@@ -71,10 +71,10 @@
         }
 
         [Fact]
-        public void Pre_request_hook_should_not_set_auth_details_with_no_auth_headers()
+        public void Pre_request_hook_should_not_set_auth_details_with_no_auth_headers_or_cookie()
         {
             // Given
-            var context = new NancyContext()
+            var context = new NancyContext
             {
                 Request = new FakeRequest("GET", "/")
             };
@@ -117,6 +117,69 @@
         }
 
         [Fact]
+        public void Pre_request_hook_should_call_tokenizer_with_token_in_cookie()
+        {
+            // Given
+            var context = CreateContextWithCookie(
+               "tok", "mytoken");
+
+            // When
+            this.hooks.BeforeRequest.Invoke(context, new CancellationToken());
+
+            // Then
+            A.CallTo(() => config.Tokenizer.Detokenize("mytoken", context)).MustHaveHappened();
+        }
+
+        [Fact]
+        public void Pre_request_hook_should_call_tokenizer_with_token_in_query()
+        {
+            // Given
+            var context = CreateContextWithQuery(
+               "tok", "mytoken");
+
+            // When
+            this.hooks.BeforeRequest.Invoke(context, new CancellationToken());
+
+            // Then
+            A.CallTo(() => config.Tokenizer.Detokenize("mytoken", context)).MustHaveHappened();
+        }
+
+        [Fact]
+        public void Pre_request_hook_should_extract_token_from_header_even_when_other_methods_exist()
+        {
+            // Given
+            var context = CreateContextWithHeader(
+               "Authorization", new[] { "Token" + " " + "myHeaderToken" });
+
+            context.Request.Cookies.Add("tok", "myCookieToken");
+            context.Request.Query["tok"] = "myQueryToken";
+            
+            // When
+            this.hooks.BeforeRequest.Invoke(context, new CancellationToken());
+
+            // Then
+            A.CallTo(() => config.Tokenizer.Detokenize("myHeaderToken", context)).MustHaveHappened();
+            A.CallTo(() => config.Tokenizer.Detokenize("myCookieToken", context)).MustNotHaveHappened();
+            A.CallTo(() => config.Tokenizer.Detokenize("myQueryToken", context)).MustNotHaveHappened();
+        }
+
+        [Fact]
+        public void Pre_request_hook_should_extract_token_from_cookie_even_when_query_exists()
+        {
+            // Given
+            var context = CreateContextWithCookie("tok", "myCookieToken");
+            context.Request.Query["tok"] = "myQueryToken";
+            
+            // When
+            this.hooks.BeforeRequest.Invoke(context, new CancellationToken());
+
+            // Then
+            A.CallTo(() => config.Tokenizer.Detokenize("myHeaderToken", context)).MustNotHaveHappened();
+            A.CallTo(() => config.Tokenizer.Detokenize("myCookieToken", context)).MustHaveHappened();
+            A.CallTo(() => config.Tokenizer.Detokenize("myQueryToken", context)).MustNotHaveHappened();
+        }
+
+        [Fact]
         public void Should_set_user_in_context_with_valid_username_in_auth_header()
         {
             // Given
@@ -147,9 +210,31 @@
                 { name, values }
             };
 
-            return new NancyContext()
+            return new NancyContext
             {
                 Request = new FakeRequest("GET", "/", header)
+            };
+        }
+
+        private static NancyContext CreateContextWithCookie(string name, string value)
+        {
+            var request = new FakeRequest("GET", "/");
+            request.Cookies.Add(name, value);
+
+            return new NancyContext
+            {
+                Request = request
+            };
+        }
+
+        private static NancyContext CreateContextWithQuery(string name, string value)
+        {
+            var request = new FakeRequest("GET", "/");
+            request.Query[name] = value;
+
+            return new NancyContext
+            {
+                Request = request
             };
         }
 
