@@ -596,11 +596,44 @@
         }
 
         [Fact]
+        public void Should_render_attributes_with_HtmlString_inside()
+        {
+            var location = FindView("ViewThatUsesAttributeWithHtmlStringInside");
+            var stream = new MemoryStream();
+            const string PHRASE = "Slugs & bugs are secret spies on gardeners, but <strong>no one</strong> knows who they spy for";
+            const string PHRASE_RESULT = "Slugs &amp; bugs are secret spies on gardeners, but &lt;strong&gt;no one&lt;/strong&gt; knows who they spy for";
+
+            //When
+            var response = this.engine.RenderView(location, PHRASE, this.renderContext);
+            response.Contents.Invoke(stream);
+
+            //Then
+            var output = ReadAll(stream);
+            output.ShouldContain(string.Format("<input value=\"{0}\" />", PHRASE_RESULT));
+        }
+
+        [Fact]
+        public void Should_render_attributes_with_RawHtmlString_inside()
+        {
+            var location = FindView("ViewThatUsesAttributeWithRawHtmlStringInside");
+            var stream = new MemoryStream();
+            const string PHRASE = "Slugs & bugs are secret spies on gardeners, but <strong>no one</strong> knows who they spy for";
+
+            //When
+            var response = this.engine.RenderView(location, PHRASE, this.renderContext);
+            response.Contents.Invoke(stream);
+
+            //Then
+            var output = ReadAll(stream);
+            output.ShouldContain(string.Format("<input value=\"{0}\" />", PHRASE));
+        }
+
+        [Fact]
         public void Should_render_attributes_with_NonEncodedHtmlString_inside()
         {
             var location = FindView("ViewThatUsesAttributeWithNonEncodedHtmlStringInside");
             var stream = new MemoryStream();
-            const string PHRASE = "Slugs are secret spies on gardeners, but no ones who they spy for";
+            const string PHRASE = "Slugs are secret spies on gardeners, but no one knows who they spy for";
 
             //When
             var response = this.engine.RenderView(location, new NonEncodedHtmlString(PHRASE), this.renderContext);
