@@ -147,6 +147,7 @@ namespace Nancy.Hosting.Aspnet
                 context.Response.StatusDescription = response.ReasonPhrase;
             }
 
+            context.Response.BufferOutput = false;
             context.Response.StatusCode = (int)response.StatusCode;
             response.Contents.Invoke(context.Response.OutputStream);
         }
