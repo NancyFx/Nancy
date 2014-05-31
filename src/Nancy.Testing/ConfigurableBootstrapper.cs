@@ -43,6 +43,7 @@ namespace Nancy.Testing
         public static IList<string> TestAssemblySuffixes = new[] { "test", "tests", "unittests", "specs", "specifications" };
 
         private bool allDiscoveredModules;
+        private bool autoRegistrations = true;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConfigurableBootstrapper"/> class.
@@ -309,7 +310,7 @@ namespace Nancy.Testing
                 container.AutoRegister();
                 this.RegisterBootstrapperTypes(container);
             }
-            
+
             RegisterTypesInternal(this.ApplicationContainer, this.GetTypeRegistrations());
             RegisterCollectionTypesInternal(this.ApplicationContainer, this.GetCollectionTypeRegistrations());
             RegisterInstancesInternal(this.ApplicationContainer, this.registeredInstances);
@@ -397,7 +398,16 @@ namespace Nancy.Testing
         /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IRegistrations"/> instances.</returns>
         protected override IEnumerable<IRegistrations> GetRegistrationTasks()
         {
-            return this.ApplicationContainer.ResolveAll<IRegistrations>(false);
+            
+            var nancyAssembly = typeof(NancyEngine).Assembly;
+
+            if (this.autoRegistrations)
+            {
+                return this.ApplicationContainer.ResolveAll<IRegistrations>(false);
+            }
+
+            return this.ApplicationContainer.ResolveAll<IRegistrations>(false)
+                       .Where(x => x.GetType().Assembly == nancyAssembly);
         }
 
         /// <summary>
@@ -424,7 +434,7 @@ namespace Nancy.Testing
         /// <param name="typeRegistrations">Type registrations to register</param>
         protected override void RegisterTypes(TinyIoCContainer container, IEnumerable<TypeRegistration> typeRegistrations)
         {
-            var configuredTypes = 
+            var configuredTypes =
                 this.GetTypeRegistrations().ToList();
 
             var filtered = typeRegistrations
@@ -450,7 +460,7 @@ namespace Nancy.Testing
         /// <param name="collectionTypeRegistrations">Collection type registrations to register</param>
         protected override void RegisterCollectionTypes(TinyIoCContainer container, IEnumerable<CollectionTypeRegistration> collectionTypeRegistrations)
         {
-            var configuredCollectionTypes = 
+            var configuredCollectionTypes =
                 this.GetCollectionTypeRegistrations().ToList();
 
             var filtered = collectionTypeRegistrations
@@ -700,7 +710,7 @@ namespace Nancy.Testing
             /// </summary>
             /// <param name="dependencies">The instances of the dependencies that should be registered with the bootstrapper.</param>
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
-            public ConfigurableBootstrapperConfigurator Dependencies(params object[] dependencies) 
+            public ConfigurableBootstrapperConfigurator Dependencies(params object[] dependencies)
             {
                 foreach (var dependency in dependencies)
                 {
@@ -715,14 +725,14 @@ namespace Nancy.Testing
             /// </summary>
             /// <param name="dependencies">An array of maps between the interfaces and instances that should be registered with the bootstrapper.</param>
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
-            public ConfigurableBootstrapperConfigurator MappedDependencies<T, K>(IEnumerable<Tuple<T, K>> dependencies) 
+            public ConfigurableBootstrapperConfigurator MappedDependencies<T, K>(IEnumerable<Tuple<T, K>> dependencies)
                 where T : Type
-                where K: class 
+                where K : class
             {
                 foreach (var dependency in dependencies)
                 {
-                   this.bootstrapper.registeredInstances.Add(
-                       new InstanceRegistration(dependency.Item1, dependency.Item2));
+                    this.bootstrapper.registeredInstances.Add(
+                        new InstanceRegistration(dependency.Item1, dependency.Item2));
                 }
 
                 return this;
@@ -1815,6 +1825,12 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator RequestStartup(Action<TinyIoCContainer, IPipelines, NancyContext> action)
             {
                 this.bootstrapper.requestStartupActions.Add(action);
+                return this;
+            }
+
+            public ConfigurableBootstrapperConfigurator DisableAutoRegistrations()
+            {
+                this.bootstrapper.autoRegistrations = false;
                 return this;
             }
         }
