@@ -3,6 +3,9 @@
     using System.IO;
     using System.Web;
 
+    /// <summary>
+    /// A wrapper around an AspNet OutputStream that defers .Flush() to the parent HttpResponseBase
+    /// </summary>
     public class NancyResponseStream : Stream
     {
         private readonly HttpResponseBase response;
@@ -26,6 +29,9 @@
             get { return this.response.OutputStream.CanWrite; }
         }
 
+        /// <summary>
+        /// Calls Flush() on the wrapped HttpResponseBase
+        /// </summary>
         public override void Flush()
         {
             this.response.Flush();
