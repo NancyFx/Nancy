@@ -12,6 +12,7 @@ namespace Nancy.Diagnostics
     using Helpers;
     using ModelBinding;
 
+    using Nancy.Localization;
     using Nancy.Routing.Constraints;
     using Nancy.Routing.Trie;
 
@@ -40,13 +41,14 @@ namespace Nancy.Diagnostics
             IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints,
             ICultureService cultureService,
             IRequestTraceFactory requestTraceFactory,
-            IEnumerable<IRouteMetadataProvider> routeMetadataProviders)
+            IEnumerable<IRouteMetadataProvider> routeMetadataProviders,
+            ITextResource textResource)
         {
             var diagnosticsModuleCatalog = new DiagnosticsModuleCatalog(providers, rootPathProvider, requestTracing, configuration, diagnosticsConfiguration);
 
             var diagnosticsRouteCache = new RouteCache(
                 diagnosticsModuleCatalog,
-                new DefaultNancyContextFactory(cultureService, requestTraceFactory),
+                new DefaultNancyContextFactory(cultureService, requestTraceFactory, textResource),
                 new DefaultRouteSegmentExtractor(),
                 new DefaultRouteDescriptionProvider(),
                 cultureService,
