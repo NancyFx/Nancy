@@ -5,6 +5,8 @@ namespace Nancy.Tests.Functional.Tests
     using System.IO;
     using System.Linq;
     using Cookies;
+
+    using Nancy.ErrorHandling;
     using Nancy.IO;
     using Nancy.Responses.Negotiation;
     using Nancy.Testing;
@@ -654,6 +656,19 @@ namespace Nancy.Tests.Functional.Tests
             Assert.Equal(HttpStatusCode.SeeOther, result.StatusCode);
         }
 
+        [Fact]
+        public void Can_negotiate_in_status_code_handler()
+        {
+            // Given
+            var browser = new Browser(with => with.StatusCodeHandler<NotFoundStatusCodeHandler>());
+
+            // When
+            var result = browser.Get("/not-found");
+
+            // Then
+            Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
+        }
+
         private static Func<dynamic, NancyModule, dynamic> CreateNegotiatedResponse(Action<Negotiator> action = null)
         {
             return (parameters, module) =>
@@ -776,6 +791,27 @@ namespace Nancy.Tests.Functional.Tests
 
             private class Foo
             {
+            }
+        }
+
+        private class NotFoundStatusCodeHandler : IStatusCodeHandler
+        {
+            private readonly IResponseNegotiator responseNegotiator;
+
+            public NotFoundStatusCodeHandler(IResponseNegotiator responseNegotiator)
+            {
+                this.responseNegotiator = responseNegotiator;
+            }
+
+            public bool HandlesStatusCode(HttpStatusCode statusCode, NancyContext context)
+            {
+                return statusCode == HttpStatusCode.NotFound;
+            }
+
+            public void Handle(HttpStatusCode statusCode, NancyContext context)
+            {
+                var error = new { StatusCode = statusCode, Message = "Not Found." };
+                context.Response = this.responseNegotiator.NegotiateResponse(error, context);
             }
         }
     }
