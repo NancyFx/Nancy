@@ -190,7 +190,7 @@
     <Compile Include="Owin\NancyContextExtensions.cs" />
     <Compile Include="Owin\NancyOptions.cs" />
     <Compile Include="Owin\NancyOptionsExtensions.cs" />
-    <Compile Include="Owin\NancyOwinHost.cs" />
+    <Compile Include="Owin\NancyMiddleware.cs" />
     <Compile Include="Responses\EmbeddedFileResponse.cs" />
     <Compile Include="Diagnostics\IDiagnosticsProvider.cs" />
     <Compile Include="Diagnostics\IInteractiveDiagnostics.cs" />

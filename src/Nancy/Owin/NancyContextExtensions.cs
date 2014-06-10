@@ -15,7 +15,7 @@
         public static IDictionary<string, object> GetOwinEnvironment(this NancyContext context)
         {
             object environment;
-            if (context.Items.TryGetValue(NancyOwinHost.RequestEnvironmentKey, out environment))
+            if (context.Items.TryGetValue(NancyMiddleware.RequestEnvironmentKey, out environment))
             {
                 return environment as IDictionary<string, object>;
             }

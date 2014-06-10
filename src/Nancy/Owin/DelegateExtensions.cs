@@ -40,7 +40,7 @@ namespace Nancy.Owin
         {
             var nancyOptions = options ?? new NancyOptions();
 
-            builder(next => new NancyOwinHost(next, nancyOptions).Invoke);
+            builder(next => new NancyMiddleware(next, nancyOptions).Invoke);
 
             return builder;
         }

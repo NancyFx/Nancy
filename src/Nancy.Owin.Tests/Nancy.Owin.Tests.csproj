@@ -71,7 +71,7 @@
     </Compile>
     <Compile Include="NancyOptionsExtensionsFixture.cs" />
     <Compile Include="NancyOptionsFixture.cs" />
-    <Compile Include="NancyOwinHostFixture.cs" />
+    <Compile Include="NancyMiddlewareFixture.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy.Owin\Nancy.Owin.csproj">
