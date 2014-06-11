@@ -218,8 +218,15 @@ namespace Nancy.Authentication.Forms
             {
                 return Guid.Empty;
             }
+            
+            var cookieValueEncrypted = context.Request.Cookies[formsAuthenticationCookieName];
+            
+            if (string.IsNullOrEmpty(cookieValueEncrypted))
+            {
+                return Guid.Empty;
+            }
 
-            var cookieValue = DecryptAndValidateAuthenticationCookie(context.Request.Cookies[formsAuthenticationCookieName], configuration);
+            var cookieValue = DecryptAndValidateAuthenticationCookie(cookieValueEncrypted, configuration);
 
             Guid returnGuid;
             if (String.IsNullOrEmpty(cookieValue) || !Guid.TryParse(cookieValue, out returnGuid))
