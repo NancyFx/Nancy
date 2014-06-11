@@ -1,14 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace Nancy.Owin
+﻿namespace Nancy.Owin
 {
-    using AppFunc = Func<IDictionary<string, object>, Task>;
+    using System;
 
-    using MiddlewareFunc = Func<
-        Func<IDictionary<string, object>, Task>, 
-        Func<IDictionary<string, object>, Task>>;
+    using AppFunc = System.Func<
+        System.Collections.Generic.IDictionary<string, object>, 
+        System.Threading.Tasks.Task>;
+
+    using MiddlewareFunc = System.Func<
+        System.Func<
+            System.Collections.Generic.IDictionary<string, object>, 
+            System.Threading.Tasks.Task>, 
+        System.Func<
+            System.Collections.Generic.IDictionary<string, object>, 
+            System.Threading.Tasks.Task>>;
 
     /// <summary>
     /// OWIN extensions for the delegate-based approach.
