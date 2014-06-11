@@ -170,8 +170,8 @@ namespace Nancy
 
                 if (parts.Length == 1)
                 {
-                    if (cookieName.Equals("HttpOnly", StringComparison.InvariantCulture) ||
-                        cookieName.Equals("Secure", StringComparison.InvariantCulture))
+                    if (cookieName.Equals("HttpOnly", StringComparison.InvariantCultureIgnoreCase) ||
+                        cookieName.Equals("Secure", StringComparison.InvariantCultureIgnoreCase))
                     {
                         continue;
                     }
