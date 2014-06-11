@@ -21,7 +21,7 @@
         }
 
         /// <summary>
-        /// Gets or sets the delegate that determines if NancyOwinHost performs pass through.
+        /// Gets or sets the delegate that determines if NancyMiddleware performs pass through.
         /// </summary>
         public Func<NancyContext, bool> PerformPassThrough
         {

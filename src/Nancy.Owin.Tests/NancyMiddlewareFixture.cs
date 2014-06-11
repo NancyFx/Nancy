@@ -15,19 +15,19 @@ namespace Nancy.Owin.Tests
 
     using Xunit;
 
-    public class NancyOwinHostFixture
+    public class NancyMiddlewareFixture
     {
         private readonly Dictionary<string, object> environment;
         private readonly INancyBootstrapper fakeBootstrapper;
         private readonly INancyEngine fakeEngine;
-        private readonly NancyOwinHost host;
+        private readonly NancyMiddleware host;
 
-        public NancyOwinHostFixture()
+        public NancyMiddlewareFixture()
         {
             this.fakeEngine = A.Fake<INancyEngine>();
             this.fakeBootstrapper = A.Fake<INancyBootstrapper>();
             A.CallTo(() => this.fakeBootstrapper.GetEngine()).Returns(this.fakeEngine);
-            this.host = new NancyOwinHost(null, new NancyOptions {Bootstrapper = this.fakeBootstrapper});
+            this.host = new NancyMiddleware(null, new NancyOptions {Bootstrapper = this.fakeBootstrapper});
             this.environment = new Dictionary<string, object>
             {
                 {"owin.RequestMethod", "GET"},

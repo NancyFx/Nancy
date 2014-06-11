@@ -14,9 +14,9 @@
     using Helpers;
 
     /// <summary>
-    /// Nancy host for OWIN hosts
+    /// Nancy middleware for OWIN.
     /// </summary>
-    public class NancyOwinHost
+    public class NancyMiddleware
     {
         private readonly Func<IDictionary<string, object>, Task> next;
 
@@ -30,11 +30,11 @@
         public const string RequestEnvironmentKey = "OWIN_REQUEST_ENVIRONMENT";
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NancyOwinHost"/> class.
+        /// Initializes a new instance of the <see cref="NancyMiddleware"/> class.
         /// </summary>
         /// <param name="next">Next middleware to run if necessary</param>
-        /// <param name="options">The nancy options that should be used by the host.</param>
-        public NancyOwinHost(Func<IDictionary<string, object>, Task> next, NancyOptions options)
+        /// <param name="options">The nancy options that should be used by the middleware.</param>
+        public NancyMiddleware(Func<IDictionary<string, object>, Task> next, NancyOptions options)
         {
             this.next = next;
             this.options = options;
