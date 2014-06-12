@@ -611,6 +611,24 @@
             output.ShouldContain(string.Format("<input value=\"{0}\" />", PHRASE));
         }
 
+        [Fact]
+        public void Should_render_form_with_html_encoded()
+        {
+            var location = FindView("ViewThatUsesLayoutAndModelWithForm");
+            var stream = new MemoryStream();
+
+            dynamic model = new ExpandoObject();
+            model.Name = "<script>alert('hello');</script>";
+
+            //When
+            var response = this.engine.RenderView(location, model, this.renderContext);
+            response.Contents.Invoke(stream);
+
+            //Then
+            var output = ReadAll(stream);
+            output.ShouldNotContain("<script>alert('hello');</script>");
+        }
+
         private static string ReadAll(Stream stream)
         {
             stream.Position = 0;
