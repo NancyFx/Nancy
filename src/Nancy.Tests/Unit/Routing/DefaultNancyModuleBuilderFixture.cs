@@ -18,7 +18,6 @@
         private readonly NancyModule module;
         private readonly IModelBinderLocator modelBinderLocator;
         private readonly IModelValidatorLocator validatorLocator;
-        private readonly ITextResource textResource;
 
         public DefaultNancyModuleBuilderFixture()
         {
@@ -30,9 +29,8 @@
             this.viewFactory = A.Fake<IViewFactory>();
             this.modelBinderLocator = A.Fake<IModelBinderLocator>();
             this.validatorLocator = A.Fake<IModelValidatorLocator>();
-            this.textResource = A.Fake<ITextResource>();
 
-            this.builder = new DefaultNancyModuleBuilder(this.viewFactory, this.responseFormatterFactory, this.modelBinderLocator, this.validatorLocator, this.textResource);
+            this.builder = new DefaultNancyModuleBuilder(this.viewFactory, this.responseFormatterFactory, this.modelBinderLocator, this.validatorLocator);
         }
 
         [Fact]
@@ -113,32 +111,6 @@
 
             // Then
             result.ModelBinderLocator.ShouldBeSameAs(this.modelBinderLocator);
-        }
-
-        [Fact]
-        public void Should_set_text_to_textresourcefinder_instance()
-        {
-            // Given
-            var context = new NancyContext();
-
-            // When
-            var result = this.builder.BuildModule(this.module, context);
-
-            // Then
-            ((object)result.Text).ShouldBeOfType<TextResourceFinder>();
-        }
-
-        [Fact]
-        public void Should_pass_text_resource_to_textresourcefinder_instance()
-        {
-            // Given
-            var context = new NancyContext();
-
-            // When
-            var result = this.builder.BuildModule(this.module, context);
-
-            // Then
-            ((TextResourceFinder)result.Text).Resource.ShouldBeSameAs(this.textResource);
         }
     }
 }

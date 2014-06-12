@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using ModelBinding;
     using Nancy.Bootstrapper;
+    using Nancy.Localization;
     using Nancy.Routing;
     using Nancy.Routing.Constraints;
 
@@ -25,6 +26,7 @@
         private readonly ICultureService cultureService;
         private readonly IRequestTraceFactory requestTraceFactory;
         private readonly IEnumerable<IRouteMetadataProvider> routeMetadataProviders;
+        private readonly ITextResource textResource;
 
         /// <summary>
         /// Creates a new instance of the <see cref="DefaultDiagnostics"/> class.
@@ -39,6 +41,8 @@
         /// <param name="routeSegmentConstraints"></param>
         /// <param name="cultureService"></param>
         /// <param name="requestTraceFactory"></param>
+        /// <param name="routeMetadataProviders"></param>
+        /// <param name="textResource"></param>
         public DefaultDiagnostics(
             DiagnosticsConfiguration diagnosticsConfiguration,
             IEnumerable<IDiagnosticsProvider> diagnosticProviders,
@@ -50,7 +54,8 @@
             IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints,
             ICultureService cultureService,
             IRequestTraceFactory requestTraceFactory,
-            IEnumerable<IRouteMetadataProvider> routeMetadataProviders)
+            IEnumerable<IRouteMetadataProvider> routeMetadataProviders,
+            ITextResource textResource)
         {
             this.diagnosticsConfiguration = diagnosticsConfiguration;
             this.diagnosticProviders = diagnosticProviders;
@@ -63,6 +68,7 @@
             this.cultureService = cultureService;
             this.requestTraceFactory = requestTraceFactory;
             this.routeMetadataProviders = routeMetadataProviders;
+            this.textResource = textResource;
         }
 
         /// <summary>
@@ -82,7 +88,8 @@
                 this.routeSegmentConstraints,
                 this.cultureService,
                 this.requestTraceFactory,
-                this.routeMetadataProviders);
+                this.routeMetadataProviders,
+                this.textResource);
         }
     }
 }

@@ -88,6 +88,6 @@ namespace Nancy
         /// <summary>
         /// Gets or sets the dynamic object used to locate text resources.
         /// </summary>
-        dynamic Text { get; set; }
+        dynamic Text { get; }
     }
 }

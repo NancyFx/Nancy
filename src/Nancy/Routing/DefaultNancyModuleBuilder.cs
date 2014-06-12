@@ -16,7 +16,6 @@
         private readonly IResponseFormatterFactory responseFormatterFactory;
         private readonly IModelBinderLocator modelBinderLocator;
         private readonly IModelValidatorLocator validatorLocator;
-        private readonly ITextResource textResource;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultNancyModuleBuilder"/> class.
@@ -25,13 +24,12 @@
         /// <param name="responseFormatterFactory">An <see cref="IResponseFormatterFactory"/> instance that should be used to create a response formatter for the module.</param>
         /// <param name="modelBinderLocator">A <see cref="IModelBinderLocator"/> instance that should be assigned to the module.</param>
         /// <param name="validatorLocator">A <see cref="IModelValidatorLocator"/> instance that should be assigned to the module.</param>
-        public DefaultNancyModuleBuilder(IViewFactory viewFactory, IResponseFormatterFactory responseFormatterFactory, IModelBinderLocator modelBinderLocator, IModelValidatorLocator validatorLocator, ITextResource textResource)
+        public DefaultNancyModuleBuilder(IViewFactory viewFactory, IResponseFormatterFactory responseFormatterFactory, IModelBinderLocator modelBinderLocator, IModelValidatorLocator validatorLocator)
         {
             this.viewFactory = viewFactory;
             this.responseFormatterFactory = responseFormatterFactory;
             this.modelBinderLocator = modelBinderLocator;
             this.validatorLocator = validatorLocator;
-            this.textResource = textResource;
         }
 
         /// <summary>
@@ -49,7 +47,6 @@
             module.ViewFactory = this.viewFactory;
             module.ModelBinderLocator = this.modelBinderLocator;
             module.ValidatorLocator = this.validatorLocator;
-            module.Text = new TextResourceFinder(this.textResource, context);
 
             return module;
         }

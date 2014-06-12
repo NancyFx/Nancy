@@ -16,6 +16,11 @@ namespace Nancy.Demo.Hosting.Aspnet
                 return View["routes", routeCacheProvider.GetCache()];
             };
 
+            Get["/texts"] = parameters => {
+                return (string)this.Context.Text.Menu.Home;
+                
+            };
+
             Get["/meta"] = parameters =>
             {
                 return Negotiate
@@ -32,7 +37,7 @@ namespace Nancy.Demo.Hosting.Aspnet
 
             Get["/text"] = x =>
             {
-                var value = (string)this.Text.Home;
+                var value = (string)this.Context.Text.Menu.Home;
                 return string.Concat("Value of 'Home' resource key in the Menu resource file: ", value);
             };
 

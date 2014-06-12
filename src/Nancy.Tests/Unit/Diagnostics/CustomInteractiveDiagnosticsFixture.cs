@@ -8,6 +8,7 @@
     using Nancy.Cryptography;
     using Nancy.Culture;
     using Nancy.Diagnostics;
+    using Nancy.Localization;
     using Nancy.ModelBinding;
     using Nancy.Responses.Negotiation;
     using Nancy.Routing;
@@ -43,6 +44,7 @@
             private readonly ICultureService cultureService;
             private readonly IRequestTraceFactory requestTraceFactory;
             private readonly IEnumerable<IRouteMetadataProvider> routeMetadataProviders;
+            private readonly ITextResource textResource;
 
             public FakeDiagnostics(
                 DiagnosticsConfiguration diagnosticsConfiguration,
@@ -54,7 +56,8 @@
                 IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints,
                 ICultureService cultureService,
                 IRequestTraceFactory requestTraceFactory,
-                IEnumerable<IRouteMetadataProvider> routeMetadataProviders)
+                IEnumerable<IRouteMetadataProvider> routeMetadataProviders,
+                ITextResource textResource)
             {
                 this.diagnosticsConfiguration = diagnosticsConfiguration;
                 this.diagnosticProviders = (new IDiagnosticsProvider[] { new FakeDiagnosticsProvider() }).ToArray();
@@ -67,6 +70,7 @@
                 this.cultureService = cultureService;
                 this.requestTraceFactory = requestTraceFactory;
                 this.routeMetadataProviders = routeMetadataProviders;
+                this.textResource = textResource;
             }
 
             public void Initialize(IPipelines pipelines)
@@ -82,7 +86,8 @@
                     this.routeSegmentConstraints,
                     this.cultureService,
                     this.requestTraceFactory,
-                    this.routeMetadataProviders);
+                    this.routeMetadataProviders,
+                    this.textResource);
             }
         }
 

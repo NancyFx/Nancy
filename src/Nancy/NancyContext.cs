@@ -110,6 +110,11 @@ namespace Nancy
         public NegotiationContext NegotiationContext { get; set; }
 
         /// <summary>
+        /// Gets or sets the dynamic object used to locate text resources.
+        /// </summary>
+        public dynamic Text { get; set; }
+
+        /// <summary>
         /// Disposes any disposable items in the <see cref="Items"/> dictionary.
         /// </summary>
         public void Dispose()
