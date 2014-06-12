@@ -45,6 +45,18 @@
             return true;
         }
 
+        /// <summary>
+        /// Gets a translation based on the provided key.
+        /// </summary>
+        /// <param name="key">The key to look up the translation for.</param>
+        public string this[string key]
+        {
+            get
+            {
+                return this.textResource[key, this.context];
+            }
+        }
+
         public class DynamicMemberChainer : DynamicObject
         {
             private string memberName;
