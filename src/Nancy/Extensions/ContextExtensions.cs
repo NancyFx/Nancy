@@ -151,6 +151,11 @@ namespace Nancy.Extensions
                 return false;
             }
 
+            if (url.StartsWith("//"))
+            {
+                return false;
+            }
+
             Uri uri;
 
             if (Uri.TryCreate(url, UriKind.Relative, out uri))

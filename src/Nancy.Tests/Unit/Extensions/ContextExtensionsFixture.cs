@@ -143,6 +143,16 @@
             result.ShouldBeFalse();
         }
 
+        [Fact]
+        public void Should_report_protocol_relative_url_as_nonlocal()
+        {
+            var context = this.CreateContext();
+
+            var result = context.IsLocalUrl("//anothertest.com");
+
+            result.ShouldBeFalse();
+        }
+
         private NancyContext CreateContext(Url url = null)
         {
             var request = new Request(
