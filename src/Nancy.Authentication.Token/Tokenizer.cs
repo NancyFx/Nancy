@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Security.Cryptography;
     using System.Text;
@@ -16,7 +17,6 @@
     public class Tokenizer : ITokenizer
     {
         private readonly TokenValidator validator;
-        private readonly TokenKeyRing keyRing;
         private ITokenKeyStore keyStore = new FileSystemTokenKeyStore();
         private Encoding encoding = Encoding.UTF8;
         private string claimsDelimiter = "|";
@@ -27,10 +27,10 @@
         private Func<TimeSpan> tokenExpiration = () => TimeSpan.FromDays(1);
         private Func<TimeSpan> keyExpiration = () => TimeSpan.FromDays(7);
 
-        private Func<NancyContext, string>[] additionalItems = new Func<NancyContext, string>[]
-            {
-                ctx => ctx.Request.Headers.UserAgent
-            };
+        private Func<NancyContext, string>[] additionalItems =
+        {
+            ctx => ctx.Request.Headers.UserAgent
+        };
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Tokenizer"/> class.
@@ -51,8 +51,8 @@
                 var configurator = new TokenizerConfigurator(this);
                 configuration.Invoke(configurator);
             }
-            this.keyRing = new TokenKeyRing(this);
-            this.validator = new TokenValidator(this.keyRing);
+            var keyRing = new TokenKeyRing(this);
+            this.validator = new TokenValidator(keyRing);
         }
 
         /// <summary>
@@ -63,10 +63,12 @@
         /// <returns>The generated token.</returns>
         public string Tokenize(IUserIdentity userIdentity, NancyContext context)
         {
-            var items = new List<string>();
-            items.Add(userIdentity.UserName);
-            items.Add(string.Join(this.claimsDelimiter, userIdentity.Claims));
-            items.Add(this.tokenStamp().Ticks.ToString());
+            var items = new List<string>
+            {
+                userIdentity.UserName,
+                string.Join(this.claimsDelimiter, userIdentity.Claims),
+                this.tokenStamp().Ticks.ToString(CultureInfo.InvariantCulture)
+            };
 
             foreach (var item in this.additionalItems.Select(additionalItem => additionalItem(context)))
             {
