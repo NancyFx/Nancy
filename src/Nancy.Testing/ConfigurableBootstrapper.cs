@@ -34,6 +34,7 @@ namespace Nancy.Testing
         private DiagnosticsConfiguration diagnosticConfiguration;
         private readonly List<Action<TinyIoCContainer, IPipelines>> applicationStartupActions;
         private readonly List<Action<TinyIoCContainer, IPipelines, NancyContext>> requestStartupActions;
+        private readonly Assembly nancyAssembly = typeof(NancyEngine).Assembly;
 
         /// <summary>
         /// Test project name suffixes that will be stripped from the test name project
@@ -44,6 +45,7 @@ namespace Nancy.Testing
 
         private bool allDiscoveredModules;
         private bool autoRegistrations = true;
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConfigurableBootstrapper"/> class.
@@ -398,9 +400,6 @@ namespace Nancy.Testing
         /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IRegistrations"/> instances.</returns>
         protected override IEnumerable<IRegistrations> GetRegistrationTasks()
         {
-            
-            var nancyAssembly = typeof(NancyEngine).Assembly;
-
             if (this.autoRegistrations)
             {
                 return this.ApplicationContainer.ResolveAll<IRegistrations>(false);
