@@ -11,6 +11,7 @@
         /// Initializes a new instance of the <see cref="TokenAuthenticationConfiguration"/> class.
         /// </summary>
         /// <param name="tokenizer">A valid instance of <see cref="ITokenizer"/> class</param>
+        /// <param name="userMapper">The user mapper.</param>
         public TokenAuthenticationConfiguration(ITokenizer tokenizer, IUserMapper userMapper = null)
         {
             if (tokenizer == null)

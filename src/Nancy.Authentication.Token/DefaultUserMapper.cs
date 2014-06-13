@@ -4,7 +4,7 @@
 
     using Nancy.Security;
 
-    public class DefaultUserMapper : IUserMapper
+    internal class DefaultUserMapper : IUserMapper
     {
         public IUserIdentity GetUser(string userName, IEnumerable<string> claims, NancyContext context)
         {

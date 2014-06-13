@@ -59,7 +59,7 @@
         /// Creates a token from a <see cref="IUserIdentity"/>.
         /// </summary>
         /// <param name="userIdentity">The user identity from which to create a token.</param>
-        /// <param name="context">NancyContext</param>
+        /// <param name="context">Current <see cref="NancyContext"/>.</param>
         /// <returns>The generated token.</returns>
         public string Tokenize(IUserIdentity userIdentity, NancyContext context)
         {
@@ -86,8 +86,8 @@
         /// Creates a <see cref="IUserIdentity"/> from a token.
         /// </summary>
         /// <param name="token">The token from which to create a user identity.</param>
-        /// <param name="context">NancyContext</param>
-        /// <param name="userMapper"></param>
+        /// <param name="context">Current <see cref="NancyContext"/>.</param>
+        /// <param name="userMapper">The user mapper.</param>
         /// <returns>The detokenized user identity.</returns>
         public IUserIdentity Detokenize(string token, NancyContext context, IUserMapper userMapper)
         {
