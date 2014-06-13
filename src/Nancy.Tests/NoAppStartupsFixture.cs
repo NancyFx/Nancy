@@ -11,13 +11,13 @@
 
     public class AutoThingsRegistrations : IRegistrations
     {
-        public static bool Throw = false;
-
         public IEnumerable<TypeRegistration> TypeRegistrations
         {
             get
             {
-                if (Throw)
+                var frames = new System.Diagnostics.StackTrace().GetFrames();
+
+                if (frames != null && frames.Select(f => f.GetMethod().DeclaringType).Any(t => t == typeof(NoAppStartupsFixture)))
                 {
                     throw new Exception();
                 }
@@ -30,7 +30,9 @@
         {
             get
             {
-                if (Throw)
+                var frames = new System.Diagnostics.StackTrace().GetFrames();
+
+                if (frames != null && frames.Select(f => f.GetMethod().DeclaringType).Any(t => t == typeof(NoAppStartupsFixture)))
                 {
                     throw new Exception();
                 }
@@ -43,7 +45,9 @@
         {
             get
             {
-                if (Throw)
+                var frames = new System.Diagnostics.StackTrace().GetFrames();
+
+                if (frames != null && frames.Select(f => f.GetMethod().DeclaringType).Any(t => t == typeof(NoAppStartupsFixture)))
                 {
                     throw new Exception();
                 }
@@ -58,9 +62,6 @@
         [Fact]
         public void When_AutoRegistration_Is_Enabled_Should_Throw()
         {
-            // Enable for tests...
-            AutoThingsRegistrations.Throw = true;
-
             Assert.Throws<Exception>(() =>
             {
                 // Given
@@ -79,9 +80,6 @@
         [Fact]
         public void When_AutoRegistration_Is_Disabled_Should_Not_Throw()
         {
-            // Enable for tests...
-            AutoThingsRegistrations.Throw = true;
-
             // Given
             var bootstrapper = new ConfigurableBootstrapper(config =>
             {
