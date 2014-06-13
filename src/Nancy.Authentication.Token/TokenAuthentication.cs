@@ -78,7 +78,7 @@
 
             if (token != null)
             {
-                var user = configuration.Tokenizer.Detokenize(token, context);
+                var user = configuration.Tokenizer.Detokenize(token, context, configuration.UserMapper);
 
                 if (user != null)
                 {

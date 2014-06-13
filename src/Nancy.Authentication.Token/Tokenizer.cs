@@ -87,8 +87,9 @@
         /// </summary>
         /// <param name="token">The token from which to create a user identity.</param>
         /// <param name="context">NancyContext</param>
+        /// <param name="userMapper"></param>
         /// <returns>The detokenized user identity.</returns>
-        public IUserIdentity Detokenize(string token, NancyContext context)
+        public IUserIdentity Detokenize(string token, NancyContext context, IUserMapper userMapper)
         {
             var tokenComponents = token.Split(new[] { this.hashDelimiter }, StringSplitOptions.None);
             if (tokenComponents.Length != 2)
@@ -128,7 +129,7 @@
             var userName = items[0];
             var claims = items[1].Split(new[] { this.claimsDelimiter }, StringSplitOptions.None);
 
-            return new TokenUserIdentity(userName, claims);
+            return userMapper.GetUser(userName, claims);
         }
 
         private string CreateToken(string message)
@@ -278,18 +279,6 @@
                 this.tokenizer.additionalItems = additionalItems;
                 return this;
             }
-        }
-
-        private class TokenUserIdentity : IUserIdentity
-        {
-            public TokenUserIdentity(string userName, IEnumerable<string> claims)
-            {
-                UserName = userName;
-                Claims = claims;
-            }
-
-            public string UserName { get; private set; }
-            public IEnumerable<string> Claims { get; private set; }
         }
 
         private class TokenValidator

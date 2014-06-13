@@ -21,6 +21,6 @@
         /// <param name="token">The token from which to create a user identity.</param>
         /// <param name="context">NancyContext</param>
         /// <returns>The detokenized user identity.</returns>
-        IUserIdentity Detokenize(string token, NancyContext context);
+        IUserIdentity Detokenize(string token, NancyContext context, IUserMapper userMapper);
     }
 }

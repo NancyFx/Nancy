@@ -68,6 +68,8 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="DefaultUserMapper.cs" />
+    <Compile Include="IUserMapper.cs" />
     <Compile Include="Storage\FileSystemTokenKeyStore.cs" />
     <Compile Include="Storage\InMemoryTokenKeyStore.cs" />
     <Compile Include="ITokenizer.cs" />

@@ -11,7 +11,7 @@
         /// Initializes a new instance of the <see cref="TokenAuthenticationConfiguration"/> class.
         /// </summary>
         /// <param name="tokenizer">A valid instance of <see cref="ITokenizer"/> class</param>
-        public TokenAuthenticationConfiguration(ITokenizer tokenizer)
+        public TokenAuthenticationConfiguration(ITokenizer tokenizer, IUserMapper userMapper = null)
         {
             if (tokenizer == null)
             {
@@ -19,11 +19,14 @@
             }
 
             this.Tokenizer = tokenizer;
+            this.UserMapper = userMapper ?? new DefaultUserMapper();
         }
 
         /// <summary>
         /// Gets the token validator
         /// </summary>
         public ITokenizer Tokenizer { get; private set; }
+
+        public IUserMapper UserMapper { get; set; }
     }
 }
