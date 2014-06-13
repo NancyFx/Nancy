@@ -129,7 +129,7 @@
             var userName = items[0];
             var claims = items[1].Split(new[] { this.claimsDelimiter }, StringSplitOptions.None);
 
-            return userMapper.GetUser(userName, claims);
+            return userMapper.GetUser(userName, claims, context);
         }
 
         private string CreateToken(string message)

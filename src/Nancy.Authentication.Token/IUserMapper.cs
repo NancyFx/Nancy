@@ -6,6 +6,6 @@
 
     public interface IUserMapper
     {
-        IUserIdentity GetUser(string userName, IEnumerable<string> claims);
+        IUserIdentity GetUser(string userName, IEnumerable<string> claims, NancyContext context);
     }
 }

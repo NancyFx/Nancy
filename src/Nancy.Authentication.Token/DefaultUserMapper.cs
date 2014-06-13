@@ -6,7 +6,7 @@
 
     public class DefaultUserMapper : IUserMapper
     {
-        public IUserIdentity GetUser(string userName, IEnumerable<string> claims)
+        public IUserIdentity GetUser(string userName, IEnumerable<string> claims, NancyContext context)
         {
             return new TokenUserIdentity(userName, claims);
         }
@@ -20,6 +20,7 @@
             }
 
             public string UserName { get; private set; }
+
             public IEnumerable<string> Claims { get; private set; }
         }
     }
