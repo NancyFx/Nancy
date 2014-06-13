@@ -55,6 +55,7 @@
         [Fact]
         public void Should_return_same_path_when_parsing_path_if_path_doesnt_contain_tilde()
         {
+            // Given
             const string input = "/scripts/test.js";
             var url = new Url
             {
@@ -64,14 +65,17 @@
             var request = new Request("GET", url);
             var nancyContext = new NancyContext { Request = request };
 
+            // When
             var result = nancyContext.ToFullPath(input);
 
+            // Then
             result.ShouldEqual(input);
         }
 
         [Fact]
         public void Should_replace_tilde_with_base_path_when_parsing_path_if_one_present()
         {
+            // Given
             const string input = "~/scripts/test.js";
             var url = new Url
             {
@@ -81,14 +85,17 @@
             var request = new Request("GET", url);
             var nancyContext = new NancyContext { Request = request };
 
+            // When
             var result = nancyContext.ToFullPath(input);
 
+            // Then
             result.ShouldEqual("/base/path/scripts/test.js");
         }
 
         [Fact]
         public void Should_replace_tilde_with_nothing_when_parsing_path_if_one_present_and_base_path_is_null()
         {
+            // Given
             const string input = "~/scripts/test.js";
             var url = new Url
             {
@@ -98,58 +105,75 @@
             var request = new Request("GET", url);
             var nancyContext = new NancyContext { Request = request };
 
+            // When
             var result = nancyContext.ToFullPath(input);
 
+            // Then
             result.ShouldEqual("/scripts/test.js");
         }
 
         [Fact]
         public void Should_report_simple_relative_path_as_local()
         {
+            // Given
             var context = this.CreateContext();
 
+            // When
             var result = context.IsLocalUrl("/stuff");
 
+            // Then
             result.ShouldBeTrue();
         }
 
         [Fact]
         public void Should_report_same_host_absolute_url_as_local()
         {
+            // Given
             var context = this.CreateContext();
 
+            // When
             var result = context.IsLocalUrl("http://test.com/someotherpath");
 
+            // Then
             result.ShouldBeTrue();
         }
 
         [Fact]
         public void Should_report_empty_string_as_nonlocal()
         {
+            // Given
             var context = this.CreateContext();
 
+            // When
             var result = context.IsLocalUrl("");
 
+            // Then
             result.ShouldBeFalse();
         }
 
         [Fact]
         public void Should_report_different_host_absolute_url_as_nonlocal()
         {
+            // Given
             var context = this.CreateContext();
 
+            // When
             var result = context.IsLocalUrl("http://anothertest.com/someotherpath");
 
+            // Then
             result.ShouldBeFalse();
         }
 
         [Fact]
         public void Should_report_protocol_relative_url_as_nonlocal()
         {
+            // Given
             var context = this.CreateContext();
 
+            // When
             var result = context.IsLocalUrl("//anothertest.com");
 
+            // Then
             result.ShouldBeFalse();
         }
 
