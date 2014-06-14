@@ -15,12 +15,7 @@
         {
             get
             {
-                var frames = new System.Diagnostics.StackTrace().GetFrames();
-
-                if (frames != null && frames.Select(f => f.GetMethod().DeclaringType).Any(t => t == typeof(NoAppStartupsFixture)))
-                {
-                    throw new Exception();
-                }
+                ThrowWhenNoAppStartupsFixtureRuns();
 
                 return Enumerable.Empty<TypeRegistration>();
             }
@@ -30,12 +25,7 @@
         {
             get
             {
-                var frames = new System.Diagnostics.StackTrace().GetFrames();
-
-                if (frames != null && frames.Select(f => f.GetMethod().DeclaringType).Any(t => t == typeof(NoAppStartupsFixture)))
-                {
-                    throw new Exception();
-                }
+                ThrowWhenNoAppStartupsFixtureRuns();
 
                 return Enumerable.Empty<CollectionTypeRegistration>();
             }
@@ -45,14 +35,19 @@
         {
             get
             {
-                var frames = new System.Diagnostics.StackTrace().GetFrames();
-
-                if (frames != null && frames.Select(f => f.GetMethod().DeclaringType).Any(t => t == typeof(NoAppStartupsFixture)))
-                {
-                    throw new Exception();
-                }
+                ThrowWhenNoAppStartupsFixtureRuns();
 
                 return Enumerable.Empty<InstanceRegistration>();
+            }
+        }
+
+        private static void ThrowWhenNoAppStartupsFixtureRuns()
+        {
+            var frames = new System.Diagnostics.StackTrace().GetFrames();
+
+            if (frames != null && frames.Select(f => f.GetMethod().DeclaringType).Any(t => t == typeof(NoAppStartupsFixture)))
+            {
+                throw new Exception();
             }
         }
     }
