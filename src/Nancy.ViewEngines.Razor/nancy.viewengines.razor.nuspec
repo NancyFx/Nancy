@@ -13,8 +13,14 @@
     <licenseUrl>https://github.com/NancyFx/Nancy/blob/master/license.txt</licenseUrl>
     <projectUrl>http://nancyfx.org</projectUrl>
     <dependencies>
-      <dependency id="Nancy" />
-      <dependency id="Microsoft.AspNet.Razor" />
+      <group>
+        <dependency id="Nancy" />
+        <dependency id="Microsoft.AspNet.Razor" />
+      </group>
+      <group targetFramework="net40">
+        <dependency id="Nancy" />
+        <dependency id="Microsoft.AspNet.Razor" version="2.0.30506" />
+      </group>
     </dependencies> 
     <tags>Nancy Viewengine Razor</tags>
   </metadata>
