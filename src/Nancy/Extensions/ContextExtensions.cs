@@ -151,24 +151,18 @@ namespace Nancy.Extensions
                 return false;
             }
 
-            if (url.StartsWith("//"))
+            if (!Uri.IsWellFormedUriString(url, UriKind.RelativeOrAbsolute))
             {
                 return false;
             }
 
             Uri uri;
-
-            if (Uri.TryCreate(url, UriKind.Relative, out uri))
+            if (Uri.TryCreate(url, UriKind.Absolute, out uri))
             {
-                return true;
+                return uri.Host == context.Request.Url.HostName;
             }
 
-            if (!Uri.TryCreate(url, UriKind.Absolute, out uri))
-            {
-                return false;
-            }
-
-            return string.Equals(uri.Host, context.Request.Url.HostName, StringComparison.OrdinalIgnoreCase);
+            return Uri.TryCreate(url, UriKind.Relative, out uri);
         }
     }
 }

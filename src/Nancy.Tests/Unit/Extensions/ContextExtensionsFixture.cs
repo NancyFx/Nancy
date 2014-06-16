@@ -6,6 +6,7 @@
     using Nancy.Tests.Fakes;
 
     using Xunit;
+    using Xunit.Extensions;
 
     public class ContextExtensionsFixture
     {
@@ -165,13 +166,41 @@
         }
 
         [Fact]
-        public void Should_report_protocol_relative_url_as_nonlocal()
+        public void Should_report_protocol_relative_url_different_host_as_nonlocal()
         {
             // Given
             var context = this.CreateContext();
 
             // When
             var result = context.IsLocalUrl("//anothertest.com");
+
+            // Then
+            result.ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Should_report_protocol_relative_url_same_host_as_local()
+        {
+            // Given
+            var context = this.CreateContext();
+
+            // When
+            var result = context.IsLocalUrl("//test.com");
+
+            // Then
+            result.ShouldBeTrue();
+        }
+
+        [Theory]
+        [InlineData(@"/\anothertest.com")]
+        [InlineData(@"\/anothertest.com")]
+        public void Should_report_malformed_url_as_nonlocal(string malformedUrl)
+        {
+            // Given
+            var context = this.CreateContext();
+            
+            // When
+            var result = context.IsLocalUrl(malformedUrl);
 
             // Then
             result.ShouldBeFalse();
