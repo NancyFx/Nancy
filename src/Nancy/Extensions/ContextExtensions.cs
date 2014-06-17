@@ -159,7 +159,17 @@ namespace Nancy.Extensions
             Uri uri;
             if (Uri.TryCreate(url, UriKind.Absolute, out uri))
             {
-                return uri.Host == context.Request.Url.HostName;
+                var currentHostName = context.Request.Url.HostName;
+
+                // Mono does not populate the uri.Host correctly when url
+                // is in //hostname format causing the simple check to fail.
+                if (uri.Scheme.Equals("file"))
+                {
+                    var localFormat = string.Format("//{0}", currentHostName);
+                    return !url.StartsWith("//") || url.StartsWith(localFormat);
+                }
+
+                return uri.Host == currentHostName;
             }
 
             return Uri.TryCreate(url, UriKind.Relative, out uri);
