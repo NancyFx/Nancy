@@ -1,4 +1,4 @@
-﻿namespace Nancy.Metadata.Module.Tests.Metadata
+﻿namespace Nancy.Metadata.Modules.Tests
 {
     using Nancy.Routing;
 

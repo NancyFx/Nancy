@@ -1,4 +1,4 @@
-﻿namespace Nancy.Metadata.Module.Tests
+﻿namespace Nancy.Metadata.Modules.Tests
 {
     using System;
 

@@ -1,4 +1,4 @@
-﻿namespace Nancy.Metadata.Module.Tests.Modules
+﻿namespace Nancy.Metadata.Modules.Tests.Modules
 {
     public class FakeNancyModule : NancyModule
     {

@@ -1,11 +1,11 @@
-﻿namespace Nancy.Metadata.Module
+﻿namespace Nancy.Metadata.Modules
 {
     using System;
 
     using Nancy.Routing;
 
     /// <summary>
-    /// Provides metadata for routes by obtaining it from <see cref="IMetadataModule"/> instances associated with <see cref="INancyModules"/>.
+    /// Provides metadata for routes by obtaining it from <see cref="IMetadataModule"/> instances associated with <see cref="INancyModule"/>.
     /// </summary>
     public class MetadataModuleRouteMetadataProvider : IRouteMetadataProvider
     {
