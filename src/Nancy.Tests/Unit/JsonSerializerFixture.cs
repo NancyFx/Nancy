@@ -10,7 +10,7 @@
     public class JsonSerializerFixture
     {
         [Fact]
-        public void Should_be_able_to_serialise_datetimeoffset()
+        public void Should_be_able_to_serialise_datetimeoffset_iso_format()
         {
             // Given
             var serializer = new JavaScriptSerializer();
@@ -25,7 +25,7 @@
         }
 
         [Fact]
-        public void Should_be_able_to_deserialise_datetimeoffset()
+        public void Should_be_able_to_deserialise_datetimeoffset_iso_format()
         {
             // Given
             var serializer = new JavaScriptSerializer();
@@ -39,7 +39,7 @@
         } 
 
         [Fact]
-        public void Should_be_able_to_serialise_and_deserialise_datetimeoffset()
+        public void Should_be_able_to_serialise_and_deserialise_datetimeoffset_iso_format()
         {
             // Given
             var serializer = new JavaScriptSerializer();
@@ -53,6 +53,35 @@
 
             // Then
             actual.ShouldEqual(offset);
+        }
+
+        [Fact]
+        public void Should_be_able_to_serialise_datetimeoffset_non_iso_format()
+        {
+            // Given
+            var serializer = new JavaScriptSerializer(null, false, 102400, 100, false, false); // default params but not ISO dates
+            var sb = new StringBuilder();
+            var offset = new DateTimeOffset(2014, 12, 1, 17, 0, 0, new TimeSpan(0, 6, 0, 0));
+
+            // When
+            serializer.Serialize(offset, sb);
+
+            // Then
+            sb.ToString().ShouldEqual(@"""\/Date(1417453200000+0600)\/""");
+        }
+
+        [Fact]
+        public void Should_be_able_to_deserialise_datetimeoffset_non_iso_format()
+        {
+            // Given
+            var serializer = new JavaScriptSerializer();
+            var serialized = @"""\/Date(1417453200000+0600)\/""";
+
+            // When
+            var actual = serializer.Deserialize<DateTimeOffset>(serialized);
+
+            // Then
+            actual.ShouldEqual(new DateTimeOffset(2014, 12, 1, 17, 0, 0, new TimeSpan(0, 6, 0, 0)));
         } 
     }
 }
