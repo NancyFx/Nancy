@@ -211,6 +211,12 @@ namespace Nancy.Json
 				return;
 			}
 
+            if (typeof(DateTimeOffset).IsAssignableFrom(valueType))
+            {
+                WriteValue(output, (DateTimeOffset)obj);
+                return;
+            }
+
 			if (typeof (DynamicDictionaryValue).IsAssignableFrom(valueType))
 			{
 				var o = (DynamicDictionaryValue) obj;
@@ -530,6 +536,30 @@ namespace Nancy.Json
 		        StringBuilderExtensions.AppendCount(output, maxJsonLength, "\"\\/Date(" + ticks + suffix + ")\\/\"");
 		    }
 		}
+
+        void WriteValue(StringBuilder output, DateTimeOffset value)
+        {
+            if (this.iso8601DateFormat)
+            {
+                StringBuilderExtensions.AppendCount(output, maxJsonLength, string.Concat("\"", value.ToString("o", CultureInfo.InvariantCulture), "\""));
+            }
+            else
+            {
+                var offset = value.Offset;
+                var time = value.DateTime;
+
+                var suffix = offset < new TimeSpan(0, 0, 0,0) ? "-" : "+";
+                suffix += offset.ToString("hhmm");
+
+                if (time < MinimumJavaScriptDate)
+                {
+                    time = MinimumJavaScriptDate;
+                }
+
+                long ticks = (time.Ticks - InitialJavaScriptDateTicks) / 10000;
+                StringBuilderExtensions.AppendCount(output, maxJsonLength, "\"\\/Date(" + ticks + suffix + ")\\/\"");
+            }
+        }
 
 		void WriteValue (StringBuilder output, IConvertible value)
 		{
