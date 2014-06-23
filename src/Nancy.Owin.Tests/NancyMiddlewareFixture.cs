@@ -15,19 +15,31 @@ namespace Nancy.Owin.Tests
 
     using Xunit;
 
+    using AppFunc = System.Func<
+       System.Collections.Generic.IDictionary<string, object>,
+       System.Threading.Tasks.Task>;
+
+    using MidFunc = System.Func<
+        System.Func<
+            System.Collections.Generic.IDictionary<string, object>,
+            System.Threading.Tasks.Task>,
+        System.Func<
+            System.Collections.Generic.IDictionary<string, object>,
+            System.Threading.Tasks.Task>>;
+
     public class NancyMiddlewareFixture
     {
         private readonly Dictionary<string, object> environment;
         private readonly INancyBootstrapper fakeBootstrapper;
         private readonly INancyEngine fakeEngine;
-        private readonly NancyMiddleware host;
+        private readonly AppFunc host;
 
         public NancyMiddlewareFixture()
         {
             this.fakeEngine = A.Fake<INancyEngine>();
             this.fakeBootstrapper = A.Fake<INancyBootstrapper>();
             A.CallTo(() => this.fakeBootstrapper.GetEngine()).Returns(this.fakeEngine);
-            this.host = new NancyMiddleware(null, new NancyOptions {Bootstrapper = this.fakeBootstrapper});
+            this.host = NancyMiddleware.UseNancy(new NancyOptions {Bootstrapper = this.fakeBootstrapper})(null);
             this.environment = new Dictionary<string, object>
             {
                 {"owin.RequestMethod", "GET"},
@@ -51,7 +63,7 @@ namespace Nancy.Owin.Tests
             var fakeResponse = new Response { StatusCode = HttpStatusCode.OK, Contents = s => { } };
             var fakeContext = new NancyContext { Response = fakeResponse };
             this.SetupFakeNancyCompleteCallback(fakeContext);
-            this.host.Invoke(this.environment);
+            this.host(this.environment);
             A.CallTo(() =>  this.fakeEngine.HandleRequest(
                     A<Request>.Ignored,
                     A<Func<NancyContext, NancyContext>>.Ignored,
@@ -133,8 +145,8 @@ namespace Nancy.Owin.Tests
         public void Should_set_cookie_with_valid_header()
         {
             var fakeResponse = new Response {StatusCode = HttpStatusCode.OK};
-            fakeResponse.AddCookie("test", "testvalue");
-            fakeResponse.AddCookie("test1", "testvalue1");
+            fakeResponse.WithCookie("test", "testvalue");
+            fakeResponse.WithCookie("test1", "testvalue1");
             var fakeContext = new NancyContext {Response = fakeResponse};
 
             this.SetupFakeNancyCompleteCallback(fakeContext);
@@ -157,7 +169,7 @@ namespace Nancy.Owin.Tests
             respHeaders.Add("Set-Cookie", new[] { middlewareSetCookie });
 
             var fakeResponse = new Response { StatusCode = HttpStatusCode.OK };
-            fakeResponse.AddCookie("test", "testvalue");
+            fakeResponse.WithCookie("test", "testvalue");
             var fakeContext = new NancyContext { Response = fakeResponse };
             this.SetupFakeNancyCompleteCallback(fakeContext);
 
