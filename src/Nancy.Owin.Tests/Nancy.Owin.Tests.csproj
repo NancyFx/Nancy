@@ -115,6 +115,10 @@
       <Project>{D6B2480C-2A52-4D02-9477-D387D7A486E5}</Project>
       <Name>Nancy.Owin</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Nancy.Testing\Nancy.Testing.csproj">
+      <Project>{d79203c0-b672-4751-9c95-c3ab7d3fefbe}</Project>
+      <Name>Nancy.Testing</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Nancy\Nancy.csproj">
       <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
       <Name>Nancy</Name>
