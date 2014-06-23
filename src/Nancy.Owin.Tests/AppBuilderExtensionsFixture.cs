@@ -1,5 +1,7 @@
 ﻿namespace Nancy.Owin.Tests
 {
+    using System;
+
     using global::Owin;
 
     using Microsoft.Owin.Testing;
@@ -20,7 +22,7 @@
             {
 
                 // When
-                var response = server.CreateRequest("/").GetAsync().Result;
+                var response = server.HttpClient.GetAsync(new Uri("http://localhost/")).Result;
 
                 // Then
                 Assert.Equal(response.StatusCode, System.Net.HttpStatusCode.OK);
