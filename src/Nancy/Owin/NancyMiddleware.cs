@@ -13,83 +13,97 @@
     using Nancy.IO;
     using Helpers;
 
+    using AppFunc = System.Func<
+       System.Collections.Generic.IDictionary<string, object>,
+       System.Threading.Tasks.Task>;
+
+    using MidFunc = System.Func<
+        System.Func<
+            System.Collections.Generic.IDictionary<string, object>,
+            System.Threading.Tasks.Task>,
+        System.Func<
+            System.Collections.Generic.IDictionary<string, object>,
+            System.Threading.Tasks.Task>>;
+
     /// <summary>
     /// Nancy middleware for OWIN.
     /// </summary>
-    public class NancyMiddleware
+    public static class NancyMiddleware
     {
-        private readonly Func<IDictionary<string, object>, Task> next;
-
-        private readonly NancyOptions options;
-
-        private readonly INancyEngine engine;
-
         /// <summary>
         /// The request environment key
         /// </summary>
         public const string RequestEnvironmentKey = "OWIN_REQUEST_ENVIRONMENT";
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NancyMiddleware"/> class.
+        /// Use Nancy in an OWIN pipeline
         /// </summary>
-        /// <param name="next">Next middleware to run if necessary</param>
-        /// <param name="options">The nancy options that should be used by the middleware.</param>
-        public NancyMiddleware(Func<IDictionary<string, object>, Task> next, NancyOptions options)
+        /// <param name="configuration">A delegate to configure the <see cref="NancyOptions"/>.</param>
+        /// <returns>An OWIN middleware delegate.</returns>
+        public static MidFunc UseNancy(Action<NancyOptions> configuration)
         {
-            this.next = next;
-            this.options = options;
-            options.Bootstrapper.Initialise();
-            this.engine = options.Bootstrapper.GetEngine();
+            var options = new NancyOptions();
+            configuration(options);
+            return UseNancy(options);
         }
 
         /// <summary>
-        /// OWIN App Action
+        /// Use Nancy in an OWIN pipeline
         /// </summary>
-        /// <param name="environment">Application environment</param>
-        /// <returns>Returns result</returns>
-        public Task Invoke(IDictionary<string, object> environment)
+        /// <param name="options">An <see cref="NancyOptions"/> to configure the Nancy middleware</param>
+        /// <returns>An OWIN middleware delegate.</returns>
+        public static MidFunc UseNancy(NancyOptions options = null)
         {
-            var owinRequestMethod = Get<string>(environment, "owin.RequestMethod");
-            var owinRequestScheme = Get<string>(environment, "owin.RequestScheme");
-            var owinRequestHeaders = Get<IDictionary<string, string[]>>(environment, "owin.RequestHeaders");
-            var owinRequestPathBase = Get<string>(environment, "owin.RequestPathBase");
-            var owinRequestPath = Get<string>(environment, "owin.RequestPath");
-            var owinRequestQueryString = Get<string>(environment, "owin.RequestQueryString");
-            var owinRequestBody = Get<Stream>(environment, "owin.RequestBody");
-            var owinCallCancelled = Get<CancellationToken>(environment, "owin.CallCancelled");
-            var owinRequestHost = GetHeader(owinRequestHeaders, "Host") ?? Dns.GetHostName();
+            options = options ?? new NancyOptions();
+            options.Bootstrapper.Initialise();
+            var engine = options.Bootstrapper.GetEngine();
 
-            byte[] certificate = null;
-            if (this.options.EnableClientCertificates)
-            {
-                var clientCertificate = Get<X509Certificate>(environment, "ssl.ClientCertificate");
-                certificate = (clientCertificate == null) ? null : clientCertificate.GetRawCertData();
-            }
+            return 
+                next =>
+                    environment =>
+                    {
+                        var owinRequestMethod = Get<string>(environment, "owin.RequestMethod");
+                        var owinRequestScheme = Get<string>(environment, "owin.RequestScheme");
+                        var owinRequestHeaders = Get<IDictionary<string, string[]>>(environment, "owin.RequestHeaders");
+                        var owinRequestPathBase = Get<string>(environment, "owin.RequestPathBase");
+                        var owinRequestPath = Get<string>(environment, "owin.RequestPath");
+                        var owinRequestQueryString = Get<string>(environment, "owin.RequestQueryString");
+                        var owinRequestBody = Get<Stream>(environment, "owin.RequestBody");
+                        var owinCallCancelled = Get<CancellationToken>(environment, "owin.CallCancelled");
+                        var owinRequestHost = GetHeader(owinRequestHeaders, "Host") ?? Dns.GetHostName();
 
-            var serverClientIp = Get<string>(environment, "server.RemoteIpAddress");
+                        byte[] certificate = null;
+                        if (options.EnableClientCertificates)
+                        {
+                            var clientCertificate = Get<X509Certificate>(environment, "ssl.ClientCertificate");
+                            certificate = (clientCertificate == null) ? null : clientCertificate.GetRawCertData();
+                        }
 
-            var url = CreateUrl(owinRequestHost, owinRequestScheme, owinRequestPathBase, owinRequestPath, owinRequestQueryString);
+                        var serverClientIp = Get<string>(environment, "server.RemoteIpAddress");
 
-            var nancyRequestStream = new RequestStream(owinRequestBody, ExpectedLength(owinRequestHeaders), false);
+                        var url = CreateUrl(owinRequestHost, owinRequestScheme, owinRequestPathBase, owinRequestPath, owinRequestQueryString);
 
-            var nancyRequest = new Request(
-                    owinRequestMethod,
-                    url,
-                    nancyRequestStream,
-                    owinRequestHeaders.ToDictionary(kv => kv.Key, kv => (IEnumerable<string>)kv.Value, StringComparer.OrdinalIgnoreCase),
-                    serverClientIp,
-                    certificate);
+                        var nancyRequestStream = new RequestStream(owinRequestBody, ExpectedLength(owinRequestHeaders), false);
 
-            var tcs = new TaskCompletionSource<int>();
+                        var nancyRequest = new Request(
+                                owinRequestMethod,
+                                url,
+                                nancyRequestStream,
+                                owinRequestHeaders.ToDictionary(kv => kv.Key, kv => (IEnumerable<string>)kv.Value, StringComparer.OrdinalIgnoreCase),
+                                serverClientIp,
+                                certificate);
 
-            this.engine.HandleRequest(
-                nancyRequest,
-                StoreEnvironment(environment),
-                RequestComplete(environment, this.options.PerformPassThrough, this.next, tcs), 
-                RequestErrored(tcs),
-                owinCallCancelled);
+                        var tcs = new TaskCompletionSource<int>();
 
-            return tcs.Task;
+                        engine.HandleRequest(
+                            nancyRequest,
+                            StoreEnvironment(environment),
+                            RequestComplete(environment, options.PerformPassThrough, next, tcs), 
+                            RequestErrored(tcs),
+                            owinCallCancelled);
+
+                        return tcs.Task;
+                    };
         }
 
         /// <summary>
@@ -106,7 +120,7 @@
         private static Action<NancyContext> RequestComplete(
             IDictionary<string, object> environment,
             Func<NancyContext, bool> performPassThrough,
-            Func<IDictionary<string, object>, Task> next,
+            AppFunc next,
             TaskCompletionSource<int> tcs)
         {
             return context =>
