@@ -6,7 +6,7 @@
         System.Collections.Generic.IDictionary<string, object>, 
         System.Threading.Tasks.Task>;
 
-    using MiddlewareFunc = System.Func<
+    using MidFunc = System.Func<
         System.Func<
             System.Collections.Generic.IDictionary<string, object>, 
             System.Threading.Tasks.Task>, 
@@ -25,7 +25,7 @@
         /// <param name="builder">The application builder delegate.</param>
         /// <param name="action">A configuration builder action.</param>
         /// <returns>The application builder delegate.</returns>
-        public static Action<MiddlewareFunc> UseNancy(this Action<MiddlewareFunc> builder, Action<NancyOptions> action)
+        public static Action<MidFunc> UseNancy(this Action<MidFunc> builder, Action<NancyOptions> action)
         {
             var options = new NancyOptions();
 
@@ -40,11 +40,11 @@
         /// <param name="builder">The application builder delegate.</param>
         /// <param name="options">The Nancy options.</param>
         /// <returns>The application builder delegate.</returns>
-        public static Action<MiddlewareFunc> UseNancy(this Action<MiddlewareFunc> builder, NancyOptions options = null)
+        public static Action<MidFunc> UseNancy(this Action<MidFunc> builder, NancyOptions options = null)
         {
             var nancyOptions = options ?? new NancyOptions();
 
-            builder(next => new NancyMiddleware(next, nancyOptions).Invoke);
+            builder(NancyMiddleware.UseNancy(nancyOptions).Invoke);
 
             return builder;
         }
