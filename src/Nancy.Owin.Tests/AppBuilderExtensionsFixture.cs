@@ -12,7 +12,7 @@
 
     public class AppBuilderExtensionsFixture
     {
-        [Fact]
+        /*[Fact]
         public void When_host_Nancy_via_IAppBuilder_then_should_handle_requests()
         {
             // Given
@@ -27,7 +27,7 @@
                 // Then
                 Assert.Equal(response.StatusCode, System.Net.HttpStatusCode.OK);
             }
-        }
+        }*/
 
         public class TestModule : NancyModule
         {
