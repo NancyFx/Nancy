@@ -70,7 +70,7 @@ namespace Nancy.Testing
         /// </summary>
         public static AndConnector<NodeWrapper> ShouldBeOfClass(this NodeWrapper node, string className)
         {
-            Asserts.Equal(node.Attributes["class"], className);
+            Asserts.Equal(className, node.Attributes["class"]);
 
             return new AndConnector<NodeWrapper>(node);
         }
