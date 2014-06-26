@@ -70,7 +70,7 @@ namespace Nancy.Testing
         /// </summary>
         public static AndConnector<NodeWrapper> ShouldBeOfClass(this NodeWrapper node, string className)
         {
-            Asserts.Equal(node.Attributes["class"], className);
+            Asserts.Equal(className, node.Attributes["class"]);
 
             return new AndConnector<NodeWrapper>(node);
         }
@@ -148,7 +148,7 @@ namespace Nancy.Testing
         /// </summary>
         public static AndConnector<NodeWrapper> ShouldContainAttribute(this NodeWrapper node, string name, string value, StringComparison comparisonType = StringComparison.InvariantCulture)
         {
-            Asserts.Equal(node.Attributes[name], value, comparisonType);
+            Asserts.Equal(value, node.Attributes[name], comparisonType);
 
             return new AndConnector<NodeWrapper>(node);
         }
