@@ -163,15 +163,15 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
                 return StandardTypePropertyEvaluator(model, propertyName);
             }
 
-            if (model is DynamicObject)
-            {
-                return GetDynamicMember(model, propertyName);
-            }
-
             var dynamicModel = model as DynamicDictionaryValue;
             if (dynamicModel != null)
             {
                 return GetPropertyValue(dynamicModel.Value, propertyName);
+            }
+
+            if (model is DynamicObject)
+            {
+                return GetDynamicMember(model, propertyName);
             }
 
 
