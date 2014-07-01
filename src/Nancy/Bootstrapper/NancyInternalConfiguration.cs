@@ -22,7 +22,7 @@ namespace Nancy.Bootstrapper
     /// <summary>
     /// Configuration class for Nancy's internals.
     /// Contains implementation types/configuration for Nancy that usually
-    /// remain do not require overriding in "general use".
+    /// do not require overriding in "general use".
     /// </summary>
     public sealed class NancyInternalConfiguration
     {
