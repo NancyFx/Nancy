@@ -794,7 +794,7 @@ namespace Nancy.Tests.Unit
             dynamic value = "42";
             var input = new DynamicDictionaryValue(value);
 
-            var sut = new Json.JavaScriptSerializer();
+            var sut = new Nancy.Json.JavaScriptSerializer();
             var actual = sut.Serialize(input);
 
             actual.ShouldEqual(@"""42""");
@@ -806,7 +806,7 @@ namespace Nancy.Tests.Unit
             dynamic value = 42;
             var input = new DynamicDictionaryValue(value);
 
-            var sut = new Json.JavaScriptSerializer();
+            var sut = new Nancy.Json.JavaScriptSerializer();
             var actual = sut.Serialize(input);
 
             actual.ShouldEqual(@"42");
