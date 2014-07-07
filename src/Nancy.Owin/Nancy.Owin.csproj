@@ -67,10 +67,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Extensions.cs" />
-    <Compile Include="NancyOptions.cs" />
-    <Compile Include="NancyOptionsExtensions.cs" />
-    <Compile Include="NancyOwinHost.cs" />
+    <Compile Include="AppBuilderExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -36,7 +36,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -46,7 +45,6 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'MonoRelease|AnyCPU' ">
@@ -84,19 +82,27 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Modules\AbsoluteUrlTestModule.cs" />
     <Compile Include="Modules\PerRouteAuthModule.cs" />
     <Compile Include="Modules\RazorWithTracingTestModule.cs" />
     <Compile Include="Modules\JsonpTestModule.cs" />
     <Compile Include="Modules\RazorTestModule.cs" />
+    <Compile Include="Modules\SerializerTestModule.cs" />
+    <Compile Include="Tests\AbsoluteUrlTests.cs" />
+    <Compile Include="Tests\AsyncExceptionTests.cs" />
     <Compile Include="Tests\BasicRouteInvocationsFixture.cs" />
+    <Compile Include="Modules\SerializeTestModule.cs" />
     <Compile Include="Tests\ContentNegotiationFixture.cs" />
     <Compile Include="Tests\MethodRewriteFixture.cs" />
     <Compile Include="Tests\PerRouteAuthFixture.cs" />
+    <Compile Include="Tests\SerializerTests.cs" />
     <Compile Include="Tests\TracingSmokeTests.cs" />
     <Compile Include="Tests\JsonpTests.cs" />
     <Compile Include="Tests\ModelBindingTests.cs" />
     <Compile Include="Tests\ManualStaticContentTests.cs" />
+    <Compile Include="Tests\PartialViewTests.cs" />
     <Compile Include="Tests\ViewBagTests.cs" />
+    <Compile Include="Tests\SerializeTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy.Testing\Nancy.Testing.csproj">
@@ -144,6 +150,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Views\_PartialTest.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\_LayoutPage.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\_ViewStart.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Views\RazorPage.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

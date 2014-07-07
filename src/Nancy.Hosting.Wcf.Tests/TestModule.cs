@@ -6,6 +6,10 @@
     {
         public TestModule()
         {
+            Get["/notmodified"] = parameters => {
+                return HttpStatusCode.NotModified;
+            };
+
             Get["/rel"] = parameters => {
                 return "This is the site route";
             };

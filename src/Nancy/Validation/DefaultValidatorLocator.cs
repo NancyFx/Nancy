@@ -42,19 +42,19 @@
 
         private IModelValidator CreateValidator(Type type)
         {
-            var validators = factories
-                .Select(f => f.Create(type))
-                .Where(v => v != null)
-                .ToList();
+            var validators = this.factories
+                .Select(factory => factory.Create(type))
+                .Where(validator => validator != null)
+                .ToArray();
 
-            if(validators.Count == 0)
+            if(!validators.Any())
             {
                 return null;
             }
 
-            return validators.Count == 1 ? 
+            return (validators.Length == 1) ? 
                 validators[0] : 
-                new CompositeValidator(validators);
+                new CompositeValidator(validators, type);
         }
     }
 }

@@ -16,13 +16,21 @@
         /// <returns>An <see cref="IEnumerable{T}"/> instance, containing <see cref="ModelValidationError"/> objects.</returns>
         public IEnumerable<ModelValidationError> Validate(object instance)
         {
+            var validateable =
+                instance as IValidatableObject;
+
+            if (validateable == null)
+            {
+                return Enumerable.Empty<ModelValidationError>();
+            }
+
             var context =
                 new ValidationContext(instance, null, null);
 
             var result =
-                ((IValidatableObject)instance).Validate(context);
+                validateable.Validate(context);
 
-            return result.Select(r => new ModelValidationError(r.MemberNames, s => r.ErrorMessage));
+            return result.Select(r => new ModelValidationError(r.MemberNames, r.ErrorMessage));
         }
     }
 }

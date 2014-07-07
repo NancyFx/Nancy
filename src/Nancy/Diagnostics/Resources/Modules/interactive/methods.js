@@ -85,7 +85,7 @@
             var executionContext = {};
 
             executionContext.providerName = this.providerName;
-            executionContext.methodName = this.model.MethodName;
+            executionContext.methodName = this.model.methodName;
             executionContext.arguments = [];
 
             _.each(parameters, function (input) {

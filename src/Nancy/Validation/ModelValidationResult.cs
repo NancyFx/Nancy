@@ -1,70 +1,79 @@
 ﻿namespace Nancy.Validation
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
     /// <summary>
-    /// The result of a validation.
+    /// Represents the result of a model validation.
     /// </summary>
     public class ModelValidationResult
     {
         /// <summary>
-        /// Represents an instance of the <see cref="ModelValidationResult"/> type that will
-        /// return <see langword="true"/> when <see cref="IsValid"/> is queried.
+        /// Initializes a new instance of the <see cref="ModelValidationResult"/> class.
         /// </summary>
-        public static readonly ModelValidationResult Valid = new ModelValidationResult();
+        public ModelValidationResult()
+            : this(Enumerable.Empty<ModelValidationError>())
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ModelValidationResult"/> class.
         /// </summary>
-        /// <param name="errors">The errors.</param>
+        /// <param name="errors">The <see cref="ModelValidationError"/> instances that makes up the result.</param>
         public ModelValidationResult(IEnumerable<ModelValidationError> errors)
+            : this(GetModelValidationErrorDictionary((errors ?? Enumerable.Empty<ModelValidationError>()).ToArray()))
         {
-            this.Errors = errors == null
-                ? new List<ModelValidationError>().AsReadOnly()
-                : errors.ToList().AsReadOnly();
         }
 
-        private ModelValidationResult()
-            : this(null)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ModelValidationResult"/> class.
+        /// </summary>
+        /// <param name="errors">The <see cref="ModelValidationError"/> instances that makes up the result, grouped by member name.</param>
+        public ModelValidationResult(IDictionary<string, IList<ModelValidationError>> errors)
         {
+            this.Errors = errors;
         }
 
         /// <summary>
         /// Gets the errors.
         /// </summary>
-        /// <value>An <see cref="IEnumerable{T}"/> that contains the <see cref="ModelValidationError"/> instances.</value>
-        public IEnumerable<ModelValidationError> Errors { get; private set; }
+        /// <value>An <see cref="IDictionary{TKey,TValue}"/> instance that contains <see cref="ModelValidationError"/> instances grouped by property name.</value>
+        public IDictionary<string, IList<ModelValidationError>> Errors { get; set; }
 
         /// <summary>
-        /// Gets a value indicating whether the validated instance is valid.
+        /// Gets a value indicating whether the validated instance is valid or not.
         /// </summary>
         /// <value><see langword="true"/> if the validated instance is valid; otherwise, <see langword="false"/>.</value>
         public bool IsValid
         {
-            get { return !Errors.Any(); }
+            get { return !Errors.Keys.Any(); }
         }
 
-        /// <summary>
-        /// Creates a new ValidationResult with the added error.
-        /// </summary>
-        /// <param name="memberName">Name of the member.</param>
-        /// <param name="errorMessage">The error message.</param>
-        /// <returns>An <see cref="ModelValidationResult"/> instance.</returns>
-        public ModelValidationResult AddError(string memberName, string errorMessage)
+        private static IDictionary<string, IList<ModelValidationError>> GetModelValidationErrorDictionary(ModelValidationError[] results)
         {
-            return new ModelValidationResult(this.Errors.Concat(new[] { new ModelValidationError(memberName, s => errorMessage) }));
-        }
+            var output =
+                new Dictionary<string, IList<ModelValidationError>>(StringComparer.OrdinalIgnoreCase);
 
-        /// <summary>
-        /// Creates a new ValidationResult with the added error.
-        /// </summary>
-        /// <param name="memberNames">The member names.</param>
-        /// <param name="errorMessage">The error message.</param>
-        /// <returns>An <see cref="ModelValidationResult"/> instance.</returns>
-        public ModelValidationResult AddError(IEnumerable<string> memberNames, string errorMessage)
-        {
-            return new ModelValidationResult(Errors.Concat(new[] { new ModelValidationError(memberNames, s => errorMessage) }));
+            if (results == null || !results.Any())
+            {
+                return output;
+            }
+
+            foreach (var result in results)
+            {
+                foreach (var name in result.MemberNames)
+                {
+                    if (!output.ContainsKey(name))
+                    {
+                        output.Add(name, new List<ModelValidationError>());
+                    }
+
+                    output[name].Add(result);
+                }
+            }
+
+            return output;
         }
     }
 }

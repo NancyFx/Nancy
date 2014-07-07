@@ -83,9 +83,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FakeItEasy, Version=1.13.1.0, Culture=neutral, PublicKeyToken=eff28e2146d5fd2c, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\FakeItEasy.1.13.1\lib\net40\FakeItEasy.dll</HintPath>
+    <Reference Include="FakeItEasy">
+      <HintPath>..\packages\FakeItEasy.1.19.0\lib\net40\FakeItEasy.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp">
     </Reference>
@@ -110,6 +109,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="NoAppStartupsFixture.cs" />
     <Compile Include="Extensions\ResponseExtensions.cs" />
     <Compile Include="Fakes\FakeNancyModuleNoRoutes.cs" />
     <Compile Include="Fakes\FakeNancyModuleWithBasePath.cs" />
@@ -128,6 +128,7 @@
     <Compile Include="Helpers\CacheHelpersFixture.cs" />
     <Compile Include="Unit\Bootstrapper\CollectionTypeRegistrationFixture.cs" />
     <Compile Include="Unit\Bootstrapper\InstanceRegistrationFixture.cs" />
+    <Compile Include="Unit\Bootstrapper\NancyBootstrapperWithRequestContainerBaseFixture.cs" />
     <Compile Include="Unit\Bootstrapper\PipelinesFixture.cs" />
     <Compile Include="Unit\Conventions\DefaultAcceptHeaderCoercionConventionsFixture.cs" />
     <Compile Include="Unit\Conventions\DefaultCultureConventionsFixture.cs" />
@@ -137,10 +138,12 @@
     <Compile Include="Unit\DefaultResponseFormatterFactoryFixture.cs" />
     <Compile Include="Unit\Diagnostics\ConcurrentLimitedCollectionFixture.cs" />
     <Compile Include="Unit\Diagnostics\CustomInteractiveDiagnosticsFixture.cs" />
+    <Compile Include="Unit\Diagnostics\DefaultRequestTraceFactoryFixture.cs" />
     <Compile Include="Unit\Diagnostics\DiagnosticsHookFixture.cs" />
     <Compile Include="Unit\ErrorHandling\DefaultStatusCodeHandlerFixture.cs" />
     <Compile Include="Unit\Extensions\TypeExtensionsFixture.cs" />
     <Compile Include="Unit\FormatterExtensionsFixture.cs" />
+    <Compile Include="Unit\Helpers\HttpUtilityFixture.cs" />
     <Compile Include="Unit\MimeTypesFixture.cs" />
     <Compile Include="Unit\ModelBinding\ModelBindingExceptionFixture.cs" />
     <Compile Include="Unit\ModelBinding\PropertyBindingExceptionFixture.cs" />
@@ -184,17 +187,20 @@
     <Compile Include="Unit\NancyModuleFixture.cs" />
     <Compile Include="Unit\AfterPipelineFixture.cs" />
     <Compile Include="Unit\BeforePipelineFixture.cs" />
+    <Compile Include="Unit\ErrorPipelineFixture.cs" />
     <Compile Include="Unit\RequestFixture.cs" />
     <Compile Include="Fakes\FakeModuleCatalog.cs" />
     <Compile Include="Unit\DefaultResponseFormatterFixture.cs" />
     <Compile Include="Unit\RequestHeadersFixture.cs" />
     <Compile Include="Unit\ResponseExtensionsFixture.cs" />
+    <Compile Include="Unit\Responses\DefaultJsonSerializerFixture.cs" />
     <Compile Include="Unit\Responses\EmbeddedFileResponseFixture.cs" />
     <Compile Include="Unit\Responses\Negotiation\MediaRangeFixture.cs" />
     <Compile Include="Unit\Responses\RedirectResponseFixture.cs" />
     <Compile Include="Unit\Responses\StreamResponseFixture.cs" />
     <Compile Include="Unit\Responses\TextResponseFixture.cs" />
     <Compile Include="Unit\Routing\ConstraintNodeRouteResolverFixture.cs" />
+    <Compile Include="Unit\Routing\ConstraintNodeRouteScoringFixture.cs" />
     <Compile Include="Unit\Routing\DefaultNancyModuleBuilderFixture.cs" />
     <Compile Include="Unit\Routing\DefaultRequestDispatcherFixture.cs" />
     <Compile Include="Unit\Routing\DefaultRouteCacheProviderFixture.cs" />
@@ -216,6 +222,7 @@
     <Compile Include="Unit\Security\DefaultCsrfTokenValidatorFixture.cs" />
     <Compile Include="Unit\Security\ModuleSecurityFixture.cs" />
     <Compile Include="Unit\Security\UserIdentityExtensionsFixture.cs" />
+    <Compile Include="Unit\Sessions\CookieBasedSessionsConfigurationFixture.cs" />
     <Compile Include="Unit\Sessions\CookieBasedSessionsFixture.cs" />
     <Compile Include="Unit\Cryptography\RijndaelEncryptionProviderFixture.cs" />
     <Compile Include="Unit\Sessions\DefaultSessionObjectFormatterFixture.cs" />
@@ -313,6 +320,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

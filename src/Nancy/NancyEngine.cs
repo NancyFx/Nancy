@@ -70,64 +70,8 @@
         /// <value>An <see cref="IPipelines"/> instance.</value>
         public Func<NancyContext, IPipelines> RequestPipelinesFactory { get; set; }
 
-        /// <summary>
-        /// Handles an incoming <see cref="Request"/>.
-        /// </summary>
-        /// <param name="request">An <see cref="Request"/> instance, containing the information about the current request.</param>
-        /// <returns>A <see cref="NancyContext"/> instance containing the request/response context.</returns>
-        public NancyContext HandleRequest(Request request)
+        public Task<NancyContext> HandleRequest(Request request, Func<NancyContext, NancyContext> preRequest, CancellationToken cancellationToken)
         {
-            return this.HandleRequest(request, context => context);
-        }
-
-        /// <summary>
-        /// Handles an incoming <see cref="Request"/> async.
-        /// </summary>
-        /// <param name="request">An <see cref="Request"/> instance, containing the information about the current request.</param>
-        /// <param name="onComplete">Delegate to call when the request is complete</param>
-        /// <param name="onError">Deletate to call when any errors occur</param>
-        public void HandleRequest(Request request, Action<NancyContext> onComplete, Action<Exception> onError)
-        {
-            this.HandleRequest(request, null, onComplete, onError);
-        }
-
-        /// <summary>
-        /// Handles an incoming <see cref="Request"/>.
-        /// </summary>
-        /// <param name="request">An <see cref="Request"/> instance, containing the information about the current request.</param>
-        /// <param name="preRequest">Delegate to call before the request is processed</param>
-        /// <returns>A <see cref="NancyContext"/> instance containing the request/response context.</returns>
-        private NancyContext HandleRequest(Request request, Func<NancyContext, NancyContext> preRequest)
-        {
-            var task = this.HandleRequestInternal(request, preRequest);
-
-            task.Wait();
-
-            if (task.IsFaulted)
-            {
-                throw task.Exception ?? new Exception("Request task faulted");
-            }
-
-            return task.Result;
-        }
-
-        /// <summary>
-        /// Handles an incoming <see cref="Request"/> async.
-        /// </summary>
-        /// <param name="request">An <see cref="Request"/> instance, containing the information about the current request.</param>
-        /// <param name="preRequest">Pre request hook from the host</param>
-        /// <param name="onComplete">Delegate to call when the request is complete</param>
-        /// <param name="onError">Deletate to call when any errors occur</param>
-        public void HandleRequest(Request request, Func<NancyContext, NancyContext> preRequest, Action<NancyContext> onComplete, Action<Exception> onError)
-        {
-            this.HandleRequestInternal(request, preRequest)
-                .WhenCompleted(t => onComplete(t.Result), t => onError(t.Exception));
-        }
-
-        private Task<NancyContext> HandleRequestInternal(Request request, Func<NancyContext, NancyContext> preRequest)
-        {
-            // TODO - replace continuations with a fast continue from the pipeline spike
-
             var tcs = new TaskCompletionSource<NancyContext>();
 
             if (request == null)
@@ -150,21 +94,24 @@
                 return tcs.Task;
             }
 
-            var pipelines =
-                this.RequestPipelinesFactory.Invoke(context);
-
-            // TODO - potentially get this passed in so requests can be cancelled
-            var cancellationToken = new CancellationToken();
-            context.Items["CANCELLATION_TOKEN"] = cancellationToken; // So we get disposed when the request is complete
+            var pipelines = this.RequestPipelinesFactory.Invoke(context);
 
             var task = this.InvokeRequestLifeCycle(context, cancellationToken, pipelines);
 
             task.WhenCompleted(
                 completeTask =>
                 {
-                    this.CheckStatusCodeHandler(completeTask.Result);
+                    try
+                    {
+                        this.CheckStatusCodeHandler(completeTask.Result);
 
-                    this.SaveTraceInformation(completeTask.Result);
+                        this.SaveTraceInformation(completeTask.Result);
+                    }
+                    catch (Exception ex)
+                    {
+                        tcs.SetException(ex);
+                        return;
+                    }
 
                     tcs.SetResult(completeTask.Result);
                 },
@@ -191,12 +138,8 @@
 
             var sessionGuid = this.GetDiagnosticsSessionGuid(ctx);
 
-            ctx.Trace.ResponseType = ctx.Response.GetType();
-            ctx.Trace.StatusCode = ctx.Response.StatusCode;
-            ctx.Trace.RequestContentType = ctx.Request.Headers.ContentType;
-            ctx.Trace.ResponseContentType = ctx.Response.ContentType;
-            ctx.Trace.RequestHeaders = ctx.Request.Headers.ToDictionary(kv => kv.Key, kv => kv.Value);
-            ctx.Trace.ResponseHeaders = ctx.Response.Headers;
+            ctx.Trace.RequestData = ctx.Request;
+            ctx.Trace.ResponseData = ctx.Response;
 
             this.requestTracing.AddRequestDiagnosticToSession(sessionGuid, ctx);
 
@@ -341,7 +284,7 @@
             }
         }
 
-        private static Exception FlattenException(Exception exception)
+        internal static Exception FlattenException(Exception exception)
         {
             if (exception is AggregateException)
             {

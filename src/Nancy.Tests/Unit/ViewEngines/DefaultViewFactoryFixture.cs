@@ -4,6 +4,8 @@ namespace Nancy.Tests.Unit.ViewEngines
     using System.Dynamic;
     using System.IO;
     using FakeItEasy;
+
+    using Nancy.Diagnostics;
     using Nancy.ViewEngines;
     using Nancy.Tests.Fakes;
     using Xunit;
@@ -31,7 +33,13 @@ namespace Nancy.Tests.Unit.ViewEngines
             this.viewLocationContext =
                 new ViewLocationContext
                 {
-                    Context = new NancyContext()
+                    Context = new NancyContext
+                    {
+                        Trace = new DefaultRequestTrace
+                        {
+                            TraceLog = new DefaultTraceLog()
+                        }
+                    }
                 };
         }
 
@@ -190,7 +198,13 @@ namespace Nancy.Tests.Unit.ViewEngines
             var viewContext = 
                 new ViewLocationContext
                 {
-                    Context = new NancyContext(),
+                    Context = new NancyContext
+                    {
+                        Trace = new DefaultRequestTrace
+                        {
+                            TraceLog = new DefaultTraceLog()
+                        }
+                    },
                     ModulePath = "/bar"
                 };
 

@@ -27,10 +27,13 @@ namespace Nancy.Tests.Fakes
                 Replace("\"", "&quot;");
         }
 
-        private class FakeContext
+        public class FakeContext
         {
+            public dynamic ViewBag { get; private set; }
+
             public FakeContext()
             {
+                ViewBag = new DynamicDictionary();
                 this.User = new FakeUser { Username = "Frank123" };
             }
 

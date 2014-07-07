@@ -21,9 +21,11 @@ namespace Nancy.Validation.FluentValidation
         /// specified <see cref="IValidator"/>.
         /// </summary>
         /// <param name="validator">The Fluent Validation validator that should be used.</param>
-        /// <param name="factory"> </param>
-        public FluentValidationValidator(IValidator validator, IFluentAdapterFactory factory)
-        {
+        /// <param name="factory">Factory for creating adapters for the type that is being validated.</param>
+        /// <param name="modelType">The type of the model that is being validated.</param>
+        public FluentValidationValidator(IValidator validator, IFluentAdapterFactory factory, Type modelType)
+         {
+            this.ModelType = modelType;
             this.validator = validator;
             this.factory = factory;
         }
@@ -38,11 +40,17 @@ namespace Nancy.Validation.FluentValidation
         }
 
         /// <summary>
+        /// Gets the <see cref="System.Type"/> of the model that is being validated by the validator.
+        /// </summary>
+        public Type ModelType { get; private set; }
+
+        /// <summary>
         /// Validates the specified instance.
         /// </summary>
-        /// <param name="instance">The instance that is being validated.</param>
-        /// <returns>A ValidationResult with the result of the validation.</returns>
-        public ModelValidationResult Validate(object instance)
+        /// <param name="instance">The instance that should be validated.</param>
+        /// <param name="context">The <see cref="NancyContext"/> of the current request.</param>
+        /// <returns>A <see cref="ModelValidationResult"/> with the result of the validation.</returns>
+        public ModelValidationResult Validate(object instance, NancyContext context)
         {
             var result =
                 this.validator.Validate(instance);
@@ -78,19 +86,19 @@ namespace Nancy.Validation.FluentValidation
                 }
             }
 
-            return new ModelValidationDescriptor(rules);
+            return new ModelValidationDescriptor(rules, this.ModelType);
         }
 
         private static IEnumerable<ModelValidationError> GetErrors(ValidationResult results)
         {
             return results.IsValid ? 
                 Enumerable.Empty<ModelValidationError>() :
-                results.Errors.Select(error => new ModelValidationError(new[] { error.PropertyName }, s => error.ErrorMessage));
+                results.Errors.Select(error => new ModelValidationError(new[] { error.PropertyName }, error.ErrorMessage));
         }
 
         private IEnumerable<ModelValidationRule> GetValidationRule(PropertyRule rule, IPropertyValidator propertyValidator)
         {
-            return this.factory.Create(rule, propertyValidator).GetRules();
+            return this.factory.Create(propertyValidator).GetRules(rule, propertyValidator);
         }
     }
 }

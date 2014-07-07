@@ -27,7 +27,7 @@ namespace Nancy
 
                 var outputBytes = outputStream.GetBuffer();
 
-                return Convert.ToBase64String(outputStream.GetBuffer());
+                return Convert.ToBase64String(outputBytes);
             }
         }
 

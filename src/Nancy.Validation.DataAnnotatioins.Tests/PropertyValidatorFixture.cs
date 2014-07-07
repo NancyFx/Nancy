@@ -26,7 +26,7 @@
                 A.Fake<IDataAnnotationsValidatorAdapter>();
 
             this.error1 =
-                new ModelValidationError("error1", x => string.Empty);
+                new ModelValidationError("error1", string.Empty);
 
             A.CallTo(() => this.adapter1.Validate(A<object>._, A<ValidationAttribute>._, A<PropertyDescriptor>._))
                 .Returns(new[] {this.error1});
@@ -35,7 +35,7 @@
                 A.Fake<IDataAnnotationsValidatorAdapter>();
 
             this.error2 =
-                new ModelValidationError("error2", x => string.Empty);
+                new ModelValidationError("error2", string.Empty);
 
             A.CallTo(() => this.adapter2.Validate(A<object>._, A<ValidationAttribute>._, A<PropertyDescriptor>._))
                 .Returns(new[] { this.error2 });

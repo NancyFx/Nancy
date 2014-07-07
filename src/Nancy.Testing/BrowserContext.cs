@@ -20,10 +20,11 @@
         public BrowserContext()
         {
             this.Values.Headers = new Dictionary<string, IEnumerable<string>>();
-            this.Values.Protocol = "http";
+            this.Values.Protocol = String.Empty;
             this.Values.QueryString = String.Empty;
             this.Values.BodyString = String.Empty;
             this.Values.FormValues = String.Empty;
+            this.Values.HostName = String.Empty;
         }
 
         /// <summary>
@@ -42,6 +43,11 @@
         /// Gets or sets the querystring
         /// </summary>
         string IBrowserContextValues.QueryString { get; set; }
+
+        /// <summary>
+        /// Gets or sets the user host name
+        /// </summary>
+        string IBrowserContextValues.HostName { get; set; }
 
         /// <summary>
         /// Gets or sets the user host address
@@ -76,6 +82,17 @@
         public void Body(string body)
         {
             this.Values.BodyString = body;
+        }
+
+        /// <summary>
+        /// Adds a body to the HTTP request.
+        /// </summary>
+        /// <param name="body">A string that should be used as the HTTP request body.</param>
+        /// <param name="contentType">Content type of the HTTP request body.</param>
+        public void Body(string body, string contentType)
+        {
+            this.Values.BodyString = body;
+            this.Header("Content-Type", contentType);
         }
 
         /// <summary>
@@ -160,6 +177,15 @@
         public void UserHostAddress(string userHostAddress)
         {
             this.Values.UserHostAddress = userHostAddress;
+        }
+
+        /// <summary>
+        /// Sets the host name.
+        /// </summary>
+        /// <param name="hostName">is the host name of request url string</param>
+        public void HostName(string hostName)
+        {
+            this.Values.HostName = hostName;
         }
 
         /// <summary>

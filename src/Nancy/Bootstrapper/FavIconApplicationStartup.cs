@@ -68,36 +68,39 @@
                 return null;
             }
 
-            byte[] icon = null;
             var extensions = new[] { "ico", "png" };
 
-            var locatedFavIcons = extensions.SelectMany(extension => Directory
-                .EnumerateFiles(rootPathProvider.GetRootPath(), string.Concat("favicon.", extension), SearchOption.AllDirectories))
-                .ToArray();
-
-            if (locatedFavIcons.Any())
+            var locatedFavIcon = extensions.SelectMany(EnumerateFiles).FirstOrDefault();
+            if (locatedFavIcon == null)
             {
-                try
-                {
-                    var image =
-                        Image.FromFile(locatedFavIcons.First());
-
-                    var converter = new ImageConverter();
-
-                    icon = (byte[])converter.ConvertTo(image, typeof(byte[]));
-                }
-                catch (Exception e)
-                {
-                    if (!StaticConfiguration.DisableErrorTraces)
-                    {
-                        throw new InvalidDataException("Unable to load favicon, please check the format is compatible with GDI+", e);
-                    }
-
-                    return null;
-                }
+                return null;
             }
 
-            return icon;
+            try
+            {
+                var image = Image.FromFile(locatedFavIcon);
+
+                var converter = new ImageConverter();
+
+                return (byte[]) converter.ConvertTo(image, typeof(byte[]));
+            }
+            catch (Exception e)
+            {
+                if (!StaticConfiguration.DisableErrorTraces)
+                {
+                    throw new InvalidDataException("Unable to load favicon, please check the format is compatible with GDI+", e);
+                }
+
+                return null;
+            }
+        }
+
+        private static IEnumerable<string> EnumerateFiles(string extension)
+        {
+            var rootPath = rootPathProvider.GetRootPath();
+            var fileName = string.Concat("favicon.", extension);
+
+            return Directory.EnumerateFiles(rootPath, fileName, SearchOption.AllDirectories);
         }
 
         private static byte[] ScanForFavIcon()

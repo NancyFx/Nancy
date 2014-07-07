@@ -3,7 +3,7 @@ namespace Nancy.Routing.Trie.Nodes
     using System.Text.RegularExpressions;
 
     /// <summary>
-    /// A regular expression capture node e.g. (?<foo>\d{2,4})
+    /// A regular expression capture node e.g. (?&lt;foo>\d{2,4})
     /// </summary>
     public class RegExNode : TrieNode
     {

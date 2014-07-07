@@ -44,6 +44,11 @@
         string QueryString { get; set; }
 
         /// <summary>
+        /// Gets or sets the basePath string
+        /// </summary>
+        string HostName { get; set; }
+
+        /// <summary>
         /// Gets or sets the user host address
         /// </summary>
         string UserHostAddress { get; set; }

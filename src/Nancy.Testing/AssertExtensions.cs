@@ -70,7 +70,7 @@ namespace Nancy.Testing
         /// </summary>
         public static AndConnector<NodeWrapper> ShouldBeOfClass(this NodeWrapper node, string className)
         {
-            Asserts.Equal(node.Attributes["class"], className);
+            Asserts.Equal(className, node.Attributes["class"]);
 
             return new AndConnector<NodeWrapper>(node);
         }
@@ -103,7 +103,7 @@ namespace Nancy.Testing
         /// <summary>
         /// Asserts that every node contains the specified text
         /// </summary>
-        [Obsolete("This method has a ambiguous name and will be removed. Use ShouldContainAll instead.")]
+        [Obsolete("This method has a ambiguous name and will be removed. Use AllShouldContain instead.")]
         public static AndConnector<QueryWrapper> ShouldContain(this QueryWrapper query, string contents, StringComparison comparisonType = StringComparison.InvariantCulture)
         {
             return query.AllShouldContain(contents, comparisonType);
@@ -148,7 +148,7 @@ namespace Nancy.Testing
         /// </summary>
         public static AndConnector<NodeWrapper> ShouldContainAttribute(this NodeWrapper node, string name, string value, StringComparison comparisonType = StringComparison.InvariantCulture)
         {
-            Asserts.Equal(node.Attributes[name], value, comparisonType);
+            Asserts.Equal(value, node.Attributes[name], comparisonType);
 
             return new AndConnector<NodeWrapper>(node);
         }

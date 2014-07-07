@@ -42,7 +42,7 @@
         /// Gets the route, and the corresponding parameter dictionary from the URL
         /// </summary>
         /// <param name="context">Current context</param>
-        /// <returns>Tuple - Item1 being the Route, Item2 being the parameters dictionary, Item3 being the prereq, Item4 being the postreq, Item5 being the error handler</returns>
+        /// <returns>A <see cref="ResolveResult"/> containing the resolved route information.</returns>
         public ResolveResult Resolve(NancyContext context)
         {
             var pathDecoded = 

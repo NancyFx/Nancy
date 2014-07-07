@@ -130,6 +130,22 @@
         }
 
         [Fact]
+        public void Should_resolve_custom_datetime_constraint()
+        {
+            var result = this.browser.Get("/customDatetimeConstraint/2013-10-02");
+
+            result.Body.AsString().ShouldEqual("CustomDateTimeConstraint");
+        }
+
+        [Fact]
+        public void Should_not_resolve_custom_datetime_constraint()
+        {
+            var result = this.browser.Get("/customDatetimeConstraint/2013-20-02");
+
+            result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
+        }
+
+        [Fact]
         public void Should_not_resolve_min_constraint_as_string()
         {
             var result = this.browser.Get("/minConstraint/foo");
@@ -288,6 +304,8 @@
                 Get["/alphaConstraint/{value:alpha}"] = _ => "AlphaConstraint";
 
                 Get["/datetimeConstraint/{value:datetime}"] = _ => DateTime.Parse(_.value).ToString("yyyy-MM-dd hh:mm:ss", CultureInfo.InvariantCulture);
+
+                Get["/customDatetimeConstraint/{value:datetime(yyyy-MM-dd)}"] = _ => "CustomDateTimeConstraint";
 
                 Get["/minConstraint/{value:min(4)}"] = _ => "MinConstraint";
 

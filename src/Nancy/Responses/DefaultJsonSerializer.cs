@@ -9,6 +9,9 @@
 
     public class DefaultJsonSerializer : ISerializer
     {
+        private bool? retainCasing;
+        private bool? iso8601DateFormat;
+
         /// <summary>
         /// Whether the serializer can serialize the content type
         /// </summary>
@@ -29,6 +32,28 @@
         }
 
         /// <summary>
+        /// Set to true to retain the casing used in the C# code in produced JSON.
+        /// Set to false to use camelCasig in the produced JSON.
+        /// False by default.
+        /// </summary>
+        public bool RetainCasing
+        {
+            get { return retainCasing.HasValue ? retainCasing.Value : JsonSettings.RetainCasing; }
+            set { retainCasing = value; }
+        }
+
+        /// <summary>
+        /// Set to true to use the ISO8601 format for datetimes in produced JSON.
+        /// Set to false to use the WCF \/Date()\/ format in the the produced JSON.
+        /// True by default.
+        /// </summary>
+        public bool ISO8601DateFormat
+        {
+            get { return iso8601DateFormat.HasValue ? iso8601DateFormat.Value : JsonSettings.ISO8601DateFormat; }
+            set { iso8601DateFormat = value; }
+        }
+
+        /// <summary>
         /// Serialize the given model with the given contentType
         /// </summary>
         /// <param name="contentType">Content type to serialize into</param>
@@ -39,7 +64,7 @@
         {
             using (var writer = new StreamWriter(new UnclosableStreamWrapper(outputStream)))
             {
-                var serializer = new JavaScriptSerializer(null, false, JsonSettings.MaxJsonLength, JsonSettings.MaxRecursions);
+                var serializer = new JavaScriptSerializer(null, false, JsonSettings.MaxJsonLength, JsonSettings.MaxRecursions, RetainCasing, ISO8601DateFormat);
             
                 serializer.RegisterConverters(JsonSettings.Converters, JsonSettings.PrimitiveConverters);
 

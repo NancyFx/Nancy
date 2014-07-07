@@ -76,6 +76,59 @@ namespace Nancy.Extensions
         }
 
         /// <summary>
+        /// Get a thrown exception from the context.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <returns>The thrown exception or <c>null</c> if not exception has been thrown.</returns>
+        public static Exception GetException(this NancyContext context)
+        {
+            return GetException<Exception>(context);
+        }
+
+        /// <summary>
+        /// Get a thrown exception of the given type from the context.
+        /// </summary>
+        /// <typeparam name="T">The type of exception to get.</typeparam>
+        /// <param name="context">The context.</param>
+        /// <returns>The thrown exception or <c>null</c> if not exception has been thrown.</returns>
+        public static T GetException<T>(this NancyContext context) where T : Exception
+        {
+            T exception;
+            return TryGetException(context, out exception) ? exception : null;
+        }
+
+        /// <summary>
+        /// Tries to get a thrown exception from the context.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="exception">The thrown exception.</param>
+        /// <returns><c>true</c> if an exception has been thrown during the request, <c>false</c> otherwise.</returns>
+        public static bool TryGetException(this NancyContext context, out Exception exception)
+        {
+            return TryGetException<Exception>(context, out exception);
+        }
+
+        /// <summary>
+        /// Tries to get a thrown exception of the given type from the context.
+        /// </summary>
+        /// <typeparam name="T">The type of exception to get.</typeparam>
+        /// <param name="context">The context.</param>
+        /// <param name="exception">The thrown exception.</param>
+        /// <returns><c>true</c> if an exception of the given type has been thrown during the request, <c>false</c> otherwise.</returns>
+        public static bool TryGetException<T>(this NancyContext context, out T exception) where T : Exception
+        {
+            object exceptionObject;
+            if (context.Items.TryGetValue(NancyEngine.ERROR_EXCEPTION, out exceptionObject) && exceptionObject is T)
+            {
+                exception = exceptionObject as T;
+                return true;
+            }
+
+            exception = null;
+            return false;
+        }
+
+        /// <summary>
         /// Shortcut extension method for writing trace information
         /// </summary>
         /// <param name="context">Nancy context</param>
@@ -98,19 +151,28 @@ namespace Nancy.Extensions
                 return false;
             }
 
-            Uri uri;
-
-            if (Uri.TryCreate(url, UriKind.Relative, out uri))
-            {
-                return true;
-            }
-
-            if (!Uri.TryCreate(url, UriKind.Absolute, out uri))
+            if (!Uri.IsWellFormedUriString(url, UriKind.RelativeOrAbsolute))
             {
                 return false;
             }
 
-            return string.Equals(uri.Host, context.Request.Url.HostName, StringComparison.OrdinalIgnoreCase);
+            Uri uri;
+            if (Uri.TryCreate(url, UriKind.Absolute, out uri))
+            {
+                var currentHostName = context.Request.Url.HostName;
+
+                // Mono does not populate the uri.Host correctly when url
+                // is in //hostname format causing the simple check to fail.
+                if (uri.Scheme.Equals("file"))
+                {
+                    var localFormat = string.Format("//{0}", currentHostName);
+                    return !url.StartsWith("//") || url.StartsWith(localFormat);
+                }
+
+                return uri.Host == currentHostName;
+            }
+
+            return Uri.TryCreate(url, UriKind.Relative, out uri);
         }
     }
 }

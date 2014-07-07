@@ -56,7 +56,9 @@
         /// <returns>A <see cref="Response"/> instance.</returns>
         public Response Process(MediaRange requestedMediaRange, dynamic model, NancyContext context)
         {
-            return this.viewFactory.RenderView(context.NegotiationContext.ViewName, model, GetViewLocationContext(context));
+            var viewResponse = this.viewFactory.RenderView(context.NegotiationContext.ViewName, model, GetViewLocationContext(context));
+
+            return StaticConfiguration.DisableErrorTraces ? viewResponse : new MaterialisingResponse(viewResponse);
         }
 
         private static ViewLocationContext GetViewLocationContext(NancyContext context)

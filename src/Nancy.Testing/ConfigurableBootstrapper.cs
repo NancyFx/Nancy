@@ -13,6 +13,7 @@ namespace Nancy.Testing
     using Nancy.ErrorHandling;
     using Nancy.ModelBinding;
     using Nancy.Routing;
+    using Nancy.Routing.Constraints;
     using Nancy.Routing.Trie;
     using Nancy.Security;
     using Nancy.TinyIoc;
@@ -33,6 +34,7 @@ namespace Nancy.Testing
         private DiagnosticsConfiguration diagnosticConfiguration;
         private readonly List<Action<TinyIoCContainer, IPipelines>> applicationStartupActions;
         private readonly List<Action<TinyIoCContainer, IPipelines, NancyContext>> requestStartupActions;
+        private readonly Assembly nancyAssembly = typeof(NancyEngine).Assembly;
 
         /// <summary>
         /// Test project name suffixes that will be stripped from the test name project
@@ -42,6 +44,8 @@ namespace Nancy.Testing
         public static IList<string> TestAssemblySuffixes = new[] { "test", "tests", "unittests", "specs", "specifications" };
 
         private bool allDiscoveredModules;
+        private bool autoRegistrations = true;
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConfigurableBootstrapper"/> class.
@@ -309,6 +313,9 @@ namespace Nancy.Testing
                 this.RegisterBootstrapperTypes(container);
             }
 
+            RegisterTypesInternal(this.ApplicationContainer, this.GetTypeRegistrations());
+            RegisterCollectionTypesInternal(this.ApplicationContainer, this.GetCollectionTypeRegistrations());
+            RegisterInstancesInternal(this.ApplicationContainer, this.registeredInstances);
         }
 
         /// <summary>
@@ -377,12 +384,29 @@ namespace Nancy.Testing
         }
 
         /// <summary>
+        /// Gets all registered request startup tasks
+        /// </summary>
+        /// <returns>An <see cref="System.Collections.Generic.IEnumerable{T}"/> instance containing <see cref="IRequestStartup"/> instances.</returns>
+        protected override IEnumerable<IRequestStartup> RegisterAndGetRequestStartupTasks(TinyIoCContainer container, Type[] requestStartupTypes)
+        {
+            container.RegisterMultiple(typeof(IRequestStartup), requestStartupTypes);
+
+            return container.ResolveAll<IRequestStartup>(false);
+        }
+
+        /// <summary>
         /// Gets all registered application registration tasks
         /// </summary>
-        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IApplicationRegistrations"/> instances.</returns>
-        protected override IEnumerable<IApplicationRegistrations> GetApplicationRegistrationTasks()
+        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IRegistrations"/> instances.</returns>
+        protected override IEnumerable<IRegistrations> GetRegistrationTasks()
         {
-            return this.ApplicationContainer.ResolveAll<IApplicationRegistrations>(false);
+            if (this.autoRegistrations)
+            {
+                return this.ApplicationContainer.ResolveAll<IRegistrations>(false);
+            }
+
+            return this.ApplicationContainer.ResolveAll<IRegistrations>(false)
+                       .Where(x => x.GetType().Assembly == nancyAssembly);
         }
 
         /// <summary>
@@ -409,13 +433,19 @@ namespace Nancy.Testing
         /// <param name="typeRegistrations">Type registrations to register</param>
         protected override void RegisterTypes(TinyIoCContainer container, IEnumerable<TypeRegistration> typeRegistrations)
         {
-            var configuredTypes = this.GetTypeRegistrations().ToList();
+            var configuredTypes =
+                this.GetTypeRegistrations().ToList();
 
-            typeRegistrations = configuredTypes
-                .Concat(typeRegistrations.Where(x => configuredTypes.All(y => y.RegistrationType != x.RegistrationType)))
-                .Where(x => this.registeredInstances.All(y => y.RegistrationType != x.RegistrationType));
+            var filtered = typeRegistrations
+                .Where(x => !configuredTypes.Any(y => y.RegistrationType == x.RegistrationType))
+                .Where(x => !this.registeredInstances.Any(y => y.RegistrationType == x.RegistrationType));
 
-            foreach (var typeRegistration in typeRegistrations)
+            RegisterTypesInternal(container, filtered);
+        }
+
+        private static void RegisterTypesInternal(TinyIoCContainer container, IEnumerable<TypeRegistration> filtered)
+        {
+            foreach (var typeRegistration in filtered)
             {
                 container.Register(typeRegistration.RegistrationType, typeRegistration.ImplementationType).AsSingleton();
             }
@@ -429,14 +459,21 @@ namespace Nancy.Testing
         /// <param name="collectionTypeRegistrations">Collection type registrations to register</param>
         protected override void RegisterCollectionTypes(TinyIoCContainer container, IEnumerable<CollectionTypeRegistration> collectionTypeRegistrations)
         {
-            var configuredCollectionTypes = this.GetCollectionTypeRegistrations().ToList();
+            var configuredCollectionTypes =
+                this.GetCollectionTypeRegistrations().ToList();
 
-            collectionTypeRegistrations = configuredCollectionTypes
-                .Concat(collectionTypeRegistrations.Where(x => configuredCollectionTypes.All(y => y.RegistrationType != x.RegistrationType)));
+            var filtered = collectionTypeRegistrations
+                .Where(x => !configuredCollectionTypes.Any(y => y.RegistrationType == x.RegistrationType));
 
-            foreach (var collectionTypeRegistration in collectionTypeRegistrations)
+            RegisterCollectionTypesInternal(container, filtered);
+        }
+
+        private static void RegisterCollectionTypesInternal(TinyIoCContainer container, IEnumerable<CollectionTypeRegistration> filtered)
+        {
+            foreach (var collectionTypeRegistration in filtered)
             {
-                container.RegisterMultiple(collectionTypeRegistration.RegistrationType, collectionTypeRegistration.ImplementationTypes);
+                container.RegisterMultiple(collectionTypeRegistration.RegistrationType,
+                    collectionTypeRegistration.ImplementationTypes);
             }
         }
 
@@ -447,11 +484,19 @@ namespace Nancy.Testing
         /// <param name="instanceRegistrations">Instance registration types</param>
         protected override void RegisterInstances(TinyIoCContainer container, IEnumerable<InstanceRegistration> instanceRegistrations)
         {
-            instanceRegistrations = this.registeredInstances
-                .Concat(instanceRegistrations.Where(x => this.registeredInstances.All(y => y.RegistrationType != x.RegistrationType)))
-                .Where(x => this.GetTypeRegistrations().All(y => y.RegistrationType != x.RegistrationType));
+            var configuredInstanceRegistrations = this.GetTypeRegistrations();
 
-            foreach (var instanceRegistration in instanceRegistrations)
+            var fileteredInstanceRegistrations = instanceRegistrations
+                .Where(x => !this.registeredInstances.Any(y => y.RegistrationType == x.RegistrationType))
+                .Where(x => !configuredInstanceRegistrations.Any(y => y.RegistrationType == x.RegistrationType))
+                .ToList();
+
+            RegisterInstancesInternal(container, fileteredInstanceRegistrations);
+        }
+
+        private static void RegisterInstancesInternal(TinyIoCContainer container, IEnumerable<InstanceRegistration> fileteredInstanceRegistrations)
+        {
+            foreach (var instanceRegistration in fileteredInstanceRegistrations)
             {
                 container.Register(
                     instanceRegistration.RegistrationType,
@@ -617,7 +662,7 @@ namespace Nancy.Testing
             {
                 this.bootstrapper.registeredTypes.Add(new TypeRegistration(typeof(T), typeof(T)));
 
-                foreach (var interfaceType in typeof(T).GetInterfaces())
+                foreach (var interfaceType in GetSafeInterfaces(typeof(T)))
                 {
                     this.bootstrapper.registeredTypes.Add(new TypeRegistration(interfaceType, typeof(T)));
                 }
@@ -635,12 +680,17 @@ namespace Nancy.Testing
             {
                 this.bootstrapper.registeredInstances.Add(new InstanceRegistration(typeof(T), instance));
 
-                foreach (var interfaceType in instance.GetType().GetInterfaces())
+                foreach (var interfaceType in GetSafeInterfaces(instance.GetType()))
                 {
                     this.bootstrapper.registeredInstances.Add(new InstanceRegistration(interfaceType, instance));
                 }
 
                 return this;
+            }
+
+            private static IEnumerable<Type> GetSafeInterfaces(Type type)
+            {
+                return type.GetInterfaces().Where(x => x != typeof(IDisposable));
             }
 
             /// <summary>
@@ -659,7 +709,7 @@ namespace Nancy.Testing
             /// </summary>
             /// <param name="dependencies">The instances of the dependencies that should be registered with the bootstrapper.</param>
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
-            public ConfigurableBootstrapperConfigurator Dependencies(params object[] dependencies) 
+            public ConfigurableBootstrapperConfigurator Dependencies(params object[] dependencies)
             {
                 foreach (var dependency in dependencies)
                 {
@@ -674,14 +724,14 @@ namespace Nancy.Testing
             /// </summary>
             /// <param name="dependencies">An array of maps between the interfaces and instances that should be registered with the bootstrapper.</param>
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
-            public ConfigurableBootstrapperConfigurator MappedDependencies<T, K>(IEnumerable<Tuple<T, K>> dependencies) 
+            public ConfigurableBootstrapperConfigurator MappedDependencies<T, K>(IEnumerable<Tuple<T, K>> dependencies)
                 where T : Type
-                where K: class 
+                where K : class
             {
                 foreach (var dependency in dependencies)
                 {
-                   this.bootstrapper.registeredInstances.Add(
-                       new InstanceRegistration(dependency.Item1, dependency.Item2));
+                    this.bootstrapper.registeredInstances.Add(
+                        new InstanceRegistration(dependency.Item1, dependency.Item2));
                 }
 
                 return this;
@@ -720,7 +770,7 @@ namespace Nancy.Testing
             }
 
             /// <summary>
-            /// Disables the auto registration behavior of the bootstrapper
+            /// Enables the auto registration behavior of the bootstrapper
             /// </summary>
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator EnableAutoRegistration()
@@ -906,6 +956,30 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator RenderContextFactory<T>() where T : IRenderContextFactory
             {
                 this.bootstrapper.configuration.RenderContextFactory = typeof(T);
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to use the provided instance of <see cref="IRequestTraceFactory"/>.
+            /// </summary>
+            /// <param name="requestTraceFactory">The <see cref="IRequestTraceFactory"/> instance that should be used by the bootstrapper.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator RequestTraceFactory(IRequestTraceFactory requestTraceFactory)
+            {
+                this.bootstrapper.registeredInstances.Add(
+                    new InstanceRegistration(typeof(IRequestTraceFactory), requestTraceFactory));
+
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to create an <see cref="IRequestTraceFactory"/> instance of the specified type.
+            /// </summary>
+            /// <typeparam name="T">The type of the <see cref="IRequestTraceFactory"/> that the bootstrapper should use.</typeparam>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator RequestTraceFactory<T>() where T : IRequestTraceFactory
+            {
+                this.bootstrapper.configuration.RequestTraceFactory = typeof(T);
                 return this;
             }
 
@@ -1154,6 +1228,30 @@ namespace Nancy.Testing
             }
 
             /// <summary>
+            /// Configures the bootstrapper to use the provided instance of <see cref="IResourceReader"/>.
+            /// </summary>
+            /// <param name="resourceReader">The <see cref="IResourceReader"/> instance that should be used by the bootstrapper.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator ResourceReader(IResourceReader resourceReader)
+            {
+                this.bootstrapper.registeredInstances.Add(
+                    new InstanceRegistration(typeof(IResourceReader), resourceReader));
+
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to create an <see cref="IResourceReader"/> instance of the specified type.
+            /// </summary>
+            /// <typeparam name="T">The type of the <see cref="IResourceReader"/> that the bootstrapper should use.</typeparam>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator ResourceReader<T>() where T : IResourceReader
+            {
+                this.bootstrapper.configuration.ResourceReader = typeof(T);
+                return this;
+            }
+
+            /// <summary>
             /// Configures the bootstrapper to create an <see cref="IRouteDescriptionProvider"/> instance of the specified type.
             /// </summary>
             /// <typeparam name="T">The type of the <see cref="IRouteDescriptionProvider"/> that the bootstrapper should use.</typeparam>
@@ -1175,6 +1273,61 @@ namespace Nancy.Testing
             {
                 this.bootstrapper.registeredInstances.Add(
                     new InstanceRegistration(typeof(IRouteDescriptionProvider), routeDescriptionProvider));
+
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to use the provided instance of <see cref="IRouteMetadataProvider"/>.
+            /// </summary>
+            /// <param name="routeMetadataProviders">The <see cref="IRouteMetadataProvider"/> instance that should be used by the bootstrapper.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator RouteMetadataProvider(IRouteMetadataProvider routeMetadataProviders)
+            {
+                this.bootstrapper.registeredInstances.Add(
+                    new InstanceRegistration(typeof(IRouteMetadataProvider), routeMetadataProviders));
+
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to create an <see cref="IRouteMetadataProvider"/> instance of the specified type.
+            /// </summary>
+            /// <typeparam name="T">The type of the <see cref="IRouteMetadataProvider"/> that the bootstrapper should use.</typeparam>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator RouteMetadataProvider<T>() where T : IRouteMetadataProvider
+            {
+                this.bootstrapper.registeredTypes.Add(
+                    new CollectionTypeRegistration(typeof(IRouteMetadataProvider), new[] { typeof(T) }));
+
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to use the provided <see cref="IRouteMetadataProvider"/> types.
+            /// </summary>
+            /// <param name="routeMetadataProviders">The <see cref="IRouteMetadataProvider"/> types that should be used by the bootstrapper.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator RouteMetadataProviders(params Type[] routeMetadataProviders)
+            {
+                this.bootstrapper.registeredTypes.Add(
+                    new CollectionTypeRegistration(typeof(IRouteMetadataProvider), routeMetadataProviders));
+
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to use the provided instances of <see cref="IRouteMetadataProvider"/>.
+            /// </summary>
+            /// <param name="routeMetadataProviders">The <see cref="IRouteMetadataProvider"/> types that should be used by the bootstrapper.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator RouteMetadataProviders(params IRouteMetadataProvider[] routeMetadataProviders)
+            {
+                foreach (var routeMetadataProvider in routeMetadataProviders)
+                {
+                    this.bootstrapper.registeredTypes.Add(
+                        new InstanceRegistration(typeof(IRouteMetadataProvider), routeMetadataProvider));
+                }
 
                 return this;
             }
@@ -1616,6 +1769,52 @@ namespace Nancy.Testing
                 return this;
             }
 
+            /// <summary>
+            /// Configures the bootstrapper to create an <see cref="IRouteSegmentConstraint"/> instance of the specified type.
+            /// </summary>
+            /// <typeparam name="T">The type of the <see cref="IRouteSegmentConstraint"/> that the bootstrapper should use.</typeparam>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator RouteSegmentConstraint<T>() where T : IRouteSegmentConstraint
+            {
+                this.bootstrapper.configuration.RouteSegmentConstraints = new List<Type> { typeof(T) };
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to use specific route segment constraints.
+            /// </summary>
+            /// <param name="types">Collection of route segment constraint types.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator RouteSegmentConstraints(params Type[] types)
+            {
+                this.bootstrapper.configuration.RouteSegmentConstraints = new List<Type>(types);
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to use the provided instance of <see cref="IResponseNegotiator"/>.
+            /// </summary>
+            /// <param name="negotiator">The <see cref="IResponseNegotiator"/> instance that should be used by the bootstrapper.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator ResponseNegotiator(IResponseNegotiator negotiator)
+            {
+                this.bootstrapper.registeredInstances.Add(
+                    new InstanceRegistration(typeof(IResponseNegotiator), negotiator));
+
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to create an <see cref="IResponseNegotiator"/> instance of the specified type.
+            /// </summary>
+            /// <typeparam name="T">The type of the <see cref="IResponseNegotiator"/> that the bootstrapper should use.</typeparam>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator ResponseNegotiator<T>() where T : IResponseNegotiator
+            {
+                this.bootstrapper.configuration.ResponseNegotiator = typeof(T);
+                return this;
+            }
+
             public ConfigurableBootstrapperConfigurator ApplicationStartup(Action<TinyIoCContainer, IPipelines> action)
             {
                 this.bootstrapper.applicationStartupActions.Add(action);
@@ -1625,6 +1824,12 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator RequestStartup(Action<TinyIoCContainer, IPipelines, NancyContext> action)
             {
                 this.bootstrapper.requestStartupActions.Add(action);
+                return this;
+            }
+
+            public ConfigurableBootstrapperConfigurator DisableAutoRegistrations()
+            {
+                this.bootstrapper.autoRegistrations = false;
                 return this;
             }
         }

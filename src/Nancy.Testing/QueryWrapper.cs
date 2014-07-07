@@ -27,7 +27,13 @@
         /// <returns>A <see cref="QueryWrapper"/> instance</returns>
         public QueryWrapper this[string selector]
         {
-            get { return new QueryWrapper(this.document[selector]); }
+            get
+            {
+                var newDocument = this.document.Selector == null
+                                      ? this.document
+                                      : new CQ(this.document.RenderSelection());
+                return new QueryWrapper(newDocument[selector]);
+            }
         }
 
         /// <summary>

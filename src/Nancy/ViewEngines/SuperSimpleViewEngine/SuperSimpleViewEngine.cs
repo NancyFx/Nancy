@@ -15,6 +15,11 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
     public class SuperSimpleViewEngine
     {
         /// <summary>
+        /// Compiled Regex for viewbag substitutions
+        /// </summary>
+        private static readonly Regex ViewBagSubstitutionsRegEx = new Regex(@"@(?<Encode>!)?ViewBag(?:\.(?<ParameterName>[a-zA-Z0-9-_]+))*;?", RegexOptions.Compiled);
+
+        /// <summary>
         /// Compiled Regex for single substitutions
         /// </summary>
         private static readonly Regex SingleSubstitutionsRegEx = new Regex(@"@(?<Encode>!)?Model(?:\.(?<ParameterName>[a-zA-Z0-9-_]+))*;?", RegexOptions.Compiled);
@@ -42,7 +47,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         /// <summary>
         /// Compiled regex for partial blocks
         /// </summary>
-        private static readonly Regex PartialSubstitutionRegEx = new Regex(@"@Partial\['(?<ViewName>.+)'(?<Model>.[ ]?Model(?:\.(?<ParameterName>[a-zA-Z0-9-_]+))*)?\];?", RegexOptions.Compiled);
+        private static readonly Regex PartialSubstitutionRegEx = new Regex(@"@Partial\['(?<ViewName>[^\]]+)'(?:.[ ]?@?(?<Model>(Model|Current)(?:\.(?<ParameterName>[a-zA-Z0-9-_]+))*))?\];?", RegexOptions.Compiled);
 
         /// <summary>
         /// Compiled RegEx for section block declarations
@@ -98,6 +103,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
 
             this.processors = new List<Func<string, object, IViewEngineHost, string>>
             {
+                PerformViewBagSubstitutions,
                 PerformSingleSubstitutions,
                 PerformContextSubstitutions,
                 PerformEachSubstitutions,
@@ -118,7 +124,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         /// <returns>A string containing the expanded template.</returns>
         public string Render(string template, dynamic model, IViewEngineHost host)
         {
-            var output = 
+            var output =
                 this.processors.Aggregate(template, (current, processor) => processor(current, model ?? new object(), host));
 
             return this.matchers.Aggregate(output, (current, extension) => extension.Invoke(current, model, host));
@@ -145,14 +151,20 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
                 return new Tuple<bool, object>(false, null);
             }
 
-            if (!typeof(IDynamicMetaObjectProvider).IsAssignableFrom(model.GetType()))
+            if (model is IDictionary<string, object>)
+            {
+                return DynamicDictionaryPropertyEvaluator(model, propertyName);
+            }
+
+            if (!(model is IDynamicMetaObjectProvider))
             {
                 return StandardTypePropertyEvaluator(model, propertyName);
             }
 
-            if (typeof(IDictionary<string, object>).IsAssignableFrom(model.GetType()))
+            var dynamicModel = model as DynamicDictionaryValue;
+            if (dynamicModel != null)
             {
-                return DynamicDictionaryPropertyEvaluator(model, propertyName);
+                return GetPropertyValue(dynamicModel.Value, propertyName);
             }
 
             throw new ArgumentException("model must be a standard type or implement IDictionary<string, object>", "model");
@@ -308,6 +320,37 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         }
 
         /// <summary>
+        /// Performs single @ViewBag.PropertyName substitutions.
+        /// </summary>
+        /// <param name="template">The template.</param>
+        /// <param name="model">This parameter is not used, the model is based on the "host.Context.ViewBag".</param>
+        /// <param name="host">View engine host</param>
+        /// <returns>Template with @ViewBag.PropertyName blocks expanded.</returns>
+        private static string PerformViewBagSubstitutions(string template, object model, IViewEngineHost host)
+        {
+            return ViewBagSubstitutionsRegEx.Replace(
+                template,
+                m =>
+                {
+                    var properties = GetCaptureGroupValues(m, "ParameterName");
+
+                    var substitution = GetPropertyValueFromParameterCollection(((dynamic)host.Context).ViewBag, properties);
+
+                    if (!substitution.Item1)
+                    {
+                        return "[ERR!]";
+                    }
+
+                    if (substitution.Item2 == null)
+                    {
+                        return string.Empty;
+                    }
+
+                    return m.Groups["Encode"].Success ? host.HtmlEncode(substitution.Item2.ToString()) : substitution.Item2.ToString();
+                });
+        }
+
+        /// <summary>
         /// Performs single @Model.PropertyName substitutions.
         /// </summary>
         /// <param name="template">The template.</param>
@@ -376,7 +419,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         /// <param name="model">The model.</param>
         /// <param name="host">View engine host</param>
         /// <returns>Template with @Each.PropertyName blocks expanded.</returns>
-        private static string PerformEachSubstitutions(string template, object model, IViewEngineHost host)
+        private string PerformEachSubstitutions(string template, object model, IViewEngineHost host)
         {
             return EachSubstitutionRegEx.Replace(
                 template,
@@ -410,11 +453,13 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
                     }
 
                     var contents = m.Groups["Contents"].Value;
+
                     var result = string.Empty;
                     foreach (var item in substitutionEnumerable)
                     {
-                        var postConditionalResult = PerformConditionalSubstitutions(contents, item, host);
-                        result += ReplaceCurrentMatch(postConditionalResult, item, host);
+                        var modifiedContent = PerformPartialSubstitutions(contents, item, host);
+                        modifiedContent = PerformConditionalSubstitutions(modifiedContent, item, host);
+                        result += ReplaceCurrentMatch(modifiedContent, item, host);
                     }
 
                     return result;
@@ -536,7 +581,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         /// <param name="model">The model.</param>
         /// <param name="host">View engine host</param>
         /// <returns>Template with partials expanded</returns>
-        private string PerformPartialSubstitutions(string template, object model, IViewEngineHost host)
+        private string PerformPartialSubstitutions(string template, dynamic model, IViewEngineHost host)
         {
             var result = template;
 
@@ -550,7 +595,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
 
                     if (m.Groups["Model"].Length > 0)
                     {
-                        var modelValue = GetPropertyValueFromParameterCollection(model, properties);
+                        var modelValue = GetPropertyValueFromParameterCollection(partialModel, properties);
 
                         if (modelValue.Item1 != true)
                         {
@@ -616,7 +661,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         }
 
         /// <summary>
-		/// Gets the master page name, if one is specified
+        /// Gets the master page name, if one is specified
         /// </summary>
         /// <param name="template">The template</param>
         /// <returns>Master page name or String.Empty</returns>

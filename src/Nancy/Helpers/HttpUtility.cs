@@ -42,6 +42,11 @@ namespace Nancy.Helpers
     {
         sealed class HttpQSCollection : NameValueCollection
         {
+            public HttpQSCollection()
+                : base(StaticConfiguration.CaseSensitive ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase)
+            {
+            }
+
             public override string ToString()
             {
                 int count = Count;
@@ -731,7 +736,11 @@ namespace Nancy.Helpers
                 string name, value;
                 if (valuePos == -1)
                 {
-                    name = null;
+                    var valueLen = valueEnd;
+                    if (valueLen == -1) 
+                        valueLen = decoded.Length - namePos;
+
+                    name = UrlDecode(decoded.Substring(namePos, valueLen), encoding);
                     valuePos = namePos;
                 }
                 else

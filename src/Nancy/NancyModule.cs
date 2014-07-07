@@ -54,6 +54,11 @@ namespace Nancy
             }
         }
 
+        public dynamic Text
+        {
+            get { return this.Context.Text; }
+        }
+
         /// <summary>
         /// Gets <see cref="RouteBuilder"/> for declaring actions for DELETE requests.
         /// </summary>
@@ -271,7 +276,7 @@ namespace Nancy
             /// <value>A delegate that is used to invoke the route.</value>
             public Func<dynamic, dynamic> this[string path]
             {
-                set { this.AddRoute(path, null, value); }
+                set { this.AddRoute(string.Empty, path, null, value); }
             }
 
             /// <summary>
@@ -280,37 +285,77 @@ namespace Nancy
             /// <value>A delegate that is used to invoke the route.</value>
             public Func<dynamic, dynamic> this[string path, Func<NancyContext, bool> condition]
             {
-                set { this.AddRoute(path, condition, value); }
+                set { this.AddRoute(string.Empty, path, condition, value); }
             }
 
+            /// <summary>
+            /// Defines an async route for the specified <paramref name="path"/>
+            /// </summary>
             public Func<dynamic, CancellationToken, Task<dynamic>> this[string path, bool runAsync]
             {
-                set { this.AddRoute(path, null, value); }
+                set { this.AddRoute(string.Empty, path, null, value); }
             }
 
+            /// <summary>
+            /// Defines an async route for the specified <paramref name="path"/> and <paramref name="condition"/>.
+            /// </summary>
             public Func<dynamic, CancellationToken, Task<dynamic>> this[string path, Func<NancyContext, bool> condition, bool runAsync]
             {
-                set { this.AddRoute(path, condition, value); }
+                set { this.AddRoute(string.Empty, path, condition, value); }
             }
 
-            protected void AddRoute(string path, Func<NancyContext, bool> condition, Func<dynamic, dynamic> value)
+            /// <summary>
+            /// Defines a Nancy route for the specified <paramref name="path"/> and <paramref name="name"/>
+            /// </summary>
+            /// <value>A delegate that is used to invoke the route.</value>
+            public Func<dynamic, dynamic> this[string name, string path]
+            {
+                set { this.AddRoute(name, path, null, value); }
+            }
+
+            /// <summary>
+            /// Defines a Nancy route for the specified <paramref name="path"/>, <paramref name="condition"/> and <paramref name="name"/>
+            /// </summary>
+            /// <value>A delegate that is used to invoke the route.</value>
+            public Func<dynamic, dynamic> this[string name, string path, Func<NancyContext, bool> condition]
+            {
+                set { this.AddRoute(name, path, condition, value); }
+            }
+
+            /// <summary>
+            /// Defines an async route for the specified <paramref name="path"/> and <paramref name="name"/>
+            /// </summary>
+            public Func<dynamic, CancellationToken, Task<dynamic>> this[string name, string path, bool runAsync]
+            {
+                set { this.AddRoute(name, path, null, value); }
+            }
+
+            /// <summary>
+            /// Defines an async route for the specified <paramref name="path"/>, <paramref name="condition"/> and <paramref name="name"/>
+            /// </summary>
+            public Func<dynamic, CancellationToken, Task<dynamic>> this[string name, string path, Func<NancyContext, bool> condition, bool runAsync]
+            {
+                set { this.AddRoute(name, path, condition, value); }
+            }
+
+            protected void AddRoute(string name, string path, Func<NancyContext, bool> condition, Func<dynamic, dynamic> value)
             {
                 var fullPath = GetFullPath(path);
 
-                this.parentModule.routes.Add(Route.FromSync(this.method, fullPath, condition, value));
+                this.parentModule.routes.Add(Route.FromSync(name, this.method, fullPath, condition, value));
             }
 
-            protected void AddRoute(string path, Func<NancyContext, bool> condition, Func<dynamic, CancellationToken, Task<dynamic>> value)
+            protected void AddRoute(string name, string path, Func<NancyContext, bool> condition, Func<dynamic, CancellationToken, Task<dynamic>> value)
             {
                 var fullPath = GetFullPath(path);
 
-                this.parentModule.routes.Add(new Route(this.method, fullPath, condition, value));
+                this.parentModule.routes.Add(new Route(name, this.method, fullPath, condition, value));
             }
 
             private string GetFullPath(string path)
             {
-                var relativePath = path.Trim('/');
-                var parentPath = this.parentModule.ModulePath.Trim('/');
+                var relativePath = (path ?? string.Empty).Trim('/');
+                var parentPath = (this.parentModule.ModulePath ?? string.Empty).Trim('/');
 
                 if (string.IsNullOrEmpty(parentPath))
                 {

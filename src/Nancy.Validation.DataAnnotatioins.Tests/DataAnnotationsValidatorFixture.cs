@@ -42,7 +42,7 @@
             var instance = new ModelUnderTest();
 
             // When
-            this.validator.Validate(instance);
+            this.validator.Validate(instance, new NancyContext());
 
             // Then
             A.CallTo(() => this.validatorFactory.GetValidators(typeof(ModelUnderTest))).MustHaveHappened();
@@ -55,7 +55,7 @@
             var instance = new ModelUnderTest();
 
             // When
-            this.validator.Validate(instance);
+            this.validator.Validate(instance, new NancyContext());
 
             // Then
             A.CallTo(() => this.propertyValidator1.Validate(instance)).MustHaveHappened();
@@ -69,7 +69,7 @@
             var instance = new ModelUnderTest();
 
             // When
-            this.validator.Validate(instance);
+            this.validator.Validate(instance, new NancyContext());
 
             // Then
             A.CallTo(() => this.validatableObjectAdapter.Validate(instance)).MustHaveHappened();
@@ -81,21 +81,18 @@
             // Given
             var instance = new ModelUnderTest();
 
-            var result1 = new ModelValidationError(string.Empty, x => string.Empty);
-            var result2 = new ModelValidationError(string.Empty, x => string.Empty);
-            var result3 = new ModelValidationError(string.Empty, x => string.Empty);
+            var result1 = new ModelValidationError("Foo", string.Empty);
+            var result2 = new ModelValidationError("Bar", string.Empty);
+            var result3 = new ModelValidationError("Baz", string.Empty);
 
             A.CallTo(() => this.propertyValidator1.Validate(instance)).Returns(new[] { result1 });
             A.CallTo(() => this.propertyValidator2.Validate(instance)).Returns(new[] { result2, result3 });
 
             // When
-            var results = this.validator.Validate(instance);
+            var results = this.validator.Validate(instance, new NancyContext());
 
             // Then
             results.Errors.Count().ShouldEqual(3);
-            results.Errors.Contains(result1).ShouldBeTrue();
-            results.Errors.Contains(result2).ShouldBeTrue();
-            results.Errors.Contains(result3).ShouldBeTrue();
         }
 
         [Fact]
@@ -103,38 +100,34 @@
         {
             // Given
             var instance = new ModelUnderTest();
-            var result = new ModelValidationError(string.Empty, x => string.Empty);
+            var result = new ModelValidationError("Foo", string.Empty);
 
             A.CallTo(() => this.validatableObjectAdapter.Validate(instance)).Returns(new[] { result });
 
             // When
-            var results = this.validator.Validate(instance);
+            var results = this.validator.Validate(instance, new NancyContext());
 
             // Then
             results.Errors.Count().ShouldEqual(1);
-            results.Errors.Contains(result).ShouldBeTrue();
+            results.Errors.Keys.Contains("Foo").ShouldBeTrue();
         }
 
         [Fact]
         public void Should_return_descriptor_with_rules_from_all_validators()
         {
             // Given
-            var rule1 = new ModelValidationRule(string.Empty, s => string.Empty);
-            var rule2 = new ModelValidationRule(string.Empty, s => string.Empty);
-            var rule3 = new ModelValidationRule(string.Empty, s => string.Empty);
+            var rule1 = new ModelValidationRule(string.Empty, s => string.Empty, new[] { "One" });
+            var rule2 = new ModelValidationRule(string.Empty, s => string.Empty, new[] { "Two" });
+            var rule3 = new ModelValidationRule(string.Empty, s => string.Empty, new[] { "Three" });
 
             A.CallTo(() => this.propertyValidator1.GetRules()).Returns(new[] { rule1 });
             A.CallTo(() => this.propertyValidator2.GetRules()).Returns(new[] { rule2, rule3 });
-
 
             // When
             var descriptor = this.validator.Description;
 
             // Then
             descriptor.Rules.Count().ShouldEqual(3);
-            descriptor.Rules.Contains(rule1).ShouldBeTrue();
-            descriptor.Rules.Contains(rule2).ShouldBeTrue();
-            descriptor.Rules.Contains(rule3).ShouldBeTrue();
         }
 
         public class ModelUnderTest

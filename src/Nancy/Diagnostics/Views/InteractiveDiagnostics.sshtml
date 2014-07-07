@@ -41,23 +41,23 @@
 	</script>
 
 	<script id="provider" type="text/x-handlebars-template">
-		<h2>{{model.Name}}</h2>
-		<p>{{model.Description}}</p>
+		<h2>{{model.name}}</h2>
+		<p>{{model.description}}</p>
 	</script>
 
 	<script id="method" type="text/x-handlebars-template">
 		<div class="item-list">
-			<strong>{{model.MethodName}}</strong><br/>
-			<em>{{model.Description}}</em><br/>
-				{{#if model.Arguments.length}}
+			<strong>{{model.methodName}}</strong><br/>
+			<em>{{model.description}}</em><br/>
+				{{#if model.arguments.length}}
 					<ul class="method-arguments">
-						{{#each model.Arguments}}
+						{{#each model.arguments}}
 							<li class="method-argument">
 								<div class="tooltip">
-									<input type="text" id="{{this.ArgumentName}}"/>
+									<input type="text" id="{{this.argumentName}}"/>
 									<span class="method-argument-tooltip">
-										<strong>{{this.ArgumentName}}</strong><br/>
-										<em>{{this.ArgumentType}}</em>
+										<strong>{{this.argumentName}}</strong><br/>
+										<em>{{this.argumentType}}</em>
 									</span>
 								</div>
 							</li>

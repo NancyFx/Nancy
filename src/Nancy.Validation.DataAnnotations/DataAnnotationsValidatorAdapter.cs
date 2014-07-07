@@ -1,8 +1,10 @@
 ﻿namespace Nancy.Validation.DataAnnotations
 {
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
+    using System.Linq;
 
     /// <summary>
     /// A default implementation of an <see cref="IDataAnnotationsValidatorAdapter"/>.
@@ -22,7 +24,7 @@
 
         /// <summary>
         /// Gets a boolean that indicates if the adapter can handle the
-        /// provided <param name="attribute">.</param>
+        /// provided <paramref name="attribute"/>.
         /// </summary>
         /// <param name="attribute">The <see cref="ValidationAttribute"/> that should be handled.</param>
         /// <returns><see langword="true" /> if the attribute can be handles, otherwise <see langword="false" />.</returns>
@@ -36,7 +38,7 @@
         /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="ModelValidationRule"/> instances.</returns>
         public virtual IEnumerable<ModelValidationRule> GetRules(ValidationAttribute attribute, PropertyDescriptor descriptor)
         {
-            yield return new ModelValidationRule(ruleType, attribute.FormatErrorMessage, descriptor == null ? null : new[] { descriptor.Name });
+            yield return new ModelValidationRule(ruleType, attribute.FormatErrorMessage, new [] { descriptor == null ? string.Empty : descriptor.Name });
         }
 
         /// <summary>
@@ -64,7 +66,7 @@
 
             if (result != null)
             {
-                yield return new ModelValidationError(result.MemberNames, attribute.FormatErrorMessage);
+                yield return new ModelValidationError(result.MemberNames, string.Join(" ", result.MemberNames.Select(attribute.FormatErrorMessage)));
             }
         }
     }

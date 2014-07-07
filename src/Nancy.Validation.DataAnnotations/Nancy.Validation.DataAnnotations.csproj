@@ -124,7 +124,7 @@
     <Compile Include="IPropertyValidatorFactory.cs" />
     <Compile Include="IValidatableObjectAdapter.cs" />
     <Compile Include="PropertyValidator.cs" />
-    <Compile Include="Registrations.cs" />
+    <Compile Include="DataAnnotationsRegistrations.cs" />
     <Compile Include="DefaultValidatableObjectAdapter.cs" />
     <Compile Include="DataAnnotationsValidator.cs" />
     <Compile Include="DataAnnotationsValidatorAdapter.cs" />

@@ -34,7 +34,7 @@ namespace Nancy.Responses
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GenericFileResponse"/> for the file specified
-        /// by the <param name="filePath" /> parameter.
+        /// by the <paramref name="filePath"/> parameter.
         /// </summary>
         /// <param name="filePath">The name of the file, including path relative to the root of the application, that should be returned.</param>
         /// <remarks>The <see cref="MimeTypes.GetMimeType"/> method will be used to determine the mimetype of the file and will be used as the content-type of the response. If no match if found the content-type will be set to application/octet-stream.</remarks>
@@ -45,7 +45,7 @@ namespace Nancy.Responses
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GenericFileResponse"/> for the file specified
-        /// by the <param name="filePath" /> parameter.
+        /// by the <paramref name="filePath"/> parameter.
         /// </summary>
         /// <param name="filePath">The name of the file, including path relative to the root of the application, that should be returned.</param>
         /// <remarks>The <see cref="MimeTypes.GetMimeType"/> method will be used to determine the mimetype of the file and will be used as the content-type of the response. If no match if found the content-type will be set to application/octet-stream.</remarks>
@@ -57,14 +57,14 @@ namespace Nancy.Responses
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GenericFileResponse"/> for the file specified
-        /// by the <param name="filePath" /> parameter and the content-type specified by the <param name="contentType" /> parameter.
+        /// by the <paramref name="filePath"/> parameter and the content-type specified by the <paramref name="contentType"/> parameter.
         /// </summary>
         /// <param name="filePath">The name of the file, including path relative to the root of the application, that should be returned.</param>
         /// <param name="contentType">The content-type of the response.</param>
         /// <param name="context">Current context</param>
         public GenericFileResponse(string filePath, string contentType, NancyContext context = null)
         {
-            InitializeGenericFileResonse(filePath, contentType, context);
+            InitializeGenericFileResponse(filePath, contentType, context);
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace Nancy.Responses
             return fullPath.StartsWith(rootPath, StringComparison.OrdinalIgnoreCase);
         }
 
-        private void InitializeGenericFileResonse(string filePath, string contentType, NancyContext context)
+        private void InitializeGenericFileResponse(string filePath, string contentType, NancyContext context)
         {
             if (string.IsNullOrEmpty(filePath))
             {
@@ -157,7 +157,12 @@ namespace Nancy.Responses
 
             this.Headers["ETag"] = etag;
             this.Headers["Last-Modified"] = lastModified;
-            this.Contents = GetFileContent(fullPath, fi.Length);
+            
+            if (fi.Length > 0)
+            {
+                this.Contents = GetFileContent(fullPath, fi.Length);
+            }
+            
             this.ContentType = contentType;
             this.StatusCode = HttpStatusCode.OK;
         }

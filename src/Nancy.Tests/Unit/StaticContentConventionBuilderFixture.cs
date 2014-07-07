@@ -6,6 +6,7 @@
     using System.IO;
     using System.Text;
     using Nancy.Conventions;
+    using Nancy.Diagnostics;
     using Nancy.IO;
     using Nancy.Responses;
     using Xunit;
@@ -287,7 +288,15 @@
                 new Url { Path = resource, Scheme = "http" },
                 headers: headers ?? new Dictionary<string, IEnumerable<string>>());
 
-            var context = new NancyContext { Request = request };
+            var context = new NancyContext
+            {
+                Request = request,
+                Trace = new DefaultRequestTrace
+                {
+                    TraceLog = new DefaultTraceLog()
+                }
+            };
+
             return context;
         }
 

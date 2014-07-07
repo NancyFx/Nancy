@@ -26,8 +26,7 @@ namespace Nancy.ModelBinding
         /// property name and the original exception, which caused the problem
         /// </summary>
         /// <param name="boundType">the model type to bind to</param>
-        /// <param name="propertyName">the property name, which failed to bind</param>
-        /// <param name="innerException">the original exception, thrown while binding the property</param>
+        /// <param name="propertyBindingExceptions">the original exceptions, thrown while binding the property</param>
         public ModelBindingException(Type boundType, IEnumerable<PropertyBindingException> propertyBindingExceptions = null)
             : base(String.Format(ExceptionMessage, boundType))
         {

@@ -6,9 +6,9 @@
     using System.Text.RegularExpressions;
 
     /// <summary>
-    /// A greedy regular expression capture node e.g. ^(?<id>\d{0,100})$
+    /// A greedy regular expression capture node e.g. ^(?&lt;id>\d{0,100})$
     /// For use on an entire route path, regular expression must be surrounded by ^( )$
-    /// e.g. @"^(?:(?<id>videos/\d{1,10})(?:/{0,1}(?<slug>.*)))$"
+    /// e.g. @"^(?:(?&lt;id>videos/\d{1,10})(?:/{0,1}(?&lt;slug>.*)))$"
     /// This will match for a Url like /videos/123/some-random-slug 
     /// and capture 'videos/123' and 'some-random-slug'
     /// </summary>

@@ -3,23 +3,24 @@ using Nancy.ErrorHandling;
 
 namespace Nancy.Testing
 {
+    using Nancy.Extensions;
+
     public class PassThroughStatusCodeHandler : IStatusCodeHandler
     {
         public bool HandlesStatusCode(HttpStatusCode statusCode, NancyContext context)
         {
-            if (!context.Items.ContainsKey(NancyEngine.ERROR_EXCEPTION))
+            Exception exception;
+            if (!context.TryGetException(out exception) || exception == null)
             {
                 return false;
             }
 
-            var exception = context.Items[NancyEngine.ERROR_EXCEPTION] as Exception;
-
-            return statusCode == HttpStatusCode.InternalServerError && exception != null;
+            return statusCode == HttpStatusCode.InternalServerError;
         }
 
         public void Handle(HttpStatusCode statusCode, NancyContext context)
         {
-            throw new Exception("ConfigurableBootstrapper Exception", context.Items[NancyEngine.ERROR_EXCEPTION] as Exception);
+            throw new Exception("ConfigurableBootstrapper Exception", context.GetException());
         }
     }
 }

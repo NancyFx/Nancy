@@ -50,6 +50,11 @@ namespace Nancy.Testing
 
 		public static TModel JsonBody<TModel>(this NancyContext context)
 		{
+			return context.JsonBody<TModel>(new JavaScriptSerializer());
+		}
+
+		public static TModel JsonBody<TModel>(this NancyContext context, JavaScriptSerializer serializer)
+		{
 			return Cache(context, JSONRESPONSE_KEY_NAME, () =>
 			{
 				using (var contentsStream = new MemoryStream())
@@ -58,7 +63,6 @@ namespace Nancy.Testing
 					contentsStream.Position = 0;
 					using (var contents = new StreamReader(contentsStream))
 					{
-						var serializer = new JavaScriptSerializer();
 						var model = serializer.Deserialize<TModel>(contents.ReadToEnd());
 						return model;
 					}

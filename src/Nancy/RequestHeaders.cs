@@ -65,7 +65,7 @@ namespace Nancy
         }
 
         /// <summary>
-        /// Acceptable languages for response.
+        /// Authorization header value for request.
         /// </summary>
         /// <value>A <see cref="string"/> containing the header value if it is available; otherwise <see cref="string.Empty"/>.</value>
         public string Authorization
