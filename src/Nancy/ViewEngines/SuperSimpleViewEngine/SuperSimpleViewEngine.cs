@@ -178,13 +178,22 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         /// <returns>Tuple - Item1 being a bool for whether the evaluation was sucessful, Item2 being the value.</returns>
         private static Tuple<bool, object> StandardTypePropertyEvaluator(object model, string propertyName)
         {
-            var properties = model.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
+            var type = model.GetType();
+            var properties = type.GetProperties( BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static );
 
             var property =
-                properties.Where(p => string.Equals(p.Name, propertyName, StringComparison.InvariantCulture)).
+                properties.Where( p => string.Equals( p.Name, propertyName, StringComparison.InvariantCulture ) ).
                 FirstOrDefault();
 
-            return property == null ? new Tuple<bool, object>(false, null) : new Tuple<bool, object>(true, property.GetValue(model, null));
+            if ( property != null )
+                return new Tuple<bool, object>( true, property.GetValue( model, null ) );
+
+            var fields = type.GetFields( BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static );
+
+            var field = 
+                fields.Where( p => string.Equals( p.Name, propertyName, StringComparison.InvariantCulture ) ).
+                FirstOrDefault();
+            return field == null ? new Tuple<bool, object>( false, null ) : new Tuple<bool, object>( true, field.GetValue( model ) );
         }
 
         /// <summary>
