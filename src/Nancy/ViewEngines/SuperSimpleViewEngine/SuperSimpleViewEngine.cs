@@ -179,21 +179,24 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         private static Tuple<bool, object> StandardTypePropertyEvaluator(object model, string propertyName)
         {
             var type = model.GetType();
-            var properties = type.GetProperties( BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static );
+            var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
 
             var property =
-                properties.Where( p => string.Equals( p.Name, propertyName, StringComparison.InvariantCulture ) ).
+                properties.Where(p => string.Equals(p.Name, propertyName, StringComparison.InvariantCulture)).
                 FirstOrDefault();
 
-            if ( property != null )
+            if (property != null)
+            {
                 return new Tuple<bool, object>( true, property.GetValue( model, null ) );
+            }
 
-            var fields = type.GetFields( BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static );
+            var fields = type.GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
 
             var field = 
-                fields.Where( p => string.Equals( p.Name, propertyName, StringComparison.InvariantCulture ) ).
+                fields.Where(p => string.Equals(p.Name, propertyName, StringComparison.InvariantCulture)).
                 FirstOrDefault();
-            return field == null ? new Tuple<bool, object>( false, null ) : new Tuple<bool, object>( true, field.GetValue( model ) );
+
+            return field == null ? new Tuple<bool, object>(false, null) : new Tuple<bool, object>(true, field.GetValue(model));
         }
 
         /// <summary>
