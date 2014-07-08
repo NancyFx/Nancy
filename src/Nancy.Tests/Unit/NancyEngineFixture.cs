@@ -723,6 +723,31 @@ namespace Nancy.Tests.Unit
             result.Response.ShouldBeSameAs(localResponse);
         }
 
+        [Fact]
+        public void Should_set_status_code_to_500_if_pre_execute_response_throws()
+        {
+            // Given
+            var resolvedRoute = new ResolveResult(
+                new FakeRoute(),
+                DynamicDictionary.Empty,
+                null,
+                null,
+                null);
+
+            A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored)).Returns(resolvedRoute);
+
+            A.CallTo(() => this.requestDispatcher.Dispatch(context, A<CancellationToken>._))
+                .Returns(TaskHelpers.GetCompletedTask<Response>(new PreExecuteFailureResponse()));
+
+            var request = new Request("GET", "/", "http");
+
+            // When
+            var result = this.engine.HandleRequest(request);
+
+            // Then
+            result.Response.StatusCode.ShouldEqual(HttpStatusCode.InternalServerError);
+        }
+
         private static Task<Response> CreateResponseTask(Response response)
         {
             var tcs =
@@ -731,6 +756,14 @@ namespace Nancy.Tests.Unit
             tcs.SetResult(response);
 
             return tcs.Task;
+        }
+    }
+
+    public class PreExecuteFailureResponse : Response
+    {
+        public override Task<NancyContext> PreExecute(NancyContext context)
+        {
+            return TaskHelpers.GetFaultedTask<NancyContext>(new InvalidOperationException());
         }
     }
 }

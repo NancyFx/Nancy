@@ -96,24 +96,32 @@
 
             var pipelines = this.RequestPipelinesFactory.Invoke(context);
 
-            var task = this.InvokeRequestLifeCycle(context, cancellationToken, pipelines);
+            var lifeCycleTask = this.InvokeRequestLifeCycle(context, cancellationToken, pipelines);
 
-            task.WhenCompleted(
-                completeTask =>
+            lifeCycleTask.WhenCompleted(
+                completedTask =>
                 {
-                    try
-                    {
-                        this.CheckStatusCodeHandler(completeTask.Result);
+                    var preExecuteTask = context.Response.PreExecute(context);
 
-                        this.SaveTraceInformation(completeTask.Result);
-                    }
-                    catch (Exception ex)
-                    {
-                        tcs.SetException(ex);
-                        return;
-                    }
+                    preExecuteTask.WhenCompleted(
+                            completeTask =>
+                            {
+                                try
+                                {
+                                    this.CheckStatusCodeHandler(completeTask.Result);
 
-                    tcs.SetResult(completeTask.Result);
+                                    this.SaveTraceInformation(completeTask.Result);
+                                }
+                                catch (Exception ex)
+                                {
+                                    tcs.SetException(ex);
+                                    return;
+                                }
+
+                                tcs.SetResult(completeTask.Result);
+                            },
+                            HandleFaultedTask(context, pipelines, tcs),
+                            true);
                 },
                 errorTask =>
                 {

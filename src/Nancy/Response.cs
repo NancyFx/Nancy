@@ -17,15 +17,6 @@ namespace Nancy
         /// </summary>
         public static Action<Stream> NoBody = s => { };
 
-        private static readonly Task<object> CompletedTask;
-
-        static Response()
-        {
-            var tcs = new TaskCompletionSource<object>();
-            tcs.SetResult(new object());
-            CompletedTask = tcs.Task;
-        }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="Response"/> class.
         /// </summary>
@@ -82,9 +73,11 @@ namespace Nancy
         /// </summary>
         /// <param name="context">Nancy context</param>
         /// <returns>Task for completion/erroring</returns>
-        public virtual Task PreExecute(NancyContext context)
+        public virtual Task<NancyContext> PreExecute(NancyContext context)
         {
-            return CompletedTask;
+            var tcs = new TaskCompletionSource<NancyContext>();
+            tcs.SetResult(context);
+            return tcs.Task;
         }
 
         /// <summary>
