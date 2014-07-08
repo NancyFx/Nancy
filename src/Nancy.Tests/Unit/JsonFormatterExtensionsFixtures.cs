@@ -52,7 +52,7 @@ namespace Nancy.Tests.Unit
             using (var stream = new MemoryStream())
             {
                 nullResponse.Contents(stream);
-                Encoding.UTF8.GetString(stream.ToArray()).ShouldEqual("null");
+                Encoding.UTF8.GetString(stream.ToArray()).ShouldHaveCount(0);
             }
         }
 
