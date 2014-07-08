@@ -1,7 +1,10 @@
 ﻿namespace Nancy.Responses
 {
+    using System;
     using System.IO;
     using System.Threading.Tasks;
+
+    using Nancy.Helpers;
 
     /// <summary>
     /// Takes an existing response and materialises the body.
@@ -16,13 +19,20 @@
 
         public override Task<NancyContext> PreExecute(NancyContext context)
         {
-            using (var memoryStream = new MemoryStream())
+            try
             {
-                this.sourceResponse.Contents.Invoke(memoryStream);
-                this.oldResponseOutput = memoryStream.ToArray();
-            }
+                using (var memoryStream = new MemoryStream())
+                {
+                    this.sourceResponse.Contents.Invoke(memoryStream);
+                    this.oldResponseOutput = memoryStream.ToArray();
+                }
 
-            return base.PreExecute(context);
+                return base.PreExecute(context);
+            }
+            catch (Exception e)
+            {
+                return TaskHelpers.GetFaultedTask<NancyContext>(e);
+            }
         }
 
         public MaterialisingResponse(Response sourceResponse)

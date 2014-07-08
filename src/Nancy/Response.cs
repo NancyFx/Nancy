@@ -7,6 +7,8 @@ namespace Nancy
 
     using Cookies;
 
+    using Nancy.Helpers;
+
     /// <summary>
     /// Encapsulates HTTP-response information from an Nancy operation.
     /// </summary>
@@ -75,9 +77,7 @@ namespace Nancy
         /// <returns>Task for completion/erroring</returns>
         public virtual Task<NancyContext> PreExecute(NancyContext context)
         {
-            var tcs = new TaskCompletionSource<NancyContext>();
-            tcs.SetResult(context);
-            return tcs.Task;
+            return TaskHelpers.GetCompletedTask(context);
         }
 
         /// <summary>
