@@ -3,6 +3,8 @@ namespace Nancy
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Threading.Tasks;
+
     using Cookies;
 
     /// <summary>
@@ -14,6 +16,15 @@ namespace Nancy
         /// Null object representing no body    
         /// </summary>
         public static Action<Stream> NoBody = s => { };
+
+        private static readonly Task<object> CompletedTask;
+
+        static Response()
+        {
+            var tcs = new TaskCompletionSource<object>();
+            tcs.SetResult(new object());
+            CompletedTask = tcs.Task;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Response"/> class.
@@ -64,7 +75,18 @@ namespace Nancy
         /// </summary>
         /// <value>A <see cref="IList{T}"/> instance, containing <see cref="INancyCookie"/> instances.</value>
         public IList<INancyCookie> Cookies { get; private set; }
-        
+
+        /// <summary>
+        /// Executes at the end of the nancy execution pipeline and before control is passed back to the hosting.
+        /// Can be used to pre-render/validate views while still inside the main pipeline/error handling.
+        /// </summary>
+        /// <param name="context">Nancy context</param>
+        /// <returns>Task for completion/erroring</returns>
+        public virtual Task PreExecute(NancyContext context)
+        {
+            return CompletedTask;
+        }
+
         /// <summary>
         /// Adds a <see cref="INancyCookie"/> to the response.
         /// </summary>
