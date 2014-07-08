@@ -187,7 +187,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
 
             if (property != null)
             {
-                return new Tuple<bool, object>( true, property.GetValue( model, null ) );
+                return new Tuple<bool, object>(true, property.GetValue(model, null));
             }
 
             var fields = type.GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
