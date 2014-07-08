@@ -75,9 +75,9 @@ namespace Nancy
         /// </summary>
         /// <param name="context">Nancy context</param>
         /// <returns>Task for completion/erroring</returns>
-        public virtual Task<NancyContext> PreExecute(NancyContext context)
+        public virtual Task PreExecute(NancyContext context)
         {
-            return TaskHelpers.GetCompletedTask(context);
+            return TaskHelpers.GetCompletedTask();
         }
 
         /// <summary>

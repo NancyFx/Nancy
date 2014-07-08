@@ -17,7 +17,7 @@
         private readonly Response sourceResponse;
         private byte[] oldResponseOutput;
 
-        public override Task<NancyContext> PreExecute(NancyContext context)
+        public override Task PreExecute(NancyContext context)
         {
             try
             {
@@ -31,7 +31,7 @@
             }
             catch (Exception e)
             {
-                return TaskHelpers.GetFaultedTask<NancyContext>(e);
+                return TaskHelpers.GetFaultedTask<object>(e);
             }
         }
 

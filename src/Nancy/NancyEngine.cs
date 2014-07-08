@@ -99,29 +99,21 @@
             var lifeCycleTask = this.InvokeRequestLifeCycle(context, cancellationToken, pipelines);
 
             lifeCycleTask.WhenCompleted(
-                completedTask =>
+                completeTask =>
                 {
-                    var preExecuteTask = context.Response.PreExecute(context);
+                    try
+                    {
+                        this.CheckStatusCodeHandler(completeTask.Result);
 
-                    preExecuteTask.WhenCompleted(
-                            completeTask =>
-                            {
-                                try
-                                {
-                                    this.CheckStatusCodeHandler(completeTask.Result);
+                        this.SaveTraceInformation(completeTask.Result);
+                    }
+                    catch (Exception ex)
+                    {
+                        tcs.SetException(ex);
+                        return;
+                    }
 
-                                    this.SaveTraceInformation(completeTask.Result);
-                                }
-                                catch (Exception ex)
-                                {
-                                    tcs.SetException(ex);
-                                    return;
-                                }
-
-                                tcs.SetResult(completeTask.Result);
-                            },
-                            HandleFaultedTask(context, pipelines, tcs),
-                            true);
+                    tcs.SetResult(completeTask.Result);
                 },
                 errorTask =>
                 {
@@ -221,15 +213,25 @@
 
                             var postHookTask = InvokePostRequestHook(context, cancellationToken, pipelines.AfterRequest);
 
-                            postHookTask.WhenCompleted(
-                                completedPostHookTask => tcs.SetResult(context),
-                                HandleFaultedTask(context, pipelines, tcs));
+                            postHookTask.WhenCompleted(PreExecute(context, pipelines, tcs), HandleFaultedTask(context, pipelines, tcs));
                         },
                         HandleFaultedTask(context, pipelines, tcs));
                 },
                 HandleFaultedTask(context, pipelines, tcs));
 
             return tcs.Task;
+        }
+
+        private Action<Task> PreExecute(NancyContext context, IPipelines pipelines, TaskCompletionSource<NancyContext> tcs)
+        {
+            return postHookTask =>
+            {
+                var preExecuteTask = context.Response.PreExecute(context);
+
+                preExecuteTask.WhenCompleted(
+                    completedPostHookTask => tcs.SetResult(context),
+                    HandleFaultedTask(context, pipelines, tcs));
+            };
         }
 
         private static Action<Task> HandleFaultedTask(NancyContext context, IPipelines pipelines, TaskCompletionSource<NancyContext> tcs)
