@@ -12,7 +12,7 @@
         private readonly ISerializer serializer;
 
         private static readonly IEnumerable<Tuple<string, MediaRange>> extensionMappings =
-            new[] { new Tuple<string, MediaRange>("xml", MediaRange.FromString("application/xml")) };
+            new[] { new Tuple<string, MediaRange>("xml", new MediaRange("application/xml")) };
 
         /// <summary>
         /// Initializes a new instance of the <see cref="XmlProcessor"/> class,
