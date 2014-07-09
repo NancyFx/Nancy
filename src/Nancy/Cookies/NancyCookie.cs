@@ -23,6 +23,11 @@ namespace Nancy.Cookies
         {
         }
 
+        public NancyCookie(string name, string value, bool httpOnly, bool secure)
+            : this(name, value, httpOnly, secure, null)
+        {
+        }
+
         public NancyCookie(string name, string value, bool httpOnly, bool secure, DateTime? expires)
         {
             this.Name = name;
