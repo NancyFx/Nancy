@@ -3,7 +3,11 @@ namespace Nancy
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Threading.Tasks;
+
     using Cookies;
+
+    using Nancy.Helpers;
 
     /// <summary>
     /// Encapsulates HTTP-response information from an Nancy operation.
@@ -64,7 +68,18 @@ namespace Nancy
         /// </summary>
         /// <value>A <see cref="IList{T}"/> instance, containing <see cref="INancyCookie"/> instances.</value>
         public IList<INancyCookie> Cookies { get; private set; }
-        
+
+        /// <summary>
+        /// Executes at the end of the nancy execution pipeline and before control is passed back to the hosting.
+        /// Can be used to pre-render/validate views while still inside the main pipeline/error handling.
+        /// </summary>
+        /// <param name="context">Nancy context</param>
+        /// <returns>Task for completion/erroring</returns>
+        public virtual Task PreExecute(NancyContext context)
+        {
+            return TaskHelpers.GetCompletedTask();
+        }
+
         /// <summary>
         /// Adds a <see cref="INancyCookie"/> to the response.
         /// </summary>
