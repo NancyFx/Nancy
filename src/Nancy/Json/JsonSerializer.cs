@@ -525,26 +525,7 @@ namespace Nancy.Json
 
         void WriteValue(StringBuilder output, DateTimeOffset value)
         {
-            if (this.iso8601DateFormat)
-            {
-                StringBuilderExtensions.AppendCount(output, maxJsonLength, string.Concat("\"", value.ToString("o", CultureInfo.InvariantCulture), "\""));
-            }
-            else
-            {
-                var offset = value.Offset;
-                var time = value.DateTime;
-
-                var suffix = offset < new TimeSpan(0, 0, 0,0) ? "-" : "+";
-                suffix += offset.ToString("hhmm");
-
-                if (time < MinimumJavaScriptDate)
-                {
-                    time = MinimumJavaScriptDate;
-                }
-
-                long ticks = (time.Ticks - InitialJavaScriptDateTicks) / 10000;
-                StringBuilderExtensions.AppendCount(output, maxJsonLength, "\"\\/Date(" + ticks + suffix + ")\\/\"");
-            }
+            StringBuilderExtensions.AppendCount(output, maxJsonLength, string.Concat("\"", value.ToString("o", CultureInfo.InvariantCulture), "\""));
         }
 
 		void WriteValue (StringBuilder output, IConvertible value)
