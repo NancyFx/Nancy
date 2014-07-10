@@ -54,17 +54,17 @@ namespace Nancy.Responses.Negotiation
         /// <summary>
         /// Media range type
         /// </summary>
-        public MediaType Type { get; set; }
+        public MediaType Type { get; private set; }
 
         /// <summary>
         /// Media range subtype
         /// </summary>
-        public MediaType Subtype { get; set; }
+        public MediaType Subtype { get; private set; }
 
         /// <summary>
         /// Media range parameters
         /// </summary>
-        public MediaRangeParameters Parameters { get; set; }
+        public MediaRangeParameters Parameters { get; private set; }
 
         /// <summary>
         /// Gets a value indicating if the media range is the */* wildcard
