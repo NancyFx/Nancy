@@ -127,6 +127,7 @@
     <Compile Include="Fakes\Person.cs" />
     <Compile Include="Fakes\ViewModel.cs" />
     <Compile Include="Helpers\CacheHelpersFixture.cs" />
+    <Compile Include="Unit\Bootstrapper\BootstrapperLocatorFixture.cs" />
     <Compile Include="Unit\Bootstrapper\CollectionTypeRegistrationFixture.cs" />
     <Compile Include="Unit\Bootstrapper\InstanceRegistrationFixture.cs" />
     <Compile Include="Unit\Bootstrapper\NancyBootstrapperWithRequestContainerBaseFixture.cs" />

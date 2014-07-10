@@ -1,4 +1,4 @@
-using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 using System.Reflection;
 
 [assembly: AssemblyTitle("Nancy")]
@@ -8,3 +8,5 @@ using System.Reflection;
 [assembly: AssemblyCopyright("Copyright (C) Andreas Hakansson, Steven Robbins and contributors")]
 [assembly: AssemblyVersion("0.23.1")]
 [assembly: AssemblyInformationalVersion("0.23.1")]
+
+[assembly: InternalsVisibleTo("Nancy.Tests")]

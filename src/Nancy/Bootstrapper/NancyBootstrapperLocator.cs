@@ -54,9 +54,29 @@
                 return customBootstrappers.Single();
             }
 
+            Type bootstrapper;
+            if (TryFindMostDerivedType(customBootstrappers, out bootstrapper))
+            {
+                return bootstrapper;
+            }
+
             var errorMessage = GetMultipleBootstrappersMessage(customBootstrappers);
 
             throw new BootstrapperException(errorMessage);
+        }
+
+        internal static bool TryFindMostDerivedType(List<Type> customBootstrappers, out Type bootstrapper)
+        {
+            var set = new HashSet<Type>();
+            bootstrapper = null;
+                
+            if (customBootstrappers.All(boostrapper => set.Add(boostrapper.BaseType)))
+            {
+                var except = customBootstrappers.Except(set).ToList();
+                bootstrapper = except.Count == 1 ? except[0] : null;
+            }
+                
+            return bootstrapper != null;
         }
 
         private static string GetMultipleBootstrappersMessage(IEnumerable<Type> customBootstrappers)
