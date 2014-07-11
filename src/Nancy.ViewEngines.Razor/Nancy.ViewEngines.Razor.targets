@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+ <Target Name="AfterBuild">
+    <Copy Condition="'$(Configuration)' == 'Debug'" 
+          SourceFiles="$(SolutionDir)packages\Nancy.Viewengines.Razor.0.18.0\BuildProviders\Nancy.ViewEngines.Razor.BuildProviders.dll" 
+          DestinationFolder="$(OutDir)" />
+    <Copy Condition="'$(Configuration)' == 'Debug'" 
+          SourceFiles="$(SolutionDir)packages\Nancy.Viewengines.Razor.0.18.0\lib\net40\Nancy.ViewEngines.Razor.dll" 
+          DestinationFolder="$(OutDir)" />
+ </Target>
+
+</Project>
