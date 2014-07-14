@@ -4,6 +4,8 @@
     using System.Dynamic;
     using System.Globalization;
 
+    using FakeItEasy;
+
     using Xunit;
 
     public class DynamicDictionaryValueFixture
@@ -989,7 +991,7 @@
         public void Should_return_false_when_converting_enums_of_different_types()
         {
             // Given
-            var binder = new MockConvertBinder(typeof(IntEnum), false);
+            var binder = A.Fake<ConvertBinder>(o => o.WithArgumentsForConstructor(new object[] { typeof(IntEnum), false }));
             var value = new DynamicDictionaryValue(ByteEnum.Value1);
 
             // When
@@ -1005,7 +1007,7 @@
         public void Should_return_true_when_converting_enums_of_same_type()
         {
             // Given
-            var binder = new MockConvertBinder(typeof(IntEnum), false);
+            var binder = A.Fake<ConvertBinder>(o => o.WithArgumentsForConstructor(new object[] { typeof(IntEnum), false }));
             var value = new DynamicDictionaryValue(IntEnum.Value1);
 
             // When
@@ -1021,7 +1023,7 @@
         public void Should_return_false_when_converting_incorrect_enum_base_type_to_enum()
         {
             // Given
-            var binder = new MockConvertBinder(typeof(IntEnum), false);
+            var binder = A.Fake<ConvertBinder>(o => o.WithArgumentsForConstructor(new object[] { typeof(IntEnum), false }));
             var value = new DynamicDictionaryValue((byte)1);
 
             // When
@@ -1037,7 +1039,7 @@
         public void Should_return_true_when_converting_enum_base_type_to_enum()
         {
             // Given
-            var binder = new MockConvertBinder(typeof(IntEnum), false);
+            var binder = A.Fake<ConvertBinder>(o => o.WithArgumentsForConstructor(new object[] { typeof(IntEnum), false }));
             var value = new DynamicDictionaryValue(1);
 
             // When
@@ -1049,29 +1051,16 @@
             valueResult.ShouldEqual(IntEnum.Value1);
         }
 
-        private enum IntEnum
-        {
-            Value1 = 1,
-            Value2 = 2
-        }
-
         private enum ByteEnum : byte
         {
             Value1 = 1,
             Value2 = 2
         }
 
-        private class MockConvertBinder : ConvertBinder
+        private enum IntEnum
         {
-            public MockConvertBinder(Type type, bool explicitConversion)
-                : base(type, explicitConversion)
-            {
-            }
-
-            public override DynamicMetaObject FallbackConvert(DynamicMetaObject target, DynamicMetaObject errorSuggestion)
-            {
-                throw new NotImplementedException();
-            }
+            Value1 = 1,
+            Value2 = 2
         }
     }
 }
