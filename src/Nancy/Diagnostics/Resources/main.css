@@ -136,6 +136,10 @@ div.item-list h2
 
 /* JSON Report CSS */
 
+.ib {
+    text-transform: capitalize;
+}
+
 .modelreport TABLE
 {
     border-collapse: collapse;
