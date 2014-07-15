@@ -37,7 +37,7 @@
         /// <summary>
         /// DestinationType properties that are not black listed
         /// </summary>
-        public IEnumerable<PropertyInfo> ValidModelProperties { get; set; }
+        public IEnumerable<BindingMemberInfo> ValidModelBindingMembers { get; set; }
 
         /// <summary>
         /// The incoming data fields

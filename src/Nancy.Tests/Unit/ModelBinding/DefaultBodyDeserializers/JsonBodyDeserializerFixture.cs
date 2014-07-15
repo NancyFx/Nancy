@@ -115,7 +115,7 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
             var context = new BindingContext()
             {
                 DestinationType = typeof(TimeSpan),
-                ValidModelProperties = typeof(TimeSpan).GetProperties(),
+                ValidModelBindingMembers = BindingMemberInfo.Collect<TimeSpan>().ToList(),
             };
 
             // When
@@ -135,13 +135,14 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
             var context = new BindingContext()
             {
                 DestinationType = typeof(TestModel),
-                ValidModelProperties = typeof(TestModel).GetProperties(),
+                ValidModelBindingMembers = BindingMemberInfo.Collect<TestModel>().ToList(),
             };
 
             var model =
                 new TestModel
                 {
-                    ListOfPrimitivesProperty = new List<int> { 1, 3, 5 }
+                    ListOfPrimitivesProperty = new List<int> { 1, 3, 5 },
+                    ListOfPrimitivesField = new List<int> { 2, 4, 6 },
                 };
 
             var s = new JavaScriptSerializer();
@@ -159,6 +160,11 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
             result.ListOfPrimitivesProperty[0].ShouldEqual(1);
             result.ListOfPrimitivesProperty[1].ShouldEqual(3);
             result.ListOfPrimitivesProperty[2].ShouldEqual(5);
+
+            result.ListOfPrimitivesField.ShouldHaveCount(3);
+            result.ListOfPrimitivesField[0].ShouldEqual(2);
+            result.ListOfPrimitivesField[1].ShouldEqual(4);
+            result.ListOfPrimitivesField[2].ShouldEqual(6);
         }
 
         [Fact]
@@ -168,7 +174,7 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
             var context = new BindingContext()
             {
                 DestinationType = typeof(TestModel),
-                ValidModelProperties = typeof(TestModel).GetProperties(),
+                ValidModelBindingMembers = BindingMemberInfo.Collect<TestModel>().ToList(),
             };
 
             var model =
@@ -178,6 +184,11 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
                     {
                         new ModelWithStringValues() { Value1 = "one", Value2 = "two"},
                         new ModelWithStringValues() { Value1 = "three", Value2 = "four"}
+                    },
+                    ListOfComplexObjectsField = new List<ModelWithStringValues>
+                    {
+                        new ModelWithStringValues() { Value1 = "five", Value2 = "six"},
+                        new ModelWithStringValues() { Value1 = "seven", Value2 = "eight"}
                     }
                 };
 
@@ -197,21 +208,29 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
             result.ListOfComplexObjectsProperty[0].Value2.ShouldEqual("two");
             result.ListOfComplexObjectsProperty[1].Value1.ShouldEqual("three");
             result.ListOfComplexObjectsProperty[1].Value2.ShouldEqual("four");
+            result.ListOfComplexObjectsField.ShouldHaveCount(2);
+            result.ListOfComplexObjectsField[0].Value1.ShouldEqual("five");
+            result.ListOfComplexObjectsField[0].Value2.ShouldEqual("six");
+            result.ListOfComplexObjectsField[1].Value1.ShouldEqual("seven");
+            result.ListOfComplexObjectsField[1].Value2.ShouldEqual("eight");
         }
 
         [Fact]
         public void Should_Deserialize_Signed_And_Unsigned_Nullable_Numeric_Types()
         {
             //Given
-            const string json = "{F1: 1, F2: 2, F3: 3}";
+            const string json = "{P1: 1, P2: 2, P3: 3, F1: 4, F2: 5, F3: 6}";
 
             //When
             var model = this.serializer.Deserialize<ModelWithNullables> (json);
 
             //Should
-            Assert.Equal (1, model.F1);
-            Assert.Equal ((uint)2, model.F2);
-            Assert.Equal ((uint)3, model.F3);
+            Assert.Equal (1, model.P1);
+            Assert.Equal ((uint)2, model.P2);
+            Assert.Equal ((uint)3, model.P3);
+            Assert.Equal (4, model.F1);
+            Assert.Equal ((uint)5, model.F2);
+            Assert.Equal ((uint)6, model.F3);
         }
 
 #if !__MonoCS__
@@ -286,7 +305,11 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
 
             public List<int> ListOfPrimitivesProperty { get; set; }
 
+            public List<int> ListOfPrimitivesField;
+
             public List<ModelWithStringValues> ListOfComplexObjectsProperty { get; set; }
+
+            public List<ModelWithStringValues> ListOfComplexObjectsField { get; set; }
 
             public bool Equals(TestModel other)
             {
@@ -354,21 +377,25 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
     {
         public string Value1 { get; set; }
 
-        public string Value2 { get; set; }
+        public string Value2;
     }
 
     public class ModelWithDoubleValues
     {
         public double Latitude { get; set; }
 
-        public double Longitude { get; set; }
+        public double Longitude;
     }
 
     public class ModelWithNullables 
     {
-        public int? F1 { get; set; } 
-        public uint F2 { get; set; } 
-        public uint? F3 { get; set; } 
+        public int? P1 { get; set; }
+        public uint P2 { get; set; }
+        public uint? P3 { get; set; }
+
+        public int? F1;
+        public uint F2;
+        public uint? F3;
     }
 
 }
