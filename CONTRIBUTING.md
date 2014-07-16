@@ -39,3 +39,16 @@ When you're ready to go you should confirm that you are up to date and rebased w
 1. `git push origin myBranch`
 1. Send a descriptive [Pull Request](http://help.github.com/pull-requests/) on GitHub - making sure you have selected the correct branch in the GitHub UI!
 1. Wait for @TheCodeJunkie to merge your changes in and reformat all of your code because he has StyleCop OCD :wink:.
+
+And remember; **A pull-request with tests is a pull-request that's likely to be pulled in.** :grin:
+
+## Style Guidelines
+
+- Indent with 4 spaces, **not** tabs.
+- No underscore (`_`) prefix for member names.
+- Use `this` when accessing instance members, e.g. `this.Name = "TheCodeJunkie";`.
+- Use the `var` keyword unless the inferred type is not obvious.
+- Use the C# type aliases for types that have them, e.g. `int` instead of `Int32`, `string` instead of `String` etc.
+- Use meaningful names (no hungarian notation).
+- Wrap `if`, `else` and `using` blocks (or blocks in general, really) in curly braces, even if it's a single line.
+- Put `using` statements inside namespace.
