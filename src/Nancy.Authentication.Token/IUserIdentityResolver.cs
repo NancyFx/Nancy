@@ -7,7 +7,7 @@
     /// <summary>
     /// Provides a mapping between username and an <see cref="IUserIdentity"/>.
     /// </summary>
-    public interface IUserMapper
+    public interface IUserIdentityResolver
     {
         /// <summary>
         /// Gets the <see cref="IUserIdentity"/> from username and claims.

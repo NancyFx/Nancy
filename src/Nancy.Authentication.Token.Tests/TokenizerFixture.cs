@@ -78,7 +78,7 @@
 
             var token = tokenizer.Tokenize(identity, context);
 
-            var detokenizedIdentity = tokenizer.Detokenize(token, this.context, new DefaultUserMapper());
+            var detokenizedIdentity = tokenizer.Detokenize(token, this.context, new DefaultUserIdentityResolver());
 
             detokenizedIdentity.ShouldNotBeNull();
 
@@ -107,7 +107,7 @@
 
             var badToken = Convert.ToBase64String(tweak.ToArray()) + ":" + parts[1];
 
-            var detokenizedIdentity = tokenizer.Detokenize(badToken, this.context, new DefaultUserMapper());
+            var detokenizedIdentity = tokenizer.Detokenize(badToken, this.context, new DefaultUserIdentityResolver());
 
             detokenizedIdentity.ShouldBeNull();
         }
@@ -125,7 +125,7 @@
 
             var token = tokenizer.Tokenize(identity, context);
 
-            var detokenizedIdentity = tokenizer.Detokenize(token, this.context, new DefaultUserMapper());
+            var detokenizedIdentity = tokenizer.Detokenize(token, this.context, new DefaultUserIdentityResolver());
 
             detokenizedIdentity.ShouldNotBeNull();
 
@@ -157,7 +157,7 @@
                 Request = badRequest
             };
 
-            var detokenizedIdentity = tokenizer.Detokenize(token, badContext, new DefaultUserMapper());
+            var detokenizedIdentity = tokenizer.Detokenize(token, badContext, new DefaultUserIdentityResolver());
 
             detokenizedIdentity.ShouldBeNull();
         }
@@ -177,7 +177,7 @@
 
             Thread.Sleep(20);
 
-            var detokenizedIdentity = tokenizer.Detokenize(token, this.context, new DefaultUserMapper());
+            var detokenizedIdentity = tokenizer.Detokenize(token, this.context, new DefaultUserIdentityResolver());
 
             detokenizedIdentity.ShouldBeNull();
         }
@@ -205,7 +205,7 @@
 
             Thread.Sleep(25); // key is now expired but should not be purged until token expiration lapses
 
-            var detokenizedIdentity = tokenizer.Detokenize(token, this.context, new DefaultUserMapper());
+            var detokenizedIdentity = tokenizer.Detokenize(token, this.context, new DefaultUserIdentityResolver());
 
             detokenizedIdentity.ShouldNotBeNull();
         }
@@ -254,7 +254,7 @@
 
             Thread.Sleep(30);
 
-            var detokenizedIdentity = tokenizer.Detokenize(token, this.context, new DefaultUserMapper());
+            var detokenizedIdentity = tokenizer.Detokenize(token, this.context, new DefaultUserIdentityResolver());
 
             detokenizedIdentity.ShouldBeNull();
         }

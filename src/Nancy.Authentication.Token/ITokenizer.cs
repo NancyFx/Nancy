@@ -20,8 +20,8 @@
         /// </summary>
         /// <param name="token">The token from which to create a user identity.</param>
         /// <param name="context">Current <see cref="NancyContext"/>.</param>
-        /// <param name="userMapper">The user mapper.</param>
+        /// <param name="userIdentityResolver">The user identity resolver.</param>
         /// <returns>The detokenized user identity.</returns>
-        IUserIdentity Detokenize(string token, NancyContext context, IUserMapper userMapper);
+        IUserIdentity Detokenize(string token, NancyContext context, IUserIdentityResolver userIdentityResolver);
     }
 }

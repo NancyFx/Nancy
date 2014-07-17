@@ -11,8 +11,8 @@
         /// Initializes a new instance of the <see cref="TokenAuthenticationConfiguration"/> class.
         /// </summary>
         /// <param name="tokenizer">A valid instance of <see cref="ITokenizer"/> class</param>
-        /// <param name="userMapper">The user mapper.</param>
-        public TokenAuthenticationConfiguration(ITokenizer tokenizer, IUserMapper userMapper = null)
+        /// <param name="userIdentityResolver">The user identity resolver.</param>
+        public TokenAuthenticationConfiguration(ITokenizer tokenizer, IUserIdentityResolver userIdentityResolver = null)
         {
             if (tokenizer == null)
             {
@@ -20,7 +20,7 @@
             }
 
             this.Tokenizer = tokenizer;
-            this.UserMapper = userMapper ?? new DefaultUserMapper();
+            this.UserIdentityResolver = userIdentityResolver ?? new DefaultUserIdentityResolver();
         }
 
         /// <summary>
@@ -28,6 +28,9 @@
         /// </summary>
         public ITokenizer Tokenizer { get; private set; }
 
-        public IUserMapper UserMapper { get; set; }
+        /// <summary>
+        /// Gets or sets the user identity resolver
+        /// </summary>
+        public IUserIdentityResolver UserIdentityResolver { get; set; }
     }
 }
