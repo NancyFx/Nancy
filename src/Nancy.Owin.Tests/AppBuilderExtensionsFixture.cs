@@ -12,12 +12,13 @@
 
     public class AppBuilderExtensionsFixture
     {
-        /*[Fact]
+#if !__MonoCS__
+        [Fact]
         public void When_host_Nancy_via_IAppBuilder_then_should_handle_requests()
         {
             // Given
             var bootstrapper = new ConfigurableBootstrapper(config => config.Module<TestModule>());
-            
+
             using(var server = TestServer.Create(app => app.UseNancy(opts => opts.Bootstrapper = bootstrapper)))
             {
 
@@ -27,7 +28,8 @@
                 // Then
                 Assert.Equal(response.StatusCode, System.Net.HttpStatusCode.OK);
             }
-        }*/
+        }
+#endif
 
         public class TestModule : NancyModule
         {
