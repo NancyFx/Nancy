@@ -1,7 +1,11 @@
 ﻿namespace Nancy.Tests.Unit
 {
     using System;
+    using System.Dynamic;
     using System.Globalization;
+
+    using FakeItEasy;
+
     using Xunit;
 
     public class DynamicDictionaryValueFixture
@@ -222,10 +226,10 @@
             Assert.False(valueFalse);
         }
 
-		[Fact]
+        [Fact]
         public void Should_be_able_to_implictly_cast_long_to_other_value_types()
         {
-            // Given 
+            // Given
             dynamic valueLong = new DynamicDictionaryValue((long)10);
 
             // Then
@@ -981,6 +985,82 @@
             {
                 EventArgs e = (EventArgs)value;
             });
+        }
+
+        [Fact]
+        public void Should_return_false_when_converting_enums_of_different_types()
+        {
+            // Given
+            var binder = A.Fake<ConvertBinder>(o => o.WithArgumentsForConstructor(new object[] { typeof(IntEnum), false }));
+            var value = new DynamicDictionaryValue(ByteEnum.Value1);
+
+            // When
+            object valueResult;
+            var result = value.TryConvert(binder, out valueResult);
+
+            // Then
+            result.ShouldBeFalse();
+            valueResult.ShouldBeNull();
+        }
+
+        [Fact]
+        public void Should_return_true_when_converting_enums_of_same_type()
+        {
+            // Given
+            var binder = A.Fake<ConvertBinder>(o => o.WithArgumentsForConstructor(new object[] { typeof(IntEnum), false }));
+            var value = new DynamicDictionaryValue(IntEnum.Value1);
+
+            // When
+            object valueResult;
+            var result = value.TryConvert(binder, out valueResult);
+
+            // Then
+            result.ShouldBeTrue();
+            valueResult.ShouldEqual(IntEnum.Value1);
+        }
+
+        [Fact]
+        public void Should_return_false_when_converting_incorrect_enum_base_type_to_enum()
+        {
+            // Given
+            var binder = A.Fake<ConvertBinder>(o => o.WithArgumentsForConstructor(new object[] { typeof(IntEnum), false }));
+            var value = new DynamicDictionaryValue((byte)1);
+
+            // When
+            object valueResult;
+            var result = value.TryConvert(binder, out valueResult);
+
+            // Then
+            result.ShouldBeFalse();
+            valueResult.ShouldBeNull();
+        }
+
+        [Fact]
+        public void Should_return_true_when_converting_enum_base_type_to_enum()
+        {
+            // Given
+            var binder = A.Fake<ConvertBinder>(o => o.WithArgumentsForConstructor(new object[] { typeof(IntEnum), false }));
+            var value = new DynamicDictionaryValue(1);
+
+            // When
+            object valueResult;
+            var result = value.TryConvert(binder, out valueResult);
+
+            // Then
+            result.ShouldBeTrue();
+            valueResult.ShouldEqual(IntEnum.Value1);
+        }
+
+        private enum ByteEnum : byte
+        {
+            Value1 = 1,
+            Value2 = 2
+        }
+
+        private enum IntEnum
+        {
+            Value1 = 1,
+            Value2 = 2
         }
     }
 }

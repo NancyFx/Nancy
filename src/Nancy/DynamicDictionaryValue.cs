@@ -246,6 +246,29 @@
                     return true;
                 }
             }
+            else if (binderType.IsEnum)
+            {
+                // handles enum to enum assignments
+                if (value.GetType().IsEnum)
+                {
+                    if (binderType == value.GetType())
+                    {
+                        result = value;
+                        return true;
+                    }
+
+                    return false;
+                }
+
+                // handles number to enum assignments
+                if (Enum.GetUnderlyingType(binderType) == value.GetType())
+                {
+                    result = Enum.ToObject(binderType, value);
+                    return true;
+                }
+
+                return false;
+            }
             else
             {
                 if (binderType.IsGenericType && binderType.GetGenericTypeDefinition() == typeof(Nullable<>))
