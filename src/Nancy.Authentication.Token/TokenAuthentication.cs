@@ -3,6 +3,7 @@
     using System;
     using Nancy.Bootstrapper;
     using Nancy.Security;
+    using Nancy.Helpers;
 
     /// <summary>
     /// Nancy Token authentication implementation
@@ -10,6 +11,8 @@
     public static class TokenAuthentication
     {
         private const string Scheme = "Token";
+        private const string CookieName = "tok";
+        private const string QueryName = "tok";
 
         /// <summary>
         /// Enables Token authentication for the application
@@ -74,17 +77,15 @@
 
         private static void RetrieveCredentials(NancyContext context, TokenAuthenticationConfiguration configuration)
         {
-            var token = ExtractTokenFromHeader(context.Request);
+            var token = ExtractTokenFromHeader(context.Request) 
+                ?? ExtractTokenFromCookie(context.Request)
+                ?? ExtractTokenFromQuery(context.Request);
+            if (token == null) return;
 
-            if (token != null)
-            {
-                var user = configuration.Tokenizer.Detokenize(token, context);
+            var user = configuration.Tokenizer.Detokenize(token, context);
+            if (user == null) return;
 
-                if (user != null)
-                {
-                    context.CurrentUser = user;
-                }
-            }
+            context.CurrentUser = user;
         }
 
         private static string ExtractTokenFromHeader(Request request)
@@ -106,6 +107,36 @@
             {
                 var encodedToken = authorization.Substring(Scheme.Length).Trim();
                 return String.IsNullOrWhiteSpace(encodedToken) ? null : encodedToken;
+            }
+            catch (FormatException)
+            {
+                return null;
+            }
+        }
+
+        private static string ExtractTokenFromCookie(Request request)
+        {
+            var encodedToken = request.Cookies.ContainsKey(CookieName)
+                                    ? request.Cookies[CookieName]
+                                    : null;
+
+            try
+            {
+                return String.IsNullOrWhiteSpace(encodedToken) ? null : HttpUtility.UrlDecode(encodedToken);
+            }
+            catch (FormatException)
+            {
+                return null;
+            }
+        }
+
+        private static string ExtractTokenFromQuery(Request request)
+        {
+            var encodedToken = request.Query[QueryName].HasValue ? request.Query[QueryName] : null;
+
+            try
+            {
+                return String.IsNullOrWhiteSpace(encodedToken) ? null : HttpUtility.UrlDecode(encodedToken);
             }
             catch (FormatException)
             {
