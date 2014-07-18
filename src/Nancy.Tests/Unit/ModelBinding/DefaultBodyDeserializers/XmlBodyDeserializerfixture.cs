@@ -2,9 +2,10 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
 {
     using System.IO;
     using System.Text;
+    using System.Xml.Serialization;
+    using FakeItEasy;
     using Nancy.ModelBinding;
     using Nancy.ModelBinding.DefaultBodyDeserializers;
-    using System.Xml.Serialization;
     using Xunit;
 
     public class XmlBodyDeserializerFixture
@@ -20,80 +21,80 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
             testModelXml = ToXmlString(testModel);
         }
 
-//        [Fact]
-//        public void Should_report_true_for_can_deserialize_for_application_xml()
-//        {
-//            // Given
-//            const string contentType = "application/xml";
+        [Fact]
+        public void Should_report_true_for_can_deserialize_for_application_xml()
+        {
+            // Given
+            const string contentType = "application/xml";
 
-//            // When
-//            var result = this.deserialize.CanDeserialize(contentType);
+            // When
+            var result = this.deserialize.CanDeserialize(contentType, A<BindingContext>._);
 
-//            // Then
-//            result.ShouldBeTrue();
-//        }
+            // Then
+            result.ShouldBeTrue();
+        }
 
-//        [Fact]
-//        public void Should_report_true_for_can_deserialize_for_text_xml()
-//        {
-//            // Given
-//            const string contentType = "text/xml";
+        [Fact]
+        public void Should_report_true_for_can_deserialize_for_text_xml()
+        {
+            // Given
+            const string contentType = "text/xml";
 
-//            // When
-//            var result = this.deserialize.CanDeserialize(contentType);
+            // When
+            var result = this.deserialize.CanDeserialize(contentType, A<BindingContext>._);
 
-//            // Then
-//            result.ShouldBeTrue();
-//        }
+            // Then
+            result.ShouldBeTrue();
+        }
 
-//        [Fact]
-//        public void Should_report_true_for_can_deserialize_for_custom_xml()
-//        {
-//            // Given
-//            const string contentType = "application/vnd.org.nancyfx.mything+xml";
+        [Fact]
+        public void Should_report_true_for_can_deserialize_for_custom_xml()
+        {
+            // Given
+            const string contentType = "application/vnd.org.nancyfx.mything+xml";
 
-//            // When
-//            var result = this.deserialize.CanDeserialize(contentType);
+            // When
+            var result = this.deserialize.CanDeserialize(contentType, A<BindingContext>._);
 
-//            // Then
-//            result.ShouldBeTrue();
-//        }
+            // Then
+            result.ShouldBeTrue();
+        }
 
-//        [Fact]
-//        public void Should_report_false_for_can_deserialize_for_json_format()
-//        {
-//            // Given
-//            const string contentType = "text/json";
+        [Fact]
+        public void Should_report_false_for_can_deserialize_for_json_format()
+        {
+            // Given
+            const string contentType = "text/json";
 
-//            // When
-//            var result = this.deserialize.CanDeserialize(contentType);
+            // When
+            var result = this.deserialize.CanDeserialize(contentType, A<BindingContext>._);
 
-//            // Then
-//            result.ShouldBeFalse();
-//        }
+            // Then
+            result.ShouldBeFalse();
+        }
 
-//        [Fact]
-//        public void Should_deserialize_xml_model()
-//        {
-//            // Given
-//            var bodyStream = new MemoryStream(Encoding.UTF8.GetBytes(this.testModelXml));
-//            var context = new BindingContext()
-//            {
-//                DestinationType = typeof(TestModel),
-//                ValidModelProperties = typeof(TestModel).GetProperties(),
-//            };
+        [Fact]
+        public void Should_deserialize_xml_model()
+        {
+            // Given
+            var bodyStream = new MemoryStream(Encoding.UTF8.GetBytes(this.testModelXml));
+            var context = new BindingContext()
+            {
+                DestinationType = typeof(TestModel),
+                ValidModelProperties = typeof(TestModel).GetProperties(),
+            };
 
-//            // When
-//            var result = (TestModel)this.deserialize.Deserialize(
-//                            "application/xml",
-//                            bodyStream,
-//                            context);
+            // When
+            var result = (TestModel)this.deserialize.Deserialize(
+                            "application/xml",
+                            bodyStream,
+                            context);
 
-//            // Then
-//            result.ShouldNotBeNull();
-//            result.ShouldBeOfType(typeof(TestModel));
-//            result.ShouldEqual(this.testModel);
-//        }
+            // Then
+            result.ShouldNotBeNull();
+            result.ShouldBeOfType(typeof(TestModel));
+            result.ShouldEqual(this.testModel);
+        }
 
         public static string ToXmlString<T>(T input)
         {
