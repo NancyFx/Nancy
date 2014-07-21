@@ -2,8 +2,9 @@
 {
     using Nancy.Helpers;
     using Xunit;
+    using Xunit.Extensions;
 
-    public class HttpUtilityFixture
+	public class HttpUtilityFixture
     {
         [Fact]
         public void ParseQueryString_respects_case_insensitive_setting()
@@ -20,12 +21,15 @@
             collection["KEY"].ShouldEqual("value");
         }
 
-        [Fact]
-        public void ParseQueryString_respects_case_sensitive_setting()
+        [Theory]
+        [InlineData("key=value")]
+        [InlineData("/a/a&/b&/c")]
+        [InlineData("/build/app-transitions-css/app-transitions-css-min.css&/build/widget-base/assets/skins/sam/widget-base.css&/build/scrollview-base/assets/skins/sam/scrollview-base.css&/build/scrollview-scrollbars/assets/skins/sam/scrollview-scrollbars.css&/build/widget-stack/assets/skins/sam/widget-stack.css&/build/overlay/assets/skins/sam/overlay.css&/build/console/assets/skins/sam/console.css")]
+        public void ParseQueryString_respects_case_sensitive_setting(string qs)
         {
             // Given
             StaticConfiguration.CaseSensitive = true;
-            var query = "key=value";
+            var query = qs;
 
             // When
             var collection = HttpUtility.ParseQueryString(query);
