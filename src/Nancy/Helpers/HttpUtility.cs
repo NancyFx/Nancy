@@ -737,16 +737,24 @@ namespace Nancy.Helpers
                 if (valuePos == -1)
                 {
                     var valueLen = valueEnd;
-                    if (valueLen == -1) 
-                        valueLen = decoded.Length - namePos;
+                    if (valueLen == -1)
+                        valueLen = decodedLength - namePos;
 
-                    name = UrlDecode(decoded.Substring(namePos, valueLen), encoding);
+                    //Ensure we don't try to read beyond the end of the string
+                    var length = Math.Min(decodedLength - namePos, valueLen);
+                    name = UrlDecode(decoded.Substring(namePos, length), encoding);
+
+                    var ampersandIndex = name.IndexOf('&');
+                    if (ampersandIndex != -1)
+                        name = name.Substring(0, ampersandIndex);
+
                     valuePos = namePos;
                 }
                 else
                 {
                     name = UrlDecode(decoded.Substring(namePos, valuePos - namePos - 1), encoding);
                 }
+
                 if (valueEnd < 0)
                 {
                     namePos = -1;
