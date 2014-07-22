@@ -724,12 +724,14 @@ namespace Nancy.Helpers
 
             var indexOfEquals = segment.IndexOf('=');
             if (indexOfEquals == -1)
-                return new KeyValuePair<string, string>(segment, segment);
+            {
+                var decoded = UrlDecode(segment);
+                return new KeyValuePair<string, string>(decoded, decoded);
+            }
 
-            //Treat the first '=' as the separator as subsequent '=' may be valid within the value
-            var key = segment.Substring(0, indexOfEquals);
+            var key = UrlDecode(segment.Substring(0, indexOfEquals));
             var length = (segment.Length - indexOfEquals) - 1;
-            var value = segment.Substring(indexOfEquals + 1, length);
+            var value = UrlDecode(segment.Substring(indexOfEquals + 1, length));
             return new KeyValuePair<string, string>(key, value);
         }
 
