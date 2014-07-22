@@ -711,13 +711,13 @@ namespace Nancy.Helpers
 
             foreach (var segment in segments)
             {
-                var keyValuePair = ParseQueryStringSegment(segment);
+                var keyValuePair = ParseQueryStringSegment(segment, encoding);
                 if (!Equals(keyValuePair, default(KeyValuePair<string, string>)))
                     result.Add(keyValuePair.Key, keyValuePair.Value);
             }
         }
 
-        private static KeyValuePair<string, string> ParseQueryStringSegment(string segment)
+        private static KeyValuePair<string, string> ParseQueryStringSegment(string segment, Encoding encoding)
         {
             if (String.IsNullOrWhiteSpace(segment))
                 return default(KeyValuePair<string, string>);
@@ -725,13 +725,13 @@ namespace Nancy.Helpers
             var indexOfEquals = segment.IndexOf('=');
             if (indexOfEquals == -1)
             {
-                var decoded = UrlDecode(segment);
+                var decoded = UrlDecode(segment, encoding);
                 return new KeyValuePair<string, string>(decoded, decoded);
             }
 
-            var key = UrlDecode(segment.Substring(0, indexOfEquals));
+            var key = UrlDecode(segment.Substring(0, indexOfEquals), encoding);
             var length = (segment.Length - indexOfEquals) - 1;
-            var value = UrlDecode(segment.Substring(indexOfEquals + 1, length));
+            var value = UrlDecode(segment.Substring(indexOfEquals + 1, length), encoding);
             return new KeyValuePair<string, string>(key, value);
         }
 
