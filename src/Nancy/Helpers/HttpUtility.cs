@@ -706,71 +706,33 @@ namespace Nancy.Helpers
             if (query.Length == 0)
                 return;
 
-            string decoded = HtmlDecode(query);
-            int decodedLength = decoded.Length;
-            int namePos = 0;
-            bool first = true;
-            while (namePos <= decodedLength)
+            var decoded = HtmlDecode(query);
+            var segments = decoded.Split(new[] {'&'}, StringSplitOptions.None);
+
+            foreach (var segment in segments)
             {
-                int valuePos = -1, valueEnd = -1;
-                for (int q = namePos; q < decodedLength; q++)
-                {
-                    if (valuePos == -1 && decoded[q] == '=')
-                    {
-                        valuePos = q + 1;
-                    }
-                    else if (decoded[q] == '&')
-                    {
-                        valueEnd = q;
-                        break;
-                    }
-                }
-
-                if (first)
-                {
-                    first = false;
-                    if (decoded[namePos] == '?')
-                        namePos++;
-                }
-
-                string name, value;
-                if (valuePos == -1)
-                {
-                    var valueLen = valueEnd;
-                    if (valueLen == -1)
-                        valueLen = decodedLength - namePos;
-
-                    //Ensure we don't try to read beyond the end of the string
-                    var length = Math.Min(decodedLength - namePos, valueLen);
-                    name = UrlDecode(decoded.Substring(namePos, length), encoding);
-
-                    var ampersandIndex = name.IndexOf('&');
-                    if (ampersandIndex != -1)
-                        name = name.Substring(0, ampersandIndex);
-
-                    valuePos = namePos;
-                }
-                else
-                {
-                    name = UrlDecode(decoded.Substring(namePos, valuePos - namePos - 1), encoding);
-                }
-
-                if (valueEnd < 0)
-                {
-                    namePos = -1;
-                    valueEnd = decoded.Length;
-                }
-                else
-                {
-                    namePos = valueEnd + 1;
-                }
-                value = UrlDecode(decoded.Substring(valuePos, valueEnd - valuePos), encoding);
-
-                result.Add(name, value);
-                if (namePos == -1)
-                    break;
+                var keyValuePair = ParseQueryStringSegment(segment);
+                if (!Equals(keyValuePair, default(KeyValuePair<string, string>)))
+                    result.Add(keyValuePair.Key, keyValuePair.Value);
             }
         }
+
+        private static KeyValuePair<string, string> ParseQueryStringSegment(string segment)
+        {
+            if (String.IsNullOrWhiteSpace(segment))
+                return default(KeyValuePair<string, string>);
+
+            var indexOfEquals = segment.IndexOf('=');
+            if (indexOfEquals == -1)
+                return new KeyValuePair<string, string>(segment, segment);
+
+            //Treat the first '=' as the separator as subsequent '=' may be valid within the value
+            var key = segment.Substring(0, indexOfEquals);
+            var length = (segment.Length - indexOfEquals) - 1;
+            var value = segment.Substring(indexOfEquals + 1, length);
+            return new KeyValuePair<string, string>(key, value);
+        }
+
         #endregion // Methods
     }
 }
