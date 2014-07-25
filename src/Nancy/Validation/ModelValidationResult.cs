@@ -41,6 +41,20 @@
         /// <value>An <see cref="IDictionary{TKey,TValue}"/> instance that contains <see cref="ModelValidationError"/> instances grouped by property name.</value>
         public IDictionary<string, IList<ModelValidationError>> Errors { get; set; }
 
+		/// <summary>
+		/// Gets a clean representation of the errors.
+		/// </summary>
+		/// <returns></returns>
+		public IEnumerable<KeyValuePair<string, string[]>> FormattedErrors
+		{
+			get
+			{
+				var result = this.Errors.Select(
+					x => new KeyValuePair<string, string[]>(x.Key, x.Value.Select(y => y.ErrorMessage).ToArray()));
+				return result;
+			}
+		}
+
         /// <summary>
         /// Gets a value indicating whether the validated instance is valid or not.
         /// </summary>
