@@ -45,12 +45,11 @@
         /// Gets a clean representation of the errors.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<KeyValuePair<string, string[]>> FormattedErrors
+        public IEnumerable<dynamic> FormattedErrors
         {
             get
             {
-                var result = this.Errors.Select(
-                    x => new KeyValuePair<string, string[]>(x.Key, x.Value.Select(y => y.ErrorMessage).ToArray()));
+                var result = this.Errors.Select(x => new {Key = x.Key, Errors = x.Value.Select(y => y.ErrorMessage).ToArray()}); 
                 return result;
             }
         }
