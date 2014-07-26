@@ -134,6 +134,24 @@
         protected IRenderContext RenderContext { get; set; }
 
         /// <summary>
+        /// Gets the current <see cref="NancyContext"/> instance.
+        /// </summary>
+        /// <value>A <see cref="NancyContext"/> instance.</value>
+        public NancyContext Context
+        {
+            get { return this.RenderContext.Context; }
+        }
+
+        /// <summary>
+        /// Gets the current <see cref="Request"/> instance.
+        /// </summary>
+        /// <value>A <see cref="Request"/> instance.</value>
+        public Request Request
+        {
+            get { return this.Context.Request; }
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="NancyRazorViewBase"/> class.
         /// </summary>
         protected NancyRazorViewBase()
