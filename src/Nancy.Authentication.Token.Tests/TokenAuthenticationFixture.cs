@@ -10,6 +10,7 @@
     using Nancy.Bootstrapper;
     using Nancy.Tests.Fakes;
     using Xunit;
+    using Xunit.Extensions;
 
     public class TokenAuthenticationFixture
     {
@@ -70,10 +71,13 @@
             result.ShouldBeOfType(typeof(ArgumentNullException));
         }
 
-        [Fact]
-        public void Pre_request_hook_should_not_set_auth_details_with_no_auth_headers()
+        [Theory]
+        [InlineData(TokenSource.Header)]
+        [InlineData(TokenSource.Query)]
+        public void Pre_request_hook_should_not_set_auth_details_with_no_auth_headers_or_query_param(TokenSource tokenSource)
         {
             // Given
+            this.config.TokenSource = tokenSource;
             var context = new NancyContext()
             {
                 Request = new FakeRequest("GET", "/")
@@ -91,8 +95,26 @@
         public void Pre_request_hook_should_not_set_auth_details_when_invalid_scheme_in_auth_header()
         {
             // Given
-            var context = CreateContextWithHeader(
-                "Authorization", new[] { "FooScheme" + " " + "A-FAKE-TOKEN" });
+            this.config.TokenSource = TokenSource.Header;
+            var context = CreateContextWithHeaderAndQuery(new Tuple<string, IEnumerable<string>>(
+                "Authorization", new[] { "FooScheme" + " " + "A-FAKE-TOKEN" }));
+
+            // When
+            var result = this.hooks.BeforeRequest.Invoke(context, new CancellationToken());
+
+            // Then
+            result.Result.ShouldBeNull();
+            context.CurrentUser.ShouldBeNull();
+        }
+
+        [Fact]
+        public void Pre_request_hook_should_not_set_auth_details_when_invalid_scheme_in_auth_query_param()
+        {
+            // Given
+            this.config.TokenSource = TokenSource.Query;
+            var context = CreateContextWithHeaderAndQuery(
+                null,
+                new Tuple<string, string>("Authorization",  "FooScheme" + " " + "A-FAKE-TOKEN"));
 
             // When
             var result = this.hooks.BeforeRequest.Invoke(context, new CancellationToken());
@@ -106,8 +128,9 @@
         public void Pre_request_hook_should_call_tokenizer_with_token_in_auth_header()
         {
             // Given
-            var context = CreateContextWithHeader(
-               "Authorization", new[] { "Token" + " " + "mytoken" });
+            this.config.TokenSource = TokenSource.Header;
+            var context = CreateContextWithHeaderAndQuery(
+                new Tuple<string, IEnumerable<string>>("Authorization", new[] { "Token" + " " + "mytoken" }));
 
             // When
             this.hooks.BeforeRequest.Invoke(context, new CancellationToken());
@@ -117,19 +140,35 @@
         }
 
         [Fact]
+        public void Pre_request_hook_should_call_tokenizer_with_token_in_auth_query_param()
+        {
+            // Given
+            this.config.TokenSource = TokenSource.Query;
+            var context = CreateContextWithHeaderAndQuery(
+                null,
+                new Tuple<string, string>("authorization", "Token" + " " + "querytoken"));
+
+            // When
+            this.hooks.BeforeRequest.Invoke(context, new CancellationToken());
+
+            // Then
+            A.CallTo(() => config.Tokenizer.Detokenize("querytoken", context)).MustHaveHappened();
+        }
+
+        [Fact]
         public void Should_set_user_in_context_with_valid_username_in_auth_header()
         {
             // Given
             var fakePipelines = new Pipelines();
 
-            var context = CreateContextWithHeader(
-               "Authorization", new[] { "Token" + " " + "mytoken" });
+            var context = CreateContextWithHeaderAndQuery(new Tuple<string, IEnumerable<string>>(
+               "Authorization", new[] { "Token" + " " + "mytoken" }));
 
             var tokenizer = A.Fake<ITokenizer>();
             var fakeUser = A.Fake<IUserIdentity>();
             A.CallTo(() => tokenizer.Detokenize("mytoken", context)).Returns(fakeUser);
 
-            var cfg = new TokenAuthenticationConfiguration(tokenizer);
+            var cfg = new TokenAuthenticationConfiguration(tokenizer, TokenSource.Header);
 
             TokenAuthentication.Enable(fakePipelines, cfg);
 
@@ -140,16 +179,44 @@
             context.CurrentUser.ShouldBeSameAs(fakeUser);
         }
 
-        private static NancyContext CreateContextWithHeader(string name, IEnumerable<string> values)
+        [Fact]
+        public void Should_set_user_in_context_with_valid_username_in_auth_query_param()
         {
-            var header = new Dictionary<string, IEnumerable<string>>
-            {
-                { name, values }
-            };
+            // Given
+            var fakePipelines = new Pipelines();
 
+            var context = CreateContextWithHeaderAndQuery(
+                null,
+                new Tuple<string, string>("Authorization", "Token" + " " + "querytoken"));
+
+            var tokenizer = A.Fake<ITokenizer>();
+            var fakeUser = A.Fake<IUserIdentity>();
+            A.CallTo(() => tokenizer.Detokenize("querytoken", context)).Returns(fakeUser);
+
+            var cfg = new TokenAuthenticationConfiguration(tokenizer, TokenSource.Query);
+
+            TokenAuthentication.Enable(fakePipelines, cfg);
+
+            // When
+            fakePipelines.BeforeRequest.Invoke(context, new CancellationToken());
+
+            // Then
+            context.CurrentUser.ShouldBeSameAs(fakeUser);
+        }
+
+        private static NancyContext CreateContextWithHeaderAndQuery(Tuple<string, IEnumerable<string>> header = null,
+            Tuple<string, string> queryParam = null)
+        {
+            var headers = new Dictionary<string, IEnumerable<string>>();
+            if (header != null)
+            {
+                headers.Add(header.Item1, header.Item2);
+            }
+
+            var query = queryParam != null ? queryParam.Item1 + "=" + queryParam.Item2 : String.Empty;
             return new NancyContext()
             {
-                Request = new FakeRequest("GET", "/", header)
+                Request = new FakeRequest("GET", "/", headers, query)
             };
         }
 

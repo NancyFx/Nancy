@@ -75,6 +75,7 @@
     <Compile Include="TokenAuthentication.cs" />
     <Compile Include="TokenAuthenticationConfiguration.cs" />
     <Compile Include="Tokenizer.cs" />
+    <Compile Include="TokenSource.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy\Nancy.csproj">

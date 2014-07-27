@@ -74,7 +74,7 @@
 
         private static void RetrieveCredentials(NancyContext context, TokenAuthenticationConfiguration configuration)
         {
-            var token = ExtractTokenFromHeader(context.Request);
+            var token = ExtractToken(context.Request, configuration.TokenSource);
 
             if (token != null)
             {
@@ -87,10 +87,11 @@
             }
         }
 
-        private static string ExtractTokenFromHeader(Request request)
+        private static string ExtractToken(Request request, TokenSource tokenLocation)
         {
-            var authorization =
-                request.Headers.Authorization;
+            var authorization = tokenLocation == TokenSource.Header ?
+                request.Headers.Authorization :
+                request.Query.Authorization.ToString();
 
             if (string.IsNullOrEmpty(authorization))
             {
