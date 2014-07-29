@@ -35,8 +35,15 @@ namespace Nancy.Localization
                         Manager = new ResourceManager(baseName, assembly)
                     };
 
-            this.resourceManagers = 
-                resources.ToDictionary(x => x.Name, x => x.Manager, StringComparer.OrdinalIgnoreCase);
+            this.resourceManagers = new Dictionary<string, ResourceManager>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var x in resources)
+            {
+                if (!this.resourceManagers.ContainsKey(x.Name))
+                {
+                    this.resourceManagers[x.Name] = x.Manager;
+                }
+            }
         }
 
         /// <summary>
