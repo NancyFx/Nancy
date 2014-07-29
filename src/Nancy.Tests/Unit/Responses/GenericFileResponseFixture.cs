@@ -127,6 +127,17 @@
             response.Headers["ETag"].ShouldEndWith("\"");
         }
 
+        [Fact]
+        public void Should_set_content_length_in_response_header()
+        {
+            // Given, when
+            var expected = new FileInfo(imagePath).Length.ToString();
+            var response =
+                new GenericFileResponse(this.imagePath, imageContentType);
+
+            // Then
+            response.Headers["Content-Length"].ShouldEqual(expected);
+        }
 		
 		private static IEnumerable<byte> GetResponseContents(Response response)
 		{
