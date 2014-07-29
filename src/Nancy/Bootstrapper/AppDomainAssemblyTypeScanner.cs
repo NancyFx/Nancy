@@ -315,11 +315,11 @@ namespace Nancy.Bootstrapper
             }
             else if ((mode == ScanMode.OnlyNancyNamespace))
             {
-                return returnTypes.Where(t => t.FullName.StartsWith("Nancy"));
+                return returnTypes.Where(t => t.Namespace.StartsWith("Nancy"));
             }
             else if ((mode == ScanMode.ExcludeNancyNamespace))
             {
-                return returnTypes.Where(t => !t.FullName.StartsWith("Nancy"));
+                return returnTypes.Where(t => !t.Namespace.StartsWith("Nancy"));
             }
             else//mode == ScanMode.All
             {
