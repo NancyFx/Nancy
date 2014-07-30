@@ -145,7 +145,7 @@ namespace Nancy.Responses
             var lastWriteTimeUtc = fi.LastWriteTimeUtc;
             var etag = string.Concat("\"", lastWriteTimeUtc.Ticks.ToString("x"), "\"");
             var lastModified = lastWriteTimeUtc.ToString("R");
-            long length = fi.Length;
+            var length = fi.Length;
 
             if (CacheHelpers.ReturnNotModified(etag, lastWriteTimeUtc, context))
             {
