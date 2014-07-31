@@ -350,7 +350,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             binder.Bind(context, typeof(TestModel), null, BindingConfig.Default);
 
             // Then
-            validProperties.ShouldEqual(10);
+            validProperties.ShouldEqual(11);
         }
 
         [Fact]
@@ -831,6 +831,33 @@ namespace Nancy.Tests.Unit.ModelBinding
             result.First().IntValues.ShouldEqualSequence(new[] { 1, 2, 3, 4 });
             result.Last().IntValues.ShouldHaveCount(4);
             result.Last().IntValues.ShouldEqualSequence(new[] { 5, 6, 7, 8 });
+        }
+
+        [Fact]
+        public void Should_bind_collections_regardless_of_case()
+        {
+            // Given
+            var typeConverters = new ITypeConverter[] { new CollectionConverter(), new FallbackConverter() };
+            var binder = this.GetBinder(typeConverters);
+
+            var context = CreateContextWithHeader("Content-Type", new[] { "application/x-www-form-urlencoded" });
+
+            context.Request.Form["lowercaseintproperty[0]"] = "1";
+            context.Request.Form["lowercaseintproperty[1]"] = "2";
+            context.Request.Form["lowercaseIntproperty[2]"] = "3";
+            context.Request.Form["lowercaseIntproperty[3]"] = "4";
+            context.Request.Form["Lowercaseintproperty[4]"] = "5";
+            context.Request.Form["Lowercaseintproperty[5]"] = "6";
+            context.Request.Form["LowercaseIntproperty[6]"] = "7";
+            context.Request.Form["LowercaseIntproperty[7]"] = "8";
+
+            // When
+            var result = (List<TestModel>)binder.Bind(context, typeof(List<TestModel>), null, BindingConfig.Default);
+
+            // Then
+            result.ShouldHaveCount(8);
+            result.First().lowercaseintproperty.ShouldEqual(1);
+            result.Last().lowercaseintproperty.ShouldEqual(8);
         }
 
         [Fact]
@@ -1396,6 +1423,8 @@ namespace Nancy.Tests.Unit.ModelBinding
             public int IntProperty { get; set; }
 
             public int AnotherIntProperty { get; set; }
+
+            public int lowercaseintproperty { get; set; }
 
             public DateTime DateProperty { get; set; }
 

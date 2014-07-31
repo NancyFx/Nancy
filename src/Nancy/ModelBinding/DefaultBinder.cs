@@ -482,7 +482,7 @@ namespace Nancy.ModelBinding
                         context.RequestData.Where(c =>
                         {
                             var indexId = IsMatch(c.Key);
-                            return c.Key.StartsWith(propertyName) && indexId != -1 && indexId == indexindexes[index];
+                            return c.Key.StartsWith(propertyName, StringComparison.OrdinalIgnoreCase) && indexId != -1 && indexId == indexindexes[index];
                         })
                         .Select(k => k.Value)
                         .FirstOrDefault();
@@ -490,9 +490,9 @@ namespace Nancy.ModelBinding
                     return propertyValue ?? string.Empty;
                 }
                 
-                return String.Empty;
+                return string.Empty;
             }
-            return context.RequestData.ContainsKey(propertyName) ? context.RequestData[propertyName] : String.Empty;
+            return context.RequestData.ContainsKey(propertyName) ? context.RequestData[propertyName] : string.Empty;
         }
 
         private object DeserializeRequestBody(BindingContext context)
