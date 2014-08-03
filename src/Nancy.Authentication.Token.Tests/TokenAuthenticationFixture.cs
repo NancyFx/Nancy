@@ -113,7 +113,7 @@
             this.hooks.BeforeRequest.Invoke(context, new CancellationToken());
 
             // Then
-            A.CallTo(() => config.Tokenizer.Detokenize("mytoken", context)).MustHaveHappened();
+            A.CallTo(() => config.Tokenizer.Detokenize("mytoken", context, A<IUserIdentityResolver>.Ignored)).MustHaveHappened();
         }
 
         [Fact]
@@ -127,7 +127,7 @@
 
             var tokenizer = A.Fake<ITokenizer>();
             var fakeUser = A.Fake<IUserIdentity>();
-            A.CallTo(() => tokenizer.Detokenize("mytoken", context)).Returns(fakeUser);
+            A.CallTo(() => tokenizer.Detokenize("mytoken", context, A<IUserIdentityResolver>.Ignored)).Returns(fakeUser);
 
             var cfg = new TokenAuthenticationConfiguration(tokenizer);
 

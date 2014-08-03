@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Security.Cryptography;
     using System.Text;
@@ -16,7 +17,6 @@
     public class Tokenizer : ITokenizer
     {
         private readonly TokenValidator validator;
-        private readonly TokenKeyRing keyRing;
         private ITokenKeyStore keyStore = new FileSystemTokenKeyStore();
         private Encoding encoding = Encoding.UTF8;
         private string claimsDelimiter = "|";
@@ -27,10 +27,10 @@
         private Func<TimeSpan> tokenExpiration = () => TimeSpan.FromDays(1);
         private Func<TimeSpan> keyExpiration = () => TimeSpan.FromDays(7);
 
-        private Func<NancyContext, string>[] additionalItems = new Func<NancyContext, string>[]
-            {
-                ctx => ctx.Request.Headers.UserAgent
-            };
+        private Func<NancyContext, string>[] additionalItems =
+        {
+            ctx => ctx.Request.Headers.UserAgent
+        };
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Tokenizer"/> class.
@@ -51,22 +51,24 @@
                 var configurator = new TokenizerConfigurator(this);
                 configuration.Invoke(configurator);
             }
-            this.keyRing = new TokenKeyRing(this);
-            this.validator = new TokenValidator(this.keyRing);
+            var keyRing = new TokenKeyRing(this);
+            this.validator = new TokenValidator(keyRing);
         }
 
         /// <summary>
         /// Creates a token from a <see cref="IUserIdentity"/>.
         /// </summary>
         /// <param name="userIdentity">The user identity from which to create a token.</param>
-        /// <param name="context">NancyContext</param>
+        /// <param name="context">Current <see cref="NancyContext"/>.</param>
         /// <returns>The generated token.</returns>
         public string Tokenize(IUserIdentity userIdentity, NancyContext context)
         {
-            var items = new List<string>();
-            items.Add(userIdentity.UserName);
-            items.Add(string.Join(this.claimsDelimiter, userIdentity.Claims));
-            items.Add(this.tokenStamp().Ticks.ToString());
+            var items = new List<string>
+            {
+                userIdentity.UserName,
+                string.Join(this.claimsDelimiter, userIdentity.Claims),
+                this.tokenStamp().Ticks.ToString(CultureInfo.InvariantCulture)
+            };
 
             foreach (var item in this.additionalItems.Select(additionalItem => additionalItem(context)))
             {
@@ -86,9 +88,10 @@
         /// Creates a <see cref="IUserIdentity"/> from a token.
         /// </summary>
         /// <param name="token">The token from which to create a user identity.</param>
-        /// <param name="context">NancyContext</param>
+        /// <param name="context">Current <see cref="NancyContext"/>.</param>
+        /// <param name="userIdentityResolver">The user identity resolver.</param>
         /// <returns>The detokenized user identity.</returns>
-        public IUserIdentity Detokenize(string token, NancyContext context)
+        public IUserIdentity Detokenize(string token, NancyContext context, IUserIdentityResolver userIdentityResolver)
         {
             var tokenComponents = token.Split(new[] { this.hashDelimiter }, StringSplitOptions.None);
             if (tokenComponents.Length != 2)
@@ -128,7 +131,7 @@
             var userName = items[0];
             var claims = items[1].Split(new[] { this.claimsDelimiter }, StringSplitOptions.None);
 
-            return new TokenUserIdentity(userName, claims);
+            return userIdentityResolver.GetUser(userName, claims, context);
         }
 
         private string CreateToken(string message)
@@ -278,18 +281,6 @@
                 this.tokenizer.additionalItems = additionalItems;
                 return this;
             }
-        }
-
-        private class TokenUserIdentity : IUserIdentity
-        {
-            public TokenUserIdentity(string userName, IEnumerable<string> claims)
-            {
-                UserName = userName;
-                Claims = claims;
-            }
-
-            public string UserName { get; private set; }
-            public IEnumerable<string> Claims { get; private set; }
         }
 
         private class TokenValidator
