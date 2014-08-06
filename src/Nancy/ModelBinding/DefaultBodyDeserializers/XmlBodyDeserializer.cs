@@ -39,6 +39,7 @@ namespace Nancy.ModelBinding.DefaultBodyDeserializers
         /// <returns>Model instance</returns>
         public object Deserialize(string contentType, Stream bodyStream, BindingContext context)
         {
+            bodyStream.Position = 0;
             var ser = new XmlSerializer(context.DestinationType);
             return ser.Deserialize(bodyStream);
         }

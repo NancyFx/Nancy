@@ -17,7 +17,7 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
         public XmlBodyDeserializerFixture()
         {
             deserialize = new XmlBodyDeserializer();
-            testModel = new TestModel {Bar = 13, Foo = "lil"};
+            testModel = new TestModel { Bar = 13, Foo = "lil" };
             testModelXml = ToXmlString(testModel);
         }
 
@@ -71,6 +71,32 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
 
             // Then
             result.ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Should_deserialize_if_body_stream_accessed_before_bind()
+        {
+            // Given
+            var bodyStream = new MemoryStream(Encoding.UTF8.GetBytes(this.testModelXml));
+            var context = new BindingContext()
+            {
+                DestinationType = typeof(TestModel),
+                ValidModelProperties = typeof(TestModel).GetProperties(),
+            };
+
+            var reader = new StreamReader(bodyStream);
+            var dataThatDoesntResetStreamPosition = reader.ReadToEnd();
+
+            // When
+            var result = (TestModel)this.deserialize.Deserialize(
+                            "application/xml",
+                            bodyStream,
+                            context);
+
+            // Then
+            result.ShouldNotBeNull();
+            result.ShouldBeOfType(typeof(TestModel));
+            result.ShouldEqual(this.testModel);
         }
 
         [Fact]
