@@ -131,9 +131,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Authentication.T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Authentication.Token.TestingDemo", "Nancy.Demo.Authentication.Token.TestingDemo\Nancy.Demo.Authentication.Token.TestingDemo.csproj", "{9121DA01-7BFD-49F0-9937-0D3E7875ADB9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Metadata.Modules", "Nancy.Metadata.Module\Nancy.Metadata.Modules.csproj", "{DC8AAA8B-7FD0-47C4-9413-3CC94088BCC4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Metadata.Modules", "Nancy.Metadata.Modules\Nancy.Metadata.Modules.csproj", "{DC8AAA8B-7FD0-47C4-9413-3CC94088BCC4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Metadata.Modules.Tests", "Nancy.Metadata.Module.Tests\Nancy.Metadata.Modules.Tests.csproj", "{508A3A68-2012-4E62-925F-2F3083A013FC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Metadata.Modules.Tests", "Nancy.Metadata.Modules.Tests\Nancy.Metadata.Modules.Tests.csproj", "{508A3A68-2012-4E62-925F-2F3083A013FC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

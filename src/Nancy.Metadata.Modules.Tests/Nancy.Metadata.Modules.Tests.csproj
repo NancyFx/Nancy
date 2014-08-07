@@ -86,7 +86,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nancy.Metadata.Module\Nancy.Metadata.Modules.csproj">
+    <ProjectReference Include="..\Nancy.Metadata.Modules\Nancy.Metadata.Modules.csproj">
       <Project>{DC8AAA8B-7FD0-47C4-9413-3CC94088BCC4}</Project>
       <Name>Nancy.Metadata.Modules</Name>
     </ProjectReference>
