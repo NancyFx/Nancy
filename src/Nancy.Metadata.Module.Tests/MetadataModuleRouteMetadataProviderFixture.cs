@@ -1,7 +1,8 @@
-﻿namespace Nancy.Metadata.Module.Tests
+﻿namespace Nancy.Metadata.Modules.Tests
 {
     using FakeItEasy;
 
+    using Nancy.Metadata.Modules;
     using Nancy.Routing;
     using Nancy.Tests;
 

@@ -1,7 +1,5 @@
-﻿namespace Nancy.Metadata.Module
+﻿namespace Nancy.Metadata.Modules
 {
-    using Nancy.Routing;
-
     /// <summary>
     /// Defines the functionality for resolving the metadata module for a given <see cref="INancyModule"/>.
     /// </summary>

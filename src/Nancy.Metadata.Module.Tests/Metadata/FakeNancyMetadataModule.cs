@@ -1,6 +1,6 @@
-﻿namespace Nancy.Metadata.Module.Tests.Metadata
+﻿namespace Nancy.Metadata.Modules.Tests.Metadata
 {
-    using Nancy.Routing;
+    using Nancy.Metadata.Modules;
 
     public class FakeNancyMetadataModule : MetadataModule<string>
     {

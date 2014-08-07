@@ -1,4 +1,4 @@
-﻿namespace Nancy.Metadata.Module
+﻿namespace Nancy.Metadata.Modules
 {
     using System;
 
