@@ -1,10 +1,7 @@
 ﻿namespace Nancy.Metadata.Modules.Tests
 {
-    using System.Linq;
-
-    using Nancy.Metadata.Modules;
     using Nancy.Tests;
-
+    using System.Linq;
     using Xunit;
 
     public class DefaultMetadataModuleConventionsFixture
