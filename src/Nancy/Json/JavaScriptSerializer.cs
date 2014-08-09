@@ -43,6 +43,7 @@ namespace Nancy.Json
         internal const string SerializedTypeNameKey = "__type";
 
         List<IEnumerable<JavaScriptConverter>> _converterList;
+        List<IEnumerable<JavaScriptPrimitiveConverter>> _primitiveConverterList;
         int _maxJsonLength;
         int _recursionLimit;
         bool _retainCasing;
@@ -83,6 +84,9 @@ namespace Nancy.Json
             this.RetainCasing = retainCasing;
 
             _iso8601DateFormat = iso8601DateFormat;
+
+            if (registerConverters)
+                RegisterConverters(JsonSettings.Converters, JsonSettings.PrimitiveConverters);
         }
 
 
@@ -137,6 +141,11 @@ namespace Nancy.Json
 
         internal object ConvertToType(Type type, object obj)
         {
+            var primitiveConverter = GetPrimitiveConverter(type);
+
+            if (primitiveConverter != null)
+                obj = primitiveConverter.Deserialize(obj, type, this);
+
             if (obj == null)
                 return null;
 
@@ -460,12 +469,45 @@ namespace Nancy.Json
             _converterList.Add(converters);
         }
 
+        public void RegisterConverters(IEnumerable<JavaScriptPrimitiveConverter> primitiveConverters)
+        {
+            if (primitiveConverters == null)
+                throw new ArgumentNullException("primitiveConverters");
+
+            if (_primitiveConverterList == null)
+                _primitiveConverterList = new List<IEnumerable<JavaScriptPrimitiveConverter>>();
+            _primitiveConverterList.Add(primitiveConverters);
+        }
+
+        public void RegisterConverters(IEnumerable<JavaScriptConverter> converters, IEnumerable<JavaScriptPrimitiveConverter> primitiveConverters)
+        {
+            if (converters != null)
+                RegisterConverters(converters);
+
+            if (primitiveConverters != null)
+                RegisterConverters(primitiveConverters);
+        }
+
         internal JavaScriptConverter GetConverter(Type type)
         {
             if (_converterList != null)
                 for (int i = 0; i < _converterList.Count; i++)
                 {
                     foreach (JavaScriptConverter converter in _converterList[i])
+                        foreach (Type supportedType in converter.SupportedTypes)
+                            if (supportedType.IsAssignableFrom(type))
+                                return converter;
+                }
+
+            return null;
+        }
+
+        internal JavaScriptPrimitiveConverter GetPrimitiveConverter(Type type)
+        {
+            if (_primitiveConverterList != null)
+                for (int i = 0; i < _primitiveConverterList.Count; i++)
+                {
+                    foreach (JavaScriptPrimitiveConverter converter in _primitiveConverterList[i])
                         foreach (Type supportedType in converter.SupportedTypes)
                             if (supportedType.IsAssignableFrom(type))
                                 return converter;
