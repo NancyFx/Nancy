@@ -151,7 +151,7 @@ namespace Nancy
             get { return new ViewRenderer(this); }
         }
 
-        public Negotiator Negotiate
+        public virtual Negotiator Negotiate
         {
             get { return new Negotiator(this.Context); }
         }
