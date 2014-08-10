@@ -482,6 +482,7 @@
     <Compile Include="ViewEngines\ViewLocationResult.cs" />
     <Compile Include="ViewEngines\ViewNotFoundException.cs" />
     <Compile Include="ViewEngines\ViewRenderException.cs" />
+    <Compile Include="ViewRenderer.cs" />
     <Compile Include="Xml\XmlSettings.cs" />
   </ItemGroup>
   <ItemGroup>
