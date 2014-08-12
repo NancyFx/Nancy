@@ -99,8 +99,6 @@
     </Reference>
     <Reference Include="System.Core">
     </Reference>
-    <Reference Include="System.Drawing">
-    </Reference>
     <Reference Include="System.Xml">
     </Reference>
   </ItemGroup>
