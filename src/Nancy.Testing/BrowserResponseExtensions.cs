@@ -3,7 +3,6 @@ namespace Nancy.Testing
     using System;
 	using System.IO;
     using System.Linq;
-    using System.Net;
     using System.Xml.Linq;
 
     using HttpStatusCode = Nancy.HttpStatusCode;
