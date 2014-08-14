@@ -5,8 +5,6 @@ namespace Nancy.Testing
     using System.Linq;
     using System.Xml.Linq;
 
-    using HttpStatusCode = Nancy.HttpStatusCode;
-
     /// <summary>
     /// Defines extensions for the <see cref="BrowserResponse"/> type.
     /// </summary>
