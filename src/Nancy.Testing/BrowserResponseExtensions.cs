@@ -2,7 +2,8 @@ namespace Nancy.Testing
 {
     using System;
 	using System.IO;
-	using System.Xml.Linq;
+    using System.Linq;
+    using System.Xml.Linq;
     
     /// <summary>
     /// Defines extensions for the <see cref="BrowserResponse"/> type.
@@ -17,9 +18,17 @@ namespace Nancy.Testing
         /// <param name="stringComparer">The string comparer that should be used by the assertion. The default value is <see cref="StringComparison.InvariantCulture"/>.</param>
         public static void ShouldHaveRedirectedTo(this BrowserResponse response, string location, StringComparison stringComparer = StringComparison.InvariantCulture)
         {
-            if (response.StatusCode != HttpStatusCode.SeeOther)
+            var validRedirectStatuses = new[]
             {
-                throw new AssertException("Status code should be SeeOther");
+                HttpStatusCode.MovedPermanently,
+                HttpStatusCode.SeeOther,
+                HttpStatusCode.TemporaryRedirect
+            };
+
+            if (!validRedirectStatuses.Any(x => x == response.StatusCode))
+            {
+                throw new AssertException(
+                    String.Format("Status code should be one of 'MovedPermanently, SeeOther, TemporaryRedirect', but was {0}.", response.StatusCode));
             }
 
             if (!response.Headers["Location"].Equals(location, stringComparer))
