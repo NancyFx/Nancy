@@ -37,14 +37,14 @@ namespace Nancy.Testing
             }
         }
 
-		public static XDocument BodyAsXml(this BrowserResponse response)
-		{
-			using (var contentsStream = new MemoryStream())
-			{
-				response.Context.Response.Contents.Invoke(contentsStream);
-				contentsStream.Position = 0;
-				return XDocument.Load(contentsStream);
-			}
-		}
+        public static XDocument BodyAsXml(this BrowserResponse response)
+        {
+            using (var contentsStream = new MemoryStream())
+            {
+                response.Context.Response.Contents.Invoke(contentsStream);
+                contentsStream.Position = 0;
+                return XDocument.Load(contentsStream);
+            }
+        }
     }
 }
