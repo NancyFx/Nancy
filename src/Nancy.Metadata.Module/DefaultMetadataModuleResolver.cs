@@ -11,7 +11,7 @@
     /// </summary>
     public class DefaultMetadataModuleResolver : IMetadataModuleResolver
     {
-        private readonly DefaultMetadataModuleConventions conventions;
+        private readonly IEnumerable<IMetadataConvention> conventions;
 
         private readonly IEnumerable<IMetadataModule> metadataModules;
 
@@ -20,7 +20,7 @@
         /// </summary>
         /// <param name="conventions">The conventions that the resolver should use to determine which metadata module to return.</param>
         /// <param name="metadataModules">The metadata modules to use resolve against.</param>
-        public DefaultMetadataModuleResolver(DefaultMetadataModuleConventions conventions, IEnumerable<IMetadataModule> metadataModules)
+        public DefaultMetadataModuleResolver(IEnumerable<IMetadataConvention> conventions, IEnumerable<IMetadataModule> metadataModules)
         {
             if (conventions == null)
             {
@@ -43,21 +43,15 @@
         /// <returns>An <see cref="IMetadataModule"/> instance if one could be found, otherwise <see langword="null"/>.</returns>
         public IMetadataModule GetMetadataModule(INancyModule module)
         {
-            return this.conventions
-                .Select(convention => this.SafeInvokeConvention(convention, module))
-                .FirstOrDefault(metadataModule => metadataModule != null);
-        }
+            foreach (var convention in this.conventions)
+            {
+                if (convention.CanUseModule(module, metadataModules))
+                {
+                    return convention.DiscoverMetadataModule(module, metadataModules);
+                }
+            }
 
-        private IMetadataModule SafeInvokeConvention(Func<INancyModule, IEnumerable<IMetadataModule>, IMetadataModule> convention, INancyModule module)
-        {
-            try
-            {
-                return convention.Invoke(module, this.metadataModules);
-            }
-            catch
-            {
-                return null;
-            }
+            return null;
         }
     }
 }

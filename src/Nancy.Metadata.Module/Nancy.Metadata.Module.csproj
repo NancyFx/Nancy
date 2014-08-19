@@ -66,12 +66,15 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="DefaultMetadataModuleResolver.cs" />
+    <Compile Include="IMetadataConvention.cs" />
     <Compile Include="IMetadataModule.cs" />
     <Compile Include="IMetadataModuleResolver.cs" />
-    <Compile Include="DefaultMetadataModuleConventions.cs" />
     <Compile Include="MetadataModule.cs" />
     <Compile Include="MetadataModuleRegistrations.cs" />
     <Compile Include="MetadataModuleRouteMetadataProvider.cs" />
+    <Compile Include="MetadataPrefixConvention.cs" />
+    <Compile Include="NameBasedConvention.cs" />
+    <Compile Include="NamespacePrefixConvention.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy\Nancy.csproj">

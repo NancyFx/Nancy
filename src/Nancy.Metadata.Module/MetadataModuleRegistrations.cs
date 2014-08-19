@@ -14,9 +14,10 @@
         /// </summary>
         public MetadataModuleRegistrations()
         {
-            this.Register<DefaultMetadataModuleConventions>();
+            this.RegisterAll<IMetadataConvention>();
             this.RegisterAll<IMetadataModule>();
             this.RegisterWithDefault<IMetadataModuleResolver>(typeof(DefaultMetadataModuleResolver));
+
         }
     }
 }
