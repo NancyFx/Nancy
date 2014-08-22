@@ -60,10 +60,15 @@ namespace Nancy.Owin.Tests
         [Fact]
         public void Should_immediately_invoke_nancy_if_no_request_body_delegate()
         {
+            // Given
             var fakeResponse = new Response { StatusCode = HttpStatusCode.OK, Contents = s => { } };
             var fakeContext = new NancyContext { Response = fakeResponse };
             this.SetupFakeNancyCompleteCallback(fakeContext);
+
+            // When
             this.host(this.environment);
+
+            // Then
             A.CallTo(() =>  this.fakeEngine.HandleRequest(
                     A<Request>.Ignored,
                     A<Func<NancyContext, NancyContext>>.Ignored,
@@ -74,17 +79,22 @@ namespace Nancy.Owin.Tests
         [Fact]
         public void Should_set_return_code_in_response_callback()
         {
+            // Given
             var fakeResponse = new Response {StatusCode = HttpStatusCode.OK, Contents = s => { }};
             var fakeContext = new NancyContext {Response = fakeResponse};
             this.SetupFakeNancyCompleteCallback(fakeContext);
+
+            // When
             this.host.Invoke(this.environment);
 
+            // Then
             ((int)this.environment["owin.ResponseStatusCode"]).ShouldEqual(200);
         }
 
         [Fact]
         public void Should_set_headers_in_response_callback()
         {
+            // Given
             var fakeResponse = new Response
             {
                 StatusCode = HttpStatusCode.OK,
@@ -94,9 +104,11 @@ namespace Nancy.Owin.Tests
             var fakeContext = new NancyContext {Response = fakeResponse};
             this.SetupFakeNancyCompleteCallback(fakeContext);
 
+            // When
             this.host.Invoke(this.environment);
             var headers = (IDictionary<string, string[]>)this.environment["owin.ResponseHeaders"];
 
+            // Then
             // 2 headers because the default content-type is text/html
             headers.Count.ShouldEqual(2);
             headers["Content-Type"][0].ShouldEqual("text/html");
@@ -106,6 +118,7 @@ namespace Nancy.Owin.Tests
         [Fact]
         public void Should_send_entire_body()
         {
+            // Given
             var data1 = Encoding.ASCII.GetBytes("Some content");
             var data2 = Encoding.ASCII.GetBytes("Some more content");
             var fakeResponse = new Response
@@ -120,15 +133,19 @@ namespace Nancy.Owin.Tests
             var fakeContext = new NancyContext {Response = fakeResponse};
             this.SetupFakeNancyCompleteCallback(fakeContext);
 
+            // When
             this.host.Invoke(this.environment);
 
             var data = ((MemoryStream)this.environment["owin.ResponseBody"]).ToArray();
+
+            // Then
             data.ShouldEqualSequence(data1.Concat(data2));
         }
 
         [Fact]
         public void Should_dispose_context_on_completion_of_body_delegate()
         {
+            // Given
             var data1 = Encoding.ASCII.GetBytes("Some content");
             var fakeResponse = new Response {StatusCode = HttpStatusCode.OK, Contents = s => s.Write(data1, 0, data1.Length)};
             var fakeContext = new NancyContext {Response = fakeResponse};
@@ -136,14 +153,17 @@ namespace Nancy.Owin.Tests
             fakeContext.Items.Add("Test", mockDisposable);
             this.SetupFakeNancyCompleteCallback(fakeContext);
 
+            // When
             this.host.Invoke(environment);
 
+            // Then
             A.CallTo(() => mockDisposable.Dispose()).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
         public void Should_set_cookie_with_valid_header()
         {
+            // Given
             var fakeResponse = new Response {StatusCode = HttpStatusCode.OK};
             fakeResponse.WithCookie("test", "testvalue");
             fakeResponse.WithCookie("test1", "testvalue1");
@@ -151,10 +171,11 @@ namespace Nancy.Owin.Tests
 
             this.SetupFakeNancyCompleteCallback(fakeContext);
 
+            // When
             this.host.Invoke(this.environment).Wait();
-
             var respHeaders = Get<IDictionary<string, string[]>>(this.environment, "owin.ResponseHeaders");
 
+            // Then
             respHeaders.ContainsKey("Set-Cookie").ShouldBeTrue();
             (respHeaders["Set-Cookie"][0] == "test=testvalue; path=/").ShouldBeTrue();
             (respHeaders["Set-Cookie"][1] == "test1=testvalue1; path=/").ShouldBeTrue();

@@ -66,7 +66,7 @@ task :publish => [:compile] do
         mkpath(output)
     end
 
-    FileUtils.cp_r FileList["src/**/#{CONFIGURATION}/*.dll", "src/**/#{CONFIGURATION}/*.XML", "src/**/#{CONFIGURATION}/*.pdb", "src/**/*.ps1"].exclude(/obj\//).exclude(/.Tests/), output
+    FileUtils.cp_r FileList["src/**/#{CONFIGURATION}/*.dll", "src/**/#{CONFIGURATION}/*.XML", "src/**/#{CONFIGURATION}/*.pdb", "src/**/*.ps1"].exclude(/obj\//).exclude(/.Tests/).exclude(/packages\//), output
 end
 
 desc "Executes xUnit tests"

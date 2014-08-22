@@ -85,6 +85,54 @@
         }
 
         [Fact]
+        public void Should_expand_partial_inside_each_section_with_property_parameter_of_current_as_model()
+        {
+            const string input = @"<html><head></head><body>@Each;@Partial['testing', @Current.FirstName];@EndEach</body></html>";
+            var fakeViewEngineHost = new FakeViewEngineHost();
+            fakeViewEngineHost.GetTemplateCallback = (s, m) => "Hi @Model ";
+
+            var clark  = new PersonWithAgeField()
+            {
+                FirstName = "Clark",
+            };
+
+            var lois = new PersonWithAgeField()
+            {
+                FirstName = "Lois",
+            };
+
+            var model = new List<PersonWithAgeField>() { clark, lois };
+
+            var result = viewEngine.Render(input, model, fakeViewEngineHost);
+
+            Assert.Equal(@"<html><head></head><body>Hi Clark Hi Lois </body></html>", result);
+        }
+
+        [Fact]
+        public void Should_expand_partial_inside_each_section_with_field_parameter_of_current_as_model()
+        {
+            const string input = @"<html><head></head><body>@Each;@Partial['testing', @Current.Age];@EndEach</body></html>";
+            var fakeViewEngineHost = new FakeViewEngineHost();
+            fakeViewEngineHost.GetTemplateCallback = (s, m) => "Hi @Model ";
+
+            var clark  = new PersonWithAgeField()
+            {
+                Age = 28,
+            };
+
+            var lois = new PersonWithAgeField()
+            {
+                Age = 37,
+            };
+
+            var model = new List<Person>() { clark, lois };
+
+            var result = viewEngine.Render(input, model, fakeViewEngineHost);
+
+            Assert.Equal(@"<html><head></head><body>Hi 28 Hi 37 </body></html>", result);
+        }
+
+        [Fact]
         public void Should_expand_multiple_partial_inside_each_section_with_parameter_of_current_as_model()
         {
             const string input = @"<html><head></head><body>@Each;@Partial['first', @Current.Name];-@Partial['second', @Current.Name];@EndEach</body></html>";

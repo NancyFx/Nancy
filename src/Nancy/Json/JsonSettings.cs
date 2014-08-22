@@ -24,7 +24,9 @@ namespace Nancy.Json
         public static string DefaultCharset { get; set; }
 
         public static IList<JavaScriptConverter> Converters { get; set; }
-        
+
+        public static IList<JavaScriptPrimitiveConverter> PrimitiveConverters { get; set; }
+
         /// <summary>
         /// Set to true to retain the casing used in the C# code in produced JSON.
         /// Set to false to use camelCasing in the produced JSON.
@@ -47,6 +49,7 @@ namespace Nancy.Json
                              {
                                  new TimeSpanConverter(),
                              };
+            PrimitiveConverters = new List<JavaScriptPrimitiveConverter>();
             RetainCasing = false;
         }
     }

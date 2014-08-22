@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Drawing;
     using System.IO;
     using System.Linq;
 
@@ -78,17 +77,13 @@
 
             try
             {
-                var image = Image.FromFile(locatedFavIcon);
-
-                var converter = new ImageConverter();
-
-                return (byte[]) converter.ConvertTo(image, typeof(byte[]));
+                return File.ReadAllBytes(locatedFavIcon);
             }
             catch (Exception e)
             {
                 if (!StaticConfiguration.DisableErrorTraces)
                 {
-                    throw new InvalidDataException("Unable to load favicon, please check the format is compatible with GDI+", e);
+                    throw new InvalidDataException("Unable to load favicon", e);
                 }
 
                 return null;

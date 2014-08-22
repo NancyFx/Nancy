@@ -96,9 +96,9 @@
 
             var pipelines = this.RequestPipelinesFactory.Invoke(context);
 
-            var task = this.InvokeRequestLifeCycle(context, cancellationToken, pipelines);
+            var lifeCycleTask = this.InvokeRequestLifeCycle(context, cancellationToken, pipelines);
 
-            task.WhenCompleted(
+            lifeCycleTask.WhenCompleted(
                 completeTask =>
                 {
                     try
@@ -213,15 +213,25 @@
 
                             var postHookTask = InvokePostRequestHook(context, cancellationToken, pipelines.AfterRequest);
 
-                            postHookTask.WhenCompleted(
-                                completedPostHookTask => tcs.SetResult(context),
-                                HandleFaultedTask(context, pipelines, tcs));
+                            postHookTask.WhenCompleted(PreExecute(context, pipelines, tcs), HandleFaultedTask(context, pipelines, tcs));
                         },
                         HandleFaultedTask(context, pipelines, tcs));
                 },
                 HandleFaultedTask(context, pipelines, tcs));
 
             return tcs.Task;
+        }
+
+        private Action<Task> PreExecute(NancyContext context, IPipelines pipelines, TaskCompletionSource<NancyContext> tcs)
+        {
+            return postHookTask =>
+            {
+                var preExecuteTask = context.Response.PreExecute(context);
+
+                preExecuteTask.WhenCompleted(
+                    completedPostHookTask => tcs.SetResult(context),
+                    HandleFaultedTask(context, pipelines, tcs));
+            };
         }
 
         private static Action<Task> HandleFaultedTask(NancyContext context, IPipelines pipelines, TaskCompletionSource<NancyContext> tcs)

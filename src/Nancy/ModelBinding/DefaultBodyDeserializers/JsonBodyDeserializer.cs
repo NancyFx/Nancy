@@ -32,7 +32,7 @@ namespace Nancy.ModelBinding.DefaultBodyDeserializers
         public object Deserialize(string contentType, Stream bodyStream, BindingContext context)
         {
             var serializer = new JavaScriptSerializer(null, false, JsonSettings.MaxJsonLength, JsonSettings.MaxRecursions, JsonSettings.RetainCasing, JsonSettings.ISO8601DateFormat);
-            serializer.RegisterConverters(JsonSettings.Converters);
+            serializer.RegisterConverters(JsonSettings.Converters, JsonSettings.PrimitiveConverters);
 
             bodyStream.Position = 0;
             string bodyText;
@@ -47,5 +47,5 @@ namespace Nancy.ModelBinding.DefaultBodyDeserializers
 
             return deserializedObject;
         }
-    }
+            }
 }

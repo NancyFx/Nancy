@@ -99,8 +99,6 @@
     </Reference>
     <Reference Include="System.Core">
     </Reference>
-    <Reference Include="System.Drawing">
-    </Reference>
     <Reference Include="System.Xml">
     </Reference>
   </ItemGroup>
@@ -176,6 +174,7 @@
     <Compile Include="Diagnostics\DiagnosticsViewRenderer.cs" />
     <Compile Include="Helpers\CacheHelpers.cs" />
     <Compile Include="IStaticContentProvider.cs" />
+    <Compile Include="Json\JavaScriptPrimitiveConverter.cs" />
     <Compile Include="Localization\TextResourceFinder.cs" />
     <Compile Include="Helpers\TaskHelpers.cs" />
     <Compile Include="ModelBinding\BindingConfig.cs" />

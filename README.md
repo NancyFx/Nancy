@@ -47,7 +47,7 @@ Above all, creating an application with Nancy should be a pleasure, and hopefull
 
 ## Community
 
-You can find lot of Nancy users on the [Nancy User Group](https://groups.google.com/forum/?fromgroups#forum/nancy-web-framework). That is where most of the discussions regarding the development and usage of Nancy is taking place. Nancy followers can be found in the JabbR [#NancyFX room](http://jabbr.net/#/rooms/nancyfx). You can also find Nancy on Twitter using the #NancyFx hashtag.	
+Nancy followers can be found in the JabbR [#NancyFX room](http://jabbr.net/#/rooms/nancyfx). You can also find Nancy on Twitter using the #NancyFx hashtag.	
 	
 ## Help out
 

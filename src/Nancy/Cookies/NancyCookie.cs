@@ -13,17 +13,28 @@ namespace Nancy.Cookies
         {
         }
 
+        public NancyCookie(string name, string value, DateTime expires)
+            : this(name, value, false, false, expires)
+        {
+        }
+
         public NancyCookie(string name, string value, bool httpOnly)
-            : this(name, value, httpOnly, false)
+            : this(name, value, httpOnly, false, null)
         {
         }
 
         public NancyCookie(string name, string value, bool httpOnly, bool secure)
+            : this(name, value, httpOnly, secure, null)
+        {
+        }
+
+        public NancyCookie(string name, string value, bool httpOnly, bool secure, DateTime? expires)
         {
             this.Name = name;
             this.Value = value;
             this.HttpOnly = httpOnly;
             this.Secure = secure;
+            this.Expires = expires;
         }
 
         /// <summary>

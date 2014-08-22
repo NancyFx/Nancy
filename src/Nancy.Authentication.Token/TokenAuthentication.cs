@@ -66,31 +66,30 @@
             }
 
             return context =>
-                {
-                    RetrieveCredentials(context, configuration);
-                    return null;
-                };
+            {
+                RetrieveCredentials(context, configuration);
+                return null;
+            };
         }
 
         private static void RetrieveCredentials(NancyContext context, TokenAuthenticationConfiguration configuration)
         {
             var token = ExtractTokenFromHeader(context.Request);
-
-            if (token != null)
+            if (token == null)
             {
-                var user = configuration.Tokenizer.Detokenize(token, context);
+                return;
+            }
 
-                if (user != null)
-                {
-                    context.CurrentUser = user;
-                }
+            var user = configuration.Tokenizer.Detokenize(token, context, configuration.UserIdentityResolver);
+            if (user != null)
+            {
+                context.CurrentUser = user;
             }
         }
 
         private static string ExtractTokenFromHeader(Request request)
         {
-            var authorization =
-                request.Headers.Authorization;
+            var authorization = request.Headers.Authorization;
 
             if (string.IsNullOrEmpty(authorization))
             {

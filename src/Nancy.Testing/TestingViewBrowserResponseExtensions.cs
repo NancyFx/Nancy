@@ -12,6 +12,7 @@
         /// <typeparam name="TType">the type of the model</typeparam>
         /// <param name="response">The <see cref="BrowserResponse"/> that the assert should be made on.</param>
         /// <returns>a model of the <typeparam name="TType">type</typeparam></returns>
+        /// <remarks>This method requires that the <c>Browser</c> utilize the <see cref="TestingViewFactory"/></remarks>
         public static TType GetModel<TType>(this BrowserResponse response)
         {
             return (TType)response.Context.Items[TestingViewContextKeys.VIEWMODEL];
@@ -22,6 +23,7 @@
         /// </summary>
         /// <param name="response">The <see cref="BrowserResponse"/> that the assert should be made on.</param>
         /// <returns>the name of the view</returns>
+        /// <remarks>This method requires that the <c>Browser</c> utilize the <see cref="TestingViewFactory"/></remarks>
         public static string GetViewName(this BrowserResponse response)
         {
             return GetContextValue(response, TestingViewContextKeys.VIEWNAME);
@@ -32,6 +34,7 @@
         /// </summary>
         /// <param name="response">The <see cref="BrowserResponse"/> that the assert should be made on.</param>
         /// <returns>the name of the module</returns>
+        /// <remarks>This method requires that the <c>Browser</c> utilize the <see cref="TestingViewFactory"/></remarks>
         public static string GetModuleName(this BrowserResponse response)
         {
             return GetContextValue(response, TestingViewContextKeys.MODULENAME);
@@ -42,6 +45,7 @@
         /// </summary>
         /// <param name="response">The <see cref="BrowserResponse"/> that the assert should be made on.</param>
         /// <returns>the name of the module</returns>
+        /// <remarks>This method requires that the <c>Browser</c> utilize the <see cref="TestingViewFactory"/></remarks>
         public static string GetModulePath(this BrowserResponse response)
         {
             return GetContextValue(response, TestingViewContextKeys.MODULEPATH);

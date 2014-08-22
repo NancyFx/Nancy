@@ -21,7 +21,7 @@
                 throw new InvalidOperationException("JSON Serializer not set");
             }
 
-            this.Contents = GetJsonContents(model, serializer);
+            this.Contents = model == null ? NoBody : GetJsonContents(model, serializer);
             this.ContentType = contentType;
             this.StatusCode = HttpStatusCode.OK;
         }

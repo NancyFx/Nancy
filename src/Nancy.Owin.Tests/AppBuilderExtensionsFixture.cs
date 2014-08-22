@@ -1,6 +1,6 @@
 ﻿namespace Nancy.Owin.Tests
 {
-    using System.Net.Http;
+    using System;
 
     using global::Owin;
 
@@ -12,18 +12,24 @@
 
     public class AppBuilderExtensionsFixture
     {
+#if !__MonoCS__
         [Fact]
-        public void When_host_nancy_via_IAppBuilder_then_should_handle_requests()
+        public void When_host_Nancy_via_IAppBuilder_then_should_handle_requests()
         {
+            // Given
             var bootstrapper = new ConfigurableBootstrapper(config => config.Module<TestModule>());
-            
+
             using(var server = TestServer.Create(app => app.UseNancy(opts => opts.Bootstrapper = bootstrapper)))
             {
-                var response = server.CreateRequest("/").GetAsync().Result;
 
+                // When
+                var response = server.HttpClient.GetAsync(new Uri("http://localhost/")).Result;
+
+                // Then
                 Assert.Equal(response.StatusCode, System.Net.HttpStatusCode.OK);
             }
         }
+#endif
 
         public class TestModule : NancyModule
         {
