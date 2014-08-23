@@ -133,8 +133,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Authentication.T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Authentication.Token.TestingDemo", "Nancy.Demo.Authentication.Token.TestingDemo\Nancy.Demo.Authentication.Token.TestingDemo.csproj", "{9121DA01-7BFD-49F0-9937-0D3E7875ADB9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.SuperSimpleViewEngine.Localization", "Nancy.Demo.SuperSimpleViewEngine.Localization\Nancy.Demo.SuperSimpleViewEngine.Localization.csproj", "{72833FC9-4D79-4C0A-AF47-C30088D07D28}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{C83115E9-B3B9-4848-9312-5C298CC1B924}"
 EndProject
 Global
@@ -651,26 +649,6 @@ Global
 		{701765DC-F4F2-4943-A37F-6ED253198158}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{701765DC-F4F2-4943-A37F-6ED253198158}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{701765DC-F4F2-4943-A37F-6ED253198158}.Release|x86.ActiveCfg = Release|Any CPU
-		{72833FC9-4D79-4C0A-AF47-C30088D07D28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{72833FC9-4D79-4C0A-AF47-C30088D07D28}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{72833FC9-4D79-4C0A-AF47-C30088D07D28}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{72833FC9-4D79-4C0A-AF47-C30088D07D28}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{72833FC9-4D79-4C0A-AF47-C30088D07D28}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{72833FC9-4D79-4C0A-AF47-C30088D07D28}.MonoDebug|Any CPU.ActiveCfg = MonoDebug|Any CPU
-		{72833FC9-4D79-4C0A-AF47-C30088D07D28}.MonoDebug|Any CPU.Build.0 = MonoDebug|Any CPU
-		{72833FC9-4D79-4C0A-AF47-C30088D07D28}.MonoDebug|Mixed Platforms.ActiveCfg = MonoDebug|Any CPU
-		{72833FC9-4D79-4C0A-AF47-C30088D07D28}.MonoDebug|Mixed Platforms.Build.0 = MonoDebug|Any CPU
-		{72833FC9-4D79-4C0A-AF47-C30088D07D28}.MonoDebug|x86.ActiveCfg = MonoDebug|Any CPU
-		{72833FC9-4D79-4C0A-AF47-C30088D07D28}.MonoRelease|Any CPU.ActiveCfg = MonoRelease|Any CPU
-		{72833FC9-4D79-4C0A-AF47-C30088D07D28}.MonoRelease|Any CPU.Build.0 = MonoRelease|Any CPU
-		{72833FC9-4D79-4C0A-AF47-C30088D07D28}.MonoRelease|Mixed Platforms.ActiveCfg = MonoRelease|Any CPU
-		{72833FC9-4D79-4C0A-AF47-C30088D07D28}.MonoRelease|Mixed Platforms.Build.0 = MonoRelease|Any CPU
-		{72833FC9-4D79-4C0A-AF47-C30088D07D28}.MonoRelease|x86.ActiveCfg = MonoRelease|Any CPU
-		{72833FC9-4D79-4C0A-AF47-C30088D07D28}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{72833FC9-4D79-4C0A-AF47-C30088D07D28}.Release|Any CPU.Build.0 = Release|Any CPU
-		{72833FC9-4D79-4C0A-AF47-C30088D07D28}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{72833FC9-4D79-4C0A-AF47-C30088D07D28}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{72833FC9-4D79-4C0A-AF47-C30088D07D28}.Release|x86.ActiveCfg = Release|Any CPU
 		{776D244D-BC4D-4BBB-A478-CAF2D04520E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{776D244D-BC4D-4BBB-A478-CAF2D04520E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{776D244D-BC4D-4BBB-A478-CAF2D04520E1}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -1473,10 +1451,9 @@ Global
 		{972C2D45-49B6-4109-9A3A-0C8BC9225B95} = {4A24657F-9695-437B-9702-2541ED280628}
 		{35460AA4-B94A-4B64-9418-7243EC3D2F01} = {4A24657F-9695-437B-9702-2541ED280628}
 		{9121DA01-7BFD-49F0-9937-0D3E7875ADB9} = {4A24657F-9695-437B-9702-2541ED280628}
-		{72833FC9-4D79-4C0A-AF47-C30088D07D28} = {4A24657F-9695-437B-9702-2541ED280628}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = Nancy.Demo.SuperSimpleViewEngine.Localization\Nancy.Demo.SuperSimpleViewEngine.Localization.csproj
+		StartupItem = Nancy\Nancy.csproj
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
