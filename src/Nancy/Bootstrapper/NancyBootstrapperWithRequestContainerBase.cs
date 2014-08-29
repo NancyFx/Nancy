@@ -14,6 +14,10 @@ namespace Nancy.Bootstrapper
     public abstract class NancyBootstrapperWithRequestContainerBase<TContainer> : NancyBootstrapperBase<TContainer>
         where TContainer : class
     {
+        protected NancyBootstrapperWithRequestContainerBase()
+        {
+            this.RequestScopedTypes = new TypeRegistration[0];
+        }
         /// <summary>
         /// Context key for storing the child container in the context
         /// </summary>
@@ -113,9 +117,9 @@ namespace Nancy.Bootstrapper
                                                         applicationRegistrationTask.TypeRegistrations.ToArray();
 
                 this.RegisterTypes(this.ApplicationContainer, applicationTypeRegistrations.Where(tr => tr.Lifetime != Lifetime.PerRequest));
-                this.RequestScopedTypes = applicationTypeRegistrations.Where(tr => tr.Lifetime == Lifetime.PerRequest)
-                                                                      .Select(tr => new TypeRegistration(tr.RegistrationType, tr.ImplementationType, Lifetime.Singleton))
-                                                                      .ToArray();
+                this.RequestScopedTypes = this.RequestScopedTypes.Concat(applicationTypeRegistrations.Where(tr => tr.Lifetime == Lifetime.PerRequest)
+                        .Select(tr => new TypeRegistration(tr.RegistrationType, tr.ImplementationType, Lifetime.Singleton)))
+                        .ToArray();
 
                 var applicationCollectionRegistrations = applicationRegistrationTask.CollectionTypeRegistrations == null ?
                                                             new CollectionTypeRegistration[] { } :
