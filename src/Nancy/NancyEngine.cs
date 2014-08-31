@@ -197,13 +197,15 @@
                 return;
             }
 
-            foreach (var statusCodeHandler in this.statusCodeHandlers)
+            var handler = this.statusCodeHandlers
+                .FirstOrDefault(x => x.HandlesStatusCode(context.Response.StatusCode, context));
+
+            if (handler == null)
             {
-                if (statusCodeHandler.HandlesStatusCode(context.Response.StatusCode, context))
-                {
-                    statusCodeHandler.Handle(context.Response.StatusCode, context);
-                }
+                return;
             }
+
+            handler.Handle(context.Response.StatusCode, context);
         }
 
         private Task<NancyContext> InvokeRequestLifeCycle(NancyContext context, CancellationToken cancellationToken, IPipelines pipelines)
