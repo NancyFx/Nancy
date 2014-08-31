@@ -197,9 +197,17 @@
                 return;
             }
 
-            var handler = this.statusCodeHandlers
-                .FirstOrDefault(x => x.HandlesStatusCode(context.Response.StatusCode, context));
+            var handlers = this.statusCodeHandlers
+                .Where(x => x.HandlesStatusCode(context.Response.StatusCode, context))
+                .ToList();
 
+            var defaultHandler = handlers
+                .FirstOrDefault(x => x is DefaultStatusCodeHandler);
+
+            var customHandler = handlers
+                .FirstOrDefault(x => !(x is DefaultStatusCodeHandler));
+
+            var handler = customHandler ?? defaultHandler;
             if (handler == null)
             {
                 return;
