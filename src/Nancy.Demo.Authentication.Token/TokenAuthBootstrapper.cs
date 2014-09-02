@@ -10,6 +10,7 @@
     {
         protected override void ConfigureApplicationContainer(TinyIoCContainer container)
         {
+            container.Register<ITokenizer>(new Tokenizer());
             // Example options for specifying additional values for token generation
 
             //container.Register<ITokenizer>(new Tokenizer(cfg =>
