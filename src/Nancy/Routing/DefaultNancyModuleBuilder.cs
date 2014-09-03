@@ -2,7 +2,6 @@
 {
     using ModelBinding;
     using Nancy.Extensions;
-    using Nancy.Localization;
     using Nancy.Responses.Negotiation;
     using Nancy.ViewEngines;
     using Nancy.Validation;
