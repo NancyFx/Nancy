@@ -11,7 +11,7 @@
         {
             //Given, When
             var exception =
-                Record.Exception(() => new RouteDescription(null, "/", null));
+                Record.Exception(() => new RouteDescription(string.Empty, null, "/", null));
 
             // Then
             exception.ShouldBeOfType<ArgumentException>();
@@ -22,7 +22,7 @@
         {
             //Given, When
             var exception =
-                Record.Exception(() => new RouteDescription("", "/", null));
+                Record.Exception(() => new RouteDescription(string.Empty, "", "/", null));
 
             // Then
             exception.ShouldBeOfType<ArgumentException>();
@@ -33,7 +33,7 @@
         {
             //Given, When
             var exception =
-                Record.Exception(() => new RouteDescription("GET", null, null));
+                Record.Exception(() => new RouteDescription(string.Empty, "GET", null, null));
 
             // Then
             exception.ShouldBeOfType<ArgumentException>();
@@ -44,7 +44,7 @@
         {
             //Given, When
             var exception =
-                Record.Exception(() => new RouteDescription("GET", "", null));
+                Record.Exception(() => new RouteDescription(string.Empty, "GET", "", null));
 
             // Then
             exception.ShouldBeOfType<ArgumentException>();

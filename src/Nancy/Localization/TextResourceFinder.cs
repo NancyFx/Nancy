@@ -23,6 +23,15 @@
         }
 
         /// <summary>
+        /// Gets the <see cref="ITextResource"/> that is being used to locate texts.
+        /// </summary>
+        /// <value>An <see cref="ITextResource"/> instance.</value>
+        public ITextResource Resource
+        {
+            get { return this.textResource; }
+        }
+
+        /// <summary>
         /// Finds text resource
         /// </summary>
         /// <param name="binder">GetMemberBinder with dynamic text key</param>
@@ -34,6 +43,18 @@
                 new DynamicMemberChainer(binder.Name, this.context, this.textResource);
 
             return true;
+        }
+
+        /// <summary>
+        /// Gets a translation based on the provided key.
+        /// </summary>
+        /// <param name="key">The key to look up the translation for.</param>
+        public string this[string key]
+        {
+            get
+            {
+                return this.textResource[key, this.context];
+            }
         }
 
         public class DynamicMemberChainer : DynamicObject

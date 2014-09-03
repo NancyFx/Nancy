@@ -14,25 +14,19 @@ namespace Nancy.Session
     /// </summary>
     public class CookieBasedSessions : IObjectSerializerSelector
     {
-        /// <summary>
-        /// Encryption provider
-        /// </summary>
-        private readonly IEncryptionProvider encryptionProvider;
+        private readonly CookieBasedSessionsConfiguration currentConfiguration;
 
         /// <summary>
-        /// Provider for generating hmacs
+        /// Gets the cookie name that the session is stored in
         /// </summary>
-        private readonly IHmacProvider hmacProvider;
-
-        /// <summary>
-        /// Formatter for de/serializing the session objects
-        /// </summary>
-        private IObjectSerializer serializer;
-
-        /// <summary>
-        /// Cookie name for storing session information
-        /// </summary>
-        private static string cookieName = "_nc";
+        /// <value>Cookie name</value>
+        public string CookieName
+        {
+            get
+            {
+                return this.currentConfiguration.CookieName;
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CookieBasedSessions"/> class.
@@ -42,18 +36,52 @@ namespace Nancy.Session
         /// <param name="objectSerializer">Session object serializer to use</param>
         public CookieBasedSessions(IEncryptionProvider encryptionProvider, IHmacProvider hmacProvider, IObjectSerializer objectSerializer)
         {
-            this.encryptionProvider = encryptionProvider;
-            this.hmacProvider = hmacProvider;
-            this.serializer = objectSerializer;
+            this.currentConfiguration = new CookieBasedSessionsConfiguration
+            {
+                Serializer = objectSerializer,
+                CryptographyConfiguration = new CryptographyConfiguration(encryptionProvider, hmacProvider)
+            };
         }
 
         /// <summary>
-        /// Gets the cookie name that the session is stored in
+        /// Initializes a new instance of the <see cref="CookieBasedSessions"/> class.
         /// </summary>
-        /// <returns>Cookie name</returns>
-        public static string GetCookieName()
+        /// <param name="configuration">Cookie based sessions configuration.</param>
+        public CookieBasedSessions(CookieBasedSessionsConfiguration configuration)
         {
-            return cookieName;
+            if (configuration == null)
+            {
+                throw new ArgumentNullException("configuration");
+            }
+
+            if (!configuration.IsValid)
+            {
+                throw new ArgumentException("Configuration is invalid", "configuration");
+            }
+            this.currentConfiguration = configuration;
+        }
+
+
+
+        /// <summary>
+        /// Initialise and add cookie based session hooks to the application pipeine
+        /// </summary>
+        /// <param name="pipelines">Application pipelines</param>
+        /// <param name="configuration">Cookie based sessions configuration.</param>
+        /// <returns>Formatter selector for choosing a non-default serializer</returns>
+        public static IObjectSerializerSelector Enable(IPipelines pipelines, CookieBasedSessionsConfiguration configuration)
+        {
+            if (pipelines == null)
+            {
+                throw new ArgumentNullException("pipelines");
+            }
+
+            var sessionStore = new CookieBasedSessions(configuration);
+
+            pipelines.BeforeRequest.AddItemToStartOfPipeline(ctx => LoadSession(ctx, sessionStore));
+            pipelines.AfterRequest.AddItemToEndOfPipeline(ctx => SaveSession(ctx, sessionStore));
+
+            return sessionStore;
         }
 
         /// <summary>
@@ -64,12 +92,11 @@ namespace Nancy.Session
         /// <returns>Formatter selector for choosing a non-default serializer</returns>
         public static IObjectSerializerSelector Enable(IPipelines pipelines, CryptographyConfiguration cryptographyConfiguration)
         {
-            var sessionStore = new CookieBasedSessions(cryptographyConfiguration.EncryptionProvider, cryptographyConfiguration.HmacProvider, new DefaultObjectSerializer());
-
-            pipelines.BeforeRequest.AddItemToStartOfPipeline(ctx => LoadSession(ctx, sessionStore));
-            pipelines.AfterRequest.AddItemToEndOfPipeline(ctx => SaveSession(ctx, sessionStore));
-
-            return sessionStore;
+            var cookieBasedSessionsConfiguration = new CookieBasedSessionsConfiguration(cryptographyConfiguration)
+            {
+                Serializer = new DefaultObjectSerializer()
+            };
+            return Enable(pipelines, cookieBasedSessionsConfiguration);
         }
 
         /// <summary>
@@ -79,7 +106,10 @@ namespace Nancy.Session
         /// <returns>Formatter selector for choosing a non-default serializer</returns>
         public static IObjectSerializerSelector Enable(IPipelines pipelines)
         {
-            return Enable(pipelines, CryptographyConfiguration.Default);
+            return Enable(pipelines, new CookieBasedSessionsConfiguration
+            {
+                Serializer = new DefaultObjectSerializer()
+            });
         }
 
         /// <summary>
@@ -88,7 +118,7 @@ namespace Nancy.Session
         /// <param name="newSerializer">Formatter to use</param>
         public void WithSerializer(IObjectSerializer newSerializer)
         {
-            this.serializer = newSerializer;
+            this.currentConfiguration.Serializer = newSerializer;
         }
 
         /// <summary>
@@ -109,19 +139,23 @@ namespace Nancy.Session
                 sb.Append(HttpUtility.UrlEncode(kvp.Key));
                 sb.Append("=");
 
-                var objectString = this.serializer.Serialize(kvp.Value);
+                var objectString = this.currentConfiguration.Serializer.Serialize(kvp.Value);
 
                 sb.Append(HttpUtility.UrlEncode(objectString));
                 sb.Append(";");
             }
 
-            // TODO - configurable path?
-            var encryptedData = this.encryptionProvider.Encrypt(sb.ToString());
-            var hmacBytes = this.hmacProvider.GenerateHmac(encryptedData);
+            var cryptographyConfiguration = this.currentConfiguration.CryptographyConfiguration;
+            var encryptedData = cryptographyConfiguration.EncryptionProvider.Encrypt(sb.ToString());
+            var hmacBytes = cryptographyConfiguration.HmacProvider.GenerateHmac(encryptedData);
             var cookieData = String.Format("{0}{1}", Convert.ToBase64String(hmacBytes), encryptedData);
 
-            var cookie = new NancyCookie(cookieName, cookieData, true);
-            response.AddCookie(cookie);
+            var cookie = new NancyCookie(this.currentConfiguration.CookieName, cookieData, true)
+            {
+                Domain = this.currentConfiguration.Domain,
+                Path = this.currentConfiguration.Path
+            };
+            response.WithCookie(cookie);
         }
 
         /// <summary>
@@ -133,23 +167,26 @@ namespace Nancy.Session
         {
             var dictionary = new Dictionary<string, object>();
 
-            // TODO - configurable path?
+            var cookieName = this.currentConfiguration.CookieName;
+            var hmacProvider = this.currentConfiguration.CryptographyConfiguration.HmacProvider;
+            var encryptionProvider = this.currentConfiguration.CryptographyConfiguration.EncryptionProvider;
+
             if (request.Cookies.ContainsKey(cookieName))
             {
                 var cookieData = HttpUtility.UrlDecode(request.Cookies[cookieName]);
-                var hmacLength = Base64Helpers.GetBase64Length(this.hmacProvider.HmacLength);
+                var hmacLength = Base64Helpers.GetBase64Length(hmacProvider.HmacLength);
                 var hmacString = cookieData.Substring(0, hmacLength);
                 var encryptedCookie = cookieData.Substring(hmacLength);
 
                 var hmacBytes = Convert.FromBase64String(hmacString);
-                var newHmac = this.hmacProvider.GenerateHmac(encryptedCookie);
-                var hmacValid = HmacComparer.Compare(newHmac, hmacBytes, this.hmacProvider.HmacLength);
+                var newHmac = hmacProvider.GenerateHmac(encryptedCookie);
+                var hmacValid = HmacComparer.Compare(newHmac, hmacBytes, hmacProvider.HmacLength);
 
-                var data = this.encryptionProvider.Decrypt(encryptedCookie);
+                var data = encryptionProvider.Decrypt(encryptedCookie);
                 var parts = data.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var part in parts.Select(part => part.Split('=')))
                 {
-                    var valueObject = this.serializer.Deserialize(HttpUtility.UrlDecode(part[1]));
+                    var valueObject = this.currentConfiguration.Serializer.Deserialize(HttpUtility.UrlDecode(part[1]));
 
                     dictionary[HttpUtility.UrlDecode(part[0])] = valueObject;
                 }

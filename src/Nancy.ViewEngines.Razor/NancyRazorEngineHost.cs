@@ -3,7 +3,9 @@
     using System.Web.Razor;
     using System.Web.Razor.Generator;
     using System.Web.Razor.Parser;
+
     using CSharp;
+
     using VisualBasic;
 
     /// <summary>
@@ -17,35 +19,36 @@
         /// <param name="language">The language.</param>
         public NancyRazorEngineHost(RazorCodeLanguage language)
             : base(language)
-		{
-            this.DefaultBaseClass = typeof(NancyRazorViewBase).FullName;
+        {
+            this.DefaultBaseClass = typeof (NancyRazorViewBase).FullName;
             this.DefaultNamespace = "RazorOutput";
             this.DefaultClassName = "RazorView";
 
-            var context = new GeneratedClassContext("Execute", "Write", "WriteLiteral", "WriteTo", "WriteLiteralTo", typeof(HelperResult).FullName, "DefineSection");
+            var context = new GeneratedClassContext("Execute", "Write", "WriteLiteral", "WriteTo", "WriteLiteralTo",
+                typeof (HelperResult).FullName, "DefineSection");
             context.ResolveUrlMethodName = "ResolveUrl";
 
             this.GeneratedClassContext = context;
-		}
+        }
 
         /// <summary>
         /// Decorates the code parser.
         /// </summary>
         /// <param name="incomingCodeParser">The incoming code parser.</param>
         /// <returns></returns>
-		public override ParserBase DecorateCodeParser(ParserBase incomingCodeParser)
-		{
-			if (incomingCodeParser is CSharpCodeParser)
-			{
-			    return new NancyCSharpRazorCodeParser();
-			}
+        public override ParserBase DecorateCodeParser(ParserBase incomingCodeParser)
+        {
+            if (incomingCodeParser is CSharpCodeParser)
+            {
+                return new NancyCSharpRazorCodeParser();
+            }
 
             if (incomingCodeParser is VBCodeParser)
             {
                 return new NancyVisualBasicRazorCodeParser();
             }
 
-			return base.DecorateCodeParser(incomingCodeParser);
-		}
+            return base.DecorateCodeParser(incomingCodeParser);
+        }
     }
 }

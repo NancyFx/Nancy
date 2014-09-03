@@ -2,6 +2,10 @@
 namespace Nancy.Tests.Unit.Bootstrapper.Base
 {
     using System;
+    using System.Collections.Generic;
+    using System.Threading;
+    using System.Threading.Tasks;
+
     using Nancy.Bootstrapper;
     using Nancy.Routing;
     using Xunit;
@@ -37,6 +41,7 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
         [Fact]
         public virtual void Should_throw_if_get_engine_called_without_being_initialised()
         {
+            // Given / When
             var result = Record.Exception(() => this.Bootstrapper.GetEngine());
 
             result.ShouldNotBeNull();
@@ -45,10 +50,13 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
         [Fact]
         public virtual void Should_resolve_engine_when_initialised()
         {
+            // Given
             this.Bootstrapper.Initialise();
 
+            // When
             var result = this.Bootstrapper.GetEngine();
 
+            // Then
             result.ShouldNotBeNull();
             result.ShouldBeOfType(typeof(INancyEngine));
         }
@@ -56,22 +64,56 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
         [Fact]
         public virtual void Should_use_types_from_config()
         {
+            // Given
             this.Bootstrapper.Initialise();
 
+            // When
             var result = this.Bootstrapper.GetEngine();
 
+            // Then
             result.ShouldBeOfType(typeof(FakeEngine));
         }
 
         [Fact]
         public virtual void Should_register_config_types_as_singletons()
         {
+            // Given
             this.Bootstrapper.Initialise();
 
+            // When
             var result1 = this.Bootstrapper.GetEngine();
             var result2 = this.Bootstrapper.GetEngine();
             
+            // Then
             result1.ShouldBeSameAs(result2);
+        }
+
+        [Fact]
+        public void Should_honour_typeregistration_singleton_lifetimes()
+        {
+            // Given
+            this.Bootstrapper.Initialise();
+            
+            // When
+            var result1 = ((TestDependencyModule)this.Bootstrapper.GetModule(typeof(TestDependencyModule), new NancyContext()));
+            var result2 = ((TestDependencyModule)this.Bootstrapper.GetModule(typeof(TestDependencyModule), new NancyContext()));
+
+            // Then
+            result1.Singleton.ShouldBeSameAs(result2.Singleton);
+        }
+
+        [Fact]
+        public void Should_honour_typeregistration_transient_lifetimes()
+        {
+            // Given
+            this.Bootstrapper.Initialise();
+
+            // When
+            var result1 = ((TestDependencyModule)this.Bootstrapper.GetModule(typeof(TestDependencyModule), new NancyContext()));
+            var result2 = ((TestDependencyModule)this.Bootstrapper.GetModule(typeof(TestDependencyModule), new NancyContext()));
+
+            // Then
+            result1.Transient.ShouldNotBeSameAs(result2.Transient);
         }
 
         public class FakeEngine : INancyEngine
@@ -103,6 +145,11 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
 
             public Func<NancyContext, IPipelines> RequestPipelinesFactory { get; set; }
 
+            public Task<NancyContext> HandleRequest(Request request, Func<NancyContext, NancyContext> preRequest, CancellationToken cancellationToken)
+            {
+                throw new NotImplementedException();
+            }
+
             public FakeEngine(IRouteResolver resolver, IRouteCache routeCache, INancyContextFactory contextFactory)
             {
                 if (resolver == null)
@@ -124,32 +171,51 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
                 this.routeCache = routeCache;
                 this.contextFactory = contextFactory;
             }
+        }
+    }
 
-            /// <summary>
-            /// Handles an incoming <see cref="Request"/>.
-            /// </summary>
-            /// <param name="request">An <see cref="Request"/> instance, containing the information about the current request.</param>
-            /// <returns>A <see cref="NancyContext"/> instance containing the request/response context.</returns>
-            public NancyContext HandleRequest(Request request)
-            {
-                throw new NotImplementedException();
-            }
+    public class TestRegistrations : IRegistrations
+    {
+        public IEnumerable<TypeRegistration> TypeRegistrations { get; private set; }
 
-            /// <summary>
-            /// Handles an incoming <see cref="Request"/> async.
-            /// </summary>
-            /// <param name="request">An <see cref="Request"/> instance, containing the information about the current request.</param>
-            /// <param name="onComplete">Delegate to call when the request is complete</param>
-            /// <param name="onError">Deletate to call when any errors occur</param>
-            public void HandleRequest(Request request, Action<NancyContext> onComplete, Action<Exception> onError)
-            {
-                throw new NotImplementedException();
-            }
+        public IEnumerable<CollectionTypeRegistration> CollectionTypeRegistrations { get; private set; }
 
-            public void HandleRequest(Request request, Func<NancyContext, NancyContext> preRequest, Action<NancyContext> onComplete, Action<Exception> onError)
-            {
-                throw new NotImplementedException();
-            }
+        public IEnumerable<InstanceRegistration> InstanceRegistrations { get; private set; }
+
+        public TestRegistrations()
+        {
+            this.TypeRegistrations = new[]
+                                         {
+                                             new TypeRegistration(
+                                                 typeof(Singleton),
+                                                 typeof(Singleton),
+                                                 Lifetime.Singleton),
+                                             new TypeRegistration(
+                                                 typeof(Transient),
+                                                 typeof(Transient),
+                                                 Lifetime.Transient),
+                                         };
+        }
+    }
+
+    public class Singleton
+    {
+    }
+
+    public class Transient
+    {
+    }
+
+    public class TestDependencyModule : NancyModule
+    {
+        public Singleton Singleton { get; set; }
+
+        public Transient Transient { get; set; }
+
+        public TestDependencyModule(Singleton singleton, Transient transient)
+        {
+            this.Singleton = singleton;
+            this.Transient = transient;
         }
     }
 }

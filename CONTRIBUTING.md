@@ -24,7 +24,7 @@ While you're working away in your branch it's quite possible that your upstream 
 1. `git pull upstream master`
 1. `git checkout myBranch`
 1. `git rebase master myBranch`
-1. `git push origin master` - (optional) this this makes sure your remote master is up to date
+1. `git push origin master` - (optional) this makes sure your remote master is up to date
 
 This ensures that your history is "clean" i.e. you have one branch off from master followed by your changes in a straight line. Failing to do this ends up with several "messy" merges in your history, which we don't want. This is the reason why you should always work in a branch and you should never be working in, or sending pull requests from, master.
 
@@ -39,3 +39,16 @@ When you're ready to go you should confirm that you are up to date and rebased w
 1. `git push origin myBranch`
 1. Send a descriptive [Pull Request](http://help.github.com/pull-requests/) on GitHub - making sure you have selected the correct branch in the GitHub UI!
 1. Wait for @TheCodeJunkie to merge your changes in and reformat all of your code because he has StyleCop OCD :wink:.
+
+And remember; **A pull-request with tests is a pull-request that's likely to be pulled in.** :grin:
+
+## Style Guidelines
+
+- Indent with 4 spaces, **not** tabs.
+- No underscore (`_`) prefix for member names.
+- Use `this` when accessing instance members, e.g. `this.Name = "TheCodeJunkie";`.
+- Use the `var` keyword unless the inferred type is not obvious.
+- Use the C# type aliases for types that have them, e.g. `int` instead of `Int32`, `string` instead of `String` etc.
+- Use meaningful names (no hungarian notation).
+- Wrap `if`, `else` and `using` blocks (or blocks in general, really) in curly braces, even if it's a single line.
+- Put `using` statements inside namespace.

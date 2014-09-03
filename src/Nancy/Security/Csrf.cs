@@ -3,6 +3,7 @@
     using System;
     using Cookies;
     using Nancy.Bootstrapper;
+    using Nancy.Cryptography;
     using Nancy.Helpers;
 
     /// <summary>
@@ -14,11 +15,13 @@
 
         /// <summary>
         /// Enables Csrf token generation.
-        /// This is enabled automatically so there should be no reason to call this manually.
+        /// This is disabled by default.
         /// </summary>
         /// <param name="pipelines">Application pipelines</param>
-        public static void Enable(IPipelines pipelines)
+        public static void Enable(IPipelines pipelines, CryptographyConfiguration cryptographyConfiguration = null)
         {
+            cryptographyConfiguration = cryptographyConfiguration ?? CsrfApplicationStartup.CryptographyConfiguration;
+
             var postHook = new PipelineItem<Action<NancyContext>>(
                 CsrfHookName,
                 context =>
@@ -53,7 +56,7 @@
                         CreatedDate = DateTime.Now,
                     };
                     token.CreateRandomBytes();
-                    token.CreateHmac(CsrfApplicationStartup.CryptographyConfiguration.HmacProvider);
+                    token.CreateHmac(cryptographyConfiguration.HmacProvider);
                     var tokenString = CsrfApplicationStartup.ObjectSerializer.Serialize(token);
 
                     context.Items[CsrfToken.DEFAULT_CSRF_KEY] = tokenString;
@@ -78,14 +81,16 @@
         /// </summary>
         /// <param name="module">Nancy module</param>
         /// <returns></returns>
-        public static void CreateNewCsrfToken(this INancyModule module)
+        public static void CreateNewCsrfToken(this INancyModule module, CryptographyConfiguration cryptographyConfiguration = null)
         {
+            cryptographyConfiguration = cryptographyConfiguration ?? CsrfApplicationStartup.CryptographyConfiguration;
+
             var token = new CsrfToken
             {
                 CreatedDate = DateTime.Now,
             };
             token.CreateRandomBytes();
-            token.CreateHmac(CsrfApplicationStartup.CryptographyConfiguration.HmacProvider);
+            token.CreateHmac(cryptographyConfiguration.HmacProvider);
 
             var tokenString = CsrfApplicationStartup.ObjectSerializer.Serialize(token);
 
@@ -122,7 +127,7 @@
         private static CsrfToken GetFormToken(Request request)
         {
             CsrfToken formToken = null;
-            
+
             var formTokenString = request.Form[CsrfToken.DEFAULT_CSRF_KEY].Value;
             if (formTokenString != null)
             {

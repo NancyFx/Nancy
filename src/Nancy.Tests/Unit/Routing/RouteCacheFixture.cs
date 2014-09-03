@@ -1,5 +1,6 @@
 ﻿namespace Nancy.Tests.Unit.Routing
 {
+    using System.Collections.Generic;
     using System.Linq;
     using Nancy.Tests.Fakes;
     using Xunit;
@@ -13,6 +14,7 @@
         private readonly IRouteCache routeCache;
         private readonly IRouteSegmentExtractor routeSegmentExtractor;
         private readonly IRouteDescriptionProvider routeDescriptionProvider;
+        private readonly IEnumerable<IRouteMetadataProvider> routeMetadataProviders;
 
         /// <summary>
         /// Initializes a new instance of the RouteCacheFixture class.
@@ -21,10 +23,16 @@
         {
             this.routeDescriptionProvider = A.Fake<IRouteDescriptionProvider>();
             this.routeSegmentExtractor = A.Fake<IRouteSegmentExtractor>();
+            this.routeMetadataProviders = new IRouteMetadataProvider[0];
             this.fakeModuleCatalog = new FakeModuleCatalog();
 
-            this.routeCache =
-                new RouteCache(this.fakeModuleCatalog, A.Fake<INancyContextFactory>(), this.routeSegmentExtractor, this.routeDescriptionProvider, A.Fake<ICultureService>());
+            this.routeCache = new RouteCache(
+                    this.fakeModuleCatalog,
+                    A.Fake<INancyContextFactory>(),
+                    this.routeSegmentExtractor,
+                    this.routeDescriptionProvider,
+                    A.Fake<ICultureService>(),
+                    this.routeMetadataProviders);
         }
 
         [Fact]
@@ -136,7 +144,8 @@
                 A.Fake<INancyContextFactory>(),
                 this.routeSegmentExtractor,
                 descriptionProvider,
-                A.Fake<ICultureService>());
+                A.Fake<ICultureService>(),
+                new IRouteMetadataProvider[0]);
 
             // Then
             A.CallTo(() => descriptionProvider.GetDescription(module, A<string>._)).MustHaveHappened();
@@ -165,10 +174,67 @@
                 A.Fake<INancyContextFactory>(),
                 this.routeSegmentExtractor,
                 descriptionProvider,
-                A.Fake<ICultureService>());
+                A.Fake<ICultureService>(),
+                new IRouteMetadataProvider[0]);
 
             // Then
             A.CallTo(() => descriptionProvider.GetDescription(A<NancyModule>._, expectedPath)).MustHaveHappened();
+        }
+
+        [Fact]
+        public void Should_invoke_route_metadata_provider_with_module_that_route_is_defined_in()
+        {
+            // Given
+            var module = new FakeNancyModule(with =>
+            {
+                with.AddGetRoute("/");
+            });
+
+            var catalog = A.Fake<INancyModuleCatalog>();
+            A.CallTo(() => catalog.GetAllModules(A<NancyContext>._)).Returns(new[] { module });
+
+            var metadataProvider =
+                A.Fake<IRouteMetadataProvider>();
+
+            // When
+            new RouteCache(
+                catalog,
+                A.Fake<INancyContextFactory>(),
+                this.routeSegmentExtractor,
+                A.Fake<IRouteDescriptionProvider>(),
+                A.Fake<ICultureService>(),
+                new[] { metadataProvider });
+
+            // Then
+            A.CallTo(() => metadataProvider.GetMetadata(module, A<RouteDescription>._)).MustHaveHappened();
+        }
+
+        [Fact]
+        public void Should_handle_null_metadata()
+        {
+            // Given
+            var module = new FakeNancyModule(with =>
+            {
+                with.AddGetRoute("/");
+            });
+
+            var catalog = A.Fake<INancyModuleCatalog>();
+            A.CallTo(() => catalog.GetAllModules(A<NancyContext>._)).Returns(new[] { module });
+
+            var metadataProvider = A.Fake<IRouteMetadataProvider>();
+            A.CallTo(() => metadataProvider.GetMetadata(null, null)).WithAnyArguments().Returns(null);
+
+            // When
+            var cache = new RouteCache(
+                catalog,
+                A.Fake<INancyContextFactory>(),
+                this.routeSegmentExtractor,
+                A.Fake<IRouteDescriptionProvider>(),
+                A.Fake<ICultureService>(),
+                new[] { metadataProvider });
+
+            // Then
+            cache[module.GetType()][0].Item2.Metadata.Raw.Count.ShouldEqual(0);
         }
     }
 }

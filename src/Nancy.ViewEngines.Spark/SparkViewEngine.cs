@@ -74,11 +74,6 @@
             return new NancyViewFolder(viewLocationResults);
         }
 
-        private static string GetViewFolderKey(ViewLocationResult viewLocationResult)
-        {
-            return string.Concat(viewLocationResult.Location, Path.DirectorySeparatorChar, viewLocationResult.Name, ".", viewLocationResult.Extension);
-        }
-
         private SparkViewEngineResult LocateView(string viewPath, string viewName, ViewLocationResult viewLocationResult, IRenderContext renderContext)
         {
             var searchedLocations = new List<string>();

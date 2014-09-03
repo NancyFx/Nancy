@@ -2,7 +2,9 @@
 
 namespace Nancy.Hosting.Aspnet
 {
+    using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     using Bootstrapper;
     using Nancy.TinyIoc;
@@ -23,6 +25,21 @@ namespace Nancy.Hosting.Aspnet
         }
 
         /// <summary>
+        /// Gets all request startup tasks
+        /// </summary>
+        protected override IEnumerable<Type> RequestStartupTasks
+        {
+            get
+            {
+                var types = base.RequestStartupTasks.ToArray();
+
+                this.ApplicationContainer.RegisterMultiple(typeof(IRequestStartup), types).AsPerRequestSingleton();
+
+                return types;
+            }
+        }
+
+        /// <summary>
         /// Gets all registered startup tasks
         /// </summary>
         /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IApplicationStartup"/> instances. </returns>
@@ -32,12 +49,23 @@ namespace Nancy.Hosting.Aspnet
         }
 
         /// <summary>
+        /// Resolves all request startup tasks
+        /// </summary>
+        /// <param name="container">Container to use</param>
+        /// <param name="requestStartupTypes">Types to register - not used</param>
+        /// <returns>An <see cref="System.Collections.Generic.IEnumerable{T}"/> instance containing <see cref="IRequestStartup"/> instances.</returns>
+        protected override IEnumerable<IRequestStartup> RegisterAndGetRequestStartupTasks(TinyIoCContainer container, Type[] requestStartupTypes)
+        {
+            return container.ResolveAll<IRequestStartup>();
+        }
+
+        /// <summary>
         /// Gets all registered application registration tasks
         /// </summary>
-        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IApplicationRegistrations"/> instances.</returns>
-        protected override IEnumerable<IApplicationRegistrations> GetApplicationRegistrationTasks()
+        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IRegistrations"/> instances.</returns>
+        protected override IEnumerable<IRegistrations> GetRegistrationTasks()
         {
-            return this.ApplicationContainer.ResolveAll<IApplicationRegistrations>(false);
+            return this.ApplicationContainer.ResolveAll<IRegistrations>(false);
         }
 
         /// <summary>
@@ -120,7 +148,20 @@ namespace Nancy.Hosting.Aspnet
         {
             foreach (var typeRegistration in typeRegistrations)
             {
-                container.Register(typeRegistration.RegistrationType, typeRegistration.ImplementationType).AsSingleton();
+                switch (typeRegistration.Lifetime)
+                {
+                    case Lifetime.Transient:
+                        container.Register(typeRegistration.RegistrationType, typeRegistration.ImplementationType).AsMultiInstance();
+                        break;
+                    case Lifetime.Singleton:
+                        container.Register(typeRegistration.RegistrationType, typeRegistration.ImplementationType).AsSingleton();
+                        break;
+                    case Lifetime.PerRequest:
+                        container.Register(typeRegistration.RegistrationType, typeRegistration.ImplementationType).AsPerRequestSingleton();
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
         }
 
@@ -134,7 +175,20 @@ namespace Nancy.Hosting.Aspnet
         {
             foreach (var collectionTypeRegistration in collectionTypeRegistrationsn)
             {
-                container.RegisterMultiple(collectionTypeRegistration.RegistrationType, collectionTypeRegistration.ImplementationTypes);
+                switch (collectionTypeRegistration.Lifetime)
+                {
+                    case Lifetime.Transient:
+                        container.RegisterMultiple(collectionTypeRegistration.RegistrationType, collectionTypeRegistration.ImplementationTypes).AsMultiInstance();
+                        break;
+                    case Lifetime.Singleton:
+                        container.RegisterMultiple(collectionTypeRegistration.RegistrationType, collectionTypeRegistration.ImplementationTypes).AsSingleton();
+                        break;
+                    case Lifetime.PerRequest:
+                        container.RegisterMultiple(collectionTypeRegistration.RegistrationType, collectionTypeRegistration.ImplementationTypes).AsPerRequestSingleton();
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
         }
 

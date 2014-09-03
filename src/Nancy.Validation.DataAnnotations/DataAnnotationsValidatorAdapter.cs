@@ -1,56 +1,54 @@
 ﻿namespace Nancy.Validation.DataAnnotations
 {
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
+    using System.Linq;
 
     /// <summary>
     /// A default implementation of an <see cref="IDataAnnotationsValidatorAdapter"/>.
     /// </summary>
-    public class DataAnnotationsValidatorAdapter : IDataAnnotationsValidatorAdapter
+    public abstract class DataAnnotationsValidatorAdapter : IDataAnnotationsValidatorAdapter
     {
-        protected readonly PropertyDescriptor descriptor;
         protected readonly string ruleType;
-        protected readonly ValidationAttribute attribute;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataAnnotationsValidatorAdapter"/> class.
         /// </summary>
         /// <param name="ruleType">Type of the rule.</param>
-        /// <param name="attribute">The attribute.</param>
-        public DataAnnotationsValidatorAdapter(string ruleType, ValidationAttribute attribute)
-            : this(ruleType, attribute, null)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DataAnnotationsValidatorAdapter"/> class.
-        /// </summary>
-        /// <param name="ruleType">Type of the rule.</param>
-        /// <param name="attribute">The attribute.</param>
-        /// <param name="descriptor">The descriptor.</param>
-        public DataAnnotationsValidatorAdapter(string ruleType, ValidationAttribute attribute, PropertyDescriptor descriptor)
+        protected DataAnnotationsValidatorAdapter(string ruleType)
         {
             this.ruleType = ruleType;
-            this.attribute = attribute;
-            this.descriptor = descriptor;
         }
+
+        /// <summary>
+        /// Gets a boolean that indicates if the adapter can handle the
+        /// provided <paramref name="attribute"/>.
+        /// </summary>
+        /// <param name="attribute">The <see cref="ValidationAttribute"/> that should be handled.</param>
+        /// <returns><see langword="true" /> if the attribute can be handles, otherwise <see langword="false" />.</returns>
+        public abstract bool CanHandle(ValidationAttribute attribute);
 
         /// <summary>
         /// Gets the the rules the adapter provides.
         /// </summary>
-        /// <returns>An <see cref="IEnumerable{T}"/> instance, containing <see cref="ModelValidationRule"/> instances.</returns>
-        public virtual IEnumerable<ModelValidationRule> GetRules()
+        /// <param name="attribute">The <see cref="ValidationAttribute"/> that should be handled.</param>
+        /// <param name="descriptor">A <see cref="PropertyDescriptor"/> instance for the property that is being validated.</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="ModelValidationRule"/> instances.</returns>
+        public virtual IEnumerable<ModelValidationRule> GetRules(ValidationAttribute attribute, PropertyDescriptor descriptor)
         {
-            yield return new ModelValidationRule(ruleType, attribute.FormatErrorMessage, descriptor == null ? null : new[] { descriptor.Name });
+            yield return new ModelValidationRule(ruleType, attribute.FormatErrorMessage, new [] { descriptor == null ? string.Empty : descriptor.Name });
         }
 
         /// <summary>
         /// Validates the given instance.
         /// </summary>
-        /// <param name="instance">The instance.</param>
-        /// <returns>An <see cref="IEnumerable{T}"/> instance, containing <see cref="ModelValidationError"/> instances.</returns>
-        public virtual IEnumerable<ModelValidationError> Validate(object instance)
+        /// <param name="instance">The instance that should be validated.</param>
+        /// <param name="attribute">The <see cref="ValidationAttribute"/> that should be handled.</param>
+        /// <param name="descriptor">A <see cref="PropertyDescriptor"/> instance for the property that is being validated.</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="ModelValidationRule"/> instances.</returns>
+        public virtual IEnumerable<ModelValidationError> Validate(object instance, ValidationAttribute attribute, PropertyDescriptor descriptor)
         {
             var context = 
                 new ValidationContext(instance, null, null)
@@ -68,10 +66,8 @@
 
             if (result != null)
             {
-                yield return new ModelValidationError(result.MemberNames, attribute.FormatErrorMessage);
+                yield return new ModelValidationError(result.MemberNames, string.Join(" ", result.MemberNames.Select(attribute.FormatErrorMessage)));
             }
-
-            yield break;
         }
     }
 }

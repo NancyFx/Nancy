@@ -1,6 +1,9 @@
 ﻿@Master['MasterPage']
 
 @Section['Content']
+
+	<h3>ViewBag</h3>
+	@ViewBag.Test
 	<p>This content from the index page<p>
 	<h3>Partials</h3>
 	<p>Login box below rendered via a partial view with no model.</p>

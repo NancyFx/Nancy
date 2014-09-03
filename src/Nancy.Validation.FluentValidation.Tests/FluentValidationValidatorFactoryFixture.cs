@@ -7,14 +7,26 @@
 
     public class FluentValidationValidatorFactoryFixture
     {
+        private readonly FluentValidationValidatorFactory factory;
+
+        public FluentValidationValidatorFactoryFixture()
+        {
+            var adapterFactory = 
+                A.Fake<IFluentAdapterFactory>();
+
+            var validators = 
+                new IValidator[] {new ClassUnderTestValidator(), new NeverBeUsedTestValidator()};
+
+            this.factory = 
+                new FluentValidationValidatorFactory(adapterFactory, validators);
+        }
+
         [Fact]
         public void Should_return_instance_when_validator_was_found_for_type()
         {
             // Given
-            var factory = new FluentValidationValidatorFactory(A.Fake<IFluentAdapterFactory>());
-
             // When
-            var instance = factory.Create(typeof(ClassUnderTest));
+            var instance = this.factory.Create(typeof(ClassUnderTest));
 
             // Then
             instance.ShouldNotBeNull();
@@ -24,10 +36,8 @@
         public void Should_return_null_when_no_validator_was_found_for_type()
         {
             // Given
-            var factory = new FluentValidationValidatorFactory(A.Fake<IFluentAdapterFactory>());
-
             // When
-            var instance = factory.Create(typeof(string));
+            var instance = this.factory.Create(typeof(string));
 
             // Then
             instance.ShouldBeNull();
@@ -38,6 +48,10 @@
         }
 
         public class ClassUnderTestValidator : AbstractValidator<ClassUnderTest>
+        {
+        }
+
+        public class NeverBeUsedTestValidator : AbstractValidator<int>
         {
         }
     }

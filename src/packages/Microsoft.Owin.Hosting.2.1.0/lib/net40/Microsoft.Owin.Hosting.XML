@@ -1,0 +1,1015 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.Owin.Hosting</name>
+    </assembly>
+    <members>
+        <member name="T:System.Reflection.AssemblyMetadataAttribute">
+            <summary>
+            Provided as a down-level stub for the 4.5 AssemblyMetaDataAttribute class.
+            All released assemblies should define [AssemblyMetadata("Serviceable", "True")].
+            </summary>
+        </member>
+        <member name="T:Owin.Loader.DefaultLoader">
+            <summary>
+            Locates the startup class based on the following convention:
+            AssemblyName.Startup, with a method named Configuration
+            </summary>
+        </member>
+        <member name="M:Owin.Loader.DefaultLoader.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Owin.Loader.DefaultLoader.#ctor(System.Func{System.String,System.Collections.Generic.IList{System.String},System.Action{Owin.IAppBuilder}})">
+            <summary>
+            Allows for a fallback loader to be specified.
+            </summary>
+            <param name="next"></param>
+        </member>
+        <member name="M:Owin.Loader.DefaultLoader.#ctor(System.Func{System.String,System.Collections.Generic.IList{System.String},System.Action{Owin.IAppBuilder}},System.Func{System.Type,System.Object})">
+            <summary>
+            Allows for a fallback loader and a Dependency Injection activator to be specified.
+            </summary>
+            <param name="next"></param>
+            <param name="activator"></param>
+        </member>
+        <member name="M:Owin.Loader.DefaultLoader.#ctor(System.Func{System.String,System.Collections.Generic.IList{System.String},System.Action{Owin.IAppBuilder}},System.Func{System.Type,System.Object},System.Collections.Generic.IEnumerable{System.Reflection.Assembly})">
+            <summary>
+            
+            </summary>
+            <param name="next"></param>
+            <param name="activator"></param>
+            <param name="referencedAssemblies"></param>
+        </member>
+        <member name="M:Owin.Loader.DefaultLoader.Load(System.String,System.Collections.Generic.IList{System.String})">
+            <summary>
+            Executes the loader, searching for the entry point by name.
+            </summary>
+            <param name="startupName">The name of the assembly and type entry point</param>
+            <param name="errorDetails"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Owin.Loader.DefaultLoader.DotByDot(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="text"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Owin.Loader.NullLoader">
+            <summary>
+            A default fallback loader that does nothing.
+            </summary>
+        </member>
+        <member name="M:Owin.Loader.NullLoader.Load(System.String,System.Collections.Generic.IList{System.String})">
+            <summary>
+            A placeholder method that always returns null.
+            </summary>
+            <param name="startup"></param>
+            <param name="errors"></param>
+            <returns>null.</returns>
+        </member>
+        <member name="P:Owin.Loader.NullLoader.Instance">
+            <summary>
+            A singleton instance of the NullLoader type.
+            </summary>
+        </member>
+        <member name="T:SharedResourceNamespace.LoaderResources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:SharedResourceNamespace.LoaderResources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:SharedResourceNamespace.LoaderResources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:SharedResourceNamespace.LoaderResources.AssemblyNotFound">
+            <summary>
+              Looks up a localized string similar to For the app startup parameter value &apos;{0}&apos;, the assembly &apos;{1}&apos; was not found..
+            </summary>
+        </member>
+        <member name="P:SharedResourceNamespace.LoaderResources.ClassNotFoundInAssembly">
+            <summary>
+              Looks up a localized string similar to For the app startup parameter value &apos;{0}&apos;, the class &apos;{1}&apos; was not found in assembly &apos;{2}&apos;..
+            </summary>
+        </member>
+        <member name="P:SharedResourceNamespace.LoaderResources.Exception_AttributeNameConflict">
+            <summary>
+              Looks up a localized string similar to The OwinStartup attribute discovered in assembly &apos;{0}&apos; referencing startup type &apos;{1}&apos; conflicts with the attribute in assembly &apos;{2}&apos; referencing startup type &apos;{3}&apos; because they have the same FriendlyName &apos;{4}&apos;. Remove or rename one of the attributes, or reference the desired type directly..
+            </summary>
+        </member>
+        <member name="P:SharedResourceNamespace.LoaderResources.Exception_StartupTypeConflict">
+            <summary>
+              Looks up a localized string similar to The discovered startup type &apos;{0}&apos; conflicts with the type &apos;{1}&apos;. Remove or rename one of the types, or reference the desired type directly..
+            </summary>
+        </member>
+        <member name="P:SharedResourceNamespace.LoaderResources.FriendlyNameMismatch">
+            <summary>
+              Looks up a localized string similar to The OwinStartupAttribute.FriendlyName value &apos;{0}&apos; does not match the given value &apos;{1}&apos; in Assembly &apos;{2}&apos;..
+            </summary>
+        </member>
+        <member name="P:SharedResourceNamespace.LoaderResources.MethodNotFoundInClass">
+            <summary>
+              Looks up a localized string similar to No &apos;{0}&apos; method was found in class &apos;{1}&apos;..
+            </summary>
+        </member>
+        <member name="P:SharedResourceNamespace.LoaderResources.NoAssemblyWithStartupClass">
+            <summary>
+              Looks up a localized string similar to No assembly found containing a Startup or [AssemblyName].Startup class..
+            </summary>
+        </member>
+        <member name="P:SharedResourceNamespace.LoaderResources.NoOwinStartupAttribute">
+            <summary>
+              Looks up a localized string similar to No assembly found containing an OwinStartupAttribute..
+            </summary>
+        </member>
+        <member name="P:SharedResourceNamespace.LoaderResources.StartupTypePropertyEmpty">
+            <summary>
+              Looks up a localized string similar to The OwinStartupAttribute.StartupType value is empty in Assembly &apos;{0}&apos;..
+            </summary>
+        </member>
+        <member name="P:SharedResourceNamespace.LoaderResources.StartupTypePropertyMissing">
+            <summary>
+              Looks up a localized string similar to The type &apos;{0}&apos; referenced from assembly &apos;{1}&apos; does not define a property &apos;StartupType&apos; of type &apos;Type&apos;..
+            </summary>
+        </member>
+        <member name="P:SharedResourceNamespace.LoaderResources.TypeOrMethodNotFound">
+            <summary>
+              Looks up a localized string similar to The given type or method &apos;{0}&apos; was not found. Try specifying the Assembly..
+            </summary>
+        </member>
+        <member name="P:SharedResourceNamespace.LoaderResources.UnexpectedMethodSignature">
+            <summary>
+              Looks up a localized string similar to The &apos;{0}&apos; method on class &apos;{1}&apos; does not have the expected signature &apos;void {0}(IAppBuilder)&apos;..
+            </summary>
+        </member>
+        <member name="T:Microsoft.Owin.Hosting.ServerFactory.ServerFactoryActivator">
+            <summary>
+            Used to instantiate the server factory.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Owin.Hosting.ServerFactory.IServerFactoryActivator">
+            <summary>
+            Used to instantiate the server factory.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.ServerFactory.IServerFactoryActivator.Activate(System.Type)">
+            <summary>
+            Instantiate an instance of the given type.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.ServerFactory.ServerFactoryActivator.#ctor(System.IServiceProvider)">
+            <summary>
+            
+            </summary>
+            <param name="services"></param>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.ServerFactory.ServerFactoryActivator.Activate(System.Type)">
+            <summary>
+            Instantiate an instance of the given type.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Owin.Hosting.ServerFactory.ServerFactoryLoader">
+            <summary>
+            Located and loads the server factory.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Owin.Hosting.ServerFactory.IServerFactoryLoader">
+            <summary>
+            Used to locate and load the named server factory.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.ServerFactory.IServerFactoryLoader.Load(System.String)">
+            <summary>
+            Used to locate and load the named server factory.
+            </summary>
+            <param name="serverName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.ServerFactory.ServerFactoryLoader.#ctor(Microsoft.Owin.Hosting.ServerFactory.IServerFactoryActivator)">
+            <summary>
+            Allows for a Dependency Injection activator to be specified.
+            </summary>
+            <param name="activator"></param>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.ServerFactory.ServerFactoryLoader.Load(System.String)">
+            <summary>
+            Executes the loader, searching for the server factory by name.
+            Acceptable inputs:
+            - Assembly.Name. Look for type Assembly.Name.ServerFactory in the assembly Assembly.Name.
+            - Assembly.Name.FactoryName.  Look for type Assembly.Name.FactoryName in the assembly Assembly.Name.
+            </summary>
+            <param name="serverName">The name of the assembly and type of the server factory</param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Owin.Hosting.ServerFactory.IServerFactoryAdapter">
+            <summary>
+            The basic ServerFactory contract.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.ServerFactory.IServerFactoryAdapter.Initialize(Owin.IAppBuilder)">
+            <summary>
+            An optional method that allows the server factory to specify its capabilities.
+            </summary>
+            <param name="builder"></param>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.ServerFactory.IServerFactoryAdapter.Create(Owin.IAppBuilder)">
+            <summary>
+            Starts a server with the given app instance.
+            </summary>
+            <param name="builder"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Owin.Hosting.Loader.AppLoader">
+            <summary>
+            Attempts to find the entry point for an app.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Owin.Hosting.Loader.IAppLoader">
+            <summary>
+            Attempts to find the entry point for an app.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Loader.IAppLoader.Load(System.String,System.Collections.Generic.IList{System.String})">
+            <summary>
+            Attempts to find the entry point for a given configuration string.
+            </summary>
+            <param name="appName"></param>
+            <param name="errors"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Loader.AppLoader.#ctor(System.Collections.Generic.IEnumerable{Microsoft.Owin.Hosting.Loader.IAppLoaderFactory})">
+            <summary>
+            
+            </summary>
+            <param name="providers"></param>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Loader.AppLoader.Load(System.String,System.Collections.Generic.IList{System.String})">
+            <summary>
+            Attempts to find the entry point for a given configuration string.
+            </summary>
+            <param name="appName"></param>
+            <param name="errors"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Owin.Hosting.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.Resources.Exception_AppLoadFailure">
+            <summary>
+              Looks up a localized string similar to The following errors occurred while attempting to load the app..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.Resources.Exception_FailedToResolveService">
+            <summary>
+              Looks up a localized string similar to Failed to resolve an instance of {0} from the IServiceProvider..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.Resources.Exception_ImproperlyFormattedSettingsFile">
+            <summary>
+              Looks up a localized string similar to The settings file is improperly formatted. It should consist of one name=value pair per line.  Empty lines or lines beginning with &apos;#&apos; are ignored..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.Resources.Exception_ServerFactoryParameterCount">
+            <summary>
+              Looks up a localized string similar to The &apos;{0}&apos; Create method must take two parameters..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.Resources.Exception_ServerFactoryParameterType">
+            <summary>
+              Looks up a localized string similar to The &apos;{0}&apos; Create method must have a second parameter of type IDictionary&lt;string,object&gt;..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.Resources.Exception_ServerNotFound">
+            <summary>
+              Looks up a localized string similar to The server factory could not be located for the given input: {0}.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Owin.Hosting.ServerFactory.ServerFactoryAdapter">
+            <summary>
+            The basic ServerFactory contract.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.ServerFactory.ServerFactoryAdapter.#ctor(System.Object)">
+            <summary>
+            Creates a wrapper around the given server factory instance.
+            </summary>
+            <param name="serverFactory"></param>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.ServerFactory.ServerFactoryAdapter.#ctor(System.Type,Microsoft.Owin.Hosting.ServerFactory.IServerFactoryActivator)">
+            <summary>
+            Creates a wrapper around the given server factory type.
+            </summary>
+            <param name="serverFactoryType"></param>
+            <param name="activator"></param>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.ServerFactory.ServerFactoryAdapter.Initialize(Owin.IAppBuilder)">
+            <summary>
+            Calls the optional Initialize method on the server factory.
+            The method may be static or instance, and may accept either
+            an IAppBuilder or the IAppBuilder.Properties IDictionary&lt;string, object&gt;.
+            </summary>
+            <param name="builder"></param>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.ServerFactory.ServerFactoryAdapter.Create(Owin.IAppBuilder)">
+            <summary>
+            Calls the Create method on the server factory.
+            The method may be static or instance, and may accept the AppFunc and the 
+            IAppBuilder.Properties IDictionary&lt;string, object&gt;.
+            </summary>
+            <param name="builder"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Owin.Hosting.Services.ActivatorUtilities">
+            <summary>
+            Helper code for the various activator services.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Services.ActivatorUtilities.GetServiceOrCreateInstance(System.IServiceProvider,System.Type)">
+            <summary>
+            Retrieve an instance of the given type from the service provider. If one is not found then instantiate it directly.
+            </summary>
+            <param name="services"></param>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Services.ActivatorUtilities.CreateInstance(System.IServiceProvider,System.Type)">
+            <summary>
+            Instantiate an object of the given type, using constructor service injection if possible.
+            </summary>
+            <param name="services"></param>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Services.ActivatorUtilities.CreateFactory(System.Type)">
+            <summary>
+            Creates a factory to instantiate a type using constructor service injection if possible.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Owin.Hosting.Builder.AppActivator">
+            <summary>
+            Used to instantiate the application entry point. e.g. the Startup class.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Owin.Hosting.Builder.IAppActivator">
+            <summary>
+            Used to instantiate the application entry point. e.g. the Startup class.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Builder.IAppActivator.Activate(System.Type)">
+            <summary>
+            Instantiate an instance of the given type.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Builder.AppActivator.#ctor(System.IServiceProvider)">
+            <summary>
+            Creates a new AppActivator.
+            </summary>
+            <param name="services"></param>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Builder.AppActivator.Activate(System.Type)">
+            <summary>
+            Instantiate an instance of the given type, injecting any available services.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Owin.Hosting.Builder.AppBuilderFactory">
+            <summary>
+            Provides an IAppBuilder instance based on Microsoft.Owin.Builder.AppBuilder.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Owin.Hosting.Builder.IAppBuilderFactory">
+            <summary>
+            Provides an IAppBuilder instance.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Builder.IAppBuilderFactory.Create">
+            <summary>
+            Create a new IAppBuilder instance.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Builder.AppBuilderFactory.Create">
+            <summary>
+            Create a new IAppBuilder instance based on Microsoft.Owin.Builder.AppBuilder.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Owin.Hosting.Loader.AppLoaderFactory">
+            <summary>
+            Initializes a new app loader.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Owin.Hosting.Loader.IAppLoaderFactory">
+            <summary>
+            Initializes a new app loader.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Loader.IAppLoaderFactory.Create(System.Func{System.String,System.Collections.Generic.IList{System.String},System.Action{Owin.IAppBuilder}})">
+            <summary>
+            Create a new chained app loader.
+            </summary>
+            <param name="nextLoader"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.Loader.IAppLoaderFactory.Order">
+            <summary>
+            Not currently used.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Loader.AppLoaderFactory.#ctor(Microsoft.Owin.Hosting.Builder.IAppActivator)">
+            <summary>
+            
+            </summary>
+            <param name="activator"></param>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Loader.AppLoaderFactory.Create(System.Func{System.String,System.Collections.Generic.IList{System.String},System.Action{Owin.IAppBuilder}})">
+            <summary>
+            Create a new chained app loader.
+            </summary>
+            <param name="nextLoader"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.Loader.AppLoaderFactory.Order">
+            <summary>
+            Not currently used.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Owin.Hosting.Services.ServicesFactory">
+            <summary>
+            Create a default ServiceProvider with input from a variety or sources.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Services.ServicesFactory.Create(System.Collections.Generic.IDictionary{System.String,System.String},System.Action{Microsoft.Owin.Hosting.Services.ServiceProvider})">
+            <summary>
+            Create a default ServiceProvider with the given settings.
+            </summary>
+            <param name="settings"></param>
+            <param name="configuration"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Services.ServicesFactory.Create(System.String,System.Action{Microsoft.Owin.Hosting.Services.ServiceProvider})">
+            <summary>
+            Create a default ServiceProvider with the given settings file.
+            </summary>
+            <param name="settingsFile"></param>
+            <param name="configuration"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Services.ServicesFactory.Create(System.Action{Microsoft.Owin.Hosting.Services.ServiceProvider})">
+            <summary>
+            Create a default ServiceProvider.
+            </summary>
+            <param name="configuration"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Services.ServicesFactory.Create(System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Create a default ServiceProvider with the given settings.
+            </summary>
+            <param name="settings"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Services.ServicesFactory.Create(System.String)">
+            <summary>
+            Create a default ServiceProvider with the given settings file.
+            </summary>
+            <param name="settingsFile"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Services.ServicesFactory.Create">
+            <summary>
+            Create a default ServiceProvider.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Services.ServicesFactory.ForEach(System.Collections.Generic.IDictionary{System.String,System.String},System.Action{System.Type,System.Type})">
+            <summary>
+            Enumerate the default service types with the given settings overrides.
+            </summary>
+            <param name="settings"></param>
+            <param name="callback"></param>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Services.ServicesFactory.ForEach(System.String,System.Action{System.Type,System.Type})">
+            <summary>
+            Enumerate the default service types with the given settings file overrides.
+            </summary>
+            <param name="settingsFile"></param>
+            <param name="callback"></param>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Services.ServicesFactory.ForEach(System.Action{System.Type,System.Type})">
+            <summary>
+            Enumerate the default service types.
+            </summary>
+            <param name="callback"></param>
+        </member>
+        <member name="T:Microsoft.Owin.Hosting.Utilities.SettingsLoader">
+            <summary>
+            Loads settings from various locations.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Utilities.SettingsLoader.LoadFromConfig">
+            <summary>
+            Load settings from the AppSettings section of the config file.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Utilities.SettingsLoader.LoadFromConfig(System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Load settings from the AppSettings section of the config file.
+            </summary>
+            <param name="settings"></param>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Utilities.SettingsLoader.LoadFromSettingsFile(System.String)">
+            <summary>
+            Load settings from a flat text file.
+            </summary>
+            <param name="settingsFile"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Utilities.SettingsLoader.LoadFromSettingsFile(System.String,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Load settings from a flat text file.
+            </summary>
+            <param name="settingsFile"></param>
+            <param name="settings"></param>
+        </member>
+        <member name="T:Microsoft.Owin.Hosting.Services.ServiceProviderExtensions">
+            <summary>
+            Extension methods for IServiceProvider.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Services.ServiceProviderExtensions.GetService``1(System.IServiceProvider)">
+            <summary>
+            Retrieve a service of type T from the IServiceProvider.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="services"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Owin.Hosting.Services.ServiceProvider">
+            <summary>
+            The default IServiceProvider.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Services.ServiceProvider.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Services.ServiceProvider.GetService(System.Type)">
+            <summary>
+            Gets the service object of the specified type.
+            </summary>
+            <param name="serviceType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Services.ServiceProvider.RemoveAll``1">
+            <summary>
+            Remove all occurrences of the given type from the provider.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Services.ServiceProvider.RemoveAll(System.Type)">
+            <summary>
+            Remove all occurrences of the given type from the provider.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Services.ServiceProvider.AddInstance``1(System.Object)">
+            <summary>
+            Add an instance of type TService to the list of providers.
+            </summary>
+            <typeparam name="TService"></typeparam>
+            <param name="instance"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Services.ServiceProvider.AddInstance(System.Type,System.Object)">
+            <summary>
+            Add an instance of the given type to the list of providers.
+            </summary>
+            <param name="service"></param>
+            <param name="instance"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Services.ServiceProvider.Add``2">
+            <summary>
+            Specify that services of the type TService should be fulfilled by the type TImplementation.
+            </summary>
+            <typeparam name="TService"></typeparam>
+            <typeparam name="TImplementation"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Services.ServiceProvider.Add(System.Type,System.Type)">
+            <summary>
+            Specify that services of the type serviceType should be fulfilled by the type implementationType.
+            </summary>
+            <param name="serviceType"></param>
+            <param name="implementationType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Services.ServiceProvider.Add(System.Type,System.Func{System.Object})">
+            <summary>
+            Specify that services of the given type should be created with the given serviceFactory.
+            </summary>
+            <param name="serviceType"></param>
+            <param name="serviceFactory"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Owin.Hosting.Tracing.TraceOutputFactory">
+            <summary>
+            Opens a stream writer for the given file.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Owin.Hosting.Tracing.ITraceOutputFactory">
+            <summary>
+            Used to create the trace output.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Tracing.ITraceOutputFactory.Create(System.String)">
+            <summary>
+            Used to create the trace output.
+            </summary>
+            <param name="outputFile"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Tracing.TraceOutputFactory.Create(System.String)">
+            <summary>
+            Opens a stream writer for the given file.
+            </summary>
+            <param name="outputFile"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Owin.Hosting.Starter.HostingStarterActivator">
+            <summary>
+            Instantiates instances of the IHostingStarter.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Owin.Hosting.Starter.IHostingStarterActivator">
+            <summary>
+            Instantiates instances of the IHostingStarter.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Starter.IHostingStarterActivator.Activate(System.Type)">
+            <summary>
+            Instantiates instances of the IHostingStarter.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Starter.HostingStarterActivator.#ctor(System.IServiceProvider)">
+            <summary>
+            
+            </summary>
+            <param name="services"></param>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Starter.HostingStarterActivator.Activate(System.Type)">
+            <summary>
+            Instantiates instances of the IHostingStarter.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Owin.Hosting.Starter.DirectHostingStarter">
+            <summary>
+            Executes the IHostingEngine without making any changes to the current execution environment.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Owin.Hosting.Starter.IHostingStarter">
+            <summary>
+            Performs any necessary environment setup prior to executing the IHostingEngine.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Starter.IHostingStarter.Start(Microsoft.Owin.Hosting.StartOptions)">
+            <summary>
+            Performs any necessary environment setup prior to executing the IHostingEngine.
+            </summary>
+            <param name="options"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Starter.DirectHostingStarter.#ctor(Microsoft.Owin.Hosting.Engine.IHostingEngine)">
+            <summary>
+            
+            </summary>
+            <param name="engine"></param>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Starter.DirectHostingStarter.Start(Microsoft.Owin.Hosting.StartOptions)">
+            <summary>
+            Executes the IHostingEngine without making any changes to the current execution environment.
+            </summary>
+            <param name="options"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Owin.Hosting.Starter.DomainHostingStarterAgent">
+            <summary>
+            Used for executing the IHostingEngine in a new AppDomain.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Starter.DomainHostingStarterAgent.ResolveAssembliesFromDirectory(System.String)">
+            <summary>
+            Registers a fallback assembly resolver that looks in the given directory.
+            </summary>
+            <param name="directory"></param>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Starter.DomainHostingStarterAgent.Start(Microsoft.Owin.Hosting.StartOptions)">
+            <summary>
+            Executes the IHostingEngine in a new AppDomain.
+            </summary>
+            <param name="options"></param>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Starter.DomainHostingStarterAgent.Dispose">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Starter.DomainHostingStarterAgent.Dispose(System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="disposing"></param>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Starter.DomainHostingStarterAgent.Renewal(System.Runtime.Remoting.Lifetime.ILease)">
+            <summary>
+            Renews the given lease for 5 minutes.
+            </summary>
+            <param name="lease"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Owin.Hosting.Starter.DomainHostingStarter">
+            <summary>
+            Creates a new AppDomain to run the IHostingEngine in.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Starter.DomainHostingStarter.Start(Microsoft.Owin.Hosting.StartOptions)">
+            <summary>
+            Creates a new AppDomain to run the IHostingEngine in.
+            </summary>
+            <param name="options"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Owin.Hosting.Starter.HostingStarterAttribute">
+            <summary>
+            This attribute is used to identify custom hosting starters that may be loaded at runtime.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Starter.HostingStarterAttribute.#ctor(System.Type)">
+            <summary>
+            
+            </summary>
+            <param name="hostingStarterType"></param>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.Starter.HostingStarterAttribute.HostingStarterType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Microsoft.Owin.Hosting.Starter.IHostingStarterFactory">
+            <summary>
+            Creates a IHostingStarter for the given identifier.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Starter.IHostingStarterFactory.Create(System.String)">
+            <summary>
+            Creates a IHostingStarter for the given identifier.
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Owin.Hosting.Starter.HostingStarterFactory">
+            <summary>
+            Selects from known hosting starters, or detects additional providers via convention.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Starter.HostingStarterFactory.#ctor(Microsoft.Owin.Hosting.Starter.IHostingStarterActivator)">
+            <summary>
+            
+            </summary>
+            <param name="hostingStarterActivator"></param>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Starter.HostingStarterFactory.Create(System.String)">
+            <summary>
+            Selects from known hosting starters, or detects additional providers via convention.
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Owin.Hosting.WebApp">
+            <summary>
+            These methods are used to load, assemble, and start a web app.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.WebApp.Start(System.String,System.Action{Owin.IAppBuilder})">
+            <summary>
+            Start a web app using default settings and the given url and entry point.
+            e.g. Discover the ServerFactory and run at the given url.
+            </summary>
+            <returns>An IDisposible instance that can be called to shut down the web app.</returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.WebApp.Start(Microsoft.Owin.Hosting.StartOptions,System.Action{Owin.IAppBuilder})">
+            <summary>
+            Start a web app using the given settings and entry point, using defaults for items not specified.
+            </summary>
+            <returns>An IDisposible instance that can be called to shut down the web app.</returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.WebApp.Start``1(System.String)">
+            <summary>
+            Start a web app using default settings and the given url and entry point type.
+            e.g. Discover the ServerFactory and run at the given url.
+            </summary>
+            <returns>An IDisposible instance that can be called to shut down the web app.</returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.WebApp.Start``1(Microsoft.Owin.Hosting.StartOptions)">
+            <summary>
+            Start a web app using the given settings and entry point type, using defaults for items not specified.
+            </summary>
+            <returns>An IDisposible instance that can be called to shut down the web app.</returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.WebApp.Start(System.String)">
+            <summary>
+            Start a web app using the given settings and entry point type, using defaults for items not specified.
+            </summary>
+            <returns>An IDisposible instance that can be called to shut down the web app.</returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.WebApp.Start(Microsoft.Owin.Hosting.StartOptions)">
+            <summary>
+            Start a web app using the given settings and entry point type, using defaults for items not specified.
+            </summary>
+            <returns>An IDisposible instance that can be called to shut down the web app.</returns>
+        </member>
+        <member name="T:Microsoft.Owin.Hosting.StartOptions">
+            <summary>
+            Settings to control the startup behavior of an OWIN application
+            </summary>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.StartOptions.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Owin.Hosting.StartOptions"/> class
+            </summary>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.StartOptions.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Owin.Hosting.StartOptions"/> class
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.StartOptions.Urls">
+            <summary>
+            A list of url prefixes to listen on. Overrides port.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.StartOptions.Port">
+            <summary>
+            A port to listen on.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.StartOptions.AppStartup">
+            <summary>
+            Parameter to locate and load web application startup routine
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.StartOptions.ServerFactory">
+            <summary>
+            Name of the assembly containing the http server implementation
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.StartOptions.Settings">
+            <summary>
+            Optional settings used to override service types and other defaults
+            </summary>
+        </member>
+        <member name="T:Microsoft.Owin.Hosting.Engine.IHostingEngine">
+            <summary>
+            Initializes and starts a web application.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Engine.IHostingEngine.Start(Microsoft.Owin.Hosting.Engine.StartContext)">
+            <summary>
+            Initializes and starts a web application.
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Owin.Hosting.Starter.HostingStarter">
+            <summary>
+            Determines the which IHostingStarter instance to use via the IHostingSterterFactory.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Starter.HostingStarter.#ctor(Microsoft.Owin.Hosting.Starter.IHostingStarterFactory)">
+            <summary>
+            
+            </summary>
+            <param name="hostingStarterFactory"></param>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Starter.HostingStarter.Start(Microsoft.Owin.Hosting.StartOptions)">
+            <summary>
+            Determines the which IHostingStarter instance to use via the IHostingSterterFactory.
+            </summary>
+            <param name="options"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Owin.Hosting.Engine.HostingEngine">
+            <summary>
+            Used to initialize and start a web application.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Engine.HostingEngine.#ctor(Microsoft.Owin.Hosting.Builder.IAppBuilderFactory,Microsoft.Owin.Hosting.Tracing.ITraceOutputFactory,Microsoft.Owin.Hosting.Loader.IAppLoader,Microsoft.Owin.Hosting.ServerFactory.IServerFactoryLoader,Microsoft.Owin.Logging.ILoggerFactory)">
+            <summary>
+            
+            </summary>
+            <param name="appBuilderFactory"></param>
+            <param name="traceOutputFactory"></param>
+            <param name="appLoader"></param>
+            <param name="serverFactoryLoader"></param>
+            <param name="loggerFactory"></param>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Engine.HostingEngine.Start(Microsoft.Owin.Hosting.Engine.StartContext)">
+            <summary>
+            Initialize and start a web application.
+            Major Steps:
+            - Find and initialize the ServerFactory
+            - Find and initialize the application
+            - Start the server
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Owin.Hosting.Engine.StartContext">
+            <summary>
+            This class contains the relevant application and server state during startup.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Engine.StartContext.#ctor(Microsoft.Owin.Hosting.StartOptions)">
+            <summary>
+            Create a new StartContext with the given options.
+            If the given options do not define any settings, then settings will be loaded from the config.
+            </summary>
+            <param name="options"></param>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.Engine.StartContext.Options">
+            <summary>
+            The initial options provided to the constructor.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.Engine.StartContext.ServerFactory">
+            <summary>
+            The factory used to instantiate the server.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.Engine.StartContext.Builder">
+            <summary>
+            The IAppBuilder used to construct the OWIN application pipeline.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.Engine.StartContext.App">
+            <summary>
+            The constructed OWIN application pipeline.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.Engine.StartContext.Startup">
+            <summary>
+            The application entry point where the pipeline is defined.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.Engine.StartContext.TraceOutput">
+            <summary>
+            A TextWriter for writing diagnostic data to.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.Engine.StartContext.EnvironmentData">
+            <summary>
+            A list of keys and their associated values that will be injected by the host into each OWIN request environment.
+            </summary>
+        </member>
+    </members>
+</doc>

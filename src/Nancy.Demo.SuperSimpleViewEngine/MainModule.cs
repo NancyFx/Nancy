@@ -9,13 +9,14 @@ namespace Nancy.Demo.SuperSimpleViewEngine
         /// </summary>
         public MainModule()
         {
-            Get["/"] = (x) =>
+            Get["/"] =
+                (x) =>
                 {
-                    
 
+                    ViewBag.Test = "Test ViewBag";
                     var model = new MainModel(
-                        "Jimbo", 
-                        new[] { new User("Bob", "Smith"), new User("Jimbo", "Jones"), new User("Bill", "Bobs"), },
+                        "Jimbo",
+                        new[] {new User("Bob", "Smith"), new User("Jimbo", "Jones"), new User("Bill", "Bobs"),},
                         "<script type=\"text/javascript\">alert('Naughty JavaScript!');</script>");
 
                     return View["Index", model];

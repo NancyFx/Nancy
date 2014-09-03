@@ -4,7 +4,8 @@
     using System.Collections.Generic;
 
     /// <summary>
-    /// 
+    /// Implementation of <see cref="ModelValidationRule"/> for ensuring that the length of a string
+    /// is withing the specified range.
     /// </summary>
     public class StringLengthValidationRule : ModelValidationRule
     {
@@ -13,8 +14,8 @@
         /// </summary>
         /// <param name="errorMessageFormatter">The error message formatter.</param>
         /// <param name="memberNames">The member names.</param>
-        /// <param name="minLength">Length of the min.</param>
-        /// <param name="maxLength">Length of the max.</param>
+        /// <param name="minLength">Minimum allowed length of the string</param>
+        /// <param name="maxLength">Maximum allowed length of the string</param>
         public StringLengthValidationRule(Func<string, string> errorMessageFormatter, IEnumerable<string> memberNames, int minLength, int maxLength)
             : base("StringLength", errorMessageFormatter, memberNames)
         {

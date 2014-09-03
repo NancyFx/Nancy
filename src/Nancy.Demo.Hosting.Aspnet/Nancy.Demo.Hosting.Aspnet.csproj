@@ -116,6 +116,8 @@
     <Content Include="Views\razor-layout-error.cshtml" />
     <Content Include="Views\negotiatedview.cshtml" />
     <Content Include="Views\razor2.cshtml" />
+    <Content Include="Views\nustachePartial.nustache" />
+    <Content Include="Views\uber-meta.cshtml" />
     <None Include="Views\FileUpload.sshtml">
       <SubType>Designer</SubType>
     </None>
@@ -140,12 +142,15 @@
     </Compile>
     <Compile Include="ApplicationDependencyClass.cs" />
     <Compile Include="CustomStatusHandler.cs" />
+    <Compile Include="DefaultRouteMetadataProvider.cs" />
     <Compile Include="HereBeAResponseYouScurvyDog.cs" />
     <Compile Include="DemoBootstrapper.cs" />
     <Compile Include="DependencyModule.cs" />
     <Compile Include="IApplicationDependency.cs" />
     <Compile Include="IRequestDependency.cs" />
     <Compile Include="MainModule.cs" />
+    <Compile Include="Metadata\MainMetadataModule.cs" />
+    <Compile Include="Metadata\MyUberRouteMetadata.cs" />
     <Compile Include="Models\Payload.cs" />
     <Compile Include="Models\RatPack.cs" />
     <Compile Include="Models\RatPackWithDependencyText.cs" />
@@ -154,6 +159,11 @@
     <Compile Include="Piratizer4000.cs" />
     <Compile Include="PngSerializer.cs" />
     <Compile Include="RequestDependencyClass.cs" />
+    <Compile Include="Resources\Menu.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Menu.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\razor.cshtml" />
@@ -162,6 +172,10 @@
     <ProjectReference Include="..\Nancy.Hosting.Aspnet\Nancy.Hosting.Aspnet.csproj">
       <Project>{15B7F794-0BB2-4B66-AD78-4A951F1209B2}</Project>
       <Name>Nancy.Hosting.Aspnet</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nancy.Metadata.Module\Nancy.Metadata.Module.csproj">
+      <Project>{DC8AAA8B-7FD0-47C4-9413-3CC94088BCC4}</Project>
+      <Name>Nancy.Metadata.Module</Name>
     </ProjectReference>
     <ProjectReference Include="..\Nancy.ViewEngines.DotLiquid\Nancy.ViewEngines.DotLiquid.csproj">
       <Project>{B795886D-9D70-45B1-BFB5-AD54CBC9A447}</Project>
@@ -190,16 +204,23 @@
     <None Include="Views\anon.spark" />
     <Content Include="Views\csrf.cshtml" />
     <Content Include="Views\razor-strong.cshtml" />
+    <Content Include="Views\razor-divzero.cshtml" />
     <None Include="Views\razor-strong.vbhtml" />
     <None Include="Views\dot.liquid" />
     <Content Include="Views\razor-dependency.cshtml" />
     <Content Include="Views\razor-simple.cshtml" />
     <None Include="Views\nustache.nustache" />
+    <Content Include="Views\meta.cshtml" />
     <None Include="Views\routes.cshtml" />
     <None Include="Views\spark.spark" />
     <None Include="Views\ssve.sshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Menu.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Menu.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

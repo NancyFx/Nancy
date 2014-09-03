@@ -2,6 +2,8 @@
 {
     using FakeItEasy;
     using Fakes;
+
+    using Nancy.Localization;
     using Nancy.ModelBinding;
     using Nancy.Routing;
     using Nancy.ViewEngines;
@@ -27,6 +29,7 @@
             this.viewFactory = A.Fake<IViewFactory>();
             this.modelBinderLocator = A.Fake<IModelBinderLocator>();
             this.validatorLocator = A.Fake<IModelValidatorLocator>();
+
             this.builder = new DefaultNancyModuleBuilder(this.viewFactory, this.responseFormatterFactory, this.modelBinderLocator, this.validatorLocator);
         }
 

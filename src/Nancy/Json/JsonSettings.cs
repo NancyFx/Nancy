@@ -25,8 +25,23 @@ namespace Nancy.Json
 
         public static IList<JavaScriptConverter> Converters { get; set; }
 
+        public static IList<JavaScriptPrimitiveConverter> PrimitiveConverters { get; set; }
+
+        /// <summary>
+        /// Set to true to retain the casing used in the C# code in produced JSON.
+        /// Set to false to use camelCasing in the produced JSON.
+        /// False by default.
+        /// </summary>
+        public static bool RetainCasing { get; set; }
+
+        /// <summary>
+        /// Serialized date format
+        /// </summary>
+        public static bool ISO8601DateFormat { get; set; }
+
         static JsonSettings()
         {
+            ISO8601DateFormat = true;
             MaxJsonLength = 102400;
             MaxRecursions = 100;
             DefaultCharset = "utf-8";
@@ -34,6 +49,8 @@ namespace Nancy.Json
                              {
                                  new TimeSpanConverter(),
                              };
+            PrimitiveConverters = new List<JavaScriptPrimitiveConverter>();
+            RetainCasing = false;
         }
     }
 }

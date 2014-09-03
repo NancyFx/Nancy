@@ -1,25 +1,12 @@
 ﻿namespace Nancy.Bootstrapper
 {
-    using System.Collections.Generic;
+    using System;
 
     /// <summary>
     /// Provides a hook to perform registrations during application startup.
     /// </summary>
-    public interface IApplicationRegistrations
+    [Obsolete("IApplicationRegistrations is now obsolete, please use IRegistrations instead.")]
+    public interface IApplicationRegistrations : IRegistrations
     {
-        /// <summary>
-        /// Gets the type registrations to register for this startup task
-        /// </summary>
-        IEnumerable<TypeRegistration> TypeRegistrations { get; }
-
-        /// <summary>
-        /// Gets the collection registrations to register for this startup task
-        /// </summary>
-        IEnumerable<CollectionTypeRegistration> CollectionTypeRegistrations { get; }
-
-        /// <summary>
-        /// Gets the instance registrations to register for this startup task
-        /// </summary>
-        IEnumerable<InstanceRegistration> InstanceRegistrations { get; }        
     }
 }

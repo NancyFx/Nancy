@@ -1,9 +1,9 @@
 namespace Nancy.Demo.Hosting.Aspnet
 {
     using System;
-    using System.IO;
     using System.Linq;
-    using IO;
+
+    using Nancy.Demo.Hosting.Aspnet.Metadata;
     using Nancy.Demo.Hosting.Aspnet.Models;
     using Nancy.Routing;
     using Security;
@@ -14,6 +14,31 @@ namespace Nancy.Demo.Hosting.Aspnet
         {
             Get["/"] = x => {
                 return View["routes", routeCacheProvider.GetCache()];
+            };
+
+            Get["/texts"] = parameters => {
+                return (string)this.Context.Text.Menu.Home;
+                
+            };
+
+            Get["/meta"] = parameters =>
+            {
+                return Negotiate
+                    .WithModel(routeCacheProvider.GetCache().RetrieveMetadata<MyRouteMetadata>())
+                    .WithView("meta");
+            };
+
+            Get["/uber-meta"] = parameters =>
+            {
+                return Negotiate
+                    .WithModel(routeCacheProvider.GetCache().RetrieveMetadata<MyUberRouteMetadata>().OfType<MyUberRouteMetadata>())
+                    .WithView("uber-meta");
+            };
+
+            Get["/text"] = x =>
+            {
+                var value = (string)this.Context.Text.Menu.Home;
+                return string.Concat("Value of 'Home' resource key in the Menu resource file: ", value);
             };
 
             Get["/negotiated"] = parameters => {
@@ -64,6 +89,12 @@ namespace Nancy.Demo.Hosting.Aspnet
             Get["/razor"] = x => {
                 var model = new RatPack { FirstName = "Frank" };
                 return View["razor.cshtml", model];
+            };
+
+            Get["/razor-divzero"] = x =>
+            {
+                var model = new { FirstName = "Frank", Number = 22 };
+                return View["razor-divzero.cshtml", model];
             };
 
             Get["/razorError"] = x =>
@@ -204,6 +235,7 @@ namespace Nancy.Demo.Hosting.Aspnet
                 return View["FileUpload", new { Posted = fileDetails }];
             };
 
+            Get["NamedRoute", "/namedRoute"] = _ => "I am a named route!";
         }
     }
 }

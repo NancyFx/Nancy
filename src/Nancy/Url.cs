@@ -5,14 +5,15 @@ namespace Nancy
     using System.Net.Sockets;
 
     /// <summary>
-    /// Represents a full Url of the form scheme://hostname:port/basepath/path?query#fragment
+    /// Represents a full Url of the form scheme://hostname:port/basepath/path?query
     /// </summary>
+    /// <remarks>Since this is for  internal use, and fragments are not passed to the server, fragments are not supported.</remarks>
     public sealed class Url : ICloneable
     {
         private string basePath;
 
         /// <summary>
-        /// Represents a URL made up of component parts
+        /// Creates an instance of the <see cref="Url" /> class
         /// </summary>
         public Url()
         {
@@ -22,7 +23,20 @@ namespace Nancy
             this.BasePath = String.Empty;
             this.Path = String.Empty;
             this.Query = String.Empty;
-            this.Fragment = String.Empty;
+        }
+
+        /// <summary>
+        /// Creates an instance of the <see cref="Url" /> class
+        /// </summary>
+        /// <param name="url">A <see cref="string" /> containing a URL.</param>
+        public Url(string url)
+        {
+            var uri = new Uri(url);
+            this.HostName = uri.Host;
+            this.Path = uri.LocalPath;
+            this.Port = uri.Port;
+            this.Query = uri.Query;
+            this.Scheme = uri.Scheme;
         }
 
         /// <summary>
@@ -69,10 +83,6 @@ namespace Nancy
         /// </summary>
         public string Query { get; set; }
 
-        /// <summary>
-        /// Gets the fragment of the request
-        /// </summary>
-        public string Fragment { get; set; }
 
         /// <summary>
         /// Gets the domain part of the request
@@ -105,8 +115,19 @@ namespace Nancy
                 GetPort(this.Port) +
                 GetCorrectPath(this.BasePath) +
                 GetCorrectPath(this.Path) +
-                this.Query +
-                GetFragment(this.Fragment);
+                GetQuery(this.Query);
+        }
+
+        private static string GetQuery(string query)
+        {
+            if (string.IsNullOrEmpty(query))
+            {
+                return string.Empty;
+            }
+
+            return query.StartsWith("?", StringComparison.OrdinalIgnoreCase) ?
+                query :
+                string.Concat("?", query);
         }
 
         /// <summary>
@@ -127,13 +148,32 @@ namespace Nancy
             return new Url
                        {
                            BasePath = this.BasePath,
-                           Fragment = this.Fragment,
                            HostName = this.HostName,
                            Port = this.Port,
                            Query = this.Query,
                            Path = this.Path,
                            Scheme = this.Scheme
                        };
+        }
+
+        /// <summary>
+        /// Casts the current <see cref="Url"/> instance to a <see cref="string"/> instance.
+        /// </summary>
+        /// <param name="url">The instance that should be cast.</param>
+        /// <returns>A <see cref="string"/> representation of the <paramref name="url"/>.</returns>
+        public static implicit operator String(Url url)
+        {
+            return url.ToString();
+        }
+
+        /// <summary>
+        /// Casts the current <see cref="string"/> instance to a <see cref="Url"/> instance.
+        /// </summary>
+        /// <param name="url">The instance that should be cast.</param>
+        /// <returns>An <see cref="Url"/> representation of the <paramref name="url"/>.</returns>
+        public static implicit operator Url(string url)
+        {
+            return new Uri(url);
         }
 
         /// <summary>
@@ -146,9 +186,23 @@ namespace Nancy
             return new Uri(url.ToString(), UriKind.Absolute);
         }
 
-        private static string GetFragment(string fragment)
+        /// <summary>
+        /// Casts a <see cref="Uri"/> instance to a <see cref="Url"/> instance
+        /// </summary>
+        /// <param name="uri">The instance that should be cast.</param>
+        /// <returns>An <see cref="Url"/> representation of the <paramref name="uri"/>.</returns>
+        public static implicit operator Url(Uri uri)
         {
-            return (string.IsNullOrEmpty(fragment)) ? string.Empty : string.Concat("#", fragment);
+            var url = new Url
+            {
+                HostName = uri.Host,
+                Path = uri.LocalPath,
+                Port = uri.Port,
+                Query = uri.Query,
+                Scheme = uri.Scheme
+            };
+
+            return url;
         }
 
         private static string GetCorrectPath(string path)

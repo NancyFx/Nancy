@@ -170,8 +170,8 @@ namespace Nancy
 
                 if (parts.Length == 1)
                 {
-                    if (cookieName.Equals("HttpOnly", StringComparison.InvariantCulture) ||
-                        cookieName.Equals("Secure", StringComparison.InvariantCulture))
+                    if (cookieName.Equals("HttpOnly", StringComparison.InvariantCultureIgnoreCase) ||
+                        cookieName.Equals("Secure", StringComparison.InvariantCultureIgnoreCase))
                     {
                         continue;
                     }
@@ -235,11 +235,11 @@ namespace Nancy
                 return;
             }
 
-            var boundary = Regex.Match(contentType, @"boundary=(?<token>[^\n\; ]*)").Groups["token"].Value;
+            var boundary = Regex.Match(contentType, @"boundary=""?(?<token>[^\n\;\"" ]*)").Groups["token"].Value;
             var multipart = new HttpMultipart(this.Body, boundary);
 
             var formValues =
-                new NameValueCollection();
+                new NameValueCollection(StaticConfiguration.CaseSensitive ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase);
 
             foreach (var httpMultipartBoundary in multipart.GetBoundaries())
             {

@@ -14,7 +14,7 @@ namespace Nancy.ViewEngines
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewEngineApplicationStartup"/> class, with the
-        /// provided <paramref name="viewEngines"/>, <paramref name="viewLocationCache"/> and <paramref name="viewCache"/>.
+        /// provided <paramref name="viewEngines"/>, <paramref name="viewCache"/> and <paramref name="viewLocator"/>.
         /// </summary>
         /// <param name="viewEngines">The available view engines.</param>
         /// <param name="viewCache">The view cache.</param>

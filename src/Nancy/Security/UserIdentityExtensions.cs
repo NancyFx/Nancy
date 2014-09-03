@@ -32,7 +32,7 @@
             return
                 user != null
                 && user.Claims != null
-                && user.Claims.Contains(requiredClaim);
+                && user.Claims.Contains(requiredClaim, StringComparer.OrdinalIgnoreCase);
         }
 
         /// <summary>
@@ -46,7 +46,7 @@
             return
                 user != null
                 && user.Claims != null
-                && !requiredClaims.Any(claim => !user.Claims.Contains(claim));
+                && !requiredClaims.Any(claim => !user.Claims.Contains(claim, StringComparer.OrdinalIgnoreCase));
         }
 
         /// <summary>
@@ -60,7 +60,7 @@
             return
                 user != null
                 && user.Claims != null
-                && requiredClaims.Any(claim => user.Claims.Contains(claim));
+                && requiredClaims.Any(claim => user.Claims.Contains(claim, StringComparer.OrdinalIgnoreCase));
         }
 
         /// <summary>

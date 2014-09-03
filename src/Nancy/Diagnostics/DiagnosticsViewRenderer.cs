@@ -9,6 +9,9 @@ namespace Nancy.Diagnostics
     using ViewEngines;
     using ViewEngines.SuperSimpleViewEngine;
 
+    /// <summary>
+    /// Renders diagnostics views from embedded resources.
+    /// </summary>
     public class DiagnosticsViewRenderer
     {
         private readonly NancyContext context;
@@ -16,16 +19,31 @@ namespace Nancy.Diagnostics
 
         private static readonly IViewEngine Engine = new SuperSimpleViewEngineWrapper(Enumerable.Empty<ISuperSimpleViewEngineMatcher>());
 
+        /// <summary>
+        /// Creates a new instance of the <see cref="DiagnosticsViewRenderer"/> class.
+        /// </summary>
+        /// <param name="context">A <see cref="NancyContext"/> instance.</param>
         public DiagnosticsViewRenderer(NancyContext context)
         {
             this.context = context;
         }
 
+        /// <summary>
+        /// Renders the diagnostics view with the provided <paramref name="name"/>.
+        /// </summary>
+        /// <param name="name">The name of the view to render.</param>
+        /// <returns>A <see cref="Response"/> of the rendered view.</returns>
         public Response this[string name]
         {
             get { return RenderView(name, null, this.context); }
         }
 
+        /// <summary>
+        /// Renders the diagnostics view with the provided <paramref name="name"/> and <paramref name="model"/>.
+        /// </summary>
+        /// <param name="name">The name of the view to render.</param>
+        /// <param name="model">The model that should be passed to the view engine during rendering.</param>
+        /// <returns>A <see cref="Response"/> of the rendered view.</returns>
         public Response this[string name, dynamic model]
         {
             get { return RenderView(name, model, this.context); }

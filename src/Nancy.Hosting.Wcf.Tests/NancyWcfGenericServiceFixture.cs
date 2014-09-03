@@ -1,14 +1,19 @@
 namespace Nancy.Hosting.Wcf.Tests
 {
+    using Bootstrapper;
+    using FakeItEasy;
+
+    using Nancy.Helpers;
+    using Nancy.Tests;
+    using Nancy.Tests.xUnitExtensions;
     using System;
     using System.IO;
+    using System.Linq;
     using System.Net;
     using System.ServiceModel;
     using System.ServiceModel.Web;
-    using Bootstrapper;
-    using FakeItEasy;
-    using Nancy.Tests;
-    using Nancy.Tests.xUnitExtensions;
+    using System.Threading;
+
     using Xunit;
 
     /// <remarks>
@@ -45,8 +50,9 @@ namespace Nancy.Hosting.Wcf.Tests
             // Given
             Request nancyRequest = null;
             var fakeEngine = A.Fake<INancyEngine>();
-            A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored))
-                .Invokes((f) => nancyRequest = (Request)f.Arguments[0]);
+            A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored, A<Func<NancyContext, NancyContext>>.Ignored, A<CancellationToken>.Ignored))
+                .Invokes(f => nancyRequest = (Request)f.Arguments[0])
+                .Returns(TaskHelpers.GetCompletedTask(new NancyContext()));
             var fakeBootstrapper = A.Fake<INancyBootstrapper>();
             A.CallTo(() => fakeBootstrapper.GetEngine()).Returns(fakeEngine);
 
@@ -78,8 +84,9 @@ namespace Nancy.Hosting.Wcf.Tests
             // Given
             Request nancyRequest = null;
             var fakeEngine = A.Fake<INancyEngine>();
-            A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored))
-                .Invokes((f) => nancyRequest = (Request) f.Arguments[0]);
+            A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored, A<Func<NancyContext, NancyContext>>.Ignored, A<CancellationToken>.Ignored))
+                .Invokes(f => nancyRequest = (Request)f.Arguments[0])
+                .Returns(TaskHelpers.GetCompletedTask(new NancyContext()));
             var fakeBootstrapper = A.Fake<INancyBootstrapper>();
             A.CallTo(() => fakeBootstrapper.GetEngine()).Returns(fakeEngine);
 
@@ -156,8 +163,9 @@ namespace Nancy.Hosting.Wcf.Tests
             var fakeEngine = A.Fake<INancyEngine>();
             var fakeBootstrapper = A.Fake<INancyBootstrapper>();
 
-            A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored))
-                .Invokes((f) => nancyRequest = (Request)f.Arguments[0]);            
+            A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored, A<Func<NancyContext, NancyContext>>.Ignored, A<CancellationToken>.Ignored))
+                .Invokes(f => nancyRequest = (Request)f.Arguments[0])
+                .Returns(TaskHelpers.GetCompletedTask(new NancyContext()));
             A.CallTo(() => fakeBootstrapper.GetEngine()).Returns(fakeEngine);
 
             // When 
@@ -182,6 +190,49 @@ namespace Nancy.Hosting.Wcf.Tests
             Assert.Equal("http", nancyRequest.Url.Scheme);
         }
 
+        [SkippableFact]
+        public void Should_not_have_content_type_header_for_not_modified_responses()
+        {
+            // Given
+            var fakeEngine = A.Fake<INancyEngine>();
+            var fakeBootstrapper = A.Fake<INancyBootstrapper>();
+
+            // Context sends back a 304 Not Modified
+            var context = new NancyContext
+            {
+                Response = new Response
+                {
+                    ContentType = null,
+                    StatusCode = Nancy.HttpStatusCode.NotModified
+                }
+            };
+
+            A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored, A<Func<NancyContext, NancyContext>>.Ignored, A<CancellationToken>.Ignored))
+                .Returns(TaskHelpers.GetCompletedTask(context));
+            A.CallTo(() => fakeBootstrapper.GetEngine()).Returns(fakeEngine);
+
+            // When a request is made and responded to with a status of 304 Not Modified
+            WebResponse response = null;
+            using (CreateAndOpenWebServiceHost(fakeBootstrapper)) 
+            {
+                var request = WebRequest.Create(new Uri(BaseUri, "notmodified"));
+                request.Method = "GET";
+                try 
+                {
+                    request.GetResponse();
+                }
+                catch (WebException notModifiedEx) 
+                {
+                    // Will throw because it returns 304
+                    response = notModifiedEx.Response;
+                }
+            }
+
+            // Then
+            Assert.NotNull(response);
+            Assert.False(response.Headers.AllKeys.Any(header => header == "Content-Type"));
+        }
+
         private static WebServiceHost CreateAndOpenWebServiceHost(INancyBootstrapper nancyBootstrapper = null, Uri baseUri = null)
         {
             if (nancyBootstrapper == null)
@@ -198,7 +249,7 @@ namespace Nancy.Hosting.Wcf.Tests
             {
                 host.Open();
             }
-            catch (System.ServiceModel.AddressAccessDeniedException)
+            catch (AddressAccessDeniedException)
             {
                 throw new SkipException("Skipped due to no Administrator access - please see test fixture for more information.");
             }

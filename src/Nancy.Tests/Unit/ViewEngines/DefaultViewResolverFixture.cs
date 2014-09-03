@@ -6,6 +6,7 @@
     using FakeItEasy;
 
     using Nancy.Conventions;
+    using Nancy.Diagnostics;
     using Nancy.ViewEngines;
     using Xunit;
 
@@ -23,7 +24,13 @@
             this.viewLocationContext =
                 new ViewLocationContext
                 {
-                    Context = new NancyContext()
+                    Context = new NancyContext
+                    {
+                        Trace = new DefaultRequestTrace
+                        {
+                            TraceLog = new DefaultTraceLog()
+                        }
+                    }
                 };
         }
 

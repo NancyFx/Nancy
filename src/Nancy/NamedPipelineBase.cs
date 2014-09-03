@@ -196,6 +196,11 @@ namespace Nancy
         /// <returns>Index of item that was removed or -1 if nothing removed</returns>
         public virtual int RemoveByName(string name)
         {
+            if (string.IsNullOrEmpty(name))
+            {
+                return -1;
+            }
+
             var existingIndex =
                 this.pipelineItems.FindIndex(i => String.Equals(name, i.Name, StringComparison.InvariantCulture));
 

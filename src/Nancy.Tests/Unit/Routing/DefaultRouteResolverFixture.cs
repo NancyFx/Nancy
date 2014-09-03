@@ -35,12 +35,10 @@
         [Fact]
         public void Should_resolve_single_literal()
         {
-
             //Given, When
             var result = this.browser.Get("/foo");
 
             //Then
-
             result.Body.AsString().ShouldEqual("SingleLiteral");
         }
 
@@ -61,14 +59,12 @@
             var result = this.browser.Get("/foo/testing/plop");
 
             //Then
-
             result.Body.AsString().ShouldEqual("Captured testing");
         }
 
         [Fact]
         public void Should_resolve_optional_capture_with_optional_specified()
         {
-
             //Given, When
             var result = this.browser.Get("/moo/hoo/moo");
 
@@ -113,7 +109,6 @@
             var result = this.browser.Get("/bleh/this/is/some/stuff");
 
             //Then
-
             result.Body.AsString().ShouldEqual("GreedyOnEnd this/is/some/stuff");
         }
 
@@ -124,7 +119,6 @@
             var result = this.browser.Get("/bleh/this/is/some/stuff/bar");
 
             //Then
-
             result.Body.AsString().ShouldEqual("GreedyInMiddle this/is/some/stuff");
         }
 
@@ -161,23 +155,20 @@
         [Fact]
         public void Should_capture_regex()
         {
-           //Given, When
+            //Given, When
             var result = this.browser.Get("/regex/123/moo");
 
             //Then
-
             result.Body.AsString().ShouldEqual("RegEx 123 moo");
         }
 
         [Fact]
         public void Should_handle_head_requests()
         {
-
             //Given, When
             var result = this.browser.Head("/");
 
             //Then
-
             result.StatusCode.ShouldEqual(HttpStatusCode.OK);
             result.Body.AsString().ShouldEqual(string.Empty);
         }
@@ -185,12 +176,10 @@
         [Fact]
         public void Should_handle_options_requests()
         {
-
             //Given, When
             var result = this.browser.Options("/");
 
             //Then
-
             result.StatusCode.ShouldEqual(HttpStatusCode.OK);
             result.Headers["Allow"].ShouldContain("GET");
             result.Headers["Allow"].ShouldContain("POST");
@@ -199,7 +188,6 @@
         [Fact]
         public void Should_return_404_if_no_root_found_when_requesting_it()
         {
-
             //Given
             var localBrowser = new Browser(with => with.Module<NoRootModule>());
 
@@ -207,7 +195,6 @@
             var result = localBrowser.Get("/");
 
             //Then
-
             result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
         }
 
@@ -302,12 +289,8 @@
                 Get["/multipleparameters/{file}.{extension}"] = _ => "Multiple parameters " + _.file + "." + _.extension;
 
                 Get["/capturenodewithliteral/{file}.html"] = _ => "CaptureNodeWithLiteral " + _.file + ".html";
-
-
-                Get[@"/regex/(?<foo>\d{2,4})/{bar}"] = x =>
-                {
-                    return string.Format("RegEx {0} {1}", x.foo, x.bar);
-                };
+                
+                Get[@"/regex/(?<foo>\d{2,4})/{bar}"] = x => string.Format("RegEx {0} {1}", x.foo, x.bar);
             }
         }
     }

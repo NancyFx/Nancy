@@ -19,7 +19,7 @@
         /// <summary>
         /// Enable JSONP support in the application
         /// </summary>
-        /// <param name="pipeline">Application Pipeline to Hook into</param>
+        /// <param name="pipelines">Application Pipeline to Hook into</param>
         public static void Enable(IPipelines pipelines)
         {
             bool jsonpEnabled = pipelines.AfterRequest.PipelineItems.Any(ctx => ctx.Name == "JSONP");
@@ -33,7 +33,7 @@
         /// <summary>
         /// Disable JSONP support in the application
         /// </summary>
-        /// <param name="pipeline">Application Pipeline to Hook into</param>
+        /// <param name="pipelines">Application Pipeline to Hook into</param>
         public static void Disable(IPipelines pipelines)
         {
             pipelines.AfterRequest.RemoveByName("JSONP");

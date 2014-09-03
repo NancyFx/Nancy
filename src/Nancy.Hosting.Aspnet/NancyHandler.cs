@@ -85,7 +85,6 @@ namespace Nancy.Hosting.Aspnet
                                    BasePath = basePath,
                                    Path = path,
                                    Query = context.Request.Url.Query,
-                                   Fragment = context.Request.Url.Fragment,
                                };
             byte[] certificate = null;
 

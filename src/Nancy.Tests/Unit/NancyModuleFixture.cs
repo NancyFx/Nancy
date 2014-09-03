@@ -203,7 +203,39 @@ namespace Nancy.Tests.Unit
             moduleWithBasePath.Routes.Last().Description.Path.ShouldEqual("/Test1");
         }
 
-        public class CustomNancyModule : NancyModule
+        [Fact]
+        public void Should_not_throw_when_null_passed_as_modulepath()
+        {
+            // Given
+            var moduleWithNullPath = new CustomModulePathModule(null);
+
+            // Then
+            Assert.DoesNotThrow(() =>
+            {
+                moduleWithNullPath.Post["/Test1"] = d => null;
+            });
+        }
+
+        [Fact]
+        public void Adds_named_route_when_named_indexer_used()
+        {
+            // Given, When
+            this.module.Get["Foo", "/test"] = d => null;
+
+            // Then
+            this.module.Routes.Count().ShouldEqual(1);
+            this.module.Routes.First().Description.Name.ShouldEqual("Foo");
+        }
+
+        private class CustomModulePathModule : NancyModule
+        {
+            public CustomModulePathModule(string modulePath)
+                : base(modulePath)
+            {
+            }
+        }
+
+        private class CustomNancyModule : NancyModule
         {
             public new CustomRouteBuilder Get
             {
@@ -223,7 +255,7 @@ namespace Nancy.Tests.Unit
                     {
                         foreach (var path in paths)
                         {
-                            this.AddRoute(path, null, value);
+                            this.AddRoute(String.Empty, path, null, value);
                         }
                     }
                 }

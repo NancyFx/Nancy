@@ -540,7 +540,6 @@ namespace Nancy.Tests.Unit.Security
             return new Url
                        {
                            BasePath = null,
-                           Fragment = string.Empty,
                            HostName = "localhost",
                            Path = "/",
                            Port = 80,

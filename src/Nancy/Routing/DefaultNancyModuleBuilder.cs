@@ -1,9 +1,9 @@
-﻿using Nancy.Extensions;
-using Nancy.Responses.Negotiation;
-
-namespace Nancy.Routing
+﻿namespace Nancy.Routing
 {
     using ModelBinding;
+    using Nancy.Extensions;
+    using Nancy.Localization;
+    using Nancy.Responses.Negotiation;
     using Nancy.ViewEngines;
     using Nancy.Validation;
 

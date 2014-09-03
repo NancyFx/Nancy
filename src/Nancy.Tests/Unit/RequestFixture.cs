@@ -252,6 +252,110 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
+        public void Should_respect_case_insensitivity_when_extracting_form_data_from_body_when_content_type_is_x_www_form_urlencoded()
+        {
+            // Given
+            StaticConfiguration.CaseSensitive = false;
+            const string bodyContent = "key=value&key=value&KEY=VALUE";
+            var memory = CreateRequestStream();
+            var writer = new StreamWriter(memory);
+            writer.Write(bodyContent);
+            writer.Flush();
+            memory.Position = 0;
+
+            var headers =
+                new Dictionary<string, IEnumerable<string>>
+                {
+                    { "content-type", new[] { "application/x-www-form-urlencoded" } }
+                };
+
+            // When
+            var request = new Request("POST", new Url { Path = "/", Scheme = "http" }, memory, headers);
+
+            // Then
+            ((string)request.Form.key).ShouldEqual("value,value,VALUE");
+            ((string)request.Form.KEY).ShouldEqual("value,value,VALUE");
+        }
+
+        [Fact]
+        public void Should_respect_case_sensitivity_when_extracting_form_data_from_body_when_content_type_is_x_www_form_urlencoded()
+        {
+            // Given
+            StaticConfiguration.CaseSensitive = true;
+            const string bodyContent = "key=value&key=value&KEY=VALUE";
+            var memory = CreateRequestStream();
+            var writer = new StreamWriter(memory);
+            writer.Write(bodyContent);
+            writer.Flush();
+            memory.Position = 0;
+
+            var headers =
+                new Dictionary<string, IEnumerable<string>>
+                {
+                    { "content-type", new[] { "application/x-www-form-urlencoded" } }
+                };
+
+            // When
+            var request = new Request("POST", new Url { Path = "/", Scheme = "http" }, memory, headers);
+
+            // Then
+            ((string)request.Form.key).ShouldEqual("value,value");
+            ((string)request.Form.KEY).ShouldEqual("VALUE");
+        }
+
+        [Fact]
+        public void Should_respect_case_insensitivity_when_extracting_form_data_from_body_when_content_type_is_multipart_form_data()
+        {
+            // Given
+            StaticConfiguration.CaseSensitive = false;
+            var memory =
+                new MemoryStream(BuildMultipartFormValues(new Dictionary<string, string>(StringComparer.InvariantCulture)
+                {
+                    { "key", "value" },
+                    { "KEY", "VALUE" }
+                }));
+
+            var headers =
+                new Dictionary<string, IEnumerable<string>>
+                {
+                    { "content-type", new[] { "multipart/form-data; boundary=----NancyFormBoundary" } }
+                };
+
+            // When
+            var request = new Request("POST", new Url { Path = "/", Scheme = "http" }, CreateRequestStream(memory), headers);
+
+            // Then
+            ((string)request.Form.key).ShouldEqual("value,VALUE");
+            ((string)request.Form.KEY).ShouldEqual("value,VALUE");
+        }
+
+        [Fact]
+        public void Should_respect_case_sensitivity_when_extracting_form_data_from_body_when_content_type_is_multipart_form_data()
+        {
+            // Given
+            StaticConfiguration.CaseSensitive = true;
+            var memory =
+                new MemoryStream(BuildMultipartFormValues(new Dictionary<string, string>(StringComparer.InvariantCulture)
+                {
+                    { "key", "value" },
+                    { "KEY", "VALUE" }
+                }));
+
+            var headers =
+                new Dictionary<string, IEnumerable<string>>
+                {
+                    { "content-type", new[] { "multipart/form-data; boundary=----NancyFormBoundary" } }
+                };
+
+            // When
+            var request = new Request("POST", new Url { Path = "/", Scheme = "http" }, CreateRequestStream(memory), headers);
+
+            // Then
+            ((string)request.Form.key).ShouldEqual("value");
+            ((string)request.Form.KEY).ShouldEqual("VALUE");
+        }
+
+        [Fact]
         public void Should_set_extracted_files_to_files_collection_when_body_content_type_is_multipart_form_data()
         {
             // Given
@@ -489,6 +593,25 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
+        public void Should_split_cookie_in_two_parts_with_httponly_and_secure_attribute_ignoring_case()
+        {
+            // Given, when
+            const string cookieName = "path";
+            const string cookieData = "/";
+            var headers = new Dictionary<string, IEnumerable<string>>();
+            var cookies = new List<string> { string.Format("{0}={1}; httponly; secure", cookieName, cookieData) };
+            headers.Add("cookie", cookies);
+            var newUrl = new Url
+            {
+                Path = "/"
+            };
+            var request = new Request("GET", newUrl, null, headers);
+
+            // Then
+            request.Cookies[cookieName].ShouldEqual(cookieData);
+        }
+
+        [Fact]
         public void Should_split_cookie_in_two_parts_with_httponly_attribute()
         {
             // Given, when
@@ -640,6 +763,33 @@ namespace Nancy.Tests.Unit
             var request = new Request("GET", "", "http");
 
             request.Path.ShouldEqual("/");
+        }
+
+        [Fact]
+        public void Should_replace_value_of_query_key_without_value_with_true()
+        {
+            // Given
+            var memory = CreateRequestStream();
+
+            // When
+            var request = new Request("GET", new Url { Path = "/", Scheme = "http", Query = "key1" }, memory);
+
+            // Then
+            ((bool)request.Query.key1).ShouldBeTrue();
+            ((string)request.Query.key1).ShouldEqual("key1"); 
+        }
+
+        [Fact]
+        public void Should_not_replace_equal_key_value_query_with_bool()
+        {
+            // Given
+            var memory = CreateRequestStream();
+
+            // When
+            var request = new Request("GET", new Url { Path = "/", Scheme = "http", Query = "key1=key1" }, memory);
+
+            // Then
+            ShouldAssertExtensions.ShouldBeOfType<string>(request.Query["key1"].Value);
         }
 
         private static RequestStream CreateRequestStream()

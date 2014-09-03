@@ -415,6 +415,22 @@ namespace Nancy.Authentication.Forms.Tests
         }
 
         [Fact]
+        public void Should_not_set_user_in_context_with_empty_cookie()
+        {
+            var fakePipelines = new Pipelines();
+            var fakeMapper = A.Fake<IUserMapper>();
+            var fakeUser = new FakeUserIdentity {UserName = "Bob"};
+            A.CallTo(() => fakeMapper.GetUserFromIdentifier(this.userGuid, this.context)).Returns(fakeUser);
+            this.config.UserMapper = fakeMapper;
+            FormsAuthentication.Enable(fakePipelines, this.config);
+            this.context.Request.Cookies.Add(FormsAuthentication.FormsAuthenticationCookieName, string.Empty);
+
+            var result = fakePipelines.BeforeRequest.Invoke(this.context, new CancellationToken());
+
+            context.CurrentUser.ShouldBeNull();
+        }
+
+        [Fact]
         public void Should_not_set_user_in_context_with_invalid_hmac()
         {
             var fakePipelines = new Pipelines();

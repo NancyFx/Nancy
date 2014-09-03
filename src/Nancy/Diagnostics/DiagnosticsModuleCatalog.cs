@@ -50,7 +50,7 @@ namespace Nancy.Diagnostics
             diagContainer.Register<IBinder, DefaultBinder>();
             diagContainer.Register<IFieldNameConverter, DefaultFieldNameConverter>();
             diagContainer.Register<BindingDefaults, BindingDefaults>();
-            diagContainer.Register<ISerializer, DefaultJsonSerializer>();
+            diagContainer.Register<ISerializer>(new DefaultJsonSerializer { RetainCasing = false });
             diagContainer.Register<DiagnosticsConfiguration>(diagnosticsConfiguration);
 
             foreach (var diagnosticsProvider in providers)

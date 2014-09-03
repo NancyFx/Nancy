@@ -218,8 +218,15 @@ namespace Nancy.Authentication.Forms
             {
                 return Guid.Empty;
             }
+            
+            var cookieValueEncrypted = context.Request.Cookies[formsAuthenticationCookieName];
+            
+            if (string.IsNullOrEmpty(cookieValueEncrypted))
+            {
+                return Guid.Empty;
+            }
 
-            var cookieValue = DecryptAndValidateAuthenticationCookie(context.Request.Cookies[formsAuthenticationCookieName], configuration);
+            var cookieValue = DecryptAndValidateAuthenticationCookie(cookieValueEncrypted, configuration);
 
             Guid returnGuid;
             if (String.IsNullOrEmpty(cookieValue) || !Guid.TryParse(cookieValue, out returnGuid))
@@ -241,7 +248,7 @@ namespace Nancy.Authentication.Forms
         {
             var cookieContents = EncryptAndSignCookie(userIdentifier.ToString(), configuration);
 
-            var cookie = new NancyCookie(formsAuthenticationCookieName, cookieContents, true, configuration.RequiresSSL) { Expires = cookieExpiry };
+            var cookie = new NancyCookie(formsAuthenticationCookieName, cookieContents, true, configuration.RequiresSSL, cookieExpiry);
 
             if(!string.IsNullOrEmpty(configuration.Domain))
             {
@@ -263,7 +270,7 @@ namespace Nancy.Authentication.Forms
         /// <returns>Nancy cookie instance</returns>
         private static INancyCookie BuildLogoutCookie(FormsAuthenticationConfiguration configuration)
         {
-            var cookie = new NancyCookie(formsAuthenticationCookieName, String.Empty, true, configuration.RequiresSSL) { Expires = DateTime.Now.AddDays(-1) };
+            var cookie = new NancyCookie(formsAuthenticationCookieName, String.Empty, true, configuration.RequiresSSL,  DateTime.Now.AddDays(-1));
 
             if(!string.IsNullOrEmpty(configuration.Domain))
             {

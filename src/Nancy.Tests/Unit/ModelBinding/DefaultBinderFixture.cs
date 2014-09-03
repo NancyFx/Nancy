@@ -278,17 +278,19 @@ namespace Nancy.Tests.Unit.ModelBinding
             context.Request.Form["AnotherIntProperty"] = "morebad";
 
             // Then
-            Assert.Throws<ModelBindingException>(() => binder.Bind(context, typeof(TestModel), null, BindingConfig.Default))
+            Type modelType = typeof(TestModel);
+            Assert.Throws<ModelBindingException>(() => binder.Bind(context, modelType, null, BindingConfig.Default))
                 .ShouldMatch(exception =>
-                             exception.BoundType == typeof(TestModel)
+                             exception.BoundType == modelType
                              && exception.PropertyBindingExceptions.Any(pe =>
                                                                         pe.PropertyName == "IntProperty"
-                                                                        && pe.AttemptedValue == "badint"
-                                                                        && pe.InnerException.Message == "badint is not a valid value for Int32.")
+                                                                        && pe.AttemptedValue == "badint")
                              && exception.PropertyBindingExceptions.Any(pe =>
                                                                         pe.PropertyName == "AnotherIntProperty"
-                                                                        && pe.AttemptedValue == "morebad"
-                                                                        && pe.InnerException.Message == "morebad is not a valid value for Int32."));
+                                                                        && pe.AttemptedValue == "morebad")
+                             && exception.PropertyBindingExceptions.All(pe =>
+                                                                        pe.InnerException.Message.Contains(pe.AttemptedValue)
+                                                                        && pe.InnerException.Message.Contains(modelType.GetProperty(pe.PropertyName).PropertyType.Name)));
         }
 
         [Fact]
@@ -348,7 +350,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             binder.Bind(context, typeof(TestModel), null, BindingConfig.Default);
 
             // Then
-            validProperties.ShouldEqual(10);
+            validProperties.ShouldEqual(11);
         }
 
         [Fact]
@@ -832,6 +834,33 @@ namespace Nancy.Tests.Unit.ModelBinding
         }
 
         [Fact]
+        public void Should_bind_collections_regardless_of_case()
+        {
+            // Given
+            var typeConverters = new ITypeConverter[] { new CollectionConverter(), new FallbackConverter() };
+            var binder = this.GetBinder(typeConverters);
+
+            var context = CreateContextWithHeader("Content-Type", new[] { "application/x-www-form-urlencoded" });
+
+            context.Request.Form["lowercaseintproperty[0]"] = "1";
+            context.Request.Form["lowercaseintproperty[1]"] = "2";
+            context.Request.Form["lowercaseIntproperty[2]"] = "3";
+            context.Request.Form["lowercaseIntproperty[3]"] = "4";
+            context.Request.Form["Lowercaseintproperty[4]"] = "5";
+            context.Request.Form["Lowercaseintproperty[5]"] = "6";
+            context.Request.Form["LowercaseIntproperty[6]"] = "7";
+            context.Request.Form["LowercaseIntproperty[7]"] = "8";
+
+            // When
+            var result = (List<TestModel>)binder.Bind(context, typeof(List<TestModel>), null, BindingConfig.Default);
+
+            // Then
+            result.ShouldHaveCount(8);
+            result.First().lowercaseintproperty.ShouldEqual(1);
+            result.Last().lowercaseintproperty.ShouldEqual(8);
+        }
+
+        [Fact]
         public void Form_properties_should_take_precendence_over_request_properties_and_context_properties()
         {
             // Given
@@ -1075,6 +1104,23 @@ namespace Nancy.Tests.Unit.ModelBinding
             // Then
             result.First().StringProperty.ShouldEqual("Test");
             result.Last().StringProperty.ShouldEqual("AnotherTest");
+        }
+
+        [Fact]
+        public void Should_bind_string_array_model_from_body()
+        {
+            //Given
+            var binder = this.GetBinder(null, new List<IBodyDeserializer> { new JsonBodyDeserializer() });
+            var body = serializer.Serialize(new[] { "Test","AnotherTest"});
+
+            var context = CreateContextWithHeaderAndBody("Content-Type", new[] { "application/json" }, body);
+
+            // When
+            var result = (string[])binder.Bind(context, typeof(string[]), null, BindingConfig.Default);
+
+            // Then
+            result.First().ShouldEqual("Test");
+            result.Last().ShouldEqual("AnotherTest");
         }
 
         [Fact]
@@ -1377,6 +1423,8 @@ namespace Nancy.Tests.Unit.ModelBinding
             public int IntProperty { get; set; }
 
             public int AnotherIntProperty { get; set; }
+
+            public int lowercaseintproperty { get; set; }
 
             public DateTime DateProperty { get; set; }
 

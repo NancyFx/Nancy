@@ -12,6 +12,8 @@
 
     public class FakeDefaultNancyBootstrapper : DefaultNancyBootstrapper
     {
+        public IEnumerable<Type> OverriddenRegistrationTasks { get; set; }
+
         private NancyInternalConfiguration configuration;
 
         protected override System.Collections.Generic.IEnumerable<ModuleRegistration> Modules
@@ -25,6 +27,14 @@
             : this(NancyInternalConfiguration.WithOverrides(b => b.StatusCodeHandlers = new List<Type>(new[] { typeof(DefaultStatusCodeHandler) })))
         {
             
+        }
+
+        protected override IEnumerable<Type> RegistrationTasks
+        {
+            get
+            {
+                return this.OverriddenRegistrationTasks ?? base.RegistrationTasks;
+            }
         }
 
         protected override IEnumerable<Func<Assembly, bool>> AutoRegisterIgnoredAssemblies

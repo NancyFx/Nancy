@@ -16,6 +16,8 @@ namespace Nancy.Testing.Tests
     using FakeItEasy;
     using Nancy.Authentication.Forms;
 
+    using Xunit.Extensions;
+
     public class BrowserFixture
     {
         private readonly Browser browser;
@@ -62,6 +64,60 @@ namespace Nancy.Testing.Tests
 
             // Then
             result.Body.AsString().ShouldEqual(userHostAddress);
+        }
+
+        [Fact]
+        public void Should_be_able_check_is_local_ipV4()
+        {
+            // Given
+            const string userHostAddress = "127.0.0.1";
+
+            // When
+            var result = browser.Get("/isLocal", with =>
+                    {
+                        with.HttpRequest();
+                        with.HostName("localhost");
+                        with.UserHostAddress(userHostAddress);
+                    });
+
+            // Then
+            result.Body.AsString().ShouldEqual("local");
+        }
+
+        [Fact]
+        public void Should_be_able_check_is_local_ipV6()
+        {
+            // Given
+            const string userHostAddress = "::1";
+
+            // When
+            var result = browser.Get("/isLocal", with =>
+                    {
+                        with.HttpRequest();
+                        with.HostName("localhost");
+                        with.UserHostAddress(userHostAddress);
+                    });
+
+            // Then
+            result.Body.AsString().ShouldEqual("local");
+        }
+
+        [Fact]
+        public void Should_be_able_check_is_not_local()
+        {
+            // Given
+            const string userHostAddress = "84.12.65.72";
+
+            // When
+            var result = browser.Get("/isLocal", with =>
+                    {
+                        with.HttpRequest();
+                        with.HostName("anotherhost");
+                        with.UserHostAddress(userHostAddress);
+                    });
+
+            // Then
+            result.Body.AsString().ShouldEqual("not-local");
         }
 
         [Fact]
@@ -342,6 +398,15 @@ namespace Nancy.Testing.Tests
             result.Context.Request.ClientCertificate.ShouldNotBeNull();
         }
 
+        [Fact]
+        public void Should_change_scheme_to_https_when_HttpsRequest_is_called_on_the_context()
+        {
+            //Given, When
+            var result = browser.Get("/", with => with.HttpsRequest());
+
+            //Then
+            result.Context.Request.Url.Scheme.ShouldEqual("https");
+        }
 
         [Fact]
         public void Should_add_forms_authentication_cookie_to_the_request()
@@ -372,6 +437,44 @@ namespace Nancy.Testing.Tests
             
             //Then
             cookieValue.ShouldEqual(cookieContents);
+        }
+
+        [Fact]
+        public void Should_return_JSON_serialized_form()
+        {
+            var response = browser.Post("/serializedform", (with) =>
+            {
+                with.HttpRequest();
+                with.Accept("application/json");
+                with.FormValue("SomeString", "Hi");
+                with.FormValue("SomeInt", "1");
+                with.FormValue("SomeBoolean", "true");
+            });
+
+            var actualModel = response.Body.DeserializeJson<EchoModel>();
+
+            Assert.Equal("Hi", actualModel.SomeString);
+            Assert.Equal(1, actualModel.SomeInt);
+            Assert.Equal(true, actualModel.SomeBoolean);
+        }
+
+        [Fact]
+        public void Should_return_JSON_serialized_querystring()
+        {
+            var response = browser.Get("/serializedquerystring", (with) =>
+            {
+                with.HttpRequest();
+                with.Accept("application/json");
+                with.Query("SomeString", "Hi");
+                with.Query("SomeInt", "1");
+                with.Query("SomeBoolean", "true");
+            });
+
+            var actualModel = response.Body.DeserializeJson<EchoModel>();
+
+            Assert.Equal("Hi", actualModel.SomeString);
+            Assert.Equal(1, actualModel.SomeInt);
+            Assert.Equal(true, actualModel.SomeBoolean);
         }
 
         [Fact]
@@ -444,6 +547,8 @@ namespace Nancy.Testing.Tests
 
                 Get["/userHostAddress"] = ctx => this.Request.UserHostAddress;
 
+                Get["/isLocal"] = _ => this.Request.IsLocal() ? "local" : "not-local";
+
                 Get["/session"] = ctx =>
                     {
                         var value = Session["moo"] ?? "";
@@ -463,12 +568,25 @@ namespace Nancy.Testing.Tests
                 Get["/type"] = _ => this.Request.Url.Scheme.ToLower();
 
                 Get["/ajax"] = _ => this.Request.IsAjaxRequest() ? "ajax" : "not-ajax";
-
+ 
                 Post["/encoded"] = parameters => (string)this.Request.Form.name;
 
                 Post["/encodedquerystring"] = parameters => (string)this.Request.Query.name;
-            }
 
+                Post["/serializedform"] = _ =>
+                {
+                    var data = Request.Form.ToDictionary();
+
+                    return data;
+                };
+
+                Get["/serializedquerystring"] = _ =>
+                {
+                    var data = Request.Query.ToDictionary();
+
+                    return data;
+                };
+            }
         }
     }
 }

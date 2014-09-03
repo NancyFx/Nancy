@@ -6,28 +6,30 @@
     using global::FluentValidation.Validators;
 
     /// <summary>
-    /// Adapter between the Fluent Validation <see cref="IRegularExpressionValidator"/> and the Nancy validation rules.
+    /// Adapter between the Fluent Validation <see cref="RegularExpressionValidator"/> and the Nancy validation rules.
     /// </summary>
-    public class RegularExpressionAdapter : AdapterBase<IRegularExpressionValidator>
+    public class RegularExpressionAdapter : AdapterBase
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="RegularExpressionAdapter"/> class for the specified
-        /// <paramref name="rule"/> and <paramref name="validator"/>.
+        /// Gets whether or not the adapter can handle the provided <see cref="IPropertyValidator"/> instance.
         /// </summary>
-        /// <param name="rule">The fluent validation <see cref="PropertyRule"/> that is being mapped.</param>
-        /// <param name="validator">The <see cref="PropertyRule"/> of the rule.</param>
-        public RegularExpressionAdapter(PropertyRule rule, IRegularExpressionValidator validator)
-            : base(rule, validator)
+        /// <param name="validator">The <see cref="IPropertyValidator"/> instance to check for compatability with the adapter.</param>
+        /// <returns><see langword="true" /> if the adapter can handle the validator, otherwise <see langword="false" />.</returns>
+        public override bool CanHandle(IPropertyValidator validator)
         {
+            return validator is RegularExpressionValidator;
         }
 
         /// <summary>
         /// Get the <see cref="ModelValidationRule"/> instances that are mapped from the fluent validation rule.
         /// </summary>
         /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="ModelValidationRule"/> instances.</returns>
-        public override IEnumerable<ModelValidationRule> GetRules()
+        public override IEnumerable<ModelValidationRule> GetRules(PropertyRule rule, IPropertyValidator validator)
         {
-            yield return new RegexValidationRule(FormatMessage, GetMemberNames(), this.Validator.Expression);
+            yield return new RegexValidationRule(
+                FormatMessage(rule, validator),
+                GetMemberNames(rule),
+                ((IRegularExpressionValidator)validator).Expression);
         }
     }
 }
