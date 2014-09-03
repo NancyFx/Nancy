@@ -70,7 +70,7 @@
 
         private static void ExecuteTasksWithSingleResultInternal(NancyContext context, CancellationToken cancellationToken, IEnumerator<Func<NancyContext, CancellationToken, Task<Response>>> enumerator, TaskCompletionSource<Response> tcs)
         {
-            // Endless loop to try and optimise the "main" use case of 
+            // Endless loop to try and optimise the "main" use case of
             // our tasks just being delegates wrapped in a task.
             //
             // If they finish executing before returning them we will
@@ -184,4 +184,4 @@
             return new PipelineItem<Func<NancyContext, CancellationToken, Task<Response>>>(pipelineItem.Name, asyncDelegate);
         }
     }
-} 
+}

@@ -61,7 +61,7 @@ namespace Nancy.Diagnostics
 
             context.Items.Add(CsrfToken.DEFAULT_CSRF_KEY, "DIAGNOSTICSTOKEN");
 
-            var renderContext = 
+            var renderContext =
                 new DefaultRenderContext(ViewResolver, cache, new DummyTextResource(), new ViewLocationContext() { Context = context });
 
             return Engine.RenderView(location, model, renderContext);

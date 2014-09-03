@@ -28,7 +28,7 @@ namespace Nancy.Routing
             var resourceName = assembly
                 .GetManifestResourceNames()
                 .FirstOrDefault(x => x.Equals(moduleName, StringComparison.OrdinalIgnoreCase));
-                
+
             if (resourceName != null)
             {
                 var manager =

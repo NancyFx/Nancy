@@ -181,7 +181,7 @@ namespace Nancy
 
             if (existingIndex > this.pipelineItems.Count)
             {
-                this.AddItemToEndOfPipeline(item);                
+                this.AddItemToEndOfPipeline(item);
             }
             else
             {

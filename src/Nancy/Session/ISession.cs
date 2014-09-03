@@ -25,7 +25,7 @@ namespace Nancy.Session
 
         /// <summary>
         /// Retrieves the value from the session
-        /// </summary>        
+        /// </summary>
         object this[string key] { get; set; }
 
         bool HasChanged { get; }

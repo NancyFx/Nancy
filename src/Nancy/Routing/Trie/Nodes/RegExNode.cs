@@ -51,7 +51,7 @@ namespace Nancy.Routing.Trie.Nodes
 
             return result;
         }
-    
+
         private void BuildRegEx()
         {
             this.expression = new Regex(this.RouteDefinitionSegment, RegexOptions.Compiled);

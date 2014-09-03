@@ -73,9 +73,9 @@
             {
                 var task =
                     MoveToWritableStream();
- 
+
                 task.Wait();
-  
+
                 if (task.IsFaulted)
                 {
                    throw new InvalidOperationException("Unable to copy stream", task.Exception);
@@ -346,8 +346,8 @@
 
             if (this.stream.Length >= this.thresholdLength)
             {
-                // Close the stream here as closing it every time we call 
-                // MoveStreamContentsToFileStream causes an (ObjectDisposedException) 
+                // Close the stream here as closing it every time we call
+                // MoveStreamContentsToFileStream causes an (ObjectDisposedException)
                 // in NancyWcfGenericService - webRequest.UriTemplateMatch
                 var old = this.stream;
                 this.MoveStreamContentsToFileStream();

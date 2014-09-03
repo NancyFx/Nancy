@@ -43,7 +43,7 @@ namespace Nancy.Bootstrapper
                 var errorMessage =
                     string.Format("{0} must implement {1} inorder to be registered by {2}", incompatibleTypeNames, this.RegistrationType.FullName, this.GetType().Name);
 
-                throw new ArgumentException(errorMessage);  
+                throw new ArgumentException(errorMessage);
             }
         }
     }

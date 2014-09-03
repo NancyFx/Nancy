@@ -1,4 +1,4 @@
-// 
+//
 // System.Web.HttpUtility
 //
 // Authors:
@@ -16,10 +16,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -96,7 +96,7 @@ namespace Nancy.Helpers
 #if NET_4_0
 			if (s == null)
 				return null;
-			
+
 			using (var sw = new StringWriter ()) {
 				HttpEncoder.Current.HtmlAttributeEncode (s, sw);
 				return sw.ToString ();
@@ -508,7 +508,7 @@ namespace Nancy.Helpers
 #if NET_4_0
 			if (s == null)
 				return null;
-			
+
 			using (var sw = new StringWriter ()) {
 				HttpEncoder.Current.HtmlDecode (s, sw);
 				return sw.ToString ();
@@ -549,7 +549,7 @@ namespace Nancy.Helpers
 #if NET_4_0
 			if (s == null)
 				return null;
-			
+
 			using (var sw = new StringWriter ()) {
 				HttpEncoder.Current.HtmlEncode (s, sw);
 				return sw.ToString ();
@@ -593,7 +593,7 @@ namespace Nancy.Helpers
 			IHtmlString htmlString = value as IHtmlString;
 			if (htmlString != null)
 				return htmlString.ToHtmlString ();
-			
+
 			return HtmlEncode (value.ToString ());
 		}
 

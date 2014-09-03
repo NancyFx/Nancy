@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    
+
     using Nancy.Culture;
 
     /// <summary>
@@ -87,7 +87,7 @@
                     data.Add(type, metadata);
                 }
             }
-            
+
             return new RouteMetadata(data);
         }
 

@@ -271,7 +271,7 @@ namespace Nancy
                 return;
             }
 
-            var overrides = 
+            var overrides =
                 new List<Tuple<string, string>>
                 {
                     Tuple.Create("_method form input element", (string)this.Form["_method"]),

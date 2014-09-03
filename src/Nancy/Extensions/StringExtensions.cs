@@ -81,7 +81,7 @@ namespace Nancy.Extensions
                     break;
                 }
             }
-            
+
             return ret;
         }
 

@@ -21,7 +21,7 @@
         private readonly IRequestTracing requestTracing;
         private readonly NancyInternalConfiguration configuration;
         private readonly IModelBinderLocator modelBinderLocator;
-        private readonly IEnumerable<IResponseProcessor> responseProcessors; 
+        private readonly IEnumerable<IResponseProcessor> responseProcessors;
         private readonly IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints;
         private readonly ICultureService cultureService;
         private readonly IRequestTraceFactory requestTraceFactory;

@@ -89,7 +89,7 @@ namespace Nancy
 
             boundaryBuilder.Append("--");
             boundaryBuilder.Append(boundary);
-            
+
             if(closing)
             {
                 boundaryBuilder.Append("--");
@@ -99,7 +99,7 @@ namespace Nancy
                 boundaryBuilder.Append('\r');
                 boundaryBuilder.Append('\n');
             }
-            
+
             var bytes =
                 Encoding.ASCII.GetBytes(boundaryBuilder.ToString());
 

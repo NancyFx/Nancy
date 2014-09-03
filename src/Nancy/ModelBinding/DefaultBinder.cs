@@ -201,7 +201,7 @@ namespace Nancy.ModelBinding
         private int GetBindingListInstanceCount(NancyContext context)
         {
             var dictionary = context.Request.Form as IDictionary<string, object>;
-            
+
             if (dictionary == null)
             {
                 return 0;
@@ -276,7 +276,7 @@ namespace Nancy.ModelBinding
 
         private static void HandleValueTypeCollectionElement(IList model, int count, object o)
         {
-            // If the instance specified in the binder contains the n-th element use that 
+            // If the instance specified in the binder contains the n-th element use that
             if (model.Count > count)
             {
                 return;
@@ -343,8 +343,8 @@ namespace Nancy.ModelBinding
         {
             var dictionaries = new IDictionary<string, string>[]
                 {
-                    ConvertDynamicDictionary(context.Request.Form), 
-                    ConvertDynamicDictionary(context.Request.Query), 
+                    ConvertDynamicDictionary(context.Request.Form),
+                    ConvertDynamicDictionary(context.Request.Query),
                     ConvertDynamicDictionary(context.Parameters)
                 };
 
@@ -489,7 +489,7 @@ namespace Nancy.ModelBinding
 
                     return propertyValue ?? string.Empty;
                 }
-                
+
                 return string.Empty;
             }
             return context.RequestData.ContainsKey(propertyName) ? context.RequestData[propertyName] : string.Empty;

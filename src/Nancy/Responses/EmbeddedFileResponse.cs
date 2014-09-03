@@ -27,7 +27,7 @@
             if (content != null)
             {
                 this.WithHeader("ETag", GenerateETag(content));
-                content.Seek(0, SeekOrigin.Begin);     
+                content.Seek(0, SeekOrigin.Begin);
             }
 
             this.Contents = stream =>

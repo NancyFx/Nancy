@@ -72,7 +72,7 @@ namespace Nancy.Routing
                                         ExecutePost(context, cancellationToken, resolveResult.After, resolveResult.OnError, tcs);
                                     },
                                 HandleFaultedTask(context, resolveResult.OnError, tcs));
-                            
+
                             return;
                         }
 
@@ -118,7 +118,7 @@ namespace Nancy.Routing
             return task =>
             {
                 var response = ResolveErrorResult(context, onError, task.Exception);
-    
+
                 if (response != null)
                 {
                     context.Response = response;
@@ -170,7 +170,7 @@ namespace Nancy.Routing
                     var newMediaRanges =
                         mappedMediaRanges.Where(x => !context.Request.Headers.Accept.Any(header => header.Equals(x)));
 
-                    var modifiedRequestPath = 
+                    var modifiedRequestPath =
                         context.Request.Path.Replace(extension, string.Empty);
 
                     var match =

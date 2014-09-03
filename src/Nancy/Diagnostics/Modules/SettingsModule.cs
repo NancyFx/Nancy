@@ -32,13 +32,13 @@
                             Value = value,
                             Checked = (value) ? "checked='checked'" : string.Empty
                         };
-                
+
                 return View["Settings", model];
             };
 
             Post["/"] = parameters => {
 
-                var model = 
+                var model =
                     this.Bind<SettingsModel>();
 
                 var property = GetProperty(model);
@@ -47,7 +47,7 @@
                 {
                     property.SetValue(null, model.Value, null);
                 }
-                
+
                 return HttpStatusCode.OK;
             };
         }

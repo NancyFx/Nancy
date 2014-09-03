@@ -59,7 +59,7 @@ namespace Nancy
 
             return new XmlResponse<TModel>(model, "application/xml", serializer);
         }
-        
+
         public static Response FromStream(this IResponseFormatter formatter, Stream stream, string contentType)
         {
             return new StreamResponse(() => stream, contentType);
