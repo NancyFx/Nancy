@@ -17,6 +17,7 @@ namespace Nancy.Testing.Tests
     using Nancy.Authentication.Forms;
 
     using Xunit.Extensions;
+    using Nancy.Session.Cookies;
 
     public class BrowserFixture
     {

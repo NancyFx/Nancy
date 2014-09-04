@@ -230,11 +230,12 @@
     <Compile Include="Unit\Security\DefaultCsrfTokenValidatorFixture.cs" />
     <Compile Include="Unit\Security\ModuleSecurityFixture.cs" />
     <Compile Include="Unit\Security\UserIdentityExtensionsFixture.cs" />
-    <Compile Include="Unit\Sessions\CookieBasedSessionsConfigurationFixture.cs" />
-    <Compile Include="Unit\Sessions\CookieBasedSessionsFixture.cs" />
+    <Compile Include="Unit\Sessions\Cookies\CookieBasedSessionsConfigurationFixture.cs" />
+    <Compile Include="Unit\Sessions\Cookies\CookieBasedSessionsFixture.cs" />
     <Compile Include="Unit\Cryptography\RijndaelEncryptionProviderFixture.cs" />
     <Compile Include="Unit\Sessions\DefaultSessionObjectFormatterFixture.cs" />
     <Compile Include="Unit\Sessions\NullSessionProviderFixture.cs" />
+    <Compile Include="Unit\Sessions\Server\ServerBasedSessionsFixture.cs" />
     <Compile Include="Unit\Sessions\SessionFixture.cs" />
     <Compile Include="Unit\TextFormatterFixture.cs" />
     <Compile Include="Unit\StaticContentConventionBuilderFixture.cs" />
