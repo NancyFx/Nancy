@@ -17,6 +17,7 @@ namespace Nancy.Tests.Unit.Sessions
     using Xunit;
 
     using Helpers = Nancy.Helpers;
+    using Nancy.Session.Cookies;
 
     public class CookieBasedSessionsFixture
     {

@@ -282,7 +282,10 @@
     <Compile Include="Routing\Trie\RouteResolverTrie.cs" />
     <Compile Include="Routing\Trie\SegmentMatch.cs" />
     <Compile Include="Routing\Trie\TrieNodeFactory.cs" />
-    <Compile Include="Session\CookieBasedSessionsConfiguration.cs" />
+    <Compile Include="Session\Cookies\CookieBasedSessionsConfiguration.cs" />
+    <Compile Include="Session\Server\DefaultSessionStorageProvider.cs" />
+    <Compile Include="Session\Server\ServerBasedSessions.cs" />
+    <Compile Include="Session\Server\SessionStorageProvider.cs" />
     <Compile Include="StaticContent.cs" />
     <Compile Include="Conventions\ViewLocationConventions.cs" />
     <Compile Include="Cryptography\Base64Helpers.cs" />
@@ -427,7 +430,7 @@
     <Compile Include="Security\ModuleSecurity.cs" />
     <Compile Include="Security\SecurityHooks.cs" />
     <Compile Include="Security\UserIdentityExtensions.cs" />
-    <Compile Include="Session\CookieBasedSessions.cs" />
+    <Compile Include="Session\Cookies\CookieBasedSessions.cs" />
     <Compile Include="Cryptography\RijndaelEncryptionProvider.cs" />
     <Compile Include="DefaultObjectSerializer.cs" />
     <Compile Include="Cryptography\IEncryptionProvider.cs" />

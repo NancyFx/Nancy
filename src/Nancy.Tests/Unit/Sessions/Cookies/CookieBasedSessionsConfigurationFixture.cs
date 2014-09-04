@@ -1,9 +1,9 @@
 namespace Nancy.Testing.Tests
 {
     using FakeItEasy;
-
     using Nancy.Cryptography;
     using Nancy.Session;
+    using Nancy.Session.Cookies;
     using Nancy.Tests;
     using Xunit;
 
