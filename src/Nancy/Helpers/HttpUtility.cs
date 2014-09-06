@@ -47,6 +47,11 @@ namespace Nancy.Helpers
             {
             }
 
+            public HttpQSCollection(bool caseSensitive)
+                : base(caseSensitive ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase)
+            {
+            }
+
             public override string ToString()
             {
                 int count = Count;
@@ -687,6 +692,16 @@ namespace Nancy.Helpers
 
         public static NameValueCollection ParseQueryString(string query, Encoding encoding)
         {
+            return ParseQueryString(query, encoding, StaticConfiguration.CaseSensitive);
+        }
+
+        public static NameValueCollection ParseQueryString(string query, bool caseSensitive)
+        {
+            return ParseQueryString(query, Encoding.UTF8, caseSensitive);
+        }
+
+        public static NameValueCollection ParseQueryString(string query, Encoding encoding, bool caseSensitive)
+        {
             if (query == null)
                 throw new ArgumentNullException("query");
             if (encoding == null)
@@ -696,7 +711,7 @@ namespace Nancy.Helpers
             if (query[0] == '?')
                 query = query.Substring(1);
 
-            NameValueCollection result = new HttpQSCollection();
+            NameValueCollection result = new HttpQSCollection(caseSensitive);
             ParseQueryString(query, encoding, result);
             return result;
         }
