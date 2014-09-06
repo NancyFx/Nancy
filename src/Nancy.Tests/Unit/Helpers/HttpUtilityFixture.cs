@@ -67,6 +67,36 @@
         }
 
         [Fact]
+        public void ParseQueryString_explicit_case_insensitivity_overrides_global_setting()
+        {
+            // Given
+            StaticConfiguration.CaseSensitive = true;
+            var query = "key=value";
+
+            // When
+            var collection = HttpUtility.ParseQueryString(query, caseSensitive: false);
+
+            // Then
+            collection["key"].ShouldEqual("value");
+            collection["KEY"].ShouldEqual("value");
+        }
+
+        [Fact]
+        public void ParseQueryString_explicit_case_sensitivity_overrides_global_setting()
+        {
+            // Given
+            StaticConfiguration.CaseSensitive = false;
+            var query = "key=value";
+
+            // When
+            var collection = HttpUtility.ParseQueryString(query, caseSensitive: true);
+
+            // Then
+            collection["key"].ShouldEqual("value");
+            collection["KEY"].ShouldBeNull();
+        }
+
+        [Fact]
         public void ParseQueryString_handles_keys_without_values()
         {
             // Given

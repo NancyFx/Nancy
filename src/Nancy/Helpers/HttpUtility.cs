@@ -43,7 +43,12 @@ namespace Nancy.Helpers
         sealed class HttpQSCollection : NameValueCollection
         {
             public HttpQSCollection()
-                : base(StaticConfiguration.CaseSensitive ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase)
+                : this(StaticConfiguration.CaseSensitive)
+            {
+            }
+
+            public HttpQSCollection(bool caseSensitive)
+                : base(caseSensitive ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase)
             {
             }
 
@@ -685,18 +690,28 @@ namespace Nancy.Helpers
             return ParseQueryString(query, Encoding.UTF8);
         }
 
+        public static NameValueCollection ParseQueryString(string query, bool caseSensitive)
+        {
+            return ParseQueryString(query, Encoding.UTF8, caseSensitive);
+        }
+
         public static NameValueCollection ParseQueryString(string query, Encoding encoding)
+        {
+            return ParseQueryString(query, encoding, StaticConfiguration.CaseSensitive);
+        }
+
+        public static NameValueCollection ParseQueryString(string query, Encoding encoding, bool caseSensitive)
         {
             if (query == null)
                 throw new ArgumentNullException("query");
             if (encoding == null)
                 throw new ArgumentNullException("encoding");
             if (query.Length == 0 || (query.Length == 1 && query[0] == '?'))
-                return new HttpQSCollection();
+                return new HttpQSCollection(caseSensitive);
             if (query[0] == '?')
                 query = query.Substring(1);
 
-            NameValueCollection result = new HttpQSCollection();
+            NameValueCollection result = new HttpQSCollection(caseSensitive);
             ParseQueryString(query, encoding, result);
             return result;
         }
