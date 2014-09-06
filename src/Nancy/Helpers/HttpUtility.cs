@@ -707,7 +707,7 @@ namespace Nancy.Helpers
             if (encoding == null)
                 throw new ArgumentNullException("encoding");
             if (query.Length == 0 || (query.Length == 1 && query[0] == '?'))
-                return new HttpQSCollection();
+                return new HttpQSCollection(caseSensitive);
             if (query[0] == '?')
                 query = query.Substring(1);
 
