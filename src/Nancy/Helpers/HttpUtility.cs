@@ -43,7 +43,7 @@ namespace Nancy.Helpers
         sealed class HttpQSCollection : NameValueCollection
         {
             public HttpQSCollection()
-                : base(StaticConfiguration.CaseSensitive ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase)
+                : this(StaticConfiguration.CaseSensitive)
             {
             }
 
