@@ -36,7 +36,7 @@
             return (ctx, root) =>
             {
                 var path =
-                    HttpUtility.UrlDecode(ctx.Request.Path);
+                    ctx.Request.Path;
 
                 var fileName =
                     Path.GetFileName(path);

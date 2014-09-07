@@ -1,8 +1,11 @@
 namespace Nancy
 {
     using System;
+    using System.Linq;
     using System.Net;
     using System.Net.Sockets;
+
+    using Nancy.Helpers;
 
     /// <summary>
     /// Represents a full Url of the form scheme://hostname:port/basepath/path?query
@@ -10,6 +13,8 @@ namespace Nancy
     /// <remarks>Since this is for  internal use, and fragments are not passed to the server, fragments are not supported.</remarks>
     public sealed class Url : ICloneable
     {
+        private static readonly char[] SplitSeparators = { '/' };
+
         private string basePath;
 
         /// <summary>
@@ -74,9 +79,20 @@ namespace Nancy
 
         /// <summary>
         /// Gets the path of the request, relative to the base path
-        /// This property drives the route matching
         /// </summary>
         public string Path { get; set; }
+
+        /// <summary>
+        /// Gets the decoded path segments.
+        /// This property drives the route matching
+        /// </summary>
+        public string[] Segments
+        {
+            get
+            {
+                return this.Path.Split(SplitSeparators, StringSplitOptions.RemoveEmptyEntries).Select(HttpUtility.UrlDecode).ToArray();
+            }
+        }
 
         /// <summary>
         /// Gets the querystring data of the requested resource.
