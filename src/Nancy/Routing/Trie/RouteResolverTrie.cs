@@ -54,16 +54,11 @@ namespace Nancy.Routing.Trie
         /// Get all matches for the given method and path
         /// </summary>
         /// <param name="method">HTTP method</param>
-        /// <param name="path">Reqeusted path</param>
         /// <param name="context">Current Nancy context</param>
         /// <returns>An array of <see cref="MatchResult"/> elements</returns>
         public MatchResult[] GetMatches(string method, NancyContext context)
         {
             var segments = context.Request.Url.Segments;
-            if (segments.Length == 0)
-            {
-                return MatchResult.NoMatches;
-            }
 
             // TODO -concurrent if allowing updates?
             if (!this.routeTries.ContainsKey(method))
@@ -77,7 +72,6 @@ namespace Nancy.Routing.Trie
         /// <summary>
         /// Get all method options for the given path
         /// </summary>
-        /// <param name="path">Reqeusted path</param>
         /// <param name="context">Current Nancy context</param>
         /// <returns>A collection of strings, each representing an allowed method</returns>
         public IEnumerable<string> GetOptions(NancyContext context)
