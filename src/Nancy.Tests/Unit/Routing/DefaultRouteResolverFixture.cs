@@ -63,6 +63,16 @@
         }
 
         [Fact]
+        public void Should_resolve_single_escaped_capture()
+        {
+            //Given, When
+            var result = this.browser.Get("/foo/tes%2fting/plop");
+
+            //Then
+            result.Body.AsString().ShouldEqual("Captured tes/ting");
+        }
+
+        [Fact]
         public void Should_resolve_optional_capture_with_optional_specified()
         {
             //Given, When
