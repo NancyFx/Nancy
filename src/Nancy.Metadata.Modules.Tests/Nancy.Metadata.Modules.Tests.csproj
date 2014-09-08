@@ -8,8 +8,8 @@
     <ProjectGuid>{508A3A68-2012-4E62-925F-2F3083A013FC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Nancy.Metadata.Module.Tests</RootNamespace>
-    <AssemblyName>Nancy.Metadata.Module.Tests</AssemblyName>
+    <RootNamespace>Nancy.Metadata.Modules.Tests</RootNamespace>
+    <AssemblyName>Nancy.Metadata.Modules.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -86,9 +86,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nancy.Metadata.Module\Nancy.Metadata.Module.csproj">
+    <ProjectReference Include="..\Nancy.Metadata.Modules\Nancy.Metadata.Modules.csproj">
       <Project>{DC8AAA8B-7FD0-47C4-9413-3CC94088BCC4}</Project>
-      <Name>Nancy.Metadata.Module</Name>
+      <Name>Nancy.Metadata.Modules</Name>
     </ProjectReference>
     <ProjectReference Include="..\Nancy\Nancy.csproj">
       <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>

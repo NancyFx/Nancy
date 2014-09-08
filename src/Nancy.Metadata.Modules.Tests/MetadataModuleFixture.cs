@@ -1,8 +1,7 @@
-﻿namespace Nancy.Metadata.Module.Tests
+﻿namespace Nancy.Metadata.Modules.Tests
 {
     using Nancy.Routing;
     using Nancy.Tests;
-
     using Xunit;
 
     public class MetadataModuleFixture

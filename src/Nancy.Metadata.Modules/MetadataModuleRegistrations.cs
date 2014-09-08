@@ -1,7 +1,6 @@
-﻿namespace Nancy.Metadata.Module
+﻿namespace Nancy.Metadata.Modules
 {
     using Nancy.Bootstrapper;
-    using Nancy.Routing;
 
     /// <summary>
     /// Performs application registations for metadata modules.
