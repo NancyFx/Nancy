@@ -388,6 +388,21 @@ namespace Nancy.Tests.Unit.Sessions
         }
 
         [Fact]
+        public void Should_return_blank_session_if_encrypted_data_are_invalid_but_contain_semicolon_when_decrypted()
+        {
+            var bogusEncrypted = this.rijndaelEncryptionProvider.Encrypt("foo;bar");
+            var inputValue = ValidHmac + bogusEncrypted;
+            inputValue = HttpUtility.UrlEncode(inputValue);
+            var store = new CookieBasedSessions(this.rijndaelEncryptionProvider, this.defaultHmacProvider, this.defaultObjectSerializer);
+            var request = new Request("GET", "/", "http");
+            request.Cookies.Add(store.CookieName, inputValue);
+
+            var result = store.Load(request);
+
+            result.Count.ShouldEqual(0);
+        }
+
+        [Fact]
         public void Should_use_CookieName_when_config_provides_cookiename_value()
         {
             //Given
