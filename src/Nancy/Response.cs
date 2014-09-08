@@ -15,7 +15,7 @@ namespace Nancy
     public class Response: IDisposable
     {
         /// <summary>
-        /// Null object representing no body    
+        /// Null object representing no body
         /// </summary>
         public static Action<Stream> NoBody = s => { };
 
@@ -104,7 +104,7 @@ namespace Nancy
         {
             return AddCookie(name, value, expires, null, null);
         }
-    
+
         /// <summary>
         /// Adds a <see cref="INancyCookie"/> to the response.
         /// </summary>

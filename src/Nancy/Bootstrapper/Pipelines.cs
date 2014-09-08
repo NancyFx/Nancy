@@ -23,7 +23,7 @@ namespace Nancy.Bootstrapper
         /// </summary>
         public Pipelines(IPipelines pipelines)
         {
-            this.AfterRequest = 
+            this.AfterRequest =
                 new AfterPipeline(pipelines.AfterRequest.PipelineItems.Count());
 
             foreach (var pipelineItem in pipelines.AfterRequest.PipelineItems)
@@ -31,7 +31,7 @@ namespace Nancy.Bootstrapper
                 this.AfterRequest.AddItemToEndOfPipeline(pipelineItem);
             }
 
-            this.BeforeRequest = 
+            this.BeforeRequest =
                 new BeforePipeline(pipelines.BeforeRequest.PipelineItems.Count());
 
             foreach (var pipelineItem in pipelines.BeforeRequest.PipelineItems)
@@ -39,7 +39,7 @@ namespace Nancy.Bootstrapper
                 this.BeforeRequest.AddItemToEndOfPipeline(pipelineItem);
             }
 
-            this.OnError = 
+            this.OnError =
                 new ErrorPipeline(pipelines.OnError.PipelineItems.Count());
 
             foreach (var pipelineItem in pipelines.OnError.PipelineItems)

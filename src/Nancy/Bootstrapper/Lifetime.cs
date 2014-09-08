@@ -19,7 +19,7 @@ namespace Nancy.Bootstrapper
 
         /// <summary>
         /// PerRequest - within the context of each request each request
-        /// for the type will result in the same instance being returned. 
+        /// for the type will result in the same instance being returned.
         /// Different requests will have different versions.
         /// </summary>
         PerRequest

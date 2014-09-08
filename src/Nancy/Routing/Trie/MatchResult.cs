@@ -10,7 +10,7 @@ namespace Nancy.Routing.Trie
     {
         private static readonly MatchResult noMatch = new MatchResult();
 
-        private static readonly MatchResult[] noMatches = new MatchResult[] { }; 
+        private static readonly MatchResult[] noMatches = new MatchResult[] { };
 
         /// <summary>
         /// Gets or sets the captured parameters

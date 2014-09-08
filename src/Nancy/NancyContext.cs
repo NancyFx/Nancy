@@ -28,7 +28,7 @@ namespace Nancy
             this.Items = new Dictionary<string, object>();
             this.Trace = new DefaultRequestTrace();
             this.ViewBag = new DynamicDictionary();
-            
+
             // TODO - potentially additional logic to lock to ip etc?
             this.ControlPanelEnabled = true;
         }
@@ -39,12 +39,12 @@ namespace Nancy
         public IDictionary<string, object> Items { get; private set; }
 
         /// <summary>
-        /// Gets or sets the resolved route 
+        /// Gets or sets the resolved route
         /// </summary>
         public Route ResolvedRoute { get; set; }
 
         /// <summary>
-        /// Gets or sets the parameters for the resolved route 
+        /// Gets or sets the parameters for the resolved route
         /// </summary>
         public dynamic Parameters { get; set; }
 

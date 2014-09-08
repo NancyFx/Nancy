@@ -55,10 +55,10 @@
             context.WriteTraceLog(sb => GetAccepHeaderTraceLog(context, negotiationContext, coercedAcceptHeaders, sb));
 
             var compatibleHeaders = this.GetCompatibleHeaders(coercedAcceptHeaders, negotiationContext, context).ToArray();
-            
+
             if (!compatibleHeaders.Any())
             {
-                context.WriteTraceLog(sb => 
+                context.WriteTraceLog(sb =>
                     sb.AppendLine("[DefaultResponseNegotiator] Unable to negotiate response - no headers compatible"));
 
                 return new NotAcceptableResponse();
@@ -104,7 +104,7 @@
 
                 negotiator = new Negotiator(context).WithModel(routeResult);
             }
- 
+
             return negotiator.NegotiationContext;
         }
 
@@ -147,7 +147,7 @@
             NancyContext context)
         {
             var acceptHeaders = GetCompatibleHeaders(coercedAcceptHeaders, negotiationContext);
-            
+
             foreach (var header in acceptHeaders)
             {
                 var mediaRangeModel = negotiationContext.GetModelForMediaRange(header.Item1);
@@ -208,12 +208,12 @@
         /// <param name="context">The context.</param>
         /// <returns>A <see cref="Response"/>.</returns>
         private static Response CreateResponse(
-            IList<CompatibleHeader> compatibleHeaders, 
-            NegotiationContext negotiationContext, 
+            IList<CompatibleHeader> compatibleHeaders,
+            NegotiationContext negotiationContext,
             NancyContext context)
         {
             var response = NegotiateResponse(compatibleHeaders, negotiationContext, context);
-            
+
             if (response == null)
             {
                 context.WriteTraceLog(sb =>
@@ -285,8 +285,8 @@
         /// <param name="response">The response.</param>
         /// <param name="requestUrl">The request URL.</param>
         private static void AddLinkHeader(
-            IEnumerable<CompatibleHeader> compatibleHeaders, 
-            Response response, 
+            IEnumerable<CompatibleHeader> compatibleHeaders,
+            Response response,
             Url requestUrl)
         {
             var linkProcessors = GetLinkProcessors(compatibleHeaders, response.ContentType);

@@ -2,9 +2,7 @@ namespace Nancy.Security
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
 
-    using Nancy.ErrorHandling;
     using Nancy.Extensions;
     using Nancy.Responses;
 
@@ -102,7 +100,7 @@ namespace Nancy.Security
                            }
                            else
                            {
-                               response = new Response { StatusCode = HttpStatusCode.Forbidden };                               
+                               response = new Response { StatusCode = HttpStatusCode.Forbidden };
                            }
                        }
 

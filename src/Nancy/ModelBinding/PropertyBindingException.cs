@@ -22,7 +22,7 @@
         /// <param name="propertyName">the name of the property which failed to bind</param>
         /// <param name="attemptedValue">the value attempted to set</param>
         /// <param name="innerException">the underlying exception</param>
-        public PropertyBindingException(string propertyName, string attemptedValue, Exception innerException = null) 
+        public PropertyBindingException(string propertyName, string attemptedValue, Exception innerException = null)
             : base(String.Format(ExceptionMessage, propertyName, attemptedValue), innerException)
         {
             this.PropertyName = propertyName;

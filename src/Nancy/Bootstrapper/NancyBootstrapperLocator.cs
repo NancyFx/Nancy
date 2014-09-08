@@ -69,13 +69,13 @@
         {
             var set = new HashSet<Type>();
             bootstrapper = null;
-                
+
             if (customBootstrappers.All(boostrapper => set.Add(boostrapper.BaseType)))
             {
                 var except = customBootstrappers.Except(set).ToList();
                 bootstrapper = except.Count == 1 ? except[0] : null;
             }
-                
+
             return bootstrapper != null;
         }
 

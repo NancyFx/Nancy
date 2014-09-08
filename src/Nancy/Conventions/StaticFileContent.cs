@@ -10,7 +10,7 @@
         /// <summary>
         /// Creates a new instance of StaticFileContent
         /// </summary>
-        /// <param name="conventions">NancyConventions, to wich static files get added</param>
+        /// <param name="conventions">NancyConventions, to which static files get added</param>
         public StaticFileContent(NancyConventions conventions)
         {
             this.conventions = conventions;

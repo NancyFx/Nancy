@@ -39,7 +39,7 @@ namespace Nancy.ErrorHandling
         }
 
         /// <summary>
-        /// Whether then 
+        /// Whether then
         /// </summary>
         /// <param name="statusCode">Status code</param>
         /// <param name="context">The <see cref="NancyContext"/> instance of the current request.</param>

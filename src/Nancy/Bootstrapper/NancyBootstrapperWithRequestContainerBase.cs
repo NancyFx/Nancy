@@ -7,7 +7,7 @@ namespace Nancy.Bootstrapper
     /// <summary>
     /// Nancy bootstrapper base with per-request container support.
     /// Stores/retrieves the child container in the context to ensure that
-    /// only one child container is stored per request, and that the child 
+    /// only one child container is stored per request, and that the child
     /// container will be disposed at the end of the request.
     /// </summary>
     /// <typeparam name="TContainer">IoC container type</typeparam>

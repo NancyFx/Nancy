@@ -31,7 +31,7 @@
             {
                 return false;
             }
-            
+
             Uri uri = null;
             if (Uri.TryCreate(request.Url, UriKind.Absolute, out uri))
             {

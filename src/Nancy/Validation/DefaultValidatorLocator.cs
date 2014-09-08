@@ -19,7 +19,7 @@
         /// <param name="factories">The factories.</param>
         public DefaultValidatorLocator(IEnumerable<IModelValidatorFactory> factories)
         {
-            this.cachedValidators = 
+            this.cachedValidators =
                 new ConcurrentDictionary<Type, IModelValidator>();
 
             this.factories = factories ?? Enumerable.Empty<IModelValidatorFactory>();
@@ -52,8 +52,8 @@
                 return null;
             }
 
-            return (validators.Length == 1) ? 
-                validators[0] : 
+            return (validators.Length == 1) ?
+                validators[0] :
                 new CompositeValidator(validators, type);
         }
     }

@@ -5,7 +5,7 @@ namespace Nancy.Routing.Trie
 
     using Nancy.Routing.Constraints;
     using Nancy.Routing.Trie.Nodes;
-    
+
     /// <summary>
     /// Factory for creating the correct type of TrieNode
     /// </summary>
@@ -39,7 +39,7 @@ namespace Nancy.Routing.Trie
             {
                 return new RegExNode(parent, segment, this);
             }
-            
+
             if (start == '{' && end == '}' && chars.Count(c => c == '{' || c == '}') == 2)
             {
                 return this.GetCaptureNode(parent, segment);

@@ -78,7 +78,7 @@
                 .FirstOrDefault(asmName => asmName.Name != null && asmName.Name.StartsWith("Nancy.Hosting."));
 
             return (name == null) ?
-                "Unknown" : 
+                "Unknown" :
                 string.Format("{0} (v{1})", name.Name.Split('.').Last(), name.Version);
         }
     }

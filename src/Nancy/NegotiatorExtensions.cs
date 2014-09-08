@@ -32,7 +32,7 @@
             {
                 negotiator.WithCookie(cookie);
             }
-            
+
             return negotiator;
         }
 
@@ -63,7 +63,7 @@
         /// </summary>
         /// <param name="negotiator">Negotiator object</param>
         /// <param name="headers">
-        /// Array of headers - each header should be an anonymous type with two string properties 
+        /// Array of headers - each header should be an anonymous type with two string properties
         /// 'Header' and 'Value' to represent the header name and its value.
         /// </param>
         /// <returns>Modified negotiator</returns>

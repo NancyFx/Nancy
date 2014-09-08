@@ -5,7 +5,7 @@
 
     public static class TaskHelpers
     {
-        private static readonly Lazy<Task> CompletedTask = new Lazy<Task>(() => GetCompletedTask<object>(null));  
+        private static readonly Lazy<Task> CompletedTask = new Lazy<Task>(() => GetCompletedTask<object>(null));
 
         public static Task GetCompletedTask()
         {

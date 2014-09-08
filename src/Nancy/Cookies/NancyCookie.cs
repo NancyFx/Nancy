@@ -94,12 +94,12 @@ namespace Nancy.Cookies
         /// Whether the cookie is secure (i.e. HTTPS only)
         /// </summary>
         public bool Secure { get; private set; }
-        
+
         public override string ToString()
         {
             var sb = new StringBuilder(50);
             sb.AppendFormat("{0}={1}; path={2}", this.EncodedName, this.EncodedValue, Path ?? "/");
-            
+
             if (Expires != null)
             {
                 sb.Append("; expires=");

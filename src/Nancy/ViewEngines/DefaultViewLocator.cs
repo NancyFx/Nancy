@@ -76,14 +76,14 @@
             }
             finally
             {
-                this.padlock.ExitUpgradeableReadLock();                    
+                this.padlock.ExitUpgradeableReadLock();
             }
         }
 
         /// <summary>
         /// Gets all the views that are currently discovered
         /// Note: this is *not* the recommended way to deal with the view locator
-        /// as it doesn't allow for runtime discovery of views with the 
+        /// as it doesn't allow for runtime discovery of views with the
         /// <see cref="StaticConfiguration.Caching"/> settings.
         /// </summary>
         /// <returns>A collection of <see cref="ViewLocationResult"/> instances</returns>
@@ -100,7 +100,7 @@
             }
             finally
             {
-                this.padlock.ExitReadLock();                
+                this.padlock.ExitReadLock();
             }
         }
 
@@ -142,7 +142,7 @@
             {
                 throw new AmbiguousViewsException(GetAmgiguousViewExceptionMessage(cachedResults.Length, cachedResults));
             }
-            
+
             return null;
         }
 

@@ -8,7 +8,7 @@
     public static class NancyOptionsExtensions
     {
         /// <summary>
-        /// Tells the NancyMiddleware to pass through when 
+        /// Tells the NancyMiddleware to pass through when
         /// response has one of the given status codes.
         /// </summary>
         /// <param name="nancyOptions">The Nancy options.</param>

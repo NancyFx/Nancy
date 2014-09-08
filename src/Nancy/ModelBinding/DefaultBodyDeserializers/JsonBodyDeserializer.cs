@@ -47,5 +47,5 @@ namespace Nancy.ModelBinding.DefaultBodyDeserializers
 
             return deserializedObject;
         }
-            }
+    }
 }

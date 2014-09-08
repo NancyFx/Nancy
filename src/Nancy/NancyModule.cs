@@ -15,7 +15,7 @@ namespace Nancy
     using Nancy.ViewEngines;
 
     /// <summary>
-    /// Basic class containing the functionality for defining routes and actions in Nancy. 
+    /// Basic class containing the functionality for defining routes and actions in Nancy.
     /// </summary>
     public abstract class NancyModule : INancyModule, IHideObjectMembers
     {
@@ -118,7 +118,7 @@ namespace Nancy
         /// Get the root path of the routes in the current module.
         /// </summary>
         /// <value>
-        /// A <see cref="T:System.String" /> containing the root path of the module or <see langword="null" /> 
+        /// A <see cref="T:System.String" /> containing the root path of the module or <see langword="null" />
         /// if no root path should be used.</value><remarks>All routes will be relative to this root path.
         /// </remarks>
         public string ModulePath { get; protected set; }

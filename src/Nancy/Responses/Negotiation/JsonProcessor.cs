@@ -11,7 +11,7 @@
     {
         private readonly ISerializer serializer;
 
-        private static readonly IEnumerable<Tuple<string, MediaRange>> extensionMappings = 
+        private static readonly IEnumerable<Tuple<string, MediaRange>> extensionMappings =
             new[] { new Tuple<string, MediaRange>("json", new MediaRange("application/json")) };
 
         /// <summary>

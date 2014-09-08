@@ -26,7 +26,7 @@
         private bool initialised;
 
         /// <summary>
-        /// Stores whether the bootstrapper is in the process of 
+        /// Stores whether the bootstrapper is in the process of
         /// being disposed.
         /// </summary>
         private bool disposing;
@@ -107,9 +107,9 @@
             get
             {
                 // Shouldn't need thread safety here?
-                return 
-                    this.modules 
-                    ?? 
+                return
+                    this.modules
+                    ??
                     (this.modules = AppDomainAssemblyTypeScanner
                                         .TypesOf<INancyModule>(ScanMode.ExcludeNancy)
                                         .NotOfType<DiagnosticModule>()
@@ -241,7 +241,7 @@
             this.ApplicationContainer = this.GetApplicationContainer();
 
             this.RegisterBootstrapperTypes(this.ApplicationContainer);
-            
+
             this.ConfigureApplicationContainer(this.ApplicationContainer);
 
             var typeRegistrations = this.InternalConfiguration.GetTypeRegistations()
@@ -542,7 +542,7 @@
         /// <param name="container">Container to register into</param>
         /// <param name="instanceRegistrations">Instance registration types</param>
         protected abstract void RegisterInstances(TContainer container, IEnumerable<InstanceRegistration> instanceRegistrations);
-        
+
         /// <summary>
         /// Gets additional required type registrations
         /// that don't form part of the core Nancy configuration
@@ -551,7 +551,7 @@
         private IEnumerable<TypeRegistration> GetAdditionalTypes()
         {
             return new[] {
-                new TypeRegistration(typeof(IViewRenderer), typeof(DefaultViewRenderer)),            
+                new TypeRegistration(typeof(IViewRenderer), typeof(DefaultViewRenderer)),
             };
         }
 
@@ -564,9 +564,9 @@
         {
             return new[] {
                 new InstanceRegistration(typeof(CryptographyConfiguration), this.CryptographyConfiguration),
-                new InstanceRegistration(typeof(NancyInternalConfiguration), this.InternalConfiguration), 
-                new InstanceRegistration(typeof(DiagnosticsConfiguration), this.DiagnosticsConfiguration), 
-                new InstanceRegistration(typeof(IRootPathProvider), this.RootPathProvider), 
+                new InstanceRegistration(typeof(NancyInternalConfiguration), this.InternalConfiguration),
+                new InstanceRegistration(typeof(DiagnosticsConfiguration), this.DiagnosticsConfiguration),
+                new InstanceRegistration(typeof(IRootPathProvider), this.RootPathProvider),
             };
         }
 
@@ -583,8 +583,8 @@
                     new CollectionTypeRegistration(typeof(IModelBinder), this.ModelBinders),
                     new CollectionTypeRegistration(typeof(ITypeConverter), this.TypeConverters),
                     new CollectionTypeRegistration(typeof(IBodyDeserializer), this.BodyDeserializers),
-                    new CollectionTypeRegistration(typeof(IApplicationStartup), this.ApplicationStartupTasks), 
-                    new CollectionTypeRegistration(typeof(IRegistrations), this.RegistrationTasks), 
+                    new CollectionTypeRegistration(typeof(IApplicationStartup), this.ApplicationStartupTasks),
+                    new CollectionTypeRegistration(typeof(IRegistrations), this.RegistrationTasks),
                     new CollectionTypeRegistration(typeof(IModelValidatorFactory), this.ModelValidatorFactories)
                 };
         }
@@ -645,7 +645,7 @@
                 throw new MultipleRootPathProvidersLocatedException(providerTypes);
             }
 
-            var providerType = 
+            var providerType =
                 providerTypes.SingleOrDefault() ?? typeof(DefaultRootPathProvider);
 
             return Activator.CreateInstance(providerType) as IRootPathProvider;

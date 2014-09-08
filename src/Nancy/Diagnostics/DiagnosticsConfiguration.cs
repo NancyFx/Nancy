@@ -8,10 +8,10 @@
     public class DiagnosticsConfiguration
     {
         private string path;
- 
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DiagnosticsConfiguration"/> class,
-        /// using the <see cref="CryptographyConfiguration.Default"/> cryptographic 
+        /// using the <see cref="CryptographyConfiguration.Default"/> cryptographic
         /// configuration.
         /// </summary>
         public DiagnosticsConfiguration()
@@ -21,7 +21,7 @@
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DiagnosticsConfiguration"/> class,
-        /// using the <paramref name="cryptographyConfiguration"/> cryptographic 
+        /// using the <paramref name="cryptographyConfiguration"/> cryptographic
         /// configuration.
         /// </summary>
         /// <param name="cryptographyConfiguration">The <see cref="CryptographyConfiguration"/> to use with diagnostics.</param>

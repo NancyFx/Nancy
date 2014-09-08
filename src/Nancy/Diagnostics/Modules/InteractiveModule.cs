@@ -26,10 +26,10 @@
                     .AvailableDiagnostics
                     .Select(p => new
                         {
-                            p.Name, 
-                            p.Description, 
-                            Type = p.GetType().Name, 
-                            p.GetType().Namespace, 
+                            p.Name,
+                            p.Description,
+                            Type = p.GetType().Name,
+                            p.GetType().Namespace,
                             Assembly = p.GetType().Assembly.GetName().Name
                         })
                     .ToArray();
@@ -42,7 +42,7 @@
                 var providerName =
                     HttpUtility.UrlDecode((string)ctx.providerName);
 
-                var diagnostic = 
+                var diagnostic =
                     this.interactiveDiagnostics.GetDiagnostic(providerName);
 
                 if (diagnostic == null)
@@ -53,12 +53,12 @@
                 var methods = diagnostic.Methods
                     .Select(m => new
                         {
-                            m.MethodName, 
-                            ReturnType = m.ReturnType.ToString(), 
+                            m.MethodName,
+                            ReturnType = m.ReturnType.ToString(),
                             m.Description,
                             Arguments = m.Arguments.Select(a => new
                             {
-                                ArgumentName = a.Item1, 
+                                ArgumentName = a.Item1,
                                 ArgumentType = a.Item2.ToString()
                             })
                         })
@@ -75,7 +75,7 @@
                 var methodName =
                     HttpUtility.UrlDecode((string)ctx.methodName);
 
-                var method = 
+                var method =
                     this.interactiveDiagnostics.GetMethod(providerName, methodName);
 
                 if (method == null)
@@ -83,7 +83,7 @@
                     return HttpStatusCode.NotFound;
                 }
 
-                object[] arguments = 
+                object[] arguments =
                     GetArguments(method, this.Request.Query);
 
                 return this.Response.AsJson(new { Result = this.interactiveDiagnostics.ExecuteDiagnostic(method, arguments) });
@@ -97,7 +97,7 @@
                 var methodName =
                     HttpUtility.UrlDecode((string)ctx.methodName);
 
-                var method = 
+                var method =
                     this.interactiveDiagnostics.GetMethod(providerName, methodName);
 
                 if (method == null)
@@ -105,7 +105,7 @@
                     return HttpStatusCode.NotFound;
                 }
 
-                var template = 
+                var template =
                     this.interactiveDiagnostics.GetTemplate(method);
 
                 if (template == null)
@@ -131,7 +131,7 @@
 
         private static object ConvertArgument(string value, Type destinationType)
         {
-            var converter = 
+            var converter =
                 TypeDescriptor.GetConverter(destinationType);
 
             if (converter == null || !converter.CanConvertFrom(typeof(string)))

@@ -34,7 +34,6 @@
 
         public ResolveResult()
         {
-            
         }
 
         public ResolveResult(Route route, DynamicDictionary parameters, BeforePipeline before, AfterPipeline after, Func<NancyContext, Exception, Response> onError)

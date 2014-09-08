@@ -18,10 +18,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -113,7 +113,7 @@ namespace Nancy.Helpers
         public HttpEncoder()
         {
         }
-#if NET_4_0	
+#if NET_4_0
 		protected internal virtual
 #else
         internal static
@@ -157,7 +157,7 @@ namespace Nancy.Helpers
 
             return input;
         }
-#if NET_4_0		
+#if NET_4_0
 		protected internal virtual void HtmlAttributeEncode (string value, TextWriter output)
 		{
 
@@ -198,11 +198,11 @@ namespace Nancy.Helpers
 
 			if (String.Compare (typeName, "System.Web.Util.HttpEncoder", StringComparison.OrdinalIgnoreCase) == 0)
 				return Default;
-			
+
 			Type t = Type.GetType (typeName, false);
 			if (t == null)
 				throw new ConfigurationErrorsException (String.Format ("Could not load type '{0}'.", typeName));
-			
+
 			if (!typeof (HttpEncoder).IsAssignableFrom (t))
 				throw new ConfigurationErrorsException (
 					String.Format ("'{0}' is not allowed here because it does not extend class 'System.Web.Util.HttpEncoder'.", typeName)
