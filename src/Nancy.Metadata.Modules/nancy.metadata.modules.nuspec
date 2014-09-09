@@ -21,6 +21,6 @@
     <file src="build\binaries\Nancy.Metadata.Modules.dll" target="lib\net40" />
     <file src="build\binaries\Nancy.Metadata.Modules.pdb" target="lib\net40" />
     <file src="build\binaries\Nancy.Metadata.Modules.XML" target="lib\net40" />
-    <file src="src\Nancy.Metadata.Module\**\*.cs" target="src" />
+    <file src="src\Nancy.Metadata.Modules\**\*.cs" target="src" />
   </files>
 </package>
