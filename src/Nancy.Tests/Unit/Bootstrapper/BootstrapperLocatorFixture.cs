@@ -178,6 +178,7 @@
             NancyBootstrapperLocator.BootstrapperFactory = () => new FactoredBootstrapper();
             INancyBootstrapper bootstrapper = NancyBootstrapperLocator.Bootstrapper;
             bootstrapper.ShouldBeOfType<FactoredBootstrapper>();
+            NancyBootstrapperLocator.BootstrapperFactory = null;
         }
     }
 }
