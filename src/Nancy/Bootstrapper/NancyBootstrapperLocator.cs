@@ -23,8 +23,18 @@
             set { instance = value; }
         }
 
+        /// <summary>
+        /// Custom bootstrapper factory function
+        /// </summary>
+        public static Func<INancyBootstrapper> BootstrapperFactory { get; set; }
+
         private static INancyBootstrapper LocateBootstrapper()
         {
+            if (BootstrapperFactory != null)
+            {
+                return BootstrapperFactory();
+            }
+
             var bootstrapperType = GetBootstrapperType();
 
             try
