@@ -81,6 +81,22 @@
 
         }
 
+        class FactoredBootstrapper : INancyBootstrapper
+        {
+            public void Dispose()
+            {
+            }
+
+            public void Initialise()
+            {
+            }
+
+            public INancyEngine GetEngine()
+            {
+                return null;
+            }
+        }
+
         [Fact]
         public void Should_automatically_resolve_the_most_derived_bootstrapper()
         {
@@ -154,6 +170,20 @@
             // Then
             res.ShouldEqual(true);
             found.ShouldEqual(typeof(MySecondBootstwapper));
-        } 
+        }
+
+        [Fact]
+        public void Should_return_instance_created_by_bootstrapper_factory()
+        {
+            // Given
+            NancyBootstrapperLocator.BootstrapperFactory = () => new FactoredBootstrapper();
+
+            // When
+            var bootstrapper = NancyBootstrapperLocator.Bootstrapper;
+
+            // Then
+            bootstrapper.ShouldBeOfType<FactoredBootstrapper>();
+            NancyBootstrapperLocator.BootstrapperFactory = null;
+        }
     }
 }
