@@ -1,6 +1,8 @@
 ﻿namespace Nancy.ViewEngines.Razor.Tests
 {
     using System;
+    using System.Collections;
+    using System.Collections.Generic;
     using System.Dynamic;
     using System.IO;
     using System.Linq;
@@ -15,6 +17,7 @@
     using Nancy.ViewEngines.Razor.Tests.Models;
 
     using Xunit;
+    using Xunit.Extensions;
 
     public class RazorViewEngineFixture
     {
@@ -646,6 +649,29 @@
             // Then
             var output = ReadAll(stream);
             output.ShouldContain(string.Format("<input value=\"{0}\" />", PHRASE));
+        }
+
+        [Theory]
+        [InlineData("System.String", typeof(string))]
+        [InlineData("IEnumerable<System.String>", typeof(IEnumerable<string>))]
+        [InlineData("System.String[]", typeof(string[]))]
+        public void Should_be_able_to_render_view_with_generic_model(string modelType, Type expectedType)
+        {
+            var location = new ViewLocationResult(
+                string.Empty,
+                string.Empty,
+                "cshtml",
+                () => new StringReader("@model " + modelType + "\n\n@this.GetType().BaseType.GetGenericArguments()[0].FullName")
+                );
+
+            var stream = new MemoryStream();
+
+            // When
+            var response = this.engine.RenderView(location, null, this.renderContext);
+            response.Contents.Invoke(stream);
+
+            // Then
+            stream.ShouldEqual(expectedType.FullName);
         }
 
         private static string ReadAll(Stream stream)
