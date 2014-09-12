@@ -175,8 +175,13 @@
         [Fact]
         public void Should_return_instance_created_by_bootstrapper_factory()
         {
+            // Given
             NancyBootstrapperLocator.BootstrapperFactory = () => new FactoredBootstrapper();
-            INancyBootstrapper bootstrapper = NancyBootstrapperLocator.Bootstrapper;
+
+            // When
+            var bootstrapper = NancyBootstrapperLocator.Bootstrapper;
+
+            // Then
             bootstrapper.ShouldBeOfType<FactoredBootstrapper>();
             NancyBootstrapperLocator.BootstrapperFactory = null;
         }
