@@ -8,6 +8,7 @@
     using System.Linq;
     using System.Reflection;
     using System.Text;
+    using System.Text.RegularExpressions;
     using System.Threading;
 
     using FakeItEasy;
@@ -651,12 +652,16 @@
             output.ShouldContain(string.Format("<input value=\"{0}\" />", PHRASE));
         }
 
-        [Theory]
-        [InlineData("System.String", typeof(string))]
-        [InlineData("IEnumerable<System.String>", typeof(IEnumerable<string>))]
-        [InlineData("System.String[]", typeof(string[]))]
+        [Theory]        
+        //[InlineData("System.String", typeof(string))]        
+        //[InlineData("System.Tuple<System.String>", typeof(Tuple<string>))]        
+        //[InlineData("System.Tuple<System.Tuple<System.String>>", typeof(Tuple<Tuple<string>>))]        
+        //[InlineData("System.Tuple<System.String, System.Int32>", typeof(Tuple<string, int>))]        
+        //[InlineData("System.Tuple<System.String, System.Tuple<System.Int32>>", typeof(Tuple<string, Tuple<int>>))]        
+        //[InlineData("System.Tuple<System.String, System.Tuple<System.Int32>, System.Int32>", typeof(Tuple<string, Tuple<int>, int>))]
+        [InlineData("System.Tuple<System.String, System.Tuple<System.Int32, System.String>, System.Tuple<System.Int32>, System.Int32>", typeof(Tuple<string, Tuple<int, string>, Tuple<int>, int>))]        
         public void Should_be_able_to_render_view_with_generic_model(string modelType, Type expectedType)
-        {
+        {            
             var location = new ViewLocationResult(
                 string.Empty,
                 string.Empty,
@@ -672,7 +677,7 @@
 
             // Then
             stream.ShouldEqual(expectedType.FullName);
-        }
+        }       
 
         private static string ReadAll(Stream stream)
         {

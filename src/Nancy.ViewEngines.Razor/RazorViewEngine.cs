@@ -4,12 +4,16 @@
     using System.CodeDom;
     using System.CodeDom.Compiler;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Reflection;
     using System.Text;
+    using System.Text.RegularExpressions;
     using System.Web.Razor;
     using System.Web.Razor.Parser.SyntaxTree;
+
+    using Microsoft.CSharp;
 
     using Nancy.Bootstrapper;
     using Nancy.Helpers;
@@ -206,9 +210,10 @@
         {
             var outputAssemblyName =
                 Path.Combine(Path.GetTempPath(), String.Format("Temp_{0}.dll", Guid.NewGuid().ToString("N")));
-
-            var modelType =
-                FindModelType(razorResult.Document, passedModelType, viewRenderer.ModelCodeGenerator);
+            
+            var modelType = (Type)razorResult.GeneratedCode.Namespaces[0].Types[0].UserData["ModelType"]
+                            ?? passedModelType
+                            ?? typeof (object);            
 
             var assemblies = new List<string>
             {
@@ -376,21 +381,7 @@
 
             var discoveredModelType = modelBlock.Content.Trim();
 
-            var modelType = Type.GetType(discoveredModelType);
-
-            if (modelType != null)
-            {
-                return modelType;
-            }
-
-            modelType = AppDomainAssemblyTypeScanner.Types.FirstOrDefault(t => t.FullName == discoveredModelType);
-
-            if (modelType != null)
-            {
-                return modelType;
-            }
-
-            modelType = AppDomainAssemblyTypeScanner.Types.FirstOrDefault(t => t.Name == discoveredModelType);
+            var modelType = ResolveGenericType(discoveredModelType);
 
             if (modelType != null)
             {
@@ -403,6 +394,86 @@
                                                 AppDomain.CurrentDomain.GetAssemblies().Select(a => a.FullName).Aggregate((n1, n2) => n1 + "\n\t" + n2),
                                                 AppDomainAssemblyTypeScanner.Assemblies.Select(a => a.FullName).Aggregate((n1, n2) => n1 + "\n\t" + n2),
                                                 GetAssembliesInDirectories().Aggregate((n1, n2) => n1 + "\n\t" + n2)));
+        }
+
+        private static Type ResolveTypeByName(string typeName)
+        {
+            return Type.GetType(typeName)
+                   ?? AppDomainAssemblyTypeScanner.Types.FirstOrDefault(t => t.FullName == typeName)
+                   ?? AppDomainAssemblyTypeScanner.Types.FirstOrDefault(t => t.Name == typeName)
+                ;
+        }
+
+        public static Type ResolveGenericType(string type)
+        {
+            var stack = new Stack<TypeNameParserStep>();
+
+            var elements = Regex.Split(type, @"([<>,])")
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Select(x => x.Trim()).ToArray();
+
+            if (elements.Length == 1)
+            {
+                return ResolveTypeByName(elements[0]);
+            }
+            
+            foreach (var element in elements)
+            {
+                if (element == "<")
+                {
+                    // stack tip is generic type
+                }
+                else if (element == ">")
+                {
+                    // finished all arguments for generic type on stack tip                   
+
+                    var argument = stack.Pop();
+                    stack.Peek().GenericArguments.Add(argument);                   
+                }
+                else if (element == ",")
+                {
+                    var argument = stack.Pop();
+                    stack.Peek().GenericArguments.Add(argument);
+                }
+                else if (element == "")
+                {
+                }
+                else
+                {                    
+                    stack.Push(new TypeNameParserStep(element));
+                }
+
+            }
+            return stack.Single().Resolve();            
+        }
+
+        [DebuggerDisplay("{GenericTypeName}`{GenericArguments.Count}")]
+        private class TypeNameParserStep
+        {
+            public string GenericTypeName { get; private set; }
+            public List<TypeNameParserStep> GenericArguments { get; private set; }
+
+            public TypeNameParserStep(string name)
+            {
+                this.GenericTypeName = name;
+                this.GenericArguments = new List<TypeNameParserStep>();
+            }
+
+            public Type Resolve()
+            {
+                var effectiveArguments = this.GenericArguments.Where(x => x.GenericTypeName != string.Empty).ToArray();
+
+                var genericType = ResolveTypeByName(this.GenericTypeName + "`" + effectiveArguments.Length);
+
+                if (effectiveArguments.Length == 0)
+                {
+                    return ResolveTypeByName(this.GenericTypeName);
+                }
+
+                var genericArguments = effectiveArguments.Select(x => x.Resolve()).ToArray();
+
+                return genericType.MakeGenericType(genericArguments);
+            }
         }
 
         private static IEnumerable<String> GetAssembliesInDirectories()

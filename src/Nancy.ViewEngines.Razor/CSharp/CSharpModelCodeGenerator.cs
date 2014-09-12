@@ -6,16 +6,21 @@ namespace Nancy.ViewEngines.Razor.CSharp
 
     public class CSharpModelCodeGenerator : SetBaseTypeCodeGenerator
     {
-        public CSharpModelCodeGenerator(string baseType)
-            : base(baseType)
+        private readonly Type modelType;
+
+        public CSharpModelCodeGenerator(Type modelType)
+            : base(modelType.FullName)
         {
+            this.modelType = modelType;
         }
 
         protected override string ResolveType(CodeGeneratorContext context, string baseType)
         {
+            context.GeneratedClass.UserData.Add("ModelType", this.modelType);
+
             return String.Format(
                 CultureInfo.InvariantCulture,
-                "{0}<{1}>",
+                "{0}`1[{1}]",
                 context.Host.DefaultBaseClass,
                 baseType);
         }

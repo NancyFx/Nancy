@@ -1,6 +1,7 @@
 ﻿namespace Nancy.ViewEngines.Razor.CSharp
 {
     using System.Globalization;
+    using System.Linq;
     using System.Web.Razor.Parser;
     using System.Web.Razor.Text;
 
@@ -28,7 +29,11 @@
 
             var endModelLocation = CurrentLocation;
 
-            this.BaseTypeDirective("The 'model' keyword must be followed by a type name on the same line.", s => new CSharpModelCodeGenerator(s));
+            this.BaseTypeDirective("The 'model' keyword must be followed by a type name on the same line.", s =>
+            {
+                var modelType = RazorViewEngine.ResolveGenericType(s);
+                return new CSharpModelCodeGenerator(modelType);
+            });
 
             if (this.modelStatementFound)
             {
