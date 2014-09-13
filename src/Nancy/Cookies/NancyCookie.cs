@@ -26,7 +26,7 @@ namespace Nancy.Cookies
         /// </summary>
         /// <param name="name">The name of the cookie.</param>
         /// <param name="value">The value of the cookie.</param>
-        /// <param name="expires">The expiration date of the cookie. Can be <see langword="null" /> if it should never expire.</param>
+        /// <param name="expires">The expiration date of the cookie. Can be <see langword="null" /> if it should expire at the end of the session.</param>
         public NancyCookie(string name, string value, DateTime expires)
             : this(name, value, false, false, expires)
         {
@@ -62,7 +62,7 @@ namespace Nancy.Cookies
         /// <param name="value">The value of the cookie.</param>
         /// <param name="httpOnly">Whether the cookie is http only.</param>
         /// <param name="secure">Whether the cookie is secure (i.e. HTTPS only).</param>
-        /// <param name="expires">The expiration date of the cookie. Can be <see langword="null" /> if it should never expire.</param>
+        /// <param name="expires">The expiration date of the cookie. Can be <see langword="null" /> if it should expire at the end of the session.</param>
         public NancyCookie(string name, string value, bool httpOnly, bool secure, DateTime? expires)
         {
             this.Name = name;
@@ -80,7 +80,7 @@ namespace Nancy.Cookies
         /// <summary>
         /// When the cookie should expire
         /// </summary>
-        /// <value>A <see cref="DateTime"/> instance containing the date and time when the cookie should expire; otherwise <see langword="null"/> if it should never expire.</value>
+        /// <value>A <see cref="DateTime"/> instance containing the date and time when the cookie should expire; otherwise <see langword="null"/> if it should expire at the end of the session.</value>
         public DateTime? Expires { get; set; }
 
         /// <summary>

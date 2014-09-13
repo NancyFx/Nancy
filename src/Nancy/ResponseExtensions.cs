@@ -58,7 +58,7 @@ namespace Nancy
         /// <param name="response">Response object</param>
         /// <param name="name">The name of the cookie.</param>
         /// <param name="value">The value of the cookie.</param>
-        /// <param name="expires">The expiration date of the cookie. Can be <see langword="null" /> if it should never expire.</param>
+        /// <param name="expires">The expiration date of the cookie. Can be <see langword="null" /> if it should expire at the end of the session.</param>
         /// <returns>The <see cref="Response"/> instance.</returns>
         public static Response WithCookie(this Response response, string name, string value, DateTime? expires)
         {
@@ -71,7 +71,7 @@ namespace Nancy
         /// <param name="response">Response object</param>
         /// <param name="name">The name of the cookie.</param>
         /// <param name="value">The value of the cookie.</param>
-        /// <param name="expires">The expiration date of the cookie. Can be <see langword="null" /> if it should never expire.</param>
+        /// <param name="expires">The expiration date of the cookie. Can be <see langword="null" /> if it should expire at the end of the session.</param>
         /// <param name="domain">The domain of the cookie.</param>
         /// <param name="path">The path of the cookie.</param>
         /// <returns>The <see cref="Response"/> instance.</returns>
