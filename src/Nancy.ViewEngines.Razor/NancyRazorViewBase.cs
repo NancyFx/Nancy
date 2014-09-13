@@ -203,6 +203,12 @@
                     var stringValue = this.GetStringValue(value);
                     var valuePrefix = value.Prefix.Item1;
 
+                    // encode anything that hasn't opted out of it
+                    if (!(value.Value.Item1 is IHtmlString))
+                    {
+                        stringValue = HtmlEncode(stringValue);
+                    }
+
                     if (!string.IsNullOrEmpty(valuePrefix))
                     {
                         attributeBuilder.Append(valuePrefix);

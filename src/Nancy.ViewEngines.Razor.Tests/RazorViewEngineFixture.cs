@@ -279,7 +279,7 @@
             stream.ShouldEqual("<h1>Mr. Jeff likes Music!</h1>", true);
         }
 
-#if !__MonoCS__			
+#if !__MonoCS__
         [Fact]
         public void RenderView_vb_should_use_model_directive_for_strongly_typed_view()
         {
@@ -398,15 +398,15 @@
         [Fact]
         public void Should_be_able_to_render_view_with_layout_and_optional_section_with_default_to_stream()
         {
-            //Given
+            // Given
             var location = FindView("ViewThatUsesLayoutAndOptionalSectionWithDefaults");
             var stream = new MemoryStream();
 
-            //When
+            // When
             var response = this.engine.RenderView(location, null, this.renderContext);
             response.Contents.Invoke(stream);
 
-            //Then
+            // Then
             var output = ReadAll(stream);
             output.ShouldContainInOrder("<h1>SectionWithDefaultsLayout</h1>",
                                         "<div>OptionalSectionDefault</div>",
@@ -416,15 +416,15 @@
         [Fact]
         public void Should_be_able_to_render_view_with_layout_and_optional_section_overriding_the_default_to_stream()
         {
-            //Given
+            // Given
             var location = FindView("ViewThatUsesLayoutAndOptionalSectionOverridingDefaults");
             var stream = new MemoryStream();
 
-            //When
+            // When
             var response = this.engine.RenderView(location, null, this.renderContext);
             response.Contents.Invoke(stream);
 
-            //Then
+            // Then
             var output = ReadAll(stream);
             output.ShouldContainInOrder("<h1>SectionWithDefaultsLayout</h1>",
                                         "<div>OptionalSectionOverride</div>",
@@ -476,7 +476,7 @@
             output.ShouldEqual("<h1>Hi, Nancy!</h1>");
         }
 
-#if !__MonoCS__			
+#if !__MonoCS__
         [Fact]
         public void Should_use_custom_view_base_with_vb_views()
         {
@@ -545,11 +545,11 @@
             var location = FindView("ViewThatUsesAttributeWithCodeInside");
             var stream = new MemoryStream();
 
-            //When
+            // When
             var response = this.engine.RenderView(location, new TestModel { Name = "Bob", Slug = "BobSlug" }, this.renderContext);
             response.Contents.Invoke(stream);
 
-            //Then
+            // Then
             var output = ReadAll(stream);
             output.ShouldContain("<a href=\"BobSlug\">Bob</a>");
         }
@@ -571,11 +571,11 @@
 
             var stream = new MemoryStream();
 
-            //When
+            // When
             var response = this.engine.RenderView(location, null, this.renderContext);
             response.Contents.Invoke(stream);
 
-            //Then
+            // Then
             var output = ReadAll(stream);
             output.ShouldContain("namespace RazorOutput {");
         }
@@ -583,30 +583,67 @@
         [Fact]
         public void Should_render_attributes_with_dynamic_null_inside()
         {
+            // Given
             var location = FindView("ViewThatUsesAttributeWithDynamicNullInside");
             var stream = new MemoryStream();
 
-            //When
+            // When
             var response = this.engine.RenderView(location, null, this.renderContext);
             response.Contents.Invoke(stream);
 
-            //Then
+            // Then
             var output = ReadAll(stream);
             output.ShouldContain("<input value=\"\" />");
         }
 
         [Fact]
+        public void Should_render_attributes_with_HtmlString_inside()
+        {
+            // Given
+            var location = FindView("ViewThatUsesAttributeWithHtmlStringInside");
+            var stream = new MemoryStream();
+            const string PHRASE = "Slugs & bugs are secret spies on gardeners, but <strong>no one</strong> knows who they spy for";
+            const string PHRASE_RESULT = "Slugs &amp; bugs are secret spies on gardeners, but &lt;strong&gt;no one&lt;/strong&gt; knows who they spy for";
+
+            // When
+            var response = this.engine.RenderView(location, PHRASE, this.renderContext);
+            response.Contents.Invoke(stream);
+
+            // Then
+            var output = ReadAll(stream);
+            output.ShouldContain(string.Format("<input value=\"{0}\" />", PHRASE_RESULT));
+        }
+
+        [Fact]
+        public void Should_render_attributes_with_RawHtmlString_inside()
+        {
+            // Given
+            var location = FindView("ViewThatUsesAttributeWithRawHtmlStringInside");
+            var stream = new MemoryStream();
+            const string PHRASE = "Slugs & bugs are secret spies on gardeners, but <strong>no one</strong> knows who they spy for";
+
+            // When
+            var response = this.engine.RenderView(location, PHRASE, this.renderContext);
+            response.Contents.Invoke(stream);
+
+            // Then
+            var output = ReadAll(stream);
+            output.ShouldContain(string.Format("<input value=\"{0}\" />", PHRASE));
+        }
+
+        [Fact]
         public void Should_render_attributes_with_NonEncodedHtmlString_inside()
         {
+            // Given
             var location = FindView("ViewThatUsesAttributeWithNonEncodedHtmlStringInside");
             var stream = new MemoryStream();
-            const string PHRASE = "Slugs are secret spies on gardeners, but no ones who they spy for";
+            const string PHRASE = "Slugs are secret spies on gardeners, but no one knows who they spy for";
 
-            //When
+            // When
             var response = this.engine.RenderView(location, new NonEncodedHtmlString(PHRASE), this.renderContext);
             response.Contents.Invoke(stream);
 
-            //Then
+            // Then
             var output = ReadAll(stream);
             output.ShouldContain(string.Format("<input value=\"{0}\" />", PHRASE));
         }
