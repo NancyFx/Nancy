@@ -10,7 +10,7 @@ namespace Nancy.ViewEngines.Razor.VisualBasic
         public VisualBasicClrTypeResolver()
             : base(VBSymbolType.Identifier, VBSymbolType.Keyword, VBSymbolType.Dot, VBSymbolType.WhiteSpace)
         {
-            
+
         }
 
         protected override TypeNameParserStep ResolveType()
@@ -21,10 +21,10 @@ namespace Nancy.ViewEngines.Razor.VisualBasic
 
             if (this.symbols.Any() && this.symbols.Peek().Type == VBSymbolType.LeftParenthesis)
             {
-                this.symbols.Dequeue();
-
-                if (this.symbols.Peek().Type == VBSymbolType.Keyword && this.symbols.Peek().Keyword == VBKeyword.Of)
+                var next = this.symbols.ElementAt(1);
+                if (next.Type == VBSymbolType.Keyword && next.Keyword == VBKeyword.Of)
                 {
+                    this.symbols.Dequeue();
                     this.symbols.Dequeue();
 
                     while (this.symbols.Peek().Type != VBSymbolType.RightParenthesis)
@@ -36,10 +36,24 @@ namespace Nancy.ViewEngines.Razor.VisualBasic
                             this.symbols.Dequeue();
                         }
                     }
+
+                    this.symbols.Dequeue();
+                }
+            }
+
+            while (this.symbols.Any() && this.symbols.Peek().Type == VBSymbolType.LeftParenthesis)
+            {
+                this.symbols.Dequeue();
+
+                step.ArrayExpression += "[";
+                while (this.symbols.Peek().Type != VBSymbolType.RightParenthesis)
+                {
+                    step.ArrayExpression += this.symbols.Dequeue().Content;
                 }
 
+                step.ArrayExpression += "]";
                 this.symbols.Dequeue();
-            }
+            } 
 
             return step;
         }

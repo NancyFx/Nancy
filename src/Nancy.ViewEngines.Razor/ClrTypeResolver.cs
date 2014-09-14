@@ -14,7 +14,7 @@
     /// </summary>
     /// <typeparam name="TSymbolType">Symbol type enum</typeparam>
     /// <typeparam name="TSymbol">Symbol class</typeparam>
-    internal abstract class ClrTypeResolver<TSymbolType, TSymbol>       
+    internal abstract class ClrTypeResolver<TSymbolType, TSymbol>
         where TSymbol : SymbolBase<TSymbolType>
     {
         private readonly TSymbolType identifier;
@@ -28,7 +28,7 @@
             this.identifier = identifier;
             this.keyword = keyword;
             this.dot = dot;
-            this.WhiteSpace = whiteSpace;           
+            this.WhiteSpace = whiteSpace;
         }
 
         public Type Resolve(List<TSymbol> symbols)
@@ -76,7 +76,7 @@
         }
 
         private Type ResolveTypeByName(string typeName)
-        {           
+        {
             return Type.GetType(typeName)
                    ?? ResolvePrimitiveType(typeName)
                    ?? AppDomainAssemblyTypeScanner.Types.FirstOrDefault(t => t.FullName == typeName)
@@ -89,13 +89,15 @@
         [DebuggerDisplay("{GenericTypeName}`{GenericArguments.Count}")]
         protected class TypeNameParserStep
         {
-            public string GenericTypeName { get; private set; }
+            public string GenericTypeName { get; set; }
             public List<TypeNameParserStep> GenericArguments { get; private set; }
+            public string ArrayExpression { get; set; }
 
             public TypeNameParserStep(string name)
             {
                 this.GenericTypeName = name;
                 this.GenericArguments = new List<TypeNameParserStep>();
+                this.ArrayExpression = "";
             }
 
             public Type Resolve(Func<string, Type> resolveType)
@@ -104,14 +106,25 @@
 
                 var genericType = resolveType(this.GenericTypeName + "`" + effectiveArguments.Length);
 
+                Type resultType = null;
+
                 if (effectiveArguments.Length == 0)
                 {
-                    return resolveType(this.GenericTypeName);
+                    resultType = resolveType(this.GenericTypeName);
+                }              
+                else
+                {
+                    var genericArguments = effectiveArguments.Select(x => x.Resolve(resolveType)).ToArray();
+
+                    resultType = genericType.MakeGenericType(genericArguments);
                 }
 
-                var genericArguments = effectiveArguments.Select(x => x.Resolve(resolveType)).ToArray();
+                if (this.ArrayExpression != "")
+                {
+                    resultType = resolveType(resultType.FullName + this.ArrayExpression);
+                }
 
-                return genericType.MakeGenericType(genericArguments);
+                return resultType;
             }
         }
     }

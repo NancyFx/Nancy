@@ -666,7 +666,14 @@
         [InlineData(typeof(Tuple<string, Tuple<int>>))]
         [InlineData(typeof(Tuple<string, Tuple<int>, int>))]
         [InlineData(typeof(Tuple<string, Tuple<int, string>, Tuple<int>, int>))]
-        [InlineData(typeof(Tuple<string, Tuple<int, string>, Tuple<int>, int, Tuple<string, Tuple<int, int>>>))]        
+        [InlineData(typeof(Tuple<string, Tuple<int, string>, Tuple<int>, int, Tuple<string, Tuple<int, int>>>))]
+        [InlineData(typeof(int[]))]
+        [InlineData(typeof(int[,]))]
+        [InlineData(typeof(int[, , , ,]))]
+        [InlineData(typeof(int[][]))]
+        [InlineData(typeof(int[][, ,][]))]
+        [InlineData(typeof(Tuple<int, string>[][, ,][]))]
+        [InlineData(typeof(Tuple<int, int[][, ,][], string>))]
         public void Should_be_able_to_render_csharp_view_with_generic_model(Type expectedType)
         {
             this.TestGenericView(expectedType, new CSharpCodeProvider(), "model");
@@ -680,7 +687,14 @@
         [InlineData(typeof(Tuple<string, Tuple<int>>))]
         [InlineData(typeof(Tuple<string, Tuple<int>, int>))]
         [InlineData(typeof(Tuple<string, Tuple<int, string>, Tuple<int>, int>))]
-        [InlineData(typeof(Tuple<string, Tuple<int, string>, Tuple<int>, int, Tuple<string, Tuple<int, int>>>))]        
+        [InlineData(typeof(Tuple<string, Tuple<int, string>, Tuple<int>, int, Tuple<string, Tuple<int, int>>>))]
+        [InlineData(typeof(int[]))]
+        [InlineData(typeof(int[,]))]
+        [InlineData(typeof(int[, , , ,]))]
+        [InlineData(typeof(int[][]))]
+        [InlineData(typeof(int[][, ,][]))]
+        [InlineData(typeof(Tuple<int, string>[][, ,][]))]
+        [InlineData(typeof(Tuple<int, int[][, ,][], string>))]
         public void Should_be_able_to_render_vb_view_with_generic_model(Type expectedType)
         {
             this.TestGenericView(expectedType, new VBCodeProvider(), "ModelType");

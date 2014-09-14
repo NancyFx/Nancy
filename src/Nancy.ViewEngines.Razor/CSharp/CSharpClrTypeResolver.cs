@@ -18,7 +18,9 @@ namespace Nancy.ViewEngines.Razor.CSharp
 
             var step = new TypeNameParserStep(identifier);
 
-            if (this.symbols.Any() && this.symbols.Peek().Type == CSharpSymbolType.LessThan)
+            if (!this.symbols.Any()) return step;
+            
+            if (this.symbols.Peek().Type == CSharpSymbolType.LessThan)
             {
                 this.symbols.Dequeue();
 
@@ -32,6 +34,17 @@ namespace Nancy.ViewEngines.Razor.CSharp
                     }
                 }
 
+                this.symbols.Dequeue();
+            }
+            
+            while (this.symbols.Any() && this.symbols.Peek().Type == CSharpSymbolType.LeftBracket)
+            {
+                while (this.symbols.Peek().Type != CSharpSymbolType.RightBracket)
+                {
+                    step.ArrayExpression += this.symbols.Dequeue().Content;
+                }
+
+                step.ArrayExpression += "]";
                 this.symbols.Dequeue();
             }
 
