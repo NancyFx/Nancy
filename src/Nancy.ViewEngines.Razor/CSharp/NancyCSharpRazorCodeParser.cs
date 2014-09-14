@@ -43,14 +43,7 @@
 
                 if (modelType == null)
                 {
-                    //TODO: GetAssembliesInDirectories().Aggregate(
-                    throw new NotSupportedException(string.Format(
-                                                "Unable to discover CLR Type for model by the name of {0}.\n\nTry using a fully qualified type name and ensure that the assembly is added to the configuration file.\n\nAppDomain Assemblies:\n\t{1}.\n\nCurrent ADATS assemblies:\n\t{2}.\n\nAssemblies in directories\n\t{3}",
-                                                s,
-                                                AppDomain.CurrentDomain.GetAssemblies().Select(a => a.FullName).Aggregate((n1, n2) => n1 + "\n\t" + n2),
-                                                AppDomainAssemblyTypeScanner.Assemblies.Select(a => a.FullName).Aggregate((n1, n2) => n1 + "\n\t" + n2)
-                                                //GetAssembliesInDirectories().Aggregate((n1, n2) => n1 + "\n\t" + n2))
-                                                ));
+                    CodeParserHelper.ThrowTypeNotFound(s);
                 }
 
                 return new CSharpModelCodeGenerator(modelType, modelType.FullName);

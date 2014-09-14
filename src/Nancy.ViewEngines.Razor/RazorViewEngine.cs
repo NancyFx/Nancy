@@ -4,14 +4,11 @@
     using System.CodeDom;
     using System.CodeDom.Compiler;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Reflection;
     using System.Text;
-    using System.Text.RegularExpressions;
     using System.Web.Razor;
-    using System.Web.Razor.Parser.SyntaxTree;
 
     using Microsoft.CSharp;
 
@@ -354,162 +351,6 @@
                 }
             }
             return templateLines.ToArray();
-        }
-
-        /// <summary>
-        /// Tries to find the model type from the document
-        /// So documents using @model will actually be able to reference the model type
-        /// </summary>
-        /// <param name="block">The document</param>
-        /// <param name="passedModelType">The model type from the base class</param>
-        /// <param name="modelCodeGenerator">The model code generator</param>
-        /// <returns>The model type, if discovered, or the passedModelType if not</returns>
-        private static Type FindModelType(Block block, Type passedModelType, Type modelCodeGenerator)
-        {
-            var modelBlock =
-                block.Flatten().FirstOrDefault(b => b.CodeGenerator.GetType() == modelCodeGenerator);
-
-            if (modelBlock == null)
-            {
-                return passedModelType ?? typeof(object);
-            }
-
-            if (string.IsNullOrEmpty(modelBlock.Content))
-            {
-                return passedModelType ?? typeof(object);
-            }
-
-            var discoveredModelType = modelBlock.Content.Trim();
-
-            var modelType = ResolveGenericType(discoveredModelType);
-
-            if (modelType != null)
-            {
-                return modelType;
-            }
-
-            throw new NotSupportedException(string.Format(
-                                                "Unable to discover CLR Type for model by the name of {0}.\n\nTry using a fully qualified type name and ensure that the assembly is added to the configuration file.\n\nAppDomain Assemblies:\n\t{1}.\n\nCurrent ADATS assemblies:\n\t{2}.\n\nAssemblies in directories\n\t{3}",
-                                                discoveredModelType,
-                                                AppDomain.CurrentDomain.GetAssemblies().Select(a => a.FullName).Aggregate((n1, n2) => n1 + "\n\t" + n2),
-                                                AppDomainAssemblyTypeScanner.Assemblies.Select(a => a.FullName).Aggregate((n1, n2) => n1 + "\n\t" + n2),
-                                                GetAssembliesInDirectories().Aggregate((n1, n2) => n1 + "\n\t" + n2)));
-        }
-
-        private static Type ResolveTypeByName(string typeName)
-        {
-            var csharpPrimitives = new Dictionary<string, Type>
-            {
-                {"string", typeof (String)},
-                {"int", typeof (int)}
-            };
-
-            return Type.GetType(typeName)
-                   ?? (csharpPrimitives.ContainsKey(typeName) ? csharpPrimitives[typeName] : null)
-                   ?? AppDomainAssemblyTypeScanner.Types.FirstOrDefault(t => t.FullName == typeName)
-                   ?? AppDomainAssemblyTypeScanner.Types.FirstOrDefault(t => t.Name == typeName)
-                ;
-        }
-
-        public static Type ResolveGenericType(string type)
-        {
-            var stack = new Stack<TypeNameParserStep>();
-
-            var elements = Regex.Split(type, @"([<>,])")
-                .Where(x => !string.IsNullOrWhiteSpace(x))
-                .Select(x => x.Trim()).ToArray();
-
-            if (elements.Length == 1)
-            {
-                return ResolveTypeByName(elements[0]);
-            }
-
-            foreach (var element in elements)
-            {
-                if (element == "<")
-                {
-                    // stack tip is generic type
-                }
-                else if (element == ">")
-                {
-                    // finished all arguments for generic type on stack tip                   
-
-                    var argument = stack.Pop();
-                    stack.Peek().GenericArguments.Add(argument);
-                }
-                else if (element == ",")
-                {
-                    var argument = stack.Pop();
-                    stack.Peek().GenericArguments.Add(argument);
-                }
-                else if (element == "")
-                {
-                }
-                else
-                {
-                    stack.Push(new TypeNameParserStep(element));
-                }
-
-            }
-            return stack.Single().Resolve();
-        }
-
-        [DebuggerDisplay("{GenericTypeName}`{GenericArguments.Count}")]
-        private class TypeNameParserStep
-        {
-            public string GenericTypeName { get; private set; }
-            public List<TypeNameParserStep> GenericArguments { get; private set; }
-
-            public TypeNameParserStep(string name)
-            {
-                this.GenericTypeName = name;
-                this.GenericArguments = new List<TypeNameParserStep>();
-            }
-
-            public Type Resolve()
-            {
-                var effectiveArguments = this.GenericArguments.Where(x => x.GenericTypeName != string.Empty).ToArray();
-
-                var genericType = ResolveTypeByName(this.GenericTypeName + "`" + effectiveArguments.Length);
-
-                if (effectiveArguments.Length == 0)
-                {
-                    return ResolveTypeByName(this.GenericTypeName);
-                }
-
-                var genericArguments = effectiveArguments.Select(x => x.Resolve()).ToArray();
-
-                return genericType.MakeGenericType(genericArguments);
-            }
-        }
-
-        private static IEnumerable<String> GetAssembliesInDirectories()
-        {
-            return GetAssemblyDirectories().SelectMany(d => Directory.GetFiles(d, "*.dll"));
-        }
-
-        /// <summary>
-        /// Returns the directories containing dll files. It uses the default convention as stated by microsoft.
-        /// </summary>
-        /// <see cref="http://msdn.microsoft.com/en-us/library/system.appdomainsetup.privatebinpathprobe.aspx"/>
-        private static IEnumerable<string> GetAssemblyDirectories()
-        {
-            var privateBinPathDirectories = AppDomain.CurrentDomain.SetupInformation.PrivateBinPath == null
-                                                ? new string[] { }
-                                                : AppDomain.CurrentDomain.SetupInformation.PrivateBinPath.Split(';');
-
-            foreach (var privateBinPathDirectory in privateBinPathDirectories)
-            {
-                if (!string.IsNullOrWhiteSpace(privateBinPathDirectory))
-                {
-                    yield return privateBinPathDirectory;
-                }
-            }
-
-            if (AppDomain.CurrentDomain.SetupInformation.PrivateBinPathProbe == null)
-            {
-                yield return AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
-            }
         }
 
         private static void AddModelNamespace(GeneratorResults razorResult, Type modelType)

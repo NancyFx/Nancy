@@ -9,6 +9,11 @@
 
     using Nancy.Bootstrapper;
 
+    /// <summary>
+    /// Converts language-specific type name into CRL Type
+    /// </summary>
+    /// <typeparam name="TSymbolType">Symbol type enum</typeparam>
+    /// <typeparam name="TSymbol">Symbol class</typeparam>
     internal abstract class ClrTypeResolver<TSymbolType, TSymbol>       
         where TSymbol : SymbolBase<TSymbolType>
     {
@@ -108,102 +113,6 @@
 
                 return genericType.MakeGenericType(genericArguments);
             }
-        }
-    }
-
-    internal class CSharpClrTypeResolver : ClrTypeResolver<CSharpSymbolType, CSharpSymbol>
-    {        
-        public CSharpClrTypeResolver()
-            :base(CSharpSymbolType.Identifier, CSharpSymbolType.Keyword, CSharpSymbolType.Dot, CSharpSymbolType.WhiteSpace)
-        {            
-        }
-
-        protected override TypeNameParserStep ResolveType()
-        {
-            var identifier = this.PopFullIdentifier();
-
-            var step = new TypeNameParserStep(identifier);
-
-            if (this.symbols.Any() && this.symbols.Peek().Type == CSharpSymbolType.LessThan)
-            {
-                this.symbols.Dequeue();
-
-                while (this.symbols.Peek().Type != CSharpSymbolType.GreaterThan)
-                {
-                    step.GenericArguments.Add(this.ResolveType());
-
-                    while (this.symbols.Peek().Type.Equals(this.WhiteSpace) || this.symbols.Peek().Type == CSharpSymbolType.Comma)
-                    {
-                        this.symbols.Dequeue();
-                    }
-                }
-
-                this.symbols.Dequeue();
-            }
-
-            return step;
-        }
-
-        protected override Type ResolvePrimitiveType(string typeName)
-        {
-            var primitives = new Dictionary<string, Type>
-            {
-                {"string", typeof (String)},
-                {"int", typeof (int)}
-            };
-
-            return (primitives.ContainsKey(typeName) ? primitives[typeName] : null);
-        }
-    }
-
-    internal class VisualBasicClrTypeResolver : ClrTypeResolver<VBSymbolType, VBSymbol>
-    {
-        public VisualBasicClrTypeResolver()
-            : base(VBSymbolType.Identifier, VBSymbolType.Keyword, VBSymbolType.Dot, VBSymbolType.WhiteSpace)
-        {
-            
-        }
-
-        protected override TypeNameParserStep ResolveType()
-        {
-            var identifier = this.PopFullIdentifier();
-
-            var step = new TypeNameParserStep(identifier);
-
-            if (this.symbols.Any() && this.symbols.Peek().Type == VBSymbolType.LeftParenthesis)
-            {
-                this.symbols.Dequeue();
-
-                if (this.symbols.Peek().Type == VBSymbolType.Keyword && this.symbols.Peek().Keyword == VBKeyword.Of)
-                {
-                    this.symbols.Dequeue();
-
-                    while (this.symbols.Peek().Type != VBSymbolType.RightParenthesis)
-                    {
-                        step.GenericArguments.Add(this.ResolveType());
-
-                        while (this.symbols.Peek().Type.Equals(this.WhiteSpace) || this.symbols.Peek().Type == VBSymbolType.Comma)
-                        {
-                            this.symbols.Dequeue();
-                        }
-                    }
-                }
-
-                this.symbols.Dequeue();
-            }
-
-            return step;
-        }
-
-        protected override Type ResolvePrimitiveType(string typeName)
-        {
-            var primitives = new Dictionary<string, Type>
-            {
-                {"String", typeof (String)},
-                {"Integer", typeof (int)}
-            };
-
-            return (primitives.ContainsKey(typeName) ? primitives[typeName] : null);
         }
     }
 }
