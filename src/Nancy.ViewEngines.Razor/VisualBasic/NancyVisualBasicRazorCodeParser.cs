@@ -67,7 +67,12 @@
 
             var baseType = string.Concat(Span.Symbols.Select(s => s.Content)).Trim();
 
-            var modelType = this.clrTypeResolver.Resolve(this.Language.TokenizeString(baseType).ToList());
+            var modelType = this.clrTypeResolver.Resolve(this.Language.TokenizeString(baseType).ToList());           
+
+            if (modelType == null)
+            {
+                CodeParserHelper.ThrowTypeNotFound(baseType);
+            }
 
             this.Span.CodeGenerator = new VisualBasicModelCodeGenerator(modelType);
 

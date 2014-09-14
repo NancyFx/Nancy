@@ -62,8 +62,21 @@ namespace Nancy.ViewEngines.Razor.VisualBasic
         {
             var primitives = new Dictionary<string, Type>
             {
-                {"String", typeof (String)},
-                {"Integer", typeof (int)}
+                {"String", typeof (string)},
+                {"Integer", typeof (int)},
+                {"UInteger", typeof (uint)},
+                {"Boolean", typeof (bool)},
+                {"Byte", typeof (byte)},
+                {"Char", typeof (char)},
+                {"Decimal", typeof (decimal)},
+                {"Double", typeof (double)},
+                {"Short", typeof (Int16)},
+                {"UShort", typeof (UInt16)},
+                {"Long", typeof (Int64)},
+                {"ULong", typeof (UInt64)},
+                {"Object", typeof (object)},
+                {"SByte", typeof (SByte)},
+                {"Single", typeof (Single)},                
             };
 
             return (primitives.ContainsKey(typeName) ? primitives[typeName] : null);

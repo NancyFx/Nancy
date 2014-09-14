@@ -6,10 +6,10 @@ namespace Nancy.ViewEngines.Razor.CSharp
     using System.Web.Razor.Tokenizer.Symbols;
 
     internal class CSharpClrTypeResolver : ClrTypeResolver<CSharpSymbolType, CSharpSymbol>
-    {        
+    {
         public CSharpClrTypeResolver()
-            :base(CSharpSymbolType.Identifier, CSharpSymbolType.Keyword, CSharpSymbolType.Dot, CSharpSymbolType.WhiteSpace)
-        {            
+            : base(CSharpSymbolType.Identifier, CSharpSymbolType.Keyword, CSharpSymbolType.Dot, CSharpSymbolType.WhiteSpace)
+        {
         }
 
         protected override TypeNameParserStep ResolveType()
@@ -19,7 +19,7 @@ namespace Nancy.ViewEngines.Razor.CSharp
             var step = new TypeNameParserStep(identifier);
 
             if (!this.symbols.Any()) return step;
-            
+
             if (this.symbols.Peek().Type == CSharpSymbolType.LessThan)
             {
                 this.symbols.Dequeue();
@@ -36,7 +36,7 @@ namespace Nancy.ViewEngines.Razor.CSharp
 
                 this.symbols.Dequeue();
             }
-            
+
             while (this.symbols.Any() && this.symbols.Peek().Type == CSharpSymbolType.LeftBracket)
             {
                 while (this.symbols.Peek().Type != CSharpSymbolType.RightBracket)
@@ -55,8 +55,21 @@ namespace Nancy.ViewEngines.Razor.CSharp
         {
             var primitives = new Dictionary<string, Type>
             {
-                {"string", typeof (String)},
-                {"int", typeof (int)}
+                {"string", typeof (string)},
+                {"byte", typeof (byte)},
+                {"sbyte", typeof (sbyte)},
+                {"short", typeof (short)},
+                {"ushort", typeof (ushort)},
+                {"int", typeof (int)},
+                {"uint", typeof (uint)},
+                {"long", typeof (long)},
+                {"ulong", typeof (ulong)},
+                {"float", typeof (float)},
+                {"double", typeof (double)},
+                {"decimal", typeof (decimal)},
+                {"char", typeof (char)},
+                {"bool", typeof (bool)},
+                {"object", typeof (object)},
             };
 
             return (primitives.ContainsKey(typeName) ? primitives[typeName] : null);
