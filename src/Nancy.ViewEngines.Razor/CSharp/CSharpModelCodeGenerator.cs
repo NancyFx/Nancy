@@ -8,8 +8,8 @@ namespace Nancy.ViewEngines.Razor.CSharp
     {
         private readonly Type modelType;
 
-        public CSharpModelCodeGenerator(Type modelType)
-            : base(modelType.FullName)
+        public CSharpModelCodeGenerator(Type modelType, string typeFullname)
+            : base(typeFullname)
         {
             this.modelType = modelType;
         }

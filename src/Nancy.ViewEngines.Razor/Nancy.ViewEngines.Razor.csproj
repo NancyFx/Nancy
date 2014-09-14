@@ -112,7 +112,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AttributeValue.cs" />
-    <Compile Include="CodeDomExtensions.cs" />
+    <Compile Include="ClrTypeResolver.cs" />
     <Compile Include="CSharp\CSharpModelCodeGenerator.cs" />
     <Compile Include="CSharp\CSharpRazorViewRenderer.cs" />
     <Compile Include="DefaultRazorConfiguration.cs" />

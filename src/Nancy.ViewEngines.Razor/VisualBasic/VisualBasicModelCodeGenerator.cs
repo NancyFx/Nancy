@@ -6,16 +6,21 @@
 
     public class VisualBasicModelCodeGenerator : SetBaseTypeCodeGenerator
     {
-        public VisualBasicModelCodeGenerator(string baseType)
-            : base(baseType)
+        private readonly Type modelType;
+
+        public VisualBasicModelCodeGenerator(Type modelType)
+            : base(modelType.FullName)
         {
+            this.modelType = modelType;
         }
 
         protected override string ResolveType(CodeGeneratorContext context, string baseType)
         {
+            context.GeneratedClass.UserData["ModelType"] = modelType;
+
             return String.Format(
                 CultureInfo.InvariantCulture,
-                "{0}(Of {1})",
+                "{0}`1[{1}]",
                 context.Host.DefaultBaseClass,
                 baseType);
         }

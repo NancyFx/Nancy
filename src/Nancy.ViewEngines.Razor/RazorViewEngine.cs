@@ -210,10 +210,10 @@
         {
             var outputAssemblyName =
                 Path.Combine(Path.GetTempPath(), String.Format("Temp_{0}.dll", Guid.NewGuid().ToString("N")));
-            
+
             var modelType = (Type)razorResult.GeneratedCode.Namespaces[0].Types[0].UserData["ModelType"]
                             ?? passedModelType
-                            ?? typeof (object);            
+                            ?? typeof(object);
 
             var assemblies = new List<string>
             {
@@ -398,7 +398,14 @@
 
         private static Type ResolveTypeByName(string typeName)
         {
+            var csharpPrimitives = new Dictionary<string, Type>
+            {
+                {"string", typeof (String)},
+                {"int", typeof (int)}
+            };
+
             return Type.GetType(typeName)
+                   ?? (csharpPrimitives.ContainsKey(typeName) ? csharpPrimitives[typeName] : null)
                    ?? AppDomainAssemblyTypeScanner.Types.FirstOrDefault(t => t.FullName == typeName)
                    ?? AppDomainAssemblyTypeScanner.Types.FirstOrDefault(t => t.Name == typeName)
                 ;
@@ -416,7 +423,7 @@
             {
                 return ResolveTypeByName(elements[0]);
             }
-            
+
             foreach (var element in elements)
             {
                 if (element == "<")
@@ -428,7 +435,7 @@
                     // finished all arguments for generic type on stack tip                   
 
                     var argument = stack.Pop();
-                    stack.Peek().GenericArguments.Add(argument);                   
+                    stack.Peek().GenericArguments.Add(argument);
                 }
                 else if (element == ",")
                 {
@@ -439,12 +446,12 @@
                 {
                 }
                 else
-                {                    
+                {
                     stack.Push(new TypeNameParserStep(element));
                 }
 
             }
-            return stack.Single().Resolve();            
+            return stack.Single().Resolve();
         }
 
         [DebuggerDisplay("{GenericTypeName}`{GenericArguments.Count}")]

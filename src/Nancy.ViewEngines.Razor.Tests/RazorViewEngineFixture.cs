@@ -1,6 +1,8 @@
 ﻿namespace Nancy.ViewEngines.Razor.Tests
 {
     using System;
+    using System.CodeDom;
+    using System.CodeDom.Compiler;
     using System.Collections;
     using System.Collections.Generic;
     using System.Dynamic;
@@ -13,12 +15,16 @@
 
     using FakeItEasy;
 
+    using Microsoft.CSharp;
+    using Microsoft.VisualBasic;
+
     using Nancy.Bootstrapper;
     using Nancy.Tests;
     using Nancy.ViewEngines.Razor.Tests.Models;
 
     using Xunit;
     using Xunit.Extensions;
+    using Xunit.Sdk;
 
     public class RazorViewEngineFixture
     {
@@ -652,21 +658,78 @@
             output.ShouldContain(string.Format("<input value=\"{0}\" />", PHRASE));
         }
 
-        [Theory]        
-        //[InlineData("System.String", typeof(string))]        
-        //[InlineData("System.Tuple<System.String>", typeof(Tuple<string>))]        
-        //[InlineData("System.Tuple<System.Tuple<System.String>>", typeof(Tuple<Tuple<string>>))]        
-        //[InlineData("System.Tuple<System.String, System.Int32>", typeof(Tuple<string, int>))]        
-        //[InlineData("System.Tuple<System.String, System.Tuple<System.Int32>>", typeof(Tuple<string, Tuple<int>>))]        
-        //[InlineData("System.Tuple<System.String, System.Tuple<System.Int32>, System.Int32>", typeof(Tuple<string, Tuple<int>, int>))]
-        [InlineData("System.Tuple<System.String, System.Tuple<System.Int32, System.String>, System.Tuple<System.Int32>, System.Int32>", typeof(Tuple<string, Tuple<int, string>, Tuple<int>, int>))]        
-        public void Should_be_able_to_render_view_with_generic_model(string modelType, Type expectedType)
-        {            
+        [Theory]
+        [InlineData(typeof(string))]
+        [InlineData(typeof(Tuple<string>))]
+        [InlineData(typeof(Tuple<Tuple<string>>))]
+        [InlineData(typeof(Tuple<string, int>))]
+        [InlineData(typeof(Tuple<string, Tuple<int>>))]
+        [InlineData(typeof(Tuple<string, Tuple<int>, int>))]
+        [InlineData(typeof(Tuple<string, Tuple<int, string>, Tuple<int>, int>))]
+        [InlineData(typeof(Tuple<string, Tuple<int, string>, Tuple<int>, int, Tuple<string, Tuple<int, int>>>))]
+        public void Should_be_able_to_render_csharp_view_with_generic_model(Type expectedType)
+        {
+            this.TestGenericView(expectedType, new CSharpCodeProvider(), "model");
+        }
+
+        [Theory]
+        [InlineData(typeof(string))]
+        [InlineData(typeof(Tuple<string>))]
+        [InlineData(typeof(Tuple<Tuple<string>>))]
+        [InlineData(typeof(Tuple<string, int>))]
+        [InlineData(typeof(Tuple<string, Tuple<int>>))]
+        [InlineData(typeof(Tuple<string, Tuple<int>, int>))]
+        [InlineData(typeof(Tuple<string, Tuple<int, string>, Tuple<int>, int>))]
+        [InlineData(typeof(Tuple<string, Tuple<int, string>, Tuple<int>, int, Tuple<string, Tuple<int, int>>>))]
+        public void Should_be_able_to_render_vb_view_with_generic_model(Type expectedType)
+        {
+            this.TestGenericView(expectedType, new VBCodeProvider(), "ModelType");
+        }
+
+        private void TestGenericView(Type expectedType, CodeDomProvider provider, string modelDirective)
+        {
+            var codeTypeRef = new CodeTypeReference(expectedType);
+            var modelType = provider.GetTypeOutput(codeTypeRef);
+
+            var modelTypeExpression = new CodeFieldReferenceExpression
+                (
+                new CodeArrayIndexerExpression
+                    (
+                    new CodeMethodInvokeExpression
+                        (
+                        new CodeFieldReferenceExpression
+                            (
+                            new CodeMethodInvokeExpression
+                                (
+                                new CodeThisReferenceExpression(),
+                                "GetType"
+                                ),
+                            "BaseType"
+                            ),
+                        "GetGenericArguments"
+                        ),
+                    new CodePrimitiveExpression(0)
+                    ),
+                "FullName"
+                );
+
+            string modelTypeCode;
+            using (var sw = new StringWriter())
+            {
+                provider.GenerateCodeFromExpression(modelTypeExpression, sw, new CodeGeneratorOptions());
+                modelTypeCode = sw.ToString();
+            }
+
+            //modelTypeCode = "Me.GetType.FullName";
+
+            var view = "@" + modelDirective + " " + modelType + "\n\n@" + modelTypeCode;
+
+            //this.GetType().BaseType.GetGenericArguments()[0].FullName
             var location = new ViewLocationResult(
                 string.Empty,
                 string.Empty,
-                "cshtml",
-                () => new StringReader("@model " + modelType + "\n\n@this.GetType().BaseType.GetGenericArguments()[0].FullName")
+                provider.FileExtension + "html",
+                () => new StringReader(view)
                 );
 
             var stream = new MemoryStream();
@@ -676,8 +739,8 @@
             response.Contents.Invoke(stream);
 
             // Then
-            stream.ShouldEqual(expectedType.FullName);
-        }       
+            stream.ShouldEqual(expectedType.FullName, true);
+        }
 
         private static string ReadAll(Stream stream)
         {
