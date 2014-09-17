@@ -55,7 +55,7 @@
                 var currentSegment = segments[currentIndex];
 
                 TrieNode matchingChild;
-                if (this.Children.TryGetValue(currentSegment, out matchingChild))
+                if (this.Children.TryGetValue(currentSegment.ToLowerInvariant(), out matchingChild))
                 {
                     var parameters = new Dictionary<string, object>(capturedParameters);
                     parameters[this.parameterName] = sb.ToString();
