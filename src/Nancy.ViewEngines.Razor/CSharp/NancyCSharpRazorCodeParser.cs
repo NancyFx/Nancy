@@ -46,7 +46,7 @@
                     CodeParserHelper.ThrowTypeNotFound(s);
                 }
 
-                return new CSharpModelCodeGenerator(modelType, modelType.FullName);
+                return new ModelCodeGenerator(modelType, modelType.FullName);
             });
 
             if (this.modelStatementFound)

@@ -74,7 +74,7 @@
                 CodeParserHelper.ThrowTypeNotFound(baseType);
             }
 
-            this.Span.CodeGenerator = new VisualBasicModelCodeGenerator(modelType);
+            this.Span.CodeGenerator = new ModelCodeGenerator(modelType, modelType.FullName);
 
             this.CheckForInheritsAndModelStatements();
             

@@ -693,6 +693,7 @@
             this.TestGenericView(expectedType, new CSharpCodeProvider(), "model");
         }
 
+#if !__MonoCS__
         [Theory]
         [InlineData(typeof(string))]
         [InlineData(typeof(byte))]
@@ -727,6 +728,7 @@
         {
             this.TestGenericView(expectedType, new VBCodeProvider(), "ModelType");
         }
+#endif
 
         private void TestGenericView(Type expectedType, CodeDomProvider provider, string modelDirective)
         {

@@ -115,7 +115,6 @@
     <Compile Include="ClrTypeResolver.cs" />
     <Compile Include="CodeParserHelper.cs" />
     <Compile Include="CSharp\CSharpClrTypeResolver.cs" />
-    <Compile Include="CSharp\CSharpModelCodeGenerator.cs" />
     <Compile Include="CSharp\CSharpRazorViewRenderer.cs" />
     <Compile Include="DefaultRazorConfiguration.cs" />
     <Compile Include="HelperResult.cs" />
@@ -126,6 +125,7 @@
     <Compile Include="IRazorConfiguration.cs" />
     <Compile Include="IRazorViewRenderer.cs" />
     <Compile Include="CSharp\NancyCSharpRazorCodeParser.cs" />
+    <Compile Include="ModelCodeGenerator.cs" />
     <Compile Include="NancyRazorEngineHost.cs" />
     <Compile Include="NancyRazorErrorView.cs" />
     <Compile Include="NancyRazorViewBase.cs" />
@@ -136,7 +136,6 @@
     <Compile Include="UrlHelpers.cs" />
     <Compile Include="VisualBasic\NancyVisualBasicRazorCodeParser.cs" />
     <Compile Include="VisualBasic\VisualBasicClrTypeResolver.cs" />
-    <Compile Include="VisualBasic\VisualBasicModelCodeGenerator.cs" />
     <Compile Include="VisualBasic\VisualBasicRazorViewRenderer.cs" />
     <Compile Include="EncodedHtmlString.cs" />
   </ItemGroup>
