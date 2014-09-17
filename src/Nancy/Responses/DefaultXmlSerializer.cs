@@ -5,6 +5,8 @@
     using System.IO;
     using System.Xml.Serialization;
 
+    using Nancy.Xml;
+
     public class DefaultXmlSerializer : ISerializer
     {
         /// <summary>
@@ -36,7 +38,15 @@
         public void Serialize<TModel>(string contentType, TModel model, Stream outputStream)
         {
             var serializer = new XmlSerializer(typeof(TModel));
-            serializer.Serialize(outputStream, model);
+
+            if (XmlSettings.EncodingEnabled)
+            {
+                serializer.Serialize(new StreamWriter(outputStream, XmlSettings.DefaultEncoding), model);
+            }
+            else
+            {
+                serializer.Serialize(outputStream, model);
+            }
         }
 
         private static bool IsXmlType(string contentType)
