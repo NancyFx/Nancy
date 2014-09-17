@@ -96,7 +96,7 @@ namespace Nancy.Routing.Trie.Nodes
             if (!this.Children.TryGetValue(segments[currentIndex], out child))
             {
                 child = this.nodeFactory.GetNodeForSegment(this, segments[currentIndex]);
-                this.Children.Add(segments[currentIndex], child);
+                this.Children.Add(segments[currentIndex].ToLowerInvariant(), child);
             }
 
             child.Add(segments, currentIndex, currentScore + this.Score, nodeCount, moduleType, routeIndex, routeDescription);
