@@ -2,6 +2,7 @@
 {
     using Nancy.Testing;
     using Xunit;
+    using Xunit.Extensions;
 
     public class DefaultRouteResolverFixture
     {
@@ -32,48 +33,58 @@
             result.Body.AsString().ShouldEqual("PostRoot");
         }
 
-        [Fact]
-        public void Should_resolve_single_literal()
+        [Theory]
+        [InlineData("/foo")]
+        [InlineData("/FOO")]
+        public void Should_resolve_single_literal(string path)
         {
             //Given, When
-            var result = this.browser.Get("/foo");
+            var result = this.browser.Get(path);
 
             //Then
             result.Body.AsString().ShouldEqual("SingleLiteral");
         }
 
-        [Fact]
-        public void Should_resolve_multi_literal()
+        [Theory]
+        [InlineData("/foo/bar/baz")]
+        [InlineData("/FOO/BAR/BAZ")]
+        public void Should_resolve_multi_literal(string path)
         {
             //Given, When
-            var result = this.browser.Get("/foo/bar/baz");
+            var result = this.browser.Get(path);
 
             //Then
             result.Body.AsString().ShouldEqual("MultipleLiteral");
         }
 
-        [Fact]
-        public void Should_resolve_single_capture()
+        [Theory]
+        [InlineData("/foo/testing/plop", "testing")]
+        [InlineData("/FOO/TESTING/PLOP", "TESTING")]
+        public void Should_resolve_single_capture(string path, string expected)
         {
             //Given, When
-            var result = this.browser.Get("/foo/testing/plop");
+            var result = this.browser.Get(path);
 
             //Then
-            result.Body.AsString().ShouldEqual("Captured testing");
+            result.Body.AsString().ShouldEqual("Captured " + expected);
         }
 
-        [Fact]
-        public void Should_resolve_optional_capture_with_optional_specified()
+        [Theory]
+        [InlineData("/moo/hoo/moo", "hoo")]
+        [InlineData("/MOO/HOO/MOO", "HOO")]
+        public void Should_resolve_optional_capture_with_optional_specified(string path, string expected)
         {
             //Given, When
-            var result = this.browser.Get("/moo/hoo/moo");
+            var result = this.browser.Get(path);
 
             //Then
-            result.Body.AsString().ShouldEqual("OptionalCapture hoo");
+            result.Body.AsString().ShouldEqual("OptionalCapture " + expected);
         }
 
-        [Fact]
-        public void Should_resolve_optional_capture_with_optional_not_specified()
+        [Theory]
+        [InlineData("/moo/moo")]
+        [InlineData("/moo/moo")]
+        public void Should_resolve_optional_capture_with_optional_not_specified(string path)
         {
             //Given, When
             var result = this.browser.Get("/moo/moo");
@@ -82,84 +93,100 @@
             result.Body.AsString().ShouldEqual("OptionalCapture default");
         }
 
-        [Fact]
-        public void Should_resolve_optional_capture_with_default_with_optional_specified()
+        [Theory]
+        [InlineData("/boo/badger/laa", "badger")]
+        [InlineData("/BOO/BADGER/LAA", "BADGER")]
+        public void Should_resolve_optional_capture_with_default_with_optional_specified(string path, string expected)
         {
             //Given, When
-            var result = this.browser.Get("/boo/badger/laa");
+            var result = this.browser.Get(path);
 
             //Then
-            result.Body.AsString().ShouldEqual("OptionalCaptureWithDefault badger");
+            result.Body.AsString().ShouldEqual("OptionalCaptureWithDefault " + expected);
         }
 
-        [Fact]
-        public void Should_resolve_optional_capture_with_default_with_optional_not_specified()
+        [Theory]
+        [InlineData("/boo/laa")]
+        [InlineData("/BOO/LAA")]
+        public void Should_resolve_optional_capture_with_default_with_optional_not_specified(string path)
         {
             //Given, When
-            var result = this.browser.Get("/boo/laa");
+            var result = this.browser.Get(path);
 
             //Then
             result.Body.AsString().ShouldEqual("OptionalCaptureWithDefault test");
         }
 
-        [Fact]
-        public void Should_capture_greedy_on_end()
+        [Theory]
+        [InlineData("/bleh/this/is/some/stuff", "this/is/some/stuff")]
+        [InlineData("/BLEH/THIS/IS/SOME/STUFF", "THIS/IS/SOME/STUFF")]
+        public void Should_capture_greedy_on_end(string path, string expected)
         {
             //Given, When
-            var result = this.browser.Get("/bleh/this/is/some/stuff");
+            var result = this.browser.Get(path);
 
             //Then
-            result.Body.AsString().ShouldEqual("GreedyOnEnd this/is/some/stuff");
+            result.Body.AsString().ShouldEqual("GreedyOnEnd " + expected);
         }
 
-        [Fact]
-        public void Should_capture_greedy_in_middle()
+        [Theory]
+        [InlineData("/bleh/this/is/some/stuff/bar", "this/is/some/stuff")]
+        [InlineData("/BLEH/THIS/IS/SOME/STUFF/BAR", "THIS/IS/SOME/STUFF")]
+        public void Should_capture_greedy_in_middle(string path, string expected)
         {
             //Given, When
-            var result = this.browser.Get("/bleh/this/is/some/stuff/bar");
+            var result = this.browser.Get(path);
 
             //Then
-            result.Body.AsString().ShouldEqual("GreedyInMiddle this/is/some/stuff");
+            result.Body.AsString().ShouldEqual("GreedyInMiddle " + expected);
         }
 
-        [Fact]
-        public void Should_capture_greedy_and_normal_capture()
+        [Theory]
+        [InlineData("/greedy/this/is/some/stuff/badger/blah", "this/is/some/stuff blah")]
+        [InlineData("/GREEDY/THIS/IS/SOME/STUFF/BADGER/BLAH", "THIS/IS/SOME/STUFF BLAH")]
+        public void Should_capture_greedy_and_normal_capture(string path, string expected)
         {
             //Given, When
-            var result = this.browser.Get("/greedy/this/is/some/stuff/badger/blah");
+            var result = this.browser.Get(path);
 
             //Then
-            result.Body.AsString().ShouldEqual("GreedyAndCapture this/is/some/stuff blah");
+            result.Body.AsString().ShouldEqual("GreedyAndCapture " + expected);
         }
 
-        [Fact]
-        public void Should_capture_node_with_multiple_parameters()
+        [Theory]
+        [InlineData("/multipleparameters/file.extension", "file.extension")]
+        [InlineData("/MULTIPLEPARAMETERS/FILE.EXTENSION", "FILE.EXTENSION")]
+        public void Should_capture_node_with_multiple_parameters(string path, string expected)
         {
             //Given, When
-            var result = this.browser.Get("/multipleparameters/file.extension");
+            var result = this.browser.Get(path);
 
             //Then
-            result.Body.AsString().ShouldEqual("Multiple parameters file.extension");
+            result.Body.AsString().ShouldEqual("Multiple parameters " + expected);
         }
 
-        [Fact] 
-        public void Should_capture_node_with_literal()
+        [Theory]
+        [InlineData("/capturenodewithliteral/testing.html", "testing")]
+        [InlineData("/CAPTURENODEWITHLITERAL/TESTING.HTML", "TESTING")]
+        public void Should_capture_node_with_literal(string path, string expected)
         {
             //Given, When
-            var result = this.browser.Get("/capturenodewithliteral/file.html");
+            var result = this.browser.Get(path);
 
             //Then
-            result.Body.AsString().ShouldEqual("CaptureNodeWithLiteral file.html");
+            result.Body.AsString().ShouldEqual("CaptureNodeWithLiteral " + expected + ".html");
         }
 
-        [Fact]
-        public void Should_capture_regex()
+        [Theory]
+        [InlineData("/regex/123/moo", "123 moo")]
+        [InlineData("/REGEX/123/MOO", "123 MOO")]
+        public void Should_capture_regex(string path, string expected)
         {
             //Given, When
-            var result = this.browser.Get("/regex/123/moo");
+            var result = this.browser.Get(path);
 
             //Then
-            result.Body.AsString().ShouldEqual("RegEx 123 moo");
+            result.Body.AsString().ShouldEqual("RegEx " + expected);
         }
 
         [Fact]
