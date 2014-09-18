@@ -4,12 +4,6 @@
 
     public static class XmlSettings
     {
-        /// <summary>
-        /// Gets or sets whether character encoding should be enabled, or not, for XML responses.
-        /// </summary>
-        /// <remarks>The default value is <see langword="false" /></remarks>
-        public static bool EncodingEnabled { get; set; }
-
         static XmlSettings()
         {
             EncodingEnabled = false;
@@ -17,9 +11,19 @@
         }
 
         /// <summary>
+        /// Gets or sets whether character encoding should be enabled, or not, for XML responses.
+        /// </summary>
+        /// <remarks>
+        /// The default value is <see langword="false" />
+        /// </remarks>
+        public static bool EncodingEnabled { get; set; }
+
+        /// <summary>
         /// Gets the default encoding for XML responses.
         /// </summary>
-        /// <remarks>The default value is <see langword="Encoding.UTF8" /></remarks>
+        /// <remarks>
+        /// The default value is <see langword="Encoding.UTF8" />
+        /// </remarks>
         public static Encoding DefaultEncoding { get; set; }
     }
 }

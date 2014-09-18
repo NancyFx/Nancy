@@ -57,7 +57,7 @@ namespace Nancy
         {
             var serializer = xmlSerializer ?? (xmlSerializer = formatter.Serializers.FirstOrDefault(s => s.CanSerialize("application/xml")));
 
-            return new XmlResponse<TModel>(model, "application/xml", serializer);
+            return new XmlResponse<TModel>(model, serializer);
         }
 
         public static Response FromStream(this IResponseFormatter formatter, Stream stream, string contentType)
