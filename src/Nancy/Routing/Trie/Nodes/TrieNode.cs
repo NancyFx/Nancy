@@ -54,7 +54,7 @@ namespace Nancy.Routing.Trie.Nodes
             this.Parent = parent;
             this.RouteDefinitionSegment = segment;
 
-            this.Children = new Dictionary<string, TrieNode>();
+            this.Children = new Dictionary<string, TrieNode>(StringComparer.OrdinalIgnoreCase);
             this.AdditionalParameters = new Dictionary<string, object>();
             this.NodeData = new List<NodeData>();
         }
@@ -96,7 +96,7 @@ namespace Nancy.Routing.Trie.Nodes
             if (!this.Children.TryGetValue(segments[currentIndex], out child))
             {
                 child = this.nodeFactory.GetNodeForSegment(this, segments[currentIndex]);
-                this.Children.Add(segments[currentIndex].ToLowerInvariant(), child);
+                this.Children.Add(segments[currentIndex], child);
             }
 
             child.Add(segments, currentIndex, currentScore + this.Score, nodeCount, moduleType, routeIndex, routeDescription);
