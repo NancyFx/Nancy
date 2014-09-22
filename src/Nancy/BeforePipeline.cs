@@ -118,7 +118,7 @@
         {
             return t =>
             {
-                if (ContinueExecution(t.IsFaulted, t.Result, t.Exception))
+                if (ContinueExecution(t.IsFaulted, t.IsFaulted ? null : t.Result, t.Exception))
                 {
                     if (enumerator.MoveNext())
                     {
@@ -156,7 +156,7 @@
 
         private static bool ContinueExecution(bool isFaulted, Response result, AggregateException exception)
         {
-            return result == null;
+            return !isFaulted && result == null;
         }
 
         /// <summary>
