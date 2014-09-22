@@ -6,6 +6,8 @@
     using System.Threading.Tasks;
     using Xunit;
 
+    using Timer = System.Timers.Timer;
+
     public class BeforePipelineFixture
     {
         private BeforePipeline pipeline;
@@ -106,11 +108,11 @@
         public void When_cast_to_func_and_invoked_members_are_invoked()
         {
             var item1Called = false;
-            Func<NancyContext, Response> item1 = (r) => { item1Called = true; return null; };
-            var item2Called = false;
-            Func<NancyContext, Response> item2 = (r) => { item2Called = true; return null; };
-            var item3Called = false;
-            Func<NancyContext, Response> item3 = (r) => { item3Called = true; return null; };
+            Func<NancyContext, Response> item1 = r => { item1Called = true; return null; };
+            var item2Called = false;               
+            Func<NancyContext, Response> item2 = r => { item2Called = true; return null; };
+            var item3Called = false;               
+            Func<NancyContext, Response> item3 = r => { item3Called = true; return null; };
             pipeline.AddItemToEndOfPipeline(item1);
             pipeline.AddItemToEndOfPipeline(item2);
             pipeline.AddItemToEndOfPipeline(item3);
@@ -133,6 +135,22 @@
             Assert.Equal(1, castPipeline.PipelineDelegates.Count());
             Assert.Same(item2, castPipeline.PipelineDelegates.First());
         }
+
+
+        [Fact]
+        public void Should_be_able_to_throw_exception_from_async_pipeline_item()
+        {
+            Func<NancyContext, CancellationToken, Task<Response>> pipeLineItem = (ctx, token) => new Task<Response>(() =>
+            {
+                Thread.Sleep(1000);
+                throw new Exception("aaarg");
+            });
+            
+            pipeline.AddItemToStartOfPipeline(pipeLineItem);
+
+            Assert.Throws<AggregateException>(() => pipeline.Invoke(CreateContext(), new CancellationToken()).Result);
+        }
+
 
         [Fact]
         public void Pipeline_containing_another_pipeline_will_invoke_items_in_both_pipelines()
