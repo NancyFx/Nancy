@@ -6,14 +6,6 @@
 
     public class JsonResponse<TModel> : Response
     {
-        private static string contentType
-        {
-            get
-            {
-                return "application/json" + (String.IsNullOrWhiteSpace(JsonSettings.DefaultCharset) ? "" : "; charset=" + JsonSettings.DefaultCharset);
-            }
-        }
-
         public JsonResponse(TModel model, ISerializer serializer)
         {
             if (serializer == null)
@@ -22,13 +14,28 @@
             }
 
             this.Contents = model == null ? NoBody : GetJsonContents(model, serializer);
-            this.ContentType = contentType;
+            this.ContentType = DefaultContentType;
             this.StatusCode = HttpStatusCode.OK;
+        }
+
+        private static string DefaultContentType
+        {
+            get { return string.Concat("application/json", Encoding); }
+        }
+
+        private static string Encoding
+        {
+            get
+            {
+                return !string.IsNullOrWhiteSpace(JsonSettings.DefaultCharset)
+                    ? string.Concat("; charset=", JsonSettings.DefaultCharset)
+                    : string.Empty;
+            }
         }
 
         private static Action<Stream> GetJsonContents(TModel model, ISerializer serializer)
         {
-            return stream => serializer.Serialize(contentType, model, stream);
+            return stream => serializer.Serialize(DefaultContentType, model, stream);
         }
     }
 

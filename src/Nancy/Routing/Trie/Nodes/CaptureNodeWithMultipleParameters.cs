@@ -10,9 +10,9 @@
     public class CaptureNodeWithMultipleParameters : TrieNode
     {
         private static readonly Regex MatchRegex = new Regex(@"({?[^{}]*}?)", RegexOptions.Compiled);
-        
+
         private readonly List<string> parameterNames = new List<string>();
-        
+
         private string builtRegex = string.Empty;
 
         private const string AssertStart = "^";
@@ -20,7 +20,7 @@
         private const string AssertEnd = "$";
 
         /// <summary>
-        /// Captures parameters within segments that contain literals. 
+        /// Captures parameters within segments that contain literals.
         ///     i.e:
         ///         /{file}.{name}
         ///         /{file}.html
@@ -34,7 +34,7 @@
         {
             this.ExtractParameterNames();
         }
-        
+
         /// <summary>
         /// Determines wheter this TrieNode should be used for the given segment.
         /// </summary>
@@ -97,7 +97,7 @@
                 else
                 {
                     this.BuildRegex(Regex.Escape(match.Value));
-                } 
+                }
             }
             this.BuildRegex(AssertEnd);
         }

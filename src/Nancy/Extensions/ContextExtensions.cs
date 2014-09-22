@@ -36,7 +36,7 @@ namespace Nancy.Extensions
             {
                 return path.TrimStart('~');
             }
-            
+
             if (string.IsNullOrEmpty(context.Request.Url.BasePath))
             {
                 return path.TrimStart('~');

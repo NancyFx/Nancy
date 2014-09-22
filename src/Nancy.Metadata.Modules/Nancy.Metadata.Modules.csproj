@@ -8,8 +8,8 @@
     <ProjectGuid>{DC8AAA8B-7FD0-47C4-9413-3CC94088BCC4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Nancy.Metadata.Module</RootNamespace>
-    <AssemblyName>Nancy.Metadata.Module</AssemblyName>
+    <RootNamespace>Nancy.Metadata.Modules</RootNamespace>
+    <AssemblyName>Nancy.Metadata.Modules</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -21,7 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\Nancy.Metadata.Module.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\Nancy.Metadata.Modules.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,7 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\Nancy.Metadata.Module.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\Nancy.Metadata.Modules.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'MonoDebug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -40,7 +40,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\MonoDebug\Nancy.Metadata.Module.XML</DocumentationFile>
+    <DocumentationFile>bin\MonoDebug\Nancy.Metadata.Modules.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'MonoRelease|AnyCPU'">
     <OutputPath>bin\MonoRelease\</OutputPath>
@@ -50,7 +50,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\MonoRelease\Nancy.Metadata.Module.XML</DocumentationFile>
+    <DocumentationFile>bin\MonoRelease\Nancy.Metadata.Modules.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

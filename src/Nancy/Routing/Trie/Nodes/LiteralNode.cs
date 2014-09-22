@@ -30,8 +30,8 @@ namespace Nancy.Routing.Trie.Nodes
             var comparisonType = StaticConfiguration.CaseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
 
             if (string.Equals(
-                    segment, 
-                    this.RouteDefinitionSegment, 
+                    segment,
+                    this.RouteDefinitionSegment,
                     comparisonType))
             {
                 return new SegmentMatch(true);

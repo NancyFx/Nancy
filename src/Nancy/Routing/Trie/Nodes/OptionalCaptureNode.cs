@@ -25,8 +25,8 @@ namespace Nancy.Routing.Trie.Nodes
 
         /// <summary>
         /// Add a new route to the trie
-        /// Adds itself as a normal capture node, but also adds this node's 
-        /// children as children of the parent too 
+        /// Adds itself as a normal capture node, but also adds this node's
+        /// children as children of the parent too
         /// (so it can effectively be "skipped" during matching)
         /// </summary>
         /// <param name="segments">The segments of the route definition</param>

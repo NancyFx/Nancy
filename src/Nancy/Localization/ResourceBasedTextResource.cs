@@ -14,7 +14,7 @@ namespace Nancy.Localization
     {
         private readonly IResourceAssemblyProvider resourceAssemblyProvider;
         private readonly IDictionary<string, ResourceManager> resourceManagers;
-        
+
         /// <summary>
         /// Initializes a new instance of <see cref="ResourceBasedTextResource"/> to read strings from *.resx files
         /// </summary>
@@ -23,7 +23,7 @@ namespace Nancy.Localization
         {
             this.resourceAssemblyProvider = resourceAssemblyProvider;
 
-            var resources = 
+            var resources =
                 from assembly in this.resourceAssemblyProvider.GetAssembliesToScan()
                 from resourceName in assembly.GetManifestResourceNames()
                 where resourceName.EndsWith(".resources")
@@ -35,7 +35,7 @@ namespace Nancy.Localization
                         Manager = new ResourceManager(baseName, assembly)
                     };
 
-            this.resourceManagers = 
+            this.resourceManagers =
                 resources.ToDictionary(x => x.Name, x => x.Manager, StringComparer.OrdinalIgnoreCase);
         }
 

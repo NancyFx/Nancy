@@ -184,7 +184,7 @@ namespace Nancy.Session
 
                 var data = encryptionProvider.Decrypt(encryptedCookie);
                 var parts = data.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (var part in parts.Select(part => part.Split('=')))
+                foreach (var part in parts.Select(part => part.Split('=')).Where(part => part.Length == 2))
                 {
                     var valueObject = this.currentConfiguration.Serializer.Deserialize(HttpUtility.UrlDecode(part[1]));
 

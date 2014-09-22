@@ -65,7 +65,7 @@
                 throw new ArgumentNullException("viewLocationContext", "The value of the viewLocationContext parameter cannot be null.");
             }
 
-            var actualViewName = 
+            var actualViewName =
                 viewName ?? GetViewNameFromModel(model, viewLocationContext.Context);
 
             viewLocationContext.Context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[DefaultViewFactory] Rendering view with name ", actualViewName)));
@@ -78,7 +78,7 @@
             var viewLocationResult =
                 this.viewResolver.GetViewLocation(viewName, model, viewLocationContext);
 
-            var resolvedViewEngine = 
+            var resolvedViewEngine =
                 GetViewEngine(viewLocationResult, viewLocationContext.Context);
 
             if (resolvedViewEngine == null)
@@ -115,7 +115,7 @@
                 }
                 catch
                 {
-                }                
+                }
             }
 
             return inspectedLocations.ToArray();
@@ -148,7 +148,7 @@
 
             context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[DefaultViewFactory] Attempting to resolve view engine for view extension ", viewLocationResult.Extension)));
 
-            var matchingViewEngines = 
+            var matchingViewEngines =
                 from viewEngine in this.viewEngines
                 where viewEngine.Extensions.Any(x => x.Equals(viewLocationResult.Extension, StringComparison.InvariantCultureIgnoreCase))
                 select viewEngine;

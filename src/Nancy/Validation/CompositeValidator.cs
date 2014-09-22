@@ -18,7 +18,7 @@
         /// <param name="modelType">The type of the model that is being validated.</param>
         public CompositeValidator(IEnumerable<IModelValidator> validators, Type modelType)
         {
-            var modelValidators = 
+            var modelValidators =
                 validators.ToArray();
 
             this.ModelType = modelType;

@@ -1,11 +1,9 @@
-﻿namespace Nancy.Metadata.Module
+﻿namespace Nancy.Metadata.Modules
 {
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
-
-    using Nancy.Routing;
 
     /// <summary>
     /// This is a wrapper around the type 

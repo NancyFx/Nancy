@@ -15,7 +15,7 @@ namespace Nancy
     public class Response: IDisposable
     {
         /// <summary>
-        /// Null object representing no body    
+        /// Null object representing no body
         /// </summary>
         public static Action<Stream> NoBody = s => { };
 
@@ -97,20 +97,20 @@ namespace Nancy
         /// </summary>
         /// <param name="name">The name of the cookie.</param>
         /// <param name="value">The value of the cookie.</param>
-        /// <param name="expires">The expiration date of the cookie. Can be <see langword="null" /> if it should never expire.</param>
+        /// <param name="expires">The expiration date of the cookie. Can be <see langword="null" /> if it should expire at the end of the session.</param>
         /// <returns>The <see cref="Response"/> instance.</returns>
         [Obsolete("This method has been replaced with Response.WithCookie and will be removed in a subsequent release.")]
         public Response AddCookie(string name, string value, DateTime? expires)
         {
             return AddCookie(name, value, expires, null, null);
         }
-    
+
         /// <summary>
         /// Adds a <see cref="INancyCookie"/> to the response.
         /// </summary>
         /// <param name="name">The name of the cookie.</param>
         /// <param name="value">The value of the cookie.</param>
-        /// <param name="expires">The expiration date of the cookie. Can be <see langword="null" /> if it should never expire.</param>
+        /// <param name="expires">The expiration date of the cookie. Can be <see langword="null" /> if it should expire at the end of the session.</param>
         /// <param name="domain">The domain of the cookie.</param>
         /// <param name="path">The path of the cookie.</param>
         /// <returns>The <see cref="Response"/> instance.</returns>

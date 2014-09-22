@@ -19,7 +19,7 @@ You should **never** work on a clone of master, and you should **never** send a 
 
 While you're working away in your branch it's quite possible that your upstream master (most likely the canonical NancyFx version) may be updated. If this happens you should:
 
-1. [Stash](http://progit.org/book/ch6-3.html) any un-committed changes you need to
+1. [Stash](http://git-scm.com/book/en/Git-Tools-Stashing) any un-committed changes you need to
 1. `git checkout master`
 1. `git pull upstream master`
 1. `git checkout myBranch`

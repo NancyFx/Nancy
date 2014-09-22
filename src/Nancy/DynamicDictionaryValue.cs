@@ -66,7 +66,7 @@
         }
 
         /// <summary>
-        /// Attempts to convert the value to type of T, failing to do so will return the defaultValue. 
+        /// Attempts to convert the value to type of T, failing to do so will return the defaultValue.
         /// </summary>
         /// <typeparam name="T">When no default value is supplied, required to supply the default type</typeparam>
         /// <param name="defaultValue">Optional parameter for default value, if not given it returns default of type T</param>
@@ -169,7 +169,7 @@
         }
 
         /// <summary>
-        /// Serves as a hash function for a particular type. 
+        /// Serves as a hash function for a particular type.
         /// </summary>
         /// <returns>A hash code for the current instance.</returns>
         public override int GetHashCode()
@@ -200,7 +200,7 @@
                 return false;
             }
 
-            result = (resultOfCast == null) ? 
+            result = (resultOfCast == null) ?
                 Equals(arg, resultOfCast) :
                 resultOfCast.Equals(arg);
 

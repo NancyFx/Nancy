@@ -6,28 +6,63 @@ namespace Nancy.Cookies
 
     using Nancy.Helpers;
 
+    /// <summary>
+    /// Default cookie implementation for Nancy.
+    /// </summary>
     public class NancyCookie : INancyCookie
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NancyCookie"/> class.
+        /// </summary>
+        /// <param name="name">The name of the cookie.</param>
+        /// <param name="value">The value of the cookie.</param>
         public NancyCookie(string name, string value)
             : this(name, value, false)
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NancyCookie"/> class.
+        /// </summary>
+        /// <param name="name">The name of the cookie.</param>
+        /// <param name="value">The value of the cookie.</param>
+        /// <param name="expires">The expiration date of the cookie. Can be <see langword="null" /> if it should expire at the end of the session.</param>
         public NancyCookie(string name, string value, DateTime expires)
             : this(name, value, false, false, expires)
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NancyCookie"/> class.
+        /// </summary>
+        /// <param name="name">The name of the cookie.</param>
+        /// <param name="value">The value of the cookie.</param>
+        /// <param name="httpOnly">Whether the cookie is http only.</param>
         public NancyCookie(string name, string value, bool httpOnly)
             : this(name, value, httpOnly, false, null)
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NancyCookie"/> class.
+        /// </summary>
+        /// <param name="name">The name of the cookie.</param>
+        /// <param name="value">The value of the cookie.</param>
+        /// <param name="httpOnly">Whether the cookie is http only.</param>
+        /// <param name="secure">Whether the cookie is secure (i.e. HTTPS only).</param>
         public NancyCookie(string name, string value, bool httpOnly, bool secure)
             : this(name, value, httpOnly, secure, null)
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NancyCookie"/> class.
+        /// </summary>
+        /// <param name="name">The name of the cookie.</param>
+        /// <param name="value">The value of the cookie.</param>
+        /// <param name="httpOnly">Whether the cookie is http only.</param>
+        /// <param name="secure">Whether the cookie is secure (i.e. HTTPS only).</param>
+        /// <param name="expires">The expiration date of the cookie. Can be <see langword="null" /> if it should expire at the end of the session.</param>
         public NancyCookie(string name, string value, bool httpOnly, bool secure, DateTime? expires)
         {
             this.Name = name;
@@ -45,7 +80,7 @@ namespace Nancy.Cookies
         /// <summary>
         /// When the cookie should expire
         /// </summary>
-        /// <value>A <see cref="DateTime"/> instance containing the date and time when the cookie should expire; otherwise <see langword="null"/> if it should never expire.</value>
+        /// <value>A <see cref="DateTime"/> instance containing the date and time when the cookie should expire; otherwise <see langword="null"/> if it should expire at the end of the session.</value>
         public DateTime? Expires { get; set; }
 
         /// <summary>
@@ -94,12 +129,12 @@ namespace Nancy.Cookies
         /// Whether the cookie is secure (i.e. HTTPS only)
         /// </summary>
         public bool Secure { get; private set; }
-        
+
         public override string ToString()
         {
             var sb = new StringBuilder(50);
             sb.AppendFormat("{0}={1}; path={2}", this.EncodedName, this.EncodedValue, Path ?? "/");
-            
+
             if (Expires != null)
             {
                 sb.Append("; expires=");

@@ -182,7 +182,7 @@ namespace Nancy.Diagnostics
             var hmacString = Convert.ToBase64String(hmacBytes);
 
             var cookie = new NancyCookie(diagnosticsConfiguration.CookieName, String.Format("{1}{0}", encryptedSession, hmacString), true);
-            
+
             context.Response.AddCookie(cookie);
         }
 
@@ -219,7 +219,7 @@ namespace Nancy.Diagnostics
 
             var decryptedValue = diagnosticsConfiguration.CryptographyConfiguration.EncryptionProvider.Decrypt(encryptedSession);
             var session = serializer.Deserialize(decryptedValue) as DiagnosticsSession;
-            
+
             if (session == null || session.Expiry < DateTime.Now || !SessionPasswordValid(session, diagnosticsConfiguration.Password))
             {
                 return null;

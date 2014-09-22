@@ -60,7 +60,7 @@ namespace Nancy.Session
 
         /// <summary>
         /// Retrieves the value from the session
-        /// </summary>        
+        /// </summary>
         public object this[string key]
         {
             get

@@ -58,7 +58,7 @@
             options.Bootstrapper.Initialise();
             var engine = options.Bootstrapper.GetEngine();
 
-            return 
+            return
                 next =>
                     environment =>
                     {
@@ -98,7 +98,7 @@
                         engine.HandleRequest(
                             nancyRequest,
                             StoreEnvironment(environment),
-                            RequestComplete(environment, options.PerformPassThrough, next, tcs), 
+                            RequestComplete(environment, options.PerformPassThrough, next, tcs),
                             RequestErrored(tcs),
                             owinCallCancelled);
 

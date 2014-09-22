@@ -83,7 +83,7 @@ namespace Nancy.Conventions
 
             var maxScore = current.First().Item2;
 
-            if (IsPotentiallyBrokenBrowser(context.Request.Headers.UserAgent) 
+            if (IsPotentiallyBrokenBrowser(context.Request.Headers.UserAgent)
                 && !current.Any(h => h.Item2 == maxScore && string.Equals(HtmlContentType, h.Item1, StringComparison.InvariantCultureIgnoreCase)))
             {
                 return true;

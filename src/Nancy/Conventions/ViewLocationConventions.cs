@@ -6,9 +6,9 @@
     using Nancy.ViewEngines;
 
     /// <summary>
-    /// This is a wrapper around the type 
-    /// 'IEnumerable<Func<string, object, ViewLocationContext, string>>' and its 
-    /// only purpose is to make Ninject happy which was throwing an exception 
+    /// This is a wrapper around the type
+    /// 'IEnumerable<Func<string, object, ViewLocationContext, string>>' and its
+    /// only purpose is to make Ninject happy which was throwing an exception
     /// when constructor injecting this type.
     /// </summary>
     public class ViewLocationConventions : IEnumerable<Func<string, object, ViewLocationContext, string>>

@@ -39,7 +39,7 @@
         /// <returns>Returns a value or a non existing value from the <see cref="ITextResource"/> implementation</returns>
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
-            result = 
+            result =
                 new DynamicMemberChainer(binder.Name, this.context, this.textResource);
 
             return true;

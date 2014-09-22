@@ -9,7 +9,6 @@
         protected DiagnosticModule(string basePath)
             : base(basePath)
         {
-            
         }
 
         public new DiagnosticsViewRenderer View

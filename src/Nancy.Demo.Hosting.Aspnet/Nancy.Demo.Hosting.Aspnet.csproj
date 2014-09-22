@@ -173,9 +173,9 @@
       <Project>{15B7F794-0BB2-4B66-AD78-4A951F1209B2}</Project>
       <Name>Nancy.Hosting.Aspnet</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Nancy.Metadata.Module\Nancy.Metadata.Module.csproj">
+    <ProjectReference Include="..\Nancy.Metadata.Modules\Nancy.Metadata.Modules.csproj">
       <Project>{DC8AAA8B-7FD0-47C4-9413-3CC94088BCC4}</Project>
-      <Name>Nancy.Metadata.Module</Name>
+      <Name>Nancy.Metadata.Modules</Name>
     </ProjectReference>
     <ProjectReference Include="..\Nancy.ViewEngines.DotLiquid\Nancy.ViewEngines.DotLiquid.csproj">
       <Project>{B795886D-9D70-45B1-BFB5-AD54CBC9A447}</Project>

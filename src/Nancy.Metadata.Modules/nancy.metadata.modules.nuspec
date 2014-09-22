@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
-    <id>Nancy.MetaData</id>
+    <id>Nancy.Metadata.Modules</id>
     <version>0.0.0</version> <!-- The real version will be added by rake -->
     <authors>Andreas Håkansson, Steven Robbins and contributors</authors>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -18,9 +18,9 @@
     <tags>Nancy Meta MetaData</tags>
   </metadata>
   <files>
-    <file src="build\binaries\Nancy.Metadata.Module.dll" target="lib\net40" />
-    <file src="build\binaries\Nancy.Metadata.Module.pdb" target="lib\net40" />
-    <file src="build\binaries\Nancy.Metadata.Module.XML" target="lib\net40" />
-    <file src="src\Nancy.Metadata.Module\**\*.cs" target="src" />
+    <file src="build\binaries\Nancy.Metadata.Modules.dll" target="lib\net40" />
+    <file src="build\binaries\Nancy.Metadata.Modules.pdb" target="lib\net40" />
+    <file src="build\binaries\Nancy.Metadata.Modules.XML" target="lib\net40" />
+    <file src="src\Nancy.Metadata.Modules\**\*.cs" target="src" />
   </files>
 </package>

@@ -7,7 +7,7 @@
 
     /// <summary>
     /// It's not safe for a module to take a dependency on the cache (cyclic dependency)
-    /// 
+    ///
     /// We provide an IRouteCacheProvider instead - the default implementation uses
     /// TinyIoC'd Func based lazy factory.
     /// </summary>

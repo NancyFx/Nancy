@@ -1,10 +1,8 @@
-﻿namespace Nancy.Metadata.Module
+﻿namespace Nancy.Metadata.Modules
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
-    using Nancy.Routing;
 
     /// <summary>
     /// Default implementation on how metadata modules are resolved by Nancy.

@@ -41,7 +41,7 @@
         {
             if (this.source != null)
             {
-                this.source.Dispose();       
+                this.source.Dispose();
             }
         }
     }

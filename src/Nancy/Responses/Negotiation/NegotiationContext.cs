@@ -38,7 +38,7 @@
         /// </summary>
         /// <value>An <see cref="IDictionary{TKey,TValue}"/> containing the headers.</value>
         public IDictionary<string, string> Headers { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the model mappings for media ranges.
         /// </summary>
@@ -74,7 +74,7 @@
         /// </summary>
         /// <value>The HTTP status code description.</value>
         public string ReasonPhrase { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the view name if one is required.
         /// </summary>
