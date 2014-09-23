@@ -1,6 +1,7 @@
 namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
 {
     using System.IO;
+    using System.Linq;
     using System.Text;
     using System.Xml.Serialization;
     using FakeItEasy;
@@ -81,7 +82,7 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
             var context = new BindingContext()
             {
                 DestinationType = typeof(TestModel),
-                ValidModelProperties = typeof(TestModel).GetProperties(),
+                ValidModelBindingMembers = BindingMemberInfo.Collect<TestModel>(),
             };
 
             var reader = new StreamReader(bodyStream);
@@ -107,7 +108,7 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
             var context = new BindingContext()
             {
                 DestinationType = typeof(TestModel),
-                ValidModelProperties = typeof(TestModel).GetProperties(),
+                ValidModelBindingMembers = BindingMemberInfo.Collect<TestModel>().ToArray(),
             };
 
             // When
