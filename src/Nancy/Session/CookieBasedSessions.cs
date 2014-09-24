@@ -1,4 +1,4 @@
-namespace Nancy.Session.Cookies
+namespace Nancy.Session
 {
     using System;
     using System.Collections.Generic;
@@ -60,6 +60,8 @@ namespace Nancy.Session.Cookies
             }
             this.currentConfiguration = configuration;
         }
+
+
 
         /// <summary>
         /// Initialise and add cookie based session hooks to the application pipeine

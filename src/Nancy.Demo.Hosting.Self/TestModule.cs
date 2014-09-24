@@ -9,16 +9,6 @@ namespace Nancy.Demo.Hosting.Self
         public TestModule()
         {
             Get["/"] = parameters => {
-                if(Session["test"] == null)
-                {
-                    Session["test"] = 0;
-                }
-                else
-                {
-                    int t=(int)Session["test"];
-                    t++;
-                    Session["test"]=t;
-                }
                 return View["staticview", this.Request.Url];
             };
 

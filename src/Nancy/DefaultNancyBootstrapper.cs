@@ -199,11 +199,7 @@ namespace Nancy
         {
             return this.ApplicationContainer.ResolveAll<IApplicationStartup>(false);
         }
-        protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
-        {
-            Nancy.Session.Server.ServerBasedSessions.Enable(pipelines,CryptographyConfiguration);
-            base.ApplicationStartup(container, pipelines);
-        }
+
         /// <summary>
         /// Gets all registered request startup tasks
         /// </summary>

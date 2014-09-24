@@ -1,4 +1,4 @@
-namespace Nancy.Session.Cookies
+namespace Nancy.Session
 {
     using Cryptography;
 
