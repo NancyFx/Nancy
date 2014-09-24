@@ -190,6 +190,11 @@ namespace Nancy.Json
             }
 
 
+            if (type == typeof(DateTimeOffset) && obj is string)
+            {
+                return DateTimeOffset.Parse((string)obj);
+            }
+
             if ((type.IsGenericType) && (type.GetGenericTypeDefinition() == typeof(Nullable<>)))
             {
                 /*
