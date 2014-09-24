@@ -32,8 +32,7 @@ namespace Nancy.Localization
                 select new
                     {
                         Name = name,
-                        Manager = new ResourceManager(baseName, assembly),
-                        AssemblyName=assembly.FullName
+                        Manager = new ResourceManager(baseName, assembly)
                     };
 
             this.resourceManagers = new Dictionary<string, ResourceManager>(StringComparer.OrdinalIgnoreCase);
@@ -46,7 +45,7 @@ namespace Nancy.Localization
                 }
                 else
                 {
-                    throw new ArgumentException(string.Format("Key '{0}' in '{1}' already exists;",x.Name,x.AssemblyName));
+                    throw new ArgumentException(string.Format("Key '{0}' already exists;",x.Name));
                 }
             }
         }
