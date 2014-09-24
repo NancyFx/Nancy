@@ -32,11 +32,23 @@ namespace Nancy.Localization
                 select new
                     {
                         Name = name,
-                        Manager = new ResourceManager(baseName, assembly)
+                        Manager = new ResourceManager(baseName, assembly),
+                        AssemblyName=assembly.FullName
                     };
 
-            this.resourceManagers =
-                resources.ToDictionary(x => x.Name, x => x.Manager, StringComparer.OrdinalIgnoreCase);
+            this.resourceManagers = new Dictionary<string, ResourceManager>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var x in resources)
+            {
+                if (!this.resourceManagers.ContainsKey(x.Name))
+                {
+                    this.resourceManagers[x.Name] = x.Manager;
+                }
+                else
+                {
+                    throw new ArgumentException(string.Format("Key '{0}' in '{1}' already exists;",x.Name,x.AssemblyName));
+                }
+            }
         }
 
         /// <summary>
