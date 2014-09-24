@@ -146,6 +146,7 @@
     <Compile Include="Unit\Extensions\TypeExtensionsFixture.cs" />
     <Compile Include="Unit\FormatterExtensionsFixture.cs" />
     <Compile Include="Unit\Helpers\HttpUtilityFixture.cs" />
+    <Compile Include="Unit\JsonSerializerFixture.cs" />
     <Compile Include="Unit\Json\JavaScriptSerializerFixture.cs" />
     <Compile Include="Unit\Json\TestConverter.cs" />
     <Compile Include="Unit\Json\TestConverterType.cs" />
