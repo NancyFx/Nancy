@@ -211,6 +211,12 @@ namespace Nancy.Json
 				return;
 			}
 
+            if (valueType == typeof(DateTimeOffset))
+            {
+                WriteValue(output, (DateTimeOffset)obj);
+                return;
+            }
+
 			if (typeof (DynamicDictionaryValue).IsAssignableFrom(valueType))
 			{
 				var o = (DynamicDictionaryValue) obj;
@@ -530,6 +536,11 @@ namespace Nancy.Json
 		        StringBuilderExtensions.AppendCount(output, maxJsonLength, "\"\\/Date(" + ticks + suffix + ")\\/\"");
 		    }
 		}
+
+        void WriteValue(StringBuilder output, DateTimeOffset value)
+        {
+            StringBuilderExtensions.AppendCount(output, maxJsonLength, string.Concat("\"", value.ToString("o", CultureInfo.InvariantCulture), "\""));
+        }
 
 		void WriteValue (StringBuilder output, IConvertible value)
 		{
