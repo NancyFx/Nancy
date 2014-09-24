@@ -40,20 +40,35 @@
         {
             var serializer = new XmlSerializer(typeof(TModel));
 
-            var xmlSettings = new XmlWriterSettings
+            if (XmlSettings.IncludeWhiteSpace)
             {
-                Indent = XmlSettings.IncludeWhiteSpace
-            };
-
-            if (XmlSettings.EncodingEnabled)
-            {
-                var streamWriter = new StreamWriter(outputStream, XmlSettings.DefaultEncoding);
-                var xmlWriter = XmlWriter.Create(streamWriter, xmlSettings);
-                serializer.Serialize(xmlWriter, model);
+                if (XmlSettings.EncodingEnabled)
+                {
+                    serializer.Serialize(new StreamWriter(outputStream, XmlSettings.DefaultEncoding), model);
+                }
+                else
+                {
+                    serializer.Serialize(outputStream, model);
+                }
             }
             else
             {
-                var xmlWriter = XmlWriter.Create(outputStream, xmlSettings);
+                var xmlSettings = new XmlWriterSettings
+                {
+                    Indent = XmlSettings.IncludeWhiteSpace
+                };
+
+                XmlWriter xmlWriter;
+
+                if (XmlSettings.EncodingEnabled)
+                {
+                    var streamWriter = new StreamWriter(outputStream, XmlSettings.DefaultEncoding);
+                    xmlWriter = XmlWriter.Create(streamWriter, xmlSettings);
+                }
+                else
+                {
+                    xmlWriter = XmlWriter.Create(outputStream, xmlSettings);
+                }
                 serializer.Serialize(xmlWriter, model);
             }
         }
