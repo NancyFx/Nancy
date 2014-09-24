@@ -211,7 +211,7 @@ namespace Nancy.Json
 				return;
 			}
 
-            if (typeof(DateTimeOffset).IsAssignableFrom(valueType))
+            if (valueType == typeof(DateTimeOffset))
             {
                 WriteValue(output, (DateTimeOffset)obj);
                 return;
