@@ -83,7 +83,7 @@
 
         [Theory]
         [InlineData("/moo/moo")]
-        [InlineData("/moo/moo")]
+        [InlineData("/MOO/MOO")]
         public void Should_resolve_optional_capture_with_optional_not_specified(string path)
         {
             //Given, When
