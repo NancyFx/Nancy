@@ -421,7 +421,7 @@
         /// </summary>
         /// <param name="value">Object to potentially encode</param>
         /// <returns>String representation, encoded if necessary</returns>
-        private static string HtmlEncode(object value)
+        private string HtmlEncode(object value)
         {
             if (value == null)
             {
@@ -430,7 +430,9 @@
 
             var str = value as IHtmlString;
 
-            return str != null ? str.ToHtmlString() : HttpUtility.HtmlEncode(Convert.ToString(value, CultureInfo.CurrentCulture));
+            var currentCulture = this.Context.Culture ?? CultureInfo.CurrentCulture;
+
+            return str != null ? str.ToHtmlString() : HttpUtility.HtmlEncode(Convert.ToString(value, currentCulture));
         }
     }
 }
