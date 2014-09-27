@@ -239,6 +239,7 @@
     <Compile Include="Routing\Constraints\DateTimeRouteSegmentConstraint.cs" />
     <Compile Include="Routing\Constraints\DecimalRouteSegmentConstraint.cs" />
     <Compile Include="Routing\Constraints\GuidRouteSegmentConstraint.cs" />
+    <Compile Include="Routing\Constraints\LongRouteSegmentConstraint.cs" />
     <Compile Include="Routing\Constraints\IntRouteSegmentConstraint.cs" />
     <Compile Include="Routing\Constraints\IRouteSegmentConstraint.cs" />
     <Compile Include="Routing\Constraints\LengthRouteSegmentConstraint.cs" />

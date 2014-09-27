@@ -24,6 +24,23 @@
         }
 
         [Fact]
+        public void When_int_is_larger_than_max_int_should_has_no_match()
+        {
+            var result = this.browser.Get("/intConstraint/" + long.MaxValue);
+
+            result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
+            result.Body.AsString().ShouldEqual("");
+        }
+
+        [Fact]
+        public void Should_resolve_long_constraint()
+        {
+            var result = this.browser.Get("/longConstraint/" + long.MaxValue);
+
+            result.Body.AsString().ShouldEqual("LongConstraint");
+        }
+
+        [Fact]
         public void Should_not_resolve_int_constraint()
         {
             var result = this.browser.Get("/intConstraint/foo");
@@ -294,6 +311,8 @@
             public TestModule()
             {
                 Get["/intConstraint/{value:int}"] = _ => "IntConstraint";
+
+                Get["/longConstraint/{value:long}"] = _ => "LongConstraint";
 
                 Get["/decimalConstraint/{value:decimal}"] = _ => "DecimalConstraint";
 
