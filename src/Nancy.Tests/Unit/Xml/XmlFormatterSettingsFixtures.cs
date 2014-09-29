@@ -1,7 +1,8 @@
-﻿namespace Nancy.Tests.Unit
+﻿namespace Nancy.Tests.Unit.Xml
 {
     using System;
     using System.IO;
+
     using FakeItEasy;
 
     using Nancy.Responses;
@@ -28,7 +29,7 @@
         [Fact]
         public void Should_return_a_response_with_status_code_200_OK()
         {
-            response.StatusCode.ShouldEqual(HttpStatusCode.OK);
+            this.response.StatusCode.ShouldEqual(HttpStatusCode.OK);
         }
 
         [Fact]
@@ -36,7 +37,7 @@
         {
             XmlSettingsAreDefault();
 
-            var contentText = ContentAsString(response.Contents);
+            var contentText = this.ContentAsString(this.response.Contents);
             contentText.ShouldStartWith("<?xml");
             contentText.ShouldNotContain("encoding");
             contentText.ShouldContain("\n");
@@ -49,7 +50,7 @@
             XmlSettingsAreDefault();
             XmlSettings.EncodingEnabled = true;
 
-            var contentText = ContentAsString(response.Contents);
+            var contentText = this.ContentAsString(this.response.Contents);
             XmlSettingsAreDefault();
 
             contentText.ShouldStartWith("<?xml");
@@ -66,7 +67,7 @@
             XmlSettings.IncludeWhiteSpace = false;
             XmlSettings.EncodingEnabled = true;
 
-            var contentText = ContentAsString(response.Contents);
+            var contentText = this.ContentAsString(this.response.Contents);
             XmlSettingsAreDefault();
 
             contentText.ShouldStartWith("<?xml");
