@@ -199,7 +199,7 @@ namespace Nancy.Testing
             return this.HandleRequest("PUT", url, browserContext);
         }
 
-        private BrowserResponse HandleRequest(string method, Url url, Action<BrowserContext> browserContext)
+        public BrowserResponse HandleRequest(string method, Url url, Action<BrowserContext> browserContext)
         {
             var request =
                 CreateRequest(method, url, browserContext ?? (with => {}));
@@ -211,7 +211,7 @@ namespace Nancy.Testing
             return response;
         }
 
-        private BrowserResponse HandleRequest(string method, string path, Action<BrowserContext> browserContext)
+        public BrowserResponse HandleRequest(string method, string path, Action<BrowserContext> browserContext)
         {
             var url = Uri.IsWellFormedUriString(path, UriKind.Relative)
                           ? new Url {Path = path}
