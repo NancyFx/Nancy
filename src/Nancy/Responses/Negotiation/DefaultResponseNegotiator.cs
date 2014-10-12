@@ -75,16 +75,8 @@
         /// <returns><c>true</c> if the result is a <see cref="Response"/>, <c>false</c> otherwise.</returns>
         private static bool TryCastResultToResponse(dynamic routeResult, out Response response)
         {
-            try
-            {
-                response = (Response) routeResult;
-                return true;
-            }
-            catch
-            {
-                response = null;
-                return false;
-            }
+            response = routeResult as Response;
+            return response != null;         
         }
 
         /// <summary>
