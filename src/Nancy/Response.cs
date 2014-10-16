@@ -3,6 +3,7 @@ namespace Nancy
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using Cookies;
@@ -18,6 +19,8 @@ namespace Nancy
         /// Null object representing no body
         /// </summary>
         public static Action<Stream> NoBody = s => { };
+
+        private string contentType;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Response"/> class.
@@ -36,7 +39,15 @@ namespace Nancy
         /// </summary>
         /// <value>The type of the content.</value>
         /// <remarks>The default value is <c>text/html</c>.</remarks>
-        public string ContentType { get; set; }
+        public string ContentType
+        {
+            get
+            {
+                var header = Headers.Keys.FirstOrDefault(h => string.Equals(h, "content-type", StringComparison.OrdinalIgnoreCase));
+                return header == null ? this.contentType : Headers[header];
+            }
+            set { this.contentType = value; }
+        }
 
         /// <summary>
         /// Gets the delegate that will render contents to the response stream.
