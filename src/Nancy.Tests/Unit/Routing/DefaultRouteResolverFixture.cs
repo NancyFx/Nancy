@@ -11,7 +11,6 @@
         public DefaultRouteResolverFixture()
         {
             this.browser = new Browser(with => with.Module<TestModule>());
-            StaticConfiguration.CaseSensitive = false;
         }
 
         [Fact]
@@ -35,159 +34,289 @@
         }
 
         [Theory]
-        [InlineData("/foo")]
-        [InlineData("/FOO")]
-        public void Should_resolve_single_literal(string path)
+        [InlineData("/foo", true)]
+        [InlineData("/foo", false)]
+        [InlineData("/FOO", true)]
+        [InlineData("/FOO", false)]
+        public void Should_resolve_single_literal(string path, bool caseSenstive)
         {
             //Given, When
+            StaticConfiguration.CaseSensitive = caseSenstive;
             var result = this.browser.Get(path);
 
             //Then
-            result.Body.AsString().ShouldEqual("SingleLiteral");
+            if (ShouldBeFound(path, caseSenstive))
+            {
+                result.Body.AsString().ShouldEqual("SingleLiteral");
+            }
+            else
+            {
+                result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
+            }
         }
 
         [Theory]
-        [InlineData("/foo/bar/baz")]
-        [InlineData("/FOO/BAR/BAZ")]
-        public void Should_resolve_multi_literal(string path)
+        [InlineData("/foo/bar/baz", true)]
+        [InlineData("/foo/bar/baz", false)]
+        [InlineData("/FOO/BAR/BAZ", true)]
+        [InlineData("/FOO/BAR/BAZ", false)]
+        public void Should_resolve_multi_literal(string path, bool caseSenstive)
         {
             //Given, When
+            StaticConfiguration.CaseSensitive = caseSenstive;
             var result = this.browser.Get(path);
 
             //Then
-            result.Body.AsString().ShouldEqual("MultipleLiteral");
+            if (ShouldBeFound(path, caseSenstive))
+            {
+                result.Body.AsString().ShouldEqual("MultipleLiteral");
+            }
+            else
+            {
+                result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
+            }
         }
 
         [Theory]
-        [InlineData("/foo/testing/plop", "testing")]
-        [InlineData("/FOO/TESTING/PLOP", "TESTING")]
-        public void Should_resolve_single_capture(string path, string expected)
+        [InlineData("/foo/testing/plop", true, "testing")]
+        [InlineData("/foo/testing/plop", false, "testing")]
+        [InlineData("/FOO/TESTING/PLOP", true, "NA")]
+        [InlineData("/FOO/TESTING/PLOP", false, "TESTING")]
+        public void Should_resolve_single_capture(string path, bool caseSenstive, string expected)
         {
             //Given, When
+            StaticConfiguration.CaseSensitive = caseSenstive;
             var result = this.browser.Get(path);
 
             //Then
-            result.Body.AsString().ShouldEqual("Captured " + expected);
+            if (ShouldBeFound(path, caseSenstive))
+            {
+                result.Body.AsString().ShouldEqual("Captured " + expected);
+            }
+            else
+            {
+                result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
+            }
         }
 
         [Theory]
-        [InlineData("/moo/hoo/moo", "hoo")]
-        [InlineData("/MOO/HOO/MOO", "HOO")]
-        public void Should_resolve_optional_capture_with_optional_specified(string path, string expected)
+        [InlineData("/moo/hoo/moo", true, "hoo")]
+        [InlineData("/moo/hoo/moo", false, "hoo")]
+        [InlineData("/MOO/HOO/MOO", true, "NA")]
+        [InlineData("/MOO/HOO/MOO", false, "HOO")]
+        public void Should_resolve_optional_capture_with_optional_specified(string path, bool caseSenstive, string expected)
         {
             //Given, When
+            StaticConfiguration.CaseSensitive = caseSenstive;
             var result = this.browser.Get(path);
 
             //Then
-            result.Body.AsString().ShouldEqual("OptionalCapture " + expected);
+            if (ShouldBeFound(path, caseSenstive))
+            {
+                result.Body.AsString().ShouldEqual("OptionalCapture " + expected);
+            }
+            else
+            {
+                result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
+            }
         }
 
         [Theory]
-        [InlineData("/moo/moo")]
-        [InlineData("/MOO/MOO")]
-        public void Should_resolve_optional_capture_with_optional_not_specified(string path)
+        [InlineData("/moo/moo", true)]
+        [InlineData("/moo/moo", false)]
+        [InlineData("/MOO/MOO", true)]
+        [InlineData("/MOO/MOO", false)]
+        public void Should_resolve_optional_capture_with_optional_not_specified(string path, bool caseSensitive)
         {
             //Given, When
-            var result = this.browser.Get("/moo/moo");
-
-            //Then
-            result.Body.AsString().ShouldEqual("OptionalCapture default");
-        }
-
-        [Theory]
-        [InlineData("/boo/badger/laa", "badger")]
-        [InlineData("/BOO/BADGER/LAA", "BADGER")]
-        public void Should_resolve_optional_capture_with_default_with_optional_specified(string path, string expected)
-        {
-            //Given, When
+            StaticConfiguration.CaseSensitive = caseSensitive;
             var result = this.browser.Get(path);
 
             //Then
-            result.Body.AsString().ShouldEqual("OptionalCaptureWithDefault " + expected);
+            if (ShouldBeFound(path, caseSensitive))
+            {
+                result.Body.AsString().ShouldEqual("OptionalCapture default");
+            }
+            else
+            {
+                result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
+            }
         }
 
         [Theory]
-        [InlineData("/boo/laa")]
-        [InlineData("/BOO/LAA")]
-        public void Should_resolve_optional_capture_with_default_with_optional_not_specified(string path)
+        [InlineData("/boo/badger/laa", true, "badger")]
+        [InlineData("/boo/badger/laa", false, "badger")]
+        [InlineData("/BOO/BADGER/LAA", true, "NA")]
+        [InlineData("/BOO/BADGER/LAA", false, "BADGER")]
+        public void Should_resolve_optional_capture_with_default_with_optional_specified(string path, bool caseSensitive, string expected)
         {
             //Given, When
+            StaticConfiguration.CaseSensitive = caseSensitive;
             var result = this.browser.Get(path);
 
             //Then
-            result.Body.AsString().ShouldEqual("OptionalCaptureWithDefault test");
+            if (ShouldBeFound(path, caseSensitive))
+            {
+              result.Body.AsString().ShouldEqual("OptionalCaptureWithDefault " + expected);
+            }
+            else
+            {
+              result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
+            }
         }
 
         [Theory]
-        [InlineData("/bleh/this/is/some/stuff", "this/is/some/stuff")]
-        [InlineData("/BLEH/THIS/IS/SOME/STUFF", "THIS/IS/SOME/STUFF")]
-        public void Should_capture_greedy_on_end(string path, string expected)
+        [InlineData("/boo/laa", true)]
+        [InlineData("/boo/laa", false)]
+        [InlineData("/BOO/LAA", true)]
+        [InlineData("/BOO/LAA", false)]
+        public void Should_resolve_optional_capture_with_default_with_optional_not_specified(string path, bool caseSensitive)
         {
             //Given, When
+            StaticConfiguration.CaseSensitive = caseSensitive;
             var result = this.browser.Get(path);
 
             //Then
-            result.Body.AsString().ShouldEqual("GreedyOnEnd " + expected);
+            if (ShouldBeFound(path, caseSensitive))
+            {
+              result.Body.AsString().ShouldEqual("OptionalCaptureWithDefault test");
+            }
+            else
+            {
+              result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
+            }
         }
 
         [Theory]
-        [InlineData("/bleh/this/is/some/stuff/bar", "this/is/some/stuff")]
-        [InlineData("/BLEH/THIS/IS/SOME/STUFF/BAR", "THIS/IS/SOME/STUFF")]
-        public void Should_capture_greedy_in_middle(string path, string expected)
+        [InlineData("/bleh/this/is/some/stuff", true, "this/is/some/stuff")]
+        [InlineData("/bleh/this/is/some/stuff", false, "this/is/some/stuff")]
+        [InlineData("/BLEH/THIS/IS/SOME/STUFF", true, "NA")]
+        [InlineData("/BLEH/THIS/IS/SOME/STUFF", false, "THIS/IS/SOME/STUFF")]
+        public void Should_capture_greedy_on_end(string path, bool caseSensitive, string expected)
         {
             //Given, When
+            StaticConfiguration.CaseSensitive = caseSensitive;
             var result = this.browser.Get(path);
 
             //Then
-            result.Body.AsString().ShouldEqual("GreedyInMiddle " + expected);
+            if (ShouldBeFound(path, caseSensitive))
+            {
+              result.Body.AsString().ShouldEqual("GreedyOnEnd " + expected);
+            }
+            else
+            {
+              result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
+            }
         }
 
         [Theory]
-        [InlineData("/greedy/this/is/some/stuff/badger/blah", "this/is/some/stuff blah")]
-        [InlineData("/GREEDY/THIS/IS/SOME/STUFF/BADGER/BLAH", "THIS/IS/SOME/STUFF BLAH")]
-        public void Should_capture_greedy_and_normal_capture(string path, string expected)
+        [InlineData("/bleh/this/is/some/stuff/bar", true, "this/is/some/stuff")]
+        [InlineData("/bleh/this/is/some/stuff/bar", false, "this/is/some/stuff")]
+        [InlineData("/BLEH/THIS/IS/SOME/STUFF/BAR", true, "NA")]
+        [InlineData("/BLEH/THIS/IS/SOME/STUFF/BAR", false, "THIS/IS/SOME/STUFF")]
+        public void Should_capture_greedy_in_middle(string path, bool caseSensitive, string expected)
         {
             //Given, When
+            StaticConfiguration.CaseSensitive = caseSensitive;
             var result = this.browser.Get(path);
 
             //Then
-            result.Body.AsString().ShouldEqual("GreedyAndCapture " + expected);
+            if (ShouldBeFound(path, caseSensitive))
+            {
+              result.Body.AsString().ShouldEqual("GreedyInMiddle " + expected);
+            }
+            else
+            {
+              result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
+            }
         }
 
         [Theory]
-        [InlineData("/multipleparameters/file.extension", "file.extension")]
-        [InlineData("/MULTIPLEPARAMETERS/FILE.EXTENSION", "FILE.EXTENSION")]
-        public void Should_capture_node_with_multiple_parameters(string path, string expected)
+        [InlineData("/greedy/this/is/some/stuff/badger/blah", true, "this/is/some/stuff blah")]
+        [InlineData("/greedy/this/is/some/stuff/badger/blah", false, "this/is/some/stuff blah")]
+        [InlineData("/GREEDY/THIS/IS/SOME/STUFF/BADGER/BLAH", true, "NA")]
+        [InlineData("/GREEDY/THIS/IS/SOME/STUFF/BADGER/BLAH", false, "THIS/IS/SOME/STUFF BLAH")]
+        public void Should_capture_greedy_and_normal_capture(string path, bool caseSensitive, string expected)
         {
             //Given, When
+            StaticConfiguration.CaseSensitive = caseSensitive;
             var result = this.browser.Get(path);
 
             //Then
-            result.Body.AsString().ShouldEqual("Multiple parameters " + expected);
+            if (ShouldBeFound(path, caseSensitive))
+            {
+              result.Body.AsString().ShouldEqual("GreedyAndCapture " + expected);
+            }
+            else
+            {
+              result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
+            }
         }
 
         [Theory]
-        [InlineData("/capturenodewithliteral/testing.html", "testing")]
-        [InlineData("/CAPTURENODEWITHLITERAL/TESTING.HTML", "TESTING")]
-        public void Should_capture_node_with_literal(string path, string expected)
+        [InlineData("/multipleparameters/file.extension", true, "file.extension")]
+        [InlineData("/multipleparameters/file.extension", false, "file.extension")]
+        [InlineData("/MULTIPLEPARAMETERS/FILE.EXTENSION", true, "NA")]
+        [InlineData("/MULTIPLEPARAMETERS/FILE.EXTENSION", false, "FILE.EXTENSION")]
+        public void Should_capture_node_with_multiple_parameters(string path, bool caseSensitive, string expected)
         {
             //Given, When
+            StaticConfiguration.CaseSensitive = caseSensitive;
             var result = this.browser.Get(path);
 
             //Then
-            result.Body.AsString().ShouldEqual("CaptureNodeWithLiteral " + expected + ".html");
+            if (ShouldBeFound(path, caseSensitive))
+            {
+              result.Body.AsString().ShouldEqual("Multiple parameters " + expected);
+            }
+            else
+            {
+              result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
+            }
         }
 
         [Theory]
-        [InlineData("/regex/123/moo", "123 moo")]
-        [InlineData("/REGEX/123/MOO", "123 MOO")]
-        public void Should_capture_regex(string path, string expected)
+        [InlineData("/capturenodewithliteral/testing.html", true, "testing")]
+        [InlineData("/capturenodewithliteral/testing.html", false, "testing")]
+        [InlineData("/CAPTURENODEWITHLITERAL/TESTING.HTML", true, "NA")]
+        [InlineData("/CAPTURENODEWITHLITERAL/TESTING.HTML", false, "TESTING")]
+        public void Should_capture_node_with_literal(string path, bool caseSensitive, string expected)
         {
             //Given, When
+            StaticConfiguration.CaseSensitive = caseSensitive;
             var result = this.browser.Get(path);
 
             //Then
-            result.Body.AsString().ShouldEqual("RegEx " + expected);
+            if (ShouldBeFound(path, caseSensitive))
+            {
+              result.Body.AsString().ShouldEqual("CaptureNodeWithLiteral " + expected + ".html");
+            }
+            else
+            {
+              result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
+            }
+        }
+
+        [Theory]
+        [InlineData("/regex/123/moo", true, "123 moo")]
+        [InlineData("/regex/123/moo", false, "123 moo")]
+        [InlineData("/REGEX/123/MOO", true, "NA")]
+        [InlineData("/REGEX/123/MOO", false, "123 MOO")]
+        public void Should_capture_regex(string path, bool caseSensitive, string expected)
+        {
+            //Given, When
+            StaticConfiguration.CaseSensitive = caseSensitive;
+            var result = this.browser.Get(path);
+
+            //Then
+            if (ShouldBeFound(path, caseSensitive))
+            {
+              result.Body.AsString().ShouldEqual("RegEx " + expected);
+            }
+            else
+            {
+              result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
+            }
         }
 
         [Fact]
@@ -266,6 +395,12 @@
 
             // Then
             result.Headers["Allow"].ShouldEqual("DELETE, POST");
+        }
+
+        private bool ShouldBeFound(string path, bool caseSenstive)
+        {
+            var isUpperCase = path == path.ToUpperInvariant();
+            return !caseSenstive || !isUpperCase;
         }
 
         private class MethodNotAllowedModule : NancyModule
