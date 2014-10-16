@@ -11,6 +11,7 @@
         public DefaultRouteResolverFixture()
         {
             this.browser = new Browser(with => with.Module<TestModule>());
+            StaticConfiguration.CaseSensitive = false;
         }
 
         [Fact]
