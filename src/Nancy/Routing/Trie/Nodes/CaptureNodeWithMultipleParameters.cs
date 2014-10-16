@@ -66,7 +66,7 @@
         public override SegmentMatch Match(string segment)
         {
             var match = SegmentMatch.NoMatch;
-            var regex = new Regex(builtRegex, RegexOptions.IgnoreCase);
+            var regex = new Regex(this.builtRegex, StaticConfiguration.CaseSensitive ? RegexOptions.None : RegexOptions.IgnoreCase);
 
             if (regex.IsMatch(segment))
             {
