@@ -154,6 +154,20 @@
             response.ContentType.ShouldEqual("text/html");
         }
 
+        [Fact] 
+        public void Should_overwrite_content_type_from_headers()
+        {
+            // Given
+            const string value = "test value";
+            Response response = value;
+
+            // When
+            response.Headers.Add("contenT-typE", "application/json");
+
+            // Then
+            response.ContentType.ShouldEqual("application/json");
+        }
+
         [Fact]
         public void Should_set_a_cookie_with_name_and_value()
         {

@@ -3,6 +3,7 @@ namespace Nancy
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using Cookies;
@@ -19,6 +20,8 @@ namespace Nancy
         /// </summary>
         public static Action<Stream> NoBody = s => { };
 
+        private string contentType;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Response"/> class.
         /// </summary>
@@ -26,7 +29,7 @@ namespace Nancy
         {
             this.Contents = NoBody;
             this.ContentType = "text/html";
-            this.Headers = new Dictionary<string, string>();
+            this.Headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             this.StatusCode = HttpStatusCode.OK;
             this.Cookies = new List<INancyCookie>(2);
         }
@@ -36,7 +39,11 @@ namespace Nancy
         /// </summary>
         /// <value>The type of the content.</value>
         /// <remarks>The default value is <c>text/html</c>.</remarks>
-        public string ContentType { get; set; }
+        public string ContentType
+        {
+            get { return Headers.ContainsKey("content-type") ? Headers["content-type"] : this.contentType; }
+            set { this.contentType = value; }
+        }
 
         /// <summary>
         /// Gets the delegate that will render contents to the response stream.
