@@ -29,7 +29,7 @@ namespace Nancy
         {
             this.Contents = NoBody;
             this.ContentType = "text/html";
-            this.Headers = new Dictionary<string, string>();
+            this.Headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             this.StatusCode = HttpStatusCode.OK;
             this.Cookies = new List<INancyCookie>(2);
         }
@@ -41,11 +41,7 @@ namespace Nancy
         /// <remarks>The default value is <c>text/html</c>.</remarks>
         public string ContentType
         {
-            get
-            {
-                var header = Headers.Keys.FirstOrDefault(h => string.Equals(h, "content-type", StringComparison.OrdinalIgnoreCase));
-                return header == null ? this.contentType : Headers[header];
-            }
+            get { return Headers.ContainsKey("content-type") ? Headers["content-type"] : this.contentType; }
             set { this.contentType = value; }
         }
 
