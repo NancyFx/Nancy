@@ -158,7 +158,7 @@
             }
 
             /// <summary>
-            /// Sets the token key store ued by the tokenizer
+            /// Sets the token key store used by the tokenizer
             /// </summary>
             /// <param name="store"></param>
             /// <returns>A reference to the current <see cref="TokenizerConfigurator"/></returns>
