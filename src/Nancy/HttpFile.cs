@@ -3,7 +3,7 @@
     using System.IO;
 
     /// <summary>
-    /// Represents a file that was captures in a HTTP multipart/form-data request
+    /// Represents a file that was captured in a HTTP multipart/form-data request
     /// </summary>
     public class HttpFile
     {
@@ -46,9 +46,9 @@
         public string Name { get; private set; }
 
         /// <summary>
-        /// Gets or sets the form element name of this file
+        /// Gets or sets the form element name of this file.
         /// </summary>
-        /// <value>A <see cref="string"/> containg the key</value>
+        /// <value>A <see cref="string"/> containg the key.</value>
         public string Key { get; private set; }
 
         /// <summary>
