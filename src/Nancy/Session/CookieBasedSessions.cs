@@ -175,6 +175,11 @@ namespace Nancy.Session
             {
                 var cookieData = HttpUtility.UrlDecode(request.Cookies[cookieName]);
                 var hmacLength = Base64Helpers.GetBase64Length(hmacProvider.HmacLength);
+                if (cookieData.Length < hmacLength)
+                {
+                  return new Session(dictionary);
+                }
+
                 var hmacString = cookieData.Substring(0, hmacLength);
                 var encryptedCookie = cookieData.Substring(hmacLength);
 
