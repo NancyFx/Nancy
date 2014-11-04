@@ -25,7 +25,7 @@
             var instance = new ModelUnderTest();
 
             // When
-            this.validator.Validate(instance);
+            this.validator.Validate(instance, new NancyContext());
 
             // Then
             instance.ValidatedWasInvoked.ShouldBeTrue();
@@ -38,7 +38,7 @@
             var instance = new ModelUnderTest();
 
             // When
-            this.validator.Validate(instance);
+            this.validator.Validate(instance, new NancyContext());
 
             // Then
             instance.InstanceBeingValidated.ShouldBeSameAs(instance);
@@ -57,7 +57,7 @@
             };
 
             // When
-            var results = this.validator.Validate(instance);
+            var results = this.validator.Validate(instance, new NancyContext());
 
             // Then
             results.Count().ShouldEqual(2);
@@ -70,7 +70,7 @@
             var instance = new ModelNotImplementingIValidatableObject();
 
             // When
-            var result = this.validator.Validate(instance);
+            var result = this.validator.Validate(instance, new NancyContext());
 
             // Then
             result.Count().ShouldEqual(0);

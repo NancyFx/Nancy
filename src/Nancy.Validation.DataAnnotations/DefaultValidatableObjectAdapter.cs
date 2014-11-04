@@ -13,8 +13,9 @@
         /// Validates the specified instance.
         /// </summary>
         /// <param name="instance">The instance.</param>
+        /// <param name="context1"></param>
         /// <returns>An <see cref="IEnumerable{T}"/> instance, containing <see cref="ModelValidationError"/> objects.</returns>
-        public IEnumerable<ModelValidationError> Validate(object instance)
+        public IEnumerable<ModelValidationError> Validate(object instance, NancyContext context1)
         {
             var validateable =
                 instance as IValidatableObject;

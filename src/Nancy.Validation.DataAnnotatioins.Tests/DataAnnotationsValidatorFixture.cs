@@ -40,9 +40,10 @@
         {
             // Given
             var instance = new ModelUnderTest();
+            var context = new NancyContext();
 
             // When
-            this.validator.Validate(instance, new NancyContext());
+            this.validator.Validate(instance, context);
 
             // Then
             A.CallTo(() => this.validatorFactory.GetValidators(typeof(ModelUnderTest))).MustHaveHappened();
@@ -53,13 +54,14 @@
         {
             // Given
             var instance = new ModelUnderTest();
+            var context = new NancyContext();
 
             // When
-            this.validator.Validate(instance, new NancyContext());
+            this.validator.Validate(instance, context);
 
             // Then
-            A.CallTo(() => this.propertyValidator1.Validate(instance)).MustHaveHappened();
-            A.CallTo(() => this.propertyValidator2.Validate(instance)).MustHaveHappened();
+            A.CallTo(() => this.propertyValidator1.Validate(instance, context)).MustHaveHappened();
+            A.CallTo(() => this.propertyValidator2.Validate(instance, context)).MustHaveHappened();
         }
 
         [Fact]
@@ -67,12 +69,13 @@
         {
             // Given
             var instance = new ModelUnderTest();
+            var context = new NancyContext();
 
             // When
-            this.validator.Validate(instance, new NancyContext());
+            this.validator.Validate(instance, context);
 
             // Then
-            A.CallTo(() => this.validatableObjectAdapter.Validate(instance)).MustHaveHappened();
+            A.CallTo(() => this.validatableObjectAdapter.Validate(instance, context)).MustHaveHappened();
         }
 
         [Fact]
@@ -80,16 +83,17 @@
         {
             // Given
             var instance = new ModelUnderTest();
+            var context = new NancyContext();
 
             var result1 = new ModelValidationError("Foo", string.Empty);
             var result2 = new ModelValidationError("Bar", string.Empty);
             var result3 = new ModelValidationError("Baz", string.Empty);
 
-            A.CallTo(() => this.propertyValidator1.Validate(instance)).Returns(new[] { result1 });
-            A.CallTo(() => this.propertyValidator2.Validate(instance)).Returns(new[] { result2, result3 });
+            A.CallTo(() => this.propertyValidator1.Validate(instance, context)).Returns(new[] { result1 });
+            A.CallTo(() => this.propertyValidator2.Validate(instance, context)).Returns(new[] { result2, result3 });
 
             // When
-            var results = this.validator.Validate(instance, new NancyContext());
+            var results = this.validator.Validate(instance, context);
 
             // Then
             results.Errors.Count().ShouldEqual(3);
@@ -101,11 +105,12 @@
             // Given
             var instance = new ModelUnderTest();
             var result = new ModelValidationError("Foo", string.Empty);
+            var context = new NancyContext();
 
-            A.CallTo(() => this.validatableObjectAdapter.Validate(instance)).Returns(new[] { result });
+            A.CallTo(() => this.validatableObjectAdapter.Validate(instance, context)).Returns(new[] { result });
 
             // When
-            var results = this.validator.Validate(instance, new NancyContext());
+            var results = this.validator.Validate(instance, context);
 
             // Then
             results.Errors.Count().ShouldEqual(1);

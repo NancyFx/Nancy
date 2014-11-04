@@ -30,7 +30,8 @@
         /// Gets the validation result for the specified <paramref name="instance"/>.
         /// </summary>
         /// <param name="instance">The instance that should be validated.</param>
+        /// <param name="context">The <see cref="NancyContext"/> of the current request.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> instance, containing <see cref="ModelValidationError"/> objects.</returns>
-        IEnumerable<ModelValidationError> Validate(object instance);
+        IEnumerable<ModelValidationError> Validate(object instance, NancyContext context);
     }
 }

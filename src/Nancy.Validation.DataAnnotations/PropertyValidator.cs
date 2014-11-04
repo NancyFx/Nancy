@@ -48,8 +48,9 @@
         /// Gets the validation result for the specified <paramref name="instance"/>.
         /// </summary>
         /// <param name="instance">The instance that should be validated.</param>
+        /// <param name="context">The <see cref="NancyContext"/> of the current request.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> instance, containing <see cref="ModelValidationError"/> objects.</returns>
-        public IEnumerable<ModelValidationError> Validate(object instance)
+        public IEnumerable<ModelValidationError> Validate(object instance, NancyContext context)
         {
             var errors =
                 new List<ModelValidationError>();
@@ -59,7 +60,7 @@
                 foreach (var adapter in attributeAdapter.Value)
                 {
                     var results =
-                        adapter.Validate(instance, attributeAdapter.Key, this.Descriptor);
+                        adapter.Validate(instance, attributeAdapter.Key, this.Descriptor, context);
 
                     errors.AddRange(results);
                 }

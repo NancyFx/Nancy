@@ -47,10 +47,11 @@
         /// <param name="instance">The instance that should be validated.</param>
         /// <param name="attribute">The <see cref="ValidationAttribute"/> that should be handled.</param>
         /// <param name="descriptor">A <see cref="PropertyDescriptor"/> instance for the property that is being validated.</param>
+        /// <param name="context">The <see cref="NancyContext"/> of the current request.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="ModelValidationRule"/> instances.</returns>
-        public virtual IEnumerable<ModelValidationError> Validate(object instance, ValidationAttribute attribute, PropertyDescriptor descriptor)
+        public virtual IEnumerable<ModelValidationError> Validate(object instance, ValidationAttribute attribute, PropertyDescriptor descriptor, NancyContext context)
         {
-            var context = 
+            var validationContext = 
                 new ValidationContext(instance, null, null)
                 {
                     MemberName = descriptor == null ? null : descriptor.Name
@@ -62,7 +63,7 @@
             }
 
             var result = 
-                attribute.GetValidationResult(instance, context);
+                attribute.GetValidationResult(instance, validationContext);
 
             if (result != null)
             {
