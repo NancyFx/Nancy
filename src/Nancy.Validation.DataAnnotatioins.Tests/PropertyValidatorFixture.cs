@@ -28,7 +28,7 @@
             this.error1 =
                 new ModelValidationError("error1", string.Empty);
 
-            A.CallTo(() => this.adapter1.Validate(A<object>._, A<ValidationAttribute>._, A<PropertyDescriptor>._))
+            A.CallTo(() => this.adapter1.Validate(A<object>._, A<ValidationAttribute>._, A<PropertyDescriptor>._, A<NancyContext>._))
                 .Returns(new[] {this.error1});
 
             this.adapter2 = 
@@ -37,7 +37,7 @@
             this.error2 =
                 new ModelValidationError("error2", string.Empty);
 
-            A.CallTo(() => this.adapter2.Validate(A<object>._, A<ValidationAttribute>._, A<PropertyDescriptor>._))
+            A.CallTo(() => this.adapter2.Validate(A<object>._, A<ValidationAttribute>._, A<PropertyDescriptor>._, A<NancyContext>._))
                 .Returns(new[] { this.error2 });
 
             this.mappings =
@@ -65,12 +65,14 @@
         public void Should_call_validate_on_each_validator_for_each_attribute_when_validate_is_invoked()
         {
             // Given
+            var context = new NancyContext();
+
             // When
-            this.validator.Validate(null);
+            this.validator.Validate(null, context);
 
             // Then
-            A.CallTo(() => this.adapter1.Validate(A<object>._, A<ValidationAttribute>._, A<PropertyDescriptor>._)).MustHaveHappened();
-            A.CallTo(() => this.adapter2.Validate(A<object>._, A<ValidationAttribute>._, A<PropertyDescriptor>._)).MustHaveHappened();
+            A.CallTo(() => this.adapter1.Validate(A<object>._, A<ValidationAttribute>._, A<PropertyDescriptor>._, A<NancyContext>._)).MustHaveHappened();
+            A.CallTo(() => this.adapter2.Validate(A<object>._, A<ValidationAttribute>._, A<PropertyDescriptor>._, A<NancyContext>._)).MustHaveHappened();
         }
 
         [Fact]
@@ -78,12 +80,13 @@
         {
             // Given
             var instance = new Model();
+            var context = new NancyContext();
 
             // When
-            this.validator.Validate(instance);
+            this.validator.Validate(instance, context);
 
             // Then
-            A.CallTo(() => this.adapter1.Validate(instance, A<ValidationAttribute>._, A<PropertyDescriptor>._)).MustHaveHappened();
+            A.CallTo(() => this.adapter1.Validate(instance, A<ValidationAttribute>._, A<PropertyDescriptor>._, context)).MustHaveHappened();
         }
 
         [Fact]
@@ -91,12 +94,13 @@
         {
             // Given
             var instance = new Model();
+            var context = new NancyContext();
 
             // When
-            this.validator.Validate(instance);
+            this.validator.Validate(instance, context);
 
             // Then
-            A.CallTo(() => this.adapter1.Validate(A<object>._, this.mappings.Keys.First(), A<PropertyDescriptor>._)).MustHaveHappened();
+            A.CallTo(() => this.adapter1.Validate(A<object>._, this.mappings.Keys.First(), A<PropertyDescriptor>._, A<NancyContext>._)).MustHaveHappened();
         }
 
         [Fact]
@@ -104,12 +108,13 @@
         {
             // Given
             var instance = new Model();
+            var context = new NancyContext();
 
             // When
-            this.validator.Validate(instance);
+            this.validator.Validate(instance, context);
 
             // Then
-            A.CallTo(() => this.adapter1.Validate(A<object>._, A<ValidationAttribute>._, this.descriptor)).MustHaveHappened();
+            A.CallTo(() => this.adapter1.Validate(A<object>._, A<ValidationAttribute>._, this.descriptor, A<NancyContext>._)).MustHaveHappened();
         }
 
         [Fact]
@@ -117,9 +122,10 @@
         {
             // Given
             var instance = new Model();
+            var context = new NancyContext();
 
             // When
-            var results = this.validator.Validate(instance);
+            var results = this.validator.Validate(instance, context);
             
             // Then
             results.Contains(this.error1).ShouldBeTrue();
