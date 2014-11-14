@@ -6,18 +6,12 @@
 
     public class DefaultRouteResolverFixture
     {
-        private readonly Browser browser;
-
-        public DefaultRouteResolverFixture()
-        {
-            this.browser = new Browser(with => with.Module<TestModule>());
-        }
-
         [Fact]
         public void Should_resolve_root()
         {
             //Given, When
-            var result = this.browser.Get("/");
+            var browser = InitBrowser(caseSensitive: false);
+            var result = browser.Get("/");
 
             //Then
             result.Body.AsString().ShouldEqual("Root");
@@ -27,7 +21,8 @@
         public void Should_resolve_correct_route_based_on_method()
         {
             //Given, When
-            var result = this.browser.Post("/");
+            var browser = InitBrowser(caseSensitive: false);
+            var result = browser.Post("/");
 
             //Then
             result.Body.AsString().ShouldEqual("PostRoot");
@@ -38,14 +33,14 @@
         [InlineData("/foo", false)]
         [InlineData("/FOO", true)]
         [InlineData("/FOO", false)]
-        public void Should_resolve_single_literal(string path, bool caseSenstive)
+        public void Should_resolve_single_literal(string path, bool caseSensitive)
         {
             //Given, When
-            StaticConfiguration.CaseSensitive = caseSenstive;
-            var result = this.browser.Get(path);
+            var browser = InitBrowser(caseSensitive);
+            var result = browser.Get(path);
 
             //Then
-            if (ShouldBeFound(path, caseSenstive))
+            if (ShouldBeFound(path, caseSensitive))
             {
                 result.Body.AsString().ShouldEqual("SingleLiteral");
             }
@@ -60,14 +55,14 @@
         [InlineData("/foo/bar/baz", false)]
         [InlineData("/FOO/BAR/BAZ", true)]
         [InlineData("/FOO/BAR/BAZ", false)]
-        public void Should_resolve_multi_literal(string path, bool caseSenstive)
+        public void Should_resolve_multi_literal(string path, bool caseSensitive)
         {
             //Given, When
-            StaticConfiguration.CaseSensitive = caseSenstive;
-            var result = this.browser.Get(path);
+            var browser = InitBrowser(caseSensitive);
+            var result = browser.Get(path);
 
             //Then
-            if (ShouldBeFound(path, caseSenstive))
+            if (ShouldBeFound(path, caseSensitive))
             {
                 result.Body.AsString().ShouldEqual("MultipleLiteral");
             }
@@ -82,14 +77,14 @@
         [InlineData("/foo/testing/plop", false, "testing")]
         [InlineData("/FOO/TESTING/PLOP", true, "NA")]
         [InlineData("/FOO/TESTING/PLOP", false, "TESTING")]
-        public void Should_resolve_single_capture(string path, bool caseSenstive, string expected)
+        public void Should_resolve_single_capture(string path, bool caseSensitive, string expected)
         {
             //Given, When
-            StaticConfiguration.CaseSensitive = caseSenstive;
-            var result = this.browser.Get(path);
+            var browser = InitBrowser(caseSensitive);
+            var result = browser.Get(path);
 
             //Then
-            if (ShouldBeFound(path, caseSenstive))
+            if (ShouldBeFound(path, caseSensitive))
             {
                 result.Body.AsString().ShouldEqual("Captured " + expected);
             }
@@ -104,14 +99,14 @@
         [InlineData("/moo/hoo/moo", false, "hoo")]
         [InlineData("/MOO/HOO/MOO", true, "NA")]
         [InlineData("/MOO/HOO/MOO", false, "HOO")]
-        public void Should_resolve_optional_capture_with_optional_specified(string path, bool caseSenstive, string expected)
+        public void Should_resolve_optional_capture_with_optional_specified(string path, bool caseSensitive, string expected)
         {
             //Given, When
-            StaticConfiguration.CaseSensitive = caseSenstive;
-            var result = this.browser.Get(path);
+            var browser = InitBrowser(caseSensitive);
+            var result = browser.Get(path);
 
             //Then
-            if (ShouldBeFound(path, caseSenstive))
+            if (ShouldBeFound(path, caseSensitive))
             {
                 result.Body.AsString().ShouldEqual("OptionalCapture " + expected);
             }
@@ -129,8 +124,8 @@
         public void Should_resolve_optional_capture_with_optional_not_specified(string path, bool caseSensitive)
         {
             //Given, When
-            StaticConfiguration.CaseSensitive = caseSensitive;
-            var result = this.browser.Get(path);
+            var browser = InitBrowser(caseSensitive);
+            var result = browser.Get(path);
 
             //Then
             if (ShouldBeFound(path, caseSensitive))
@@ -151,8 +146,8 @@
         public void Should_resolve_optional_capture_with_default_with_optional_specified(string path, bool caseSensitive, string expected)
         {
             //Given, When
-            StaticConfiguration.CaseSensitive = caseSensitive;
-            var result = this.browser.Get(path);
+            var browser = InitBrowser(caseSensitive);
+            var result = browser.Get(path);
 
             //Then
             if (ShouldBeFound(path, caseSensitive))
@@ -173,8 +168,8 @@
         public void Should_resolve_optional_capture_with_default_with_optional_not_specified(string path, bool caseSensitive)
         {
             //Given, When
-            StaticConfiguration.CaseSensitive = caseSensitive;
-            var result = this.browser.Get(path);
+            var browser = InitBrowser(caseSensitive);
+            var result = browser.Get(path);
 
             //Then
             if (ShouldBeFound(path, caseSensitive))
@@ -195,8 +190,8 @@
         public void Should_capture_greedy_on_end(string path, bool caseSensitive, string expected)
         {
             //Given, When
-            StaticConfiguration.CaseSensitive = caseSensitive;
-            var result = this.browser.Get(path);
+            var browser = InitBrowser(caseSensitive);
+            var result = browser.Get(path);
 
             //Then
             if (ShouldBeFound(path, caseSensitive))
@@ -217,8 +212,8 @@
         public void Should_capture_greedy_in_middle(string path, bool caseSensitive, string expected)
         {
             //Given, When
-            StaticConfiguration.CaseSensitive = caseSensitive;
-            var result = this.browser.Get(path);
+            var browser = InitBrowser(caseSensitive);
+            var result = browser.Get(path);
 
             //Then
             if (ShouldBeFound(path, caseSensitive))
@@ -239,8 +234,8 @@
         public void Should_capture_greedy_and_normal_capture(string path, bool caseSensitive, string expected)
         {
             //Given, When
-            StaticConfiguration.CaseSensitive = caseSensitive;
-            var result = this.browser.Get(path);
+            var browser = InitBrowser(caseSensitive);
+            var result = browser.Get(path);
 
             //Then
             if (ShouldBeFound(path, caseSensitive))
@@ -261,8 +256,8 @@
         public void Should_capture_node_with_multiple_parameters(string path, bool caseSensitive, string expected)
         {
             //Given, When
-            StaticConfiguration.CaseSensitive = caseSensitive;
-            var result = this.browser.Get(path);
+            var browser = InitBrowser(caseSensitive);
+            var result = browser.Get(path);
 
             //Then
             if (ShouldBeFound(path, caseSensitive))
@@ -283,8 +278,8 @@
         public void Should_capture_node_with_literal(string path, bool caseSensitive, string expected)
         {
             //Given, When
-            StaticConfiguration.CaseSensitive = caseSensitive;
-            var result = this.browser.Get(path);
+            var browser = InitBrowser(caseSensitive);
+            var result = browser.Get(path);
 
             //Then
             if (ShouldBeFound(path, caseSensitive))
@@ -305,8 +300,8 @@
         public void Should_capture_regex(string path, bool caseSensitive, string expected)
         {
             //Given, When
-            StaticConfiguration.CaseSensitive = caseSensitive;
-            var result = this.browser.Get(path);
+            var browser = InitBrowser(caseSensitive);
+            var result = browser.Get(path);
 
             //Then
             if (ShouldBeFound(path, caseSensitive))
@@ -323,7 +318,8 @@
         public void Should_handle_head_requests()
         {
             //Given, When
-            var result = this.browser.Head("/");
+            var browser = InitBrowser(caseSensitive: false);
+            var result = browser.Head("/");
 
             //Then
             result.StatusCode.ShouldEqual(HttpStatusCode.OK);
@@ -334,7 +330,8 @@
         public void Should_handle_options_requests()
         {
             //Given, When
-            var result = this.browser.Options("/");
+            var browser = InitBrowser(caseSensitive: false);
+            var result = browser.Options("/");
 
             //Then
             result.StatusCode.ShouldEqual(HttpStatusCode.OK);
@@ -397,10 +394,16 @@
             result.Headers["Allow"].ShouldEqual("DELETE, POST");
         }
 
-        private bool ShouldBeFound(string path, bool caseSenstive)
+        private Browser InitBrowser(bool caseSensitive)
+        {
+            StaticConfiguration.CaseSensitive = caseSensitive;
+            return new Browser(with => with.Module<TestModule>());
+        }
+
+        private bool ShouldBeFound(string path, bool caseSensitive)
         {
             var isUpperCase = path == path.ToUpperInvariant();
-            return !caseSenstive || !isUpperCase;
+            return !caseSensitive || !isUpperCase;
         }
 
         private class MethodNotAllowedModule : NancyModule
