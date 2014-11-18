@@ -631,13 +631,14 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
-        public void Should_ignore_invalid_attribute_in_cookie()
+        public void Should_add_attribute_in_cookie_as_empty_value()
         {
           // Given, when
           const string cookieName = "path";
           const string cookieData = "/";
+          const string cookieAttribute = "SomeAttribute";
           var headers = new Dictionary<string, IEnumerable<string>>();
-          var cookies = new List<string> { string.Format("{0}={1}; InvalidAttribute", cookieName, cookieData) };
+          var cookies = new List<string> { string.Format("{0}={1}; {2}", cookieName, cookieData, cookieAttribute) };
           headers.Add("cookie", cookies);
           var newUrl = new Url
           {
@@ -647,6 +648,7 @@ namespace Nancy.Tests.Unit
 
           // Then
           request.Cookies[cookieName].ShouldEqual(cookieData);
+          request.Cookies[cookieAttribute].ShouldEqual(string.Empty);
         }
 
         [Fact]
