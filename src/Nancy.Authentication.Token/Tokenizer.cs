@@ -70,13 +70,16 @@
                 this.tokenStamp().Ticks.ToString(CultureInfo.InvariantCulture)
             };
 
-            foreach (var item in this.additionalItems.Select(additionalItem => additionalItem(context)))
+            if (this.additionalItems != null)
             {
-                if (string.IsNullOrWhiteSpace(item))
+                foreach (var item in this.additionalItems.Select(additionalItem => additionalItem(context)))
                 {
-                    throw new RouteExecutionEarlyExitException(new Response { StatusCode = HttpStatusCode.Unauthorized });
+                    if (string.IsNullOrWhiteSpace(item))
+                    {
+                        throw new RouteExecutionEarlyExitException(new Response { StatusCode = HttpStatusCode.Unauthorized });
+                    }
+                    items.Add(item);
                 }
-                items.Add(item);
             }
 
             var message = string.Join(this.itemDelimiter, items);
@@ -109,15 +112,18 @@
 
             var items = this.encoding.GetString(messagebytes).Split(new[] { this.itemDelimiter }, StringSplitOptions.None);
 
-            var additionalItemCount = additionalItems.Count();
-            for (var i = 0; i < additionalItemCount; i++)
+            if (this.additionalItems != null)
             {
-                var tokenizedValue = items[i + 3];
-                var currentValue = additionalItems.ElementAt(i)(context);
-                if (tokenizedValue != currentValue)
+                var additionalItemCount = additionalItems.Count();
+                for (var i = 0; i < additionalItemCount; i++)
                 {
-                    // todo: may need to log here as this probably indicates hacking
-                    return null;
+                    var tokenizedValue = items[i + 3];
+                    var currentValue = additionalItems.ElementAt(i)(context);
+                    if (tokenizedValue != currentValue)
+                    {
+                        // todo: may need to log here as this probably indicates hacking
+                        return null;
+                    }
                 }
             }
 
