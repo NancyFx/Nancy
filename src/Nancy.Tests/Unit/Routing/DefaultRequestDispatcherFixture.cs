@@ -454,6 +454,48 @@ namespace Nancy.Tests.Unit.Routing
         }
 
         [Fact]
+        public void Should_invoke_route_resolver_with_extension_stripped_only_at_the_end_from_path_when_path_does_contain_file_extension_and_mapped_response_processor_exists()
+        {
+            // Given
+            var requestedPath = string.Empty;
+
+            var context =
+                new NancyContext
+                {
+                    Request = new FakeRequest("GET", "/directory.jsonfiles/user.json")
+                };
+
+            var processor =
+                A.Fake<IResponseProcessor>();
+
+            this.responseProcessors.Add(processor);
+
+            var mappings = new List<Tuple<string, MediaRange>>
+            {
+                { new Tuple<string, MediaRange>("json", "application/json") }
+            };
+
+            A.CallTo(() => processor.ExtensionMappings).Returns(mappings);
+
+            var resolvedRoute = new ResolveResult(
+               new FakeRoute(),
+               DynamicDictionary.Empty,
+               null,
+               null,
+               null);
+
+            A.CallTo(() => this.routeResolver.Resolve(context))
+                .Invokes(x => requestedPath = ((NancyContext)x.Arguments[0]).Request.Path)
+                .Returns(resolvedRoute);
+
+            // When
+            this.requestDispatcher.Dispatch(context, new CancellationToken());
+
+            // Then
+            requestedPath.ShouldEqual("/directory.jsonfiles/user");
+        }
+
+        [Fact]
         public void Should_invoke_route_resolver_with_path_containing_when_path_does_contain_file_extension_and_no_mapped_response_processor_exists()
         {
             // Given

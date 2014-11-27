@@ -171,7 +171,7 @@ namespace Nancy.Routing
                         mappedMediaRanges.Where(x => !context.Request.Headers.Accept.Any(header => header.Equals(x)));
 
                     var modifiedRequestPath =
-                        context.Request.Path.Replace(extension, string.Empty);
+                        context.Request.Path.Remove (context.Request.Path.LastIndexOf (extension), extension.Length);
 
                     var match =
                         this.InvokeRouteResolver(context, modifiedRequestPath, newMediaRanges);
