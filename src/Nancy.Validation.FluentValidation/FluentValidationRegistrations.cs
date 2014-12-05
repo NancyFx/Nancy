@@ -15,7 +15,6 @@ namespace Nancy.Validation.FluentValidation
         /// </summary>
         public FluentValidationRegistrations()
         {
-            this.Register<IModelValidator>(typeof(FluentValidationValidator));
             this.Register<IFluentAdapterFactory>(typeof(DefaultFluentAdapterFactory));
             this.RegisterAll<IFluentAdapter>();
             this.RegisterAll<IValidator>();
