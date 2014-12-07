@@ -90,10 +90,29 @@
         }
 
         [Fact]
-        public void Should_invoke_response_negotiator()
+        public void Should_invoke_response_negotiator_for_reference_model()
         {
             // Given
             var model = new Person { FirstName = "First", LastName = "Last" };
+            var route = new FakeRoute(model);
+            var parameters = new DynamicDictionary();
+            var context = new NancyContext
+            {
+                Trace = new DefaultRequestTrace()
+            };
+
+            // When
+            var result = this.invoker.Invoke(route, new CancellationToken(), parameters, context).Result;
+
+            // Then
+            A.CallTo(() => this.responseNegotiator.NegotiateResponse(model, context)).MustHaveHappened();
+        }
+
+        [Fact]
+        public void Should_invoke_response_negotiator_for_value_type_model()
+        {
+            // Given
+            var model = new StructModel();
             var route = new FakeRoute(model);
             var parameters = new DynamicDictionary();
             var context = new NancyContext

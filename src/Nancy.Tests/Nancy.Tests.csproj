@@ -110,6 +110,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Fakes\PersonWithAgeField.cs" />
+    <Compile Include="Fakes\StructModel.cs" />
     <Compile Include="NoAppStartupsFixture.cs" />
     <Compile Include="Extensions\ResponseExtensions.cs" />
     <Compile Include="Fakes\FakeNancyModuleNoRoutes.cs" />
