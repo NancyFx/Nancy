@@ -6,6 +6,8 @@ namespace Nancy.Authentication.Forms
     using Cryptography;
     using Helpers;
     using Nancy.Extensions;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Nancy forms authentication implementation
@@ -57,7 +59,15 @@ namespace Nancy.Authentication.Forms
 
             currentConfiguration = configuration;
 
-            pipelines.BeforeRequest.AddItemToStartOfPipeline(GetLoadAuthenticationHook(configuration));
+            if (configuration.AsyncUserMapper != null)
+            {
+                pipelines.BeforeRequest.AddItemToStartOfPipeline(GetLoadAuthenticationAsyncHook(configuration));
+            }
+            else
+            {
+                pipelines.BeforeRequest.AddItemToStartOfPipeline(GetLoadAuthenticationHook(configuration));
+            }
+
             if (!configuration.DisableRedirect)
             {
                 pipelines.AfterRequest.AddItemToEndOfPipeline(GetRedirectToLoginHook(configuration));                
@@ -181,6 +191,46 @@ namespace Nancy.Authentication.Forms
 
                     return null;
                 };
+        }
+
+        /// <summary>
+        /// Gets the pre request hook for loading the authenticated user's details
+        /// from the cookie.
+        /// </summary>
+        /// <param name="configuration">Forms authentication configuration to use</param>
+        /// <returns>Pre request hook async delegate.</returns>
+        private static Func<NancyContext, CancellationToken, Task<Response>> GetLoadAuthenticationAsyncHook(FormsAuthenticationConfiguration configuration)
+        {
+            if (configuration == null)
+            {
+                throw new ArgumentNullException("configuration");
+            }
+
+            return (context, cancellationToken) =>
+            {
+                var userGuid = GetAuthenticatedUserFromCookie(context, configuration);
+
+                if (userGuid == Guid.Empty)
+                {
+                    return TaskHelpers.GetCompletedTask<Response>(null);
+                }
+
+                var task = configuration.AsyncUserMapper.GetUserFromIdentifierAsync(userGuid, context, cancellationToken);
+
+                return task.ContinueWith<Response>(antecedent =>
+                {
+                    if (antecedent.IsFaulted)
+                    {
+                        throw antecedent.Exception;
+                    }
+                    if (antecedent.IsCanceled)
+                    {
+                        throw new OperationCanceledException(cancellationToken);
+                    }
+                    context.CurrentUser = antecedent.Result;
+                    return null;
+                }, TaskContinuationOptions.ExecuteSynchronously);
+            };
         }
 
         /// <summary>

@@ -37,6 +37,11 @@ namespace Nancy.Authentication.Forms
         public string RedirectUrl { get; set; }
 
         /// <summary>
+        /// Gets or sets the asynchronous username/identifier mapper
+        /// </summary>
+        public IAsyncUserMapper AsyncUserMapper { get; set; }
+
+        /// <summary>
         /// Gets or sets the username/identifier mapper
         /// </summary>
         public IUserMapper UserMapper { get; set; }
@@ -79,7 +84,7 @@ namespace Nancy.Authentication.Forms
                     return false;
                 }
 
-                if (this.UserMapper == null)
+                if ((this.UserMapper == null) == (this.AsyncUserMapper == null))
                 {
                     return false;
                 }

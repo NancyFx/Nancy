@@ -3,6 +3,8 @@ namespace Nancy.Authentication.Forms.Tests
     using System;
     using System.Linq;
     using System.Threading;
+    using System.Threading.Tasks;
+
     using Bootstrapper;
     using Cryptography;
     using FakeItEasy;
@@ -16,6 +18,7 @@ namespace Nancy.Authentication.Forms.Tests
     public class FormsAuthenticationFixture
     {
         private FormsAuthenticationConfiguration config;
+        private FormsAuthenticationConfiguration asyncConfig;
         private FormsAuthenticationConfiguration secureConfig;
         private FormsAuthenticationConfiguration domainPathConfig;
         private NancyContext context;
@@ -53,6 +56,14 @@ namespace Nancy.Authentication.Forms.Tests
                 CryptographyConfiguration = this.cryptographyConfiguration,
                 RedirectUrl = "/login",
                 UserMapper = A.Fake<IUserMapper>(),
+                RequiresSSL = false
+            };
+
+            this.asyncConfig = new FormsAuthenticationConfiguration()
+            {
+                CryptographyConfiguration = this.cryptographyConfiguration,
+                RedirectUrl = "/login",
+                AsyncUserMapper = A.Fake<IAsyncUserMapper>(),
                 RequiresSSL = false
             };
 
@@ -124,6 +135,19 @@ namespace Nancy.Authentication.Forms.Tests
         }
 
         [Fact]
+        public void Should_add_a_pre_and_post_hook_when_enabled_with_async_mapper()
+        {
+            var pipelines = A.Fake<IPipelines>();
+
+            FormsAuthentication.Enable(pipelines, this.asyncConfig);
+
+            A.CallTo(() => pipelines.BeforeRequest.AddItemToStartOfPipeline(A<Func<NancyContext, CancellationToken, Task<Response>>>.Ignored))
+                .MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => pipelines.AfterRequest.AddItemToEndOfPipeline(A<Action<NancyContext>>.Ignored))
+                .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
         public void Should_add_a_pre_hook_but_not_a_post_hook_when_DisableRedirect_is_true()
         {
             var pipelines = A.Fake<IPipelines>();
@@ -132,6 +156,20 @@ namespace Nancy.Authentication.Forms.Tests
             FormsAuthentication.Enable(pipelines, this.config);
 
             A.CallTo(() => pipelines.BeforeRequest.AddItemToStartOfPipeline(A<Func<NancyContext, Response>>.Ignored))
+                .MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => pipelines.AfterRequest.AddItemToEndOfPipeline(A<Action<NancyContext>>.Ignored))
+                .MustNotHaveHappened();
+        }
+
+        [Fact]
+        public void Should_add_a_pre_hook_but_not_a_post_hook_when_DisableRedirect_is_true_with_async_mapper()
+        {
+            var pipelines = A.Fake<IPipelines>();
+
+            this.asyncConfig.DisableRedirect = true;
+            FormsAuthentication.Enable(pipelines, this.asyncConfig);
+
+            A.CallTo(() => pipelines.BeforeRequest.AddItemToStartOfPipeline(A<Func<NancyContext, CancellationToken, Task<Response>>>.Ignored))
                 .MustHaveHappened(Repeated.Exactly.Once);
             A.CallTo(() => pipelines.AfterRequest.AddItemToEndOfPipeline(A<Action<NancyContext>>.Ignored))
                 .MustNotHaveHappened();
@@ -415,6 +453,22 @@ namespace Nancy.Authentication.Forms.Tests
         }
 
         [Fact]
+        public void Should_set_user_in_context_with_valid_cookie_and_async_mapper()
+        {
+            var fakePipelines = new Pipelines();
+            var fakeMapper = A.Fake<IAsyncUserMapper>();
+            var fakeUser = new FakeUserIdentity { UserName = "Bob" };
+            A.CallTo(() => fakeMapper.GetUserFromIdentifierAsync(this.userGuid, this.context, A<CancellationToken>.Ignored)).Returns(fakeUser);
+            this.asyncConfig.AsyncUserMapper = fakeMapper;
+            FormsAuthentication.Enable(fakePipelines, this.asyncConfig);
+            this.context.Request.Cookies.Add(FormsAuthentication.FormsAuthenticationCookieName, this.validCookieValue);
+
+            var result = fakePipelines.BeforeRequest.Invoke(this.context, new CancellationToken());
+
+            context.CurrentUser.ShouldBeSameAs(fakeUser);
+        }
+
+        [Fact]
         public void Should_not_set_user_in_context_with_empty_cookie()
         {
             var fakePipelines = new Pipelines();
@@ -423,6 +477,22 @@ namespace Nancy.Authentication.Forms.Tests
             A.CallTo(() => fakeMapper.GetUserFromIdentifier(this.userGuid, this.context)).Returns(fakeUser);
             this.config.UserMapper = fakeMapper;
             FormsAuthentication.Enable(fakePipelines, this.config);
+            this.context.Request.Cookies.Add(FormsAuthentication.FormsAuthenticationCookieName, string.Empty);
+
+            var result = fakePipelines.BeforeRequest.Invoke(this.context, new CancellationToken());
+
+            context.CurrentUser.ShouldBeNull();
+        }
+
+        [Fact]
+        public void Should_not_set_user_in_context_with_empty_cookie_and_async_mapper()
+        {
+            var fakePipelines = new Pipelines();
+            var fakeMapper = A.Fake<IAsyncUserMapper>();
+            var fakeUser = new FakeUserIdentity { UserName = "Bob" };
+            A.CallTo(() => fakeMapper.GetUserFromIdentifierAsync(this.userGuid, this.context, A<CancellationToken>.Ignored)).Returns(fakeUser);
+            this.asyncConfig.AsyncUserMapper = fakeMapper;
+            FormsAuthentication.Enable(fakePipelines, this.asyncConfig);
             this.context.Request.Cookies.Add(FormsAuthentication.FormsAuthenticationCookieName, string.Empty);
 
             var result = fakePipelines.BeforeRequest.Invoke(this.context, new CancellationToken());
