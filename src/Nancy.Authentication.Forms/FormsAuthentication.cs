@@ -1,13 +1,12 @@
 namespace Nancy.Authentication.Forms
 {
     using System;
-
-    using Nancy.Bootstrapper;
-    using Nancy.Cookies;
-    using Nancy.Cryptography;
-    using Nancy.Extensions;
-    using Nancy.Helpers;
-    using Nancy.Security;
+    using Bootstrapper;
+    using Cookies;
+    using Cryptography;
+    using Extensions;
+    using Helpers;
+    using Security;
 
     /// <summary>
     /// Nancy forms authentication implementation
@@ -52,10 +51,7 @@ namespace Nancy.Authentication.Forms
                 throw new ArgumentNullException("configuration");
             }
 
-            if (!configuration.IsValid)
-            {
-                throw new ArgumentException("Configuration is invalid", "configuration");
-            }
+            configuration.EnsureConfigurationIsValid();
 
             currentConfiguration = configuration;
 
@@ -83,10 +79,7 @@ namespace Nancy.Authentication.Forms
                 throw new ArgumentNullException("configuration");
             }
 
-            if (!configuration.IsValid)
-            {
-                throw new ArgumentException("Configuration is invalid", "configuration");
-            }
+            configuration.EnsureConfigurationIsValid();
 
             module.RequiresAuthentication();
 
@@ -286,12 +279,12 @@ namespace Nancy.Authentication.Forms
 
             var cookie = new NancyCookie(formsAuthenticationCookieName, cookieContents, true, configuration.RequiresSSL, cookieExpiry);
 
-            if(!string.IsNullOrEmpty(configuration.Domain))
+            if (!string.IsNullOrEmpty(configuration.Domain))
             {
                 cookie.Domain = configuration.Domain;
             }
 
-            if(!string.IsNullOrEmpty(configuration.Path))
+            if (!string.IsNullOrEmpty(configuration.Path))
             {
                 cookie.Path = configuration.Path;
             }
@@ -306,14 +299,14 @@ namespace Nancy.Authentication.Forms
         /// <returns>Nancy cookie instance</returns>
         private static INancyCookie BuildLogoutCookie(FormsAuthenticationConfiguration configuration)
         {
-            var cookie = new NancyCookie(formsAuthenticationCookieName, String.Empty, true, configuration.RequiresSSL,  DateTime.Now.AddDays(-1));
+            var cookie = new NancyCookie(formsAuthenticationCookieName, String.Empty, true, configuration.RequiresSSL, DateTime.Now.AddDays(-1));
 
-            if(!string.IsNullOrEmpty(configuration.Domain))
+            if (!string.IsNullOrEmpty(configuration.Domain))
             {
                 cookie.Domain = configuration.Domain;
             }
 
-            if(!string.IsNullOrEmpty(configuration.Path))
+            if (!string.IsNullOrEmpty(configuration.Path))
             {
                 cookie.Path = configuration.Path;
             }
@@ -387,12 +380,12 @@ namespace Nancy.Authentication.Forms
                 redirectQuerystringKey = configuration.RedirectQuerystringKey;
             }
 
-            if(string.IsNullOrWhiteSpace(redirectQuerystringKey))
+            if (string.IsNullOrWhiteSpace(redirectQuerystringKey))
             {
                 redirectQuerystringKey = FormsAuthenticationConfiguration.DefaultRedirectQuerystringKey;
             }
 
             return redirectQuerystringKey;
         }
-     }
+    }
 }
