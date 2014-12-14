@@ -4,13 +4,34 @@ namespace Nancy.Hosting.Aspnet.Tests
     using System.Collections.Specialized;
     using System.IO;
     using System.Threading;
+    using System.Threading.Tasks;
     using System.Web;
+
+    using Nancy.Bootstrapper;
     using Nancy.Cookies;
     using FakeItEasy;
 
     using Nancy.Helpers;
     using Nancy.Hosting.Aspnet;
     using Xunit;
+
+    public class FakedEngine : INancyEngine
+    {
+        private NancyContext _nancyContext;
+        public FakedEngine()
+        {
+            _nancyContext = new NancyContext() { Response = new Response() };
+        }
+        public Request Request { get; set; }
+        public Func<NancyContext, IPipelines> RequestPipelinesFactory { get; set; }
+        public Task<NancyContext> HandleRequest(Request request, Func<NancyContext, NancyContext> preRequest, CancellationToken cancellationToken)
+        {
+            _nancyContext.Request = request;
+            var tcs = new TaskCompletionSource<NancyContext>();
+            tcs.SetResult(_nancyContext);
+            return tcs.Task;
+        }
+    }
 
     public class NancyHandlerFixture
     {
@@ -108,6 +129,48 @@ namespace Nancy.Hosting.Aspnet.Tests
 
             // Then
             A.CallTo(() => disposable.Dispose()).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public void Should_create_correct_nancy_url()
+        {
+            // Given 
+            var requestedPath = "/about/a/path/with/many/segments";
+            var nancyEngine = new FakedEngine();
+            var nancyHandler = new NancyHandler(nancyEngine);
+            A.CallTo(() => this.request.AppRelativeCurrentExecutionFilePath).Returns("~" + requestedPath);
+            A.CallTo(() => this.request.Url).Returns(new Uri("http://ihatedummydata.com" + requestedPath));
+            A.CallTo(() => this.request.HttpMethod).Returns("GET");
+
+            // When
+            var task = nancyHandler.ProcessRequest(context, ar => { }, new object());
+            NancyHandler.EndProcessRequest(task);
+            var nancyContext = task.Result.Item1.Request;
+
+            // Then
+            Assert.Equal(nancyContext.Url.Segments, new[] { "about", "a", "path", "with", "many", "segments" });
+            Assert.Equal(nancyContext.Url.Path, requestedPath);
+        }
+
+        [Fact]
+        public void UrlEscaped_Path_Should_create_correct_nancy_url()
+        {
+            // Given 
+            var requestedPath = "/hello%2Fworld";
+            var nancyEngine = new FakedEngine();
+            var nancyHandler = new NancyHandler(nancyEngine);
+            A.CallTo(() => this.request.AppRelativeCurrentExecutionFilePath).Returns("~" + requestedPath);
+            A.CallTo(() => this.request.Url).Returns(new Uri("http://ihatedummydata.com" + requestedPath));
+            A.CallTo(() => this.request.HttpMethod).Returns("GET");
+
+            // When
+            var task = nancyHandler.ProcessRequest(context, ar => { }, new object());
+            NancyHandler.EndProcessRequest(task);
+            var nancyContext = task.Result.Item1.Request;
+
+            // Then
+            Assert.Equal(nancyContext.Url.Segments, new[] { "hello/world" });
+            Assert.Equal(nancyContext.Url.Path, requestedPath);
         }
 
         private void SetupRequestProcess(NancyContext nancyContext)

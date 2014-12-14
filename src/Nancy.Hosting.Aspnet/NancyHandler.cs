@@ -74,7 +74,8 @@ namespace Nancy.Hosting.Aspnet
 
             var basePath = context.Request.ApplicationPath.TrimEnd('/');
 
-            var path = context.Request.Url.Segments.Aggregate((current, next) => current + "/" + HttpUtility.UrlEncode(next));
+            var cleanedSegments = context.Request.Url.Segments.Select(s => s.TrimEnd('/'));
+            var path = cleanedSegments.Aggregate((current, next) => current + "/" + HttpUtility.UrlEncode(next.TrimEnd('/')));
             path = string.IsNullOrWhiteSpace(path) ? "/" : path;
 
             var nancyUrl = new Url
