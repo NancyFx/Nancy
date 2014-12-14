@@ -234,6 +234,74 @@ namespace Nancy.Hosting.Self.Tests
             Assert.True(type.Attributes.ToString().Contains("Serializable"));
         }
 
+        [Fact]
+        public void Should_return_correct_NancyUrl()
+        {
+            // Given
+            Request nancyRequest = null;
+            var fakeEngine = A.Fake<INancyEngine>();
+            A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored, A<Func<NancyContext, NancyContext>>.Ignored, A<CancellationToken>.Ignored))
+                .Invokes(f => nancyRequest = (Request)f.Arguments[0])
+                .ReturnsLazily(c => TaskHelpers.GetCompletedTask(new NancyContext { Request = (Request)c.Arguments[0], Response = new Response() }));
+
+            var fakeBootstrapper = A.Fake<INancyBootstrapper>();
+            A.CallTo(() => fakeBootstrapper.GetEngine()).Returns(fakeEngine);
+
+            // When
+            using (CreateAndOpenSelfHost(fakeBootstrapper))
+            {
+                var request = WebRequest.Create(new Uri(BaseUri, "test/stuff"));
+                request.Method = "GET";
+
+                try
+                {
+                    request.GetResponse();
+                }
+                catch (WebException)
+                {
+                    // Will throw because it returns 404 - don't care.
+                }
+            }
+
+            // Then
+            nancyRequest.Path.ShouldEqual("/test/stuff");
+            Assert.Equal(nancyRequest.Url.Segments, new []{"test", "stuff"});
+        }
+
+        [Fact]
+        public void Escaped_Url_Should_return_correct_NancyUrl()
+        {
+            // Given
+            Request nancyRequest = null;
+            var fakeEngine = A.Fake<INancyEngine>();
+            A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored, A<Func<NancyContext, NancyContext>>.Ignored, A<CancellationToken>.Ignored))
+                .Invokes(f => nancyRequest = (Request)f.Arguments[0])
+                .ReturnsLazily(c => TaskHelpers.GetCompletedTask(new NancyContext { Request = (Request)c.Arguments[0], Response = new Response() }));
+
+            var fakeBootstrapper = A.Fake<INancyBootstrapper>();
+            A.CallTo(() => fakeBootstrapper.GetEngine()).Returns(fakeEngine);
+
+            // When
+            using (CreateAndOpenSelfHost(fakeBootstrapper))
+            {
+                var request = WebRequest.Create(new Uri(BaseUri, "hello%2Fworld"));
+                request.Method = "GET";
+
+                try
+                {
+                    request.GetResponse();
+                }
+                catch (WebException)
+                {
+                    // Will throw because it returns 404 - don't care.
+                }
+            }
+
+            // Then
+            nancyRequest.Path.ShouldEqual("/hello%2Fworld");
+            Assert.Equal(nancyRequest.Url.Segments, new[] { "hello%2Fworld" });
+        }
+
         private class NancyHostWrapper : IDisposable
         {
             private readonly NancyHost host;
