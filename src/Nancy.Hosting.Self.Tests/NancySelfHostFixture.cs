@@ -299,7 +299,7 @@ namespace Nancy.Hosting.Self.Tests
 
             // Then
             nancyRequest.Path.ShouldEqual("/hello%2Fworld");
-            Assert.Equal(nancyRequest.Url.Segments, new[] { "hello%2Fworld" });
+            Assert.Equal(nancyRequest.Url.Segments, new[] { "hello/world" });
         }
 
         private class NancyHostWrapper : IDisposable
