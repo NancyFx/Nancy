@@ -145,11 +145,11 @@ namespace Nancy.Hosting.Aspnet.Tests
             // When
             var task = nancyHandler.ProcessRequest(context, ar => { }, new object());
             NancyHandler.EndProcessRequest(task);
-            var nancyContext = task.Result.Item1.Request;
+            var nancyRequest = task.Result.Item1.Request;
 
             // Then
-            Assert.Equal(nancyContext.Url.Segments, new[] { "about", "a", "path", "with", "many", "segments" });
-            Assert.Equal(nancyContext.Url.Path, requestedPath);
+            Assert.Equal(nancyRequest.Url.Segments, new[] { "about", "a", "path", "with", "many", "segments" });
+            Assert.Equal(nancyRequest.Url.Path, requestedPath);
         }
 
         [Fact]
@@ -166,11 +166,32 @@ namespace Nancy.Hosting.Aspnet.Tests
             // When
             var task = nancyHandler.ProcessRequest(context, ar => { }, new object());
             NancyHandler.EndProcessRequest(task);
-            var nancyContext = task.Result.Item1.Request;
+            var nancyRequest = task.Result.Item1.Request;
 
             // Then
-            Assert.Equal(nancyContext.Url.Segments, new[] { "hello/world" });
-            Assert.Equal(nancyContext.Url.Path, requestedPath);
+            Assert.Equal(nancyRequest.Url.Segments, new[] { "hello/world" });
+            Assert.Equal(nancyRequest.Url.Path, requestedPath);
+        }
+
+        [Fact]
+        public void UrlWithTrailingPeriod_Path_Should_create_correct_nancy_url()
+        {
+            // Given 
+            var requestedPath = "/hello/world.";
+            var nancyEngine = new FakedEngine();
+            var nancyHandler = new NancyHandler(nancyEngine);
+            A.CallTo(() => this.request.AppRelativeCurrentExecutionFilePath).Returns("~" + requestedPath);
+            A.CallTo(() => this.request.Url).Returns(new Uri("http://ihatedummydata.com" + requestedPath));
+            A.CallTo(() => this.request.HttpMethod).Returns("GET");
+
+            // When
+            var task = nancyHandler.ProcessRequest(context, ar => { }, new object());
+            NancyHandler.EndProcessRequest(task);
+            var nancyRequest = task.Result.Item1.Request;
+
+            // Then
+            Assert.Equal(nancyRequest.Url.Segments, new[] { "hello", "world." });
+            Assert.Equal(nancyRequest.Url.Path, requestedPath);
         }
 
         private void SetupRequestProcess(NancyContext nancyContext)
