@@ -16,6 +16,8 @@ namespace Nancy
         private static readonly char[] SplitSeparators = { '/' };
 
         private string basePath;
+        private string[] segments;
+        private string path;
 
         /// <summary>
         /// Creates an instance of the <see cref="Url" /> class
@@ -80,7 +82,15 @@ namespace Nancy
         /// <summary>
         /// Gets the path of the request, relative to the base path
         /// </summary>
-        public string Path { get; set; }
+        public string Path
+        {
+            get { return this.path; }
+            set
+            {
+                this.path = value;
+                segments = null;
+            }
+        }
 
         /// <summary>
         /// Gets the decoded path segments.
@@ -88,9 +98,8 @@ namespace Nancy
         /// </summary>
         public string[] Segments
         {
-            get
-            {
-                return this.Path.Split(SplitSeparators, StringSplitOptions.RemoveEmptyEntries).Select(HttpUtility.UrlDecode).ToArray();
+            get {
+                return this.segments ?? (this.segments = this.Path.Split(SplitSeparators, StringSplitOptions.RemoveEmptyEntries).Select(HttpUtility.UrlDecode).ToArray());
             }
         }
 
