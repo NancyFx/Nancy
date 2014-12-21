@@ -115,6 +115,7 @@
     </Compile>
     <Compile Include="FileSystemRootPathProvider.cs" />
     <Compile Include="NancyWcfGenericService.cs" />
+    <Compile Include="UriExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy\Nancy.csproj">

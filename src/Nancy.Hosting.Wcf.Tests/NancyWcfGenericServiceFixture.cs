@@ -233,6 +233,44 @@ namespace Nancy.Hosting.Wcf.Tests
             Assert.False(response.Headers.AllKeys.Any(header => header == "Content-Type"));
         }
 
+        [Fact]
+        public void UrlTestCases_Should_Pass()
+        {
+            foreach (var urlTestCase in UrlTestCases.Instance.TestCases.Where(x => !x.HostsNotSupported.Contains(UrlTestCases.Host.Wcf)))
+            {
+                Request nancyRequest = null;
+                var fakeEngine = A.Fake<INancyEngine>();
+                var fakeBootstrapper = A.Fake<INancyBootstrapper>();
+
+                A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored, A<Func<NancyContext, NancyContext>>.Ignored, A<CancellationToken>.Ignored))
+                    .Invokes(f => nancyRequest = (Request)f.Arguments[0])
+                    .Returns(TaskHelpers.GetCompletedTask(new NancyContext()));
+                A.CallTo(() => fakeBootstrapper.GetEngine()).Returns(fakeEngine);
+
+                // When 
+                var baseUri = new Uri(urlTestCase.BaseUri);
+                using (CreateAndOpenWebServiceHost(fakeBootstrapper, baseUri))
+                {
+                    var request = WebRequest.Create(urlTestCase.IncomingUrl);
+                    request.Method = "GET";
+
+                    try
+                    {
+                        request.GetResponse();
+                    }
+                    catch (WebException)
+                    {
+                        // Will throw because it returns 404 - don't care.
+                    }
+                }
+
+                // Then
+                Assert.Equal(urlTestCase.ExpectedPath, nancyRequest.Url.Path);
+                Assert.Equal(urlTestCase.ExpectedParsedUrl, nancyRequest.Url.ToString());
+                Assert.Equal(urlTestCase.ExpectedUrlSegments, nancyRequest.Url.Segments);   
+            }
+        }
+
         private static WebServiceHost CreateAndOpenWebServiceHost(INancyBootstrapper nancyBootstrapper = null, Uri baseUri = null)
         {
             if (nancyBootstrapper == null)

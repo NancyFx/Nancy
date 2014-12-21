@@ -7,6 +7,13 @@
     { 
         private static readonly Lazy<UrlTestCases> lazy = new Lazy<UrlTestCases>(() => new UrlTestCases());
         public static UrlTestCases Instance { get { return lazy.Value; } }
+        public enum Host
+        {
+            Self,
+            AspNet,
+            Wcf,
+            Owin
+        }
 
         public UrlTestCases()
         {
@@ -14,7 +21,7 @@
             {
                 new UrlTestCase
                 {
-                    Name = "Url with fragment identifier",
+                    Name = "Url with fragment identifier and user specified",
                     BaseUri = "http://localhost:1234/base/",
                     IncomingUrl = "http://user@localhost:1234/base/#hello, world",
                     ExpectedParsedUrl = "http://localhost:1234/base",
@@ -37,7 +44,8 @@
                     IncomingUrl = "http://localhost:1234/base/hello/world.",
                     ExpectedParsedUrl = "http://localhost:1234/base/hello/world.",
                     ExpectedPath = "/hello/world.",
-                    ExpectedUrlSegments = new[]{"hello", "world."}
+                    ExpectedUrlSegments = new[]{"hello", "world."},
+                    HostsNotSupported = new [] {Host.Wcf}
                 },
                 new UrlTestCase
                 {
@@ -46,7 +54,8 @@
                     IncomingUrl = "http://localhost:1234/base/hello%2Fworld",
                     ExpectedParsedUrl = "http://localhost:1234/base/hello%2Fworld",
                     ExpectedPath = "/hello%2Fworld",
-                    ExpectedUrlSegments = new[]{"hello/world"}
+                    ExpectedUrlSegments = new[]{"hello/world"},
+                    HostsNotSupported = new [] {Host.Wcf}
                 },
                 new UrlTestCase
                 {
@@ -81,7 +90,7 @@
         public IList<UrlTestCase> TestCases { get; set; }
     }
 
-    public struct UrlTestCase
+    public class UrlTestCase
     {
         public string Name;
         public string BaseUri;
@@ -89,6 +98,7 @@
         public string ExpectedParsedUrl;
         public string ExpectedPath;
         public string[] ExpectedUrlSegments;
+        public UrlTestCases.Host[] HostsNotSupported = {};
         public bool ExpectFailure;
     }
 }
