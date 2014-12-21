@@ -1,6 +1,7 @@
 namespace Nancy
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Net;
     using System.Net.Sockets;
@@ -14,6 +15,7 @@ namespace Nancy
     public sealed class Url : ICloneable
     {
         private static readonly char[] SplitSeparators = { '/' };
+        private static readonly Dictionary<string, int> SchemeDefaultPorts = new Dictionary<string, int> { { "http", 80 }, { "https", 443 } }; 
 
         private string basePath;
         private string[] segments;
@@ -118,7 +120,7 @@ namespace Nancy
             {
                 return this.Scheme + "://" +
                        GetHostName(this.HostName) +
-                       GetPort(this.Port);
+                       GetPort(this.Scheme, this.Port);
             }
         }
 
@@ -136,8 +138,8 @@ namespace Nancy
         public override string ToString()
         {
             return this.Scheme + "://" + 
-                GetHostName(this.HostName) + 
-                GetPort(this.Port) +
+                GetHostName(this.HostName) +
+                GetPort(this.Scheme, this.Port) +
                 GetCorrectPath(this.BasePath) +
                 GetCorrectPath(this.Path) +
                 GetQuery(this.Query);
@@ -235,11 +237,14 @@ namespace Nancy
             return (string.IsNullOrEmpty(path) || path.Equals("/")) ? string.Empty : path;
         }
 
-        private static string GetPort(int? port)
+        private static string GetPort(string scheme, int? port)
         {
-            return (!port.HasValue) ?
-                string.Empty : 
-                string.Concat(":", port.Value);
+            if (SchemeDefaultPorts.ContainsKey(scheme) && port.HasValue && SchemeDefaultPorts[scheme].Equals(port.Value))
+            {
+                return String.Empty;
+            }
+
+            return (!port.HasValue) ? string.Empty : string.Concat(":", port.Value);
         }
 
         private static string GetHostName(string hostName)
