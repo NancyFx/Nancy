@@ -21,10 +21,40 @@
             {
                 new UrlTestCase
                 {
-                    Name = "Url with fragment identifier and user specified",
+                    Name = "Simple url",
                     BaseUri = "http://www.nancyfx.org",
                     IncomingUrl = "http://www.nancyfx.org",
                     ExpectedParsedUrl = "http://www.nancyfx.org",
+                    ExpectedPath = "/",
+                    ExpectedUrlSegments = new string[]{},
+                    HostsNotSupported = new [] {Host.Wcf, Host.Self, Host.Owin}
+                },
+                new UrlTestCase
+                {
+                    Name = "Simple url with trailing slash",
+                    BaseUri = "http://www.nancyfx.org",
+                    IncomingUrl = "http://www.nancyfx.org/",
+                    ExpectedParsedUrl = "http://www.nancyfx.org",
+                    ExpectedPath = "/",
+                    ExpectedUrlSegments = new string[]{},
+                    HostsNotSupported = new [] {Host.Wcf, Host.Self, Host.Owin}
+                },
+                new UrlTestCase
+                {
+                    Name = "Simple url with query string",
+                    BaseUri = "http://www.nancyfx.org",
+                    IncomingUrl = "http://www.nancyfx.org?key=val",
+                    ExpectedParsedUrl = "http://www.nancyfx.org?key=val",
+                    ExpectedPath = "/",
+                    ExpectedUrlSegments = new string[]{},
+                    HostsNotSupported = new [] {Host.Wcf, Host.Self, Host.Owin}
+                },
+                new UrlTestCase
+                {
+                    Name = "Simple url with trailing slash and query string",
+                    BaseUri = "http://www.nancyfx.org",
+                    IncomingUrl = "http://www.nancyfx.org/?key=val",
+                    ExpectedParsedUrl = "http://www.nancyfx.org?key=val",
                     ExpectedPath = "/",
                     ExpectedUrlSegments = new string[]{},
                     HostsNotSupported = new [] {Host.Wcf, Host.Self, Host.Owin}
@@ -43,6 +73,15 @@
                     Name = "Url with fragment identifier",
                     BaseUri = "http://localhost:1234/base/",
                     IncomingUrl = "http://localhost:1234/base/#hello, world",
+                    ExpectedParsedUrl = "http://localhost:1234/base",
+                    ExpectedPath = "/",
+                    ExpectedUrlSegments = new string[]{}
+                },
+                new UrlTestCase
+                {
+                    Name = "Url with percent encoding in fragment identifier",
+                    BaseUri = "http://localhost:1234/base/",
+                    IncomingUrl = "http://localhost:1234/base/#%c2%a9",
                     ExpectedParsedUrl = "http://localhost:1234/base",
                     ExpectedPath = "/",
                     ExpectedUrlSegments = new string[]{}
