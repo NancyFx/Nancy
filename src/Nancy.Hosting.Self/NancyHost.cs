@@ -178,6 +178,8 @@
                             // Clear the UnEscapeDotsAndSlashes  attribute
                             if ((flagsValue & 0x2000000) != 0)
                                 flagsField.SetValue(parser, flagsValue & ~0x2000000);
+                            if ((flagsValue & 0x1000000) != 0)
+                                flagsField.SetValue(parser, flagsValue & ~0x1000000);
                         }
                     }
                 }

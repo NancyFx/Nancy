@@ -28,10 +28,13 @@ namespace Nancy.Hosting.Self
 
         public static string MapToAppLocalPath(this Uri baseUri, string rawUrl)
         {
+            const string fragmentRegex = "#.*$";
+            const string queryRegex = @"\?.*$";
+
             var baseLocalPath = baseUri.LocalPath.TrimEnd('/');
             var path = Regex.Replace(rawUrl, "^" + baseLocalPath, String.Empty, RegexOptions.IgnoreCase);
-            path = Regex.Replace(path, @"\?.*", String.Empty, RegexOptions.IgnoreCase);
-            path = Regex.Replace(path, @"#.*", String.Empty, RegexOptions.IgnoreCase);
+            path = Regex.Replace(path, fragmentRegex, String.Empty, RegexOptions.IgnoreCase);
+            path = Regex.Replace(path, queryRegex, String.Empty, RegexOptions.IgnoreCase);
 
             if (!path.StartsWith("/"))
                 path = "/" + path;

@@ -4,6 +4,7 @@ namespace Nancy.Hosting.Aspnet
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
+    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using System.Web;
     using IO;
@@ -74,17 +75,17 @@ namespace Nancy.Hosting.Aspnet
 
             var basePath = context.Request.ApplicationPath.TrimEnd('/');
 
-            var originalString = context.Request.Url.OriginalString;
-            var path = originalString.Substring(originalString.IndexOf(context.Request.Url.Host, StringComparison.Ordinal) + context.Request.Url.Host.Length);
+            var url = context.Request.Url;
+            var path = ResolvePath(url, basePath);
 
             var nancyUrl = new Url
                                {
-                                   Scheme = context.Request.Url.Scheme,
-                                   HostName = context.Request.Url.Host,
-                                   Port = context.Request.Url.Port,
+                                   Scheme = url.Scheme,
+                                   HostName = url.Host,
+                                   Port = url.Port,
                                    BasePath = basePath,
                                    Path = path,
-                                   Query = context.Request.Url.Query,
+                                   Query = url.Query,
                                };
             byte[] certificate = null;
 
@@ -102,6 +103,29 @@ namespace Nancy.Hosting.Aspnet
                 incomingHeaders,
                 context.Request.UserHostAddress,
                 certificate);
+        }
+
+        private static string ResolvePath(Uri url, string basePath)
+        {
+            const string fragmentRegex = "#.*$";
+            const string queryRegex = @"\?.*$";
+            var portRegex = "^:" + url.Port;
+
+            var originalString = url.OriginalString;
+            var path = originalString.Substring(originalString.IndexOf(url.Host, StringComparison.OrdinalIgnoreCase) + url.Host.Length);
+            path = Regex.Replace(path, portRegex, String.Empty);
+            path = Regex.Replace(path, fragmentRegex, String.Empty, RegexOptions.IgnoreCase);
+            path = Regex.Replace(path, queryRegex, String.Empty, RegexOptions.IgnoreCase);
+
+            if (path.StartsWith(basePath, StringComparison.OrdinalIgnoreCase))
+            {
+                path = path.Remove(0, basePath.Length);
+            }
+
+            if (!path.StartsWith("/"))
+                path = "/" + path;
+
+            return path;
         }
 
         private static long GetExpectedRequestLength(IDictionary<string, IEnumerable<string>> incomingHeaders)
