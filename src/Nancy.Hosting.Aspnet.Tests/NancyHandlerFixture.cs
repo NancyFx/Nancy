@@ -3,6 +3,7 @@ namespace Nancy.Hosting.Aspnet.Tests
     using System;
     using System.Collections.Specialized;
     using System.IO;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using System.Web;
@@ -136,7 +137,7 @@ namespace Nancy.Hosting.Aspnet.Tests
         [Fact]
         public void UrlTestCases_Should_Pass()
         {
-            foreach (var urlTestCase in UrlTestCases.Instance.TestCases)
+            foreach (var urlTestCase in UrlTestCases.Instance.TestCases.Where(x => !x.HostsNotSupported.Contains(UrlTestCases.Host.AspNet)))
             {
                 // Given 
                 var nancyEngine = new FakedEngine();
