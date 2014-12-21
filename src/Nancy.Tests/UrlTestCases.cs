@@ -61,6 +61,46 @@
                 },
                 new UrlTestCase
                 {
+                    Name = "Simple secure url",
+                    BaseUri = "https://www.nancyfx.org",
+                    IncomingUrl = "https://www.nancyfx.org",
+                    ExpectedParsedUrl = "https://www.nancyfx.org",
+                    ExpectedPath = "/",
+                    ExpectedUrlSegments = new string[]{},
+                    HostsNotSupported = new [] {Host.Wcf, Host.Self, Host.Owin}
+                },
+                new UrlTestCase
+                {
+                    Name = "Simple secure url with trailing slash",
+                    BaseUri = "https://www.nancyfx.org",
+                    IncomingUrl = "https://www.nancyfx.org/",
+                    ExpectedParsedUrl = "https://www.nancyfx.org",
+                    ExpectedPath = "/",
+                    ExpectedUrlSegments = new string[]{},
+                    HostsNotSupported = new [] {Host.Wcf, Host.Self, Host.Owin}
+                },
+                new UrlTestCase
+                {
+                    Name = "Simple secure url with query string",
+                    BaseUri = "https://www.nancyfx.org",
+                    IncomingUrl = "https://www.nancyfx.org?key=val",
+                    ExpectedParsedUrl = "https://www.nancyfx.org?key=val",
+                    ExpectedPath = "/",
+                    ExpectedUrlSegments = new string[]{},
+                    HostsNotSupported = new [] {Host.Wcf, Host.Self, Host.Owin}
+                },
+                new UrlTestCase
+                {
+                    Name = "Simple secure url with trailing slash and query string",
+                    BaseUri = "https://www.nancyfx.org",
+                    IncomingUrl = "https://www.nancyfx.org/?key=val",
+                    ExpectedParsedUrl = "https://www.nancyfx.org?key=val",
+                    ExpectedPath = "/",
+                    ExpectedUrlSegments = new string[]{},
+                    HostsNotSupported = new [] {Host.Wcf, Host.Self, Host.Owin}
+                },
+                new UrlTestCase
+                {
                     Name = "Url with fragment identifier and user specified",
                     BaseUri = "http://localhost:1234/base/",
                     IncomingUrl = "http://user@localhost:1234/base/#hello, world",
