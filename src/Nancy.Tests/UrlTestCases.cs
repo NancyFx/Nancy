@@ -27,7 +27,7 @@
                     ExpectedParsedUrl = "http://www.nancyfx.org",
                     ExpectedPath = "/",
                     ExpectedUrlSegments = new string[]{},
-                    HostsNotSupported = new [] {Host.Wcf, Host.Self, Host.Owin}
+                    HostsNotSupported = new [] {Host.Wcf, Host.Self}
                 },
                 new UrlTestCase
                 {
@@ -37,7 +37,7 @@
                     ExpectedParsedUrl = "http://www.nancyfx.org",
                     ExpectedPath = "/",
                     ExpectedUrlSegments = new string[]{},
-                    HostsNotSupported = new [] {Host.Wcf, Host.Self, Host.Owin}
+                    HostsNotSupported = new [] {Host.Wcf, Host.Self}
                 },
                 new UrlTestCase
                 {
@@ -47,7 +47,7 @@
                     ExpectedParsedUrl = "http://www.nancyfx.org?key=val",
                     ExpectedPath = "/",
                     ExpectedUrlSegments = new string[]{},
-                    HostsNotSupported = new [] {Host.Wcf, Host.Self, Host.Owin}
+                    HostsNotSupported = new [] {Host.Wcf, Host.Self}
                 },
                 new UrlTestCase
                 {
@@ -57,7 +57,7 @@
                     ExpectedParsedUrl = "http://www.nancyfx.org?key=val",
                     ExpectedPath = "/",
                     ExpectedUrlSegments = new string[]{},
-                    HostsNotSupported = new [] {Host.Wcf, Host.Self, Host.Owin}
+                    HostsNotSupported = new [] {Host.Wcf, Host.Self}
                 },
                 new UrlTestCase
                 {
@@ -67,7 +67,7 @@
                     ExpectedParsedUrl = "https://www.nancyfx.org",
                     ExpectedPath = "/",
                     ExpectedUrlSegments = new string[]{},
-                    HostsNotSupported = new [] {Host.Wcf, Host.Self, Host.Owin}
+                    HostsNotSupported = new [] {Host.Wcf, Host.Self}
                 },
                 new UrlTestCase
                 {
@@ -77,7 +77,7 @@
                     ExpectedParsedUrl = "https://www.nancyfx.org",
                     ExpectedPath = "/",
                     ExpectedUrlSegments = new string[]{},
-                    HostsNotSupported = new [] {Host.Wcf, Host.Self, Host.Owin}
+                    HostsNotSupported = new [] {Host.Wcf, Host.Self}
                 },
                 new UrlTestCase
                 {
@@ -87,7 +87,7 @@
                     ExpectedParsedUrl = "https://www.nancyfx.org?key=val",
                     ExpectedPath = "/",
                     ExpectedUrlSegments = new string[]{},
-                    HostsNotSupported = new [] {Host.Wcf, Host.Self, Host.Owin}
+                    HostsNotSupported = new [] {Host.Wcf, Host.Self}
                 },
                 new UrlTestCase
                 {
@@ -97,7 +97,7 @@
                     ExpectedParsedUrl = "https://www.nancyfx.org?key=val",
                     ExpectedPath = "/",
                     ExpectedUrlSegments = new string[]{},
-                    HostsNotSupported = new [] {Host.Wcf, Host.Self, Host.Owin}
+                    HostsNotSupported = new [] {Host.Wcf, Host.Self}
                 },
                 new UrlTestCase
                 {
@@ -106,7 +106,8 @@
                     IncomingUrl = "http://user@localhost:1234/base/#hello, world",
                     ExpectedParsedUrl = "http://localhost:1234/base",
                     ExpectedPath = "/",
-                    ExpectedUrlSegments = new string[]{}
+                    ExpectedUrlSegments = new string[]{},
+                    HostsNotSupported = new [] {Host.Owin}
                 },
                 new UrlTestCase
                 {
@@ -115,7 +116,8 @@
                     IncomingUrl = "http://localhost:1234/base/#hello, world",
                     ExpectedParsedUrl = "http://localhost:1234/base",
                     ExpectedPath = "/",
-                    ExpectedUrlSegments = new string[]{}
+                    ExpectedUrlSegments = new string[]{},
+                    HostsNotSupported = new [] {Host.Owin}
                 },
                 new UrlTestCase
                 {
@@ -124,7 +126,8 @@
                     IncomingUrl = "http://localhost:1234/base/#%c2%a9",
                     ExpectedParsedUrl = "http://localhost:1234/base",
                     ExpectedPath = "/",
-                    ExpectedUrlSegments = new string[]{}
+                    ExpectedUrlSegments = new string[]{},
+                    HostsNotSupported = new [] {Host.Owin}
                 },
                 new UrlTestCase
                 {
@@ -134,7 +137,7 @@
                     ExpectedParsedUrl = "http://localhost:1234/base/hello/world.",
                     ExpectedPath = "/hello/world.",
                     ExpectedUrlSegments = new[]{"hello", "world."},
-                    HostsNotSupported = new [] {Host.Wcf}
+                    HostsNotSupported = new [] {Host.Wcf, Host.Owin}
                 },
                 new UrlTestCase
                 {
@@ -144,7 +147,7 @@
                     ExpectedParsedUrl = "http://localhost:1234/base/hello%2Fworld",
                     ExpectedPath = "/hello%2Fworld",
                     ExpectedUrlSegments = new[]{"hello/world"},
-                    HostsNotSupported = new [] {Host.Wcf}
+                    HostsNotSupported = new [] {Host.Wcf, Host.Owin}
                 },
                 new UrlTestCase
                 {
@@ -153,7 +156,8 @@
                     IncomingUrl = "http://localhost:1234/base/hello/world",
                     ExpectedParsedUrl = "http://localhost:1234/base/hello/world",
                     ExpectedPath = "/hello/world",
-                    ExpectedUrlSegments = new[]{"hello", "world"}
+                    ExpectedUrlSegments = new[]{"hello", "world"},
+                    HostsNotSupported = new [] {Host.Owin}
                 },
                 new UrlTestCase
                 {
@@ -162,7 +166,8 @@
                     IncomingUrl = "http://localhost:1234/base",
                     ExpectedParsedUrl = "http://localhost:1234/base",
                     ExpectedPath = "/",
-                    ExpectedUrlSegments = new string[]{}
+                    ExpectedUrlSegments = new string[]{},
+                    HostsNotSupported = new [] {Host.Owin}
                 },
                 new UrlTestCase
                 {
@@ -170,6 +175,83 @@
                     BaseUri = "http://localhost:1234/base/",
                     IncomingUrl = "http://lOcAlHoSt:1234/BaSe",
                     ExpectedParsedUrl = "http://localhost:1234/base",
+                    ExpectedPath = "/",
+                    ExpectedUrlSegments = new string[]{},
+                    HostsNotSupported = new [] {Host.Owin}
+                },
+
+
+                new UrlTestCase
+                {
+                    Name = "Url with fragment identifier and user specified",
+                    BaseUri = "http://localhost:1234/",
+                    IncomingUrl = "http://user@localhost:1234/#hello, world",
+                    ExpectedParsedUrl = "http://localhost:1234",
+                    ExpectedPath = "/",
+                    ExpectedUrlSegments = new string[]{}
+                },
+                new UrlTestCase
+                {
+                    Name = "Url with fragment identifier",
+                    BaseUri = "http://localhost:1234/",
+                    IncomingUrl = "http://localhost:1234/#hello, world",
+                    ExpectedParsedUrl = "http://localhost:1234",
+                    ExpectedPath = "/",
+                    ExpectedUrlSegments = new string[]{}
+                },
+                new UrlTestCase
+                {
+                    Name = "Url with percent encoding in fragment identifier",
+                    BaseUri = "http://localhost:1234/",
+                    IncomingUrl = "http://localhost:1234/#%c2%a9",
+                    ExpectedParsedUrl = "http://localhost:1234",
+                    ExpectedPath = "/",
+                    ExpectedUrlSegments = new string[]{}
+                },
+                new UrlTestCase
+                {
+                    Name = "Path with trailing period",
+                    BaseUri = "http://localhost:1234/",
+                    IncomingUrl = "http://localhost:1234/hello/world.",
+                    ExpectedParsedUrl = "http://localhost:1234/hello/world.",
+                    ExpectedPath = "/hello/world.",
+                    ExpectedUrlSegments = new[]{"hello", "world."},
+                    HostsNotSupported = new [] {Host.Wcf, Host.Owin}
+                },
+                new UrlTestCase
+                {
+                    Name = "Forward slash in path",
+                    BaseUri = "http://localhost:1234/",
+                    IncomingUrl = "http://localhost:1234/hello%2Fworld",
+                    ExpectedParsedUrl = "http://localhost:1234/hello%2Fworld",
+                    ExpectedPath = "/hello%2Fworld",
+                    ExpectedUrlSegments = new[]{"hello/world"},
+                    HostsNotSupported = new [] {Host.Wcf, Host.Owin}
+                },
+                new UrlTestCase
+                {
+                    Name = "Path with two segments",
+                    BaseUri = "http://localhost:1234/",
+                    IncomingUrl = "http://localhost:1234/hello/world",
+                    ExpectedParsedUrl = "http://localhost:1234/hello/world",
+                    ExpectedPath = "/hello/world",
+                    ExpectedUrlSegments = new[]{"hello", "world"}
+                },
+                new UrlTestCase
+                {
+                    Name = "Url with no path",
+                    BaseUri = "http://localhost:1234/",
+                    IncomingUrl = "http://localhost:1234",
+                    ExpectedParsedUrl = "http://localhost:1234",
+                    ExpectedPath = "/",
+                    ExpectedUrlSegments = new string[]{}
+                },
+                new UrlTestCase
+                {
+                    Name = "Url with no path, mixed casing",
+                    BaseUri = "http://localhost:1234/",
+                    IncomingUrl = "http://lOcAlHoSt:1234",
+                    ExpectedParsedUrl = "http://localhost:1234",
                     ExpectedPath = "/",
                     ExpectedUrlSegments = new string[]{}
                 }
