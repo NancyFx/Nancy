@@ -42,18 +42,7 @@
                     ExpectedParsedUrl = "http://www.nancyfx.org",
                     ExpectedPath = "/",
                     ExpectedUrlSegments = new string[]{},
-                    HostsNotSupported = new [] {Host.Wcf, Host.Self}
-                },
-                new UrlTestCase
-                {
-                    Name = "Simple url with trailing slash",
-                    Scheme = "http",
-                    Host = "www.nancyfx.org",
-                    RequestPath = "/",
-                    ExpectedParsedUrl = "http://www.nancyfx.org",
-                    ExpectedPath = "/",
-                    ExpectedUrlSegments = new string[]{},
-                    HostsNotSupported = new [] {Host.Wcf, Host.Self}
+                    HostsNotSupported = new [] {Host.Wcf}
                 },
                 new UrlTestCase
                 {
@@ -65,7 +54,7 @@
                     ExpectedParsedUrl = "http://www.nancyfx.org?key=val",
                     ExpectedPath = "/",
                     ExpectedUrlSegments = new string[]{},
-                    HostsNotSupported = new [] {Host.Wcf, Host.Self}
+                    HostsNotSupported = new [] {Host.Wcf}
                 },
                 new UrlTestCase
                 {
@@ -76,7 +65,7 @@
                     ExpectedParsedUrl = "https://www.nancyfx.org",
                     ExpectedPath = "/",
                     ExpectedUrlSegments = new string[]{},
-                    HostsNotSupported = new [] {Host.Wcf, Host.Self}
+                    HostsNotSupported = new [] {Host.Wcf}
                 },
                 new UrlTestCase
                 {
@@ -88,7 +77,7 @@
                     ExpectedParsedUrl = "https://www.nancyfx.org?key=val",
                     ExpectedPath = "/",
                     ExpectedUrlSegments = new string[]{},
-                    HostsNotSupported = new [] {Host.Wcf, Host.Self}
+                    HostsNotSupported = new [] {Host.Wcf}
                 },
                 new UrlTestCase
                 {

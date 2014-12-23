@@ -135,10 +135,9 @@ namespace Nancy.Hosting.Aspnet.Tests
 
                 var nancyHandler = new NancyHandler(fakedEngine);
 
-                if (!String.IsNullOrEmpty(urlTestCase.BaseUri))
+                if (!String.IsNullOrEmpty(urlTestCase.BasePath))
                 {
-                    var baseUri = new Uri(urlTestCase.BaseUri);
-                    A.CallTo(() => this.request.ApplicationPath).Returns(baseUri.LocalPath);
+                    A.CallTo(() => this.request.ApplicationPath).Returns(urlTestCase.BasePath);
                 }
                 A.CallTo(() => this.request.Url).Returns(new Uri(urlTestCase.RequestUri));
                 A.CallTo(() => this.request.HttpMethod).Returns("GET");
