@@ -9,8 +9,13 @@ namespace Nancy.Owin.Tests
 
     using FakeItEasy;
 
+    using global::Owin;
+
+    using Microsoft.Owin.Testing;
+
     using Nancy.Bootstrapper;
     using Nancy.Helpers;
+    using Nancy.Testing;
     using Nancy.Tests;
 
     using Xunit;
@@ -201,6 +206,63 @@ namespace Nancy.Owin.Tests
             respHeaders["Set-Cookie"].Length.ShouldEqual(2);
             (respHeaders["Set-Cookie"][0] == middlewareSetCookie).ShouldBeTrue();
             (respHeaders["Set-Cookie"][1] == "test=testvalue; path=/").ShouldBeTrue();
+        }
+
+        [Fact]
+        public void UrlTestCases_Should_Pass()
+        {
+            foreach (var urlTestCase in UrlTestCases.Instance.TestCases.Where(x => !x.HostsNotSupported.Contains(UrlTestCases.Host.Owin)))
+            {
+                // Given
+                Request nancyRequest = null;
+                var fakedEngine = A.Fake<INancyEngine>();
+                A.CallTo(() => fakedEngine.HandleRequest(A<Request>.Ignored, A<Func<NancyContext, NancyContext>>.Ignored, A<CancellationToken>.Ignored))
+                    .Invokes(f => nancyRequest = (Request)f.Arguments[0])
+                    .ReturnsLazily(c => TaskHelpers.GetCompletedTask(new NancyContext
+                    {
+                        Request = (Request)c.Arguments[0],
+                        Response = new Response()
+                    }));
+
+                var bootstrapper = new ConfigurableBootstrapper(config => config.Module<AppBuilderExtensionsFixture.TestModule>().NancyEngine(fakedEngine));
+
+                var path = urlTestCase.RequestPath;
+
+                if (!path.StartsWith("/"))
+                    path = "/" + path;
+
+                var headers = new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase)
+                {
+                    {"Host", new[] { urlTestCase.Host }}
+                };
+
+                var owinEnvironment = new Dictionary<string, object>
+                {
+                    {"owin.RequestMethod", "GET"},
+                    {"owin.RequestPath", path},
+                    {"owin.RequestPathBase", urlTestCase.BasePath},
+                    {"owin.RequestQueryString", urlTestCase.RequestQuery},
+                    {"owin.RequestBody", Stream.Null},
+                    {"owin.RequestHeaders", headers},
+                    {"owin.RequestScheme", urlTestCase.Scheme},
+                    {"owin.ResponseHeaders", new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase)},
+                    {"owin.ResponseBody", new MemoryStream()},
+                    {"owin.ResponseReasonPhrase", string.Empty},
+                    {"owin.Version", "1.0"},
+                    {"owin.CallCancelled", CancellationToken.None}
+                };
+
+                using (var server = TestServer.Create(app => app.UseNancy(opts => opts.Bootstrapper = bootstrapper)))
+                {
+                    // When
+                    server.Invoke(owinEnvironment);
+
+                    // Then
+                    Assert.Equal(urlTestCase.ExpectedPath, nancyRequest.Url.Path);
+                    Assert.Equal(urlTestCase.ExpectedParsedUrl, nancyRequest.Url.ToString());
+                    Assert.Equal(urlTestCase.ExpectedUrlSegments, nancyRequest.Url.Segments);
+                }
+            }
         }
 
         /// <summary>

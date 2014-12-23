@@ -251,7 +251,7 @@ namespace Nancy.Hosting.Wcf.Tests
                 var baseUri = new Uri(urlTestCase.BaseUri);
                 using (CreateAndOpenWebServiceHost(fakeBootstrapper, baseUri))
                 {
-                    var request = WebRequest.Create(urlTestCase.IncomingUrl);
+                    var request = WebRequest.Create(urlTestCase.RequestUri);
                     request.Method = "GET";
 
                     try

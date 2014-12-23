@@ -256,7 +256,7 @@ namespace Nancy.Hosting.Self.Tests
                 using (CreateAndOpenSelfHost(fakeBootstrapper, null, urlTestCase.BaseUri))
                 {
                     // When
-                    var request = WebRequest.Create(new Uri(urlTestCase.IncomingUrl));
+                    var request = WebRequest.Create(new Uri(urlTestCase.RequestUri));
                     request.Method = "GET";
 
                     try

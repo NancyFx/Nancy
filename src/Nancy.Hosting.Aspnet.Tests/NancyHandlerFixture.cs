@@ -148,7 +148,7 @@ namespace Nancy.Hosting.Aspnet.Tests
                     var baseUri = new Uri(urlTestCase.BaseUri);
                     A.CallTo(() => this.request.ApplicationPath).Returns(baseUri.LocalPath);
                 }
-                A.CallTo(() => this.request.Url).Returns(new Uri(urlTestCase.IncomingUrl));
+                A.CallTo(() => this.request.Url).Returns(new Uri(urlTestCase.RequestUri));
                 A.CallTo(() => this.request.HttpMethod).Returns("GET");
 
                 // When
