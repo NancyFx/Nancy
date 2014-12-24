@@ -164,7 +164,7 @@
             try
             {
                 //We need to pass on the raw unescaped url to nancy, and the only way to make the httplistener 
-                //comply is to make sure the UnEscapeDotsAndSlashes flag is cleared using reflextion
+                //comply is to make sure the UnEscapeDotsAndSlashes flag is cleared using reflection
                 var getSyntax = typeof(UriParser).GetMethod("GetSyntax", BindingFlags.Static | BindingFlags.NonPublic);
                 var flagsField = typeof(UriParser).GetField("m_Flags", BindingFlags.Instance | BindingFlags.NonPublic);
                 if (getSyntax != null && flagsField != null)
