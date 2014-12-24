@@ -236,7 +236,7 @@
             var url = new Url
             {
                 Scheme = owinRequestScheme,
-                HostName = owinRequestHost.ToLower(),
+                HostName = owinRequestHost.ToLowerInvariant(),
                 Port = port,
                 BasePath = owinRequestPathBase,
                 Path = owinRequestPath,
