@@ -33,6 +33,31 @@ namespace Nancy.Authentication.Stateless
             pipelines.BeforeRequest.AddItemToStartOfPipeline(GetLoadAuthenticationHook(configuration));
         }
 
+        /// <summary>        
+        /// Enables stateless authentication for a module
+        /// </summary>
+        /// <param name="module">Module to add handlers to (usually "this")</param>
+        /// <param name="configuration">Stateless authentication configuration</param>
+        public static void Enable(INancyModule module, StatelessAuthenticationConfiguration configuration)
+        {
+            if (module == null)
+            {
+                throw new ArgumentNullException("module");
+            }
+
+            if (configuration == null)
+            {
+                throw new ArgumentNullException("configuration");
+            }
+
+            if (!configuration.IsValid)
+            {
+                throw new ArgumentException("Configuration is invalid", "configuration");
+            }
+
+            module.Before.AddItemToStartOfPipeline(GetLoadAuthenticationHook(configuration));
+        }
+
         /// <summary>
         /// Gets the pre request hook for loading the authenticated user's details
         /// from apikey given in request.
