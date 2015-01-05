@@ -109,6 +109,45 @@
             }
         }
 
+        /// <inherit-doc/>
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+            {
+                return false;
+            }
+
+            var other = obj as BindingMemberInfo;
+
+            if (other == null)
+            {
+                return false;
+            }
+
+            return this.MemberInfo.Equals(other.MemberInfo);
+        }
+
+        /// <summary>
+        /// Compares two BindingMemberInfo's with eachother on their respective values rather then their reference
+        /// </summary>
+        /// <param name="obj">the other BindingMemberInfo</param>
+        /// <returns>true when they are equal and false otherwise</returns>
+        public bool Equals(BindingMemberInfo obj)
+        {
+            if (obj == null)
+            {
+                return false;
+            }
+
+            return this.MemberInfo.Equals(obj.MemberInfo);
+        }
+
+        /// <inherit-doc/>
+        public override int GetHashCode()
+        {
+            return this.MemberInfo.GetHashCode();
+        }
+
         /// <summary>
         /// Returns an enumerable sequence of bindable properties for the specified type.
         /// </summary>

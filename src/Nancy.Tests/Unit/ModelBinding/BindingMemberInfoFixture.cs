@@ -167,6 +167,22 @@
                 property.Name.ShouldStartWith("Bindable");
         }
 
+        [Fact]
+        public void Should_be_able_to_use_except_on_two_lists_of_bindingMemberInfos()
+        {
+            // Given
+            var properties = BindingMemberInfo.Collect<TestModel>();
+            var except = BindingMemberInfo.Collect<TestModel>().Where(i => i.Name.Contains("Property"));
+
+            // When
+            var res = properties.Except(except).ToList();
+
+            // Then
+            res.Count.ShouldEqual(2);
+            res[0].Name.ShouldEqual("IntField");
+            res[1].Name.ShouldEqual("StringField");
+        }
+
         public class TestModel
         {
             public int IntField;
