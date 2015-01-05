@@ -87,7 +87,7 @@ namespace Nancy.Authentication.Forms.Tests
         [Fact]
         public void Should_throw_with_null_application_pipelines_passed_to_enable()
         {
-            var result = Record.Exception(() => FormsAuthentication.Enable(null, this.config));
+            var result = Record.Exception(() => FormsAuthentication.Enable((IPipelines)null, this.config));
 
             result.ShouldBeOfType(typeof(ArgumentNullException));
         }
@@ -721,6 +721,32 @@ namespace Nancy.Authentication.Forms.Tests
             //Then
             var cookie = result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).First();
             cookie.Path.ShouldEqual(path);
+        }
+
+        [Fact]
+        public void Should_throw_with_null_module_passed_to_enable()
+        {
+            var result = Record.Exception(() => FormsAuthentication.Enable((INancyModule)null, this.config));
+
+            result.ShouldBeOfType(typeof(ArgumentNullException));
+        }
+
+        [Fact]
+        public void Should_throw_with_null_config_passed_to_enable_with_module()
+        {
+            var result = Record.Exception(() => FormsAuthentication.Enable(new FakeModule(), null));
+
+            result.ShouldBeOfType(typeof(ArgumentNullException));
+        }
+
+        class FakeModule : NancyModule
+        {
+            public FakeModule()
+            {
+                this.After = new AfterPipeline();
+                this.Before = new BeforePipeline();
+                this.OnError = new ErrorPipeline();
+            }
         }
     }
 }

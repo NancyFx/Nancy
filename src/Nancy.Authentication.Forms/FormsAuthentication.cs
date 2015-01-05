@@ -6,6 +6,7 @@ namespace Nancy.Authentication.Forms
     using Cryptography;
     using Helpers;
     using Nancy.Extensions;
+    using Nancy.Security;
 
     /// <summary>
     /// Nancy forms authentication implementation
@@ -61,6 +62,40 @@ namespace Nancy.Authentication.Forms
             if (!configuration.DisableRedirect)
             {
                 pipelines.AfterRequest.AddItemToEndOfPipeline(GetRedirectToLoginHook(configuration));                
+            }
+        }
+
+        /// <summary>
+        /// Enables forms authentication for a module
+        /// </summary>
+        /// <param name="module">Module to add handlers to (usually "this")</param>
+        /// <param name="configuration">Forms authentication configuration</param>
+        public static void Enable(INancyModule module, FormsAuthenticationConfiguration configuration)
+        {
+            if (module == null)
+            {
+                throw new ArgumentNullException("module");
+            }
+
+            if (configuration == null)
+            {
+                throw new ArgumentNullException("configuration");
+            }
+
+            if (!configuration.IsValid)
+            {
+                throw new ArgumentException("Configuration is invalid", "configuration");
+            }
+
+            module.RequiresAuthentication();
+
+            currentConfiguration = configuration;
+
+            module.Before.AddItemToStartOfPipeline(GetLoadAuthenticationHook(configuration));
+            
+            if (!configuration.DisableRedirect)
+            {
+                module.After.AddItemToEndOfPipeline(GetRedirectToLoginHook(configuration));
             }
         }
 
