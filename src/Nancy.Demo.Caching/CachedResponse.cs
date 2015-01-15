@@ -8,7 +8,7 @@
     /// <summary>
     /// Wraps a regular response in a cached response
     /// The cached response invokes the old response and stores it as a string.
-    /// Obviously this only works for ASCII text based responses, so don't use this 
+    /// Obviously this only works for ASCII text based responses, so don't use this
     /// in a real application :-)
     /// </summary>
     public class CachedResponse : Response

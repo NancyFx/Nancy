@@ -15,7 +15,7 @@
 
             Get["/poke"] = parameters =>
             {
-                var validator = 
+                var validator =
                     this.ValidatorLocator.GetValidatorForType(typeof(Product));
 
                 return this.Response.AsJson(validator.Description);

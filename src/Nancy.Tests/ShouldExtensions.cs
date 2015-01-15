@@ -191,7 +191,7 @@
             using (var reader = new StreamReader(stream))
             {
                 var actual = reader.ReadToEnd();
-                    
+
                 if (trim)
                 {
                     actual = actual.Trim();

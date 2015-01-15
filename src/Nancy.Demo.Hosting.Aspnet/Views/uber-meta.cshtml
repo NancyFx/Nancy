@@ -6,9 +6,9 @@
 <head>
     <title>Route metadata</title>
     <link rel="stylesheet" href='@Url.Content("~/content/main.css")' type="text/css" media="screen"/>
-    
+
     <style type="text/css">
-        
+
         div.meta>div {
             border: 1px solid #000;
             padding: 8px;
@@ -19,26 +19,26 @@
     </style>
 </head>
 <body>
-	<h1>Route metadata</h1>
+    <h1>Route metadata</h1>
     <p>Below is a list of route metadata that was declared within a metadata module.</p>
-	
+
     <div class="meta">
         @foreach (var meta in @Model)
         {
             <div>
                 <h1>(@meta.Method) @meta.Path</h1>
-                
+
                 <strong>Super Description:</strong>
                 <p>@meta.SuperDescription</p>
 
                 <strong>Description:</strong>
                 <p>@meta.Description</p>
-                    
+
                 <strong>Valid return status codes:</strong>
                 <p>
                     @string.Join(", ", @meta.ValidStatusCodes)
                 </p>
-                    
+
                 <strong>Code sample:</strong>
 <pre><code class="csharp">@meta.CodeSample</code></pre>
             </div>
