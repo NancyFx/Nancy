@@ -2,24 +2,24 @@
 
 @Section['Content']
 
-	<h3>ViewBag</h3>
-	@ViewBag.Test
-	<p>This content from the index page<p>
-	<h3>Partials</h3>
-	<p>Login box below rendered via a partial view with no model.</p>
-	<div id="login">
-		@Partial['login'];
-	</div>
-	<p>Box below is rendered via a partial with a sub-model passed in.</p>
-	<p>The submodel is a list which the partial iterates over with Each</p>
-	<div id="users">
-		@Partial['user', Model.Users];
-	</div>
-	<h3>Encoding</h3>
-	<p>Model output can also be encoded:</p>
-	<p>@!Model.NaughtyStuff</p>
-	<p>
-		<h2>The context stuff</h2>
-		The requested path: @Context.Request.Path
-	</p>
+    <h3>ViewBag</h3>
+    @ViewBag.Test
+    <p>This content from the index page<p>
+    <h3>Partials</h3>
+    <p>Login box below rendered via a partial view with no model.</p>
+    <div id="login">
+        @Partial['login'];
+    </div>
+    <p>Box below is rendered via a partial with a sub-model passed in.</p>
+    <p>The submodel is a list which the partial iterates over with Each</p>
+    <div id="users">
+        @Partial['user', Model.Users];
+    </div>
+    <h3>Encoding</h3>
+    <p>Model output can also be encoded:</p>
+    <p>@!Model.NaughtyStuff</p>
+    <p>
+        <h2>The context stuff</h2>
+        The requested path: @Context.Request.Path
+    </p>
 @EndSection

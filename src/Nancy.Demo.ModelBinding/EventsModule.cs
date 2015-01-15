@@ -11,7 +11,7 @@ namespace Nancy.Demo.ModelBinding
             : base("/events")
         {
             Get["/"] = x =>
-                { 
+                {
                     var model = DB.Events.OrderBy(e => e.Time).ToArray();
 
                     return View["Events", model];

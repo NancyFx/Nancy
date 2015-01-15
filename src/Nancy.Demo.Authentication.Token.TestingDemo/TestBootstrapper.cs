@@ -24,11 +24,11 @@ namespace Nancy.Demo.Authentication.Token.TestingDemo
 
                 var assemblyPath =
                     Path.GetDirectoryName(assemblyFilePath);
-                
-                var rootPath = 
+
+                var rootPath =
                     PathHelper.GetParent(assemblyPath, 2);
-                
-                rootPath = 
+
+                rootPath =
                     Path.Combine(rootPath, @"Nancy.Demo.Authentication.Token");
 
                 FakeRootPathProvider.RootPath = rootPath;

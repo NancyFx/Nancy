@@ -11,7 +11,7 @@ namespace Nancy.Demo.Validation
         public CustomersModule() : base("/customers")
         {
             Get["/"] = x =>
-            { 
+            {
                 var model = DB.Customers.OrderBy(e => e.RenewalDate).ToArray();
 
                 return View["Customers", model];

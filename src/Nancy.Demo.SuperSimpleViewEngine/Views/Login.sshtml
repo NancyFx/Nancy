@@ -1,5 +1,5 @@
 ﻿<form>
-	Username: <input/><br/>
-	Password: <input/><br/>
-	<input type="submit" value="Login"/>
+    Username: <input/><br/>
+    Password: <input/><br/>
+    <input type="submit" value="Login"/>
 </form>

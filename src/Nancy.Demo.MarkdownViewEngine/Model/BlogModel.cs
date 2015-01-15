@@ -108,7 +108,7 @@
         {
             string str = RemoveAccent(Title).ToLower();
             str = str.Replace("-", " ");
-            str = Regex.Replace(str, @"[^a-z0-9\s-]", ""); // invalid chars           
+            str = Regex.Replace(str, @"[^a-z0-9\s-]", ""); // invalid chars
             str = Regex.Replace(str, @"\s+", " ").Trim(); // convert multiple spaces into one space   
             str = str.Substring(0, str.Length <= 100 ? str.Length : 100).Trim(); // cut and trim it   
             str = Regex.Replace(str, @"\s", spacer.ToString(CultureInfo.InvariantCulture)); // hyphens   
