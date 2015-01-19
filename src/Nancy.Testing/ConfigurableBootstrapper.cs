@@ -321,8 +321,9 @@ namespace Nancy.Testing
         /// <summary>
         /// Creates a per request child/nested container
         /// </summary>
+        /// <param name="context">Current context</param>
         /// <returns>Request container instance</returns>
-        protected override TinyIoCContainer CreateRequestContainer()
+        protected override TinyIoCContainer CreateRequestContainer(NancyContext context)
         {
             return this.ApplicationContainer.GetChildContainer();
         }
