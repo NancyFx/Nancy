@@ -330,7 +330,7 @@
                 }
             }
 
-            protected override FakeContainer CreateRequestContainer()
+            protected override FakeContainer CreateRequestContainer(NancyContext context)
             {
                 return new FakeContainer(this.ApplicationContainer);
             }
