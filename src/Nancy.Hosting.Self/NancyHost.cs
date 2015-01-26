@@ -283,7 +283,10 @@
         {
             foreach (var header in nancyResponse.Headers)
             {
-                response.AddHeader(header.Key, header.Value);
+                if (!IgnoredHeaders.IsIgnored(header.Key))
+                {
+                    response.AddHeader(header.Key, header.Value);
+                }
             }
 
             foreach (var nancyCookie in nancyResponse.Cookies)
