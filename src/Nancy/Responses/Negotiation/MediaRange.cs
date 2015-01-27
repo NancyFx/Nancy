@@ -102,7 +102,7 @@ namespace Nancy.Responses.Negotiation
         /// </summary>
         /// <param name="contentType"></param>
         /// <returns></returns>
-        [Obsolete("Please use the consturctor")]
+        [Obsolete("Please use the constructor")]
         public static MediaRange FromString(string contentType)
         {
             return new MediaRange(contentType);
