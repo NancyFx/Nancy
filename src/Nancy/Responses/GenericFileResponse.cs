@@ -86,11 +86,6 @@ namespace Nancy.Responses
 
         static bool IsSafeFilePath(string rootPath, string filePath)
         {
-            if (!Path.HasExtension(filePath))
-            {
-                return false;
-            }
-
             if (!File.Exists(filePath))
             {
                 return false;
