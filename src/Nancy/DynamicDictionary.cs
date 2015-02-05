@@ -11,7 +11,7 @@
     public class DynamicDictionary : DynamicObject, IEquatable<DynamicDictionary>, IHideObjectMembers, IEnumerable<string>, IDictionary<string, object>
     {
         private readonly IDictionary<string, dynamic> dictionary =
-            new Dictionary<string, dynamic>(StaticConfiguration.CaseSensitive ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase);
+            new Dictionary<string, dynamic>(StaticConfiguration.CaseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase);
 
 
         /// <summary>
@@ -202,6 +202,7 @@
         /// <param name="key">The key to locate in the <see cref="DynamicDictionary"/>.</param>
         public bool ContainsKey(string key)
         {
+            key = GetNeutralKey(key);
             return this.dictionary.ContainsKey(key);
         }
 
@@ -222,6 +223,7 @@
         /// <param name="value">When this method returns, the value associated with the specified key, if the key is found; otherwise, the default value for the type of the <paramref name="value"/> parameter. This parameter is passed uninitialized.</param>
         public bool TryGetValue(string key, out dynamic value)
         {
+            key = GetNeutralKey(key);
             return this.dictionary.TryGetValue(key, out value);
         }
 
@@ -320,7 +322,7 @@
 
         private static string GetNeutralKey(string key)
         {
-            return key.Replace("-", string.Empty);
+            return key.Replace('-', '_');
         }
 
         /// <summary>
@@ -329,7 +331,7 @@
         /// <returns>Gets a typed Dictionary of <see cref="T:Dictionary{String, Object}" /> from <see cref="DynamicDictionary"/></returns>
         public Dictionary<string, object> ToDictionary()
         {
-            var data = new Dictionary<string, object>();
+            var data = new Dictionary<string, object>(StringComparer.Ordinal);
 
             foreach (var item in dictionary)
             {
