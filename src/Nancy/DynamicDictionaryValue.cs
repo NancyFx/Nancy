@@ -105,12 +105,11 @@
                             return (T) converter.ConvertFromInvariantString(stringValue);
                         }
                     }
-                    else if (Nullable.GetUnderlyingType(TType) == vType)
-                    {
-                        return (T)value;
-                    }
                     else
                     {
+                        var nullableType = Nullable.GetUnderlyingType (TType);
+                        if (nullableType != null)
+                            TType = nullableType;
                         return (T)Convert.ChangeType(value, TType, CultureInfo.InvariantCulture);
                     }
                 }
