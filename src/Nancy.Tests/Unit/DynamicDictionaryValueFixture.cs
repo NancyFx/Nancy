@@ -898,6 +898,66 @@
         }
 
         [Fact]
+        public void Should_implicitly_convert_from_int_based_on_given_parameter_type_of_short ()
+        {
+            //Given
+            const int expected = 42;
+            const short notExpected = 100;
+            dynamic value = new DynamicDictionaryValue (expected);
+
+            //When
+            int actual = (int)value.TryParse<short> (notExpected);
+
+            //Then
+            Assert.Equal (expected, actual);
+        }
+
+        [Fact]
+        public void Should_implicitly_convert_from_int_based_on_given_parameter_type_of_long ()
+        {
+            //Given
+            const int expected = 42;
+            const long notExpected = 100;
+            dynamic value = new DynamicDictionaryValue (expected);
+
+            //When
+            int actual = (int)value.TryParse<long> (notExpected);
+
+            //Then
+            Assert.Equal (expected, actual);
+        }
+
+        [Fact]
+        public void Should_implicitly_convert_from_int_based_on_given_parameter_type_of_nullable_long ()
+        {
+            //Given
+            const int expected = 42;
+            long? notExpected = 100;
+            dynamic value = new DynamicDictionaryValue (expected);
+
+            //When
+            int actual = (int)value.TryParse<long?> (notExpected);
+
+            //Then
+            Assert.Equal (expected, actual);
+        }
+
+        [Fact]
+        public void Should_implicitly_convert_from_datetime_based_on_given_parameter_type_of_nullable_datetime ()
+        {
+            //Given
+            DateTime expected = DateTime.Parse ("13 December 2012");
+            DateTime? notExpected = expected.AddDays (10);
+            dynamic value = new DynamicDictionaryValue (expected);
+
+            //When
+            DateTime actual = (DateTime)value.TryParse<DateTime?> (notExpected);
+
+            //Then
+            Assert.Equal (expected, actual);
+        }
+
+        [Fact]
         public void Should_return_default_value_if_implicit_convert_fails_on_datetime()
         {
             //Given
