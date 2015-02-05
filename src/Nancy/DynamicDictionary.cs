@@ -11,7 +11,7 @@
     public class DynamicDictionary : DynamicObject, IEquatable<DynamicDictionary>, IHideObjectMembers, IEnumerable<string>, IDictionary<string, object>
     {
         private readonly IDictionary<string, dynamic> dictionary =
-            new Dictionary<string, dynamic>(StaticConfiguration.CaseSensitive ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase);
+            new Dictionary<string, dynamic>(StaticConfiguration.CaseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase);
 
 
         /// <summary>
@@ -331,7 +331,7 @@
         /// <returns>Gets a typed Dictionary of <see cref="T:Dictionary{String, Object}" /> from <see cref="DynamicDictionary"/></returns>
         public Dictionary<string, object> ToDictionary()
         {
-            var data = new Dictionary<string, object>();
+            var data = new Dictionary<string, object>(StringComparer.Ordinal);
 
             foreach (var item in dictionary)
             {
