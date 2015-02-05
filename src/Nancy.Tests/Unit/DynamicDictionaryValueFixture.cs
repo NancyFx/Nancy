@@ -898,7 +898,7 @@
         }
 
         [Fact]
-        public void Should_implicitly_convert_from_int_based_on_given_parameter_type_of_short ()
+        public void Should_implicitly_convert_from_int_based_on_given_parameter_type_of_short()
         {
             //Given
             const int expected = 42;
@@ -913,7 +913,7 @@
         }
 
         [Fact]
-        public void Should_implicitly_convert_from_int_based_on_given_parameter_type_of_long ()
+        public void Should_implicitly_convert_from_int_based_on_given_parameter_type_of_long()
         {
             //Given
             const int expected = 42;
@@ -928,7 +928,7 @@
         }
 
         [Fact]
-        public void Should_implicitly_convert_from_int_based_on_given_parameter_type_of_nullable_long ()
+        public void Should_implicitly_convert_from_int_based_on_given_parameter_type_of_nullable_long()
         {
             //Given
             const int expected = 42;
@@ -943,7 +943,7 @@
         }
 
         [Fact]
-        public void Should_implicitly_convert_from_datetime_based_on_given_parameter_type_of_nullable_datetime ()
+        public void Should_implicitly_convert_from_datetime_based_on_given_parameter_type_of_nullable_datetime()
         {
             //Given
             DateTime expected = DateTime.Parse ("13 December 2012");

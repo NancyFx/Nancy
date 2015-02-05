@@ -78,16 +78,16 @@
                 try
                 {
                     var vType = value.GetType();
-                    var TType = typeof (T);
+                    var TType = typeof(T);
 
                     // check fo direct cast
-                    if (vType.IsAssignableFrom (TType))
+                    if (vType.IsAssignableFrom(TType))
                     {
                         return (T)value;
                     }                    
 
                     var stringValue = value as string;
-                    if (TType == typeof (DateTime))
+                    if (TType == typeof(DateTime))
                     {
                         DateTime result;
 
@@ -107,7 +107,7 @@
                     }
                     else
                     {
-                        var nullableType = Nullable.GetUnderlyingType (TType);
+                        var nullableType = Nullable.GetUnderlyingType(TType);
                         if (nullableType != null)
                             TType = nullableType;
                         return (T)Convert.ChangeType(value, TType, CultureInfo.InvariantCulture);
