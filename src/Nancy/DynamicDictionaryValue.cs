@@ -103,9 +103,9 @@
                             return (T) converter.ConvertFromInvariantString(stringValue);
                         }
                     }
-                    else if (TType == typeof (string))
+                    else
                     {
-                        return (T)Convert.ChangeType(value, TypeCode.String, CultureInfo.InvariantCulture);
+                        return (T)Convert.ChangeType (value, TType, System.Globalization.CultureInfo.InvariantCulture);
                     }
                 }
                 catch
