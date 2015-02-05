@@ -322,7 +322,7 @@
 
         private static string GetNeutralKey(string key)
         {
-            return key.Replace("-", string.Empty);
+            return key.Replace('-', '_');
         }
 
         /// <summary>
