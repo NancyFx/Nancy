@@ -93,7 +93,7 @@ namespace Nancy.Responses
 
             var fullPath = Path.GetFullPath(filePath);
 
-            return fullPath.StartsWith(rootPath, StringComparison.OrdinalIgnoreCase);
+            return fullPath.StartsWith(Path.GetFullPath(rootPath), StringComparison.OrdinalIgnoreCase);
         }
 
         private void InitializeGenericFileResponse(string filePath, string contentType, NancyContext context)
