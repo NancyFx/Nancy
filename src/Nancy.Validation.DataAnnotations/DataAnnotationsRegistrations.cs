@@ -13,7 +13,6 @@ namespace Nancy.Validation.DataAnnotations
         /// </summary>
         public DataAnnotationsRegistrations()
         {
-            this.Register<IModelValidator>(typeof(DataAnnotationsValidator));
             this.RegisterAll<IDataAnnotationsValidatorAdapter>();
             this.RegisterWithDefault<IPropertyValidatorFactory>(typeof(DefaultPropertyValidatorFactory));
             this.RegisterWithDefault<IValidatableObjectAdapter>(typeof(DefaultValidatableObjectAdapter));
