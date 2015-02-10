@@ -202,6 +202,7 @@
         /// <param name="key">The key to locate in the <see cref="DynamicDictionary"/>.</param>
         public bool ContainsKey(string key)
         {
+            key = GetNeutralKey(key);
             return this.dictionary.ContainsKey(key);
         }
 
@@ -222,6 +223,7 @@
         /// <param name="value">When this method returns, the value associated with the specified key, if the key is found; otherwise, the default value for the type of the <paramref name="value"/> parameter. This parameter is passed uninitialized.</param>
         public bool TryGetValue(string key, out dynamic value)
         {
+            key = GetNeutralKey(key);
             return this.dictionary.TryGetValue(key, out value);
         }
 
