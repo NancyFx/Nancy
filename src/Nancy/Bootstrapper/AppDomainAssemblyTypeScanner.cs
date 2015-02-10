@@ -282,14 +282,19 @@ namespace Nancy.Bootstrapper
             var returnTypes =
                 Types.Where(type.IsAssignableFrom);
 
-            if (mode == ScanMode.All)
+            switch (mode)
             {
-                return returnTypes;
+                case ScanMode.OnlyNancy:
+                    return returnTypes.Where(t => t.Assembly == nancyAssembly);
+                case ScanMode.ExcludeNancy:
+                    return returnTypes.Where(t => t.Assembly != nancyAssembly);
+                case ScanMode.OnlyNancyNamespace:
+                    return returnTypes.Where(t => t.Namespace.StartsWith("Nancy"));
+                case ScanMode.ExcludeNancyNamespace:
+                    return returnTypes.Where(t => !t.Namespace.StartsWith("Nancy"));
+                default://mode == ScanMode.All
+                    return returnTypes;
             }
-
-            return (mode == ScanMode.OnlyNancy) ?
-                returnTypes.Where(t => t.Assembly == nancyAssembly) :
-                returnTypes.Where(t => t.Assembly != nancyAssembly);
         }
 
         /// <summary>
