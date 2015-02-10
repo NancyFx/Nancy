@@ -125,6 +125,23 @@ namespace Nancy.Tests.Unit.Sessions
         }
 
         [Fact]
+        public void Should_load_an_empty_session_if_session_cookie_is_invalid()
+        {
+          //given
+          var inputValue = ValidHmac.Substring(0, 5); //invalid Hmac
+          inputValue = HttpUtility.UrlEncode(inputValue);
+          var store = new CookieBasedSessions(this.rijndaelEncryptionProvider, this.defaultHmacProvider, this.defaultObjectSerializer);
+          var request = new Request("GET", "/", "http");
+          request.Cookies.Add(store.CookieName, inputValue);
+
+          //when
+          var result = store.Load(request);
+
+          //then
+          result.Count.ShouldEqual(0);
+        }
+
+        [Fact]
         public void Should_load_a_single_valued_session()
         {
             var request = CreateRequest("encryptedkey1=value1");
