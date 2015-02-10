@@ -72,7 +72,7 @@ namespace Nancy.Conventions
         }
 
         /// <summary>
-        /// Adds a directory-based convention for static convention.
+        /// Adds a file-based convention for static convention.
         /// </summary>
         /// <param name="requestedFile">The file that should be matched with the request.</param>
         /// <param name="contentFile">The file that should be served when the requested path is matched.</param>
