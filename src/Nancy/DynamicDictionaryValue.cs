@@ -77,15 +77,17 @@
             {
                 try
                 {
-                    if (value.GetType().IsAssignableFrom(typeof(T)))
+                    var vType = value.GetType();
+                    var TType = typeof(T);
+
+                    // check fo direct cast
+                    if (vType.IsAssignableFrom(TType))
                     {
                         return (T)value;
-                    }
-
-                    var TType = typeof (T);
+                    }                    
 
                     var stringValue = value as string;
-                    if (TType == typeof (DateTime))
+                    if (TType == typeof(DateTime))
                     {
                         DateTime result;
 
@@ -103,9 +105,12 @@
                             return (T) converter.ConvertFromInvariantString(stringValue);
                         }
                     }
-                    else if (TType == typeof (string))
+                    else
                     {
-                        return (T)Convert.ChangeType(value, TypeCode.String, CultureInfo.InvariantCulture);
+                        var nullableType = Nullable.GetUnderlyingType(TType);
+                        if (nullableType != null)
+                            TType = nullableType;
+                        return (T)Convert.ChangeType(value, TType, CultureInfo.InvariantCulture);
                     }
                 }
                 catch
