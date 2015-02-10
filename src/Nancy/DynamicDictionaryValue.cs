@@ -124,6 +124,11 @@
 
         public static bool operator ==(DynamicDictionaryValue dynamicValue, object compareValue)
         {
+            if (ReferenceEquals(null, dynamicValue))
+            {
+                return false;
+            }
+
             if (dynamicValue.value == null && compareValue == null)
             {
                 return true;
