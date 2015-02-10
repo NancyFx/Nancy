@@ -167,17 +167,19 @@ namespace Nancy
             foreach (var parts in values.Select(c => c.Split(new[] { '=' }, 2)))
             {
                 var cookieName = parts[0].Trim();
+                string cookieValue;
 
                 if (parts.Length == 1)
                 {
-                    if (cookieName.Equals("HttpOnly", StringComparison.InvariantCultureIgnoreCase) ||
-                        cookieName.Equals("Secure", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        continue;
-                    }
+                    //Cookie attribute
+                    cookieValue = string.Empty;
+                }
+                else
+                {
+                    cookieValue = parts[1];
                 }
 
-                cookieDictionary[cookieName] = parts[1];
+                cookieDictionary[cookieName] = cookieValue;
             }
 
             return cookieDictionary;

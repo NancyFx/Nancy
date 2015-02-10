@@ -631,6 +631,27 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
+        public void Should_add_attribute_in_cookie_as_empty_value()
+        {
+          // Given, when
+          const string cookieName = "path";
+          const string cookieData = "/";
+          const string cookieAttribute = "SomeAttribute";
+          var headers = new Dictionary<string, IEnumerable<string>>();
+          var cookies = new List<string> { string.Format("{0}={1}; {2}", cookieName, cookieData, cookieAttribute) };
+          headers.Add("cookie", cookies);
+          var newUrl = new Url
+          {
+            Path = "/"
+          };
+          var request = new Request("GET", newUrl, null, headers);
+
+          // Then
+          request.Cookies[cookieName].ShouldEqual(cookieData);
+          request.Cookies[cookieAttribute].ShouldEqual(string.Empty);
+        }
+
+        [Fact]
         public void Should_move_request_body_position_to_zero_after_parsing_url_encoded_data()
         {
             // Given
