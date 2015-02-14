@@ -20,7 +20,7 @@
         /// </summary>
         ExcludeNancy,
 
-        // <summary>
+        /// <summary>
         /// Only Namespaces that starts with 'Nancy'
         /// </summary>
         OnlyNancyNamespace,
