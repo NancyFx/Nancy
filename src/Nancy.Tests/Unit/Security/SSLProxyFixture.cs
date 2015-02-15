@@ -15,7 +15,7 @@
         {
             this.pipelines = new MockPipelines();
 
-            SSLProxy.Enable(this.pipelines);
+            SSLProxy.MakeNancyUrlSecure(this.pipelines);
         }
 
         [Fact]

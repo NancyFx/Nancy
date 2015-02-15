@@ -10,7 +10,11 @@
     /// </summary>
     public class SSLProxy
     {
-        public static void Enable(IPipelines pipelines)
+        /// <summary>
+        /// Checks for Forwarded or X-Forwarded-Proto header and if so makes curent url schemme https
+        /// </summary>
+        /// <param name="pipelines"></param>
+        public static void MakeNancyUrlSecure(IPipelines pipelines)
         {
             pipelines.BeforeRequest += (ctx) =>
             {
