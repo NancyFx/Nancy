@@ -232,6 +232,7 @@
     <Compile Include="Unit\Security\CsrfFixture.cs" />
     <Compile Include="Unit\Security\DefaultCsrfTokenValidatorFixture.cs" />
     <Compile Include="Unit\Security\ModuleSecurityFixture.cs" />
+    <Compile Include="Unit\Security\SSLProxyFixture.cs" />
     <Compile Include="Unit\Security\UserIdentityExtensionsFixture.cs" />
     <Compile Include="Unit\Sessions\CookieBasedSessionsConfigurationFixture.cs" />
     <Compile Include="Unit\Sessions\CookieBasedSessionsFixture.cs" />

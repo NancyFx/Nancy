@@ -284,6 +284,7 @@
     <Compile Include="Routing\Trie\RouteResolverTrie.cs" />
     <Compile Include="Routing\Trie\SegmentMatch.cs" />
     <Compile Include="Routing\Trie\TrieNodeFactory.cs" />
+    <Compile Include="Security\SSLProxy.cs" />
     <Compile Include="Session\CookieBasedSessionsConfiguration.cs" />
     <Compile Include="StaticContent.cs" />
     <Compile Include="Conventions\ViewLocationConventions.cs" />
