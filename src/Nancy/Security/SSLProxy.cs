@@ -11,12 +11,12 @@
     public static class SSLProxy
     {
         /// <summary>
-        /// Checks for Forwarded or X-Forwarded-Proto header and if so makes curent url schemme https
+        /// Checks for Forwarded or X-Forwarded-Proto header and if so makes current url scheme https
         /// </summary>
-        /// <param name="pipelines"></param>
-        public static void MakeNancyUrlSecure(IPipelines pipelines)
+        /// <param name="pipelines">Application pipelines</param>
+        public static void RewriteSchemeUsingForwardedHeaders(IPipelines pipelines)
         {
-            pipelines.BeforeRequest += (ctx) =>
+            pipelines.BeforeRequest += ctx =>
             {
                 //X-Forwarded-Proto: https
                 if (ctx.Request.Headers.Keys.Any(x => x.Equals("X-Forwarded-Proto", StringComparison.OrdinalIgnoreCase)))

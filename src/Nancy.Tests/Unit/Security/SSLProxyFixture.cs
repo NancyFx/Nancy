@@ -15,7 +15,7 @@
         {
             this.pipelines = new MockPipelines();
 
-            SSLProxy.MakeNancyUrlSecure(this.pipelines);
+            SSLProxy.RewriteSchemeUsingForwardedHeaders(this.pipelines);
         }
 
         [Fact]
