@@ -8,7 +8,7 @@
     /// <summary>
     /// Allows a BeforeRequest hook to change Url to HTTPS if X-Forwarded-Proto header present
     /// </summary>
-    public class SSLProxy
+    public static class SSLProxy
     {
         /// <summary>
         /// Checks for Forwarded or X-Forwarded-Proto header and if so makes curent url schemme https
