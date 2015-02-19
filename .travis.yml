@@ -1,5 +1,6 @@
 language: csharp
 solution: src/Nancy.sln
+sudo: false
 install:
   - gem install bundle
   - bundle
