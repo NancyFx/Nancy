@@ -26,8 +26,8 @@
             this.collection.Add(obj);
             this.collection.Add(obj2);
 
-            this.collection.Any(o => object.ReferenceEquals(obj, o)).ShouldBeTrue();
-            this.collection.Any(o => object.ReferenceEquals(obj2, o)).ShouldBeTrue();
+            this.collection.Any(o => ReferenceEquals(obj, o)).ShouldBeTrue();
+            this.collection.Any(o => ReferenceEquals(obj2, o)).ShouldBeTrue();
         }
 
         [Fact]
@@ -92,7 +92,7 @@
             this.collection.Add(obj5);
             this.collection.Add(obj6);
 
-            this.collection.Any(o => object.ReferenceEquals(obj, o)).ShouldBeFalse();
+            this.collection.Any(o => ReferenceEquals(obj, o)).ShouldBeFalse();
         }
     }
 }

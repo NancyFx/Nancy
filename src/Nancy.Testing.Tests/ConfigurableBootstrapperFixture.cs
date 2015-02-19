@@ -8,8 +8,10 @@
     using System.Threading.Tasks;
 
     using FakeItEasy;
+
     using Nancy.Bootstrapper;
     using Nancy.Tests;
+
     using Xunit;
     using Xunit.Sdk;
 

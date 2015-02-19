@@ -7,7 +7,6 @@
 
     using Nancy.Json;
     using Nancy.Responses;
-    using Nancy.Tests.xUnitExtensions;
 
     using Xunit;
 

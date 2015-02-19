@@ -1,6 +1,6 @@
 namespace Nancy.Validation.DataAnnotations
 {
-    using Bootstrapper;
+    using Nancy.Bootstrapper;
 
     /// <summary>
     /// Application registrations for Data Annotations validation types.

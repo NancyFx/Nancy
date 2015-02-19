@@ -6,6 +6,7 @@ namespace Nancy.Tests.Unit
     using System.Threading.Tasks;
 
     using FakeItEasy;
+
     using Nancy.Bootstrapper;
     using Nancy.Diagnostics;
     using Nancy.ErrorHandling;
@@ -13,6 +14,7 @@ namespace Nancy.Tests.Unit
     using Nancy.Helpers;
     using Nancy.Routing;
     using Nancy.Tests.Fakes;
+
     using Xunit;
     using Nancy.Responses.Negotiation;
 

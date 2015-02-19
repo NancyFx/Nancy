@@ -1,7 +1,8 @@
 namespace Nancy.Diagnostics
 {
     using System.Collections.Generic;
-    using ModelBinding;
+
+    using Nancy.ModelBinding;
     using Nancy.Responses;
     using Nancy.Routing;
 

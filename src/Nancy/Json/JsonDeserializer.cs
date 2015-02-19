@@ -66,7 +66,7 @@ namespace Nancy.Json
 
     using Nancy.Extensions;
 
-	internal sealed class JsonDeserializer
+    internal sealed class JsonDeserializer
 	{
 		/* Universal error constant */
 		const int __ = -1;

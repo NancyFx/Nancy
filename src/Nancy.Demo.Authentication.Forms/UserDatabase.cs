@@ -3,6 +3,7 @@ namespace Nancy.Demo.Authentication.Forms
     using System;
     using System.Collections.Generic;
     using System.Linq;
+
     using Nancy.Authentication.Forms;
     using Nancy.Security;
 

@@ -3,16 +3,17 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.IdentityModel.Claims;
     using System.IO;
     using System.Linq;
+    using System.Net;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
     using System.ServiceModel.Web;
-    using System.IdentityModel.Claims;
-    
-    using IO;
+
     using Nancy.Bootstrapper;
     using Nancy.Extensions;
+    using Nancy.IO;
 
     /// <summary>
     /// Host for running Nancy ontop of WCF.
@@ -180,7 +181,7 @@
                 webResponse.StatusDescription = nancyResponse.ReasonPhrase;
             }
 
-            webResponse.StatusCode = (System.Net.HttpStatusCode)nancyResponse.StatusCode;
+            webResponse.StatusCode = (HttpStatusCode)nancyResponse.StatusCode;
         }
 
         private static void SetHttpResponseHeaders(OutgoingWebResponseContext context, Response response)

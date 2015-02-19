@@ -1,8 +1,10 @@
 ﻿namespace Nancy.Tests.Unit.Security
 {
     using System;
+
     using Nancy.Cryptography;
     using Nancy.Security;
+
     using Xunit;
 
     public class DefaultCsrfTokenValidatorFixture

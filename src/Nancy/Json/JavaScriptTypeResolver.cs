@@ -30,8 +30,7 @@ namespace Nancy.Json
 {
     using System;
 
-
-	public abstract class JavaScriptTypeResolver
+    public abstract class JavaScriptTypeResolver
 	{
 		protected JavaScriptTypeResolver () { }
 

@@ -4,7 +4,9 @@
     using System.Collections.Generic;
     using System.Dynamic;
     using System.Linq;
+
     using FakeItEasy;
+
     using Nancy.Tests.Fakes;
     using Nancy.ViewEngines.SuperSimpleViewEngine;
 

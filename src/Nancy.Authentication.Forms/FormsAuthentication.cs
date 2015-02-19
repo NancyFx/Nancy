@@ -1,11 +1,12 @@
 namespace Nancy.Authentication.Forms
 {
     using System;
-    using Bootstrapper;
-    using Cookies;
-    using Cryptography;
-    using Helpers;
+
+    using Nancy.Bootstrapper;
+    using Nancy.Cookies;
+    using Nancy.Cryptography;
     using Nancy.Extensions;
+    using Nancy.Helpers;
     using Nancy.Security;
 
     /// <summary>

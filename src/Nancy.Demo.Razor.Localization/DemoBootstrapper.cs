@@ -1,6 +1,6 @@
 ﻿namespace Nancy.Demo.Razor.Localization
 {
-    using Bootstrapper;
+    using Nancy.Bootstrapper;
 
     public class DemoBootstrapper : DefaultNancyBootstrapper
     {

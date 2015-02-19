@@ -1,7 +1,5 @@
 ﻿namespace Nancy.Demo.Caching.CachingExtensions
 {
-    using Nancy;
-
     public static class ContextExtensions
     {
         public const string OUTPUT_CACHE_TIME_KEY = "OUTPUT_CACHE_TIME";

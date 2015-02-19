@@ -2,15 +2,16 @@ namespace Nancy.Demo.Authentication.Token.TestingDemo
 {
     using System;
     using System.IO;
+
     using Nancy.Authentication.Token;
     using Nancy.Authentication.Token.Storage;
-    using Nancy.Demo.Authentication.Token;
-    using Nancy.Testing.Fakes;
     using Nancy.Testing;
+    using Nancy.Testing.Fakes;
+    using Nancy.TinyIoc;
 
     public class TestBootstrapper : TokenAuthBootstrapper
     {
-        protected override void ConfigureApplicationContainer(TinyIoc.TinyIoCContainer container)
+        protected override void ConfigureApplicationContainer(TinyIoCContainer container)
         {
             container.Register<ITokenizer>(new Tokenizer(cfg => cfg.WithKeyCache(new InMemoryTokenKeyStore())));
         }

@@ -2,11 +2,13 @@
 {
     using System;
     using System.Linq;
+
     using Nancy.Cookies;
     using Nancy.Cryptography;
     using Nancy.Diagnostics;
     using Nancy.Helpers;
     using Nancy.Testing;
+
     using Xunit;
 
     public class DiagnosticsHookFixture

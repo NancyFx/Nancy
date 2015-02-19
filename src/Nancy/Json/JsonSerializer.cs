@@ -39,7 +39,7 @@ namespace Nancy.Json
 
     using Nancy.Extensions;
 
-	internal sealed class JsonSerializer
+    internal sealed class JsonSerializer
 	{
         internal static readonly long InitialJavaScriptDateTicks = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).Ticks;
         static readonly DateTime MinimumJavaScriptDate = new DateTime(100, 1, 1, 0, 0, 0, DateTimeKind.Utc);

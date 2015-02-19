@@ -4,12 +4,13 @@
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using Diagnostics;
-    using Nancy.Cryptography;
-    using Nancy.ModelBinding;
+
     using Nancy.Conventions;
-    using Nancy.ViewEngines;
+    using Nancy.Cryptography;
+    using Nancy.Diagnostics;
+    using Nancy.ModelBinding;
     using Nancy.Validation;
+    using Nancy.ViewEngines;
 
     /// <summary>
     /// Nancy bootstrapper base class

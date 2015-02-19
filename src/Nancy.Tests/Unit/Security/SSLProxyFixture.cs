@@ -1,10 +1,12 @@
 ﻿namespace Nancy.Tests.Unit.Security
 {
+    using System.Collections.Generic;
+    using System.Threading;
+
     using Nancy.Bootstrapper;
     using Nancy.Security;
     using Nancy.Tests.Fakes;
-    using System.Collections.Generic;
-    using System.Threading;
+
     using Xunit;
 
     public class SSLProxyFixture

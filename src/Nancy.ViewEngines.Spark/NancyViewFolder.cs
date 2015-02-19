@@ -8,9 +8,9 @@ namespace Nancy.ViewEngines.Spark
     using System.Text;
     using System.Threading;
 
-    using Nancy.Responses.Negotiation;
-
     using global::Spark.FileSystem;
+
+    using Nancy.Responses.Negotiation;
 
     /// <summary>
     /// Implementation of the IViewFolder interface to have Spark use views that's been discovered by Nancy's view locator.

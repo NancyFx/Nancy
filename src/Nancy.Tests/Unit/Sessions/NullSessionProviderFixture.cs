@@ -1,7 +1,9 @@
 namespace Nancy.Tests.Unit.Sessions
 {
     using System;
-    using Session;
+
+    using Nancy.Session;
+
     using Xunit;
 
     public class NullSessionProviderFixture

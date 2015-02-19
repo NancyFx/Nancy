@@ -1,6 +1,6 @@
 ﻿namespace Nancy.Diagnostics
 {
-    using Cryptography;
+    using Nancy.Cryptography;
 
     /// <summary>
     /// Settings for the diagnostics dashboard

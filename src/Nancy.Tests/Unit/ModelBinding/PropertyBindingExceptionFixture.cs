@@ -1,7 +1,9 @@
 ﻿namespace Nancy.Tests.Unit.ModelBinding
 {
     using System;
+
     using Nancy.ModelBinding;
+
     using Xunit;
 
     public class PropertyBindingExceptionFixture

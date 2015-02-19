@@ -2,8 +2,8 @@ namespace Nancy.Demo.Caching
 {
     using System;
     using System.Collections.Generic;
-    using Bootstrapper;
-    using Nancy;
+
+    using Nancy.Bootstrapper;
     using Nancy.Demo.Caching.CachingExtensions;
     using Nancy.TinyIoc;
 

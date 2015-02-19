@@ -4,7 +4,8 @@ namespace Nancy.Demo.MarkdownViewEngine.Modules
     using System.Collections.Generic;
     using System.Dynamic;
     using System.Linq;
-    using ViewEngines;
+
+    using Nancy.ViewEngines;
 
     public class HomeModule : NancyModule
     {

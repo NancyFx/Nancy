@@ -3,8 +3,9 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-    using Bootstrapper;
-    using Conventions;
+
+    using Nancy.Bootstrapper;
+    using Nancy.Conventions;
     using Nancy.Diagnostics;
     using Nancy.Security;
     using Nancy.Session;

@@ -1,6 +1,7 @@
 ﻿namespace Nancy.Tests.Functional.Tests
 {
     using Nancy.Testing;
+
     using Xunit;
 
     public class BasicRouteInvocationsFixture

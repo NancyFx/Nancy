@@ -1,6 +1,7 @@
 namespace Nancy.ViewEngines.DotLiquid.Tests.Functional
 {
-    using Testing;
+    using Nancy.Testing;
+
     using Xunit;
 
     public class PartialRenderingFixture

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
 
     using Nancy.Bootstrapper;
@@ -43,7 +44,7 @@
 
         private static void ThrowWhenNoAppStartupsFixtureRuns()
         {
-            var frames = new System.Diagnostics.StackTrace().GetFrames();
+            var frames = new StackTrace().GetFrames();
 
             if (frames != null && frames.Select(f => f.GetMethod().DeclaringType).Any(t => t == typeof(NoAppStartupsFixture)))
             {

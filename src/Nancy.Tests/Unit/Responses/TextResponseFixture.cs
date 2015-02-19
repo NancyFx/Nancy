@@ -2,7 +2,9 @@
 {
     using System.IO;
     using System.Text;
+
     using Nancy.Responses;
+
     using Xunit;
 
     public class TextResponseFixture

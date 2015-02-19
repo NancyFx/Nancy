@@ -5,8 +5,11 @@ namespace Nancy.Tests.Unit.ViewEngines
     using System.IO;
     using System.Linq;
     using System.Reflection;
+
     using FakeItEasy;
+
     using Nancy.ViewEngines;
+
     using Xunit;
 
     public class ResourceViewLocationProviderFixture

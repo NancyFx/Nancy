@@ -1,8 +1,11 @@
 ﻿namespace Nancy.Tests.Unit.Validation
 {
     using System.Linq;
+
     using FakeItEasy;
+
     using Nancy.Validation;
+
     using Xunit;
 
     public class CompositeValidatorFixture

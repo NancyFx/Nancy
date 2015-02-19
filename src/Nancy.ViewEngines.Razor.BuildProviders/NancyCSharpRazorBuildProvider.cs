@@ -6,7 +6,6 @@
     using System.Globalization;
     using System.Web.Compilation;
     using System.Web.Razor;
-    using Nancy.ViewEngines.Razor;
 
     [BuildProviderAppliesTo(BuildProviderAppliesTo.Code | BuildProviderAppliesTo.Web)]
     public class NancyCSharpRazorBuildProvider : BuildProvider

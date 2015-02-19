@@ -1,8 +1,9 @@
 ﻿namespace Nancy.Testing.Tests
 {
-    using Xunit;
-    using Nancy.Tests;
     using Nancy.ModelBinding;
+    using Nancy.Tests;
+
+    using Xunit;
 
     public class CaseSensitivityFixture
     {

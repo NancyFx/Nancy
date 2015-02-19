@@ -2,7 +2,8 @@
 {
     using System.Collections.Generic;
     using System.IO;
-    using Responses;
+
+    using Nancy.Responses;
 
     /// <summary>
     /// Nancy IViewEngine wrapper for the super simple view engine

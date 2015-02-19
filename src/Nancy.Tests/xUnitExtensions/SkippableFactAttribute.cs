@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Xunit;
-using Xunit.Sdk;
-
-namespace Nancy.Tests.xUnitExtensions
+﻿namespace Nancy.Tests.xUnitExtensions
 {
+    using System.Collections.Generic;
+
+    using Xunit;
+    using Xunit.Sdk;
+
     public class SkippableFactAttribute : FactAttribute
     {
         protected override IEnumerable<ITestCommand> EnumerateTestCommands(IMethodInfo method)

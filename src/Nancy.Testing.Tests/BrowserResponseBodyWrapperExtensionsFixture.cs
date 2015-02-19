@@ -1,7 +1,9 @@
 namespace Nancy.Testing.Tests
 {
     using System.IO;
+
     using Nancy.Tests;
+
     using Xunit;
 
     public class BrowserResponseBodyWrapperExtensionsFixture

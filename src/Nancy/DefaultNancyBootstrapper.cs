@@ -5,7 +5,8 @@ namespace Nancy
     using System.Linq;
     using System.Reflection;
     using Nancy.Diagnostics;
-    using Bootstrapper;
+    using Nancy.Bootstrapper;
+    using Nancy.Diagnostics;
     using Nancy.TinyIoc;
 
     /// <summary>

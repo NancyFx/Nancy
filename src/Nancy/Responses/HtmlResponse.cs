@@ -3,7 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using Cookies;
+
+    using Nancy.Cookies;
 
     /// <summary>
     /// Represents a HTML (text/html) response

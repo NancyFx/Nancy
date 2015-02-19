@@ -1,6 +1,5 @@
 namespace Nancy.Demo.Authentication.Forms
 {
-    using Nancy;
     using Nancy.Demo.Authentication.Forms.Models;
     using Nancy.Security;
 

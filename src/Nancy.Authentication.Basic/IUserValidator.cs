@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-namespace Nancy.Authentication.Basic
+﻿namespace Nancy.Authentication.Basic
 {
     using Nancy.Security;
 

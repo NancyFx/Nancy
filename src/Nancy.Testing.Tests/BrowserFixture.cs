@@ -3,13 +3,15 @@ namespace Nancy.Testing.Tests
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Security.Cryptography.X509Certificates;
     using System.Text;
     using System.Linq;
     using Nancy.Extensions;
-    using Nancy.Tests;
     using Nancy.Helpers;
     using Nancy.Session;
+    using Nancy.Tests;
+
     using Xunit;
     using FakeItEasy;
     using Nancy.Authentication.Forms;

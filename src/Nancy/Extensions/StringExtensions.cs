@@ -5,8 +5,9 @@ namespace Nancy.Extensions
     using System.Diagnostics;
     using System.Linq;
     using System.Text.RegularExpressions;
+
     using Nancy.Helpers;
-    using Routing;
+    using Nancy.Routing;
 
     /// <summary>
     /// Containing extensions for the <see cref="string"/> object.

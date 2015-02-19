@@ -1,7 +1,7 @@
-using Nancy.Bootstrapper;
-
 namespace Nancy.Diagnostics
 {
+    using Nancy.Bootstrapper;
+
     public interface IDiagnostics
     {
         /// <summary>

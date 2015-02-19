@@ -1,9 +1,10 @@
 namespace Nancy.Hosting.Aspnet
 {
+    using System;
     using System.Configuration;
     using System.Threading.Tasks;
     using System.Web;
-    using System;
+
     using Nancy.Bootstrapper;
 
     public class NancyHttpRequestHandler : IHttpAsyncHandler

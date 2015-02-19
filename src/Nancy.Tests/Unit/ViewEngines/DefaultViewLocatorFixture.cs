@@ -1,15 +1,14 @@
 namespace Nancy.Tests.Unit.ViewEngines
 {
     using System.Collections.Generic;
+    using System.Linq;
 
     using FakeItEasy;
 
-    using Fakes;
     using Nancy.ViewEngines;
+
     using Xunit;
     using Xunit.Extensions;
-
-    using System.Linq;
 
     public class DefaultViewLocatorFixture
     {

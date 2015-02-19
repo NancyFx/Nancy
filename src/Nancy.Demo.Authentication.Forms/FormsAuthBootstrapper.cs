@@ -1,6 +1,5 @@
 namespace Nancy.Demo.Authentication.Forms
 {
-    using Nancy;
     using Nancy.Authentication.Forms;
     using Nancy.Bootstrapper;
     using Nancy.TinyIoc;

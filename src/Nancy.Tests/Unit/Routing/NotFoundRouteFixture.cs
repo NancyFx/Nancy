@@ -1,7 +1,9 @@
 ﻿namespace Nancy.Tests.Unit.Routing
 {
     using System.Threading;
+
     using Nancy.Routing;
+
     using Xunit;
 
     public class NotFoundRouteFixture

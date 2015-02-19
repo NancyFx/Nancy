@@ -1,7 +1,9 @@
 ﻿namespace Nancy.Tests.Unit.ViewEngines
 {
     using FakeItEasy;
+
     using Nancy.ViewEngines;
+
     using Xunit;
 
     public class ViewNotFoundExceptionFixture

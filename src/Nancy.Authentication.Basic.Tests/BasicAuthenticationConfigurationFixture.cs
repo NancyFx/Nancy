@@ -1,11 +1,14 @@
-﻿using System;
-using FakeItEasy;
-using Nancy.Tests;
-using Xunit;
-
-namespace Nancy.Authentication.Basic.Tests
+﻿namespace Nancy.Authentication.Basic.Tests
 {
-	public class BasicAuthenticationConfigurationFixture
+    using System;
+
+    using FakeItEasy;
+
+    using Nancy.Tests;
+
+    using Xunit;
+
+    public class BasicAuthenticationConfigurationFixture
 	{
 		[Fact]
 		public void Should_throw_with_null_user_validator()

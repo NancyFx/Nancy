@@ -1,7 +1,9 @@
 ﻿namespace Nancy.Tests.Unit.Extensions
 {
     using System;
+
     using Nancy.Extensions;
+
     using Xunit;
 
     public class TypeExtensionsFixture

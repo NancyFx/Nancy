@@ -1,6 +1,7 @@
 ﻿namespace Nancy.Demo.Hosting.Aspnet
 {
     using System.Collections.Generic;
+
     using Nancy.Routing;
 
     public class DefaultRouteMetadataProvider : RouteMetadataProvider<MyRouteMetadata>

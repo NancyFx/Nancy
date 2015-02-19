@@ -1,6 +1,5 @@
-using System.Runtime.InteropServices;
-using System.Runtime.CompilerServices;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 [assembly: AssemblyTitle("Nancy")]
 [assembly: AssemblyDescription("A Sinatra inspired web framework for the .NET platform")]

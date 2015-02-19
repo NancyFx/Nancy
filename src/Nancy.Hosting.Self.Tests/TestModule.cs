@@ -1,10 +1,9 @@
-﻿using System;
-
-namespace Nancy.Hosting.Self.Tests
+﻿namespace Nancy.Hosting.Self.Tests
 {
+    using System;
     using System.IO;
 
-	public class TestModule : NancyModule
+    public class TestModule : NancyModule
     {
         public TestModule()
         {

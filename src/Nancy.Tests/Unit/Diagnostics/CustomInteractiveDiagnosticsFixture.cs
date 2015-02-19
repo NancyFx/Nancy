@@ -3,8 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+
     using Nancy.Bootstrapper;
-    using Nancy.Cookies;
     using Nancy.Cryptography;
     using Nancy.Culture;
     using Nancy.Diagnostics;
@@ -15,8 +15,9 @@
     using Nancy.Routing;
     using Nancy.Routing.Constraints;
     using Nancy.Testing;
-    using Nancy.Tests; //While this directive is redundant, it's required to build on mono 2.x to allow it to resolve the Should* extension methods
+
     using Xunit;
+//While this directive is redundant, it's required to build on mono 2.x to allow it to resolve the Should* extension methods
 
     public class CustomInteractiveDiagnosticsHookFixture
     {

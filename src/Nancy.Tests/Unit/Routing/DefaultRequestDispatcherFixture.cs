@@ -7,11 +7,12 @@ namespace Nancy.Tests.Unit.Routing
     using System.Threading.Tasks;
 
     using FakeItEasy;
-    using Fakes;
 
     using Nancy.Helpers;
     using Nancy.Responses.Negotiation;
     using Nancy.Routing;
+    using Nancy.Tests.Fakes;
+
     using Xunit;
 
     public class DefaultRequestDispatcherFixture

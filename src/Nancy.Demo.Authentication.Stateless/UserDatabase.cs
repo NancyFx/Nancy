@@ -1,9 +1,10 @@
 namespace Nancy.Demo.Authentication.Stateless
 {
-    using Nancy.Security;
     using System;
     using System.Collections.Generic;
     using System.Linq;
+
+    using Nancy.Security;
 
     public class UserDatabase
     {

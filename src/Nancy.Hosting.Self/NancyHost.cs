@@ -4,13 +4,14 @@
     using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
-    using System.Net;
     using System.Linq;
+    using System.Net;
     using System.Security.Principal;
-    using IO;
+
     using Nancy.Bootstrapper;
     using Nancy.Extensions;
     using Nancy.Helpers;
+    using Nancy.IO;
 
     /// <summary>
     /// Allows to host Nancy server inside any application - console or windows service.

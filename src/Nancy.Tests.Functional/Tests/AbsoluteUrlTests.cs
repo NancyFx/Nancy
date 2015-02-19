@@ -4,6 +4,7 @@
 
     using Nancy.Testing;
     using Nancy.Tests.Functional.Modules;
+
     using Xunit;
 
     public class AbsoluteUrlTests

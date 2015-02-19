@@ -4,7 +4,9 @@
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
+    using System.Text;
     using System.Text.RegularExpressions;
+
     using MarkdownSharp;
 
     [Serializable]
@@ -36,8 +38,8 @@
         public BlogModel(string markdown)
         {
             string metadata = markdown.Contains("@Tags")
-                           ? markdown.Substring(markdown.IndexOf("@Tags", System.StringComparison.Ordinal) + 5,
-                                                markdown.IndexOf("@EndTags", System.StringComparison.Ordinal) - 7)
+                           ? markdown.Substring(markdown.IndexOf("@Tags", StringComparison.Ordinal) + 5,
+                                                markdown.IndexOf("@EndTags", StringComparison.Ordinal) - 7)
                            : string.Empty;
 
             var metadataSplit = metadata.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
@@ -94,14 +96,14 @@
 
             if (content.Contains("@Tags"))
             {
-                content = content.Substring(content.IndexOf("@EndTags", System.StringComparison.Ordinal) + 8);
+                content = content.Substring(content.IndexOf("@EndTags", StringComparison.Ordinal) + 8);
             }
 
             string ssveRemoved = SSVESubstitution.Replace(content, "").Trim();
             var abstractpost = ssveRemoved.Substring(0, 175).Trim();
             var html = parser.Transform(abstractpost);
             html = html + "<p><a href='" + this.Slug + "'>Read More...</a>";
-            return html.Substring(html.IndexOf("<p>", System.StringComparison.Ordinal));
+            return html.Substring(html.IndexOf("<p>", StringComparison.Ordinal));
         }
 
         private string GenerateSlug(char spacer = '-', bool removeStopWords = false)
@@ -124,8 +126,8 @@
 
         public string RemoveAccent(string txt)
         {
-            byte[] bytes = System.Text.Encoding.GetEncoding("Cyrillic").GetBytes(txt);
-            return System.Text.Encoding.ASCII.GetString(bytes);
+            byte[] bytes = Encoding.GetEncoding("Cyrillic").GetBytes(txt);
+            return Encoding.ASCII.GetString(bytes);
         }
     }
 }

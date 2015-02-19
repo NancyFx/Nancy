@@ -10,6 +10,8 @@
 
     using Xunit;
 
+    using HttpStatusCode = Nancy.HttpStatusCode;
+
     public class AppBuilderExtensionsFixture
     {
 #if !__MonoCS__

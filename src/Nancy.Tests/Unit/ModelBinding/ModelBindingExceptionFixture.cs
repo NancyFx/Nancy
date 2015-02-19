@@ -3,7 +3,9 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+
     using Nancy.ModelBinding;
+
     using Xunit;
 
     public class ModelBindingExceptionFixture

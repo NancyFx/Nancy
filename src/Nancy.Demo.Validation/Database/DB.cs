@@ -1,7 +1,8 @@
 namespace Nancy.Demo.Validation.Database
 {
     using System.Collections.Generic;
-    using Models;
+
+    using Nancy.Demo.Validation.Models;
 
     public static class DB
     {

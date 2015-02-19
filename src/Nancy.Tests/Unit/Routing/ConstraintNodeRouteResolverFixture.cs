@@ -2,8 +2,10 @@
 {
     using System;
     using System.Globalization;
+
     using Nancy.Helpers;
     using Nancy.Testing;
+
     using Xunit;
 
     public class ConstraintNodeRouteResolverFixture

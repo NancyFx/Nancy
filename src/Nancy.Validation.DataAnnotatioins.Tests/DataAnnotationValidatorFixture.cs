@@ -8,9 +8,8 @@
     using FakeItEasy;
 
     using Nancy.Tests;
-    using Nancy.Validation.DataAnnotations;
+
     using Xunit;
-    using System.Collections.Generic;
 
     public class DataAnnotationValidatorFixture
     {

@@ -1,10 +1,11 @@
 ﻿namespace Nancy.Tests.Unit.Json
 {
-	using System;
-	using System.Collections.Generic;
-	using Nancy.Json;
+    using System;
+    using System.Collections.Generic;
 
-	public class TestPrimitiveConverter : JavaScriptPrimitiveConverter
+    using Nancy.Json;
+
+    public class TestPrimitiveConverter : JavaScriptPrimitiveConverter
 	{
 		public override IEnumerable<Type> SupportedTypes
 		{

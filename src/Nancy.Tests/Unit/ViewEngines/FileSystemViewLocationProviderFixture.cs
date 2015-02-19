@@ -4,8 +4,11 @@ namespace Nancy.Tests.Unit.ViewEngines
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+
     using FakeItEasy;
+
     using Nancy.ViewEngines;
+
     using Xunit;
 
     public class FileSystemViewLocationProviderFixture

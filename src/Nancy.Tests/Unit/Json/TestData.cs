@@ -1,8 +1,8 @@
 ﻿namespace Nancy.Tests.Unit.Json
 {
-	using System;
+    using System;
 
-	public class TestData : IEquatable<TestData>
+    public class TestData : IEquatable<TestData>
 	{
 		public TestConverterType ConverterData;
 		public TestPrimitiveConverterType PrimitiveConverterData;

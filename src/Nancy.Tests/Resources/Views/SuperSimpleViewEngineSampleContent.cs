@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Nancy.Tests.Resources.Views
+﻿namespace Nancy.Tests.Resources.Views
 {
     public static class SuperSimpleViewEngineSampleContent
     {

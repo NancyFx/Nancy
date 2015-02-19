@@ -3,6 +3,7 @@
     using System.Collections.Generic;
 
     using Nancy.Validation;
+
     using Xunit;
 
     public class ModelValidationResultFixture

@@ -2,12 +2,12 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Text;
-    using System.Globalization;
-    using Nancy.Bootstrapper;
 
-    using ViewEngines;
+    using Nancy.Bootstrapper;
+    using Nancy.ViewEngines;
 
     /// <summary>
     /// Nancy configurable conventions

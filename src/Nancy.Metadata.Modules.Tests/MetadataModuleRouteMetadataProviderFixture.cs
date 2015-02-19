@@ -1,8 +1,10 @@
 ﻿namespace Nancy.Metadata.Modules.Tests
 {
     using FakeItEasy;
+
     using Nancy.Routing;
     using Nancy.Tests;
+
     using Xunit;
 
     public class MetadataModuleRouteMetadataProviderFixture

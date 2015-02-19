@@ -8,8 +8,8 @@
     using System.Text;
 
     using Nancy.Authentication.Token.Storage;
-    using Nancy.Security;
     using Nancy.ErrorHandling;
+    using Nancy.Security;
 
     /// <summary>
     /// Default implementation of <see cref="ITokenizer"/>

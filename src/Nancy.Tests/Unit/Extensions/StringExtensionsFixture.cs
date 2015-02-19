@@ -1,8 +1,7 @@
 namespace Nancy.Tests.Unit.Extensions
 {
-    using System;
-    using System.Linq;
     using Nancy.Extensions;
+
     using Xunit;
 
     public class StringExtensionsFixture

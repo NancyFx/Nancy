@@ -6,8 +6,8 @@
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
-    using Nancy.Conventions;
 
+    using Nancy.Conventions;
 
     /// <summary>
     /// The default implementation for how views are resolved and rendered by Nancy.

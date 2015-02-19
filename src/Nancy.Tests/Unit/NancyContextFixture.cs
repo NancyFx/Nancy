@@ -1,7 +1,9 @@
 namespace Nancy.Tests.Unit
 {
     using System;
+
     using FakeItEasy;
+
     using Xunit;
 
     public class NancyContextFixture

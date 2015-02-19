@@ -5,7 +5,6 @@
     using System.Linq;
 
     using Nancy.Tests;
-    using Nancy.Validation.DataAnnotations;
 
     using Xunit;
 

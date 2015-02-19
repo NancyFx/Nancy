@@ -1,6 +1,7 @@
 ﻿namespace Nancy.Tests.Functional.Tests
 {
     using System;
+
     using Nancy.Bootstrapper;
     using Nancy.Testing;
     using Nancy.Tests.Functional.Modules;

@@ -1,7 +1,7 @@
 ﻿namespace Nancy.Tests.Unit
 {
     using System.Text;
-    using Nancy;
+
     using Xunit;
 
     public class HttpMultipartBufferFixture

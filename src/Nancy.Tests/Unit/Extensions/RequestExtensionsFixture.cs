@@ -1,8 +1,10 @@
 ﻿namespace Nancy.Tests.Unit.Extensions
 {
     using System.Collections.Generic;
+
     using Nancy.Extensions;
-    using Fakes;
+    using Nancy.Tests.Fakes;
+
     using Xunit;
 
     public class RequestExtensionsFixture

@@ -3,21 +3,20 @@ namespace Nancy.Bootstrapper
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
 
+    using Nancy.Culture;
     using Nancy.Diagnostics;
     using Nancy.ErrorHandling;
+    using Nancy.Localization;
     using Nancy.ModelBinding;
+    using Nancy.Responses;
+    using Nancy.Responses.Negotiation;
     using Nancy.Routing;
     using Nancy.Routing.Constraints;
     using Nancy.Routing.Trie;
-    using Nancy.ViewEngines;
-    using Responses;
-    using Responses.Negotiation;
-    using Security;
+    using Nancy.Security;
     using Nancy.Validation;
-    using Nancy.Culture;
-    using Nancy.Localization;
+    using Nancy.ViewEngines;
 
     /// <summary>
     /// Configuration class for Nancy's internals.

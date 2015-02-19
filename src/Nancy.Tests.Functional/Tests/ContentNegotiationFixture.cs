@@ -4,8 +4,7 @@ namespace Nancy.Tests.Functional.Tests
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using Cookies;
-
+    using Nancy.Cookies;
     using Nancy.ErrorHandling;
     using Nancy.IO;
     using Nancy.Responses.Negotiation;

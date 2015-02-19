@@ -8,8 +8,7 @@ namespace Nancy.Routing
     using System.Threading.Tasks;
 
     using Nancy.Helpers;
-
-    using Responses.Negotiation;
+    using Nancy.Responses.Negotiation;
 
     /// <summary>
     /// Default implementation of a request dispatcher.

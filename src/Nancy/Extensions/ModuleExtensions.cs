@@ -3,6 +3,7 @@ namespace Nancy.Extensions
     using System;
     using System.Diagnostics;
     using System.Text.RegularExpressions;
+
     using Nancy.ErrorHandling;
 
     /// <summary>

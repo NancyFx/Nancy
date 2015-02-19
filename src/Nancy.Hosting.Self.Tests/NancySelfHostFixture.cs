@@ -6,13 +6,14 @@ namespace Nancy.Hosting.Self.Tests
     using System.Linq;
     using System.Net;
     using System.Threading;
-    using System.Threading.Tasks;
 
     using FakeItEasy;
+
     using Nancy.Bootstrapper;
     using Nancy.Helpers;
     using Nancy.Tests;
     using Nancy.Tests.xUnitExtensions;
+
     using Xunit;
 
     /// <remarks>

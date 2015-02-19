@@ -1,7 +1,9 @@
 namespace Nancy.Testing.Tests
 {
     using System;
+
     using Nancy.Tests;
+
     using Xunit;
     using Xunit.Extensions;
 

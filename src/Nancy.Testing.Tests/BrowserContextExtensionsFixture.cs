@@ -1,8 +1,10 @@
 ﻿namespace Nancy.Testing.Tests
 {
     using System.Linq;
-    using Xunit;
+
     using Nancy.Tests;
+
+    using Xunit;
 
     public class BrowserContextExtensionsFixture
     {

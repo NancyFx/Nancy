@@ -1,6 +1,6 @@
 ﻿namespace Nancy.Authentication.Token
 {
-    using Security;
+    using Nancy.Security;
 
     /// <summary>
     /// Encodes and decodes authorization tokens. 

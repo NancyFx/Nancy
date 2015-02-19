@@ -1,10 +1,9 @@
 ﻿namespace Nancy.Tests.Fakes
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Linq;
+
     using Nancy.Routing;
 
     public class FakeRouteCache : Dictionary<Type, List<Tuple<int, RouteDescription>>>, IRouteCache

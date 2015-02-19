@@ -1,7 +1,8 @@
 namespace Nancy.Demo.ModelBinding.Database
 {
     using System.Collections.Generic;
-    using Models;
+
+    using Nancy.Demo.ModelBinding.Models;
 
     public static class DB
     {

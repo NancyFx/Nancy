@@ -3,6 +3,8 @@
     using System;
     using System.Text.RegularExpressions;
 
+    using MarkdownSharp;
+
     public static class MarkdownViewengineRender
     {
         /// <summary>
@@ -43,7 +45,7 @@
             var footer =
                 templateContent.Substring(templateContent.IndexOf("</body>", StringComparison.OrdinalIgnoreCase));
 
-            var parser = new MarkdownSharp.Markdown();
+            var parser = new Markdown();
 
             var html = parser.Transform(toConvert.Trim());
 

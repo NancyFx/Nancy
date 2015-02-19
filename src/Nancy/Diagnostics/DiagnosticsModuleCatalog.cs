@@ -3,10 +3,11 @@ namespace Nancy.Diagnostics
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using ModelBinding;
+
     using Nancy.Bootstrapper;
+    using Nancy.ModelBinding;
+    using Nancy.Responses;
     using Nancy.TinyIoc;
-    using Responses;
 
     internal class DiagnosticsModuleCatalog : INancyModuleCatalog
     {

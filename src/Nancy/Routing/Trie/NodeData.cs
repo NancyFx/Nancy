@@ -2,8 +2,6 @@ namespace Nancy.Routing.Trie
 {
     using System;
 
-    using Nancy;
-
     /// <summary>
     /// Represents a route that ends at a particular node.
     /// We store/calculate as much as we can at build time to save

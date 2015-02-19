@@ -2,8 +2,9 @@ namespace Nancy.Testing.Tests
 {
     using System;
     using System.Linq;
+
     using CsQuery;
-    using Nancy.Testing;
+
     using Xunit;
 
     public class AssertExtensionsTests

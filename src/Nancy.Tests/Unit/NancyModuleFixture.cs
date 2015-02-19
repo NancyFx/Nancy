@@ -2,7 +2,9 @@ namespace Nancy.Tests.Unit
 {
     using System;
     using System.Linq;
-    using Fakes;
+
+    using Nancy.Tests.Fakes;
+
     using Xunit;
 
     public class NancyModuleFixture

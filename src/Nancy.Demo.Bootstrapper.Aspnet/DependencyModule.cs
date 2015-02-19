@@ -1,6 +1,5 @@
 ﻿namespace Nancy.Demo.Bootstrapping.Aspnet
 {
-    using Nancy.AspNetBootstrapperDemo;
     using Nancy.Demo.Bootstrapping.Aspnet.Models;
 
     public class DependencyModule : NancyModule

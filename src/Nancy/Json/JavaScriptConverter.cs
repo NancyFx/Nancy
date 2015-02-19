@@ -31,7 +31,7 @@ namespace Nancy.Json
     using System;
     using System.Collections.Generic;
 
-	public abstract class JavaScriptConverter
+    public abstract class JavaScriptConverter
 	{
 		protected JavaScriptConverter () { }
 

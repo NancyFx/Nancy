@@ -1,6 +1,7 @@
 ﻿namespace Nancy.Authentication.Token
 {
     using System;
+
     using Nancy.Bootstrapper;
     using Nancy.Security;
 

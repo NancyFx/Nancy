@@ -1,6 +1,7 @@
 ﻿namespace Nancy.Tests.Fakes
 {
     using System;
+
     using Nancy.Routing;
 
     public class FakeRoutePatternMatchResult : IRoutePatternMatchResult

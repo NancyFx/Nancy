@@ -29,6 +29,7 @@
 namespace Nancy.Json
 {
     using System;
+    using System.Globalization;
     using System.IO;
     using System.Text;
     using System.Globalization;

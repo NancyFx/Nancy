@@ -1,9 +1,10 @@
 namespace Nancy.Testing.Tests
 {
     using System.Linq;
+
     using CsQuery;
     using CsQuery.Implementation;
-    using Nancy.Testing;
+
     using Xunit;
 
     public class QueryWrapperTests

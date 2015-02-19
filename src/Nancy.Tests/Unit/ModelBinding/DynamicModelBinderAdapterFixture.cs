@@ -1,8 +1,11 @@
 namespace Nancy.Tests.Unit.ModelBinding
 {
     using System;
+
     using FakeItEasy;
+
     using Nancy.ModelBinding;
+
     using Xunit;
 
     public class DynamicModelBinderAdapterFixture

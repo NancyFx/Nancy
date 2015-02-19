@@ -1,7 +1,8 @@
 namespace Nancy.Authentication.Forms
 {
     using System;
-    using Extensions;
+
+    using Nancy.Extensions;
 
     /// <summary>
     /// Module extensions for login/logout of forms auth

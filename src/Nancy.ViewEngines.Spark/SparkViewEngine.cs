@@ -4,9 +4,11 @@
     using System.Configuration;
     using System.Dynamic;
     using System.IO;
-    using Responses;
+
     using global::Spark;
     using global::Spark.FileSystem;
+
+    using Nancy.Responses;
     using Nancy.ViewEngines.Spark.Descriptors;
 
     /// <summary>

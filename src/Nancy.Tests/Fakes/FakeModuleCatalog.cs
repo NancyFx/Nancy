@@ -1,9 +1,9 @@
-using System;
-
 namespace Nancy.Tests.Fakes
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
+
     public class FakeModuleCatalog : INancyModuleCatalog
     {
         private Dictionary<Type, INancyModule> _Modules;

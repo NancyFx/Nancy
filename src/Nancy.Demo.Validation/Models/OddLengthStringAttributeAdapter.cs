@@ -1,6 +1,7 @@
 ﻿namespace Nancy.Demo.Validation.Models
 {
     using System.ComponentModel.DataAnnotations;
+
     using Nancy.Validation.DataAnnotations;
 
     public class OddLengthStringAttributeAdapter : DataAnnotationsValidatorAdapter

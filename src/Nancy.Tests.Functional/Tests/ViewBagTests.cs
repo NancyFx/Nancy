@@ -1,9 +1,11 @@
 ﻿namespace Nancy.Tests.Functional.Tests
 {
     using System;
-    using Bootstrapper;
-    using Modules;
-    using Testing;
+
+    using Nancy.Bootstrapper;
+    using Nancy.Testing;
+    using Nancy.Tests.Functional.Modules;
+
     using Xunit;
 
     public class ViewBagTests

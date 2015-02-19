@@ -79,7 +79,7 @@ namespace Nancy.Routing.Trie
                 return 1;
             }
 
-            if (string.Equals(this.ModuleType, other.ModuleType))
+            if (Equals(this.ModuleType, other.ModuleType))
             {
                 if (this.RouteIndex < other.RouteIndex)
                 {

@@ -1,10 +1,8 @@
 ﻿namespace Nancy.Demo.Authentication.Token
 {
-    using System.Linq;
-    using Nancy;
     using Nancy.Authentication.Token;
     using Nancy.Bootstrapper;
-    using TinyIoc;
+    using Nancy.TinyIoc;
 
     public class TokenAuthBootstrapper : DefaultNancyBootstrapper
     {

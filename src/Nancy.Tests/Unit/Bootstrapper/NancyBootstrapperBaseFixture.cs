@@ -1,15 +1,17 @@
-﻿using Nancy.Diagnostics;
-
-namespace Nancy.Tests.Unit.Bootstrapper
+﻿namespace Nancy.Tests.Unit.Bootstrapper
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Threading;
+
     using FakeItEasy;
+
     using Nancy.Bootstrapper;
+    using Nancy.Diagnostics;
     using Nancy.Tests.Fakes;
+
     using Xunit;
 
     public class NancyBootstrapperBaseFixture
@@ -70,8 +72,8 @@ namespace Nancy.Tests.Unit.Bootstrapper
 
             // Then
             this.bootstrapper.PassedModules.ShouldNotBeNull();
-            this.bootstrapper.PassedModules.Where(mr => mr.ModuleType == typeof(Fakes.FakeNancyModuleWithBasePath)).FirstOrDefault().ShouldNotBeNull();
-            this.bootstrapper.PassedModules.Where(mr => mr.ModuleType == typeof(Fakes.FakeNancyModuleWithoutBasePath)).FirstOrDefault().ShouldNotBeNull();
+            this.bootstrapper.PassedModules.Where(mr => mr.ModuleType == typeof(FakeNancyModuleWithBasePath)).FirstOrDefault().ShouldNotBeNull();
+            this.bootstrapper.PassedModules.Where(mr => mr.ModuleType == typeof(FakeNancyModuleWithoutBasePath)).FirstOrDefault().ShouldNotBeNull();
         }
 
         [Fact]

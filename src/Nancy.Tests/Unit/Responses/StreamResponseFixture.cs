@@ -1,8 +1,11 @@
 ﻿namespace Nancy.Tests.Unit.Responses
 {
     using System.IO;
+
     using FakeItEasy;
+
     using Nancy.Responses;
+
     using Xunit;
 
     public class StreamResponseFixture

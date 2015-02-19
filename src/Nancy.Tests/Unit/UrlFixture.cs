@@ -1,8 +1,7 @@
-﻿using System.Net;
-
-namespace Nancy.Tests.Unit
+﻿namespace Nancy.Tests.Unit
 {
     using System;
+
     using Xunit;
     using Xunit.Extensions;
 

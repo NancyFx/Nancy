@@ -1,13 +1,13 @@
 namespace Nancy.ModelBinding
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
     using System.Text.RegularExpressions;
 
     using Nancy.Extensions;
-    using System.Collections;
 
     /// <summary>
     /// Default binder - used as a fallback when a specific modelbinder

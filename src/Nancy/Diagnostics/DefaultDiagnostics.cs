@@ -1,14 +1,14 @@
 ﻿namespace Nancy.Diagnostics
 {
     using System.Collections.Generic;
-    using ModelBinding;
+
     using Nancy.Bootstrapper;
+    using Nancy.Culture;
     using Nancy.Localization;
+    using Nancy.ModelBinding;
+    using Nancy.Responses.Negotiation;
     using Nancy.Routing;
     using Nancy.Routing.Constraints;
-
-    using Responses.Negotiation;
-    using Nancy.Culture;
 
     /// <summary>
     /// Wires up the diagnostics support at application startup.

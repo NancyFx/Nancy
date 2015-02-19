@@ -1,8 +1,10 @@
 namespace Nancy.Tests.Unit.Bootstrapper
 {
     using System;
+
     using Nancy.Bootstrapper;
     using Nancy.Responses.Negotiation;
+
     using Xunit;
 
     public class CollectionTypeRegistrationFixture

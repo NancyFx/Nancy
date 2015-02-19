@@ -3,8 +3,10 @@ namespace Nancy.Testing.Tests
     using System;
     using System.IO;
     using System.Text;
+
     using Nancy.Responses;
     using Nancy.Tests;
+
     using Xunit;
 
     public class ContextExtensionsTests

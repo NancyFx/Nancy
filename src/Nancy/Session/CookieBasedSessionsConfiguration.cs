@@ -1,6 +1,6 @@
 namespace Nancy.Session
 {
-    using Cryptography;
+    using Nancy.Cryptography;
 
     /// <summary>
     /// Configuration options for cookie based sessions

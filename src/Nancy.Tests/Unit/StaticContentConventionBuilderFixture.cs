@@ -5,10 +5,11 @@
     using System.Globalization;
     using System.IO;
     using System.Text;
+
     using Nancy.Conventions;
     using Nancy.Diagnostics;
-    using Nancy.IO;
     using Nancy.Responses;
+
     using Xunit;
     using Xunit.Extensions;
 

@@ -2,7 +2,8 @@
 {
     using System.Collections.Generic;
     using System.IO;
-    using IO;
+
+    using Nancy.IO;
 
     public class FakeRequest : Request
     {

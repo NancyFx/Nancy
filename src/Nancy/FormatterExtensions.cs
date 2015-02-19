@@ -1,10 +1,10 @@
 namespace Nancy
 {
     using System;
-    using System.Linq;
     using System.IO;
+    using System.Linq;
 
-    using Extensions;
+    using Nancy.Extensions;
     using Nancy.Responses;
 
     public static class FormatterExtensions
@@ -48,7 +48,7 @@ namespace Nancy
         	return r;
         }
 
-        public static Response AsRedirect(this IResponseFormatter formatter, string location, Nancy.Responses.RedirectResponse.RedirectType type = RedirectResponse.RedirectType.SeeOther)
+        public static Response AsRedirect(this IResponseFormatter formatter, string location, RedirectResponse.RedirectType type = RedirectResponse.RedirectType.SeeOther)
         {
             return new RedirectResponse(formatter.Context.ToFullPath(location), type);
         }

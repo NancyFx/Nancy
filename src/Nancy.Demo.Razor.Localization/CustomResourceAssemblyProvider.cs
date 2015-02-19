@@ -3,7 +3,8 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-    using Bootstrapper;
+
+    using Nancy.Bootstrapper;
 
     /// <summary>
     /// Use a custom <see cref="IResourceAssemblyProvider"/> because the default one ignores any

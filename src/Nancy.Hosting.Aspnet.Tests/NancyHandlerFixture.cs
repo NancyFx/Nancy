@@ -5,11 +5,12 @@ namespace Nancy.Hosting.Aspnet.Tests
     using System.IO;
     using System.Threading;
     using System.Web;
-    using Nancy.Cookies;
+
     using FakeItEasy;
 
+    using Nancy.Cookies;
     using Nancy.Helpers;
-    using Nancy.Hosting.Aspnet;
+
     using Xunit;
 
     public class NancyHandlerFixture

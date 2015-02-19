@@ -2,6 +2,7 @@ namespace Nancy.Bootstrapper
 {
     using System;
     using System.Linq;
+
     using Nancy.Extensions;
 
     /// <summary>

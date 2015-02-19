@@ -1,7 +1,7 @@
 namespace Nancy.Demo.Authentication
 {
     using System.Linq;
-    using Nancy;
+
     using Nancy.Demo.Authentication.Models;
     using Nancy.Security;
 

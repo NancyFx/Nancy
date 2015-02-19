@@ -4,12 +4,15 @@
     using System.Globalization;
     using System.IO;
     using System.Threading;
+
     using FakeItEasy;
+
     using global::Spark;
+
     using Nancy.Tests;
     using Nancy.ViewEngines.Spark.Tests.ViewModels;
+
     using Xunit;
-    using SparkViewEngine = Spark.SparkViewEngine;
 
     public class SparkViewEngineFixture
     {
@@ -294,7 +297,7 @@
         public void Should_support_files_with_the_spark_extensions()
         {
             // Given
-            var engine = new SparkViewEngine();
+            var engine = new global::Nancy.ViewEngines.Spark.SparkViewEngine();
 
             //When
             var extensions = engine.Extensions;
@@ -492,7 +495,7 @@
             }
 
             var stream = new MemoryStream();
-            var engine = new SparkViewEngine();
+            var engine = new global::Nancy.ViewEngines.Spark.SparkViewEngine();
 
             var locator = new DefaultViewLocator(this.fileSystemViewLocationProvider, new[] { engine });
             

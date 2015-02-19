@@ -2,9 +2,9 @@
 {
     using System;
 
-    using Nancy.Json;
     using Nancy.Testing;
     using Nancy.Tests.Functional.Modules;
+
     using Xunit;
 
     public class SerializerTests

@@ -1,8 +1,9 @@
 namespace Nancy.Demo.ModelBinding
 {
     using System.Linq;
-    using Database;
-    using Models;
+
+    using Nancy.Demo.ModelBinding.Database;
+    using Nancy.Demo.ModelBinding.Models;
     using Nancy.ModelBinding;
 
     public class EventsModule : NancyModule

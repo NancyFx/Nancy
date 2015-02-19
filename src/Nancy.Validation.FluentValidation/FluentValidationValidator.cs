@@ -3,6 +3,7 @@ namespace Nancy.Validation.FluentValidation
     using System;
     using System.Collections.Generic;
     using System.Linq;
+
     using global::FluentValidation;
     using global::FluentValidation.Internal;
     using global::FluentValidation.Results;

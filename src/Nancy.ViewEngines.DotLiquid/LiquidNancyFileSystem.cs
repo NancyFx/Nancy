@@ -2,11 +2,13 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Text.RegularExpressions;
-    using global::DotLiquid;
-    using global::DotLiquid.FileSystems;
-    using liquid = global::DotLiquid;
     using System.Linq;
+
+    using global::DotLiquid;
+    using global::DotLiquid.Exceptions;
+    using global::DotLiquid.FileSystems;
+
+    using liquid = global::DotLiquid;
 
     /// <summary>
     /// <see cref="IFileSystem"/> implementation around the Nancy templates.
@@ -36,7 +38,7 @@
         /// <param name="templateName">The name of the template to read.</param>
         /// <exception cref="liquid.Exceptions.FileSystemException">The specified template could not be located.</exception>
         /// <returns>The content of the template.</returns>
-        public string ReadTemplateFile(Context context, string templateName)
+        public string ReadTemplateFile(liquid.Context context, string templateName)
         {
             IRenderContext renderContext = context.Registers["nancy"] as IRenderContext;
             if (renderContext != null)
@@ -71,7 +73,7 @@
                         return reader.ReadToEnd();
                 }
             }
-            throw new liquid.Exceptions.FileSystemException("Template file {0} not found", new[] { templateName });
+            throw new FileSystemException("Template file {0} not found", new[] { templateName });
         }
 
         private string GetCleanTemplateName(string templateName)

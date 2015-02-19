@@ -1,14 +1,15 @@
 ﻿namespace Nancy.ViewEngines.DotLiquid
 {
-    using Responses;
     using System;
     using System.Collections.Generic;
-    using System.Dynamic;
     using System.IO;
+
     using global::DotLiquid;
+    using global::DotLiquid.Exceptions;
     using global::DotLiquid.FileSystems;
     using global::DotLiquid.NamingConventions;
-    using global::DotLiquid.Exceptions;
+
+    using Nancy.Responses;
 
     /// <summary>
     /// View engine for rendering dotLiquid views.

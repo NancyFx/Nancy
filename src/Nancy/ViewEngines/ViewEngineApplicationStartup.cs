@@ -1,6 +1,7 @@
 namespace Nancy.ViewEngines
 {
     using System.Collections.Generic;
+
     using Nancy.Bootstrapper;
 
     /// <summary>

@@ -6,20 +6,18 @@ namespace Nancy.Diagnostics
     using System.Linq;
     using System.Threading;
 
-    using Bootstrapper;
-    using Cookies;
-    using Cryptography;
-    using Helpers;
-    using ModelBinding;
-
+    using Nancy.Bootstrapper;
+    using Nancy.Cookies;
+    using Nancy.Cryptography;
+    using Nancy.Culture;
+    using Nancy.Helpers;
     using Nancy.Localization;
+    using Nancy.ModelBinding;
+    using Nancy.Responses;
+    using Nancy.Responses.Negotiation;
+    using Nancy.Routing;
     using Nancy.Routing.Constraints;
     using Nancy.Routing.Trie;
-
-    using Responses;
-    using Responses.Negotiation;
-    using Routing;
-    using Nancy.Culture;
 
     public static class DiagnosticsHook
     {

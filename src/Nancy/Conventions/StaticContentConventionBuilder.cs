@@ -7,8 +7,9 @@ namespace Nancy.Conventions
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
-    using Helpers;
-    using Responses;
+
+    using Nancy.Helpers;
+    using Nancy.Responses;
 
     /// <summary>
     /// Helper class for defining directory-based conventions for static contents.

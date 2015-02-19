@@ -1,10 +1,11 @@
 namespace Nancy.Demo.Validation
 {
     using System.Linq;
-    using ModelBinding;
+
+    using Nancy.Demo.Validation.Database;
+    using Nancy.Demo.Validation.Models;
+    using Nancy.ModelBinding;
     using Nancy.Validation;
-    using Database;
-    using Models;
 
     public class CustomersModule : NancyModule
     {

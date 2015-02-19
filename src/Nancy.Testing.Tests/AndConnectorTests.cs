@@ -1,9 +1,8 @@
 namespace Nancy.Testing.Tests
 {
     using System.Text;
-    using Nancy.Testing;
+
     using Xunit;
-    using Xunit.Sdk;
 
     public class AndConnectorTests
     {
@@ -43,7 +42,7 @@ namespace Nancy.Testing.Tests
                         document["#testId"].ShouldExist().And.ShouldBeOfClass("myClass");
                     });
 
-            Assert.IsType<Nancy.Testing.AssertException>(result);
+            Assert.IsType<AssertException>(result);
         }
     }
 }

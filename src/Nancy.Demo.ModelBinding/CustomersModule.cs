@@ -1,9 +1,10 @@
 namespace Nancy.BindingDemo
 {
     using System.Linq;
-    using Demo.ModelBinding.Database;
-    using Demo.ModelBinding.Models;
-    using ModelBinding;
+
+    using Nancy.Demo.ModelBinding.Database;
+    using Nancy.Demo.ModelBinding.Models;
+    using Nancy.ModelBinding;
 
     public class CustomersModule : NancyModule
     {

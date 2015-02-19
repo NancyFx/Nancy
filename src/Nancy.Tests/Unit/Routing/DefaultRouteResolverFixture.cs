@@ -1,6 +1,7 @@
 ﻿namespace Nancy.Tests.Unit.Routing
 {
     using Nancy.Testing;
+
     using Xunit;
     using Xunit.Extensions;
 

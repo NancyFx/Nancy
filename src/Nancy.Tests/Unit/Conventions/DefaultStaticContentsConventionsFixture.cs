@@ -2,8 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
+
     using Nancy.Conventions;
+
     using Xunit;
 
     public class DefaultStaticContentsConventionsFixture

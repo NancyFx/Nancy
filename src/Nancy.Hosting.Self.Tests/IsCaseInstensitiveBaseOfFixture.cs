@@ -1,8 +1,10 @@
 namespace Nancy.Hosting.Self.Tests
 {
     using System;
-    using Xunit;
+
     using Nancy.Tests;
+
+    using Xunit;
 
     public class IsCaseInstensitiveBaseOfFixture
     {

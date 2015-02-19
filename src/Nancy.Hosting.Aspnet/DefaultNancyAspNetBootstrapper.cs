@@ -1,12 +1,11 @@
-﻿using Nancy.Diagnostics;
-
-namespace Nancy.Hosting.Aspnet
+﻿namespace Nancy.Hosting.Aspnet
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
 
-    using Bootstrapper;
+    using Nancy.Bootstrapper;
+    using Nancy.Diagnostics;
     using Nancy.TinyIoc;
 
     /// <summary>
@@ -84,7 +83,7 @@ namespace Nancy.Hosting.Aspnet
         /// <param name="moduleType">Module type</param>
         /// <param name="context">The current context</param>
         /// <returns>The <see cref="INancyModule"/> instance</returns>
-        public override INancyModule GetModule(System.Type moduleType, NancyContext context)
+        public override INancyModule GetModule(Type moduleType, NancyContext context)
         {
             return this.ApplicationContainer.Resolve<INancyModule>(moduleType.FullName);
         }

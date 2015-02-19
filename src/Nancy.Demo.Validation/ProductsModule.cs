@@ -1,7 +1,7 @@
 ﻿namespace Nancy.Demo.Validation
 {
-    using ModelBinding;
-    using Models;
+    using Nancy.Demo.Validation.Models;
+    using Nancy.ModelBinding;
     using Nancy.Validation;
 
     public class ProductsModule : NancyModule

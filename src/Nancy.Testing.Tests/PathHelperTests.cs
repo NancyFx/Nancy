@@ -2,7 +2,9 @@ namespace Nancy.Testing.Tests
 {
     using System;
     using System.IO;
+
     using Nancy.Tests;
+
     using Xunit;
 
     public class PathHelperTests

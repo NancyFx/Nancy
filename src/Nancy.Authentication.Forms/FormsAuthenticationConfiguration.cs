@@ -1,6 +1,6 @@
 namespace Nancy.Authentication.Forms
 {
-    using Cryptography;
+    using Nancy.Cryptography;
 
     /// <summary>
     /// Configuration options for forms authentication

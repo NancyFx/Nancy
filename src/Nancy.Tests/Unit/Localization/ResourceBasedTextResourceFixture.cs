@@ -2,8 +2,10 @@
 {
     using System;
     using FakeItEasy;
-    using Xunit;
+
     using Nancy.Localization;
+
+    using Xunit;
 
     public class ResourceBasedTextResourceFixture
     {

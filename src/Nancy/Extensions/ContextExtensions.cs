@@ -2,6 +2,7 @@ namespace Nancy.Extensions
 {
     using System;
     using System.Text;
+
     using Nancy.Responses;
 
     /// <summary>

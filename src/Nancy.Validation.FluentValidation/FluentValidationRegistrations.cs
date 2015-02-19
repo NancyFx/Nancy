@@ -1,13 +1,13 @@
 namespace Nancy.Validation.FluentValidation
 {
-    using Bootstrapper;
-
     using global::FluentValidation;
+
+    using Nancy.Bootstrapper;
 
     /// <summary>
     /// Application registrations for Fluent Validation types.
     /// </summary>
-    public class FluentValidationRegistrations : Bootstrapper.Registrations
+    public class FluentValidationRegistrations : Registrations
     {
         /// <summary>
         /// Creates a new instance of the <see cref="FluentValidationRegistrations"/> class, that performs

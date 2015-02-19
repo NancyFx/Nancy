@@ -1,9 +1,12 @@
 namespace Nancy.Tests.Unit.ModelBinding
 {
     using System;
+
     using FakeItEasy;
+
     using Nancy.ModelBinding;
     using Nancy.Tests.Fakes;
+
     using Xunit;
 
     public class DefaultModelBinderLocatorFixture

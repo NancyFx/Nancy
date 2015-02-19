@@ -5,8 +5,10 @@
     using System.IO;
     using System.Linq;
     using System.Text;
+
     using Nancy.Authentication.Token.Storage;
     using Nancy.Testing.Fakes;
+
     using Xunit;
 
     public class FileSystemTokenKeyStoreFixture

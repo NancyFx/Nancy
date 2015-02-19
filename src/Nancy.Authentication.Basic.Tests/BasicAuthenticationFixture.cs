@@ -4,12 +4,15 @@
     using System.Collections.Generic;
     using System.Text;
     using System.Threading;
+
     using FakeItEasy;
+
+    using Nancy.Bootstrapper;
     using Nancy.Security;
     using Nancy.Tests;
-    using Xunit;
-    using Nancy.Bootstrapper;
     using Nancy.Tests.Fakes;
+
+    using Xunit;
 
     public class BasicAuthenticationFixture
     {
