@@ -19,21 +19,21 @@
 
             Get["/requiresclaims"] = _ =>
             {
-                this.RequiresClaims(new[] { "test", "test2" });
+                this.RequiresClaims(c => c.Type == "test", c => c.Type == "test2");
 
                 return 200;
             };
 
             Get["/requiresanyclaims"] = _ =>
             {
-                this.RequiresAnyClaim(new[] { "test", "test2" });
+                this.RequiresAnyClaim(c => c.Type == "test", c => c.Type == "test2");
 
                 return 200;
             };
 
             Get["/requiresvalidatedclaims"] = _ =>
             {
-                this.RequiresValidatedClaims(c => c.Contains("test"));
+                this.RequiresValidatedClaims(claims => claims.Any(c => c.Type == "test"));
 
                 return 200;
             };

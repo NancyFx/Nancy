@@ -1,7 +1,7 @@
 ﻿namespace Nancy.Tests.Functional.Tests
 {
+    using System.Linq;
     using System.Security.Claims;
-    using System.Security.Principal;
 
     using Nancy.Testing;
     using Nancy.Tests.Functional.Modules;
@@ -116,7 +116,10 @@
 
         private static ClaimsPrincipal CreateFakeUser(params string[] claimTypes)
         {
-            return new ClaimsPrincipal(new GenericIdentity());
+            var claims = claimTypes.Select(claimType => new Claim(claimType, string.Empty)).ToList();
+            claims.Add(new Claim(ClaimTypes.NameIdentifier, "user"));
+            
+            return new ClaimsPrincipal(new ClaimsIdentity(claims, "test"));
         }
     }
 }
