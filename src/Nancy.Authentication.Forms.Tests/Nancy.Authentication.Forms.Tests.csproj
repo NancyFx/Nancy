@@ -174,7 +174,6 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Fakes\FakeUserIdentity.cs" />
     <Compile Include="FormsAuthenticationConfigurationFixture.cs" />
     <Compile Include="FormsAuthenticationFixture.cs" />
   </ItemGroup>
