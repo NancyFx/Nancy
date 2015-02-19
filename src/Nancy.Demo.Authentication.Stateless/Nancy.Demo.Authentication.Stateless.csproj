@@ -106,7 +106,6 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AuthModule.cs" />
-    <Compile Include="DemoUserIdentity.cs" />
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="RootModule.cs" />
     <Compile Include="SecureModule.cs" />

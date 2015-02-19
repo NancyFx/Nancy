@@ -14,10 +14,10 @@ namespace Nancy.Demo.Authentication.Stateless
             Get["secure"] = x =>
                 {
                     //Context.CurrentUser was set by StatelessAuthentication earlier in the pipeline
-                    var identity = (DemoUserIdentity)this.Context.CurrentUser;
+                    var identity = this.Context.CurrentUser;
 
                     //return the secure information in a json response
-                    var userModel = new UserModel(identity.UserName);
+                    var userModel = new UserModel(identity.Identity.Name);
                     return this.Response.AsJson(new
                         {
                             SecureContent = "here's some secure content that you can only see if you provide a correct apiKey",
