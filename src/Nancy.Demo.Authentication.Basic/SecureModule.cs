@@ -8,10 +8,7 @@
         {
             this.RequiresAuthentication();
 
-            Get["/"] = x =>
-            {
-                return "Hello " + this.Context.CurrentUser.UserName;
-            };
+            Get["/"] = x => "Hello " + this.Context.CurrentUser.Identity.Name;
         }
     }
 }
