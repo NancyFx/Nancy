@@ -18,9 +18,9 @@
     <tags>Nancy Meta MetaData</tags>
   </metadata>
   <files>
-    <file src="build\binaries\Nancy.Metadata.Modules.dll" target="lib\net40" />
-    <file src="build\binaries\Nancy.Metadata.Modules.pdb" target="lib\net40" />
-    <file src="build\binaries\Nancy.Metadata.Modules.XML" target="lib\net40" />
+    <file src="build\binaries\Nancy.Metadata.Modules.dll" target="lib\net45" />
+    <file src="build\binaries\Nancy.Metadata.Modules.pdb" target="lib\net45" />
+    <file src="build\binaries\Nancy.Metadata.Modules.XML" target="lib\net45" />
     <file src="src\Nancy.Metadata.Modules\**\*.cs" target="src" />
   </files>
 </package>

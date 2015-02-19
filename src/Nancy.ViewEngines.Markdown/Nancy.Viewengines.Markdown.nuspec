@@ -21,9 +21,9 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="build\binaries\Nancy.ViewEngines.Markdown.dll" target="lib\net40" />
-    <file src="build\binaries\Nancy.ViewEngines.Markdown.pdb" target="lib\net40" />
-    <file src="build\binaries\Nancy.ViewEngines.Markdown.XML" target="lib\net40" />
+    <file src="build\binaries\Nancy.ViewEngines.Markdown.dll" target="lib\net45" />
+    <file src="build\binaries\Nancy.ViewEngines.Markdown.pdb" target="lib\net45" />
+    <file src="build\binaries\Nancy.ViewEngines.Markdown.XML" target="lib\net45" />
     <file src="src\Nancy.ViewEngines.Markdown\**\*.cs" target="src" />
   </files>
 </package>

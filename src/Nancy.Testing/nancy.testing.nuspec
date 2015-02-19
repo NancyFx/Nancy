@@ -19,9 +19,9 @@
     <tags>Nancy Testing</tags>
   </metadata>
   <files>
-    <file src="build\binaries\Nancy.Testing.dll" target="lib\net40" />
-    <file src="build\binaries\Nancy.Testing.pdb" target="lib\net40" />
-    <file src="build\binaries\Nancy.Testing.XML" target="lib\net40" />
+    <file src="build\binaries\Nancy.Testing.dll" target="lib\net45" />
+    <file src="build\binaries\Nancy.Testing.pdb" target="lib\net45" />
+    <file src="build\binaries\Nancy.Testing.XML" target="lib\net45" />
     <file src="src\Nancy.Testing\**\*.cs" target="src" />
   </files>
 </package>

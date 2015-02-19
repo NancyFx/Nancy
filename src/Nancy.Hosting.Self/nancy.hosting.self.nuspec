@@ -18,9 +18,9 @@
     <tags>Nancy</tags>
   </metadata>
   <files>
-    <file src="build\binaries\Nancy.Hosting.Self.dll" target="lib\net40" />
-    <file src="build\binaries\Nancy.Hosting.Self.pdb" target="lib\net40" />
-    <file src="build\binaries\Nancy.Hosting.Self.XML" target="lib\net40" />
+    <file src="build\binaries\Nancy.Hosting.Self.dll" target="lib\net45" />
+    <file src="build\binaries\Nancy.Hosting.Self.pdb" target="lib\net45" />
+    <file src="build\binaries\Nancy.Hosting.Self.XML" target="lib\net45" />
     <file src="src\Nancy.Hosting.Self\**\*.cs" target="src" />
   </files>
 </package>

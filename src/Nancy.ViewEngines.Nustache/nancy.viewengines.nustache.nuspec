@@ -19,10 +19,10 @@
     <tags>Nancy Viewengine Nustache</tags>
   </metadata>
   <files>
-    <file src="build\binaries\Nancy.Viewengines.Nustache.dll" target="lib\net40" />
-    <file src="build\binaries\Nancy.Viewengines.Nustache.pdb" target="lib\net40" />
-    <file src="build\binaries\Nancy.Viewengines.Nustache.XML" target="lib\net40" />
-    <file src="build\binaries\Nustache.Core.dll" target="lib\net40" />
+    <file src="build\binaries\Nancy.Viewengines.Nustache.dll" target="lib\net45" />
+    <file src="build\binaries\Nancy.Viewengines.Nustache.pdb" target="lib\net45" />
+    <file src="build\binaries\Nancy.Viewengines.Nustache.XML" target="lib\net45" />
+    <file src="build\binaries\Nustache.Core.dll" target="lib\net45" />
     <file src="src\Nancy.Viewengines.Nustache\**\*.cs" target="src" />
   </files>
 </package>
