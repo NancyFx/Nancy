@@ -2,8 +2,7 @@
 {
     using System;
     using System.IO;
-
-    using Nancy.Security;
+    using System.Security.Claims;
 
     /// <summary>
     /// Helpers to generate html content.
@@ -122,7 +121,7 @@
         /// <summary>
         /// Returns current authenticated user name
         /// </summary>
-        public IUserIdentity CurrentUser
+        public ClaimsPrincipal CurrentUser
         {
             get { return this.RenderContext.Context.CurrentUser; }
         }
