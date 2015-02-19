@@ -18,9 +18,9 @@
     <tags>Nancy WCF</tags>
   </metadata>
   <files>
-    <file src="build\binaries\Nancy.Hosting.Wcf.dll" target="lib\net40" />
-    <file src="build\binaries\Nancy.Hosting.Wcf.pdb" target="lib\net40" />
-    <file src="build\binaries\Nancy.Hosting.Wcf.XML" target="lib\net40" />
+    <file src="build\binaries\Nancy.Hosting.Wcf.dll" target="lib\net45" />
+    <file src="build\binaries\Nancy.Hosting.Wcf.pdb" target="lib\net45" />
+    <file src="build\binaries\Nancy.Hosting.Wcf.XML" target="lib\net45" />
     <file src="src\Nancy.Hosting.Wcf\**\*.cs" target="src" />
   </files>
 </package>

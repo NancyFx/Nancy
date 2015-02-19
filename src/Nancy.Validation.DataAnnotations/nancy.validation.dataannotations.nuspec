@@ -21,9 +21,9 @@
     <tags>Nancy Validation DataAnnotations</tags>
   </metadata>
   <files>
-    <file src="build\binaries\Nancy.Validation.DataAnnotations.dll" target="lib\net40" />
-    <file src="build\binaries\Nancy.Validation.DataAnnotations.pdb" target="lib\net40" />
-    <file src="build\binaries\Nancy.Validation.DataAnnotations.XML" target="lib\net40" />
+    <file src="build\binaries\Nancy.Validation.DataAnnotations.dll" target="lib\net45" />
+    <file src="build\binaries\Nancy.Validation.DataAnnotations.pdb" target="lib\net45" />
+    <file src="build\binaries\Nancy.Validation.DataAnnotations.XML" target="lib\net45" />
     <file src="src\Nancy.Validation.DataAnnotations\**\*.cs" target="src" />
   </files>
 </package>

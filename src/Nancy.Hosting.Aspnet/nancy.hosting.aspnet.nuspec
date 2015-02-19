@@ -18,9 +18,9 @@
     <tags>Nancy ASP.NET</tags>
   </metadata>
   <files>
-    <file src="build\binaries\Nancy.Hosting.Aspnet.dll" target="lib\net40" />
-    <file src="build\binaries\Nancy.Hosting.Aspnet.pdb" target="lib\net40" />
-    <file src="build\binaries\Nancy.Hosting.Aspnet.XML" target="lib\net40" />
+    <file src="build\binaries\Nancy.Hosting.Aspnet.dll" target="lib\net45" />
+    <file src="build\binaries\Nancy.Hosting.Aspnet.pdb" target="lib\net45" />
+    <file src="build\binaries\Nancy.Hosting.Aspnet.XML" target="lib\net45" />
 	<file src="src\Nancy.Hosting.Aspnet\web.config.transform" target="content" />
     <file src="src\Nancy.Hosting.Aspnet\**\*.cs" target="src" />
   </files>

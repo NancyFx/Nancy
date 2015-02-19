@@ -25,9 +25,9 @@
     <tags>Nancy Viewengine Razor</tags>
   </metadata>
   <files>
-    <file src="build\binaries\Nancy.Viewengines.Razor.dll" target="lib\net40" />
-    <file src="build\binaries\Nancy.Viewengines.Razor.pdb" target="lib\net40" />
-    <file src="build\binaries\Nancy.Viewengines.Razor.XML" target="lib\net40" />
+    <file src="build\binaries\Nancy.Viewengines.Razor.dll" target="lib\net45" />
+    <file src="build\binaries\Nancy.Viewengines.Razor.pdb" target="lib\net45" />
+    <file src="build\binaries\Nancy.Viewengines.Razor.XML" target="lib\net45" />
     <file src="build\binaries\Nancy.Viewengines.Razor.BuildProviders.dll" target="BuildProviders" />
     <file src="build\binaries\Nancy.Viewengines.Razor.BuildProviders.pdb" target="BuildProviders" />
     <file src="build\binaries\Nancy.Viewengines.Razor.BuildProviders.XML" target="BuildProviders" />

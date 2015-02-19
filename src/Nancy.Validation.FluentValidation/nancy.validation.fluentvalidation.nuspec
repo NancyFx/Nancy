@@ -19,9 +19,9 @@
     <tags>Nancy Validation FluentValidation</tags>
   </metadata>
   <files>
-    <file src="build\binaries\Nancy.Validation.FluentValidation.dll" target="lib\net40" />
-    <file src="build\binaries\Nancy.Validation.FluentValidation.pdb" target="lib\net40" />
-    <file src="build\binaries\Nancy.Validation.FluentValidation.XML" target="lib\net40" />
+    <file src="build\binaries\Nancy.Validation.FluentValidation.dll" target="lib\net45" />
+    <file src="build\binaries\Nancy.Validation.FluentValidation.pdb" target="lib\net45" />
+    <file src="build\binaries\Nancy.Validation.FluentValidation.XML" target="lib\net45" />
     <file src="src\Nancy.Validation.FluentValidation\**\*.cs" target="src" />
   </files>
 </package>
