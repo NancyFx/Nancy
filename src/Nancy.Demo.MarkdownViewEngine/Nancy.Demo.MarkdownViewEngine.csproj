@@ -47,7 +47,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CsQuery">
+    <Reference Include="CsQuery, Version=1.3.3.5, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\CsQuery.1.3.3\lib\net40\CsQuery.dll</HintPath>
     </Reference>
     <Reference Include="MarkdownSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -132,7 +133,6 @@
     <Content Include="Views\blogheader.html" />
     <Content Include="Views\blogindex.html" />
     <Content Include="Views\master.html" />
-    <Content Include="packages.config" />
     <Content Include="Views\popularposts.html" />
     <Content Include="Views\Posts\why-use-nancy.md" />
     <Content Include="Views\Posts\my-first-blog-post.md" />
@@ -163,5 +163,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Posts\future-post.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
   </ItemGroup>
 </Project>
