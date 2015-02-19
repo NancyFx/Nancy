@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Security.Claims;
 
     using Nancy.Responses;
 
@@ -28,7 +29,7 @@
         /// <param name="claims">Claims the authenticated user needs to have</param>
         /// <returns>Hook that returns an Unauthorized response if the user is not
         /// authenticated or does not have the required claims, null otherwise</returns>
-        public static Func<NancyContext, Response> RequiresClaims(IEnumerable<string> claims)
+        public static Func<NancyContext, Response> RequiresClaims(IEnumerable<Predicate<Claim>> claims)
         {
             return ForbiddenIfNot(ctx => ctx.CurrentUser.HasClaims(claims));
         }
@@ -57,7 +58,7 @@
         /// <returns>Hook that returns an Unauthorized response if the user is not
         /// authenticated or does not pass the supplied validation function, null
         /// otherwise</returns>
-        public static Func<NancyContext, Response> RequiresValidatedClaims(Func<IEnumerable<string>, bool> isValid)
+        public static Func<NancyContext, Response> RequiresValidatedClaims(Func<IEnumerable<Claim>, bool> isValid)
         {
             return ForbiddenIfNot(ctx => ctx.CurrentUser.HasValidClaims(isValid));
         }
