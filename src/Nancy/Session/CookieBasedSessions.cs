@@ -4,9 +4,10 @@ namespace Nancy.Session
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    using Bootstrapper;
-    using Cryptography;
+
+    using Nancy.Bootstrapper;
     using Nancy.Cookies;
+    using Nancy.Cryptography;
     using Nancy.Helpers;
 
     /// <summary>

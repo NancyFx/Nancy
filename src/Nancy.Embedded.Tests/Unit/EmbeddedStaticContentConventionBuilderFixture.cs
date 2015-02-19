@@ -1,15 +1,14 @@
 ﻿namespace Nancy.Embedded.Tests.Unit
 {
-    using System;
     using System.IO;
-    using System.Linq;
     using System.Reflection;
     using System.Text;
-    using Conventions;
 
     using Nancy.Diagnostics;
+    using Nancy.Embedded.Conventions;
+    using Nancy.Responses;
     using Nancy.Tests;
-    using Responses;
+
     using Xunit;
 
     public class EmbeddedStaticContentConventionBuilderFixture

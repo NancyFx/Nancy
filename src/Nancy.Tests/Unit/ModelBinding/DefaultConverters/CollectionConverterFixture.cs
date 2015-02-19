@@ -2,7 +2,9 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultConverters
 {
     using System.Collections.Generic;
     using System.Linq;
+
     using FakeItEasy;
+
     using Nancy.ModelBinding;
     using Nancy.ModelBinding.DefaultConverters;
 

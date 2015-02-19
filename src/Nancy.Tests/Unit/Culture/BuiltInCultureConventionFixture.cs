@@ -2,14 +2,16 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.IO;
     using System.Threading;
 
     using Nancy.Conventions;
     using Nancy.IO;
+    using Nancy.Session;
+
     using Xunit;
     using Xunit.Extensions;
-    using System.Globalization;
 
     public class BuiltInCultureConventionFixture
     {
@@ -198,7 +200,7 @@
                                   { "CurrentCulture", cultureName }
                               };
 
-            context.Request.Session = new Session.Session(new Dictionary<string, object>(sessionValues));
+            context.Request.Session = new Session(new Dictionary<string, object>(sessionValues));
 
             //When
             var exception =
@@ -219,7 +221,7 @@
                                   { "CurrentCulture", new CultureInfo("en-GB") }
                               };
 
-            context.Request.Session = new Session.Session(new Dictionary<string, object>(sessionValues));
+            context.Request.Session = new Session(new Dictionary<string, object>(sessionValues));
 
             //When
             var culture = BuiltInCultureConventions.SessionCulture(context);

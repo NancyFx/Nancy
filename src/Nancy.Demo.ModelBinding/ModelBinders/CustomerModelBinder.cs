@@ -1,7 +1,8 @@
 namespace Nancy.Demo.ModelBinding.ModelBinders
 {
     using System;
-    using Models;
+
+    using Nancy.Demo.ModelBinding.Models;
     using Nancy.ModelBinding;
 
     /// <summary>

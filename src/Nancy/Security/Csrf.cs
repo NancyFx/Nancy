@@ -3,8 +3,8 @@
     using System;
     using System.Linq;
 
-    using Cookies;
     using Nancy.Bootstrapper;
+    using Nancy.Cookies;
     using Nancy.Cryptography;
     using Nancy.Helpers;
 

@@ -2,12 +2,12 @@ namespace Nancy.Diagnostics
 {
     using System.IO;
     using System.Linq;
-    using Nancy.Localization;
 
-    using Responses;
-    using Security;
-    using ViewEngines;
-    using ViewEngines.SuperSimpleViewEngine;
+    using Nancy.Localization;
+    using Nancy.Responses;
+    using Nancy.Security;
+    using Nancy.ViewEngines;
+    using Nancy.ViewEngines.SuperSimpleViewEngine;
 
     /// <summary>
     /// Renders diagnostics views from embedded resources.

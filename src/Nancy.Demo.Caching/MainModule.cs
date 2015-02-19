@@ -1,7 +1,7 @@
 namespace Nancy.Demo.Caching
 {
     using System;
-    using Nancy;
+
     using Nancy.Demo.Caching.CachingExtensions;
 
     public class MainModule : NancyModule

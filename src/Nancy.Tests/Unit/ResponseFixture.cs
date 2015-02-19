@@ -2,9 +2,9 @@
 {
     using System;
 
-    using Nancy;
-	using Nancy.Cookies;
+    using Nancy.Cookies;
     using Nancy.Tests.Extensions;
+
     using Xunit;
 
     public class ResponseFixture

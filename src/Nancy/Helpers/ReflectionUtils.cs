@@ -23,13 +23,13 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Collections;
-
 namespace Nancy.Helpers
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Reflection;
+
     internal static class ReflectionUtils
     {
         public static bool IsInstantiatableType(Type t)

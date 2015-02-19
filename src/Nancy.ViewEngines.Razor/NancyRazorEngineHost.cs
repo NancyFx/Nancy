@@ -4,9 +4,8 @@
     using System.Web.Razor.Generator;
     using System.Web.Razor.Parser;
 
-    using CSharp;
-
-    using VisualBasic;
+    using Nancy.ViewEngines.Razor.CSharp;
+    using Nancy.ViewEngines.Razor.VisualBasic;
 
     /// <summary>
     /// A custom razor engine host responsible for decorating the existing code generators with nancy versions.

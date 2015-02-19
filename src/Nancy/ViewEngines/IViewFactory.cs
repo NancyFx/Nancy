@@ -1,8 +1,5 @@
 ﻿namespace Nancy.ViewEngines
 {
-    using System;
-    using System.IO;
-
     /// <summary>
     /// Defines the functionality used by a <see cref="INancyModule"/> to render a view to the response.
     /// </summary>

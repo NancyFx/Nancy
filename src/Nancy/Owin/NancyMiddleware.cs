@@ -6,23 +6,18 @@
     using System.IO;
     using System.Linq;
     using System.Net;
+    using System.Security.Cryptography.X509Certificates;
     using System.Threading;
     using System.Threading.Tasks;
-    using System.Security.Cryptography.X509Certificates;
 
+    using Nancy.Helpers;
     using Nancy.IO;
-    using Helpers;
 
-    using AppFunc = System.Func<
-       System.Collections.Generic.IDictionary<string, object>,
+    using AppFunc = System.Func<System.Collections.Generic.IDictionary<string, object>,
        System.Threading.Tasks.Task>;
 
-    using MidFunc = System.Func<
-        System.Func<
-            System.Collections.Generic.IDictionary<string, object>,
-            System.Threading.Tasks.Task>,
-        System.Func<
-            System.Collections.Generic.IDictionary<string, object>,
+    using MidFunc = System.Func<System.Func<System.Collections.Generic.IDictionary<string, object>,
+            System.Threading.Tasks.Task>, System.Func<System.Collections.Generic.IDictionary<string, object>,
             System.Threading.Tasks.Task>>;
 
     /// <summary>

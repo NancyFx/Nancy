@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using Spark;
+
     using global::Spark;
     using global::Spark.Parser;
     using global::Spark.Parser.Syntax;

@@ -2,10 +2,12 @@ namespace Nancy.Tests.Unit.IO
 {
     using System;
     using System.IO;
+
     using FakeItEasy;
+
     using Nancy.IO;
+
     using Xunit;
-    using Xunit.Extensions;
 
     public class RequestStreamFixture
     {

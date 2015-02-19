@@ -1,7 +1,9 @@
 namespace Nancy.Tests.Unit.Bootstrapper
 {
     using System;
+
     using Nancy.Bootstrapper;
+
     using Xunit;
 
     public class InstanceRegistrationFixture

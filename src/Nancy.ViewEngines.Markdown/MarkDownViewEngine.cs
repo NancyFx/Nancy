@@ -1,14 +1,13 @@
 namespace Nancy.ViewEngines.Markdown
 {
-    using System;
-    using System.Linq;
-    using ViewEngines;
     using System.Collections.Generic;
-    using Responses;
     using System.IO;
-    using MarkdownSharp;
-    using SuperSimpleViewEngine;
     using System.Text.RegularExpressions;
+
+    using MarkdownSharp;
+
+    using Nancy.Responses;
+    using Nancy.ViewEngines.SuperSimpleViewEngine;
 
     /// <summary>
     /// Viewengine for rendering Markdown

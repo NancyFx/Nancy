@@ -5,6 +5,7 @@
     using System.Globalization;
     using System.Linq;
     using System.Threading;
+
     using Nancy.Session;
 
     /// <summary>

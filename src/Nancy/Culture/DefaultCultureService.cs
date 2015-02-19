@@ -1,8 +1,8 @@
 ﻿namespace Nancy.Culture
 {
     using System.Globalization;
+
     using Nancy.Conventions;
-    using System.Linq;
 
     /// <summary>
     /// Determines current culture for context

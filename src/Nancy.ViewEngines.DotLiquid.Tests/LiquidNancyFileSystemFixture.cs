@@ -1,10 +1,13 @@
 namespace Nancy.ViewEngines.DotLiquid.Tests
 {
-    using System.IO;
     using System.Collections.Generic;
+    using System.IO;
+
     using FakeItEasy;
+
     using global::DotLiquid;
     using global::DotLiquid.Exceptions;
+
     using Nancy.Tests;
 
     using Xunit;

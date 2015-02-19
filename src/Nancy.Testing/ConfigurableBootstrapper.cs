@@ -5,21 +5,22 @@ namespace Nancy.Testing
     using System.IO;
     using System.Linq;
     using System.Reflection;
-    using Localization;
+
     using Nancy.Bootstrapper;
     using Nancy.Conventions;
     using Nancy.Culture;
     using Nancy.Diagnostics;
     using Nancy.ErrorHandling;
+    using Nancy.Localization;
     using Nancy.ModelBinding;
+    using Nancy.Responses.Negotiation;
     using Nancy.Routing;
     using Nancy.Routing.Constraints;
     using Nancy.Routing.Trie;
     using Nancy.Security;
     using Nancy.TinyIoc;
-    using Nancy.ViewEngines;
-    using Responses.Negotiation;
     using Nancy.Validation;
+    using Nancy.ViewEngines;
 
     /// <summary>
     /// A Nancy bootstrapper that can be configured with either Type or Instance overrides for all Nancy types.

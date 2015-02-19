@@ -29,13 +29,14 @@
 namespace Nancy.Json
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.IO;
     using System.Collections;
-    using System.Reflection;
+    using System.Collections.Generic;
     using System.ComponentModel;
+    using System.IO;
+    using System.Linq;
+    using System.Reflection;
+    using System.Text;
+
     using Nancy.Helpers;
 
     public class JavaScriptSerializer
@@ -361,7 +362,7 @@ namespace Nancy.Json
                 if (target is IDictionary)
                 {
                     Type valueType = ReflectionUtils.GetTypedDictionaryValueType(type);
-                    if (value != null && valueType == typeof(System.Object))
+                    if (value != null && valueType == typeof(Object))
                         valueType = value.GetType();
 
                     if (isDictionaryWithGuidKey)

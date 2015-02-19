@@ -3,8 +3,8 @@
     using System;
     using System.Threading;
 
-    using Fakes;
     using Nancy.Routing;
+
     using Xunit;
 
     public class RouteFixture

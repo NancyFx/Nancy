@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-
-namespace Nancy.Responses
+﻿namespace Nancy.Responses
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
 
     using Nancy.Helpers;
 
@@ -146,7 +144,7 @@ namespace Nancy.Responses
             {
                 this.StatusCode = HttpStatusCode.NotModified;
                 this.ContentType = null;
-                this.Contents = Response.NoBody;
+                this.Contents = NoBody;
 
                 return;
             }

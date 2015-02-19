@@ -1,10 +1,11 @@
 ﻿namespace Nancy.Tests.Unit.Helpers
 {
     using Nancy.Helpers;
+
     using Xunit;
     using Xunit.Extensions;
 
-	public class HttpUtilityFixture
+    public class HttpUtilityFixture
     {
         [Fact]
         public void ParseQueryString_respects_case_insensitive_setting()

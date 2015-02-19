@@ -1,6 +1,5 @@
 ﻿namespace Nancy.Hosting.Self
 {
-
     using System;
     using System.Collections.Generic;
 

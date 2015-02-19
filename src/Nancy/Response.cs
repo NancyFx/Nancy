@@ -4,11 +4,9 @@ namespace Nancy
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
-    using System.Linq;
     using System.Threading.Tasks;
 
-    using Cookies;
-
+    using Nancy.Cookies;
     using Nancy.Helpers;
 
     /// <summary>

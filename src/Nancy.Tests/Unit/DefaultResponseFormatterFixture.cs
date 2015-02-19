@@ -1,6 +1,7 @@
 namespace Nancy.Tests.Unit
 {
     using FakeItEasy;
+
     using Xunit;
 
     public class DefaultResponseFormatterFixture

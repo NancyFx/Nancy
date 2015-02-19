@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Xunit;
-using Nancy.Responses;
-
-namespace Nancy.Tests.Unit.Responses
+﻿namespace Nancy.Tests.Unit.Responses
 {
+    using Nancy.Responses;
+
+    using Xunit;
+
     public class RedirectResponseFixture
     {
         [Fact]

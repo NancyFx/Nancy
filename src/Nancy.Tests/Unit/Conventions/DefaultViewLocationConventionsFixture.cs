@@ -2,10 +2,12 @@ namespace Nancy.Tests.Unit.Conventions
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
+
     using Nancy.Conventions;
     using Nancy.ViewEngines;
+
     using Xunit;
-    using System.Globalization;
     using Xunit.Extensions;
 
     public class DefaultViewLocationConventionsFixture

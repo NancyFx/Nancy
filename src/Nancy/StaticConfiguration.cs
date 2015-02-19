@@ -3,8 +3,9 @@ namespace Nancy
     using System;
     using System.Diagnostics;
     using System.Linq;
-    using Diagnostics;
+
     using Nancy.Bootstrapper;
+    using Nancy.Diagnostics;
 
     public static class StaticConfiguration
     {

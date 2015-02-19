@@ -1,7 +1,7 @@
 namespace Nancy
 {
-    using Bootstrapper;
-    using Responses;
+    using Nancy.Bootstrapper;
+    using Nancy.Responses;
 
     /// <summary>
     /// Assigns the root path of the application whom ever needs it.

@@ -2,7 +2,8 @@ namespace Nancy.ModelBinding.DefaultBodyDeserializers
 {
     using System.IO;
     using System.Reflection;
-    using Json;
+
+    using Nancy.Json;
 
     /// <summary>
     /// Deserializes request bodies in JSON format

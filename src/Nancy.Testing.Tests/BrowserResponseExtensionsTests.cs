@@ -1,10 +1,12 @@
 ﻿namespace Nancy.Testing.Tests
 {
-using System.Xml;
-using FakeItEasy;
-using Xunit;
+    using System.Xml;
 
-	public class BrowserResponseExtensionsTests
+    using FakeItEasy;
+
+    using Xunit;
+
+    public class BrowserResponseExtensionsTests
 	{
 		private BrowserResponse sut;
 

@@ -1,9 +1,5 @@
 namespace Nancy.Tests.Fakes
 {
-    using System;
-
-    using Nancy.Session;
-
     public class FakeObjectSerializer : IObjectSerializer
     {
         /// <summary>

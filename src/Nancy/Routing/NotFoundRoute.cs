@@ -1,7 +1,5 @@
 ﻿namespace Nancy.Routing
 {
-    using System.Threading.Tasks;
-
     using Nancy.Helpers;
 
     /// <summary>

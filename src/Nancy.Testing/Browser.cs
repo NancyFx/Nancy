@@ -5,9 +5,10 @@ namespace Nancy.Testing
     using System.IO;
     using System.Linq;
     using System.Text;
+
     using Nancy.Bootstrapper;
     using Nancy.Helpers;
-    using IO;
+    using Nancy.IO;
 
     /// <summary>
     /// Provides the capability of executing a request with Nancy, using a specific configuration provided by an <see cref="INancyBootstrapper"/> instance.

@@ -1,14 +1,14 @@
 ﻿namespace Nancy.Tests.Unit.Routing
 {
     using FakeItEasy;
-    using Fakes;
 
-    using Nancy.Localization;
     using Nancy.ModelBinding;
     using Nancy.Routing;
-    using Nancy.ViewEngines;
-    using Xunit;
+    using Nancy.Tests.Fakes;
     using Nancy.Validation;
+    using Nancy.ViewEngines;
+
+    using Xunit;
 
     public class DefaultNancyModuleBuilderFixture
     {

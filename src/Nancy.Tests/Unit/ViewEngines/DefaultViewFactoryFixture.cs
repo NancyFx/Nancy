@@ -3,15 +3,16 @@ namespace Nancy.Tests.Unit.ViewEngines
     using System;
     using System.Dynamic;
     using System.IO;
+    using System.Linq;
+
     using FakeItEasy;
 
-    using Nancy.Diagnostics;
-    using Nancy.ViewEngines;
-    using Nancy.Tests.Fakes;
-    using Xunit;
-    using System.Linq;
     using Nancy.Conventions;
+    using Nancy.Diagnostics;
+    using Nancy.Tests.Fakes;
+    using Nancy.ViewEngines;
 
+    using Xunit;
 
     public class DefaultViewFactoryFixture
     {

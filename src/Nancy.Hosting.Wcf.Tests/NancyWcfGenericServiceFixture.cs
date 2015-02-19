@@ -1,11 +1,5 @@
 namespace Nancy.Hosting.Wcf.Tests
 {
-    using Bootstrapper;
-    using FakeItEasy;
-
-    using Nancy.Helpers;
-    using Nancy.Tests;
-    using Nancy.Tests.xUnitExtensions;
     using System;
     using System.IO;
     using System.Linq;
@@ -14,7 +8,16 @@ namespace Nancy.Hosting.Wcf.Tests
     using System.ServiceModel.Web;
     using System.Threading;
 
+    using FakeItEasy;
+
+    using Nancy.Bootstrapper;
+    using Nancy.Helpers;
+    using Nancy.Tests;
+    using Nancy.Tests.xUnitExtensions;
+
     using Xunit;
+
+    using HttpStatusCode = Nancy.HttpStatusCode;
 
     /// <remarks>
     /// These tests attempt to listen on port 56297, and so require either administrative 
@@ -203,7 +206,7 @@ namespace Nancy.Hosting.Wcf.Tests
                 Response = new Response
                 {
                     ContentType = null,
-                    StatusCode = Nancy.HttpStatusCode.NotModified
+                    StatusCode = HttpStatusCode.NotModified
                 }
             };
 

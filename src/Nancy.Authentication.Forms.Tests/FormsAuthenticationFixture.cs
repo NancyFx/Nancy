@@ -3,14 +3,16 @@ namespace Nancy.Authentication.Forms.Tests
     using System;
     using System.Linq;
     using System.Threading;
-    using Bootstrapper;
-    using Cryptography;
+
     using FakeItEasy;
-    using Fakes;
-    using Helpers;
-    using Nancy.Security;
+
+    using Nancy.Authentication.Forms.Tests.Fakes;
+    using Nancy.Bootstrapper;
+    using Nancy.Cryptography;
+    using Nancy.Helpers;
     using Nancy.Tests;
     using Nancy.Tests.Fakes;
+
     using Xunit;
 
     public class FormsAuthenticationFixture

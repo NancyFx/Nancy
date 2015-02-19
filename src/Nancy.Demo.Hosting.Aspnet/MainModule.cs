@@ -6,7 +6,7 @@ namespace Nancy.Demo.Hosting.Aspnet
     using Nancy.Demo.Hosting.Aspnet.Metadata;
     using Nancy.Demo.Hosting.Aspnet.Models;
     using Nancy.Routing;
-    using Security;
+    using Nancy.Security;
 
     public class MainModule : NancyModule
     {

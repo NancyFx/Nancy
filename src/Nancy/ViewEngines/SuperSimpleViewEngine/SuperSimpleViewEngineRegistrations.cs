@@ -1,7 +1,8 @@
 ﻿namespace Nancy.ViewEngines.SuperSimpleViewEngine
 {
     using System.Collections.Generic;
-    using Bootstrapper;
+
+    using Nancy.Bootstrapper;
 
     /// <summary>
     /// Performs application registrations for the SuperSimpleViewEngine.

@@ -69,10 +69,9 @@ namespace Nancy.TinyIoc
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
+    using System.IO;
     using System.Linq;
     using System.Reflection;
-
 #if EXPRESSIONS
     using System.Linq.Expressions;
     using System.Threading;
@@ -293,7 +292,7 @@ namespace Nancy.TinyIoc
             {
 				assemblies = assembly.GetTypes();
             }
-            catch (System.IO.FileNotFoundException)
+            catch (FileNotFoundException)
             {
                 assemblies = new Type[] { };
             }

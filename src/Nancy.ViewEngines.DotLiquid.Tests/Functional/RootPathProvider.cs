@@ -1,7 +1,9 @@
 ﻿namespace Nancy.ViewEngines.DotLiquid.Tests.Functional
 {
     using System;
-    using Testing;
+    using System.IO;
+
+    using Nancy.Testing;
 
     public class RootPathProvider : IRootPathProvider
     {
@@ -15,7 +17,7 @@
                 new Uri(typeof (RootPathProvider).Assembly.CodeBase).LocalPath;
 
             var assemblyPath =
-                System.IO.Path.GetDirectoryName(assemblyFilePath);
+                Path.GetDirectoryName(assemblyFilePath);
 
             return PathHelper.GetParent(assemblyPath, 2);
         }

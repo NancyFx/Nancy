@@ -1,6 +1,7 @@
 ﻿namespace Nancy
 {
     using System.Collections.Generic;
+
     using Nancy.Validation;
 
     /// <summary>

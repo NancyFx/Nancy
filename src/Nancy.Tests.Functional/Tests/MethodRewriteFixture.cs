@@ -1,7 +1,9 @@
 namespace Nancy.Tests.Functional.Tests
 {
     using System;
-    using Testing;
+
+    using Nancy.Testing;
+
     using Xunit;
 
     public class MethodRewriteFixture

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Nancy
+﻿namespace Nancy
 {
     using System.Collections.Generic;
     using System.IO;

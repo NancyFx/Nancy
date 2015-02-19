@@ -5,6 +5,7 @@
     using System.Dynamic;
     using System.Globalization;
     using System.Linq.Expressions;
+
     using Microsoft.CSharp.RuntimeBinder;
     using Nancy.Routing.Trie.Nodes;
 

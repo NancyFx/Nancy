@@ -6,17 +6,15 @@ namespace Nancy.Tests.Unit.Sessions
     using System.Threading;
     using System.Web;
 
-    using Nancy.Cryptography;
-
     using FakeItEasy;
 
     using Nancy.Bootstrapper;
+    using Nancy.Cryptography;
     using Nancy.IO;
     using Nancy.Session;
+    using Nancy.Tests.Fakes;
 
     using Xunit;
-
-    using Helpers = Nancy.Helpers;
 
     public class CookieBasedSessionsFixture
     {
@@ -38,7 +36,7 @@ namespace Nancy.Tests.Unit.Sessions
         {
             this.fakeEncryptionProvider = A.Fake<IEncryptionProvider>();
             this.fakeHmacProvider = A.Fake<IHmacProvider>();
-            this.fakeObjectSerializer = new Fakes.FakeObjectSerializer();
+            this.fakeObjectSerializer = new FakeObjectSerializer();
             this.cookieStore = new CookieBasedSessions(this.fakeEncryptionProvider, this.fakeHmacProvider, this.fakeObjectSerializer);
 
             this.rijndaelEncryptionProvider = new RijndaelEncryptionProvider(new PassphraseKeyGenerator("password", new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 }, 1000));

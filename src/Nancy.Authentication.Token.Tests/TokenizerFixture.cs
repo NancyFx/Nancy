@@ -4,11 +4,14 @@
     using System.Collections.Generic;
     using System.Text;
     using System.Threading;
+
+    using FakeItEasy;
+
     using Nancy.Authentication.Token.Storage;
     using Nancy.Security;
     using Nancy.Tests;
     using Nancy.Tests.Fakes;
-    using FakeItEasy;
+
     using Xunit;
 
     public class TokenizerFixture

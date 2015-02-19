@@ -8,6 +8,7 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
 
     using Nancy.Bootstrapper;
     using Nancy.Routing;
+
     using Xunit;
 
     /// <summary>

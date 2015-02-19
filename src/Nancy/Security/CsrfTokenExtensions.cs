@@ -3,8 +3,8 @@
     using System;
     using System.Linq;
     using System.Security.Cryptography;
-    using System.Text;
-    using Cryptography;
+
+    using Nancy.Cryptography;
 
     public static class CsrfTokenExtensions
     {

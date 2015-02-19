@@ -1,24 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Xunit;
-using FakeItEasy;
-
-namespace Nancy.Tests.Unit.Routing
+﻿namespace Nancy.Tests.Unit.Routing
 {
+    using FakeItEasy;
+
+    using Nancy.Routing;
+
+    using Xunit;
+
     public class DefaultRouteCacheProviderFixture
     {
-        private Nancy.Routing.IRouteCacheProvider _Provider;
-        private Nancy.Routing.IRouteCache _RouteCache;
+        private IRouteCacheProvider _Provider;
+        private IRouteCache _RouteCache;
 
         /// <summary>
         /// Initializes a new instance of the DefaultRouteCacheProviderFixture class.
         /// </summary>
         public DefaultRouteCacheProviderFixture()
         {
-            _RouteCache = A.Fake<Nancy.Routing.IRouteCache>();
-            _Provider = new Nancy.Routing.DefaultRouteCacheProvider(() => _RouteCache);
+            _RouteCache = A.Fake<IRouteCache>();
+            _Provider = new DefaultRouteCacheProvider(() => _RouteCache);
         }
 
         [Fact]

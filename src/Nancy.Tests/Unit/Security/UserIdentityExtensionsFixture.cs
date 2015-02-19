@@ -2,10 +2,7 @@ namespace Nancy.Tests.Unit.Security
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
 
-    using FakeItEasy;
-    using Nancy.Responses;
     using Nancy.Security;
     using Nancy.Tests.Fakes;
 

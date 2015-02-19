@@ -1,6 +1,7 @@
 namespace Nancy.Authentication.Stateless
 {
     using System;
+
     using Nancy.Bootstrapper;
 
     /// <summary>

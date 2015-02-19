@@ -2,9 +2,11 @@
 {
     using System;
     using System.Collections.Generic;
+
     using FluentValidation;
     using FluentValidation.Internal;
     using FluentValidation.Validators;
+
     using Nancy.Validation;
     using Nancy.Validation.FluentValidation;
 

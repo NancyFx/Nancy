@@ -1,7 +1,8 @@
 ﻿namespace Nancy.Demo.Authentication.Token
 {
     using System;
-    using Hosting.Self;
+
+    using Nancy.Hosting.Self;
 
     class Program
     {

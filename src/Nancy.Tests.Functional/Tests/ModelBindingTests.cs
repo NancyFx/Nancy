@@ -1,10 +1,11 @@
 ﻿namespace Nancy.Tests.Functional.Tests
 {
     using System.Collections.Generic;
-    using System.Linq;
-    using Bootstrapper;
-    using ModelBinding;
-    using Testing;
+
+    using Nancy.Bootstrapper;
+    using Nancy.ModelBinding;
+    using Nancy.Testing;
+
     using Xunit;
 
     public class ModelBindingFixture

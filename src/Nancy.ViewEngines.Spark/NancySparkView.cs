@@ -2,6 +2,7 @@
 {
     using System.IO;
     using System.Web;
+
     using global::Spark;
 
     public abstract class NancySparkView : SparkViewBase

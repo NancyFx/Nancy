@@ -5,8 +5,7 @@
     using System.Linq;
     using System.Reflection;
 
-    using Bootstrapper;
-
+    using Nancy.Bootstrapper;
     using Nancy.ErrorHandling;
     using Nancy.TinyIoc;
 
@@ -16,7 +15,7 @@
 
         private NancyInternalConfiguration configuration;
 
-        protected override System.Collections.Generic.IEnumerable<ModuleRegistration> Modules
+        protected override IEnumerable<ModuleRegistration> Modules
         {
             get
             {

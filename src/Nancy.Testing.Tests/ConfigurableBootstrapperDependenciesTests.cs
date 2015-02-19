@@ -1,7 +1,9 @@
 ﻿namespace Nancy.Testing.Tests
 {
     using System;
+
     using FakeItEasy;
+
     using Xunit;
 
     public class ConfigurableBootstrapperDependenciesTests

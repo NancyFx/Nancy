@@ -2,8 +2,9 @@ namespace Nancy.Demo.Authentication.Forms.TestingDemo
 {
     using System;
     using System.IO;
+
+    using Nancy.Testing;
     using Nancy.Testing.Fakes;
-    using Testing;
 
     public class TestBootstrapper : FormsAuthBootstrapper
     {

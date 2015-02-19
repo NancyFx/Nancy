@@ -1,9 +1,12 @@
 ﻿namespace Nancy.ViewEngines.Razor.Tests
 {
     using System;
+
     using FakeItEasy;
-    using Localization;
+
+    using Nancy.Localization;
     using Nancy.Tests;
+
     using Xunit;
     using Xunit.Extensions;
 

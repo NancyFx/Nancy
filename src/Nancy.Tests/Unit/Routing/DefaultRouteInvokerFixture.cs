@@ -11,7 +11,6 @@
     using Nancy.Tests.Fakes;
 
     using Xunit;
-    using Xunit.Extensions;
 
     public class DefaultRouteInvokerFixture
     {

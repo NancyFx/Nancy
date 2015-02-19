@@ -1,8 +1,8 @@
-using System;
-using Nancy.ErrorHandling;
-
 namespace Nancy.Testing
 {
+    using System;
+
+    using Nancy.ErrorHandling;
     using Nancy.Extensions;
 
     public class PassThroughStatusCodeHandler : IStatusCodeHandler

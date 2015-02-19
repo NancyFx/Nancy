@@ -1,7 +1,7 @@
 ﻿namespace Nancy.Demo.Authentication.Basic
 {
     using Nancy.Authentication.Basic;
-    using Bootstrapper;
+    using Nancy.Bootstrapper;
     using Nancy.TinyIoc;
 
     public class AuthenticationBootstrapper : DefaultNancyBootstrapper

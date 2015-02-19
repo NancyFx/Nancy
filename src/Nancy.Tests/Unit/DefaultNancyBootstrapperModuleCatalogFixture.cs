@@ -1,8 +1,9 @@
 namespace Nancy.Tests.Unit
 {
     using System.Collections.Generic;
-    using Bootstrapper.Base;
+
     using Nancy.Bootstrapper;
+    using Nancy.Tests.Unit.Bootstrapper.Base;
 
     public class DefaultNancyBootstrapperModuleCatalogFixture : ModuleCatalogFixtureBase
     {

@@ -4,6 +4,9 @@ namespace Nancy.Tests.Unit
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
+
+    using Nancy.Json;
+
     using Xunit;
     using Xunit.Extensions;
 
@@ -794,7 +797,7 @@ namespace Nancy.Tests.Unit
             dynamic value = "42";
             var input = new DynamicDictionaryValue(value);
 
-            var sut = new Nancy.Json.JavaScriptSerializer();
+            var sut = new JavaScriptSerializer();
             var actual = sut.Serialize(input);
 
             actual.ShouldEqual(@"""42""");
@@ -806,7 +809,7 @@ namespace Nancy.Tests.Unit
             dynamic value = 42;
             var input = new DynamicDictionaryValue(value);
 
-            var sut = new Nancy.Json.JavaScriptSerializer();
+            var sut = new JavaScriptSerializer();
             var actual = sut.Serialize(input);
 
             actual.ShouldEqual(@"42");

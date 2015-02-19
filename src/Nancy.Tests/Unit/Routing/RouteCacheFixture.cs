@@ -2,11 +2,14 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Nancy.Tests.Fakes;
-    using Xunit;
+
     using FakeItEasy;
-    using Nancy.Routing;
+
     using Nancy.Culture;
+    using Nancy.Routing;
+    using Nancy.Tests.Fakes;
+
+    using Xunit;
 
     public class RouteCacheFixture
     {

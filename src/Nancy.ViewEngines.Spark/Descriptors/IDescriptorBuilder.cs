@@ -1,6 +1,7 @@
 ﻿namespace Nancy.ViewEngines.Spark.Descriptors
 {
     using System.Collections.Generic;
+
     using global::Spark;
 
     public interface IDescriptorBuilder

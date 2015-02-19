@@ -1,9 +1,11 @@
 ﻿namespace Nancy.Tests.Functional.Tests
 {
     using System.Collections.Generic;
+
     using Nancy.Security;
     using Nancy.Testing;
     using Nancy.Tests.Functional.Modules;
+
     using Xunit;
     using Xunit.Extensions;
 

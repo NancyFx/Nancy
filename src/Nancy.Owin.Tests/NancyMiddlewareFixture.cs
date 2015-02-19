@@ -15,16 +15,11 @@ namespace Nancy.Owin.Tests
 
     using Xunit;
 
-    using AppFunc = System.Func<
-       System.Collections.Generic.IDictionary<string, object>,
+    using AppFunc = System.Func<System.Collections.Generic.IDictionary<string, object>,
        System.Threading.Tasks.Task>;
 
-    using MidFunc = System.Func<
-        System.Func<
-            System.Collections.Generic.IDictionary<string, object>,
-            System.Threading.Tasks.Task>,
-        System.Func<
-            System.Collections.Generic.IDictionary<string, object>,
+    using MidFunc = System.Func<System.Func<System.Collections.Generic.IDictionary<string, object>,
+            System.Threading.Tasks.Task>, System.Func<System.Collections.Generic.IDictionary<string, object>,
             System.Threading.Tasks.Task>>;
 
     public class NancyMiddlewareFixture

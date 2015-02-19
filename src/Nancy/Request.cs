@@ -6,10 +6,9 @@ namespace Nancy
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
-    using System.Text.RegularExpressions;
     using System.Security.Cryptography.X509Certificates;
+    using System.Text.RegularExpressions;
 
-    using IO;
     using Nancy.Extensions;
     using Nancy.Helpers;
     using Session;

@@ -1,7 +1,7 @@
 ﻿namespace Nancy.ViewEngines.Markdown.Tests
 {
-    using System;
     using Nancy.Tests;
+
     using Xunit;
 
     public class MarkdownViewengineRenderFixture

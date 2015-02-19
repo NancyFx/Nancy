@@ -2,8 +2,8 @@ namespace Nancy.ModelBinding
 {
     using System.Collections.Generic;
 
-    using DefaultBodyDeserializers;
-    using DefaultConverters;
+    using Nancy.ModelBinding.DefaultBodyDeserializers;
+    using Nancy.ModelBinding.DefaultConverters;
 
     /// <summary>
     /// Provides default binding converters/deserializers

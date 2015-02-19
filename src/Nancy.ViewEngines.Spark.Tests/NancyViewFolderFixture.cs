@@ -1,11 +1,13 @@
 namespace Nancy.ViewEngines.Spark.Tests
 {
-    using System;
     using System.Collections.Generic;
     using System.IO;
+
     using FakeItEasy;
-    using Xunit;
+
     using Nancy.Tests;
+
+    using Xunit;
 
     public class NancyViewFolderFixture
     {

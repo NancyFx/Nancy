@@ -4,7 +4,7 @@ namespace Nancy
     using System.ComponentModel;
 
     /// <summary>
-    /// Helper interface used to hide the base <see cref="Object"/>  members from the fluent API to make it much cleaner
+    /// Helper interface used to hide the base <see cref="object"/>  members from the fluent API to make it much cleaner
     /// in Visual Studio intellisense.
     /// </summary>
     /// <remarks>Created by Daniel Cazzulino http://www.clariusconsulting.net/blogs/kzu/archive/2008/03/10/58301.aspx</remarks>

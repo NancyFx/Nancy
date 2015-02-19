@@ -1,7 +1,7 @@
 ﻿namespace Nancy.Demo.Authentication.Token
 {
     using Nancy.Authentication.Token;
-    using Security;
+    using Nancy.Security;
 
     public class AuthModule : NancyModule
     {

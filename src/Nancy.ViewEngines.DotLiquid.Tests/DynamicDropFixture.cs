@@ -1,7 +1,9 @@
 namespace Nancy.ViewEngines.DotLiquid.Tests
 {
     using System.Dynamic;
+
     using Nancy.Tests;
+
     using Xunit;
 
     public class DynamicDropFixture

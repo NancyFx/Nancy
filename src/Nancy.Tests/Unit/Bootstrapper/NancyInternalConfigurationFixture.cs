@@ -1,7 +1,9 @@
 namespace Nancy.Tests.Unit.Bootstrapper
 {
     using System.Linq;
+
     using FakeItEasy;
+
     using Nancy.Bootstrapper;
     using Nancy.ModelBinding;
 

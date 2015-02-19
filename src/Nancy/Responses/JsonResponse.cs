@@ -2,7 +2,8 @@
 {
     using System;
     using System.IO;
-    using Json;
+
+    using Nancy.Json;
 
     public class JsonResponse<TModel> : Response
     {

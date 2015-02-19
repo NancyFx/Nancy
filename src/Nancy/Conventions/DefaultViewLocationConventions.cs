@@ -2,7 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
-    using ViewEngines;
+
+    using Nancy.ViewEngines;
 
     /// <summary>
     /// Defines the default static contents conventions.

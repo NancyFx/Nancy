@@ -1,10 +1,13 @@
 ﻿namespace Nancy.Tests.Unit.Validation
 {
     using System;
+
     using FakeItEasy;
-    using Nancy.Validation;
-    using Xunit;
+
     using Nancy.Tests.Fakes;
+    using Nancy.Validation;
+
+    using Xunit;
 
     public class ModuleExtensionsFixture
     {

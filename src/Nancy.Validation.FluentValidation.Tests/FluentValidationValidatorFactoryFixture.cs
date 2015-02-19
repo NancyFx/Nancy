@@ -1,9 +1,12 @@
 ﻿namespace Nancy.Validation.FluentValidation.Tests
 {
     using FakeItEasy;
-    using Nancy.Tests;
-    using Xunit;
+
     using global::FluentValidation;
+
+    using Nancy.Tests;
+
+    using Xunit;
 
     public class FluentValidationValidatorFactoryFixture
     {

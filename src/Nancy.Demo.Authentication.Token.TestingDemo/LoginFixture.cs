@@ -1,8 +1,8 @@
 namespace Nancy.Demo.Authentication.Token.TestingDemo
 {
-    using System;
     using Nancy.Testing;
     using Nancy.Tests;
+
     using Xunit;
 
     public class LoginFixture

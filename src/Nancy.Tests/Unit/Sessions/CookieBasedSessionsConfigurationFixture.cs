@@ -5,6 +5,7 @@ namespace Nancy.Testing.Tests
     using Nancy.Cryptography;
     using Nancy.Session;
     using Nancy.Tests;
+
     using Xunit;
 
     public class CookieBasesSessionsConfigurationFixture

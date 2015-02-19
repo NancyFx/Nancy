@@ -3,13 +3,14 @@ namespace Nancy
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
+
     using Nancy.Diagnostics;
     using Nancy.Responses.Negotiation;
     using Nancy.Routing;
     using Nancy.Security;
     using Nancy.Validation;
-    using System.Globalization;
 
     /// <summary>
     /// Nancy context.

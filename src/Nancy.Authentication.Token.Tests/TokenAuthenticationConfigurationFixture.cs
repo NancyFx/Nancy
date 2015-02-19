@@ -1,7 +1,9 @@
 ﻿namespace Nancy.Authentication.Token.Tests
 {
     using System;
+
     using Nancy.Tests;
+
     using Xunit;
 
     public class TokenAuthenticationConfigurationFixture

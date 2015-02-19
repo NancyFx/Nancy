@@ -4,9 +4,12 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
     using System.Linq;
     using System.Text;
     using System.Xml.Serialization;
+
     using FakeItEasy;
+
     using Nancy.ModelBinding;
     using Nancy.ModelBinding.DefaultBodyDeserializers;
+
     using Xunit;
 
     public class XmlBodyDeserializerFixture

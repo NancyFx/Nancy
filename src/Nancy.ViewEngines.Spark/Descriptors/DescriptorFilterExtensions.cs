@@ -1,9 +1,5 @@
 ﻿namespace Nancy.ViewEngines.Spark.Descriptors
 {
-    using System;
-    using global::Spark;
-    using SparkViewEngine = Spark.SparkViewEngine;
-
     //public static class DescriptorFilterExtensions
     //{
     //    public static void AddFilter(this ISparkServiceContainer target, IDescriptorFilter filter)

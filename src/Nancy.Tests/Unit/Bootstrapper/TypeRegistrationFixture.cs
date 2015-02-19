@@ -2,8 +2,10 @@ namespace Nancy.Tests.Unit.Bootstrapper
 {
     using System;
     using System.Collections.Generic;
+
     using Nancy.Bootstrapper;
     using Nancy.Diagnostics;
+
     using Xunit;
 
     public class TypeRegistrationFixture

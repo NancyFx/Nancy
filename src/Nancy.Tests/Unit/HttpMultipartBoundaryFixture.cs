@@ -2,7 +2,7 @@
 {
     using System.IO;
     using System.Text;
-    using Nancy;
+
     using Xunit;
 
     public class HttpMultipartBoundaryFixture

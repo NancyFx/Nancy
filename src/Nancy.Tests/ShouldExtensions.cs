@@ -5,6 +5,7 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+
     using Xunit;
 
     public static class ShouldAssertExtensions

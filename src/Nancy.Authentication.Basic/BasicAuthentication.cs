@@ -2,6 +2,7 @@
 {
     using System;
     using System.Text;
+
     using Nancy.Bootstrapper;
     using Nancy.Extensions;
     using Nancy.Security;

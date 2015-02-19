@@ -2,7 +2,9 @@
 {
     using System;
     using System.Linq;
+
     using Nancy.Bootstrapper;
+
     using Xunit;
 
     public class PipelinesFixture

@@ -3,9 +3,12 @@
     using System;
     using System.IO;
     using System.Linq;
+
     using FakeItEasy;
+
     using Nancy.Tests;
-    using SuperSimpleViewEngine;
+    using Nancy.ViewEngines.SuperSimpleViewEngine;
+
     using Xunit;
 
     public class MarkdownViewEngineFixture

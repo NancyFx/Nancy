@@ -3,7 +3,8 @@ namespace Nancy.ModelBinding.DefaultConverters
     using System;
     using System.Linq;
     using System.Reflection;
-    using Extensions;
+
+    using Nancy.Extensions;
 
     /// <summary>
     /// Converter for handling enumerable types

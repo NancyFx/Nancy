@@ -2,7 +2,9 @@
 {
     using System.Collections.Generic;
     using System.IO;
+
     using Nancy.Responses;
+
     using Xunit;
 
     public class GenericFileResponseFixture

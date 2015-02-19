@@ -1,13 +1,17 @@
 ﻿namespace Nancy.ViewEngines.DotLiquid.Tests
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
+
     using FakeItEasy;
+
     using global::DotLiquid;
     using global::DotLiquid.NamingConventions;
+
     using Nancy.Tests;
+
     using Xunit;
-    using System.Collections.Generic;
 
     public class DotLiquidViewEngineFixture
     {

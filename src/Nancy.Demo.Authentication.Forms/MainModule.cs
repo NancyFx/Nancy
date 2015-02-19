@@ -2,7 +2,7 @@ namespace Nancy.Demo.Authentication.Forms
 {
     using System;
     using System.Dynamic;
-    using Nancy;
+
     using Nancy.Authentication.Forms;
     using Nancy.Extensions;
 

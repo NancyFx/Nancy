@@ -1,18 +1,15 @@
 ﻿namespace Nancy.Tests.Unit
 {
-    using System;
+    using System.CodeDom.Compiler;
     using System.Collections.Generic;
     using System.Linq;
-    using System.CodeDom.Compiler;
-
-    using FakeItEasy;
 
     using Microsoft.CSharp;
 
     using Nancy.Bootstrapper;
     using Nancy.Tests.Fakes;
     using Nancy.TinyIoc;
-    
+
     using Xunit;
 
     public class DefaultNancyBootstrapperFixture

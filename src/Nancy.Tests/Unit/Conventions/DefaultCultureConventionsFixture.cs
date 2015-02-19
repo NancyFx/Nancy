@@ -2,11 +2,11 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using Nancy.Conventions;
-    using Xunit;
     using System.Globalization;
+
+    using Nancy.Conventions;
+
+    using Xunit;
 
     public class DefaultCultureConventionsFixture
     {

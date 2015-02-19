@@ -2,7 +2,8 @@
 {
     using System.Collections.Generic;
     using System.Text;
-    using Cookies;
+
+    using Nancy.Cookies;
 
     /// <summary>
     /// Represents a text (text/plain) response

@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Nancy.Tests.xUnitExtensions
+﻿namespace Nancy.Tests.xUnitExtensions
 {
+    using System;
+
     public class SkipException : Exception
     {
         public SkipException(string reason)

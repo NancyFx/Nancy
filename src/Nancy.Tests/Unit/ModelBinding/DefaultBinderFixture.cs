@@ -2,21 +2,24 @@ namespace Nancy.Tests.Unit.ModelBinding
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Text;
-    using System.Globalization;
     using System.Xml.Serialization;
+
     using FakeItEasy;
-    using Fakes;
+
     using Nancy.IO;
     using Nancy.Json;
     using Nancy.ModelBinding;
     using Nancy.ModelBinding.DefaultBodyDeserializers;
     using Nancy.ModelBinding.DefaultConverters;
+    using Nancy.Tests.Fakes;
     using Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers;
-    using Xunit.Extensions;
+
     using Xunit;
+    using Xunit.Extensions;
 
     public class DefaultBinderFixture
     {

@@ -3,7 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Security;
+
+    using Nancy.Security;
 
     public class UserDatabase
     {

@@ -3,11 +3,9 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Nancy;
-    using Nancy.Helpers;
-    using Trie;
 
-    using MatchResult = Trie.MatchResult;
+    using Nancy.Helpers;
+    using Nancy.Routing.Trie;
 
     /// <summary>
     /// Default implementation of the <see cref="IRouteResolver"/> interface.

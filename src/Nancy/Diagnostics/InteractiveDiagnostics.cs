@@ -5,6 +5,8 @@
     using System.Linq;
     using System.Reflection;
 
+    using Nancy.Routing;
+
     public class InteractiveDiagnostics : IInteractiveDiagnostics
     {
         private readonly IDiagnosticsProvider[] providers;
@@ -19,14 +21,14 @@
             {
                 Type providerType = provider.GetType();
 
-                return providerType != typeof(Nancy.Diagnostics.TestingDiagnosticProvider) &
-                       providerType != typeof(Nancy.Routing.DefaultRouteCacheProvider);
+                return providerType != typeof(TestingDiagnosticProvider) &
+                       providerType != typeof(DefaultRouteCacheProvider);
             });
 
             if (customProvidersAvailable)
             {
                 // Exclude only the TestingDiagnosticProvider
-                this.providers = providers.Where(provider => provider.GetType() != typeof(Nancy.Diagnostics.TestingDiagnosticProvider)).ToArray();
+                this.providers = providers.Where(provider => provider.GetType() != typeof(TestingDiagnosticProvider)).ToArray();
             }
             else
             {

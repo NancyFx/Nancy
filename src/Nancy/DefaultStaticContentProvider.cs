@@ -1,7 +1,5 @@
 ﻿namespace Nancy
 {
-    using System.Linq;
-
     using Nancy.Conventions;
 
     /// <summary>

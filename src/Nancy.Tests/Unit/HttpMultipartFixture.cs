@@ -1,13 +1,13 @@
-using System.Collections.Generic;
-using Nancy.IO;
-
 namespace Nancy.Tests.Unit
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Text;
-    using Nancy;
+
+    using Nancy.IO;
+
     using Xunit;
 
     public class HttpMultipartFixture

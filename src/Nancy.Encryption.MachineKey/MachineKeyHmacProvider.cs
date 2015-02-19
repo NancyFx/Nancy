@@ -2,6 +2,7 @@
 {
     using System;
     using System.Configuration;
+    using System.Globalization;
     using System.Linq;
     using System.Reflection;
     using System.Text;
@@ -94,7 +95,7 @@
             {
                 var numberString = new string(new[] { data[2 * i], data[2 * i + 1] });
 
-                var value = byte.Parse(numberString, System.Globalization.NumberStyles.HexNumber);
+                var value = byte.Parse(numberString, NumberStyles.HexNumber);
 
                 output[i] = value;
             }

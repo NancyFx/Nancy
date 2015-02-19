@@ -1,7 +1,8 @@
 ﻿namespace Nancy.Tests.Unit
 {
-    using Xunit;
     using Nancy.Extensions;
+
+    using Xunit;
 
     public class ModuleNameFixture
     {

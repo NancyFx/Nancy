@@ -4,10 +4,8 @@ namespace Nancy.Tests.Unit
     using System;
     using System.Collections.Generic;
 
-    using FakeItEasy;
-
     using Nancy.Bootstrapper;
-    using Bootstrapper.Base;
+    using Nancy.Tests.Unit.Bootstrapper.Base;
     using Nancy.TinyIoc;
 
     public class DefaultNancyBootstrapperBootstrapperBaseFixture : BootstrapperBaseFixtureBase<TinyIoCContainer>

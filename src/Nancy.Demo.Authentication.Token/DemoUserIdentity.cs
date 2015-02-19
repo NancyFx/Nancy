@@ -1,7 +1,8 @@
 ﻿namespace Nancy.Demo.Authentication.Token
 {
     using System.Collections.Generic;
-    using Security;
+
+    using Nancy.Security;
 
     public class DemoUserIdentity : IUserIdentity
     {

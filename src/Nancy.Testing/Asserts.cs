@@ -96,7 +96,7 @@
         public static void Same<T>(T actual, T expected)
         {
             var isTheSameInstance =
-                Object.ReferenceEquals(actual, expected);
+                ReferenceEquals(actual, expected);
 
             if (!isTheSameInstance)
             {

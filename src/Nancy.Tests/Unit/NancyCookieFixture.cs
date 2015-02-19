@@ -2,7 +2,10 @@ namespace Nancy.Tests.Unit
 {
     using System;
     using System.Globalization;
-    using Cookies;
+    using System.Threading;
+
+    using Nancy.Cookies;
+
     using Xunit;
 
     public class NancyCookieFixture
@@ -36,11 +39,11 @@ namespace Nancy.Tests.Unit
         [Fact]
         public void Should_stringify_an_expiry_to_english()
         {
-            var originalCulture = System.Threading.Thread.CurrentThread.CurrentCulture;
+            var originalCulture = Thread.CurrentThread.CurrentCulture;
             try
             {
                 // Given
-                System.Threading.Thread.CurrentThread.CurrentCulture = new CultureInfo("fr-FR");
+                Thread.CurrentThread.CurrentCulture = new CultureInfo("fr-FR");
                 var date = new DateTime(2015, 10, 8, 9, 10, 11, DateTimeKind.Utc);
 
                 // When
@@ -51,7 +54,7 @@ namespace Nancy.Tests.Unit
             }
             finally
             {
-                System.Threading.Thread.CurrentThread.CurrentCulture = originalCulture;
+                Thread.CurrentThread.CurrentCulture = originalCulture;
             }
         }
 

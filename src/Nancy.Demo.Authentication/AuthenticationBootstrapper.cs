@@ -2,8 +2,8 @@ namespace Nancy.Demo.Authentication
 {
     using System;
     using System.Collections.Generic;
-    using Bootstrapper;
-    using Nancy;
+
+    using Nancy.Bootstrapper;
     using Nancy.Responses;
     using Nancy.TinyIoc;
 

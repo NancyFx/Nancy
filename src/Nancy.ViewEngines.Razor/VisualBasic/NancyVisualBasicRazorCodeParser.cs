@@ -1,6 +1,5 @@
 ﻿namespace Nancy.ViewEngines.Razor.VisualBasic
 {
-    using System;
     using System.Globalization;
     using System.Linq;
     using System.Web.Razor.Generator;

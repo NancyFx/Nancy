@@ -3,9 +3,9 @@ namespace Nancy.Tests.Unit
     using System.Collections.Generic;
     using System.IO;
 
+    using Nancy.Tests.Extensions;
     using FakeItEasy;
 
-    using Tests.Extensions;
     using Xunit;
 
     public class HeadResponseFixture

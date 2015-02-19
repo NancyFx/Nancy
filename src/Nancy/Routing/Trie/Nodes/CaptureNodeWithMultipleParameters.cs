@@ -1,8 +1,8 @@
 ﻿namespace Nancy.Routing.Trie.Nodes
 {
     using System.Collections.Generic;
-    using System.Text.RegularExpressions;
     using System.Linq;
+    using System.Text.RegularExpressions;
 
     using Nancy.Routing.Constraints;
 

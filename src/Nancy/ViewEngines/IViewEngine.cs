@@ -1,8 +1,6 @@
 ﻿namespace Nancy.ViewEngines
 {
-    using System;
     using System.Collections.Generic;
-    using System.IO;
 
     /// <summary>
     /// Defines the functionality that a view engine must support to be integrated into Nancy.

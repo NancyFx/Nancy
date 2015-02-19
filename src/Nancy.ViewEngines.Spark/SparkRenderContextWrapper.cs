@@ -1,6 +1,7 @@
 ﻿namespace Nancy.ViewEngines.Spark
 {
     using System.Collections.Generic;
+
     using Nancy.Localization;
 
     /// <summary>

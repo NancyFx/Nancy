@@ -4,7 +4,8 @@ namespace Nancy.Routing.Trie
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    using Nodes;
+
+    using Nancy.Routing.Trie.Nodes;
 
     /// <summary>
     /// The default route resolution trie

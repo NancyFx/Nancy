@@ -3,8 +3,9 @@
     using System.IO;
     using System.Linq;
     using System.Text;
-    using Nancy;
+
     using Nancy.Tests;
+
     using Xunit;
 
     public class BrowserResponseBodyWrapperFixture

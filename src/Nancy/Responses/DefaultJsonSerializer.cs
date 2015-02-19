@@ -3,9 +3,9 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using Json;
 
     using Nancy.IO;
+    using Nancy.Json;
 
     public class DefaultJsonSerializer : ISerializer
     {

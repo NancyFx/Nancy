@@ -3,8 +3,9 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+
+    using Nancy.Cookies;
     using Nancy.Responses.Negotiation;
-    using Cookies;
 
     public static class NegotiatorExtensions
     {

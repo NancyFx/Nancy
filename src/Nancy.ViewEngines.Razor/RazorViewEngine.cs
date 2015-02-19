@@ -7,6 +7,7 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Runtime.CompilerServices;
     using System.Text;
     using System.Web.Razor;
 
@@ -15,6 +16,8 @@
     using Nancy.Bootstrapper;
     using Nancy.Helpers;
     using Nancy.Responses;
+    using Nancy.ViewEngines.Razor.CSharp;
+    using Nancy.ViewEngines.Razor.VisualBasic;
 
     /// <summary>
     /// View engine for rendering razor views.
@@ -43,8 +46,8 @@
         {
             this.viewRenderers = new List<IRazorViewRenderer>
             {
-                new CSharp.CSharpRazorViewRenderer(),
-                new VisualBasic.VisualBasicRazorViewRenderer()
+                new CSharpRazorViewRenderer(),
+                new VisualBasicRazorViewRenderer()
             };
 
             this.razorConfiguration = configuration;
@@ -214,7 +217,7 @@
 
             var assemblies = new List<string>
             {
-                GetAssemblyPath(typeof(System.Runtime.CompilerServices.CallSite)),
+                GetAssemblyPath(typeof(CallSite)),
                 GetAssemblyPath(typeof(IHtmlString)),
                 GetAssemblyPath(Assembly.GetExecutingAssembly()),
                 GetAssemblyPath(modelType)
@@ -345,7 +348,7 @@
                 var currentLine = templateReader.ReadLine();
                 while (currentLine != null)
                 {
-                    templateLines.Add(Helpers.HttpUtility.HtmlEncode(currentLine));
+                    templateLines.Add(HttpUtility.HtmlEncode(currentLine));
 
                     currentLine = templateReader.ReadLine();
                 }

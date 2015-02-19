@@ -4,8 +4,8 @@
     using System.IO;
     using System.Linq;
 
-    using Nancy.Json;
     using Nancy.Bootstrapper;
+    using Nancy.Json;
 
     public static class Jsonp
     {

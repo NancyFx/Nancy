@@ -1,7 +1,7 @@
 ﻿namespace Nancy.Security
 {
-    using Bootstrapper;
-    using Cryptography;
+    using Nancy.Bootstrapper;
+    using Nancy.Cryptography;
 
     /// <summary>
     /// Wires up the CSRF (anti-forgery token) support at application startup.

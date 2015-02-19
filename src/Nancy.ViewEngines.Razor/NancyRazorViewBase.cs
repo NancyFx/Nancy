@@ -5,6 +5,7 @@
     using System.Globalization;
     using System.IO;
     using System.Text;
+
     using Nancy.Helpers;
 
     /// <summary>

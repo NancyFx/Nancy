@@ -1,7 +1,5 @@
 ﻿namespace Nancy.ViewEngines
 {
-    using Nancy;
-
     /// <summary>
     /// Interface for manually rendering views to a Response object, rather
     /// than going through content negotiation.

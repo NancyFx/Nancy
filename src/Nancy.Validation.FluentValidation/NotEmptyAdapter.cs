@@ -1,9 +1,11 @@
 namespace Nancy.Validation.FluentValidation
 {
     using System.Collections.Generic;
-    using Nancy.Validation.Rules;
+
     using global::FluentValidation.Internal;
     using global::FluentValidation.Validators;
+
+    using Nancy.Validation.Rules;
 
     /// <summary>
     /// Adapter between the Fluent Validation <see cref="NotEmptyValidator"/> and the Nancy validation rules.
