@@ -29,7 +29,7 @@
         /// <param name="claims">Claims the authenticated user needs to have</param>
         /// <returns>Hook that returns an Unauthorized response if the user is not
         /// authenticated or does not have the required claims, null otherwise</returns>
-        public static Func<NancyContext, Response> RequiresClaims(IEnumerable<Predicate<Claim>> claims)
+        public static Func<NancyContext, Response> RequiresClaims(params Predicate<Claim>[] claims)
         {
             return ForbiddenIfNot(ctx => ctx.CurrentUser.HasClaims(claims));
         }
@@ -43,7 +43,7 @@
         /// <returns>Hook that returns an Unauthorized response if the user is not
         /// authenticated or does not have at least one of the required claims, null
         /// otherwise</returns>
-        public static Func<NancyContext, Response> RequiresAnyClaim(IEnumerable<string> claims)
+        public static Func<NancyContext, Response> RequiresAnyClaim(params Predicate<Claim>[] claims)
         {
             return ForbiddenIfNot(ctx => ctx.CurrentUser.HasAnyClaim(claims));
         }
@@ -111,24 +111,11 @@
         /// the resource is served over HTTPS
         /// </summary>
         /// <param name="redirect"><see langword="true"/> if the user should be redirected to HTTPS (no port number) if the incoming request was made using HTTP, otherwise <see langword="false"/> if <see cref="HttpStatusCode.Forbidden"/> should be returned.</param>
-        /// <returns>Hook that returns a RedirectResponse with the Url scheme set to HTTPS,
-        /// or a Response with a Forbidden HTTP status code if <c>redirect</c> is false or the method is not GET,
-        /// null otherwise</returns>
-        public static Func<NancyContext, Response> RequiresHttps(bool redirect)
-        {
-            return RequiresHttps(redirect, null);
-        }
-
-        /// <summary>
-        /// Creates a hook to be used in a pipeline before a route handler to ensure that
-        /// the resource is served over HTTPS
-        /// </summary>
-        /// <param name="redirect"><see langword="true"/> if the user should be redirected to HTTPS (no port number) if the incoming request was made using HTTP, otherwise <see langword="false"/> if <see cref="HttpStatusCode.Forbidden"/> should be returned.</param>
         /// <param name="httpsPort">The HTTPS port number to use</param>
         /// <returns>Hook that returns a <see cref="RedirectResponse"/> with the Url scheme set to HTTPS,
         /// or a <see cref="Response"/> with a <see cref="HttpStatusCode.Forbidden"/> status code if <c>redirect</c> is false or the method is not GET,
         /// null otherwise</returns>
-        public static Func<NancyContext, Response> RequiresHttps(bool redirect, int? httpsPort)
+        public static Func<NancyContext, Response> RequiresHttps(bool redirect, int? httpsPort = null)
         {
             return (ctx) =>
             {

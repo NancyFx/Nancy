@@ -26,7 +26,7 @@ namespace Nancy.Security
         /// </summary>
         /// <param name="module">Module to enable</param>
         /// <param name="requiredClaims">Claim(s) required</param>
-        public static void RequiresClaims(this INancyModule module, IEnumerable<Predicate<Claim>> requiredClaims)
+        public static void RequiresClaims(this INancyModule module, params Predicate<Claim>[] requiredClaims)
         {
             module.AddBeforeHookOrExecute(SecurityHooks.RequiresAuthentication(), "Requires Authentication");
             module.AddBeforeHookOrExecute(SecurityHooks.RequiresClaims(requiredClaims), "Requires Claims");
@@ -47,7 +47,7 @@ namespace Nancy.Security
         /// </summary>
         /// <param name="module">Module to enable</param>
         /// <param name="requiredClaims">Claim(s) required</param>
-        public static void RequiresAnyClaim(this INancyModule module, IEnumerable<string> requiredClaims)
+        public static void RequiresAnyClaim(this INancyModule module, params Predicate<Claim>[] requiredClaims)
         {
             module.AddBeforeHookOrExecute(SecurityHooks.RequiresAuthentication(), "Requires Authentication");
             module.AddBeforeHookOrExecute(SecurityHooks.RequiresAnyClaim(requiredClaims), "Requires Any Claim");
