@@ -341,7 +341,6 @@
     <Compile Include="Security\CsrfTokenValidationResult.cs" />
     <Compile Include="ResponseExtensions.cs" />
     <Compile Include="RootPathApplicationStartup.cs" />
-    <Compile Include="Security\IUserIdentity.cs" />
     <Compile Include="StaticConfiguration.cs" />
     <Compile Include="Url.cs" />
     <Compile Include="Validation\CompositeValidator.cs" />
@@ -438,7 +437,7 @@
     <Compile Include="Routing\RoutePatternMatchResult.cs" />
     <Compile Include="Security\ModuleSecurity.cs" />
     <Compile Include="Security\SecurityHooks.cs" />
-    <Compile Include="Security\UserIdentityExtensions.cs" />
+    <Compile Include="Security\ClaimsPrincipalExtensions.cs" />
     <Compile Include="Session\CookieBasedSessions.cs" />
     <Compile Include="Cryptography\RijndaelEncryptionProvider.cs" />
     <Compile Include="DefaultObjectSerializer.cs" />
