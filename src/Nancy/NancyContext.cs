@@ -10,7 +10,6 @@ namespace Nancy
     using Nancy.Diagnostics;
     using Nancy.Responses.Negotiation;
     using Nancy.Routing;
-    using Nancy.Security;
     using Nancy.Validation;
 
     /// <summary>
