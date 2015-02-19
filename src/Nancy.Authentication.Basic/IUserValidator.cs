@@ -1,6 +1,6 @@
 ﻿namespace Nancy.Authentication.Basic
 {
-    using Nancy.Security;
+    using System.Security.Claims;
 
     /// <summary>
     /// Provides a way to validate the username and password
