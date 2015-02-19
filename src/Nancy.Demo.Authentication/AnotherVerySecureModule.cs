@@ -1,5 +1,7 @@
 namespace Nancy.Demo.Authentication
 {
+    using System.Security.Claims;
+
     using Nancy.Demo.Authentication.Models;
     using Nancy.Security;
 
@@ -10,11 +12,11 @@ namespace Nancy.Demo.Authentication
     {
         public AnotherVerySecureModule() : base("/superSecure")
         {
-            this.RequiresClaims(new[] { "SuperSecure" });
+            this.RequiresClaims(c => c.Type == ClaimTypes.Role && c.Value == "SuperSecure");
 
             Get["/"] = x =>
             {
-                var model = new UserModel(this.Context.CurrentUser.UserName);
+                var model = new UserModel(this.Context.CurrentUser.Identity.Name);
                 return View["superSecure.cshtml", model];
             };
         }
