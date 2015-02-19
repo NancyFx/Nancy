@@ -13,7 +13,7 @@ namespace Nancy.Demo.Authentication.Forms
             Get["/secured"] = x => {
                 this.RequiresAuthentication();
 
-                var model = new UserModel(this.Context.CurrentUser.UserName);
+                var model = new UserModel(this.Context.CurrentUser.Identity.Name);
                 return View["secure.cshtml", model];
             };
         }
