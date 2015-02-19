@@ -86,34 +86,6 @@
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
         }
 
-        [Fact]
-        public void Should_deny_if_validated_claims_fails()
-        {
-            var browser = new Browser(with =>
-            {
-                with.RequestStartup((t, p, c) => c.CurrentUser = CreateFakeUser("test2"));
-                with.Module<PerRouteAuthModule>();
-            });
-
-            var result = browser.Get("/requiresvalidatedclaims");
-
-            Assert.Equal(HttpStatusCode.Forbidden, result.StatusCode);
-        }
-
-        [Fact]
-        public void Should_allow_if_validated_claims_passes()
-        {
-            var browser = new Browser(with =>
-            {
-                with.RequestStartup((t, p, c) => c.CurrentUser = CreateFakeUser("test"));
-                with.Module<PerRouteAuthModule>();
-            });
-
-            var result = browser.Get("/requiresvalidatedclaims");
-
-            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
-        }
-
         private static ClaimsPrincipal CreateFakeUser(params string[] claimTypes)
         {
             var claims = claimTypes.Select(claimType => new Claim(claimType, string.Empty)).ToList();
