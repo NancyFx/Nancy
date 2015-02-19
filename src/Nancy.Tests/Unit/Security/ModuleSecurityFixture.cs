@@ -37,16 +37,6 @@ namespace Nancy.Tests.Unit.Security
         }
 
         [Fact]
-        public void Should_add_two_items_to_the_end_of_the_begin_pipeline_when_RequiresValidatedClaims_enabled()
-        {
-            var module = new FakeHookedModule(A.Fake<BeforePipeline>());
-
-            module.RequiresValidatedClaims(claims => false);
-
-            A.CallTo(() => module.Before.AddItemToEndOfPipeline(A<Func<NancyContext, Response>>.Ignored)).MustHaveHappened(Repeated.Exactly.Twice);
-        }
-
-        [Fact]
         public void Should_return_unauthorized_response_with_RequiresAuthentication_enabled_and_no_user()
         {
             var module = new FakeHookedModule(new BeforePipeline());
@@ -214,69 +204,6 @@ namespace Nancy.Tests.Unit.Security
             var result = module.Before.Invoke(context, new CancellationToken());
 
             result.Result.ShouldBeNull();
-        }
-
-        [Fact]
-        public void Should_call_IsValid_delegate_with_RequiresValidatedClaims_and_valid_user()
-        {
-            bool called = false;
-            var module = new FakeHookedModule(new BeforePipeline());
-            var context = new NancyContext
-            {
-                CurrentUser = GetFakeUser("username",
-                    new Claim("Claim1", string.Empty),
-                    new Claim("Claim2", string.Empty),
-                    new Claim("Claim3", string.Empty))
-            };
-
-            module.RequiresValidatedClaims(_ =>
-            {
-                called = true;
-                return true;
-            });
-
-            module.Before.Invoke(context, new CancellationToken());
-
-            called.ShouldEqual(true);
-        }
-
-        [Fact]
-        public void Should_return_null_with_RequiresValidatedClaims_and_IsValid_returns_true()
-        {
-            var module = new FakeHookedModule(new BeforePipeline());
-            var context = new NancyContext
-            {
-                CurrentUser = GetFakeUser("username",
-                    new Claim("Claim1", string.Empty),
-                    new Claim("Claim2", string.Empty),
-                    new Claim("Claim3", string.Empty))
-            };
-
-            module.RequiresValidatedClaims(s => true);
-
-            var result = module.Before.Invoke(context, new CancellationToken());
-
-            result.Result.ShouldBeNull();
-        }
-
-        [Fact]
-        public void Should_return_forbidden_response_with_RequiresValidatedClaims_and_IsValid_returns_false()
-        {
-            var module = new FakeHookedModule(new BeforePipeline());
-            var context = new NancyContext
-            {
-                CurrentUser = GetFakeUser("username",
-                    new Claim("Claim1", string.Empty),
-                    new Claim("Claim2", string.Empty),
-                    new Claim("Claim3", string.Empty))
-            };
-
-            module.RequiresValidatedClaims(s => false);
-
-            var result = module.Before.Invoke(context, new CancellationToken());
-
-            result.Result.ShouldNotBeNull();
-            result.Result.StatusCode.ShouldEqual(HttpStatusCode.Forbidden);
         }
 
         [Fact]
