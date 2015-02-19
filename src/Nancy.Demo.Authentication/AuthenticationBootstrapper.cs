@@ -2,6 +2,7 @@ namespace Nancy.Demo.Authentication
 {
     using System;
     using System.Collections.Generic;
+    using System.Security.Claims;
 
     using Nancy.Bootstrapper;
     using Nancy.Responses;
@@ -14,7 +15,7 @@ namespace Nancy.Demo.Authentication
             base.ApplicationStartup(container, pipelines);
 
             // In reality you would use a pre-built authentication/claims provider
-            pipelines.BeforeRequest += (ctx) =>
+            pipelines.BeforeRequest += ctx =>
             {
                 // World's-worse-authentication (TM)
                 // Pull the username out of the querystring if it exists
@@ -23,17 +24,13 @@ namespace Nancy.Demo.Authentication
 
                 if (username.HasValue)
                 {
-                    ctx.CurrentUser = new DemoUserIdentity
-                                          {
-                                              UserName = username.ToString(),
-                                              Claims = BuildClaims(username.ToString())
-                                          };
+                    ctx.CurrentUser = new ClaimsPrincipal(new ClaimsIdentity(BuildClaims(username), "querystring"));
                 }
 
                 return null;
             };
 
-            pipelines.AfterRequest += (ctx) =>
+            pipelines.AfterRequest += ctx =>
             {
                 // If status code comes back as Unauthorized then
                 // forward the user to the login page
@@ -49,14 +46,14 @@ namespace Nancy.Demo.Authentication
         /// </summary>
         /// <param name="userName">Current username</param>
         /// <returns>IEnumerable of claims</returns>
-        private static IEnumerable<string> BuildClaims(string userName)
+        private static IEnumerable<Claim> BuildClaims(string userName)
         {
-            var claims = new List<string>();
+            var claims = new List<Claim>();
 
             // Only bob can have access to SuperSecure
             if (String.Equals(userName, "bob", StringComparison.OrdinalIgnoreCase))
             {
-                claims.Add("SuperSecure");
+                claims.Add(new Claim(ClaimTypes.Role, "SuperSecure"));
             }
 
             return claims;

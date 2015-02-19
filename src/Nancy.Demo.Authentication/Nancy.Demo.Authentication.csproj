@@ -127,11 +127,9 @@
     </Compile>
     <Compile Include="AuthenticationBootstrapper.cs" />
     <Compile Include="AnotherVerySecureModule.cs" />
-    <Compile Include="DemoUserIdentity.cs" />
     <Compile Include="MainModule.cs" />
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="SecureModule.cs" />
-    <Compile Include="VerySecureModule.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy.Hosting.Aspnet\Nancy.Hosting.Aspnet.csproj">
