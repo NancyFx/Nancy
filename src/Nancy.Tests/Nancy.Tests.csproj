@@ -130,7 +130,6 @@
     <Compile Include="Fakes\FakeRouteResolver.cs" />
     <Compile Include="Fakes\FakeObjectSerializer.cs" />
     <Compile Include="Fakes\FakeHookedModule.cs" />
-    <Compile Include="Fakes\FakeUserIdentity.cs" />
     <Compile Include="Fakes\FakeViewEngineHost.cs" />
     <Compile Include="Fakes\MockPipelines.cs" />
     <Compile Include="Fakes\Person.cs" />
@@ -259,7 +258,7 @@
     <Compile Include="Unit\Security\DefaultCsrfTokenValidatorFixture.cs" />
     <Compile Include="Unit\Security\ModuleSecurityFixture.cs" />
     <Compile Include="Unit\Security\SSLProxyFixture.cs" />
-    <Compile Include="Unit\Security\UserIdentityExtensionsFixture.cs" />
+    <Compile Include="Unit\Security\ClaimsPrincipalExtensionsFixture.cs" />
     <Compile Include="Unit\Sessions\CookieBasedSessionsConfigurationFixture.cs" />
     <Compile Include="Unit\Sessions\CookieBasedSessionsFixture.cs" />
     <Compile Include="Unit\Cryptography\RijndaelEncryptionProviderFixture.cs" />

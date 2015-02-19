@@ -1,13 +1,12 @@
 ﻿namespace Nancy.Tests.Functional.Tests
 {
-    using System.Collections.Generic;
+    using System.Security.Claims;
+    using System.Security.Principal;
 
-    using Nancy.Security;
     using Nancy.Testing;
     using Nancy.Tests.Functional.Modules;
 
     using Xunit;
-    using Xunit.Extensions;
 
     public class PerRouteAuthFixture
     {
@@ -36,7 +35,7 @@
         {
             var browser = new Browser(with =>
             {
-                with.RequestStartup((t, p, c) => c.CurrentUser = new FakeUser("test2"));
+                with.RequestStartup((t, p, c) => c.CurrentUser = CreateFakeUser("test2"));
                 with.Module<PerRouteAuthModule>();
             });
 
@@ -50,43 +49,13 @@
         {
             var browser = new Browser(with =>
             {
-                with.RequestStartup((t, p, c) => c.CurrentUser = new FakeUser("test", "test2"));
+                with.RequestStartup((t, p, c) => c.CurrentUser = CreateFakeUser("test", "test2"));
                 with.Module<PerRouteAuthModule>();
             });
 
             var result = browser.Get("/requiresclaims");
 
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
-        }
-
-        [Theory]
-        [PropertyData("Claims")]
-        public void Should_allow_if_claims_correct_case_insensitively(params string[] claims)
-        {
-            var browser = new Browser(with =>
-            {
-                with.RequestStartup((t, p, c) => c.CurrentUser = new FakeUser(claims));
-                with.Module<PerRouteAuthModule>();
-            });
-
-            var result = browser.Get("/requiresclaims");
-
-            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
-        }
-
-        public static IEnumerable<object[]> Claims
-        {
-            get
-            {
-                yield return new object[] { new[] { "TEST", "TEST2" } };
-                yield return new object[] { new[] { "TEST", "test2" } };
-                yield return new object[] { new[] { "test", "TEST2" } };
-                yield return new object[] { new[] { "test", "test2" } };
-                yield return new object[] { new[] { "Test", "Test2" } };
-                yield return new object[] { new[] { "TesT", "TesT2" } };
-                yield return new object[] { new[] { "TEsT", "TEsT2" } };
-                yield return new object[] { new[] { "TeSt", "TeSt2" } };
-            }
         }
 
         [Fact]
@@ -94,7 +63,7 @@
         {
             var browser = new Browser(with =>
             {
-                with.RequestStartup((t, p, c) => c.CurrentUser = new FakeUser("test3"));
+                with.RequestStartup((t, p, c) => c.CurrentUser = CreateFakeUser("test3"));
                 with.Module<PerRouteAuthModule>();
             });
 
@@ -108,7 +77,7 @@
         {
             var browser = new Browser(with =>
             {
-                with.RequestStartup((t, p, c) => c.CurrentUser = new FakeUser("test2"));
+                with.RequestStartup((t, p, c) => c.CurrentUser = CreateFakeUser("test2"));
                 with.Module<PerRouteAuthModule>();
             });
 
@@ -122,7 +91,7 @@
         {
             var browser = new Browser(with =>
             {
-                with.RequestStartup((t, p, c) => c.CurrentUser = new FakeUser("test2"));
+                with.RequestStartup((t, p, c) => c.CurrentUser = CreateFakeUser("test2"));
                 with.Module<PerRouteAuthModule>();
             });
 
@@ -136,7 +105,7 @@
         {
             var browser = new Browser(with =>
             {
-                with.RequestStartup((t, p, c) => c.CurrentUser = new FakeUser("test"));
+                with.RequestStartup((t, p, c) => c.CurrentUser = CreateFakeUser("test"));
                 with.Module<PerRouteAuthModule>();
             });
 
@@ -144,18 +113,10 @@
 
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
         }
-    }
 
-    public class FakeUser : IUserIdentity
-    {
-        public string UserName { get; private set; }
-
-        public IEnumerable<string> Claims { get; private set; }
-
-        public FakeUser(params string[] claims)
+        private static ClaimsPrincipal CreateFakeUser(params string[] claimTypes)
         {
-            this.UserName = "Bob";
-            this.Claims = claims;
+            return new ClaimsPrincipal(new GenericIdentity());
         }
     }
 }
