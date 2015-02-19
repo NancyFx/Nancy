@@ -2,11 +2,6 @@ language: ruby
 rvm:
   - 1.9.3
 install:
-  - sudo bash -c "echo deb http://badgerports.org lucid main >> /etc/apt/sources.list"
-  - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0E1FAD0C
-  - sudo apt-get update
-  - sudo apt-get install mono-devel mono-gmcs mono-vbnc
-  - sudo apt-get install gettext
   - sudo wget -q -P "/opt"  "http://samples.nancyfx.org/content/mono-3.0.12-x64-bin.tar.bz2"
   - gem install bundle
   - bundle
@@ -14,8 +9,6 @@ install:
   - echo set -e >> ./travis.sh
   - echo set -x >> ./travis.sh
   - echo set -o pipefail >> ./travis.sh
-  - echo echo Running on Mono 2.x >> ./travis.sh
-  - echo rake mono >> ./travis.sh
   - echo echo Running on Mono 3.x >> ./travis.sh
   - echo sudo tar xkv -C "/opt" -f /opt/mono-3.0.12-x64-bin.tar.bz2 >> ./travis.sh
   - echo export PATH="/opt/mono/bin:$PATH" >> ./travis.sh
