@@ -89,7 +89,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\CsQuery.1.3.3\lib\net40\CsQuery.dll</HintPath>
     </Reference>
-    <Reference Include="FakeItEasy">
+    <Reference Include="FakeItEasy, Version=1.19.0.0, Culture=neutral, PublicKeyToken=eff28e2146d5fd2c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\FakeItEasy.1.19.0\lib\net40\FakeItEasy.dll</HintPath>
     </Reference>
     <Reference Include="System">
