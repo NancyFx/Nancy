@@ -1,15 +1,17 @@
 ﻿namespace Nancy.Demo.Authentication.Basic
 {
+    using System.Security.Claims;
+    using System.Security.Principal;
+
     using Nancy.Authentication.Basic;
-    using Nancy.Security;
 
     public class UserValidator : IUserValidator
     {
-        public IUserIdentity Validate(string username, string password)
+        public ClaimsPrincipal Validate(string username, string password)
         {
             if (username == "demo" && password == "demo")
             {
-                return new DemoUserIdentity { UserName = username };
+                return new ClaimsPrincipal(new GenericIdentity(username));
             }
 
             // Not recognised => anonymous.
