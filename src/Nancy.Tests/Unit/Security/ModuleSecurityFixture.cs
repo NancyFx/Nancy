@@ -3,6 +3,8 @@ namespace Nancy.Tests.Unit.Security
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using System.Security.Claims;
     using System.Threading;
 
     using FakeItEasy;
@@ -30,7 +32,7 @@ namespace Nancy.Tests.Unit.Security
         {
             var module = new FakeHookedModule(A.Fake<BeforePipeline>());
 
-            module.RequiresClaims(new[] { string.Empty });
+            module.RequiresClaims(new[] { new Claim("",""), });
 
             A.CallTo(() => module.Before.AddItemToEndOfPipeline(A<Func<NancyContext, Response>>.Ignored)).MustHaveHappened(Repeated.Exactly.Twice);
         }
@@ -94,7 +96,7 @@ namespace Nancy.Tests.Unit.Security
         public void Should_return_unauthorized_response_with_RequiresClaims_enabled_and_no_username()
         {
             var module = new FakeHookedModule(new BeforePipeline());
-            module.RequiresClaims(new[] { string.Empty });
+            module.RequiresClaims(new[] { new Claim("","")  });
 
             var result = module.Before.Invoke(new NancyContext(), new CancellationToken());
 
@@ -106,7 +108,7 @@ namespace Nancy.Tests.Unit.Security
         public void Should_return_unauthorized_response_with_RequiresClaims_enabled_and_blank_username()
         {
             var module = new FakeHookedModule(new BeforePipeline());
-            module.RequiresClaims(new[] { string.Empty });
+            module.RequiresClaims(new[] { new Claim("", "") });
             var context = new NancyContext
                               {
                                   CurrentUser = GetFakeUser(String.Empty)
@@ -122,7 +124,7 @@ namespace Nancy.Tests.Unit.Security
         public void Should_return_unauthorized_response_with_RequiresAnyClaim_enabled_and_no_username()
         {
             var module = new FakeHookedModule(new BeforePipeline());
-            module.RequiresAnyClaim(new[] { string.Empty });
+            module.RequiresAnyClaim(new[] { new Claim("", "") });
 
             var result = module.Before.Invoke(new NancyContext(), new CancellationToken());
 
@@ -134,7 +136,7 @@ namespace Nancy.Tests.Unit.Security
         public void Should_return_unauthorized_response_with_RequiresAnyClaim_enabled_and_blank_username()
         {
             var module = new FakeHookedModule(new BeforePipeline());
-            module.RequiresAnyClaim(new[] { string.Empty });
+            module.RequiresAnyClaim(new[] { new Claim("", "") });
             var context = new NancyContext
             {
                 CurrentUser = GetFakeUser(String.Empty)
@@ -178,10 +180,10 @@ namespace Nancy.Tests.Unit.Security
         public void Should_return_forbidden_response_with_RequiresClaims_enabled_but_nonmatching_claims()
         {
             var module = new FakeHookedModule(new BeforePipeline());
-            module.RequiresClaims(new[] { "Claim1" });
+            module.RequiresClaims(new[] { new Claim("Claim1", "Claim1") });
             var context = new NancyContext
                               {
-                                  CurrentUser = GetFakeUser("username", new string[] {"Claim2", "Claim3"})
+                                  CurrentUser = GetFakeUser("username", new[] { new Claim("Claim2", "Claim2"), new Claim("Claim3", "Claim3") })
                               };
 
             var result = module.Before.Invoke(context, new CancellationToken());
@@ -194,7 +196,7 @@ namespace Nancy.Tests.Unit.Security
         public void Should_return_forbidden_response_with_RequiresClaims_enabled_but_claims_key_missing()
         {
             var module = new FakeHookedModule(new BeforePipeline());
-            module.RequiresClaims(new[] { "Claim1" });
+            module.RequiresClaims(new[] { new Claim("Claim1", "Claim1") });
             var context = new NancyContext
                               {
                                   CurrentUser = GetFakeUser("username")
@@ -210,10 +212,10 @@ namespace Nancy.Tests.Unit.Security
         public void Should_return_forbidden_response_with_RequiresClaims_enabled_but_not_all_claims_met()
         {
             var module = new FakeHookedModule(new BeforePipeline());
-            module.RequiresClaims(new[] { "Claim1", "Claim2" });
+            module.RequiresClaims(new[] { new Claim("Claim1", "Claim1"), new Claim("Claim2", "Claim2") });
             var context = new NancyContext
                               {
-                                  CurrentUser = GetFakeUser("username", new[] {"Claim2"})
+                                  CurrentUser = GetFakeUser("username", new[] { new Claim("Claim2", "Claim2") })
                               };
 
             var result = module.Before.Invoke(context, new CancellationToken());
@@ -226,10 +228,10 @@ namespace Nancy.Tests.Unit.Security
         public void Should_return_null_with_RequiresClaims_and_all_claims_met()
         {
             var module = new FakeHookedModule(new BeforePipeline());
-            module.RequiresClaims(new[] { "Claim1", "Claim2" });
+            module.RequiresClaims(new[] { new Claim("Claim1", "Claim1"), new Claim("Claim2", "Claim2") });
             var context = new NancyContext
                               {
-                                  CurrentUser = GetFakeUser("username", new[] {"Claim1", "Claim2", "Claim3"})
+                                  CurrentUser = GetFakeUser("username", new[] { new Claim("Claim1", "Claim1"), new Claim("Claim2", "Claim2"), new Claim("Claim3", "Claim3") })
                               };
 
             var result = module.Before.Invoke(context, new CancellationToken());
@@ -242,10 +244,10 @@ namespace Nancy.Tests.Unit.Security
         public void Should_return_forbidden_response_with_RequiresAnyClaim_enabled_but_nonmatching_claims()
         {
             var module = new FakeHookedModule(new BeforePipeline());
-            module.RequiresAnyClaim(new[] { "Claim1" });
+            module.RequiresAnyClaim(new[] { new Claim("Claim1", "Claim1") });
             var context = new NancyContext
             {
-                CurrentUser = GetFakeUser("username", new string[] { "Claim2", "Claim3" })
+                CurrentUser = GetFakeUser("username", new [] { new Claim("Claim2", "Claim2"), new Claim("Claim3", "Claim3") })
             };
 
             var result = module.Before.Invoke(context, new CancellationToken());
@@ -258,7 +260,7 @@ namespace Nancy.Tests.Unit.Security
         public void Should_return_forbidden_response_with_RequiresAnyClaim_enabled_but_claims_key_missing()
         {
             var module = new FakeHookedModule(new BeforePipeline());
-            module.RequiresAnyClaim(new[] { "Claim1" });
+            module.RequiresAnyClaim(new[] { new Claim("Claim1", "Claim1") });
             var context = new NancyContext
             {
                 CurrentUser = GetFakeUser("username")
@@ -274,10 +276,10 @@ namespace Nancy.Tests.Unit.Security
         public void Should_return_null_with_RequiresAnyClaim_and_any_claim_met()
         {
             var module = new FakeHookedModule(new BeforePipeline());
-            module.RequiresAnyClaim(new[] { "Claim1", "Claim4" });
+            module.RequiresAnyClaim(new[] { new Claim("Claim1", "Claim1"), new Claim("Claim4", "Claim4") });
             var context = new NancyContext
             {
-                CurrentUser = GetFakeUser("username", new[] { "Claim1", "Claim2", "Claim3" })
+                CurrentUser = GetFakeUser("username", new[] { new Claim("Claim1", "Claim1"), new Claim("Claim2", "Claim2"), new Claim("Claim3", "Claim3") })
             };
 
             var result = module.Before.Invoke(context, new CancellationToken());
@@ -307,7 +309,7 @@ namespace Nancy.Tests.Unit.Security
             var module = new FakeHookedModule(new BeforePipeline());
             var context = new NancyContext
                               {
-                                  CurrentUser = GetFakeUser("username", new[] {"Claim1", "Claim2", "Claim3"})
+                                  CurrentUser = GetFakeUser("username", new[] { new Claim("Claim1", "Claim1"), new Claim("Claim2", "Claim2"), new Claim("Claim3", "Claim3") })
                               };
 
             module.RequiresValidatedClaims(s =>
@@ -327,7 +329,7 @@ namespace Nancy.Tests.Unit.Security
             var module = new FakeHookedModule(new BeforePipeline());
             var context = new NancyContext
                               {
-                                  CurrentUser = GetFakeUser("username", new[] {"Claim1", "Claim2", "Claim3"})
+                                  CurrentUser = GetFakeUser("username", new[] { new Claim("Claim1", "Claim1"), new Claim("Claim2", "Claim2"), new Claim("Claim3", "Claim3") })
                               };
 
             module.RequiresValidatedClaims(s => true);
@@ -343,7 +345,7 @@ namespace Nancy.Tests.Unit.Security
             var module = new FakeHookedModule(new BeforePipeline());
             var context = new NancyContext
                               {
-                                  CurrentUser = GetFakeUser("username", new[] {"Claim1", "Claim2", "Claim3"})
+                                  CurrentUser = GetFakeUser("username", new[] { new Claim("Claim1", "Claim1"), new Claim("Claim2", "Claim2"), new Claim("Claim3", "Claim3") })
                               };
 
             module.RequiresValidatedClaims(s => false);
@@ -528,11 +530,11 @@ namespace Nancy.Tests.Unit.Security
             result.Result.ShouldBeNull();
         }
 
-        private static IUserIdentity GetFakeUser(string userName, IEnumerable<string> claims = null)
+        private static ClaimsPrincipal GetFakeUser(string userName, IEnumerable<Claim> claims = null)
         {
-            var ret = new FakeUserIdentity();
-            ret.UserName = userName;
-            ret.Claims = claims;
+            var ret = new ClaimsPrincipal();
+            //TODO: How to handle the userName?
+            ret.AddIdentity(new ClaimsIdentity(claims, "Test"));
 
             return ret;
         }

@@ -1,6 +1,7 @@
 ﻿namespace Nancy.Authentication.Forms
 {
     using System;
+    using System.Security.Claims;
 
     using Nancy.Security;
 
@@ -16,6 +17,6 @@
         /// <param name="identifier">User identifier</param>
         /// <param name="context">The current NancyFx context</param>
         /// <returns>Matching populated IUserIdentity object, or empty</returns>
-        IUserIdentity GetUserFromIdentifier(Guid identifier, NancyContext context);
+        ClaimsPrincipal GetUserFromIdentifier(Guid identifier, NancyContext context);
     }
 }

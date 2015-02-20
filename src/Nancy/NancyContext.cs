@@ -5,6 +5,7 @@ namespace Nancy
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
+    using System.Security.Claims;
 
     using Nancy.Diagnostics;
     using Nancy.Responses.Negotiation;
@@ -74,7 +75,7 @@ namespace Nancy
         /// <summary>
         /// Gets or sets the current user
         /// </summary>
-        public IUserIdentity CurrentUser { get; set; }
+        public ClaimsPrincipal CurrentUser { get; set; }
 
         /// <summary>
         /// Diagnostic request tracing

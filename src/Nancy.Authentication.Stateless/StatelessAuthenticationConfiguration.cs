@@ -1,20 +1,19 @@
 namespace Nancy.Authentication.Stateless
 {
     using System;
-
-    using Nancy.Security;
+    using System.Security.Claims;
 
     /// <summary>
     /// Configuration options for stateless authentication
     /// </summary>
     public class StatelessAuthenticationConfiguration
     {
-        internal Func<NancyContext, IUserIdentity> GetUserIdentity;
+        internal Func<NancyContext, ClaimsPrincipal> GetUserIdentity;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StatelessAuthenticationConfiguration"/> class.
         /// </summary>
-        public StatelessAuthenticationConfiguration(Func<NancyContext, IUserIdentity> getUserIdentity)
+        public StatelessAuthenticationConfiguration(Func<NancyContext, ClaimsPrincipal> getUserIdentity)
         {
             GetUserIdentity = getUserIdentity;
         }

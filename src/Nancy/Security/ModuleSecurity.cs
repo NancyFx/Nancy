@@ -2,6 +2,7 @@ namespace Nancy.Security
 {
     using System;
     using System.Collections.Generic;
+    using System.Security.Claims;
 
     using Nancy.Extensions;
     using Nancy.Responses;
@@ -25,7 +26,7 @@ namespace Nancy.Security
         /// </summary>
         /// <param name="module">Module to enable</param>
         /// <param name="requiredClaims">Claim(s) required</param>
-        public static void RequiresClaims(this INancyModule module, IEnumerable<string> requiredClaims)
+        public static void RequiresClaims(this INancyModule module, IEnumerable<Claim> requiredClaims)
         {
             module.AddBeforeHookOrExecute(SecurityHooks.RequiresAuthentication(), "Requires Authentication");
             module.AddBeforeHookOrExecute(SecurityHooks.RequiresClaims(requiredClaims), "Requires Claims");
@@ -36,7 +37,7 @@ namespace Nancy.Security
         /// </summary>
         /// <param name="module">Module to enable</param>
         /// <param name="requiredClaims">Claim(s) required</param>
-        public static void RequiresAnyClaim(this INancyModule module, IEnumerable<string> requiredClaims)
+        public static void RequiresAnyClaim(this INancyModule module, IEnumerable<Claim> requiredClaims)
         {
             module.AddBeforeHookOrExecute(SecurityHooks.RequiresAuthentication(), "Requires Authentication");
             module.AddBeforeHookOrExecute(SecurityHooks.RequiresAnyClaim(requiredClaims), "Requires Any Claim");
@@ -47,7 +48,7 @@ namespace Nancy.Security
         /// </summary>
         /// <param name="module">Module to enable</param>
         /// <param name="isValid">Claims validator</param>
-        public static void RequiresValidatedClaims(this INancyModule module, Func<IEnumerable<string>, bool> isValid)
+        public static void RequiresValidatedClaims(this INancyModule module, Func<IEnumerable<Claim>, bool> isValid)
         {
             module.AddBeforeHookOrExecute(SecurityHooks.RequiresAuthentication(), "Requires Authentication");
             module.AddBeforeHookOrExecute(SecurityHooks.RequiresValidatedClaims(isValid), "Requires Validated Claim");

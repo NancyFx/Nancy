@@ -3,22 +3,23 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security.Claims;
 
     /// <summary>
-    /// Extension methods for working with IUserIdentity.
+    /// Extension methods for working with ClaimsPrincipal.
     /// </summary>
-    public static class UserIdentityExtensions
+    public static class ClaimsPrincipalExtensions
     {
         /// <summary>
         /// Tests if the user is authenticated.
         /// </summary>
         /// <param name="user">User to be verified</param>
         /// <returns>True if the user is authenticated, false otherwise</returns>
-        public static bool IsAuthenticated(this IUserIdentity user)
+        public static bool IsAuthenticated(this ClaimsPrincipal user)
         {
             return
                 user != null
-                && !String.IsNullOrWhiteSpace(user.UserName);
+                && user.Identities.All(x => x.IsAuthenticated);
         }
 
         /// <summary>
@@ -27,12 +28,11 @@
         /// <param name="user">User to be verified</param>
         /// <param name="requiredClaim">Claim the user needs to have</param>
         /// <returns>True if the user has the required claim, false otherwise</returns>
-        public static bool HasClaim(this IUserIdentity user, string requiredClaim)
+        public static bool HasClaim(this ClaimsPrincipal user, Claim requiredClaim)
         {
             return
                 user != null
-                && user.Claims != null
-                && user.Claims.Contains(requiredClaim, StringComparer.OrdinalIgnoreCase);
+                && user.HasClaim(requiredClaim.Type, requiredClaim.Value);
         }
 
         /// <summary>
@@ -41,12 +41,12 @@
         /// <param name="user">User to be verified</param>
         /// <param name="requiredClaims">Claims the user needs to have</param>
         /// <returns>True if the user has all of the required claims, false otherwise</returns>
-        public static bool HasClaims(this IUserIdentity user, IEnumerable<string> requiredClaims)
+        public static bool HasClaims(this ClaimsPrincipal user, IEnumerable<Claim> requiredClaims)
         {
             return
                 user != null
                 && user.Claims != null
-                && !requiredClaims.Any(claim => !user.Claims.Contains(claim, StringComparer.OrdinalIgnoreCase));
+                && requiredClaims.All(claim => user.HasClaim(claim.Type, claim.Value));
         }
 
         /// <summary>
@@ -55,12 +55,12 @@
         /// <param name="user">User to be verified</param>
         /// <param name="requiredClaims">Claims the user needs to have at least one of</param>
         /// <returns>True if the user has at least one of the required claims, false otherwise</returns>
-        public static bool HasAnyClaim(this IUserIdentity user, IEnumerable<string> requiredClaims)
+        public static bool HasAnyClaim(this ClaimsPrincipal user, IEnumerable<Claim> requiredClaims)
         {
             return
                 user != null
                 && user.Claims != null
-                && requiredClaims.Any(claim => user.Claims.Contains(claim, StringComparer.OrdinalIgnoreCase));
+                && requiredClaims.Any(claim => user.HasClaim(claim.Type, claim.Value));
         }
 
         /// <summary>
@@ -70,7 +70,7 @@
         /// <param name="isValid">Validation function to be called with the authenticated
         /// users claims</param>
         /// <returns>True if the user does pass the supplied validation function, false otherwise</returns>
-        public static bool HasValidClaims(this IUserIdentity user, Func<IEnumerable<string>, bool> isValid)
+        public static bool HasValidClaims(this ClaimsPrincipal user, Func<IEnumerable<Claim>, bool> isValid)
         {
             return
                 user != null

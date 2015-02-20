@@ -2,6 +2,7 @@
 {
     using System;
     using System.IO;
+    using System.Security.Claims;
 
     using Nancy.Security;
 
@@ -107,7 +108,7 @@
         /// <summary>
         /// Returns current authenticated user name
         /// </summary>
-        public IUserIdentity CurrentUser
+        public ClaimsPrincipal CurrentUser
         {
             get { return this.RenderContext.Context.CurrentUser; }
         }

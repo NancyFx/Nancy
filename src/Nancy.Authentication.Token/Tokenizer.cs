@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
+    using System.Security.Claims;
     using System.Security.Cryptography;
     using System.Text;
 
@@ -61,11 +62,10 @@
         /// <param name="userIdentity">The user identity from which to create a token.</param>
         /// <param name="context">Current <see cref="NancyContext"/>.</param>
         /// <returns>The generated token.</returns>
-        public string Tokenize(IUserIdentity userIdentity, NancyContext context)
+        public string Tokenize(ClaimsPrincipal userIdentity, NancyContext context)
         {
             var items = new List<string>
             {
-                userIdentity.UserName,
                 string.Join(this.claimsDelimiter, userIdentity.Claims),
                 this.tokenStamp().Ticks.ToString(CultureInfo.InvariantCulture)
             };
@@ -94,7 +94,7 @@
         /// <param name="context">Current <see cref="NancyContext"/>.</param>
         /// <param name="userIdentityResolver">The user identity resolver.</param>
         /// <returns>The detokenized user identity.</returns>
-        public IUserIdentity Detokenize(string token, NancyContext context, IUserIdentityResolver userIdentityResolver)
+        public ClaimsPrincipal Detokenize(string token, NancyContext context, IUserIdentityResolver userIdentityResolver)
         {
             var tokenComponents = token.Split(new[] { this.hashDelimiter }, StringSplitOptions.None);
             if (tokenComponents.Length != 2)
