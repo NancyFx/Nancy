@@ -55,7 +55,7 @@ namespace Nancy
         /// <summary>
         /// Gets the collection of HTTP response headers that should be sent back to the client.
         /// </summary>
-        /// <value>An <see cref="IDictionary{TKey,TValue}"/> instance, contaning the key/value pair of headers.</value>
+        /// <value>An <see cref="IDictionary{TKey,TValue}"/> instance, containing the key/value pair of headers.</value>
         public IDictionary<string, string> Headers { get; set; }
 
         /// <summary>
