@@ -211,7 +211,7 @@ namespace Nancy
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
-        /// <remarks>This method can be overriden in sub-classes to dispose of response specific resources.</remarks>
+        /// <remarks>This method can be overridden in sub-classes to dispose of response specific resources.</remarks>
         public virtual void Dispose()
         {
         }
