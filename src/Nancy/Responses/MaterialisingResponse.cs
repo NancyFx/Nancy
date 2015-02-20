@@ -21,10 +21,17 @@
         {
             try
             {
-                using (var memoryStream = new MemoryStream())
+                if (this.sourceResponse.Contents != null)
                 {
-                    this.sourceResponse.Contents.Invoke(memoryStream);
-                    this.oldResponseOutput = memoryStream.ToArray();
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        this.sourceResponse.Contents.Invoke(memoryStream);
+                        this.oldResponseOutput = memoryStream.ToArray();
+                    }
+                }
+                else
+                {
+                    this.oldResponseOutput = new byte[0];
                 }
 
                 return base.PreExecute(context);
