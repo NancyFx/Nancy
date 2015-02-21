@@ -80,7 +80,7 @@
                     var valueType = value.GetType();
                     var parseType = typeof(T);
 
-                    // check fo direct cast
+                    // check for direct cast
                     if (valueType.IsAssignableFrom(parseType))
                     {
                         return (T)value;
