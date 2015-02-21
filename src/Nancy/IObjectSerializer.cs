@@ -1,7 +1,7 @@
 namespace Nancy
 {
     /// <summary>
-    /// De/Serialisation for cookie objects
+    /// De/Serialization for cookie objects
     /// </summary>
     public interface IObjectSerializer
     {
@@ -9,7 +9,7 @@ namespace Nancy
         /// Serialize an object
         /// </summary>
         /// <param name="sourceObject">Source object</param>
-        /// <returns>Serialised object string</returns>
+        /// <returns>Serialized object string</returns>
         string Serialize(object sourceObject);
 
         /// <summary>
