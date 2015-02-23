@@ -1,6 +1,5 @@
 namespace Nancy.Routing.Trie
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
@@ -14,8 +13,6 @@ namespace Nancy.Routing.Trie
         private readonly ITrieNodeFactory nodeFactory;
 
         private readonly IDictionary<string, TrieNode> routeTries = new Dictionary<string, TrieNode>();
-
-        private static char[] splitSeparators = new[] {'/'};
 
         public RouteResolverTrie(ITrieNodeFactory nodeFactory)
         {
@@ -57,15 +54,11 @@ namespace Nancy.Routing.Trie
         /// Get all matches for the given method and path
         /// </summary>
         /// <param name="method">HTTP method</param>
-        /// <param name="path">Reqeusted path</param>
         /// <param name="context">Current Nancy context</param>
         /// <returns>An array of <see cref="MatchResult"/> elements</returns>
-        public MatchResult[] GetMatches(string method, string path, NancyContext context)
+        public MatchResult[] GetMatches(string method, NancyContext context)
         {
-            if (string.IsNullOrEmpty(path))
-            {
-                return MatchResult.NoMatches;
-            }
+            var segments = context.Request.Url.Segments;
 
             // TODO -concurrent if allowing updates?
             if (!this.routeTries.ContainsKey(method))
@@ -73,25 +66,17 @@ namespace Nancy.Routing.Trie
                 return MatchResult.NoMatches;
             }
 
-            return this.routeTries[method].GetMatches(path.Split(splitSeparators, StringSplitOptions.RemoveEmptyEntries), context)
-                                          .ToArray();
+            return this.routeTries[method].GetMatches(segments, context).ToArray();
         }
 
         /// <summary>
         /// Get all method options for the given path
         /// </summary>
-        /// <param name="path">Reqeusted path</param>
         /// <param name="context">Current Nancy context</param>
         /// <returns>A collection of strings, each representing an allowed method</returns>
-        public IEnumerable<string> GetOptions(string path, NancyContext context)
+        public IEnumerable<string> GetOptions(NancyContext context)
         {
-            foreach (var method in this.routeTries.Keys)
-            {
-                if (this.GetMatches(method, path, context).Any())
-                {
-                    yield return method;
-                }
-            }
+            return this.routeTries.Keys.Where(method => this.GetMatches(method, context).Any());
         }
 
         /// <summary>

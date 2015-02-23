@@ -20,7 +20,7 @@ namespace Nancy.Routing.Trie
         /// <param name="path">Reqeusted path</param>
         /// <param name="context">Current Nancy context</param>
         /// <returns>An array of <see cref="MatchResult"/> elements</returns>
-        MatchResult[] GetMatches(string method, string path, NancyContext context);
+        MatchResult[] GetMatches(string method, NancyContext context);
 
         /// <summary>
         /// Get all method options for the given path
@@ -28,6 +28,6 @@ namespace Nancy.Routing.Trie
         /// <param name="path">Reqeusted path</param>
         /// <param name="context">Current Nancy context</param>
         /// <returns>A collection of strings, each representing an allowed method</returns>
-        IEnumerable<string> GetOptions(string path, NancyContext context);
+        IEnumerable<string> GetOptions(NancyContext context);
     }
 }

@@ -3,6 +3,7 @@ namespace Nancy.Hosting.Self.Tests
 {
     using System;
     using System.IO;
+    using System.Linq;
     using System.Net;
     using System.Threading;
     using System.Threading.Tasks;
@@ -187,17 +188,19 @@ namespace Nancy.Hosting.Self.Tests
             }
         }
 
-        private static NancyHostWrapper CreateAndOpenSelfHost(INancyBootstrapper nancyBootstrapper = null, HostConfiguration configuration = null)
+        private static NancyHostWrapper CreateAndOpenSelfHost(INancyBootstrapper nancyBootstrapper = null, HostConfiguration configuration = null, string baseUri = null)
         {
             if (nancyBootstrapper == null)
             {
                 nancyBootstrapper = new DefaultNancyBootstrapper();
             }
 
+            var actualBaseUri = null == baseUri ? BaseUri : new Uri(baseUri);
+
             var host = new NancyHost(
                 nancyBootstrapper,
                 configuration,
-                BaseUri);
+                actualBaseUri);
 
             try
             {
@@ -232,6 +235,45 @@ namespace Nancy.Hosting.Self.Tests
         {
             var type = typeof(NancyHost);
             Assert.True(type.Attributes.ToString().Contains("Serializable"));
+        }
+
+        [Fact]
+        public void UrlTestCases_Should_Pass()
+        {
+            // Given
+            Request nancyRequest = null;
+            var fakeEngine = A.Fake<INancyEngine>();
+            A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored, A<Func<NancyContext, NancyContext>>.Ignored, A<CancellationToken>.Ignored))
+                .Invokes(f => nancyRequest = (Request)f.Arguments[0])
+                .ReturnsLazily(c => TaskHelpers.GetCompletedTask(new NancyContext { Request = (Request)c.Arguments[0], Response = new Response() }));
+
+            var fakeBootstrapper = A.Fake<INancyBootstrapper>();
+            A.CallTo(() => fakeBootstrapper.GetEngine()).Returns(fakeEngine);
+
+
+            foreach (var urlTestCase in UrlTestCases.Instance.TestCases.Where(x => !x.HostsNotSupported.Contains(UrlTestCases.Host.Self)))
+            {
+                using (CreateAndOpenSelfHost(fakeBootstrapper, null, urlTestCase.BaseUri))
+                {
+                    // When
+                    var request = WebRequest.Create(new Uri(urlTestCase.RequestUri));
+                    request.Method = "GET";
+
+                    try
+                    {
+                        request.GetResponse();
+                    }
+                    catch (WebException)
+                    {
+                        // Will throw because it returns 404 in most situation - we don't care, we're just looking at the parsed incoming URL.
+                    }
+
+                    // Then
+                    Assert.Equal(urlTestCase.ExpectedPath, nancyRequest.Url.Path);
+                    Assert.Equal(urlTestCase.ExpectedParsedUrl, nancyRequest.Url.ToString());
+                    Assert.Equal(nancyRequest.Url.Segments, urlTestCase.ExpectedUrlSegments);
+                }
+            }
         }
 
         private class NancyHostWrapper : IDisposable

@@ -1,12 +1,10 @@
 namespace Nancy.Hosting.Self.Tests
 {
     using System;
-
     using Nancy.Tests;
-
     using Xunit;
 
-    public class MakeAppLocalPathFixture
+    public class MapToAppLocalPathFixture
     {
         [Fact]
         public void Should_return_path_as_local_path()
@@ -15,7 +13,7 @@ namespace Nancy.Hosting.Self.Tests
             var uri = new Uri("http://host/base/");
 
             // When
-            string result = uri.MakeAppLocalPath(new Uri("http://host/base/rel"));
+            var result = uri.MapToAppLocalPath("/base/rel");
 
             // Then
             result.ShouldEqual("/rel");
@@ -28,7 +26,7 @@ namespace Nancy.Hosting.Self.Tests
             var uri = new Uri("http://host/base/");
 
             // When
-            string result = uri.MakeAppLocalPath(new Uri("http://host/base/"));
+            var result = uri.MapToAppLocalPath("/base/");
 
             // Then
             result.ShouldEqual("/");
@@ -41,7 +39,7 @@ namespace Nancy.Hosting.Self.Tests
             var uri = new Uri("http://host/base/");
 
             // When
-            string result = uri.MakeAppLocalPath(new Uri("http://host/base"));
+            var result = uri.MapToAppLocalPath("/base");
 
             // Then
             result.ShouldEqual("/");
@@ -54,7 +52,7 @@ namespace Nancy.Hosting.Self.Tests
             var uri = new Uri("http://host/base/");
 
             // When
-            string result = uri.MakeAppLocalPath(new Uri("http://host/base/ReL"));
+            var result = uri.MapToAppLocalPath("/base/ReL");
 
             // Then
             result.ShouldEqual("/ReL");
@@ -67,7 +65,7 @@ namespace Nancy.Hosting.Self.Tests
             var uri = new Uri("http://host/");
 
             // When
-            string result = uri.MakeAppLocalPath(new Uri("http://host/rel/file"));
+            var result = uri.MapToAppLocalPath("/rel/file");
 
             // Then
             result.ShouldEqual("/rel/file");
@@ -80,7 +78,7 @@ namespace Nancy.Hosting.Self.Tests
             var uri = new Uri("http://host/");
 
             // When
-            string result = uri.MakeAppLocalPath(new Uri("http://host"));
+            var result = uri.MapToAppLocalPath("");
 
             // Then
             result.ShouldEqual("/");
@@ -93,7 +91,7 @@ namespace Nancy.Hosting.Self.Tests
             var uri = new Uri("http://host/base/");
 
             // When
-            string result = uri.MakeAppLocalPath(new Uri("http://host/Base/rel"));
+            var result = uri.MapToAppLocalPath("/Base/rel");
 
             // Then
             result.ShouldEqual("/rel");

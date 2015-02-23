@@ -393,6 +393,19 @@
             // Then
             result.Headers["Allow"].ShouldEqual("DELETE, POST");
         }
+		
+		[Fact]
+        public void Should_resolve_single_escaped_capture()
+        {
+			//Given
+			var browser = InitBrowser(false);
+			
+            //When
+            var result = browser.Get("/foo/tes%2fting/plop");
+
+            //Then
+            result.Body.AsString().ShouldEqual("Captured tes/ting");
+        }
 
         private Browser InitBrowser(bool caseSensitive)
         {

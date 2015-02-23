@@ -6,7 +6,10 @@
     using System.IO;
     using System.Net;
     using System.Linq;
+    using System.Reflection;
     using System.Security.Principal;
+    using System.Text.RegularExpressions;
+
     using IO;
     using Nancy.Bootstrapper;
     using Nancy.Extensions;
@@ -160,6 +163,27 @@
         {
             try
             {
+                //We need to pass on the raw unescaped url to nancy, and the only way to make the httplistener 
+                //comply is to make sure the UnEscapeDotsAndSlashes flag is cleared using reflection
+                var getSyntax = typeof(UriParser).GetMethod("GetSyntax", BindingFlags.Static | BindingFlags.NonPublic);
+                var flagsField = typeof(UriParser).GetField("m_Flags", BindingFlags.Instance | BindingFlags.NonPublic);
+                if (getSyntax != null && flagsField != null)
+                {
+                    foreach (var scheme in new[] { "http", "https" })
+                    {
+                        var parser = (UriParser)getSyntax.Invoke(null, new object[] { scheme });
+                        if (parser != null)
+                        {
+                            var flagsValue = (int)flagsField.GetValue(parser);
+                            // Clear the UnEscapeDotsAndSlashes  attribute
+                            if ((flagsValue & 0x2000000) != 0)
+                                flagsField.SetValue(parser, flagsValue & ~0x2000000);
+                            if ((flagsValue & 0x1000000) != 0)
+                                flagsField.SetValue(parser, flagsValue & ~0x1000000);
+                        }
+                    }
+                }
+
                 // if the listener fails to start, it gets disposed; 
                 // so we need a new one, each time.
                 this.listener = new HttpListener();
@@ -236,17 +260,16 @@
 
         private Request ConvertRequestToNancyRequest(HttpListenerRequest request)
         {
-            var baseUri = this.baseUriList.FirstOrDefault(uri => uri.IsCaseInsensitiveBaseOf(request.Url));
+            var baseUri = this.baseUriList.FirstOrDefault(uri => uri.IsCaseInsensitiveBaseOf(request.Url, request.RawUrl));
 
             if (baseUri == null)
             {
                 throw new InvalidOperationException(String.Format("Unable to locate base URI for request: {0}",request.Url));
             }
 
-            var expectedRequestLength =
-                GetExpectedRequestLength(request.Headers.ToDictionary());
+            var expectedRequestLength = GetExpectedRequestLength(request.Headers.ToDictionary());
 
-            var relativeUrl = baseUri.MakeAppLocalPath(request.Url);
+            var path = baseUri.MapToAppLocalPath(request.RawUrl);
 
             var nancyUrl = new Url 
             {
@@ -254,7 +277,7 @@
                 HostName = request.Url.Host,
                 Port = request.Url.IsDefaultPort ? null : (int?)request.Url.Port,
                 BasePath = baseUri.AbsolutePath.TrimEnd('/'),
-                Path = HttpUtility.UrlDecode(relativeUrl),
+                Path = path,
                 Query = request.Url.Query,
             };
 

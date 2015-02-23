@@ -94,8 +94,7 @@
                 baseUri = new Uri(string.Concat(baseUri.OriginalString, "/"));
             }
 
-            var relativeUri =
-                baseUri.MakeRelativeUri(GetUrlAndPathComponents(webRequest.UriTemplateMatch.RequestUri));
+            var path = baseUri.MapToAppLocalPath(webRequest.UriTemplateMatch.RequestUri);
 
             var expectedRequestLength =
                 GetExpectedRequestLength(webRequest.Headers.ToDictionary());
@@ -105,7 +104,7 @@
                 Scheme = webRequest.UriTemplateMatch.RequestUri.Scheme,
                 HostName = webRequest.UriTemplateMatch.BaseUri.Host,
                 Port = webRequest.UriTemplateMatch.RequestUri.IsDefaultPort ? null : (int?)webRequest.UriTemplateMatch.RequestUri.Port,                    
-                Path = string.Concat("/", relativeUri),
+                Path = path,
                 Query = webRequest.UriTemplateMatch.RequestUri.Query
             };
 

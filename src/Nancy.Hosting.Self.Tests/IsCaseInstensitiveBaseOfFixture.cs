@@ -14,7 +14,7 @@ namespace Nancy.Hosting.Self.Tests
         public void url_should_be_base_of_sub_directory()
         {
             // Given, When
-            var isBaseOf = baseUri.IsCaseInsensitiveBaseOf(new Uri("http://host/path/path/file/"));
+            var isBaseOf = baseUri.IsCaseInsensitiveBaseOf(new Uri("http://host/path/path/file/"), "/path/path/file/");
 
             // Then
             isBaseOf.ShouldBeTrue();
@@ -24,7 +24,7 @@ namespace Nancy.Hosting.Self.Tests
         public void url_should_be_base_of_sub_path_with_fragment()
         {
             // Given, When
-            var isBaseOf = baseUri.IsCaseInsensitiveBaseOf(new Uri("http://host/path/path/file#fragment"));
+            var isBaseOf = baseUri.IsCaseInsensitiveBaseOf(new Uri("http://host/path/path/file#fragment"), "/path/path/file#fragment");
 
             // Then
             isBaseOf.ShouldBeTrue();
@@ -34,7 +34,7 @@ namespace Nancy.Hosting.Self.Tests
         public void url_should_be_base_of_path_with_more_dirs()
         {
             // Given, When
-            var isBaseOf = baseUri.IsCaseInsensitiveBaseOf(new Uri("http://host/path/path/file/MoreDir/"));
+            var isBaseOf = baseUri.IsCaseInsensitiveBaseOf(new Uri("http://host/path/path/file/MoreDir/"), "/path/path/file/MoreDir/");
 
             // Then
             isBaseOf.ShouldBeTrue();
@@ -44,7 +44,7 @@ namespace Nancy.Hosting.Self.Tests
         public void url_should_be_base_of_sub_path_with_file_and_query()
         {
             // Given, When
-            var isBaseOf = baseUri.IsCaseInsensitiveBaseOf(new Uri("http://host/path/path/file/OtherFile?Query"));
+            var isBaseOf = baseUri.IsCaseInsensitiveBaseOf(new Uri("http://host/path/path/file/OtherFile?Query"), "/path/path/file/OtherFile?Query");
 
             // Then
             isBaseOf.ShouldBeTrue();
@@ -54,7 +54,7 @@ namespace Nancy.Hosting.Self.Tests
         public void url_should_be_base_of_path_with_extra_slash()
         {
             // Given, When
-            var isBaseOf = baseUri.IsCaseInsensitiveBaseOf(new Uri("http://host/path/path/file/"));
+            var isBaseOf = baseUri.IsCaseInsensitiveBaseOf(new Uri("http://host/path/path/file/"), "/path/path/file/");
 
             // Then
             isBaseOf.ShouldBeTrue();
@@ -64,7 +64,7 @@ namespace Nancy.Hosting.Self.Tests
         public void url_should_be_base_of_sub_file()
         {
             // Given, When
-            var isBaseOf = baseUri.IsCaseInsensitiveBaseOf(new Uri("http://host/path/path/file"));
+            var isBaseOf = baseUri.IsCaseInsensitiveBaseOf(new Uri("http://host/path/path/file"), "/path/path/file");
 
             // Then
             isBaseOf.ShouldBeTrue();
@@ -74,7 +74,7 @@ namespace Nancy.Hosting.Self.Tests
         public void url_should_not_be_base_of_other_scheme()
         {
             // Given, When
-            var isBaseOf = baseUri.IsCaseInsensitiveBaseOf(new Uri("https://host/path/path/file"));
+            var isBaseOf = baseUri.IsCaseInsensitiveBaseOf(new Uri("https://host/path/path/file"), "/path/path/file");
 
             // Then
             isBaseOf.ShouldBeFalse();
@@ -84,7 +84,7 @@ namespace Nancy.Hosting.Self.Tests
         public void url_should_not_be_base_of_other_host()
         {
             // Given, When
-            var isBaseOf = baseUri.IsCaseInsensitiveBaseOf(new Uri("http://otherhost/path/path/file"));
+            var isBaseOf = baseUri.IsCaseInsensitiveBaseOf(new Uri("http://otherhost/path/path/file"), "/path/path/file");
 
             // Then
             isBaseOf.ShouldBeFalse();
@@ -94,7 +94,7 @@ namespace Nancy.Hosting.Self.Tests
         public void url_should_not_be_base_of_other_port()
         {
             // Given, When
-            var isBaseOf = baseUri.IsCaseInsensitiveBaseOf(new Uri("http://otherhost:8080/path/path/file"));
+            var isBaseOf = baseUri.IsCaseInsensitiveBaseOf(new Uri("http://otherhost:8080/path/path/file"), "/path/path/file");
 
             // Then
             isBaseOf.ShouldBeFalse();
@@ -104,7 +104,7 @@ namespace Nancy.Hosting.Self.Tests
         public void url_should_be_base_of_host_with_different_casing()
         {
             // Given, When
-            var isBaseOf = baseUri.IsCaseInsensitiveBaseOf(new Uri("http://Host/path/path/file"));
+            var isBaseOf = baseUri.IsCaseInsensitiveBaseOf(new Uri("http://Host/path/path/file"), "/path/path/file");
 
             // Then
             isBaseOf.ShouldBeTrue();
@@ -114,7 +114,7 @@ namespace Nancy.Hosting.Self.Tests
         public void url_should_be_base_of_exact_path_without_trailing_slash()
         {
             // Given, When
-            var isBaseOf = baseSlashUri.IsCaseInsensitiveBaseOf(new Uri("http://host/path/path"));
+            var isBaseOf = baseSlashUri.IsCaseInsensitiveBaseOf(new Uri("http://host/path/path"), "/path/path");
 
             // Then
             isBaseOf.ShouldBeTrue();
@@ -124,7 +124,7 @@ namespace Nancy.Hosting.Self.Tests
         public void url_should_be_base_of_exact_path_without_trailing_slash_with_query()
         {
             // Given, When
-            var isBaseOf = baseSlashUri.IsCaseInsensitiveBaseOf(new Uri("http://host/path/path?query"));
+            var isBaseOf = baseSlashUri.IsCaseInsensitiveBaseOf(new Uri("http://host/path/path?query"), "/path/path?query");
 
             // Then
             isBaseOf.ShouldBeTrue();
@@ -134,7 +134,7 @@ namespace Nancy.Hosting.Self.Tests
         public void url_should_be_base_of_exact_path_without_trailing_slash_with_fragment()
         {
             // Given, When
-            var isBaseOf = baseSlashUri.IsCaseInsensitiveBaseOf(new Uri("http://host/path/path#Fragment"));
+            var isBaseOf = baseSlashUri.IsCaseInsensitiveBaseOf(new Uri("http://host/path/path#Fragment"), "/path/path#Fragment");
 
             // Then
             isBaseOf.ShouldBeTrue();
@@ -144,7 +144,7 @@ namespace Nancy.Hosting.Self.Tests
         public void url_should_not_be_base_of_other_path()
         {
             // Given, When
-            var isBaseOf = baseSlashUri.IsCaseInsensitiveBaseOf(new Uri("http://host/path/path2/"));
+            var isBaseOf = baseSlashUri.IsCaseInsensitiveBaseOf(new Uri("http://host/path/path2/"), "/path/path2/");
 
             // Then
             isBaseOf.ShouldBeFalse();
@@ -154,7 +154,7 @@ namespace Nancy.Hosting.Self.Tests
         public void url_should_be_base_of_same_path_with_different_host_casing()
         {
             // Given, When
-            var isBaseOf = baseSlashUri.IsCaseInsensitiveBaseOf(new Uri("http://Host/path/path/"));
+            var isBaseOf = baseSlashUri.IsCaseInsensitiveBaseOf(new Uri("http://Host/path/path/"), "/path/path/");
 
             // Then
             isBaseOf.ShouldBeTrue();
@@ -164,7 +164,7 @@ namespace Nancy.Hosting.Self.Tests
         public void url_should_be_base_of_same_path_with_different_path_casing()
         {
             // Given, When
-            var isBaseOf = baseSlashUri.IsCaseInsensitiveBaseOf(new Uri("http://host/Path/PATH/"));
+            var isBaseOf = baseSlashUri.IsCaseInsensitiveBaseOf(new Uri("http://host/Path/PATH/"), "/Path/PATH/");
 
             // Then
             isBaseOf.ShouldBeTrue();
@@ -174,7 +174,7 @@ namespace Nancy.Hosting.Self.Tests
         public void url_should_be_base_of_same_path_with_different_host_using_localhost_wildcard()
         {
             // Given, When
-            var isBaseOf = baseLocalHostUri.IsCaseInsensitiveBaseOf(new Uri("http://OtherHost/path/path/file"));
+            var isBaseOf = baseLocalHostUri.IsCaseInsensitiveBaseOf(new Uri("http://OtherHost/path/path/file"), "/path/path/file");
 
             // Then
             isBaseOf.ShouldBeTrue();

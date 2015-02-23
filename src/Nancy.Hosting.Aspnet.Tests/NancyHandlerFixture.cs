@@ -3,13 +3,19 @@ namespace Nancy.Hosting.Aspnet.Tests
     using System;
     using System.Collections.Specialized;
     using System.IO;
+    using System.Linq;
     using System.Threading;
+    using System.Threading.Tasks;
     using System.Web;
+
+    using Nancy.Bootstrapper;
     using Nancy.Cookies;
     using FakeItEasy;
 
     using Nancy.Helpers;
+    using Nancy.Tests;
     using Nancy.Hosting.Aspnet;
+
     using Xunit;
 
     public class NancyHandlerFixture
@@ -108,6 +114,43 @@ namespace Nancy.Hosting.Aspnet.Tests
 
             // Then
             A.CallTo(() => disposable.Dispose()).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public void UrlTestCases_Should_Pass()
+        {
+            foreach (var urlTestCase in UrlTestCases.Instance.TestCases.Where(x => !x.HostsNotSupported.Contains(UrlTestCases.Host.AspNet)))
+            {
+                // Given 
+                Request nancyRequest = null;
+                var fakedEngine = A.Fake<INancyEngine>();
+                A.CallTo(() => fakedEngine.HandleRequest(A<Request>.Ignored, A<Func<NancyContext, NancyContext>>.Ignored, A<CancellationToken>.Ignored))
+                    .Invokes(f => nancyRequest = (Request)f.Arguments[0])
+                    .ReturnsLazily(c => TaskHelpers.GetCompletedTask(new NancyContext
+                    {
+                        Request = (Request)c.Arguments[0],
+                        Response = new Response()
+                    }));
+
+
+                var nancyHandler = new NancyHandler(fakedEngine);
+
+                if (!String.IsNullOrEmpty(urlTestCase.BasePath))
+                {
+                    A.CallTo(() => this.request.ApplicationPath).Returns(urlTestCase.BasePath);
+                }
+                A.CallTo(() => this.request.Url).Returns(new Uri(urlTestCase.RequestUri));
+                A.CallTo(() => this.request.HttpMethod).Returns("GET");
+
+                // When
+                var task = nancyHandler.ProcessRequest(context, ar => { }, new object());
+                NancyHandler.EndProcessRequest(task);
+
+                // Then
+                Assert.Equal(urlTestCase.ExpectedPath, nancyRequest.Url.Path);
+                Assert.Equal(urlTestCase.ExpectedParsedUrl, nancyRequest.Url.ToString());
+                Assert.Equal(urlTestCase.ExpectedUrlSegments, nancyRequest.Url.Segments);
+            }
         }
 
         private void SetupRequestProcess(NancyContext nancyContext)

@@ -1,12 +1,21 @@
 ﻿namespace Nancy.Owin.Tests
 {
     using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Text.RegularExpressions;
+    using System.Threading;
+
+    using FakeItEasy;
 
     using global::Owin;
 
     using Microsoft.Owin.Testing;
 
+    using Nancy.Helpers;
     using Nancy.Testing;
+    using Nancy.Tests;
 
     using Xunit;
 

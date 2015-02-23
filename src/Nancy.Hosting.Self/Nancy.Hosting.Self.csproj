@@ -88,6 +88,7 @@
   <ItemGroup>
     <Reference Include="System">
     </Reference>
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core">
     </Reference>
     <Reference Include="System.Xml.Linq">

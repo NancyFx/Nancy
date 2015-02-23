@@ -1,8 +1,12 @@
 namespace Nancy
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Net;
     using System.Net.Sockets;
+
+    using Nancy.Helpers;
 
     /// <summary>
     /// Represents a full Url of the form scheme://hostname:port/basepath/path?query
@@ -10,7 +14,12 @@ namespace Nancy
     /// <remarks>Since this is for  internal use, and fragments are not passed to the server, fragments are not supported.</remarks>
     public sealed class Url : ICloneable
     {
+        private static readonly char[] SplitSeparators = { '/' };
+        private static readonly Dictionary<string, int> SchemeDefaultPorts = new Dictionary<string, int> { { "http", 80 }, { "https", 443 } }; 
+
         private string basePath;
+        private string[] segments;
+        private string path;
 
         /// <summary>
         /// Creates an instance of the <see cref="Url" /> class
@@ -74,9 +83,27 @@ namespace Nancy
 
         /// <summary>
         /// Gets the path of the request, relative to the base path
+        /// </summary>
+        public string Path
+        {
+            get { return this.path; }
+            set
+            {
+                this.path = value;
+                segments = null;
+            }
+        }
+
+        /// <summary>
+        /// Gets the decoded path segments.
         /// This property drives the route matching
         /// </summary>
-        public string Path { get; set; }
+        public string[] Segments
+        {
+            get {
+                return this.segments ?? (this.segments = this.Path.Split(SplitSeparators, StringSplitOptions.RemoveEmptyEntries).Select(HttpUtility.UrlDecode).ToArray());
+            }
+        }
 
         /// <summary>
         /// Gets the querystring data of the requested resource.
@@ -93,7 +120,7 @@ namespace Nancy
             {
                 return this.Scheme + "://" +
                        GetHostName(this.HostName) +
-                       GetPort(this.Port);
+                       GetPort(this.Scheme, this.Port);
             }
         }
 
@@ -111,8 +138,8 @@ namespace Nancy
         public override string ToString()
         {
             return this.Scheme + "://" + 
-                GetHostName(this.HostName) + 
-                GetPort(this.Port) +
+                GetHostName(this.HostName) +
+                GetPort(this.Scheme, this.Port) +
                 GetCorrectPath(this.BasePath) +
                 GetCorrectPath(this.Path) +
                 GetQuery(this.Query);
@@ -210,11 +237,14 @@ namespace Nancy
             return (string.IsNullOrEmpty(path) || path.Equals("/")) ? string.Empty : path;
         }
 
-        private static string GetPort(int? port)
+        private static string GetPort(string scheme, int? port)
         {
-            return (!port.HasValue) ?
-                string.Empty : 
-                string.Concat(":", port.Value);
+            if (SchemeDefaultPorts.ContainsKey(scheme) && port.HasValue && SchemeDefaultPorts[scheme].Equals(port.Value))
+            {
+                return String.Empty;
+            }
+
+            return (!port.HasValue) ? string.Empty : string.Concat(":", port.Value);
         }
 
         private static string GetHostName(string hostName)
