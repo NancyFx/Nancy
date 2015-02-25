@@ -36,7 +36,6 @@
 
             Get["/admin"] = _ =>
             {
-                this.RequiresAuthentication();
                 this.RequiresClaims(new[] { "admin" });
                 return "Yay! You are authorized!";
             };
