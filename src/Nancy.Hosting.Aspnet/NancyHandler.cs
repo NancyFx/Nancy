@@ -94,13 +94,19 @@ namespace Nancy.Hosting.Aspnet
             {
                 certificate = context.Request.ClientCertificate.Certificate;
             }
-                
-            return new Request(
-                context.Request.HttpMethod.ToUpperInvariant(),
-                nancyUrl,
-                RequestStream.FromStream(context.Request.InputStream, expectedRequestLength, true),
-                incomingHeaders,
-                context.Request.UserHostAddress,
+
+            RequestStream body = null;
+
+            if (expectedRequestLength != 0)
+            {
+                body = RequestStream.FromStream(context.Request.InputStream, expectedRequestLength, true);
+            }
+
+            return new Request(context.Request.HttpMethod.ToUpperInvariant(), 
+                nancyUrl, 
+                body, 
+                incomingHeaders, 
+                context.Request.UserHostAddress, 
                 certificate);
         }
 
