@@ -105,7 +105,7 @@ namespace Nancy
         public CultureInfo Culture { get; set; }
 
         /// <summary>
-        /// Context of content negotiation (if relevent)
+        /// Context of content negotiation (if relevant)
         /// </summary>
         public NegotiationContext NegotiationContext { get; set; }
 

@@ -3,7 +3,7 @@
     using System;
 
     /// <summary>
-    /// Exception that is thrown when an unhandled exception occured during
+    /// Exception that is thrown when an unhandled exception occurred during
     /// the execution of the current request.
     /// </summary>
     public class RequestExecutionException : Exception

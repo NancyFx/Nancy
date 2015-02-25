@@ -43,7 +43,7 @@ namespace Nancy
         public string Name { get; private set; }
 
         /// <summary>
-        /// A stream containig the value of the boundary.
+        /// A stream containing the value of the boundary.
         /// </summary>
         /// <remarks>This is the RFC2047 decoded value of the Content-Type header.</remarks>
         public HttpMultipartSubStream Value { get; private set; }

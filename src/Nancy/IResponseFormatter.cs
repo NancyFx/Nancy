@@ -16,7 +16,7 @@
         /// <summary>
         /// Gets the context for which the response is being formatted.
         /// </summary>
-        /// <value>A <see cref="NancyContext"/> intance.</value>
+        /// <value>A <see cref="NancyContext"/> instance.</value>
         NancyContext Context { get; }
 
         /// <summary>

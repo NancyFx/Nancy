@@ -54,7 +54,7 @@
 
         /// <summary>
         /// Invoke the pipeline. Each item will be invoked in turn until either an
-        /// item returns a Response, or all items have beene invoked.
+        /// item returns a Response, or all items have been invoked.
         /// </summary>
         /// <param name="context">
         /// The current context to pass to the items.
