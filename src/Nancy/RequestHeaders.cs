@@ -106,7 +106,7 @@ namespace Nancy
         /// <summary>
         /// The length of the request body in octets (8-bit bytes).
         /// </summary>
-        /// <value>The lenght of the contents if it is available; otherwise 0.</value>
+        /// <value>The length of the contents if it is available; otherwise 0.</value>
         public long ContentLength
         {
             get { return this.GetValue("Content-Length", x => Convert.ToInt64(x.First())); }

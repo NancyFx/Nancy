@@ -37,7 +37,7 @@ namespace Nancy.Testing
         /// <summary>
         /// Gets a <see cref="QueryWrapper"/> for the provided <paramref name="selector"/>.
         /// </summary>
-        /// <param name="selector">The CSS3 that shuold be applied.</param>
+        /// <param name="selector">The CSS3 selector that should be applied.</param>
         /// <returns>A <see cref="QueryWrapper"/> instance.</returns>
         public QueryWrapper this[string selector]
         {

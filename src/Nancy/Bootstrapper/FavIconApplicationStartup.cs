@@ -8,7 +8,7 @@
     /// <summary>
     /// Application startup task that attempts to locate a favicon. The startup will first scan all
     /// folders in the path defined by the provided <see cref="IRootPathProvider"/> and if it cannot
-    /// fine one, it will fall back and use the default favicon that is embedded in the Nancy.dll file.
+    /// find one, it will fall back and use the default favicon that is embedded in the Nancy.dll file.
     /// </summary>
     public class FavIconApplicationStartup : IApplicationStartup
     {

@@ -26,7 +26,7 @@ namespace Nancy
         /// Initializes a new instance of the <see cref="Request"/> class.
         /// </summary>
         /// <param name="method">The HTTP data transfer method used by the client.</param>
-        /// <param name="path">The path of the requested resource, relative to the "Nancy root". This shold not not include the scheme, host name, or query portion of the URI.</param>
+        /// <param name="path">The path of the requested resource, relative to the "Nancy root". This should not include the scheme, host name, or query portion of the URI.</param>
         /// <param name="scheme">The HTTP protocol that was used by the client.</param>
         public Request(string method, string path, string scheme)
             : this(method, new Url { Path = path, Scheme = scheme })
@@ -126,9 +126,9 @@ namespace Nancy
         }
 
         /// <summary>
-        /// Gets the querystring data of the requested resource.
+        /// Gets the query string data of the requested resource.
         /// </summary>
-        /// <value>A <see cref="DynamicDictionary"/>instance, containing the key/value pairs of querystring data.</value>
+        /// <value>A <see cref="DynamicDictionary"/>instance, containing the key/value pairs of query string data.</value>
         public dynamic Query { get; set; }
 
         /// <summary>
