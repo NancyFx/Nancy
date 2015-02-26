@@ -48,7 +48,7 @@
         /// <summary>
         /// Gets or sets the form element name of this file.
         /// </summary>
-        /// <value>A <see cref="string"/> containg the key.</value>
+        /// <value>A <see cref="string"/> containing the key.</value>
         public string Key { get; private set; }
 
         /// <summary>
