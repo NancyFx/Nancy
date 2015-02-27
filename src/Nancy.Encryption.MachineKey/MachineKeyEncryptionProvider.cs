@@ -14,7 +14,7 @@
         /// <summary>
         /// Encrypt and base64 encode the string
         /// </summary>
-        /// <param name="data">Data to encrypyt</param>
+        /// <param name="data">Data to encrypt</param>
         /// <returns>Encrypted string</returns>
         public string Encrypt(string data)
         {
