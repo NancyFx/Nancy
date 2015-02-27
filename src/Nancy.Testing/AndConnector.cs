@@ -7,7 +7,7 @@ namespace Nancy.Testing
         private TSource source;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AndConnector{TSource}"/> class. 
+        /// Initializes a new instance of the <see cref="AndConnector{TSource}"/> class.
         /// </summary>
         /// <param name="source">
         /// Source object

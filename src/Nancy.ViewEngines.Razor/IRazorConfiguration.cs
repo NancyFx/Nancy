@@ -5,15 +5,15 @@
     /// <summary>
     /// Configuration for the razor view engine.
     /// </summary>
-	public interface IRazorConfiguration
-	{
+    public interface IRazorConfiguration
+    {
         /// <summary>
         /// Gets a value indicating whether to automatically include the model's namespace in the generated code.
         /// </summary>
         /// <value>
-        /// 	<c>true</c> if the model's namespace should be automatically included in the generated code; otherwise, <c>false</c>.
+        ///     <c>true</c> if the model's namespace should be automatically included in the generated code; otherwise, <c>false</c>.
         /// </value>
-		bool AutoIncludeModelNamespace { get; }
+        bool AutoIncludeModelNamespace { get; }
 
         /// <summary>
         /// Gets the assembly names.
@@ -23,6 +23,6 @@
         /// <summary>
         /// Gets the default namespaces.
         /// </summary>
-	    IEnumerable<string> GetDefaultNamespaces();
-	}
+        IEnumerable<string> GetDefaultNamespaces();
+    }
 }

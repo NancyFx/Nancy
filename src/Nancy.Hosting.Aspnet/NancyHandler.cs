@@ -13,7 +13,7 @@ namespace Nancy.Hosting.Aspnet
     /// Bridges the communication between Nancy and ASP.NET based hosting.
     /// </summary>
     public class NancyHandler
-    {        
+    {
         private readonly INancyEngine engine;
 
         /// <summary>

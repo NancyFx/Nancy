@@ -16,7 +16,7 @@ namespace Nancy.Testing
         {
             if (string.IsNullOrEmpty(path))
             {
-                throw new ArgumentException("path cannot be null or empty", "path");    
+                throw new ArgumentException("path cannot be null or empty", "path");
             }
 
             if (levels < 0)
