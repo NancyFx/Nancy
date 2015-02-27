@@ -31,7 +31,7 @@
         }
 
         /// <summary>
-        /// Gets the the rules the adapter provides.
+        /// Gets the rules the adapter provides.
         /// </summary>
         /// <param name="attribute">The <see cref="ValidationAttribute"/> that should be handled.</param>
         /// <param name="descriptor">A <see cref="PropertyDescriptor"/> instance for the property that is being validated.</param>
