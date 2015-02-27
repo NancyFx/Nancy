@@ -72,7 +72,7 @@
         {
             get { return this.Context.Response.Headers; }
         }
-        
+
         /// <summary>
         /// Gets the HTTP status code of the response.
         /// </summary>

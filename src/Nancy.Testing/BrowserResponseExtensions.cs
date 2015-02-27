@@ -4,7 +4,7 @@ namespace Nancy.Testing
     using System.IO;
     using System.Linq;
     using System.Xml.Linq;
-    
+
     /// <summary>
     /// Defines extensions for the <see cref="BrowserResponse"/> type.
     /// </summary>

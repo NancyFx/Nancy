@@ -8,7 +8,7 @@ namespace Nancy.Authentication.Stateless
     /// </summary>
     public static class StatelessAuthentication
     {
-        /// <summary>        
+        /// <summary>
         /// Enables stateless authentication for the application
         /// </summary>
         /// <param name="pipelines">Pipelines to add handlers to (usually "this")</param>
@@ -33,7 +33,7 @@ namespace Nancy.Authentication.Stateless
             pipelines.BeforeRequest.AddItemToStartOfPipeline(GetLoadAuthenticationHook(configuration));
         }
 
-        /// <summary>        
+        /// <summary>
         /// Enables stateless authentication for a module
         /// </summary>
         /// <param name="module">Module to add handlers to (usually "this")</param>

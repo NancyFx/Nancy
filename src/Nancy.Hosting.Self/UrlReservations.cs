@@ -12,7 +12,7 @@
 
         private static readonly IdentityReference EveryoneReference =
             new SecurityIdentifier(WellKnownSidType.WorldSid, null);
-        
+
         public UrlReservations()
         {
             this.CreateAutomatically = false;

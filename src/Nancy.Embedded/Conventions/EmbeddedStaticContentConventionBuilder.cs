@@ -32,7 +32,7 @@
             {
                 requestedPath = string.Concat("/", requestedPath);
             }
-                
+
             return (ctx, root) =>
             {
                 var path =

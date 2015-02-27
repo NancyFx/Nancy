@@ -58,7 +58,7 @@
         /// </summary>
         public const string MODULENAME = "__Nancy_Testing_ModuleName";
         /// <summary>
-        ///  The key in ViewLocationContext.Item for the module path        
+        ///  The key in ViewLocationContext.Item for the module path
         /// </summary>
         public const string MODULEPATH = "__Nancy_Testing_ModulePath";
     }
