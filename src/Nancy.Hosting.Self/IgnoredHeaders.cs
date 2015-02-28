@@ -20,7 +20,7 @@
         };
 
         /// <summary>
-        ///     Determines if a header is ignored when populating the headers of an an 
+        ///     Determines if a header is ignored when populating the headers of an
         ///     <see cref="T:System.Net.HttpListenerResponse"/> object.
         /// </summary>
         /// <param name="headerName">The name of the header.</param>
