@@ -71,6 +71,26 @@
         }
 
         [Fact]
+        public void Should_throw_with_null_pipeline_passed_to_enable_with_config()
+        {
+            // Given, When
+            var result = Record.Exception(() => TokenAuthentication.Enable((IPipelines)null, null));
+
+            // Then
+            result.ShouldBeOfType(typeof(ArgumentNullException));
+        }
+
+        [Fact]
+        public void Should_throw_with_null_module_passed_to_enable_with_config()
+        {
+            // Given, When
+            var result = Record.Exception(() => TokenAuthentication.Enable((INancyModule)null, null));
+
+            // Then
+            result.ShouldBeOfType(typeof(ArgumentNullException));
+        }
+
+        [Fact]
         public void Pre_request_hook_should_not_set_auth_details_with_no_auth_headers()
         {
             // Given
