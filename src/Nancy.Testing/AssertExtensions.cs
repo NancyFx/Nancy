@@ -3,8 +3,6 @@ namespace Nancy.Testing
     using System;
     using System.Linq;
 
-    //using Xunit;
-
     /// <summary>
     /// Defines assert extensions for HTML validation.
     /// </summary>
