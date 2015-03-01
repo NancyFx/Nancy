@@ -12,7 +12,7 @@
         private readonly Action<TextWriter> action;
 
         /// <summary>
-        /// Initializes a new instanc of the <see cref="HelperResult"/> class,
+        /// Initializes a new instance of the <see cref="HelperResult"/> class,
         /// with the provided <paramref name="action"/>.
         /// </summary>
         /// <param name="action">The action that should be used to produce the result.</param>
