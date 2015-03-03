@@ -50,7 +50,7 @@
             var serverHtml = ParagraphSubstitution.Replace(html, "$1");
 
             //TODO: The "Replace" is simply for unit testing HTML/MD strings. Probably needs improving
-            return string.Concat(header, serverHtml, footer).Replace("\r\n", "").Replace("\n", "").Replace("\r", "");  
+            return string.Concat(header, serverHtml, footer).Replace("\r\n", "").Replace("\n", "").Replace("\r", "");
         }
     }
 }
