@@ -45,7 +45,7 @@
         }
 
         /// <summary>
-        /// Get the contenst of a template
+        /// Get the contents of a template
         /// </summary>
         /// <param name="templateName">Name/location of the template</param>
         /// <param name="model">Model to use to locate the template via conventions</param>
@@ -101,7 +101,7 @@
         /// <summary>
         /// Get the anti forgery token form element
         /// </summary>
-        /// <returns>String containin the form element</returns>
+        /// <returns>String containing the form element</returns>
         public string AntiForgeryToken()
         {
             return this.viewEngineHost.AntiForgeryToken();

@@ -3,7 +3,7 @@
     using System;
 
     /// <summary>
-    /// Class to represent attribute values and, more imporantly, 
+    /// Class to represent attribute values and, more importantly, 
     /// decypher them from tuple madness slightly.
     /// </summary>
     public class AttributeValue

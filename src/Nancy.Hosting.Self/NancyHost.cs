@@ -33,7 +33,7 @@
         private readonly INancyBootstrapper bootstrapper;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NancyHost"/> class for the specfied <paramref name="baseUris"/>.
+        /// Initializes a new instance of the <see cref="NancyHost"/> class for the specified <paramref name="baseUris"/>.
         /// Uses the default configuration
         /// </summary>
         /// <param name="baseUris">The <see cref="Uri"/>s that the host will listen to.</param>
@@ -41,7 +41,7 @@
             : this(NancyBootstrapperLocator.Bootstrapper, new HostConfiguration(), baseUris) { }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NancyHost"/> class for the specfied <paramref name="baseUris"/>.
+        /// Initializes a new instance of the <see cref="NancyHost"/> class for the specified <paramref name="baseUris"/>.
         /// Uses the specified configuration.
         /// </summary>
         /// <param name="baseUris">The <see cref="Uri"/>s that the host will listen to.</param>
@@ -50,7 +50,7 @@
             : this(NancyBootstrapperLocator.Bootstrapper, configuration, baseUris){}
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NancyHost"/> class for the specfied <paramref name="baseUris"/>, using
+        /// Initializes a new instance of the <see cref="NancyHost"/> class for the specified <paramref name="baseUris"/>, using
         /// the provided <paramref name="bootstrapper"/>.
         /// Uses the default configuration
         /// </summary>
@@ -62,7 +62,7 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NancyHost"/> class for the specfied <paramref name="baseUris"/>, using
+        /// Initializes a new instance of the <see cref="NancyHost"/> class for the specified <paramref name="baseUris"/>, using
         /// the provided <paramref name="bootstrapper"/>.
         /// Uses the specified configuration.
         /// </summary>
@@ -80,7 +80,7 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NancyHost"/> class for the specfied <paramref name="baseUri"/>, using
+        /// Initializes a new instance of the <see cref="NancyHost"/> class for the specified <paramref name="baseUri"/>, using
         /// the provided <paramref name="bootstrapper"/>.
         /// Uses the default configuration
         /// </summary>
@@ -92,7 +92,7 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NancyHost"/> class for the specfied <paramref name="baseUri"/>, using
+        /// Initializes a new instance of the <see cref="NancyHost"/> class for the specified <paramref name="baseUri"/>, using
         /// the provided <paramref name="bootstrapper"/>.
         /// Uses the specified configuration.
         /// </summary>
@@ -169,7 +169,7 @@
                 }
 
                 this.listener.Start();
-                
+
                 return true;
             }
             catch (HttpListenerException e)

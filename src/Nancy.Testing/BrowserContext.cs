@@ -249,7 +249,7 @@
                     String.Format("No certificates found in {0} {1} with a {2} that looks like \"{3}\"", storeLocation,
                                   storeName, findType, findBy));
             }
-            
+
             this.Values.ClientCertificate = certificatesFound[0];
         }
 
