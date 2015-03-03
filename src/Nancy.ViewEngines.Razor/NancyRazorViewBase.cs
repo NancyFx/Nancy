@@ -101,7 +101,7 @@
         public IDictionary<string, Action> Sections { get; set; }
 
         /// <summary>
-        /// Used to retun text resources
+        /// Used to return text resources
         /// </summary>
         public dynamic Text
         {

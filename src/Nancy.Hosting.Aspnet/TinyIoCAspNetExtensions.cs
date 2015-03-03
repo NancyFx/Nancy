@@ -32,7 +32,7 @@
     public static class TinyIoCAspNetExtensions
     {
         /// <summary>
-        /// Registers the dependency as per request liftime
+        /// Registers the dependency as per request lifetime
         /// </summary>
         /// <param name="registerOptions">Register options</param>
         /// <returns>Register options</returns>
