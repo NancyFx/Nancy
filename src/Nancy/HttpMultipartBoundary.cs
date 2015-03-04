@@ -1,6 +1,8 @@
 namespace Nancy
 {
     using System;
+    using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Text;
     using System.Text.RegularExpressions;
@@ -52,8 +54,7 @@ namespace Nancy
         {
             while(true)
             {
-                var header =
-                    this.ReadLineFromStream();
+                var header = ReadLineFromStream(this.Value);
 
                 if (string.IsNullOrEmpty(header))
                 {
@@ -75,13 +76,13 @@ namespace Nancy
             this.Value.PositionStartAtCurrentLocation();
         }
 
-        private string ReadLineFromStream()
+        private static string ReadLineFromStream(Stream stream)
         {
-            var readBuffer = new StringBuilder();
+            var readBuffer = new List<byte>();
 
             while (true)
             {
-                var byteReadFromStream = this.Value.ReadByte();
+                var byteReadFromStream = stream.ReadByte();
 
                 if (byteReadFromStream == -1)
                 {
@@ -93,13 +94,10 @@ namespace Nancy
                     break;
                 }
 
-                readBuffer.Append((char)byteReadFromStream);
+                readBuffer.Add((byte) byteReadFromStream);
             }
 
-            var lineReadFromStream =
-                readBuffer.ToString().Trim(new[] { (char)CR });
-
-            return lineReadFromStream;
+            return Encoding.UTF8.GetString(readBuffer.ToArray()).Trim((char) CR);
         }
     }
 }

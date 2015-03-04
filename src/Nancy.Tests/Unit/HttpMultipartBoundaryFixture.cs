@@ -26,6 +26,24 @@
         }
 
         [Fact]
+        public void Should_handle_non_ASCII_filenames()
+        {
+            // Given
+            var stream = BuildStreamForSingleFile(
+                "file_content",
+                "Данные.txt",
+                "application/octet-stream",
+                null
+                );
+
+            // When
+            var boundary = new HttpMultipartBoundary(stream);
+
+            // Then
+            boundary.Filename.ShouldEqual("Данные.txt");
+        }
+
+        [Fact]
         public void Should_set_file_name_to_empty_when_it_could_not_be_found_in_header()
         {
             // Given
@@ -135,14 +153,12 @@
 
         private static string GetValueAsString(Stream value)
         {
-            var reader = new StreamReader(value);
-            return reader.ReadToEnd();
+            return new StreamReader(value, Encoding.UTF8).ReadToEnd();
         }
 
         private static HttpMultipartSubStream BuildStreamForSingleFile(string name, string filename, string contentType, string content)
         {
-            var memory =  
-                new MemoryStream(BuildBoundaryWithSingleFile(name, filename, contentType, content));
+            var memory = new MemoryStream(BuildBoundaryWithSingleFile(name, filename, contentType, content));
 
             return new HttpMultipartSubStream(memory, 0, memory.Length);
         }
@@ -157,15 +173,15 @@
                     : "Content-Disposition: form-data; name=\"{0}\")", name, filename);
 
             boundaryBuilder.Append('\r');
-            boundaryBuilder.Append('\n');    
+            boundaryBuilder.Append('\n');
 
             if (!string.IsNullOrEmpty(contentType))
             {
                 boundaryBuilder.AppendFormat("Content-Type: {0}", contentType);
                 boundaryBuilder.Append('\r');
-                boundaryBuilder.Append('\n');  
+                boundaryBuilder.Append('\n');
             }
-            
+
             if (!string.IsNullOrEmpty(content))
             {
                 boundaryBuilder.Append('\r');
@@ -173,10 +189,7 @@
                 boundaryBuilder.Append(content);
             }
 
-            var bytes =
-                Encoding.ASCII.GetBytes(boundaryBuilder.ToString());
-
-            return bytes;
+            return Encoding.UTF8.GetBytes(boundaryBuilder.ToString());
         }
     }
 }
