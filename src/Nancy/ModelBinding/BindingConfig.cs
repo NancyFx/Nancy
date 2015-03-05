@@ -14,7 +14,7 @@
         }
 
         /// <summary>
-        /// Binding configuration that permitts that the binder overwrites non-default values.
+        /// Binding configuration that permits that the binder overwrites non-default values.
         /// </summary>
         public static BindingConfig NoOverwrite = new BindingConfig { Overwrite = false };
 

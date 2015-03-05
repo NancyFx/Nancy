@@ -64,7 +64,7 @@ namespace Nancy.Session
 
 
         /// <summary>
-        /// Initialise and add cookie based session hooks to the application pipeine
+        /// Initialise and add cookie based session hooks to the application pipeline
         /// </summary>
         /// <param name="pipelines">Application pipelines</param>
         /// <param name="configuration">Cookie based sessions configuration.</param>
@@ -85,7 +85,7 @@ namespace Nancy.Session
         }
 
         /// <summary>
-        /// Initialise and add cookie based session hooks to the application pipeine
+        /// Initialise and add cookie based session hooks to the application pipeline
         /// </summary>
         /// <param name="pipelines">Application pipelines</param>
         /// <param name="cryptographyConfiguration">Cryptography configuration</param>
@@ -100,7 +100,7 @@ namespace Nancy.Session
         }
 
         /// <summary>
-        /// Initialise and add cookie based session hooks to the application pipeine with the default encryption provider.
+        /// Initialise and add cookie based session hooks to the application pipeline with the default encryption provider.
         /// </summary>
         /// <param name="pipelines">Application pipelines</param>
         /// <returns>Formatter selector for choosing a non-default serializer</returns>

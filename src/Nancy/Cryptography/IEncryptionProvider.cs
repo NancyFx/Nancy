@@ -8,7 +8,7 @@ namespace Nancy.Cryptography
         /// <summary>
         /// Encrypt and base64 encode the string
         /// </summary>
-        /// <param name="data">Data to encrypyt</param>
+        /// <param name="data">Data to encrypt</param>
         /// <returns>Encrypted string</returns>
         string Encrypt(string data);
 

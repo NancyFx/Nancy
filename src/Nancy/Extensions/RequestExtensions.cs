@@ -9,7 +9,7 @@
     public static class RequestExtensions
     {
         /// <summary>
-        /// An extension method making it easy to check if the reqeuest was done using ajax
+        /// An extension method making it easy to check if the request was done using ajax
         /// </summary>
         /// <param name="request">The request made by client</param>
         /// <returns><see langword="true" /> if the request was done using ajax, otherwise <see langword="false"/>.</returns>

@@ -25,7 +25,7 @@
         public Type DestinationType { get; set; }
 
         /// <summary>
-        /// The generic type of a collection is only used when DestinationType is a enumerble.
+        /// The generic type of a collection is only used when DestinationType is a enumerable.
         /// </summary>
         public Type GenericType { get; set; }
 

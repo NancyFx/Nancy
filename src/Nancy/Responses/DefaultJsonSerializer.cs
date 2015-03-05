@@ -44,7 +44,7 @@
 
         /// <summary>
         /// Set to true to use the ISO8601 format for datetimes in produced JSON.
-        /// Set to false to use the WCF \/Date()\/ format in the the produced JSON.
+        /// Set to false to use the WCF \/Date()\/ format in the produced JSON.
         /// True by default.
         /// </summary>
         public bool ISO8601DateFormat

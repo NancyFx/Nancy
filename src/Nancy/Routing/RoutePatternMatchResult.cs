@@ -25,7 +25,7 @@
         public NancyContext Context { get; private set; }
 
         /// <summary>
-        /// Gets a value idicating wether or not a match was made.
+        /// Gets a value indicating whether or not a match was made.
         /// </summary>
         /// <value><see langword="true"/> if a match was made; otherwise <see langword="false"/>.</value>
         public bool IsMatch { get; private set; }
