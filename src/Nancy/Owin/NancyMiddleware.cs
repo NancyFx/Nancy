@@ -69,6 +69,7 @@
                         var owinRequestPath = Get<string>(environment, "owin.RequestPath");
                         var owinRequestQueryString = Get<string>(environment, "owin.RequestQueryString");
                         var owinRequestBody = Get<Stream>(environment, "owin.RequestBody");
+                        var owinRequestProtocol = Get<string>(environment, "owin.RequestProtocol");
                         var owinCallCancelled = Get<CancellationToken>(environment, "owin.CallCancelled");
                         var owinRequestHost = GetHeader(owinRequestHeaders, "Host") ?? Dns.GetHostName();
 
@@ -91,7 +92,8 @@
                                 nancyRequestStream,
                                 owinRequestHeaders.ToDictionary(kv => kv.Key, kv => (IEnumerable<string>)kv.Value, StringComparer.OrdinalIgnoreCase),
                                 serverClientIp,
-                                certificate);
+                                certificate,
+                                owinRequestProtocol);
 
                         var tcs = new TaskCompletionSource<int>();
 

@@ -270,13 +270,17 @@
                 }
             }
 
+            // TODO: Make sure this handles HTTP/2 (notice; not 2.0)
+            var protocolVersion = string.Format("HTTP/{0}", request.ProtocolVersion.ToString(2));
+
             return new Request(
                 request.HttpMethod,
                 nancyUrl,
                 RequestStream.FromStream(request.InputStream, expectedRequestLength, false),
                 request.Headers.ToDictionary(), 
                 (request.RemoteEndPoint != null) ? request.RemoteEndPoint.Address.ToString() : null,
-                certificate);
+                certificate,
+                protocolVersion);
         }
 
         private void ConvertNancyResponseToResponse(Response nancyResponse, HttpListenerResponse response)
