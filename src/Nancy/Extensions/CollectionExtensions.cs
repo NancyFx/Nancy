@@ -44,7 +44,7 @@
         /// Merges a collection of <see cref="IDictionary{TKey,TValue}"/> instances into a single one.
         /// </summary>
         /// <param name="dictionaries">The list of <see cref="IDictionary{TKey,TValue}"/> instances to merge.</param>
-        /// <returns>An <see cref="IDictionary{TKey,TValue}"/> instance containg the keys and values from the other instances.</returns>
+        /// <returns>An <see cref="IDictionary{TKey,TValue}"/> instance containing the keys and values from the other instances.</returns>
         public static IDictionary<string, string> Merge(this IEnumerable<IDictionary<string, string>> dictionaries)
         {
             var output =

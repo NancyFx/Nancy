@@ -22,7 +22,7 @@
         }
 
         /// <summary>
-        /// Determines whether the the processor can handle a given content type and model.
+        /// Determines whether the processor can handle a given content type and model.
         /// </summary>
         /// <param name="requestedMediaRange">Content type requested by the client.</param>
         /// <param name="model">The model for the given media range.</param>

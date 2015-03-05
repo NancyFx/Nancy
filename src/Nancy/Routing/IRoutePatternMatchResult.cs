@@ -1,7 +1,7 @@
 ﻿namespace Nancy.Routing
 {
     /// <summary>
-    /// Defines the functionality that is requred by a route pattern match result.
+    /// Defines the functionality that is required by a route pattern match result.
     /// </summary>
     public interface IRoutePatternMatchResult
     {
@@ -12,7 +12,7 @@
         NancyContext Context { get; }
 
         /// <summary>
-        /// Gets a value idicating wether or not a match was made.
+        /// Gets a value indicating whether or not a match was made.
         /// </summary>
         /// <value><see langword="true"/> if a match was made; otherwise <see langword="false"/>.</value>
         bool IsMatch { get; }

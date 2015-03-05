@@ -5,7 +5,7 @@ namespace Nancy.ViewEngines
     using System.IO;
 
     /// <summary>
-    /// Defines the functionality for retriving information about views that are stored on the file system.
+    /// Defines the functionality for retrieving information about views that are stored on the file system.
     /// </summary>
     public interface IFileSystemReader
     {

@@ -15,7 +15,7 @@
         /// <param name="cancellationToken">Cancellation token</param>
         /// <param name="parameters">The parameters that the route should be invoked with.</param>
         /// <param name="context">The context of the route that is being invoked.</param>
-        /// <returns>A <see cref="Response"/> intance that represents the result of the invoked route.</returns>
+        /// <returns>A <see cref="Response"/> instance that represents the result of the invoked route.</returns>
         Task<Response> Invoke(Route route, CancellationToken cancellationToken, DynamicDictionary parameters, NancyContext context);
     }
 }

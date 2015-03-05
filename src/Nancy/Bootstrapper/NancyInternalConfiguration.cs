@@ -200,7 +200,7 @@ namespace Nancy.Bootstrapper
         /// <summary>
         /// Returns the configuration types as a TypeRegistration collection
         /// </summary>
-        /// <returns>TypeRegistration collection representing the configurationt types</returns>
+        /// <returns>TypeRegistration collection representing the configuration types</returns>
         public IEnumerable<TypeRegistration> GetTypeRegistations()
         {
             return new[]

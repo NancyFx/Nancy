@@ -3,7 +3,7 @@
     using System.Collections.Generic;
 
     /// <summary>
-    /// Definies the functiinality used by Nancy to located a view.
+    /// Defines the functionality used by Nancy to located a view.
     /// </summary>
     public interface IViewLocationProvider
     {

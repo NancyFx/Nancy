@@ -20,7 +20,7 @@ namespace Nancy.Diagnostics
         /// <summary>
         /// Gets the HTTP verb of the request.
         /// </summary>
-        /// <value>A <see cref="string"/> containg the HTTP verb.</value>
+        /// <value>A <see cref="string"/> containing the HTTP verb.</value>
         public string Method { get; set; }
 
         /// <summary>

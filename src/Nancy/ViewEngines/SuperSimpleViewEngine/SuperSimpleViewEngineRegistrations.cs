@@ -4,7 +4,7 @@
     using Bootstrapper;
 
     /// <summary>
-    /// Performs application registations for the SuperSimpleViewEngine.
+    /// Performs application registrations for the SuperSimpleViewEngine.
     /// </summary>
     public class SuperSimpleViewEngineRegistrations : IRegistrations
     {

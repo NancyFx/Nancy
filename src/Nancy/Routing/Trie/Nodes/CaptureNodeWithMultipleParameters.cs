@@ -36,7 +36,7 @@
         }
 
         /// <summary>
-        /// Determines wheter this TrieNode should be used for the given segment.
+        /// Determines whether this TrieNode should be used for the given segment.
         /// </summary>
         /// <param name="segment">The route segment</param>
         /// <returns>a boolean</returns>

@@ -10,7 +10,7 @@ namespace Nancy.Routing.Trie
         private static SegmentMatch noMatch = new SegmentMatch(false);
 
         /// <summary>
-        /// Gets a value indicating whether the match was sucessful or not
+        /// Gets a value indicating whether the match was successful or not
         /// </summary>
         public bool Matches { get; private set; }
 
@@ -20,7 +20,7 @@ namespace Nancy.Routing.Trie
         public static SegmentMatch NoMatch { get { return noMatch; } }
 
         /// <summary>
-        /// Gets the captured parameters from the match, if the match was sucessful
+        /// Gets the captured parameters from the match, if the match was successful
         /// </summary>
         public IDictionary<string, object> CapturedParameters { get; private set; }
 

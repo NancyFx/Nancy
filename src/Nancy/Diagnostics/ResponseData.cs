@@ -9,7 +9,7 @@ namespace Nancy.Diagnostics
     public class ResponseData
     {
         /// <summary>
-        /// Gets or sets the contetn type of the response.
+        /// Gets or sets the content type of the response.
         /// </summary>
         /// <value>A <see cref="string"/> containing the content type.</value>
         public string ContentType { get; set; }

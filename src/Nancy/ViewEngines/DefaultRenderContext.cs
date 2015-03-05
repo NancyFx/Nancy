@@ -78,7 +78,7 @@
         /// base directory etc.
         /// </summary>
         /// <param name="input">Input url such as ~/styles/main.css</param>
-        /// <returns>Parsed absolut url path</returns>
+        /// <returns>Parsed absolute url path</returns>
         public string ParsePath(string input)
         {
             return this.viewLocationContext.Context.ToFullPath(input);

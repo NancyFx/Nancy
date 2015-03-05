@@ -36,7 +36,7 @@ namespace Nancy.ViewEngines
         /// base directory etc.
         /// </summary>
         /// <param name="input">Input url such as ~/styles/main.css</param>
-        /// <returns>Parsed absolut url path</returns>
+        /// <returns>Parsed absolute url path</returns>
         string ParsePath(string input);
 
         /// <summary>

@@ -63,7 +63,7 @@ namespace Nancy.Diagnostics
         }
 
         /// <summary>
-        /// Checkes if the provided <paramref name="sessionId"/> is valid or not.
+        /// Checks if the provided <paramref name="sessionId"/> is valid or not.
         /// </summary>
         /// <param name="sessionId">A <see cref="Guid"/> representing the session to check.</param>
         /// <returns><see langword="true"/> if the session is valid, otherwise <see langword="false"/>.</returns>

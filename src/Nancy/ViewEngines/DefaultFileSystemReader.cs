@@ -6,7 +6,7 @@
     using System.Linq;
 
     /// <summary>
-    /// Default implementation for retrieving informationa about views that are stored on the file system.
+    /// Default implementation for retrieving information about views that are stored on the file system.
     /// </summary>
     public class DefaultFileSystemReader : IFileSystemReader
     {

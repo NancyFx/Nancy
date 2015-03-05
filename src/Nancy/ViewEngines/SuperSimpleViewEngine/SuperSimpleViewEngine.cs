@@ -142,7 +142,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         /// </summary>
         /// <param name="model">The model.</param>
         /// <param name="propertyName">The property name to evaluate.</param>
-        /// <returns>Tuple - Item1 being a bool for whether the evaluation was sucessful, Item2 being the value.</returns>
+        /// <returns>Tuple - Item1 being a bool for whether the evaluation was successful, Item2 being the value.</returns>
         /// <exception cref="ArgumentException">Model type is not supported.</exception>
         private static Tuple<bool, object> GetPropertyValue(object model, string propertyName)
         {
@@ -175,7 +175,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         /// </summary>
         /// <param name="model">The model.</param>
         /// <param name="propertyName">The property name.</param>
-        /// <returns>Tuple - Item1 being a bool for whether the evaluation was sucessful, Item2 being the value.</returns>
+        /// <returns>Tuple - Item1 being a bool for whether the evaluation was successful, Item2 being the value.</returns>
         private static Tuple<bool, object> StandardTypePropertyEvaluator(object model, string propertyName)
         {
             var type = model.GetType();
@@ -206,7 +206,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         /// </summary>
         /// <param name="model">The model.</param>
         /// <param name="propertyName">The property name.</param>
-        /// <returns>Tuple - Item1 being a bool for whether the evaluation was sucessful, Item2 being the value.</returns>
+        /// <returns>Tuple - Item1 being a bool for whether the evaluation was successful, Item2 being the value.</returns>
         private static Tuple<bool, object> DynamicDictionaryPropertyEvaluator(object model, string propertyName)
         {
             var dictionaryModel = (IDictionary<string, object>)model;
@@ -231,7 +231,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         /// </summary>
         /// <param name="model">The model containing properties.</param>
         /// <param name="parameters">A collection of nested parameters (e.g. User, Name</param>
-        /// <returns>Tuple - Item1 being a bool for whether the evaluation was sucessful, Item2 being the value.</returns>
+        /// <returns>Tuple - Item1 being a bool for whether the evaluation was successful, Item2 being the value.</returns>
         private static Tuple<bool, object> GetPropertyValueFromParameterCollection(object model, IEnumerable<string> parameters)
         {
             if (parameters == null)
@@ -394,7 +394,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         }
 
         /// <summary>
-        /// Peforms single @Context.PropertyName substitutions.
+        /// Performs single @Context.PropertyName substitutions.
         /// </summary>
         /// <param name="template">The template.</param>
         /// <param name="model">The model.</param>

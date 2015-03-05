@@ -41,7 +41,7 @@
         public string ErrorMessage { get; private set; }
 
         /// <summary>
-        /// Implictly cast a validation error to a string.
+        /// Implicitly cast a validation error to a string.
         /// </summary>
         /// <param name="error">The <see cref="ModelValidationError"/> that should be cast.</param>
         /// <returns>A <see cref="string"/> containing the validation error description.</returns>
