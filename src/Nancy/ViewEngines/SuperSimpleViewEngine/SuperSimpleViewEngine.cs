@@ -1,5 +1,6 @@
 namespace Nancy.ViewEngines.SuperSimpleViewEngine
 {
+    using Microsoft.CSharp.RuntimeBinder;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -7,6 +8,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Runtime.CompilerServices;
     using System.Text.RegularExpressions;
 
     /// <summary>
@@ -161,13 +163,31 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
                 return StandardTypePropertyEvaluator(model, propertyName);
             }
 
-            var dynamicModel = model as DynamicDictionaryValue;
-            if (dynamicModel != null)
+            if (model is DynamicDictionaryValue) 
             {
+                var dynamicModel = model as DynamicDictionaryValue;
+
                 return GetPropertyValue(dynamicModel.Value, propertyName);
             }
 
+            if (model is DynamicObject) 
+            {
+                return GetDynamicMember (model, propertyName);
+            }
+
             throw new ArgumentException("model must be a standard type or implement IDictionary<string, object>", "model");
+        }
+
+        private static Tuple<bool, object> GetDynamicMember(object obj, string memberName)
+        {
+            var binder = Microsoft.CSharp.RuntimeBinder.Binder.GetMember (CSharpBinderFlags.None, memberName, obj.GetType (),
+                new[] { CSharpArgumentInfo.Create (CSharpArgumentInfoFlags.None, null) });
+
+            var callsite = CallSite<Func<CallSite, object, object>>.Create (binder);
+
+            var result = callsite.Target (callsite, obj);
+
+            return result == null ? new Tuple<bool, object> (false, null) : new Tuple<bool, object> (true, result);
         }
 
         /// <summary>
