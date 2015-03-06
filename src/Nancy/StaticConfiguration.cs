@@ -49,6 +49,12 @@ namespace Nancy
         public static bool CaseSensitive { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether or not to route HEAD requests separately
+        /// </summary>
+        [Description("Disables HEAD routing and uses GET for HEAD routes instead.")]
+        public static bool DisableHeadRouting { get; set; }
+
+        /// <summary>
         /// Gets a value indicating whether we are running in debug mode or not.
         /// Checks the entry assembly to see whether it has been built in debug mode.
         /// If anything goes wrong it returns false.

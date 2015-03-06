@@ -160,9 +160,13 @@
             var requestedMethod =
                 context.Request.Method;
 
-            return requestedMethod.Equals("HEAD", StringComparison.Ordinal) ?
-                "GET" :
-                requestedMethod;
+            if (StaticConfiguration.DisableHeadRouting)
+            {
+                return requestedMethod.Equals("HEAD", StringComparison.Ordinal) ?
+                    "GET" :
+                    requestedMethod;
+            }
+            return requestedMethod;
         }
     }
 }
