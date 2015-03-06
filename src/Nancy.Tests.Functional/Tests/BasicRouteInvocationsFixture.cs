@@ -146,6 +146,11 @@
                     return "Default get root";
                 };
 
+                Head["/"] = parameters =>
+                {
+                    return "Default head root";
+                };
+
                 Post["/"] = parameters =>
                 {
                     return "Default post root";
