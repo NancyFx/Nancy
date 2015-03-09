@@ -166,6 +166,7 @@
                     "GET" :
                     requestedMethod;
             }
+
             return requestedMethod;
         }
     }

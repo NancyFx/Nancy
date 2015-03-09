@@ -168,22 +168,23 @@
                 };
 
                 Head["/"] = parameters =>
-                            {
-                                return new Response()
-                                {
-                                    StatusCode = HttpStatusCode.OK,
-                                    ReasonPhrase = "HEAD!"
-                                };
-                            };
+                {
+                    return new Response()
+                    {
+                        StatusCode = HttpStatusCode.OK,
+                        ReasonPhrase = "HEAD!"
+                    };
+                };
             }
         }
 
         [Fact]
         public void Should_use_head_response_values_for_basic_head_request()
         {
-            StaticConfiguration.EnableHeadRouting = true;
             // Given
+            StaticConfiguration.EnableHeadRouting = true;
             var browser = new Browser(with => with.Module<BasicRouteInvocationsModuleWithHead>());
+
             // When
             var response = browser.Head("/");
 

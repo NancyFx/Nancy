@@ -49,9 +49,9 @@ namespace Nancy
         public static bool CaseSensitive { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether or not to route HEAD requests separately
+        /// Gets or sets a value indicating whether or not to route HEAD requests explicitly.
         /// </summary>
-        [Description("Enables HEAD routing and disables the usage of GET routes for HEAD requests.")]
+        [Description("Enables explicit HEAD routing and disables the usage of GET routes for HEAD requests.")]
         public static bool EnableHeadRouting { get; set; }
 
         /// <summary>
