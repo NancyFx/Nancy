@@ -71,10 +71,26 @@ namespace Nancy
         /// Gets <see cref="RouteBuilder"/> for declaring actions for GET requests.
         /// </summary>
         /// <value>A <see cref="RouteBuilder"/> instance.</value>
-        /// <remarks>These actions will also be used when a HEAD request is received.</remarks>
         public RouteBuilder Get
         {
             get { return new RouteBuilder("GET", this); }
+        }
+
+        /// <summary>
+        /// Gets <see cref="RouteBuilder"/> for declaring actions for HEAD requests.
+        /// </summary>
+        /// <value>A <see cref="RouteBuilder"/> instance.</value>
+        public RouteBuilder Head
+        {
+            get
+            {
+                if (!StaticConfiguration.EnableHeadRouting)
+                {
+                    throw new InvalidOperationException("Explicit HEAD routing is disabled. Set StaticConfiguration.EnableHeadRouting to enable.");
+                }
+
+                return new RouteBuilder("HEAD", this);
+            }
         }
 
         /// <summary>
