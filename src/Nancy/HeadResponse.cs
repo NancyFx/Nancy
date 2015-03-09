@@ -23,6 +23,7 @@
             this.ContentType = response.ContentType;
             this.Headers = response.Headers;
             this.StatusCode = response.StatusCode;
+            this.ReasonPhrase = response.ReasonPhrase;
             this.CheckAndSetContentLength(response);
         }
 

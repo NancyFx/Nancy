@@ -146,11 +146,6 @@
                     return "Default get root";
                 };
 
-                Head["/"] = parameters =>
-                {
-                    return "Default head root";
-                };
-
                 Post["/"] = parameters =>
                 {
                     return "Default post root";
@@ -162,7 +157,43 @@
                 };
             }
         }
+
+        public class BasicRouteInvocationsModuleWithHead : NancyModule
+        {
+            public BasicRouteInvocationsModuleWithHead()
+            {
+                Get["/"] = parameters =>
+                {
+                    return "Default get root";
+                };
+
+                Head["/"] = parameters =>
+                            {
+                                return new Response()
+                                {
+                                    StatusCode = HttpStatusCode.OK,
+                                    ReasonPhrase = "HEAD!"
+                                };
+                            };
+            }
+        }
+
+        [Fact]
+        public void Should_use_head_response_values_for_basic_head_request()
+        {
+            StaticConfiguration.EnableHeadRouting = true;
+            // Given
+            var browser = new Browser(with => with.Module<BasicRouteInvocationsModuleWithHead>());
+            // When
+            var response = browser.Head("/");
+
+            // Then
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("text/html", response.ContentType);
+            Assert.Equal(string.Empty, response.Body.AsString());
+            Assert.Equal("HEAD!", response.ReasonPhrase);
+
+            StaticConfiguration.EnableHeadRouting = false;
+        }
     }
-
-
 }

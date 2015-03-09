@@ -430,8 +430,6 @@
             {
                 Get["/"] = _ => "Root";
 
-                Head["/"] = _ => "HeadRoot";
-
                 Post["/"] = _ => "PostRoot";
 
                 Get["/foo"] = _ => "SingleLiteral";
