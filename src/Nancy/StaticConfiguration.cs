@@ -51,8 +51,8 @@ namespace Nancy
         /// <summary>
         /// Gets or sets a value indicating whether or not to route HEAD requests separately
         /// </summary>
-        [Description("Disables HEAD routing and uses GET for HEAD routes instead.")]
-        public static bool DisableHeadRouting { get; set; }
+        [Description("Enables HEAD routing and disables the usage of GET routes for HEAD requests.")]
+        public static bool EnableHeadRouting { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether we are running in debug mode or not.

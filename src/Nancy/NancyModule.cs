@@ -84,7 +84,7 @@ namespace Nancy
         {
             get
             {
-                if (StaticConfiguration.DisableHeadRouting)
+                if (!StaticConfiguration.EnableHeadRouting)
                 {
                     throw new InvalidOperationException("HEAD routing is disabled");
                 }

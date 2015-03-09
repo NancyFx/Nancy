@@ -160,7 +160,7 @@
             var requestedMethod =
                 context.Request.Method;
 
-            if (StaticConfiguration.DisableHeadRouting)
+            if (!StaticConfiguration.EnableHeadRouting)
             {
                 return requestedMethod.Equals("HEAD", StringComparison.Ordinal) ?
                     "GET" :
