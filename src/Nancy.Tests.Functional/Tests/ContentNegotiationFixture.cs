@@ -663,10 +663,14 @@ namespace Nancy.Tests.Functional.Tests
             var browser = new Browser(with => with.StatusCodeHandler<NotFoundStatusCodeHandler>());
 
             // When
-            var result = browser.Get("/not-found");
+            var result = browser.Get("/not-found", with => with.Accept("application/json"));
+
+            var response = result.Body.DeserializeJson<NotFoundStatusCodeHandlerResult>();
 
             // Then
-            Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
+            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+            Assert.Equal("Not Found.", response.Message);
         }
 
         private static Func<dynamic, NancyModule, dynamic> CreateNegotiatedResponse(Action<Negotiator> action = null)
@@ -810,10 +814,21 @@ namespace Nancy.Tests.Functional.Tests
 
             public void Handle(HttpStatusCode statusCode, NancyContext context)
             {
-                var error = new { StatusCode = statusCode, Message = "Not Found." };
+                var error = new NotFoundStatusCodeHandlerResult
+                {
+                    StatusCode = statusCode,
+                    Message = "Not Found."
+                };
+
                 context.Response = this.responseNegotiator.NegotiateResponse(error, context);
             }
         }
-    }
 
+        private class NotFoundStatusCodeHandlerResult
+        {
+            public HttpStatusCode StatusCode { get; set; }
+
+            public string Message { get; set; }
+        }
+    }
 }
