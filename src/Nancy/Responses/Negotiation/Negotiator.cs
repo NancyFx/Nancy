@@ -20,11 +20,6 @@ namespace Nancy.Responses.Negotiation
                 throw new ArgumentNullException("context");
             }
 
-            if (context.NegotiationContext == null)
-            {
-                throw new ArgumentException("NegotiationContext must not be null.", "context");
-            }
-
             this.NegotiationContext = context.NegotiationContext;
         }
 

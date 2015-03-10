@@ -99,6 +99,11 @@
 
         internal void SetModule(INancyModule module)
         {
+            if (module == null)
+            {
+                throw new ArgumentNullException("module");
+            }
+
             this.ModuleName = module.GetModuleName();
             this.ModulePath = module.ModulePath;
         }
