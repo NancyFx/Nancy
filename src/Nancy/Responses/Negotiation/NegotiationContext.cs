@@ -5,6 +5,8 @@
     using System.Linq;
     using Cookies;
 
+    using Nancy.Extensions;
+
     /// <summary>
     /// Context for content negotiation.
     /// </summary>
@@ -93,6 +95,12 @@
             return matching ?
                 this.MediaRangeModelMappings.First(m => mediaRange.Matches(m.Key)).Value.Invoke() :
                 this.DefaultModel;
+        }
+
+        internal void SetModule(INancyModule module)
+        {
+            this.ModuleName = module.GetModuleName();
+            this.ModulePath = module.ModulePath;
         }
     }
 }

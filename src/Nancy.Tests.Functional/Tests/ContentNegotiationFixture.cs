@@ -122,7 +122,7 @@ namespace Nancy.Tests.Functional.Tests
                 with.Get("/headers", (x, m) =>
                 {
                     var context =
-                        new NancyContext { NegotiationContext = new NegotiationContext() };
+                        new NancyContext();
 
                     var negotiator =
                         new Negotiator(context);
@@ -156,7 +156,7 @@ namespace Nancy.Tests.Functional.Tests
                 with.Get("/customPhrase", (x, m) =>
                 {
                     var context =
-                        new NancyContext { NegotiationContext = new NegotiationContext() };
+                        new NancyContext();
 
                     var negotiator =
                         new Negotiator(context);
@@ -190,7 +190,7 @@ namespace Nancy.Tests.Functional.Tests
             with.Get("/headers", (x, m) =>
             {
               var context =
-                  new NancyContext { NegotiationContext = new NegotiationContext() };
+                  new NancyContext();
 
               var negotiator =
                   new Negotiator(context);
@@ -227,7 +227,7 @@ namespace Nancy.Tests.Functional.Tests
                     x.Get("/", (parameters, module) =>
                     {
                         var context =
-                            new NancyContext { NegotiationContext = new NegotiationContext() };
+                            new NancyContext();
 
                         var negotiator =
                             new Negotiator(context);
@@ -257,7 +257,7 @@ namespace Nancy.Tests.Functional.Tests
                     x.Get("/", (parameters, module) =>
                     {
                         var context =
-                            new NancyContext { NegotiationContext = new NegotiationContext() };
+                            new NancyContext();
 
                         var negotiator =
                             new Negotiator(context);
@@ -296,7 +296,7 @@ namespace Nancy.Tests.Functional.Tests
                     x.Get("/test", (parameters, module) =>
                     {
                         var context =
-                            new NancyContext { NegotiationContext = new NegotiationContext() };
+                            new NancyContext();
 
                         var negotiator =
                             new Negotiator(context);
