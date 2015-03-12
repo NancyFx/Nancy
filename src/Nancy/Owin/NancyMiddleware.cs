@@ -6,6 +6,7 @@
     using System.IO;
     using System.Linq;
     using System.Net;
+    using System.Security.Claims;
     using System.Security.Cryptography.X509Certificates;
     using System.Threading;
     using System.Threading.Tasks;
@@ -67,6 +68,7 @@
                         var owinRequestProtocol = Get<string>(environment, "owin.RequestProtocol");
                         var owinCallCancelled = Get<CancellationToken>(environment, "owin.CallCancelled");
                         var owinRequestHost = GetHeader(owinRequestHeaders, "Host") ?? Dns.GetHostName();
+                        var owinUser = GetUser(environment); 
 
                         byte[] certificate = null;
                         if (options.EnableClientCertificates)
@@ -94,7 +96,7 @@
 
                         engine.HandleRequest(
                             nancyRequest,
-                            StoreEnvironment(environment),
+                            StoreEnvironment(environment, owinUser),
                             RequestComplete(environment, options.PerformPassThrough, next, tcs),
                             RequestErrored(tcs),
                             owinCallCancelled);
@@ -102,6 +104,8 @@
                         return tcs.Task;
                     };
         }
+
+          
 
         /// <summary>
         /// Gets a delegate to handle converting a nancy response
@@ -190,6 +194,23 @@
             return headers.TryGetValue(key, out value) && value != null ? string.Join(",", value.ToArray()) : null;
         }
 
+        private static ClaimsPrincipal GetUser(IDictionary<string, object> environment)
+        {
+            // OWIN 1.1
+            object user;
+            if (environment.TryGetValue("owin.RequestUser", out user))
+            {
+                return user as ClaimsPrincipal;
+            }
+
+            // check for Katana User
+            if (environment.TryGetValue("server.User", out user))
+            {
+                return user as ClaimsPrincipal;
+            }
+            return null;
+        }
+
         private static long ExpectedLength(IDictionary<string, string[]> headers)
         {
             var header = GetHeader(headers, "Content-Length");
@@ -243,14 +264,15 @@
         }
 
         /// <summary>
-        /// Gets a delegate to store the OWIN environment into the NancyContext
+        /// Gets a delegate to store the OWIN environment and flow the user into the NancyContext
         /// </summary>
         /// <param name="environment">OWIN Environment</param>
         /// <returns>Delegate</returns>
-        private static Func<NancyContext, NancyContext> StoreEnvironment(IDictionary<string, object> environment)
+        private static Func<NancyContext, NancyContext> StoreEnvironment(IDictionary<string, object> environment, ClaimsPrincipal user)
         {
             return context =>
             {
+                context.CurrentUser = user;
                 environment["nancy.NancyContext"] = context;
                 context.Items[RequestEnvironmentKey] = environment;
                 return context;
