@@ -11,6 +11,7 @@
     using System.Threading;
     using System.Threading.Tasks;
 
+    using Nancy.Bootstrapper;
     using Nancy.Helpers;
     using Nancy.IO;
 
@@ -34,12 +35,23 @@
         /// <summary>
         /// Use Nancy in an OWIN pipeline
         /// </summary>
-        /// <param name="configuration">A delegate to configure the <see cref="NancyOptions"/>.</param>
+        /// <param name="bootstrapper">A Nancy bootstrapper.</param>
+        /// <param name="configure">A delegate to configure the <see cref="NancyOptions"/>.</param>
         /// <returns>An OWIN middleware delegate.</returns>
-        public static MidFunc UseNancy(Action<NancyOptions> configuration)
+        public static MidFunc UseNancy(INancyBootstrapper bootstrapper, Action<NancyOptions> configure)
         {
-            var options = new NancyOptions();
-            configuration(options);
+            if (bootstrapper == null)
+            {
+                throw new ArgumentNullException("bootstrapper");
+            }
+
+            if (configure == null)
+            {
+                throw new ArgumentNullException("configure");
+            }
+
+            var options = new NancyOptions(bootstrapper);
+            configure(options);
             return UseNancy(options);
         }
 
@@ -48,9 +60,13 @@
         /// </summary>
         /// <param name="options">An <see cref="NancyOptions"/> to configure the Nancy middleware</param>
         /// <returns>An OWIN middleware delegate.</returns>
-        public static MidFunc UseNancy(NancyOptions options = null)
+        public static MidFunc UseNancy(NancyOptions options)
         {
-            options = options ?? new NancyOptions();
+            if (options == null)
+            {
+                throw new ArgumentNullException("options");
+            }
+
             options.Bootstrapper.Initialise();
             var engine = options.Bootstrapper.GetEngine();
 
