@@ -1,6 +1,6 @@
-﻿namespace Nancy.Owin.Tests
+namespace Nancy.Tests.Unit
 {
-    using Nancy.Tests;
+    using Nancy.Owin;
 
     using Xunit;
 

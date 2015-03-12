@@ -1,4 +1,4 @@
-namespace Nancy.Owin.Tests
+namespace Nancy.Tests.Unit
 {
     using System;
     using System.Collections.Generic;
@@ -11,7 +11,7 @@ namespace Nancy.Owin.Tests
 
     using Nancy.Bootstrapper;
     using Nancy.Helpers;
-    using Nancy.Tests;
+    using Nancy.Owin;
 
     using Xunit;
 
