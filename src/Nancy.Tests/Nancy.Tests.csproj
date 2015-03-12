@@ -220,10 +220,13 @@
     <Compile Include="Unit\ModelBinding\DefaultModelBinderLocatorFixture.cs" />
     <Compile Include="Unit\NancyCookieFixture.cs" />
     <Compile Include="Unit\NancyEngineFixture.cs" />
+    <Compile Include="Unit\NancyMiddlewareFixture.cs" />
     <Compile Include="Unit\NancyModuleFixture.cs" />
     <Compile Include="Unit\AfterPipelineFixture.cs" />
     <Compile Include="Unit\BeforePipelineFixture.cs" />
     <Compile Include="Unit\ErrorPipelineFixture.cs" />
+    <Compile Include="Unit\NancyOptionsExtensionsFixture.cs" />
+    <Compile Include="Unit\NancyOptionsFixture.cs" />
     <Compile Include="Unit\RequestFixture.cs" />
     <Compile Include="Fakes\FakeModuleCatalog.cs" />
     <Compile Include="Unit\DefaultResponseFormatterFixture.cs" />
