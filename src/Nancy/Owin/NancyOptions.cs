@@ -9,16 +9,30 @@
     /// </summary>
     public class NancyOptions
     {
-        private INancyBootstrapper bootstrapper;
+        private readonly INancyBootstrapper bootstrapper;
         private Func<NancyContext, bool> performPassThrough;
 
         /// <summary>
-        /// Gets or sets the bootstrapper. If none is set, NancyBootstrapperLocator.Bootstrapper is used.
+        /// Initializes a new instance of the <see cref="NancyOptions"/> class.
+        /// </summary>
+        /// <param name="bootstrapper">A Nancy bootstrapper.</param>
+        /// <exception cref="System.ArgumentNullException">bootstrapper</exception>
+        public NancyOptions(INancyBootstrapper bootstrapper)
+        {
+            if(bootstrapper == null)
+            {
+                throw new ArgumentNullException("bootstrapper");
+            }
+
+            this.bootstrapper = bootstrapper;
+        }
+
+        /// <summary>
+        /// Gets the bootstrapper.
         /// </summary>
         public INancyBootstrapper Bootstrapper
         {
-            get { return this.bootstrapper ?? NancyBootstrapperLocator.Bootstrapper; }
-            set { this.bootstrapper = value; }
+            get { return this.bootstrapper; }
         }
 
         /// <summary>

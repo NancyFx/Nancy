@@ -2,6 +2,8 @@
 {
     using System;
 
+    using Nancy.Bootstrapper;
+
     using AppFunc = System.Func<System.Collections.Generic.IDictionary<string, object>,
         System.Threading.Tasks.Task>;
 
@@ -18,13 +20,23 @@
         /// Adds Nancy to the OWIN pipeline.
         /// </summary>
         /// <param name="builder">The application builder delegate.</param>
-        /// <param name="action">A configuration builder action.</param>
+        /// <param name="nancyBootstrapper">A Nancy bootstrapper.</param>
+        /// <param name="configure">A configuration builder action.</param>
         /// <returns>The application builder delegate.</returns>
-        public static Action<MidFunc> UseNancy(this Action<MidFunc> builder, Action<NancyOptions> action)
+        public static Action<MidFunc> UseNancy(this Action<MidFunc> builder, INancyBootstrapper nancyBootstrapper, Action<NancyOptions> configure)
         {
-            var options = new NancyOptions();
+            if (nancyBootstrapper == null)
+            {
+                throw new ArgumentNullException("nancyBootstrapper");
+            }
+            if (configure == null)
+            {
+                throw new ArgumentNullException("configure");
+            }
 
-            action(options);
+            var options = new NancyOptions(nancyBootstrapper);
+
+            configure(options);
 
             return builder.UseNancy(options);
         }
@@ -35,11 +47,14 @@
         /// <param name="builder">The application builder delegate.</param>
         /// <param name="options">The Nancy options.</param>
         /// <returns>The application builder delegate.</returns>
-        public static Action<MidFunc> UseNancy(this Action<MidFunc> builder, NancyOptions options = null)
+        public static Action<MidFunc> UseNancy(this Action<MidFunc> builder, NancyOptions options)
         {
-            var nancyOptions = options ?? new NancyOptions();
+            if (options == null)
+            {
+                throw new ArgumentNullException("options");
+            }
 
-            builder(NancyMiddleware.UseNancy(nancyOptions).Invoke);
+            builder(NancyMiddleware.UseNancy(options).Invoke);
 
             return builder;
         }
