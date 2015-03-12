@@ -55,7 +55,7 @@ end
 desc "Compile solution file for Mono"
 xbuild :compilemono => [:assembly_info] do |xb|
     xb.solution = SOLUTION_FILE
-    xb.properties = { :configuration => CONFIGURATIONMONO, "TargetFrameworkProfile" => "", "TargetFrameworkVersion" => "v4.0" }
+    xb.properties = { :configuration => CONFIGURATIONMONO, "TargetFrameworkProfile" => "", "TargetFrameworkVersion" => "v4.5" }
 end
 
 desc "Gathers output files and copies them to the output folder"
