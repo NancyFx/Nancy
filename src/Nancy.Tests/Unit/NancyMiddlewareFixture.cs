@@ -4,8 +4,11 @@ namespace Nancy.Tests.Unit
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Security.Claims;
+    using System.Security.Principal;
     using System.Text;
     using System.Threading;
+    using System.Threading.Tasks;
 
     using FakeItEasy;
 
@@ -187,6 +190,7 @@ namespace Nancy.Tests.Unit
             var fakeResponse = new Response { StatusCode = HttpStatusCode.OK };
             fakeResponse.WithCookie("test", "testvalue");
             var fakeContext = new NancyContext { Response = fakeResponse };
+
             this.SetupFakeNancyCompleteCallback(fakeContext);
 
             //When
@@ -196,6 +200,42 @@ namespace Nancy.Tests.Unit
             respHeaders["Set-Cookie"].Length.ShouldEqual(2);
             (respHeaders["Set-Cookie"][0] == middlewareSetCookie).ShouldBeTrue();
             (respHeaders["Set-Cookie"][1] == "test=testvalue; path=/").ShouldBeTrue();
+        }
+
+        [Fact]
+        public async Task Should_flow_katana_user()
+        {
+            // Given
+            IPrincipal user = new ClaimsPrincipal(new GenericIdentity("testuser"));
+            this.environment.Add("server.User", user);
+
+            var fakeResponse = new Response { StatusCode = HttpStatusCode.OK, Contents = s => { } };
+            var fakeContext = new NancyContext { Response = fakeResponse };
+            this.SetupFakeNancyCompleteCallback(fakeContext);
+
+            // When
+            await this.host.Invoke(this.environment);
+
+            // Then
+            fakeContext.CurrentUser.ShouldEqual(user);
+        }
+
+        [Fact]
+        public async Task Should_flow_owin_user()
+        {
+            // Given
+            var user = new ClaimsPrincipal(new GenericIdentity("testuser"));
+            this.environment.Add("owin.RequestUser", user);
+
+            var fakeResponse = new Response { StatusCode = HttpStatusCode.OK, Contents = s => { } };
+            var fakeContext = new NancyContext { Response = fakeResponse };
+            this.SetupFakeNancyCompleteCallback(fakeContext);
+
+            // When
+            await this.host.Invoke(this.environment);
+
+            // Then
+            fakeContext.CurrentUser.ShouldEqual(user);
         }
 
         /// <summary>
@@ -208,6 +248,7 @@ namespace Nancy.Tests.Unit
                 A<Request>.Ignored,
                 A<Func<NancyContext, NancyContext>>.Ignored,
                 A<CancellationToken>.Ignored))
+             .Invokes((Request _, Func<NancyContext, NancyContext> preRequest, CancellationToken __) => preRequest(context))
              .Returns(TaskHelpers.GetCompletedTask(context));
         }
 
