@@ -226,18 +226,19 @@ namespace Nancy.Authentication.Forms
         private static Action<NancyContext> GetRedirectToLoginHook(FormsAuthenticationConfiguration configuration)
         {
             return context =>
+            {
+                if (context.Response.StatusCode == HttpStatusCode.Unauthorized)
                 {
-                    if (context.Response.StatusCode == HttpStatusCode.Unauthorized)
-                    {
-                        string redirectQuerystringKey = GetRedirectQuerystringKey(configuration);
-
-                        context.Response = context.GetRedirect(
-                            string.Format("{0}?{1}={2}", 
-                            configuration.RedirectUrl,
-                            redirectQuerystringKey,
-                            context.ToFullPath("~" + context.Request.Path + HttpUtility.UrlEncode(context.Request.Url.Query))));
-                    }
-                };
+                    string redirectQuerystringKey = GetRedirectQuerystringKey(configuration);
+                    string query = context.Request.Url.Query;
+                    string queryString = String.IsNullOrEmpty(query) ? String.Empty : HttpUtility.UrlEncode("?" + query);
+                    context.Response = context.GetRedirect(
+                        string.Format("{0}?{1}={2}",
+                        configuration.RedirectUrl,
+                        redirectQuerystringKey,
+                        context.ToFullPath("~" + context.Request.Path + queryString)));
+                }
+            };
         }
 
         /// <summary>
