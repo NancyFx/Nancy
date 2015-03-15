@@ -123,18 +123,6 @@ namespace Nancy
                 GetQuery(this.Query);
         }
 
-        private static string GetQuery(string query)
-        {
-            if (string.IsNullOrEmpty(query))
-            {
-                return string.Empty;
-            }
-
-            return query.StartsWith("?", StringComparison.OrdinalIgnoreCase) ?
-                query :
-                string.Concat("?", query);
-        }
-
         /// <summary>
         /// Clones the url.
         /// </summary>
@@ -208,6 +196,11 @@ namespace Nancy
             };
 
             return url;
+        }
+
+        private static string GetQuery(string query)
+        {
+            return string.IsNullOrEmpty(query) ? string.Empty : (query[0] == '?' ? query : '?' + query);
         }
 
         private static string GetCorrectPath(string path)
