@@ -19,7 +19,7 @@ namespace Nancy
         /// </summary>
         public Url()
         {
-            this.Scheme = "http";
+            this.Scheme = Uri.UriSchemeHttp;
             this.HostName = String.Empty;
             this.Port = null;
             this.BasePath = String.Empty;
@@ -96,7 +96,7 @@ namespace Nancy
         {
             get
             {
-                return this.Scheme + "://" +
+                return this.Scheme + Uri.SchemeDelimiter +
                        GetHostName(this.HostName) +
                        GetPort(this.Port);
             }
@@ -109,13 +109,13 @@ namespace Nancy
         {
             get
             {
-                return "https".Equals(this.Scheme, StringComparison.OrdinalIgnoreCase);
+                return Uri.UriSchemeHttps.Equals(this.Scheme, StringComparison.OrdinalIgnoreCase);
             }
         }
 
         public override string ToString()
         {
-            return this.Scheme + "://" + 
+            return this.Scheme + Uri.SchemeDelimiter + 
                 GetHostName(this.HostName) + 
                 GetPort(this.Port) +
                 GetCorrectPath(this.BasePath) +
