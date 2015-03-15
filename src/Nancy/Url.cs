@@ -12,6 +12,8 @@ namespace Nancy
     {
         private string basePath;
 
+        private string query;
+
         /// <summary>
         /// Creates an instance of the <see cref="Url" /> class
         /// </summary>
@@ -81,8 +83,11 @@ namespace Nancy
         /// <summary>
         /// Gets the querystring data of the requested resource.
         /// </summary>
-        public string Query { get; set; }
-
+        public string Query
+        {
+            get { return this.query; }
+            set { this.query = GetQuery(value); }
+        }
 
         /// <summary>
         /// Gets the domain part of the request
