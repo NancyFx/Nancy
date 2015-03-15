@@ -126,7 +126,7 @@ namespace Nancy
                 .Append(GetPort(this.Port))
                 .Append(GetCorrectPath(this.BasePath))
                 .Append(GetCorrectPath(this.Path))
-                .Append(GetQuery(this.Query))
+                .Append(this.Query)
                 .ToString();
         }
 
