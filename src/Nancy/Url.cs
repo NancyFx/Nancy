@@ -3,6 +3,7 @@ namespace Nancy
     using System;
     using System.Net;
     using System.Net.Sockets;
+    using System.Text;
 
     /// <summary>
     /// Represents a full Url of the form scheme://hostname:port/basepath/path?query
@@ -96,9 +97,12 @@ namespace Nancy
         {
             get
             {
-                return this.Scheme + Uri.SchemeDelimiter +
-                    GetHostName(this.HostName) +
-                    GetPort(this.Port);
+                return new StringBuilder()
+                    .Append(this.Scheme)
+                    .Append(Uri.SchemeDelimiter)
+                    .Append(GetHostName(this.HostName))
+                    .Append(GetPort(this.Port))
+                    .ToString();
             }
         }
 
@@ -115,12 +119,15 @@ namespace Nancy
 
         public override string ToString()
         {
-            return this.Scheme + Uri.SchemeDelimiter +
-                GetHostName(this.HostName) +
-                GetPort(this.Port) +
-                GetCorrectPath(this.BasePath) +
-                GetCorrectPath(this.Path) +
-                GetQuery(this.Query);
+            return new StringBuilder()
+                .Append(this.Scheme)
+                .Append(Uri.SchemeDelimiter)
+                .Append(GetHostName(this.HostName))
+                .Append(GetPort(this.Port))
+                .Append(GetCorrectPath(this.BasePath))
+                .Append(GetCorrectPath(this.Path))
+                .Append(GetQuery(this.Query))
+                .ToString();
         }
 
         /// <summary>
