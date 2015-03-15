@@ -681,7 +681,8 @@ namespace Nancy.Testing
             {
                 this.bootstrapper.registeredInstances.Add(new InstanceRegistration(typeof(T), instance));
 
-                foreach (var interfaceType in GetSafeInterfaces(instance.GetType()))
+                var interfacesToRegisterBy = GetSafeInterfaces(instance.GetType()).Where(i => !i.Equals(typeof(T)));
+                foreach (var interfaceType in interfacesToRegisterBy)
                 {
                     this.bootstrapper.registeredInstances.Add(new InstanceRegistration(interfaceType, instance));
                 }
