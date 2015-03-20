@@ -10,7 +10,7 @@ namespace Nancy.Tests.Unit
 
         public NancyOptionsFixture()
         {
-            this.nancyOptions = new NancyOptions(new DefaultNancyBootstrapper());
+            this.nancyOptions = new NancyOptions();
         }
 
         [Fact]

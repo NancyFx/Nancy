@@ -5,7 +5,6 @@ namespace Owin
     using System;
     using System.Threading;
 
-    using Nancy.Bootstrapper;
     using Nancy.Owin;
 
     /// <summary>
@@ -19,40 +18,27 @@ namespace Owin
         /// Adds Nancy to the OWIN pipeline.
         /// </summary>
         /// <param name="builder">The application builder.</param>
-        /// <param name="bootstrapper">The Nancy bootstrapper.</param>
-        /// <returns>IAppBuilder.</returns>
-        public static IAppBuilder UseNancy(this IAppBuilder builder, INancyBootstrapper bootstrapper)
-        {
-            var options = new NancyOptions(bootstrapper);
-
-            HookDisposal(builder, options);
-
-            return builder.Use(NancyMiddleware.UseNancy(options));
-        }
-
-        /// <summary>
-        /// Adds Nancy to the OWIN pipeline.
-        /// </summary>
-        /// <param name="builder">The application builder.</param>
         /// <param name="options">The Nancy options.</param>
         /// <returns>IAppBuilder.</returns>
-        public static IAppBuilder UseNancy(this IAppBuilder builder, NancyOptions options)
+        public static IAppBuilder UseNancy(this IAppBuilder builder, NancyOptions options = null)
         {
-            HookDisposal(builder, options);
+            var nancyOptions = options ?? new NancyOptions();
 
-            return builder.Use(NancyMiddleware.UseNancy(options));
+            HookDisposal(builder, nancyOptions);
+
+            return builder.Use(NancyMiddleware.UseNancy(nancyOptions));
         }
 
         /// <summary>
         /// Adds Nancy to the OWIN pipeline.
         /// </summary>
         /// <param name="builder">The application builder.</param>
-        /// <param name="configureOptions">A configuration builder action.</param>
+        /// <param name="configuration">A configuration builder action.</param>
         /// <returns>IAppBuilder.</returns>
-        public static IAppBuilder UseNancy(this IAppBuilder builder, INancyBootstrapper bootstrapper, Action<NancyOptions> configureOptions)
+        public static IAppBuilder UseNancy(this IAppBuilder builder, Action<NancyOptions> configuration)
         {
-            var options = new NancyOptions(bootstrapper);
-            configureOptions(options);
+            var options = new NancyOptions();
+            configuration(options);
             return UseNancy(builder, options);
         }
 

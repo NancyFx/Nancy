@@ -37,7 +37,7 @@ namespace Nancy.Tests.Unit
             this.fakeEngine = A.Fake<INancyEngine>();
             this.fakeBootstrapper = A.Fake<INancyBootstrapper>();
             A.CallTo(() => this.fakeBootstrapper.GetEngine()).Returns(this.fakeEngine);
-            this.host = NancyMiddleware.UseNancy(new NancyOptions(this.fakeBootstrapper))(null);
+            this.host = NancyMiddleware.UseNancy(new NancyOptions {Bootstrapper = this.fakeBootstrapper})(null);
             this.environment = new Dictionary<string, object>
             {
                 {"owin.RequestMethod", "GET"},
