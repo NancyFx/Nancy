@@ -1,5 +1,6 @@
 namespace Nancy.Tests.Unit
 {
+    using Nancy.Bootstrapper;
     using Nancy.Owin;
 
     using Xunit;
@@ -14,9 +15,32 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
-        public void Bootstrapper_should_not_be_null()
+        public void Bootstrapper_should_use_locator_if_not_specified()
         {
+            // Given
+            var bootstrapper = new DefaultNancyBootstrapper();
+            NancyBootstrapperLocator.Bootstrapper = bootstrapper;
+
+            //When
+            //Then
             this.nancyOptions.Bootstrapper.ShouldNotBeNull();
+            this.nancyOptions.Bootstrapper.ShouldBeSameAs(bootstrapper);
+        }
+
+        [Fact]
+        public void Bootstrapper_should_use_chosen_bootstrapper_if_specified()
+        {
+            // Given
+            var bootstrapper = new DefaultNancyBootstrapper();
+            var specificBootstrapper = new DefaultNancyBootstrapper();
+            NancyBootstrapperLocator.Bootstrapper = bootstrapper;
+
+            //When
+            this.nancyOptions.Bootstrapper = specificBootstrapper;
+
+            //Then
+            this.nancyOptions.Bootstrapper.ShouldNotBeNull();
+            this.nancyOptions.Bootstrapper.ShouldBeSameAs(specificBootstrapper);
         }
 
         [Fact]
