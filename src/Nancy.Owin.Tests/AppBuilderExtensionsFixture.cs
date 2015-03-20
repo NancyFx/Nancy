@@ -21,7 +21,7 @@
             // Given
             var bootstrapper = new ConfigurableBootstrapper(config => config.Module<TestModule>());
 
-            using(var server = TestServer.Create(app => app.UseNancy(bootstrapper)))
+            using(var server = TestServer.Create(app => app.UseNancy(opts => opts.Bootstrapper = bootstrapper)))
             {
 
                 // When
