@@ -10,6 +10,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
     using System.Reflection;
     using System.Runtime.CompilerServices;
     using System.Text.RegularExpressions;
+    using System.Text;
 
     /// <summary>
     /// A super-simple view engine
@@ -486,15 +487,15 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
 
                     var contents = m.Groups["Contents"].Value;
 
-                    var result = string.Empty;
+                    var result = new StringBuilder();
                     foreach (var item in substitutionEnumerable)
                     {
                         var modifiedContent = PerformPartialSubstitutions(contents, item, host);
                         modifiedContent = PerformConditionalSubstitutions(modifiedContent, item, host);
-                        result += ReplaceCurrentMatch(modifiedContent, item, host);
+                        result.Append(ReplaceCurrentMatch(modifiedContent, item, host));
                     }
 
-                    return result;
+                    return result.ToString();
                 });
         }
 
