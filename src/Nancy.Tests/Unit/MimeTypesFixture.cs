@@ -43,5 +43,15 @@
             // Given, When, Then
             MimeTypes.GetMimeType(".docx").ShouldEqual("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
         }
+
+        [Fact]
+        public void Should_support_adding_mime_extensions()
+        {
+            // Given, When
+            MimeTypes.AddType("php", "text/plain");
+
+            // Then
+            MimeTypes.GetMimeType(".php").ShouldEqual("text/plain");
+        }
     }
 }
