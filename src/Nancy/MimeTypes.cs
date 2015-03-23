@@ -155,6 +155,7 @@ namespace Nancy
             mimeTypes.Add ("f", "text/plain");
             mimeTypes.Add ("funk", "audio/make");
             mimeTypes.Add ("g3", "image/g3fax");
+            mimeTypes.Add ("gadget", "application/x-windows-gadget");
             mimeTypes.Add ("gif", "image/gif");
             mimeTypes.Add ("gl", "video/gl");
             mimeTypes.Add ("gsd", "audio/x-gsm");
@@ -581,6 +582,11 @@ namespace Nancy
             mimeTypes.Add("xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
             mimeTypes.Add("xltm", "application/vnd.ms-excel.template.macroEnabled.12");
             mimeTypes.Add("xltx", "application/vnd.openxmlformats-officedocument.spreadsheetml.template");
+        }
+
+        public static void AddType(string extension, string type) 
+        {
+            mimeTypes.Add(extension, type);
         }
 
         public static string GetMimeType (string fileName)
