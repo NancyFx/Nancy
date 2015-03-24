@@ -52,7 +52,7 @@ namespace Nancy.Routing.Trie
 
             if (CaptureNodeWithMultipleParameters.IsMatch(segment))
             {
-                return new CaptureNodeWithMultipleParameters(parent, segment, this);
+                return new CaptureNodeWithMultipleParameters(parent, segment, this, routeSegmentConstraints);
             }
 
             return new LiteralNode(parent, segment, this);
