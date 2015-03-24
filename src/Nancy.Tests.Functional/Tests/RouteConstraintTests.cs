@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Nancy.Tests.Functional.Tests
+﻿namespace Nancy.Tests.Functional.Tests
 {
+    using System;
+
     using Nancy.Bootstrapper;
     using Nancy.Routing.Constraints;
     using Nancy.Testing;
@@ -37,13 +34,18 @@ namespace Nancy.Tests.Functional.Tests
         [Fact]
         public void multiple_parameters_per_segment_should_support_constraints()
         {
-            var response = browser.Get(
-                @"/4.3...5.3",
+            // Given
+            const string url = @"/4.3...5.3";
+
+            // When
+            var response = this.browser.Get(
+                url,
                 with =>
                 {
                     with.HttpRequest();
                 });
 
+            // Then
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.True(Invoked);
         }
