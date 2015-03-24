@@ -1,5 +1,6 @@
 ﻿namespace Nancy.Tests.Unit.Security
 {
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
     using FakeItEasy;
@@ -168,6 +169,34 @@
             this.pipelines.AfterRequest.Invoke(context, new CancellationToken());
 
             this.response.Cookies.Any(c => c.Name == CsrfToken.DEFAULT_CSRF_KEY).ShouldBeFalse();
+        }
+
+        [Fact]
+        public void ValidateCsrfToken_gets_provided_token_from_form_data()
+        {
+            var token = Csrf.GenerateTokenString();
+            var context = new NancyContext { Request = this.request };
+            context.Request.Form[CsrfToken.DEFAULT_CSRF_KEY] = token;
+            context.Request.Cookies.Add(CsrfToken.DEFAULT_CSRF_KEY, HttpUtility.UrlEncode(token));
+
+            var module = new FakeNancyModule { Context = context };
+            module.ValidateCsrfToken();
+        }
+
+        [Fact]
+        public void ValidateCsrfToken_gets_provided_token_from_request_header_if_not_present_in_form_data()
+        {
+            var token = Csrf.GenerateTokenString();
+            var context = new NancyContext { Request = CreateRequestWithHeader(CsrfToken.DEFAULT_CSRF_KEY, token) };
+            context.Request.Cookies.Add(CsrfToken.DEFAULT_CSRF_KEY, HttpUtility.UrlEncode(token));
+
+            var module = new FakeNancyModule { Context = context };
+            module.ValidateCsrfToken();
+        }
+
+        private static FakeRequest CreateRequestWithHeader(string header, string value)
+        {
+            return new FakeRequest("GET", "/", new Dictionary<string, IEnumerable<string>> { { header, new[] { value } } });
         }
     }
 }
