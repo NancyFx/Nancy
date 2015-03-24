@@ -1,25 +1,22 @@
 ﻿namespace Nancy.Tests.Functional.Tests
 {
     using System;
+    using System.Runtime.Remoting.Messaging;
 
     using Nancy.Bootstrapper;
     using Nancy.Routing.Constraints;
     using Nancy.Testing;
-
     using Xunit;
 
     public class RouteConstraintTests
     {
         private readonly INancyBootstrapper bootstrapper;
-
         private readonly Browser browser;
-
         public static bool Invoked { get; set; }
 
         public RouteConstraintTests()
         {
             Invoked = false;
-
             this.bootstrapper = new ConfigurableBootstrapper(
                 configuration =>
                 {
@@ -27,7 +24,6 @@
                     configuration.Modules(new Type[] { typeof(RouteConstraintsModule) });
                     configuration.RouteSegmentConstraints(new[] { typeof(UltimateRouteSegmentConstraint), typeof(VersionRouteSegmentConstraint) });
                 });
-
             this.browser = new Browser(this.bootstrapper);
         }
 
@@ -36,40 +32,48 @@
         {
             // Given
             const string url = @"/42...42";
-
             // When
-            var response = this.browser.Get(
-                url,
-                with =>
-                {
-                    with.HttpRequest();
-                });
-
+            var response = this.browser.Get(url, with => { with.HttpRequest(); });
             // Then
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.True(Invoked);
         }
 
         [Fact]
-        public void versionsegmentrouteconstraint_should_match_on_version_numbers()
+        public void versionsegmentrouteconstraint_should_match_on_version_numbers_on_segment_with_multiple_parameters()
         {
             // Given
             const string url = @"/4.1.2...4.1.5";
-
             // When
-            var response = this.browser.Get(
-                url,
-                with =>
-                {
-                    with.HttpRequest();
-                    with.Accept("application/json");
-                });
-
+            var response = this.browser.Get(url, with => { with.HttpRequest(); with.Accept("application/json");});
             // Then
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal(response.Body.AsString(), "{\"left\":\"4.1.2\",\"right\":\"4.1.5\"}");
         }
 
+        [Fact]
+        public void versionsegmentrouteconstraint_should_match_on_valid_version_number()
+        {
+            // Given
+            const string url = @"/version/4.1.2";
+            // When
+            var response = this.browser.Get(url, with => { with.HttpRequest(); with.Accept("application/json"); });
+            // Then
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(response.Body.AsString(), "{\"versionNumber\":{\"major\":4,\"minor\":1,\"build\":2,\"revision\":-1,\"majorRevision\":-1,\"minorRevision\":-1}}");
+        }
+
+        [Fact]
+        public void versionsegmentrouteconstraint_should_not_match_on_invalid_version_number()
+        {
+            // Given
+            const string url = @"/version/4.1.";
+            // When
+            var response = this.browser.Get(url, with => { with.HttpRequest(); with.Accept("application/json"); });
+            // Then
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(response.Body.AsString(), "{\"invalidVersionNumber\":\"4.1.\"}");
+        }
 
         public class UltimateRouteSegmentConstraint : RouteSegmentConstraintBase<int>
         {
@@ -89,7 +93,6 @@
             }
         }
     }
-
     public class RouteConstraintsModule : NancyModule
     {
         public RouteConstraintsModule()
@@ -98,14 +101,15 @@
             {
                 return HttpStatusCode.OK;
             };
-
             // For testing VersionSegmentRouteConstraint
             this.Get["/{left:version}...{right:version}"] = _ =>
             {
                 return new {_.left, _.right};
             };
-
-        
+            // For testing VersionSegmentRouteConstraint
+            this.Get["/version/{versionNumber:version}"] = _ => new { _.versionNumber };
+            // For testing VersionSegmentRouteConstraint - fallback for invalid version number
+            this.Get["/version/{invalidVersionNumber}"] = _ => new { _.invalidVersionNumber };
         }
     }
 }
