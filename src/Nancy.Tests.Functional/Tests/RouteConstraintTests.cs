@@ -60,7 +60,7 @@
             var response = this.browser.Get(url, with => { with.HttpRequest(); with.Accept("application/json"); });
             // Then
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal(response.Body.AsString(), "{\"versionNumber\":{\"major\":4,\"minor\":1,\"build\":2,\"revision\":-1,\"majorRevision\":-1,\"minorRevision\":-1}}");
+            Assert.Equal(response.Body.AsString(), "{\"versionNumber\":\"4.1.2\"}");
         }
 
         [Fact]
@@ -107,7 +107,7 @@
                 return new {_.left, _.right};
             };
             // For testing VersionSegmentRouteConstraint
-            this.Get["/version/{versionNumber:version}"] = _ => new { _.versionNumber };
+            this.Get["/version/{versionNumber:version}"] = _ => new { versionNumber = _.versionNumber.ToString()};
             // For testing VersionSegmentRouteConstraint - fallback for invalid version number
             this.Get["/version/{invalidVersionNumber}"] = _ => new { _.invalidVersionNumber };
         }
