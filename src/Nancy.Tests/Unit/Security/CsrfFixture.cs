@@ -174,27 +174,36 @@
         [Fact]
         public void ValidateCsrfToken_gets_provided_token_from_form_data()
         {
+            // Given
             var token = Csrf.GenerateTokenString();
             var context = new NancyContext { Request = this.request };
+            var module = new FakeNancyModule { Context = context };
+            
+            // When
             context.Request.Form[CsrfToken.DEFAULT_CSRF_KEY] = token;
             context.Request.Cookies.Add(CsrfToken.DEFAULT_CSRF_KEY, HttpUtility.UrlEncode(token));
 
-            var module = new FakeNancyModule { Context = context };
+            // Then
             module.ValidateCsrfToken();
         }
 
         [Fact]
         public void ValidateCsrfToken_gets_provided_token_from_request_header_if_not_present_in_form_data()
         {
+            // Given
             var token = Csrf.GenerateTokenString();
-            var context = new NancyContext { Request = CreateRequestWithHeader(CsrfToken.DEFAULT_CSRF_KEY, token) };
+            var context = new NancyContext();
+            var module = new FakeNancyModule { Context = context };
+            
+            // When
+            context.Request = RequestWithHeader(CsrfToken.DEFAULT_CSRF_KEY, token);
             context.Request.Cookies.Add(CsrfToken.DEFAULT_CSRF_KEY, HttpUtility.UrlEncode(token));
 
-            var module = new FakeNancyModule { Context = context };
+            // Then
             module.ValidateCsrfToken();
         }
 
-        private static FakeRequest CreateRequestWithHeader(string header, string value)
+        private static FakeRequest RequestWithHeader(string header, string value)
         {
             return new FakeRequest("GET", "/", new Dictionary<string, IEnumerable<string>> { { header, new[] { value } } });
         }
