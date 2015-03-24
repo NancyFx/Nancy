@@ -1,6 +1,8 @@
 ﻿namespace Nancy.Security
 {
     using System;
+    using System.Linq;
+
     using Cookies;
     using Nancy.Bootstrapper;
     using Nancy.Cryptography;
@@ -51,19 +53,31 @@
                         }
                     }
 
-                    var token = new CsrfToken
-                    {
-                        CreatedDate = DateTime.Now,
-                    };
-                    token.CreateRandomBytes();
-                    token.CreateHmac(cryptographyConfiguration.HmacProvider);
-                    var tokenString = CsrfApplicationStartup.ObjectSerializer.Serialize(token);
+                    var tokenString = GenerateTokenString(cryptographyConfiguration);
 
                     context.Items[CsrfToken.DEFAULT_CSRF_KEY] = tokenString;
                     context.Response.Cookies.Add(new NancyCookie(CsrfToken.DEFAULT_CSRF_KEY, tokenString, true));
                 });
 
             pipelines.AfterRequest.AddItemToEndOfPipeline(postHook);
+        }
+
+        /// <summary>
+        /// Generates a new csrf token with an optional salt.
+        /// Does not store the token in context.
+        /// </summary>
+        /// <returns>The token</returns>
+        internal static string GenerateTokenString(CryptographyConfiguration cryptographyConfiguration = null)
+        {
+            cryptographyConfiguration = cryptographyConfiguration ?? CsrfApplicationStartup.CryptographyConfiguration;
+            var token = new CsrfToken
+            {
+                CreatedDate = DateTime.Now,
+            };
+            token.CreateRandomBytes();
+            token.CreateHmac(cryptographyConfiguration.HmacProvider);
+            var tokenString = CsrfApplicationStartup.ObjectSerializer.Serialize(token);
+            return tokenString;
         }
 
         /// <summary>
@@ -83,18 +97,7 @@
         /// <returns></returns>
         public static void CreateNewCsrfToken(this INancyModule module, CryptographyConfiguration cryptographyConfiguration = null)
         {
-            cryptographyConfiguration = cryptographyConfiguration ?? CsrfApplicationStartup.CryptographyConfiguration;
-
-            var token = new CsrfToken
-            {
-                CreatedDate = DateTime.Now,
-            };
-            token.CreateRandomBytes();
-            token.CreateHmac(cryptographyConfiguration.HmacProvider);
-
-            var tokenString = CsrfApplicationStartup.ObjectSerializer.Serialize(token);
-
-            module.Context.Items[CsrfToken.DEFAULT_CSRF_KEY] = tokenString;
+            module.Context.Items[CsrfToken.DEFAULT_CSRF_KEY] = GenerateTokenString(cryptographyConfiguration);
         }
 
         /// <summary>
@@ -114,9 +117,9 @@
             }
 
             var cookieToken = GetCookieToken(request);
-            var formToken = GetFormToken(request);
+            var providedToken = GetProvidedToken(request);
 
-            var result = CsrfApplicationStartup.TokenValidator.Validate(cookieToken, formToken, validityPeriod);
+            var result = CsrfApplicationStartup.TokenValidator.Validate(cookieToken, providedToken, validityPeriod);
 
             if (result != CsrfTokenValidationResult.Ok)
             {
@@ -124,17 +127,17 @@
             }
         }
 
-        private static CsrfToken GetFormToken(Request request)
+        private static CsrfToken GetProvidedToken(Request request)
         {
-            CsrfToken formToken = null;
+            CsrfToken providedToken = null;
 
-            var formTokenString = request.Form[CsrfToken.DEFAULT_CSRF_KEY].Value;
-            if (formTokenString != null)
+            var providedTokenString = request.Form[CsrfToken.DEFAULT_CSRF_KEY].Value ?? request.Headers[CsrfToken.DEFAULT_CSRF_KEY].FirstOrDefault();
+            if (providedTokenString != null)
             {
-                formToken = CsrfApplicationStartup.ObjectSerializer.Deserialize(formTokenString) as CsrfToken;
+                providedToken = CsrfApplicationStartup.ObjectSerializer.Deserialize(providedTokenString) as CsrfToken;
             }
 
-            return formToken;
+            return providedToken;
         }
 
         private static CsrfToken GetCookieToken(Request request)
