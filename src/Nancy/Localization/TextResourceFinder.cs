@@ -93,7 +93,7 @@
 
             public override string ToString()
             {
-                return this.textResource[this.memberName, this.context]; ;
+                return this.textResource[this.memberName, this.context];
             }
         }
     }
