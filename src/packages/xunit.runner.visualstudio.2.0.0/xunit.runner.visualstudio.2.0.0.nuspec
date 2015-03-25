@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/01/nuspec.xsd">
+  <metadata minClientVersion="2.5">
+    <id>xunit.runner.visualstudio</id>
+    <version>2.0.0</version>
+    <title>xUnit.net [Runner: Visual Studio]</title>
+    <authors>James Newkirk,  Brad Wilson</authors>
+    <owners>James Newkirk,  Brad Wilson</owners>
+    <licenseUrl>https://raw.githubusercontent.com/xunit/xunit/master/license.txt</licenseUrl>
+    <projectUrl>https://github.com/xunit/xunit</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/xunit/media/master/logo-512-transparent.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Includes support for running xUnit.net v1 and v2 tests from Visual Studio 2012+.</description>
+    <language>en-US</language>
+  </metadata>
+</package>
