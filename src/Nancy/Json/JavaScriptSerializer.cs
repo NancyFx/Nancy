@@ -266,7 +266,7 @@ namespace Nancy.Json
 
         static readonly Type typeofObject = typeof(object);
         static readonly Type typeofGenList = typeof(List<>);
-        
+
 
         object ConvertToList(ArrayList col, Type type)
         {
@@ -330,7 +330,7 @@ namespace Nancy.Json
                     Type[] arguments = type.GetGenericArguments();
                     if (arguments == null || arguments.Length != 2 || (arguments[0] != typeof(object) && arguments[0] != typeof(string) && arguments[0] != typeof(Guid)))
                         throw new InvalidOperationException(
-                            "Type '" + type + "' is not not supported for serialization/deserialization of a dictionary, keys must be strings, guids or objects.");
+                            "Type '" + type + "' is not supported for serialization/deserialization of a dictionary, keys must be strings, guids or objects.");
                     if (type.IsAbstract)
                     {
                         Type dictType = typeof(Dictionary<,>);
