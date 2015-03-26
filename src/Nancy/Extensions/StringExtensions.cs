@@ -45,7 +45,7 @@ namespace Nancy.Extensions
         }
 
         /// <summary>
-        /// Checks if a segement contains any parameters.
+        /// Checks if a segment contains any parameters.
         /// </summary>
         /// <param name="segment">The segment to check for parameters.</param>
         /// <returns>true if the segment contains a parameter; otherwise false.</returns>
