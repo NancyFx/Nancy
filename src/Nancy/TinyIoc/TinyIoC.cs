@@ -1747,7 +1747,7 @@ namespace Nancy.TinyIoc
         /// <summary>
         /// Attempts to predict whether a given type can be resolved with the specified options.
         ///
-        /// Note: Resolution may still fail if user defined factory registations fail to construct objects when called.
+        /// Note: Resolution may still fail if user defined factory registrations fail to construct objects when called.
         /// </summary>
         /// <param name="resolveType">Type to resolve</param>
         /// <param name="name">Name of registration</param>
@@ -1761,7 +1761,7 @@ namespace Nancy.TinyIoc
         /// <summary>
         /// Attempts to predict whether a given named type can be resolved with the specified options.
         ///
-        /// Note: Resolution may still fail if user defined factory registations fail to construct objects when called.
+        /// Note: Resolution may still fail if user defined factory registrations fail to construct objects when called.
         /// </summary>
         /// <param name="resolveType">Type to resolve</param>
         /// <param name="name">Name of registration</param>
@@ -1938,7 +1938,7 @@ namespace Nancy.TinyIoc
         /// Parameters are used in conjunction with normal container resolution to find the most suitable constructor (if one exists).
         /// All user supplied parameters must exist in at least one resolvable constructor of RegisterType or resolution will fail.
         /// 
-        /// Note: Resolution may still fail if user defined factory registations fail to construct objects when called.
+        /// Note: Resolution may still fail if user defined factory registrations fail to construct objects when called.
         /// </summary>
         /// <typeparam name="ResolveType">Type to resolve</typeparam>
         /// <param name="parameters">User supplied named parameter overloads</param>
@@ -2016,7 +2016,7 @@ namespace Nancy.TinyIoc
         /// <param name="ResolveType">Type to resolve</param>
         /// <param name="name">Name of registration</param>
         /// <param name="resolvedType">Resolved type or default if resolve fails</param>
-        /// <returns>True if resolved sucessfully, false otherwise</returns>
+        /// <returns>True if resolved successfully, false otherwise</returns>
         public bool TryResolve(Type resolveType, string name, out object resolvedType)
         {
             try
@@ -2081,7 +2081,7 @@ namespace Nancy.TinyIoc
         /// <param name="name">Name of registration</param>
         /// <param name="parameters">User specified constructor parameters</param>
         /// <param name="resolvedType">Resolved type or default if resolve fails</param>
-        /// <returns>True if resolved sucessfully, false otherwise</returns>
+        /// <returns>True if resolved successfully, false otherwise</returns>
         public bool TryResolve(Type resolveType, string name, NamedParameterOverloads parameters, out object resolvedType)
         {
             try
@@ -2104,7 +2104,7 @@ namespace Nancy.TinyIoc
         /// <param name="parameters">User specified constructor parameters</param>
         /// <param name="options">Resolution options</param>
         /// <param name="resolvedType">Resolved type or default if resolve fails</param>
-        /// <returns>True if resolved sucessfully, false otherwise</returns>
+        /// <returns>True if resolved successfully, false otherwise</returns>
         public bool TryResolve(Type resolveType, NamedParameterOverloads parameters, ResolveOptions options, out object resolvedType)
         {
             try
@@ -2127,7 +2127,7 @@ namespace Nancy.TinyIoc
         /// <param name="parameters">User specified constructor parameters</param>
         /// <param name="options">Resolution options</param>
         /// <param name="resolvedType">Resolved type or default if resolve fails</param>
-        /// <returns>True if resolved sucessfully, false otherwise</returns>
+        /// <returns>True if resolved successfully, false otherwise</returns>
         public bool TryResolve(Type resolveType, string name, NamedParameterOverloads parameters, ResolveOptions options, out object resolvedType)
         {
             try
@@ -2147,7 +2147,7 @@ namespace Nancy.TinyIoc
         /// </summary>
         /// <typeparam name="ResolveType">Type to resolve</typeparam>
         /// <param name="resolvedType">Resolved type or default if resolve fails</param>
-        /// <returns>True if resolved sucessfully, false otherwise</returns>
+        /// <returns>True if resolved successfully, false otherwise</returns>
         public bool TryResolve<ResolveType>(out ResolveType resolvedType)
             where ResolveType : class
         {
@@ -2169,7 +2169,7 @@ namespace Nancy.TinyIoc
         /// <typeparam name="ResolveType">Type to resolve</typeparam>
         /// <param name="options">Resolution options</param>
         /// <param name="resolvedType">Resolved type or default if resolve fails</param>
-        /// <returns>True if resolved sucessfully, false otherwise</returns>
+        /// <returns>True if resolved successfully, false otherwise</returns>
         public bool TryResolve<ResolveType>(ResolveOptions options, out ResolveType resolvedType)
             where ResolveType : class
         {
@@ -2191,7 +2191,7 @@ namespace Nancy.TinyIoc
         /// <typeparam name="ResolveType">Type to resolve</typeparam>
         /// <param name="name">Name of registration</param>
         /// <param name="resolvedType">Resolved type or default if resolve fails</param>
-        /// <returns>True if resolved sucessfully, false otherwise</returns>
+        /// <returns>True if resolved successfully, false otherwise</returns>
         public bool TryResolve<ResolveType>(string name, out ResolveType resolvedType)
             where ResolveType : class
         {
@@ -2214,7 +2214,7 @@ namespace Nancy.TinyIoc
         /// <param name="name">Name of registration</param>
         /// <param name="options">Resolution options</param>
         /// <param name="resolvedType">Resolved type or default if resolve fails</param>
-        /// <returns>True if resolved sucessfully, false otherwise</returns>
+        /// <returns>True if resolved successfully, false otherwise</returns>
         public bool TryResolve<ResolveType>(string name, ResolveOptions options, out ResolveType resolvedType)
             where ResolveType : class
         {
@@ -2236,7 +2236,7 @@ namespace Nancy.TinyIoc
         /// <typeparam name="ResolveType">Type to resolve</typeparam>
         /// <param name="parameters">User specified constructor parameters</param>
         /// <param name="resolvedType">Resolved type or default if resolve fails</param>
-        /// <returns>True if resolved sucessfully, false otherwise</returns>
+        /// <returns>True if resolved successfully, false otherwise</returns>
         public bool TryResolve<ResolveType>(NamedParameterOverloads parameters, out ResolveType resolvedType)
             where ResolveType : class
         {
@@ -2259,7 +2259,7 @@ namespace Nancy.TinyIoc
         /// <param name="name">Name of registration</param>
         /// <param name="parameters">User specified constructor parameters</param>
         /// <param name="resolvedType">Resolved type or default if resolve fails</param>
-        /// <returns>True if resolved sucessfully, false otherwise</returns>
+        /// <returns>True if resolved successfully, false otherwise</returns>
         public bool TryResolve<ResolveType>(string name, NamedParameterOverloads parameters, out ResolveType resolvedType)
             where ResolveType : class
         {
@@ -2283,7 +2283,7 @@ namespace Nancy.TinyIoc
         /// <param name="parameters">User specified constructor parameters</param>
         /// <param name="options">Resolution options</param>
         /// <param name="resolvedType">Resolved type or default if resolve fails</param>
-        /// <returns>True if resolved sucessfully, false otherwise</returns>
+        /// <returns>True if resolved successfully, false otherwise</returns>
         public bool TryResolve<ResolveType>(NamedParameterOverloads parameters, ResolveOptions options, out ResolveType resolvedType)
             where ResolveType : class
         {
@@ -2307,7 +2307,7 @@ namespace Nancy.TinyIoc
         /// <param name="parameters">User specified constructor parameters</param>
         /// <param name="options">Resolution options</param>
         /// <param name="resolvedType">Resolved type or default if resolve fails</param>
-        /// <returns>True if resolved sucessfully, false otherwise</returns>
+        /// <returns>True if resolved successfully, false otherwise</returns>
         public bool TryResolve<ResolveType>(string name, NamedParameterOverloads parameters, ResolveOptions options, out ResolveType resolvedType)
             where ResolveType : class
         {
@@ -2416,7 +2416,7 @@ namespace Nancy.TinyIoc
         private abstract class ObjectFactoryBase
         {
             /// <summary>
-            /// Whether to assume this factory sucessfully constructs its objects
+            /// Whether to assume this factory successfully constructs its objects
             /// 
             /// Generally set to true for delegate style factories as CanResolve cannot delve
             /// into the delegates they contain.

@@ -13,7 +13,7 @@
         void ExtraParameters(ViewLocationResult viewLocationResult, IDictionary<string, object> extra);
 
         /// <summary>
-        /// The DefaultDescriptorBuider calls this method for the filter to return a modified enumerable
+        /// The DefaultDescriptorBuilder calls this method for the filter to return a modified enumerable
         /// ordered list of potential template locations. This is called only when the unique combination of action,
         /// master, view, and extra have not been resolved previously.
         /// </summary>

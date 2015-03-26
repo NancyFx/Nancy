@@ -559,7 +559,7 @@
         /// Gets any additional instance registrations that need to
         /// be registered into the container
         /// </summary>
-        /// <returns>Collection of InstanceRegistation types</returns>
+        /// <returns>Collection of InstanceRegistration types</returns>
         private IEnumerable<InstanceRegistration> GetAdditionalInstances()
         {
             return new[] {
