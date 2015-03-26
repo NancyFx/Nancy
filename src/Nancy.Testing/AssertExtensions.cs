@@ -55,11 +55,11 @@ namespace Nancy.Testing
 
         /// <summary>
         /// Asserts that an element or element should exist exactly the specified number of times
-        /// <param name="expectedNumberOfOccurrances">The expected number of times the element should exist</param>
+        /// <param name="expectedNumberOfOccurrences">The expected number of times the element should exist</param>
         /// </summary>
-        public static AndConnector<QueryWrapper> ShouldExistExactly(this QueryWrapper query, int expectedNumberOfOccurrances)
+        public static AndConnector<QueryWrapper> ShouldExistExactly(this QueryWrapper query, int expectedNumberOfOccurrences)
         {
-            var nodeWrappers = Asserts.Exactly(query, expectedNumberOfOccurrances);
+            var nodeWrappers = Asserts.Exactly(query, expectedNumberOfOccurrences);
             return new AndConnector<QueryWrapper>(nodeWrappers as QueryWrapper);
         }
 

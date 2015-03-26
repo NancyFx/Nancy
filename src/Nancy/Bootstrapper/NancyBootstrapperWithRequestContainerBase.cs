@@ -31,12 +31,12 @@ namespace Nancy.Bootstrapper
         private IEnumerable<ModuleRegistration> moduleRegistrationTypeCache;
 
         /// <summary>
-        /// Stores the per-request type registations
+        /// Stores the per-request type registrations
         /// </summary>
         private TypeRegistration[] RequestScopedTypes { get; set; }
 
         /// <summary>
-        /// Stores the per-request collection registations
+        /// Stores the per-request collection registrations
         /// </summary>
         private CollectionTypeRegistration[] RequestScopedCollectionTypes { get; set; }
 

@@ -170,10 +170,10 @@ namespace Nancy.Hosting.Aspnet
         /// by IEnumerable{Type} constructor dependencies.
         /// </summary>
         /// <param name="container">Container to register into</param>
-        /// <param name="collectionTypeRegistrationsn">Collection type registrations to register</param>
-        protected override sealed void RegisterCollectionTypes(TinyIoCContainer container, IEnumerable<CollectionTypeRegistration> collectionTypeRegistrationsn)
+        /// <param name="collectionTypeRegistrations">Collection type registrations to register</param>
+        protected override sealed void RegisterCollectionTypes(TinyIoCContainer container, IEnumerable<CollectionTypeRegistration> collectionTypeRegistrations)
         {
-            foreach (var collectionTypeRegistration in collectionTypeRegistrationsn)
+            foreach (var collectionTypeRegistration in collectionTypeRegistrations)
             {
                 switch (collectionTypeRegistration.Lifetime)
                 {

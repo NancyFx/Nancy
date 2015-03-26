@@ -137,10 +137,10 @@
         }
 
         /// <summary>
-        /// Gets or sets a value, in miliseconds, that determines how long the stream will attempt to read before timing out. 
+        /// Gets or sets a value, in milliseconds, that determines how long the stream will attempt to read before timing out. 
         /// </summary>
         /// <returns>
-        /// A value, in miliseconds, that determines how long the stream will attempt to read before timing out.
+        /// A value, in milliseconds, that determines how long the stream will attempt to read before timing out.
         /// </returns>
         /// <exception cref="T:System.InvalidOperationException">The <see cref="P:System.IO.Stream.ReadTimeout"/> method always throws an <see cref="T:System.InvalidOperationException"/>. </exception><filterpriority>2</filterpriority>
         public override int ReadTimeout
@@ -157,10 +157,10 @@
         }
 
         /// <summary>
-        /// Gets or sets a value, in miliseconds, that determines how long the stream will attempt to write before timing out. 
+        /// Gets or sets a value, in milliseconds, that determines how long the stream will attempt to write before timing out. 
         /// </summary>
         /// <returns>
-        /// A value, in miliseconds, that determines how long the stream will attempt to write before timing out.
+        /// A value, in milliseconds, that determines how long the stream will attempt to write before timing out.
         /// </returns>
         /// <exception cref="T:System.InvalidOperationException">The <see cref="P:System.IO.Stream.WriteTimeout"/> method always throws an <see cref="T:System.InvalidOperationException"/>. </exception><filterpriority>2</filterpriority>
         public override int WriteTimeout

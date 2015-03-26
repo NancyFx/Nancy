@@ -31,7 +31,7 @@
         /// <param name="name">Route name</param>
         /// <param name="method">The HTTP method that the route is declared for.</param>
         /// <param name="path">The path that the route is declared for.</param>
-        /// <param name="condition">A condition that needs to be satisfied inorder for the route to be eligiable for invocation.</param>
+        /// <param name="condition">A condition that needs to be satisfied inorder for the route to be eligible for invocation.</param>
         /// <param name="action">The action that should take place when the route is invoked.</param>
         public Route(string name, string method, string path, Func<NancyContext, bool> condition, Func<dynamic, CancellationToken, Task<dynamic>> action)
             : this(new RouteDescription(name, method, path, condition), action)
@@ -103,7 +103,7 @@
         /// <param name="name">Route name</param>
         /// <param name="method">The HTTP method that the route is declared for.</param>
         /// <param name="path">The path that the route is declared for.</param>
-        /// <param name="condition">A condition that needs to be satisfied inorder for the route to be eligiable for invocation.</param>
+        /// <param name="condition">A condition that needs to be satisfied inorder for the route to be eligible for invocation.</param>
         /// <param name="syncFunc">The action that should take place when the route is invoked.</param>
         /// <returns>A Route instance</returns>
         public static Route FromSync(string name, string method, string path, Func<NancyContext, bool> condition, Func<dynamic, dynamic> syncFunc)
