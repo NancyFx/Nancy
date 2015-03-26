@@ -270,8 +270,11 @@
                 }
             }
 
-            // TODO: Make sure this handles HTTP/2 (notice; not 2.0)
-            var protocolVersion = string.Format("HTTP/{0}", request.ProtocolVersion.ToString(2));
+            // NOTE: For HTTP/2 we want fieldCount = 1,
+            // otherwise (HTTP/1.0 and HTTP/1.1) we want fieldCount = 2
+            var fieldCount = request.ProtocolVersion.Major == 2 ? 1 : 2;
+
+            var protocolVersion = string.Format("HTTP/{0}", request.ProtocolVersion.ToString(fieldCount));
 
             return new Request(
                 request.HttpMethod,
