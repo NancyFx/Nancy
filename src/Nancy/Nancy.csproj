@@ -251,6 +251,7 @@
     <Compile Include="Routing\Constraints\RangeRouteSegmentConstraint.cs" />
     <Compile Include="Routing\Constraints\RouteSegmentConstraintBase.cs" />
     <Compile Include="Routing\Constraints\ParameterizedRouteSegmentConstraintBase.cs" />
+    <Compile Include="Routing\Constraints\VersionRouteSegmentConstraint.cs" />
     <Compile Include="Routing\DefaultRequestDispatcher.cs" />
     <Compile Include="Routing\DefaultRouteDescriptionProvider.cs" />
     <Compile Include="Routing\DefaultRouteInvoker.cs" />

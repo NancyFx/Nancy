@@ -4,6 +4,8 @@
     using System.Text.RegularExpressions;
     using System.Linq;
 
+    using Nancy.Routing.Constraints;
+
     /// <summary>
     /// A node multiple standard captures combined with a literal e.g. {id}.png.{thing}.{otherthing}
     /// </summary>
@@ -11,9 +13,12 @@
     {
         private static readonly Regex MatchRegex = new Regex(@"({?[^{}]*}?)", RegexOptions.Compiled);
 
+
         private readonly List<string> parameterNames = new List<string>();
+        private readonly List<string> constraints = new List<string>();
 
         private string builtRegex = string.Empty;
+        private IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints;
 
         private const string AssertStart = "^";
         private const string MatchParameter = "(.*)";
@@ -29,9 +34,11 @@
         /// <param name="parent">The parent node</param>
         /// <param name="segment">The segment to match upon</param>
         /// <param name="nodeFactory">The factory</param>
-        public CaptureNodeWithMultipleParameters(TrieNode parent, string segment, ITrieNodeFactory nodeFactory)
+        /// <param name="routeSegmentConstraints"></param>
+        public CaptureNodeWithMultipleParameters(TrieNode parent, string segment, ITrieNodeFactory nodeFactory, IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints)
             : base(parent, segment, nodeFactory)
         {
+            this.routeSegmentConstraints = routeSegmentConstraints;
             this.ExtractParameterNames();
         }
 
@@ -74,7 +81,15 @@
                 var regexMatch = regex.Match(segment);
                 for (var i = 1; i < regexMatch.Groups.Count; i++)
                 {
-                    match.CapturedParameters.Add(parameterNames[i - 1], regexMatch.Groups[i].Value);
+                    match.CapturedParameters.Add(this.parameterNames[i - 1], regexMatch.Groups[i].Value);
+                    if (!string.IsNullOrEmpty(this.constraints[i - 1]))
+                    {
+                        var routeSegmentConstraint = this.routeSegmentConstraints.FirstOrDefault(x => x.Matches(constraints[i-1]));
+                        if (routeSegmentConstraint == null || !routeSegmentConstraint.GetMatch(this.constraints[i - 1], regexMatch.Groups[i].Value, this.parameterNames[i - 1]).Matches)
+                        {
+                            return SegmentMatch.NoMatch;
+                        }
+                    }
                 }
             }
             return match;
@@ -91,7 +106,17 @@
             {
                 if (IsParameterCapture(match))
                 {
-                    parameterNames.Add(match.Value.Trim('{', '}'));
+                    if (match.Value.Contains(":"))
+                    {
+                        var segmentSplit = match.Value.Trim('{', '}').Split(':');
+                        this.parameterNames.Add(segmentSplit[0]);
+                        this.constraints.Add(segmentSplit[1]);
+                    }
+                    else
+                    {
+                        this.parameterNames.Add(match.Value.Trim('{', '}'));
+                        this.constraints.Add(string.Empty);
+                    }
                     this.BuildRegex(MatchParameter);
                 }
                 else
