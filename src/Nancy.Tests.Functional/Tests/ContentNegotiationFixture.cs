@@ -5,6 +5,8 @@ namespace Nancy.Tests.Functional.Tests
     using System.IO;
     using System.Linq;
     using Cookies;
+
+    using Nancy.ErrorHandling;
     using Nancy.IO;
     using Nancy.Responses.Negotiation;
     using Nancy.Testing;
@@ -120,7 +122,7 @@ namespace Nancy.Tests.Functional.Tests
                 with.Get("/headers", (x, m) =>
                 {
                     var context =
-                        new NancyContext { NegotiationContext = new NegotiationContext() };
+                        new NancyContext();
 
                     var negotiator =
                         new Negotiator(context);
@@ -154,7 +156,7 @@ namespace Nancy.Tests.Functional.Tests
                 with.Get("/customPhrase", (x, m) =>
                 {
                     var context =
-                        new NancyContext { NegotiationContext = new NegotiationContext() };
+                        new NancyContext();
 
                     var negotiator =
                         new Negotiator(context);
@@ -188,7 +190,7 @@ namespace Nancy.Tests.Functional.Tests
             with.Get("/headers", (x, m) =>
             {
               var context =
-                  new NancyContext { NegotiationContext = new NegotiationContext() };
+                  new NancyContext();
 
               var negotiator =
                   new Negotiator(context);
@@ -225,7 +227,7 @@ namespace Nancy.Tests.Functional.Tests
                     x.Get("/", (parameters, module) =>
                     {
                         var context =
-                            new NancyContext { NegotiationContext = new NegotiationContext() };
+                            new NancyContext();
 
                         var negotiator =
                             new Negotiator(context);
@@ -255,7 +257,7 @@ namespace Nancy.Tests.Functional.Tests
                     x.Get("/", (parameters, module) =>
                     {
                         var context =
-                            new NancyContext { NegotiationContext = new NegotiationContext() };
+                            new NancyContext();
 
                         var negotiator =
                             new Negotiator(context);
@@ -294,7 +296,7 @@ namespace Nancy.Tests.Functional.Tests
                     x.Get("/test", (parameters, module) =>
                     {
                         var context =
-                            new NancyContext { NegotiationContext = new NegotiationContext() };
+                            new NancyContext();
 
                         var negotiator =
                             new Negotiator(context);
@@ -654,6 +656,23 @@ namespace Nancy.Tests.Functional.Tests
             Assert.Equal(HttpStatusCode.SeeOther, result.StatusCode);
         }
 
+        [Fact]
+        public void Can_negotiate_in_status_code_handler()
+        {
+            // Given
+            var browser = new Browser(with => with.StatusCodeHandler<NotFoundStatusCodeHandler>());
+
+            // When
+            var result = browser.Get("/not-found", with => with.Accept("application/json"));
+
+            var response = result.Body.DeserializeJson<NotFoundStatusCodeHandlerResult>();
+
+            // Then
+            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+            Assert.Equal("Not Found.", response.Message);
+        }
+
         private static Func<dynamic, NancyModule, dynamic> CreateNegotiatedResponse(Action<Negotiator> action = null)
         {
             return (parameters, module) =>
@@ -778,6 +797,38 @@ namespace Nancy.Tests.Functional.Tests
             {
             }
         }
-    }
 
+        private class NotFoundStatusCodeHandler : IStatusCodeHandler
+        {
+            private readonly IResponseNegotiator responseNegotiator;
+
+            public NotFoundStatusCodeHandler(IResponseNegotiator responseNegotiator)
+            {
+                this.responseNegotiator = responseNegotiator;
+            }
+
+            public bool HandlesStatusCode(HttpStatusCode statusCode, NancyContext context)
+            {
+                return statusCode == HttpStatusCode.NotFound;
+            }
+
+            public void Handle(HttpStatusCode statusCode, NancyContext context)
+            {
+                var error = new NotFoundStatusCodeHandlerResult
+                {
+                    StatusCode = statusCode,
+                    Message = "Not Found."
+                };
+
+                context.Response = this.responseNegotiator.NegotiateResponse(error, context);
+            }
+        }
+
+        private class NotFoundStatusCodeHandlerResult
+        {
+            public HttpStatusCode StatusCode { get; set; }
+
+            public string Message { get; set; }
+        }
+    }
 }

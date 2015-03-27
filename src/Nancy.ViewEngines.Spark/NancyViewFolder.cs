@@ -185,13 +185,7 @@ namespace Nancy.ViewEngines.Spark
         // Horrible hack, but we have no way to get a context
         private static NancyContext GetFakeContext()
         {
-            var ctx = new NancyContext();
-
-            ctx.Request = new Request("GET", "/", "http");
-
-            ctx.NegotiationContext = new NegotiationContext();
-
-            return ctx;
+            return new NancyContext { Request = new Request("GET", "/", "http") };
         }
 
         public class NancyViewFile : IViewFile

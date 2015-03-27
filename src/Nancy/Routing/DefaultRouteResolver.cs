@@ -122,6 +122,9 @@
         private ResolveResult BuildResult(NancyContext context, MatchResult result)
         {
             var associatedModule = this.GetModuleFromMatchResult(context, result);
+
+            context.NegotiationContext.SetModule(associatedModule);
+
             var route = associatedModule.Routes.ElementAt(result.RouteIndex);
             var parameters = DynamicDictionary.Create(result.Parameters);
 

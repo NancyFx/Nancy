@@ -1,5 +1,7 @@
 namespace Nancy.Responses.Negotiation
 {
+    using System;
+
     public class Negotiator : IHideObjectMembers
     {
         // TODO - this perhaps should be an interface, along with the view thing above
@@ -13,6 +15,11 @@ namespace Nancy.Responses.Negotiation
         /// <param name="context">The context that should be negotiated.</param>
         public Negotiator(NancyContext context)
         {
+            if (context == null)
+            {
+                throw new ArgumentNullException("context");
+            }
+
             this.NegotiationContext = context.NegotiationContext;
         }
 
