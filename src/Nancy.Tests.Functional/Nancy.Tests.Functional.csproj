@@ -98,6 +98,7 @@
     <Compile Include="Tests\PerRouteAuthFixture.cs" />
     <Compile Include="Tests\RouteConstraintTests.cs" />
     <Compile Include="Tests\SerializerTests.cs" />
+    <Compile Include="Tests\StatusCodeHandlerFixture.cs" />
     <Compile Include="Tests\TracingSmokeTests.cs" />
     <Compile Include="Tests\JsonpTests.cs" />
     <Compile Include="Tests\ModelBindingTests.cs" />

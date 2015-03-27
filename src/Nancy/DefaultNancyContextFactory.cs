@@ -3,6 +3,7 @@ namespace Nancy
     using Nancy.Culture;
     using Nancy.Diagnostics;
     using Nancy.Localization;
+    using Nancy.Responses.Negotiation;
 
     /// <summary>
     /// Creates NancyContext instances
@@ -39,6 +40,7 @@ namespace Nancy
             context.Request = request;
             context.Culture = this.cultureService.DetermineCurrentCulture(context);
             context.Text = new TextResourceFinder(this.textResource, context);
+            context.NegotiationContext = new NegotiationContext();
 
             // Move this to DefaultRequestTrace.
             context.Trace.TraceLog.WriteLog(s => s.AppendLine("New Request Started"));
