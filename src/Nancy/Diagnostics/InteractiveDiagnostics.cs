@@ -9,7 +9,7 @@
     {
         private readonly IDiagnosticsProvider[] providers;
 
-        private const BindingFlags Flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
+        private const BindingFlags Flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy;
 
         public IEnumerable<InteractiveDiagnostic> AvailableDiagnostics { get; private set; }
 
