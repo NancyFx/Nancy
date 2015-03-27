@@ -42,7 +42,14 @@ namespace Nancy
         /// <param name="body">The <see cref="Stream"/> that represents the incoming HTTP body.</param>
         /// <param name="ip">The client's IP address</param>
         /// <param name="certificate">The client's certificate when present.</param>
-        public Request(string method, Url url, RequestStream body = null, IDictionary<string, IEnumerable<string>> headers = null, string ip = null, byte[] certificate = null)
+        /// <param name="protocolVersion">The HTTP protocol version.</param>
+        public Request(string method,
+            Url url,
+            RequestStream body = null,
+            IDictionary<string, IEnumerable<string>> headers = null,
+            string ip = null,
+            byte[] certificate = null,
+            string protocolVersion = null)
         {
             if (String.IsNullOrEmpty(method))
             {
@@ -83,6 +90,8 @@ namespace Nancy
                 this.ClientCertificate = new X509Certificate2(certificate);
             }
 
+            this.ProtocolVersion = protocolVersion ?? string.Empty;
+
             if (String.IsNullOrEmpty(this.Url.Path))
             {
                 this.Url.Path = "/";
@@ -96,6 +105,11 @@ namespace Nancy
         /// Gets the certificate sent by the client.
         /// </summary>
         public X509Certificate ClientCertificate { get; private set; }
+
+        /// <summary>
+        /// Gets the HTTP protocol version.
+        /// </summary>
+        public string ProtocolVersion { get; private set; }
 
         /// <summary>
         /// Gets the IP address of the client

@@ -270,13 +270,20 @@
                 }
             }
 
+            // NOTE: For HTTP/2 we want fieldCount = 1,
+            // otherwise (HTTP/1.0 and HTTP/1.1) we want fieldCount = 2
+            var fieldCount = request.ProtocolVersion.Major == 2 ? 1 : 2;
+
+            var protocolVersion = string.Format("HTTP/{0}", request.ProtocolVersion.ToString(fieldCount));
+
             return new Request(
                 request.HttpMethod,
                 nancyUrl,
                 RequestStream.FromStream(request.InputStream, expectedRequestLength, false),
                 request.Headers.ToDictionary(), 
                 (request.RemoteEndPoint != null) ? request.RemoteEndPoint.Address.ToString() : null,
-                certificate);
+                certificate,
+                protocolVersion);
         }
 
         private void ConvertNancyResponseToResponse(Response nancyResponse, HttpListenerResponse response)

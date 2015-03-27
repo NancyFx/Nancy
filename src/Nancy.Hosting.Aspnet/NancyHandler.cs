@@ -102,12 +102,15 @@ namespace Nancy.Hosting.Aspnet
                 body = RequestStream.FromStream(context.Request.InputStream, expectedRequestLength, true);
             }
 
+            var protocolVersion = context.Request.ServerVariables["HTTP_VERSION"];
+
             return new Request(context.Request.HttpMethod.ToUpperInvariant(), 
                 nancyUrl, 
                 body, 
                 incomingHeaders, 
                 context.Request.UserHostAddress, 
-                certificate);
+                certificate,
+                protocolVersion);
         }
 
         private static long GetExpectedRequestLength(IDictionary<string, IEnumerable<string>> incomingHeaders)
