@@ -43,9 +43,9 @@ namespace Nancy
             var serializer = jsonSerializer ?? (jsonSerializer = formatter.Serializers.FirstOrDefault(s => s.CanSerialize("application/json")));
 
             var r = new JsonResponse<TModel>(model, serializer);
-        	r.StatusCode = statusCode;
+            r.StatusCode = statusCode;
 
-        	return r;
+            return r;
         }
 
         public static Response AsRedirect(this IResponseFormatter formatter, string location, Nancy.Responses.RedirectResponse.RedirectType type = RedirectResponse.RedirectType.SeeOther)
@@ -68,6 +68,11 @@ namespace Nancy
         public static Response FromStream(this IResponseFormatter formatter, Func<Stream> streamDelegate, string contentType)
         {
             return new StreamResponse(streamDelegate, contentType);
+        }
+
+        public static Response AsCreatedResource(this IResponseFormatter formatter, int id)
+        {
+            return new Response{ StatusCode = HttpStatusCode.Created, Headers = { { "Location", formatter.Context.Request.Url.ToString() + "/" + id } } };
         }
     }
 }

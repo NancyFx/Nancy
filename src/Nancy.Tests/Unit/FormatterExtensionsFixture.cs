@@ -20,11 +20,11 @@
             this.context.Request = new Request(
                 "GET", 
                 new Url
-                    {
-                        BasePath = "/basePath",
-                        Path = "Path",
-                        Scheme = "http",
-                    });
+                {
+                    BasePath = "/basePath",
+                    Path = "Path",
+                    Scheme = "http",
+                });
 
             var result = this.formatter.AsRedirect("~/test");
 
@@ -46,6 +46,30 @@
             var result = this.formatter.AsRedirect("/test");
 
             result.Headers["Location"].ShouldEqual("/test");
+        }
+
+        [Fact]
+        public void Should_set_201_header_and_location_header()
+        {
+            //Given
+            this.context.Request = new Request(
+                "POST",
+                new Url
+                {
+                    BasePath = "/basePath",
+                    Path = "/Path",
+                    Scheme = "http",
+                    HostName = "localhost",
+                    Port = 1924,
+
+                });
+
+            //When
+            var result = this.formatter.AsCreatedResource(1);
+
+            //Then
+            result.StatusCode.ShouldEqual(HttpStatusCode.Created);
+            result.Headers["Location"].ShouldEqual("http://localhost:1924/basePath/Path/1");
         }
     }
 }

@@ -40,6 +40,8 @@ namespace Nancy
             return response.WithHeader("Content-Disposition", "attachment; filename=" + actualFilename);
         }
 
+
+
         /// <summary>
         /// Adds a <see cref="INancyCookie"/> to the response.
         /// </summary>
@@ -174,7 +176,7 @@ namespace Nancy
         /// <returns>Modified response</returns>
         public static Response WithStatusCode(this Response response, int statusCode)
         {
-            response.StatusCode = (HttpStatusCode) statusCode;
+            response.StatusCode = (HttpStatusCode)statusCode;
             return response;
         }
 
