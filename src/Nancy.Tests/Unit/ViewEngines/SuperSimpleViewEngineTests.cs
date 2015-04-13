@@ -925,6 +925,19 @@
         }
 
         [Fact]
+        public void Should_expand_paths_in_attribute_values()
+        {
+            const string input = @"<script src='~/scripts/test.js'></script> <link href=""~/stylesheets/style.css"" />";
+            var fakeViewEngineHost = new FakeViewEngineHost();
+            fakeViewEngineHost.ExpandPathCallBack = s => s.Replace("~/", "/BasePath/");
+
+            var result = viewEngine.Render(input, null, fakeViewEngineHost);
+
+            Assert.Equal(@"<script src='/BasePath/scripts/test.js'></script> <link href=""/BasePath/stylesheets/style.css"" />", result);
+        }
+
+
+        [Fact]
         public void Should_expand_anti_forgery_tokens()
         {
             const string input = "<html><body><form>@AntiForgeryToken</form><body></html>";
