@@ -73,6 +73,11 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         private static readonly Regex PathExpansionRegEx = new Regex(@"(?:@Path\[\'(?<Path>.+?)\'\]);?", RegexOptions.Compiled);
 
         /// <summary>
+        /// Compiled RegEx for path expansion in attribute values
+        /// </summary>
+        private static readonly Regex AttributeValuePathExpansionRegEx = new Regex(@"(?<Attribute>[a-zA-Z]+)=(?<Quote>[""|'])(?<Path>~.+?)\k<Quote>", RegexOptions.Compiled);
+
+        /// <summary>
         /// Compiled RegEx for the CSRF anti forgery token
         /// </summary>
         private static readonly Regex AntiForgeryTokenRegEx = new Regex(@"@AntiForgeryToken;?", RegexOptions.Compiled);
@@ -590,6 +595,19 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
                     var path = m.Groups["Path"].Value;
 
                     return host.ExpandPath(path);
+                });
+
+            result = AttributeValuePathExpansionRegEx.Replace(
+                result, 
+                m =>
+                {
+                    var attribute = m.Groups["Attribute"];
+                    var quote = m.Groups["Quote"].Value;
+                    var path = m.Groups["Path"].Value;
+
+                    var expandedPath = host.ExpandPath(path);
+                
+                    return string.Format("{0}={1}{2}{1}", attribute, quote, expandedPath);
                 });
 
             return result;
