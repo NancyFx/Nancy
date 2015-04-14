@@ -56,6 +56,16 @@
                 throw new ArgumentNullException("statusCodeHandlers");
             }
 
+            if (requestTracing == null)
+            {
+                throw new ArgumentNullException("requestTracing");
+            }
+
+            if (staticContentProvider == null)
+            {
+                throw new ArgumentNullException("staticContentProvider");
+            }
+
             this.dispatcher = dispatcher;
             this.contextFactory = contextFactory;
             this.statusCodeHandlers = statusCodeHandlers;
