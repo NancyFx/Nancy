@@ -154,8 +154,8 @@ namespace Nancy.Routing
 
         private ResolveResult Resolve(NancyContext context)
         {
-            var extension =
-                Path.GetExtension(context.Request.Path);
+            var extension = context.Request.Path.IndexOfAny(Path.GetInvalidPathChars()) >= 0 ? null
+               : Path.GetExtension(context.Request.Path);
 
             var originalAcceptHeaders = context.Request.Headers.Accept;
             var originalRequestPath = context.Request.Path;
