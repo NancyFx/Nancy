@@ -46,6 +46,14 @@
         /// </summary>
         public bool EnableClientCertificates { get; set; }
 
+        /// <summary>
+        /// Gets or sets a property determining if base uri matching can fall back to just
+        /// using Authority (Schema + Host + Port) as base uri if it cannot match anything in
+        /// the known list. This should only be set to True if you have issues with port forwarding
+        /// (e.g. on Azure).
+        /// </summary>
+        public bool AllowAuthorityFallback { get; set; }
+
         public HostConfiguration()
         {
             this.RewriteLocalhost = true;
