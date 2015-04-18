@@ -175,10 +175,7 @@ namespace Nancy.Json
                 return obj;
 
             if (type.IsEnum)
-                if (obj is string)
-                    return Enum.Parse(type, (string)obj, true);
-                else
-                    return Enum.ToObject(type, obj);
+                return ConvertToEnum(obj, type);
 
             TypeConverter c = TypeDescriptor.GetConverter(type);
             if (c.CanConvertFrom(sourceType))
@@ -208,8 +205,13 @@ namespace Nancy.Json
                     if (s == string.Empty)
                         return null;
                 }
-                else //It is not string at all, convert to Nullable<> type, from int to uint for example
-                    return Convert.ChangeType (obj, type.GetGenericArguments ()[0]);
+
+                var underlyingType = type.GetGenericArguments()[0];
+
+                if (underlyingType.IsEnum)
+                    return ConvertToEnum(obj, underlyingType);
+
+                return Convert.ChangeType(obj, underlyingType);
             }
 
             return Convert.ChangeType(obj, type);
@@ -398,6 +400,14 @@ namespace Nancy.Json
             }
 
             return target;
+        }
+
+        object ConvertToEnum(object obj, Type type)
+        {
+            if (obj is string)
+                return Enum.Parse(type, (string)obj, true);
+            else
+                return Enum.ToObject(type, obj);
         }
 
         Type ResolveGenericInterfaceToType(Type type)
