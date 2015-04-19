@@ -38,7 +38,7 @@ namespace Nancy.Security
         /// <param name="requiredClaims">Claim(s) required</param>
         public static void RequiresClaims(this INancyModule module, params string[] requiredClaims)
         {
-            module.RequiresClaims((IEnumerable<string>)requiredClaims);
+            module.RequiresClaims(requiredClaims.AsEnumerable());
         }
         
         /// <summary>
@@ -59,7 +59,7 @@ namespace Nancy.Security
         /// <param name="requiredClaims">Claim(s) required</param>
         public static void RequiresAnyClaim(this INancyModule module, params string[] requiredClaims)
         {
-            module.RequiresAnyClaim((IEnumerable<string>)requiredClaims);
+            module.RequiresAnyClaim(requiredClaims.AsEnumerable());
         }
 
         /// <summary>
