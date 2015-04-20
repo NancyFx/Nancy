@@ -71,6 +71,17 @@
             Assert.Equal("Bob", model.Name);
         }
 
+        [Fact]
+        public void Should_return_200_on_head()
+        {
+            // Given
+            // When
+            var response = browser.Head(@"/razor-viewbag");
+
+            // Then
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
         public class ViewBagModel
         {
             public string Name { get; set; }
