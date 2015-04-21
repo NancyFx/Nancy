@@ -2,6 +2,7 @@ namespace Nancy.Security
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     using Nancy.Extensions;
     using Nancy.Responses;
@@ -32,6 +33,16 @@ namespace Nancy.Security
         }
 
         /// <summary>
+        /// This module requires authentication and certain claims to be present.
+        /// </summary>
+        /// <param name="module">Module to enable</param>
+        /// <param name="requiredClaims">Claim(s) required</param>
+        public static void RequiresClaims(this INancyModule module, params string[] requiredClaims)
+        {
+            module.RequiresClaims(requiredClaims.AsEnumerable());
+        }
+        
+        /// <summary>
         /// This module requires authentication and any one of certain claims to be present.
         /// </summary>
         /// <param name="module">Module to enable</param>
@@ -40,6 +51,16 @@ namespace Nancy.Security
         {
             module.AddBeforeHookOrExecute(SecurityHooks.RequiresAuthentication(), "Requires Authentication");
             module.AddBeforeHookOrExecute(SecurityHooks.RequiresAnyClaim(requiredClaims), "Requires Any Claim");
+        }
+        
+        /// <summary>
+        /// This module requires authentication and any one of certain claims to be present.
+        /// </summary>
+        /// <param name="module">Module to enable</param>
+        /// <param name="requiredClaims">Claim(s) required</param>
+        public static void RequiresAnyClaim(this INancyModule module, params string[] requiredClaims)
+        {
+            module.RequiresAnyClaim(requiredClaims.AsEnumerable());
         }
 
         /// <summary>
