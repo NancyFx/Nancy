@@ -14,7 +14,7 @@
                 new EmbeddedFileResponse(this.GetType().Assembly, "Nancy.Tests", "Resources.Views.staticviewresource.html");
 
             // Then
-            response.Headers["ETag"].ShouldEqual("\"5D6EFDFDB135DC90F16D57E05603DA1E\"");
+            response.Headers["ETag"].ShouldEqual("\"B9D9DC2B50ADFD0867749D4837C63556339080CE\"");
         }
 
         [Fact]
@@ -30,7 +30,7 @@
             response.Contents.Invoke(outputStream);
 
             // Then
-            response.Headers["ETag"].ShouldEqual("\"5D6EFDFDB135DC90F16D57E05603DA1E\"");
+            response.Headers["ETag"].ShouldEqual("\"B9D9DC2B50ADFD0867749D4837C63556339080CE\"");
         }
 
         [Fact]
