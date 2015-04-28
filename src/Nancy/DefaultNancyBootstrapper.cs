@@ -1,12 +1,10 @@
-﻿using Nancy.Diagnostics;
-
 namespace Nancy
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-
+    using Nancy.Diagnostics;
     using Bootstrapper;
     using Nancy.TinyIoc;
 
