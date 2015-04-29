@@ -64,9 +64,9 @@
 
         private static string GenerateETag(Stream stream)
         {
-            using (var md5 = MD5.Create())
+            using (var sha1 = new SHA1CryptoServiceProvider())
             {
-                var hash = md5.ComputeHash(stream);
+                var hash = sha1.ComputeHash(stream);
                 return string.Concat("\"", ByteArrayToString(hash), "\"");
             }
         }
