@@ -2,7 +2,6 @@ namespace Nancy.ModelBinding
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.Linq;
     using System.Reflection;
     using System.Text.RegularExpressions;
@@ -93,11 +92,20 @@ namespace Nancy.ModelBinding
             var bindingContext =
                 this.CreateBindingContext(context, modelType, instance, configuration, blackList, genericType);
 
-            var bodyDeserializedModel = this.DeserializeRequestBody(bindingContext);
-
-            if (bodyDeserializedModel != null)
+            try
             {
-                UpdateModelWithDeserializedModel(bodyDeserializedModel, bindingContext);
+                var bodyDeserializedModel = this.DeserializeRequestBody(bindingContext);
+                if (bodyDeserializedModel != null)
+                {
+                    UpdateModelWithDeserializedModel(bodyDeserializedModel, bindingContext);
+                }
+            }
+            catch (Exception exception)
+            {
+                if (!bindingContext.Configuration.IgnoreErrors)
+                {
+                    throw new ModelBindingException(modelType, innerException: exception);
+                }
             }
 
             var bindingExceptions = new List<PropertyBindingException>();
