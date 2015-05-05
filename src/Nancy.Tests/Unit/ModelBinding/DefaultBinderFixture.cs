@@ -62,6 +62,40 @@ namespace Nancy.Tests.Unit.ModelBinding
         }
 
         [Fact]
+        public void Should_throw_if_body_deserializer_fails_and_IgnoreErrors_is_false()
+        {
+            // Given
+            var deserializer = new ThrowingBodyDeserializer<FormatException>();
+            var binder = this.GetBinder(bodyDeserializers: new[] { deserializer });
+
+            var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
+
+            var config = new BindingConfig { IgnoreErrors = false };
+
+            // When
+            var result = Record.Exception(() => binder.Bind(context, this.GetType(), null, config));
+
+            // Then
+            result.ShouldBeOfType<ModelBindingException>();
+            result.InnerException.ShouldBeOfType<FormatException>();
+        }
+
+        [Fact]
+        public void Should_not_throw_if_body_deserializer_fails_and_IgnoreErrors_is_true()
+        {
+            // Given
+            var deserializer = new ThrowingBodyDeserializer<FormatException>();
+            var binder = this.GetBinder(bodyDeserializers: new[] { deserializer });
+
+            var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
+
+            var config = new BindingConfig { IgnoreErrors = true };
+
+            // When, Then
+            Assert.DoesNotThrow(() => binder.Bind(context, this.GetType(), null, config));
+        }
+
+        [Fact]
         public void Should_throw_if_field_name_converter_is_null()
         {
             // Given, When
@@ -329,7 +363,7 @@ namespace Nancy.Tests.Unit.ModelBinding
 
             // When
             var model = binder.Bind(context, typeof(TestModel), null, config) as TestModel;
-            
+
             // Then
             model.AnotherIntProperty.ShouldEqual(10);
         }
@@ -420,7 +454,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             var context = new NancyContext { Request = new FakeRequest("GET", "/") };
             context.Request.Form["StringProperty"] = "Test";
             context.Request.Form["IntProperty"] = "12";
-            
+
             var fakeModule = A.Fake<INancyModule>();
             var fakeModelBinderLocator = A.Fake<IModelBinderLocator>();
             A.CallTo(() => fakeModule.Context).Returns(context);
@@ -801,7 +835,7 @@ namespace Nancy.Tests.Unit.ModelBinding
 
             // When
             var result = (List<TestModel>)binder.Bind(context, typeof(List<TestModel>), null, BindingConfig.Default);
-            
+
             // Then
             result.ShouldHaveCount(2);
             result.First().IntValuesProperty.ShouldHaveCount(4);
@@ -1021,7 +1055,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             result.DateProperty.Date.Day.ShouldEqual(day);
             result.DateProperty.Date.Year.ShouldEqual(year);
         }
-        
+
         [Fact]
         public void Should_be_able_to_bind_from_request_and_context_simultaneously()
         {
@@ -1153,7 +1187,7 @@ namespace Nancy.Tests.Unit.ModelBinding
 
             // When
             var result = (TestModel[])binder.Bind(context, typeof(TestModel[]), null, BindingConfig.Default);
-            
+
             // Then
             result.First().StringProperty.ShouldEqual("Test");
             result.Last().StringProperty.ShouldEqual("AnotherTest");
@@ -1216,7 +1250,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             result.Last().IntProperty.ShouldEqual(9);
             result.Last().AnotherStringProperty.ShouldEqual("Bananas");
         }
-        
+
         [Fact]
         public void Should_bind_model_with_instance_from_body()
         {
@@ -1238,7 +1272,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             result.IntProperty.ShouldEqual(6);
             result.AnotherStringProperty.ShouldEqual("Beers");
         }
-        
+
         [Fact]
         public void Should_bind_model_from_body_that_contains_an_array()
         {
@@ -1292,7 +1326,7 @@ namespace Nancy.Tests.Unit.ModelBinding
 
             // When
             var result = (TestModel[])binder.Bind(context, typeof(TestModel[]), null, BindingConfig.Default, "SomeStringsProperty", "SomeStringsField");
-            
+
             // Then
             result.ShouldHaveCount(2);
             result.First().SomeStringsProperty.ShouldBeNull();
@@ -1375,7 +1409,7 @@ namespace Nancy.Tests.Unit.ModelBinding
         [Fact]
         public void Should_be_able_to_bind_body_request_form_and_context_properties()
         {
-            //Given 
+            //Given
             var binder = this.GetBinder(null, new List<IBodyDeserializer> { new XmlBodyDeserializer() });
             var body = XmlBodyDeserializerFixture.ToXmlString(new TestModel { DateProperty = new DateTime(2012, 8, 16) });
 
@@ -1398,7 +1432,7 @@ namespace Nancy.Tests.Unit.ModelBinding
         [Fact]
         public void Should_ignore_existing_instance_if_type_doesnt_match()
         {
-            //Given 
+            //Given
             var binder = this.GetBinder();
             var existing = new object();
             var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
@@ -1546,7 +1580,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             public string[] SomeStringsProperty { get; set; }
 
             public string[] SomeStringsField;
-            
+
             public int this[int index]
             {
                 get { return 0; }
@@ -1567,6 +1601,19 @@ namespace Nancy.Tests.Unit.ModelBinding
             public string NestedStringField;
             public int NestedIntField;
             public double NestedDoubleField;
+        }
+
+        private class ThrowingBodyDeserializer<T> : IBodyDeserializer where T : Exception, new()
+        {
+            public bool CanDeserialize(string contentType, BindingContext context)
+            {
+                return true;
+            }
+
+            public object Deserialize(string contentType, Stream bodyStream, BindingContext context)
+            {
+                throw new T();
+            }
         }
 
         public class TestModelWithHiddenDefaultConstructor
