@@ -194,7 +194,7 @@ namespace Nancy.ModelBinding
         ///  IntProperty_7
         ///  StringProperty_8
         ///  You'll end up with a list of 3 matches: 5,7,8
-        /// 
+        ///
         /// </summary>
         /// <param name="context">Current Context </param>
         /// <returns>An int containing the number of elements</returns>
@@ -476,18 +476,13 @@ namespace Nancy.ModelBinding
             }
 
             var contentType = GetRequestContentType(context.Context);
-            var bodyDeserializer = this.bodyDeserializers.FirstOrDefault(b => b.CanDeserialize(contentType, context));
 
-            if (bodyDeserializer != null)
-            {
-                return bodyDeserializer.Deserialize(contentType, context.Context.Request.Body, context);
-            }
+            var bodyDeserializer = this.bodyDeserializers.FirstOrDefault(b => b.CanDeserialize(contentType, context))
+                ?? this.defaults.DefaultBodyDeserializers.FirstOrDefault(b => b.CanDeserialize(contentType, context));
 
-            bodyDeserializer = this.defaults.DefaultBodyDeserializers.FirstOrDefault(b => b.CanDeserialize(contentType, context));
-
-            return bodyDeserializer != null ?
-                bodyDeserializer.Deserialize(contentType, context.Context.Request.Body, context) :
-                null;
+            return bodyDeserializer != null
+                ? bodyDeserializer.Deserialize(contentType, context.Context.Request.Body, context)
+                : null;
         }
 
         private static string GetRequestContentType(NancyContext context)
