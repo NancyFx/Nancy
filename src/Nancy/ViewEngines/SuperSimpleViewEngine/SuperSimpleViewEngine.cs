@@ -75,7 +75,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         /// <summary>
         /// Compiled RegEx for path expansion in attribute values
         /// </summary>
-        private static readonly Regex AttributeValuePathExpansionRegEx = new Regex(@"(?<Attribute>[a-zA-Z]+)=(?<Quote>[""|'])(?<Path>~.+?)\k<Quote>", RegexOptions.Compiled);
+        private static readonly Regex AttributeValuePathExpansionRegEx = new Regex(@"(?<Attribute>[a-zA-Z]+)=(?<Quote>[""'])(?<Path>~.+?)\k<Quote>", RegexOptions.Compiled);
 
         /// <summary>
         /// Compiled RegEx for the CSRF anti forgery token
