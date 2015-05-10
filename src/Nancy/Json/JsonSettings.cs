@@ -48,6 +48,7 @@ namespace Nancy.Json
             Converters = new List<JavaScriptConverter>
                              {
                                  new TimeSpanConverter(),
+                                 new TupleConverter()
                              };
             PrimitiveConverters = new List<JavaScriptPrimitiveConverter>();
             RetainCasing = false;
