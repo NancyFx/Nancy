@@ -339,6 +339,14 @@ namespace Nancy.Json
 
                     isDictionaryWithGuidKey = arguments[0] == typeof(Guid);
                 }
+                else
+                {
+                    var converter = GetConverter(genericTypeDefinition);
+                    if (converter != null)
+                        return converter.Deserialize(
+                            EvaluateDictionary(dict),
+                            type, this);
+                }
             }
             else if (type.IsAssignableFrom(typeof(IDictionary)))
                 type = typeof(Dictionary<string, object>);
