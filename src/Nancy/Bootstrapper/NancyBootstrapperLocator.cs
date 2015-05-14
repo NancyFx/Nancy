@@ -6,7 +6,7 @@
 
     /// <summary>
     /// Class for locating an INancyBootstrapper implementation.
-    /// 
+    ///
     /// Will search the app domain for a non-abstract one, and if it can't find one
     /// it will use the default nancy one that uses TinyIoC.
     /// </summary>
@@ -70,7 +70,7 @@
             var set = new HashSet<Type>();
             bootstrapper = null;
 
-            if (customBootstrappers.All(boostrapper => set.Add(boostrapper.BaseType)))
+            if (customBootstrappers.All(b => set.Add(b.BaseType)))
             {
                 var except = customBootstrappers.Except(set).ToList();
                 bootstrapper = except.Count == 1 ? except[0] : null;
