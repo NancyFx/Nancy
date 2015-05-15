@@ -2,7 +2,7 @@
 {
     using Bootstrapper;
 
-    public class DemoBoostrapper : DefaultNancyBootstrapper
+    public class DemoBootstrapper : DefaultNancyBootstrapper
     {
         protected override NancyInternalConfiguration InternalConfiguration
         {
