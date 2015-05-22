@@ -19,12 +19,12 @@ namespace Nancy.Routing
         {
             if (String.IsNullOrEmpty(method))
             {
-                throw new ArgumentException("Method must be specified", method);
+                throw new ArgumentException("Method must be specified", "method");
             }
 
             if (String.IsNullOrEmpty(path))
             {
-                throw new ArgumentException("Path must be specified", method);
+                throw new ArgumentException("Path must be specified", "path");
             }
 
             this.Name = name ?? string.Empty;
