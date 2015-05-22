@@ -37,7 +37,7 @@ namespace Nancy
         /// Initializes a new instance of the <see cref="Request"/> class.
         /// </summary>
         /// <param name="method">The HTTP data transfer method used by the client.</param>
-        /// <param name="url">The <see cref="Url"/>url of the requested resource</param>
+        /// <param name="url">The <see cref="Url"/> of the requested resource</param>
         /// <param name="headers">The headers that was passed in by the client.</param>
         /// <param name="body">The <see cref="Stream"/> that represents the incoming HTTP body.</param>
         /// <param name="ip">The client's IP address</param>
