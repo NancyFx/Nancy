@@ -10,6 +10,11 @@ namespace Nancy.ModelBinding.DefaultConverters
     public class FallbackConverter : ITypeConverter
     {
         /// <summary>
+        /// Used to ensure the fallback converter is always called last when converting types
+        /// </summary>
+        public int Order { get { return int.MaxValue; } }
+
+        /// <summary>
         /// Whether the converter can convert to the destination type
         /// </summary>
         /// <param name="destinationType">Destination type</param>

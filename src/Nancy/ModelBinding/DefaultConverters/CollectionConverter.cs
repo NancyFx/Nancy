@@ -15,6 +15,11 @@ namespace Nancy.ModelBinding.DefaultConverters
         private readonly MethodInfo enumerableToListMethod = typeof(Enumerable).GetMethod("ToList", BindingFlags.Public | BindingFlags.Static);
 
         /// <summary>
+        /// Used to ensure Converter is always called before FallbackConverter
+        /// </summary>
+        public int Order { get { return 0; } }
+
+        /// <summary>
         /// Whether the converter can convert to the destination type
         /// </summary>
         /// <param name="destinationType">Destination type</param>

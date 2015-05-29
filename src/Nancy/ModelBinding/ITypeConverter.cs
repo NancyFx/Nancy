@@ -24,5 +24,10 @@ namespace Nancy.ModelBinding
         /// <param name="context">Current context</param>
         /// <returns>Converted object of the destination type</returns>
         object Convert(string input, Type destinationType, BindingContext context);
+
+        /// <summary>
+        /// Used to ensure order of type converters is called correctly
+        /// </summary>
+        int Order { get; }
     }
 }
