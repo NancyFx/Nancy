@@ -429,11 +429,11 @@ namespace Nancy.ModelBinding
 
             if (instance == null)
             {
-                return Activator.CreateInstance(modelType);
+                return Activator.CreateInstance(modelType, true);
             }
 
             return !modelType.IsInstanceOfType(instance) ?
-                Activator.CreateInstance(modelType) :
+                Activator.CreateInstance(modelType, true) :
                 instance;
         }
 

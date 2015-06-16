@@ -1442,6 +1442,20 @@ namespace Nancy.Tests.Unit.ModelBinding
             result.ShouldEqualSequence(new[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 });
         }
 
+        [Fact]
+        public void Should_bind_to_model_with_non_public_default_constructor()
+        {
+            var binder = this.GetBinder();
+
+            var context = CreateContextWithHeader("Content-Type", new[] { "application/json" });
+            context.Request.Form["IntProperty"] = "10";
+
+            var result = (TestModelWithHiddenDefaultConstructor)binder.Bind(context, typeof (TestModelWithHiddenDefaultConstructor), null, BindingConfig.Default);
+
+            result.ShouldNotBeNull();
+            result.IntProperty.ShouldEqual(10);
+        }
+
         private IBinder GetBinder(IEnumerable<ITypeConverter> typeConverters = null, IEnumerable<IBodyDeserializer> bodyDeserializers = null, IFieldNameConverter nameConverter = null, BindingDefaults bindingDefaults = null)
         {
             var converters = typeConverters ?? new ITypeConverter[] { new DateTimeConverter(), new NumericConverter(), new FallbackConverter() };
@@ -1553,6 +1567,13 @@ namespace Nancy.Tests.Unit.ModelBinding
             public string NestedStringField;
             public int NestedIntField;
             public double NestedDoubleField;
+        }
+
+        public class TestModelWithHiddenDefaultConstructor
+        {
+            public int IntProperty { get; private set; }
+
+            private TestModelWithHiddenDefaultConstructor() { }
         }
     }
 
