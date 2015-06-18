@@ -92,10 +92,14 @@
 
         private IEnumerable<InteractiveDiagnosticMethod> GetDiagnosticMethods(IDiagnosticsProvider diagnosticsProvider)
         {
+            var objectMethods = typeof(object).GetMethods().Select(x => x.Name).ToList();
+
             var methods = diagnosticsProvider.DiagnosticObject
                                              .GetType()
                                              .GetMethods(Flags)
-                                             .Where(mi => ! mi.IsSpecialName).ToArray();
+                                             .Where(x => !objectMethods.Contains(x.Name))
+                                             .Where(mi => !mi.IsSpecialName)
+                                             .ToArray();
 
             var diagnosticMethods = new List<InteractiveDiagnosticMethod>(methods.Length);
 
