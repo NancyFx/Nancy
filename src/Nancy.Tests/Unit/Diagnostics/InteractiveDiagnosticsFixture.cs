@@ -1,10 +1,8 @@
 ﻿namespace Nancy.Tests.Unit.Diagnostics
 {
     using Nancy.Diagnostics;
-    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
     using Xunit;
 
     public class InteractiveDiagnosticsFixture
@@ -30,7 +28,7 @@
             [Template("<h1>{{model.Result}}</h1>")]
             public string ParentPublicMethod()
             {
-                return string.Concat("In parent public.");
+                return "In parent public.";
             }
         }
 
@@ -40,7 +38,7 @@
             [Template("<h1>{{model.Result}}</h1>")]
             public string ChildPublicMethod()
             {
-                return string.Concat("In child public.");
+                return "In child public.";
             }
         }
 
@@ -50,16 +48,39 @@
             //Given
             var child = new FakeChildDiagnosticsProvider();
             var parent = new FakeParentDiagnosticsProvider();
-            IEnumerable<IDiagnosticsProvider> ie = new IDiagnosticsProvider[] { child, parent };
-            var id = new InteractiveDiagnostics(ie);
-            var ad = id.AvailableDiagnostics;
+
+            var diagnostics = new InteractiveDiagnostics(new[] {child, parent});
+            var availableDiagnostics = diagnostics.AvailableDiagnostics.ToList();
 
             //When
-            int methodsInParent = ad.ElementAt(1).Methods.Count();
-            int methodsInChild = ad.First().Methods.Count();
+            var methodsInChild = availableDiagnostics[0].Methods.Count();
+            var methodsInParent = availableDiagnostics[1].Methods.Count();
 
             //Then
             Assert.True(methodsInChild == methodsInParent + 1);
+        }
+
+        [Fact]
+        public void Should_exclude_object_methods()
+        {
+            //Given
+            var child = new FakeChildDiagnosticsProvider();
+
+            var diagnostics = new InteractiveDiagnostics(new[] { child });
+            var availableDiagnostics = diagnostics.AvailableDiagnostics.ToList();
+
+            var objectMethodNames = typeof(object).GetMethods()
+                .Select(x => x.Name)
+                .ToList();
+
+            //When
+            var methodsInChild = availableDiagnostics[0].Methods;
+
+            //Then
+            foreach (var childMethod in methodsInChild)
+            {
+                Assert.DoesNotContain(childMethod.MethodName, objectMethodNames);
+            }
         }
     }
 }
