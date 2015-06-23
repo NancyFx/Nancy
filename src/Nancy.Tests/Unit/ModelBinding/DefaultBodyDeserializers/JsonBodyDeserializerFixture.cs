@@ -129,12 +129,61 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
         }
 
         [Fact]
+        public void Should_deserialize_enum()
+        {
+            // Given
+            var json = this.serializer.Serialize(TestEnum.One);
+            var bodyStream = new MemoryStream(Encoding.UTF8.GetBytes(json));
+            var context = new BindingContext()
+            {
+                DestinationType = typeof (TestEnum),
+                ValidModelBindingMembers = BindingMemberInfo.Collect<TestEnum>().ToList(),
+            };
+
+            // When
+            var result = (TestEnum)this.deserialize.Deserialize(
+                "application/json",
+                bodyStream,
+                context);
+
+            // Then
+            result.ShouldEqual(TestEnum.One);
+        }
+
+        [Theory]
+        [InlineData(TestEnum.Hundred)]
+        [InlineData(null)]
+        public void Should_deserialize_nullable_enum(TestEnum? propertyValue)
+        {
+            var context = new BindingContext()
+            {
+                DestinationType = typeof(TestModel),
+                ValidModelBindingMembers = BindingMemberInfo.Collect<TestModel>().ToList(),
+            };
+
+            var model = new TestModel { NullableEnumProperty = propertyValue };
+
+            var s = new JavaScriptSerializer();
+            var serialized = s.Serialize(model);
+            var bodyStream = new MemoryStream(Encoding.UTF8.GetBytes(serialized));
+
+            // When
+            var result = (TestModel)this.deserialize.Deserialize(
+                "application/json",
+                bodyStream,
+                context);
+
+            // Then
+            result.NullableEnumProperty.ShouldEqual(propertyValue);
+        }
+
+        [Fact]
         public void Should_deserialize_list_of_primitives()
         {
             // Given
             var context = new BindingContext()
             {
-                DestinationType = typeof(TestModel),
+                DestinationType = typeof (TestModel),
                 ValidModelBindingMembers = BindingMemberInfo.Collect<TestModel>().ToList(),
             };
 
@@ -303,6 +352,8 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
 
             public string[] ArrayProperty { get; set; }
 
+            public TestEnum? NullableEnumProperty { get; set; }
+
             public List<int> ListOfPrimitivesProperty { get; set; }
 
             public List<int> ListOfPrimitivesField;
@@ -370,6 +421,12 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
             {
                 return !Equals(left, right);
             }
+        }
+
+        public enum TestEnum
+        {
+            One = 1,
+            Hundred = 100
         }
     }
 
