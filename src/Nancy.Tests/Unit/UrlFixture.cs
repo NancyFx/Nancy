@@ -185,7 +185,7 @@ namespace Nancy.Tests.Unit
             result.Scheme.ShouldEqual("https");
             result.HostName.ShouldEqual("www.nancyfx.org");
             result.Port.ShouldEqual(1234);
-            result.BasePath.ShouldBeNull();
+            result.BasePath.ShouldEqual(string.Empty);
             result.Path.ShouldEqual("/base");
             result.Query.ShouldEqual("?foo=some%20text");
         }
@@ -221,7 +221,7 @@ namespace Nancy.Tests.Unit
             result.Scheme.ShouldEqual("https");
             result.HostName.ShouldEqual("www.nancyfx.org");
             result.Port.ShouldEqual(1234);
-            result.BasePath.ShouldBeNull();
+            result.BasePath.ShouldEqual(string.Empty);
             result.Path.ShouldEqual("/base");
             result.Query.ShouldEqual("?foo=some%20text");
         }
