@@ -173,7 +173,7 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
-        public void Should_implicitliy_cast_from_string()
+        public void Should_implicitly_cast_from_string()
         {
             // Given
             string urlAsString = "https://www.nancyfx.org:1234/base?foo=some%20text#anchor";
@@ -185,13 +185,13 @@ namespace Nancy.Tests.Unit
             result.Scheme.ShouldEqual("https");
             result.HostName.ShouldEqual("www.nancyfx.org");
             result.Port.ShouldEqual(1234);
-            result.BasePath.ShouldBeNull();
+            result.BasePath.ShouldEqual(string.Empty);
             result.Path.ShouldEqual("/base");
             result.Query.ShouldEqual("?foo=some%20text");
         }
 
         [Fact]
-        public void Should_implicitliy_cast_to_string()
+        public void Should_implicitly_cast_to_string()
         {
             // Given
             this.url.Scheme = "https";
@@ -209,7 +209,7 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
-        public void Should_implicitliy_cast_from_uri()
+        public void Should_implicitly_cast_from_uri()
         {
             // Given
             Uri uri = new Uri("https://www.nancyfx.org:1234/base?foo=some%20text#anchor");
@@ -221,13 +221,31 @@ namespace Nancy.Tests.Unit
             result.Scheme.ShouldEqual("https");
             result.HostName.ShouldEqual("www.nancyfx.org");
             result.Port.ShouldEqual(1234);
-            result.BasePath.ShouldBeNull();
+            result.BasePath.ShouldEqual(string.Empty);
             result.Path.ShouldEqual("/base");
             result.Query.ShouldEqual("?foo=some%20text");
         }
 
         [Fact]
-        public void Should_implicitliy_cast_to_uri()
+        public void Should_implicitly_cast_from_relative_uri()
+        {
+            // Given
+            var uri = new Uri("/hello", UriKind.Relative);
+
+            // When
+            Url result = uri;
+
+            // Then
+            result.Scheme.ShouldEqual(Uri.UriSchemeHttp);
+            result.HostName.ShouldEqual(string.Empty);
+            result.Port.ShouldEqual(null);
+            result.BasePath.ShouldEqual(string.Empty);
+            result.Path.ShouldEqual("/hello");
+            result.Query.ShouldEqual(string.Empty);
+        }
+
+        [Fact]
+        public void Should_implicitly_cast_to_uri()
         {
             // Given
             this.url.Scheme = "https";

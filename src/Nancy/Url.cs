@@ -64,15 +64,7 @@ namespace Nancy
         public string BasePath
         {
             get { return this.basePath; }
-            set
-            {
-                if (string.IsNullOrEmpty(value))
-                {
-                    return;
-                }
-
-                this.basePath = value.TrimEnd('/');
-            }
+            set { this.basePath = (value ?? string.Empty).TrimEnd('/'); }
         }
 
         /// <summary>
@@ -193,14 +185,19 @@ namespace Nancy
         /// <returns>An <see cref="Url"/> representation of the <paramref name="uri"/>.</returns>
         public static implicit operator Url(Uri uri)
         {
-            return new Url
+            if (uri.IsAbsoluteUri)
             {
-                HostName = uri.Host,
-                Path = uri.LocalPath,
-                Port = uri.Port,
-                Query = uri.Query,
-                Scheme = uri.Scheme
-            };
+                return new Url
+                {
+                    HostName = uri.Host,
+                    Path = uri.LocalPath,
+                    Port = uri.Port,
+                    Query = uri.Query,
+                    Scheme = uri.Scheme
+                };
+            }
+
+            return new Url { Path = uri.OriginalString };
         }
 
         private static string GetQuery(string query)
