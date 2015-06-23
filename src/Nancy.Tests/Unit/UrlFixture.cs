@@ -173,7 +173,7 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
-        public void Should_implicitliy_cast_from_string()
+        public void Should_implicitly_cast_from_string()
         {
             // Given
             string urlAsString = "https://www.nancyfx.org:1234/base?foo=some%20text#anchor";
@@ -191,7 +191,7 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
-        public void Should_implicitliy_cast_to_string()
+        public void Should_implicitly_cast_to_string()
         {
             // Given
             this.url.Scheme = "https";
@@ -209,7 +209,7 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
-        public void Should_implicitliy_cast_from_uri()
+        public void Should_implicitly_cast_from_uri()
         {
             // Given
             Uri uri = new Uri("https://www.nancyfx.org:1234/base?foo=some%20text#anchor");
