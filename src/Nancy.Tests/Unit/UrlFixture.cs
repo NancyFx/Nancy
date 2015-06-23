@@ -227,7 +227,25 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
-        public void Should_implicitliy_cast_to_uri()
+        public void Should_implicitly_cast_from_relative_uri()
+        {
+            // Given
+            var uri = new Uri("/hello", UriKind.Relative);
+
+            // When
+            Url result = uri;
+
+            // Then
+            result.Scheme.ShouldEqual(Uri.UriSchemeHttp);
+            result.HostName.ShouldEqual(string.Empty);
+            result.Port.ShouldEqual(null);
+            result.BasePath.ShouldEqual(string.Empty);
+            result.Path.ShouldEqual("/hello");
+            result.Query.ShouldEqual(string.Empty);
+        }
+
+        [Fact]
+        public void Should_implicitly_cast_to_uri()
         {
             // Given
             this.url.Scheme = "https";
