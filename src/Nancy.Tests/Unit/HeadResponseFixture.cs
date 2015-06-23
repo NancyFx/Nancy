@@ -1,6 +1,10 @@
 namespace Nancy.Tests.Unit
 {
     using System.Collections.Generic;
+    using System.IO;
+
+    using FakeItEasy;
+
     using Tests.Extensions;
     using Xunit;
 
@@ -11,6 +15,7 @@ namespace Nancy.Tests.Unit
 
         public HeadResponseFixture()
         {
+            // Given
             this.headers = new Dictionary<string, string> { { "Test", "Value " } };
             this.response = "This is the content";
 
@@ -19,12 +24,20 @@ namespace Nancy.Tests.Unit
             this.response.StatusCode = HttpStatusCode.ResetContent;
         }
 
+        private HeadResponse CreateHeadResponse()
+        {
+            var head = new HeadResponse(this.response);
+            head.PreExecute(A.Dummy<NancyContext>());
+            head.Contents(new MemoryStream());
+            return head;
+        }
+
         [Fact]
         public void Should_set_status_property_to_that_of_decorated_response()
         {
-            // Given, When
-            var head = new HeadResponse(this.response);
-
+            //When
+            var head = this.CreateHeadResponse();
+            
             // Then
             head.StatusCode.ShouldEqual(this.response.StatusCode);
         }
@@ -32,8 +45,8 @@ namespace Nancy.Tests.Unit
         [Fact]
         public void Should_set_headers_property_to_that_of_decorated_response()
         {
-            // Given, When
-            var head = new HeadResponse(this.response);
+            //When
+            var head = this.CreateHeadResponse();
 
             // Then
             head.Headers.ShouldBeSameAs(this.headers);
@@ -42,8 +55,8 @@ namespace Nancy.Tests.Unit
         [Fact]
         public void Should_set_content_type_property_to_that_of_decorated_response()
         {
-            // Given, When
-            var head = new HeadResponse(this.response);
+            //When
+            var head = this.CreateHeadResponse();
 
             // Then
             head.ContentType.ShouldEqual(this.response.ContentType);
@@ -52,8 +65,8 @@ namespace Nancy.Tests.Unit
         [Fact]
         public void Should_set_empty_content()
         {
-            // Given, When
-            var head = new HeadResponse(this.response);
+            //When
+            var head = this.CreateHeadResponse();
 
             // Then
             head.GetStringContentsFromResponse().ShouldBeEmpty();
@@ -62,9 +75,9 @@ namespace Nancy.Tests.Unit
         [Fact]
         public void Should_set_content_length()
         {
-            // Given, When
-            var head = new HeadResponse(this.response);
-            
+            //When
+            var head = this.CreateHeadResponse();
+
             // Then
             head.Headers.ContainsKey("Content-Length").ShouldBeTrue();
             head.Headers["Content-Length"].ShouldNotEqual("0");
@@ -75,7 +88,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             this.response.Headers.Add("Content-Length", "foo");
-            var head = new HeadResponse(this.response);
+            var head = this.CreateHeadResponse();
 
             // Then
             head.Headers.ContainsKey("Content-Length").ShouldBeTrue();
