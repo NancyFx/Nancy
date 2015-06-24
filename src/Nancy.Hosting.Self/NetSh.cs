@@ -7,7 +7,7 @@
     /// </summary>
     public static class NetSh
     {
-        private const string NETSH_COMMAND = "netsh";
+        private const string NetshCommand = "netsh";
 
         /// <summary>
         /// Add a url reservation
@@ -21,7 +21,7 @@
             {
                 var arguments = GetParameters(url, user);
 
-                return UacHelper.RunElevated(NETSH_COMMAND, arguments);
+                return UacHelper.RunElevated(NetshCommand, arguments);
             }
             catch (Exception)
             {
@@ -29,9 +29,9 @@
             }
         }
 
-        public static string GetParameters(string url, string user)
+        internal static string GetParameters(string url, string user)
         {
-            return string.Format("http add urlacl url={0} user={1}", url, user);
+            return string.Format("http add urlacl url=\"{0}\" user=\"{1}\"", url, user);
         }
     }
 }
