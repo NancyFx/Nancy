@@ -3089,9 +3089,11 @@ namespace Nancy.TinyIoc
             {
                 var types = assemblies.SelectMany(a => a.SafeGetTypes()).Where(t => !IsIgnoredType(t, registrationPredicate)).ToList();
 
-                var concreteTypes = from type in types
-                                    where type.IsClass() && (type.IsAbstract() == false) && (type != this.GetType() && (type.DeclaringType != this.GetType()) && (!type.IsGenericTypeDefinition()))
-                                    select type;
+                var concreteTypes = types.Where(type =>
+                    {
+                         var thisType = this.GetType();
+                         return (type != thisType && type.DeclaringType != thisType && !type.IsGenericTypeDefinition()) && !type.IsAbstract() && type.IsClass();
+                    });
 
                 foreach (var type in concreteTypes)
                 {
@@ -3106,7 +3108,7 @@ namespace Nancy.TinyIoc
                 }
 
                 var abstractInterfaceTypes = from type in types
-                                             where ((type.IsInterface() || type.IsAbstract()) && (type.DeclaringType != this.GetType()) && (!type.IsGenericTypeDefinition()))
+                                             where (type.DeclaringType != this.GetType()) && ((type.IsInterface() || type.IsAbstract()) && (!type.IsGenericTypeDefinition()))
                                              select type;
 
                 foreach (var type in abstractInterfaceTypes)
