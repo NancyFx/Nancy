@@ -7,7 +7,7 @@
   "licenseUrl": "",
 
   "dependencies": {
-    "Microsoft.Framework.Runtime.Interfaces": "1.0.0-beta4"
+    "Microsoft.Framework.Runtime.Interfaces": "1.0.0-beta5"
   },
   "compileFiles": [ "../SharedAssemblyInfo.cs" ],
   "frameworks": {
