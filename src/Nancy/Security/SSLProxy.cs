@@ -21,7 +21,10 @@
                 //X-Forwarded-Proto: https
                 if (ctx.Request.Headers.Keys.Any(x => x.Equals("X-Forwarded-Proto", StringComparison.OrdinalIgnoreCase)))
                 {
-                    ctx.Request.Url.Scheme = "https";
+                    if (ctx.Request.Headers["X-Forwarded-Proto"].Contains("https", StringComparer.OrdinalIgnoreCase))
+                    {
+                        ctx.Request.Url.Scheme = "https";
+                    }
                 }
 
                 //RFC7239
