@@ -28,7 +28,7 @@
         {
             StaticConfiguration.DisableErrorTraces = false;
             this.configuration = A.Fake<IRazorConfiguration>();
-            this.engine = new RazorViewEngine(this.configuration);
+            this.engine = new RazorViewEngine(this.configuration, new DefaultAssemblyCatalog());
 
             var cache = A.Fake<IViewCache>();
             A.CallTo(() => cache.GetOrAdd(A<ViewLocationResult>.Ignored, A<Func<ViewLocationResult, Func<INancyRazorView>>>.Ignored))

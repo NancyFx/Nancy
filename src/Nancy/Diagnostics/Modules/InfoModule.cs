@@ -11,9 +11,13 @@
 
     public class InfoModule : DiagnosticModule
     {
-        public InfoModule(IRootPathProvider rootPathProvider, NancyInternalConfiguration configuration)
+        private readonly IAssemblyCatalog assemblyCatalog;
+
+        public InfoModule(IRootPathProvider rootPathProvider, NancyInternalConfiguration configuration, IAssemblyCatalog assemblyCatalog)
             : base("/info")
         {
+            this.assemblyCatalog = assemblyCatalog;
+
             Get["/"] = _ =>
             {
                 return View["Info"];
@@ -58,10 +62,9 @@
                 .ToArray();
         }
 
-        private static string GetBootstrapperContainer()
+        private string GetBootstrapperContainer()
         {
-            var name = AppDomain.CurrentDomain
-                .GetAssemblies()
+            var name = this.assemblyCatalog.Assemblies
                 .Select(asm => asm.GetName())
                 .FirstOrDefault(asmName => asmName.Name != null && asmName.Name.StartsWith("Nancy.Bootstrappers."));
 
@@ -70,10 +73,9 @@
                 string.Format("{0} (v{1})", name.Name.Split('.').Last(), name.Version);
         }
 
-        private static string GetHosting()
+        private string GetHosting()
         {
-            var name = AppDomain.CurrentDomain
-                .GetAssemblies()
+            var name = this.assemblyCatalog.Assemblies
                 .Select(asm => asm.GetName())
                 .FirstOrDefault(asmName => asmName.Name != null && asmName.Name.StartsWith("Nancy.Hosting."));
 

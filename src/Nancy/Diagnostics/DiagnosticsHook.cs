@@ -42,9 +42,10 @@ namespace Nancy.Diagnostics
             ICultureService cultureService,
             IRequestTraceFactory requestTraceFactory,
             IEnumerable<IRouteMetadataProvider> routeMetadataProviders,
-            ITextResource textResource)
+            ITextResource textResource,
+            IAssemblyCatalog assemblyCatalog)
         {
-            var diagnosticsModuleCatalog = new DiagnosticsModuleCatalog(providers, rootPathProvider, requestTracing, configuration, diagnosticsConfiguration);
+            var diagnosticsModuleCatalog = new DiagnosticsModuleCatalog(providers, rootPathProvider, requestTracing, configuration, diagnosticsConfiguration, assemblyCatalog);
 
             var diagnosticsRouteCache = new RouteCache(
                 diagnosticsModuleCatalog,

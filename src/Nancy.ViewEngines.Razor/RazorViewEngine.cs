@@ -21,6 +21,7 @@
     public class RazorViewEngine : IViewEngine, IDisposable
     {
         private readonly IRazorConfiguration razorConfiguration;
+        private readonly IAssemblyCatalog assemblyCatalog;
         private readonly IEnumerable<IRazorViewRenderer> viewRenderers;
         private readonly object compileLock = new object();
 
@@ -38,7 +39,7 @@
         /// Initializes a new instance of the <see cref="RazorViewEngine"/> class.
         /// </summary>
         /// <param name="configuration">The <see cref="IRazorConfiguration"/> that should be used by the engine.</param>
-        public RazorViewEngine(IRazorConfiguration configuration)
+        public RazorViewEngine(IRazorConfiguration configuration, IAssemblyCatalog assemblyCatalog)
         {
             this.viewRenderers = new List<IRazorViewRenderer>
             {
@@ -47,6 +48,7 @@
             };
 
             this.razorConfiguration = configuration;
+            this.assemblyCatalog = assemblyCatalog;
 
             foreach (var renderer in this.viewRenderers)
             {
@@ -197,10 +199,10 @@
         private Func<INancyRazorView> GenerateRazorViewFactory(IRazorViewRenderer viewRenderer, GeneratorResults razorResult, Assembly referencingAssembly, Type passedModelType, ViewLocationResult viewLocationResult)
         {
             var outputAssemblyName =
-                Path.Combine(Path.GetTempPath(), String.Format("Temp_{0}.dll", Guid.NewGuid().ToString("N")));
+                Path.Combine(Path.GetTempPath(), string.Format("Temp_{0}.dll", Guid.NewGuid().ToString("N")));
 
             var modelType =
-                FindModelType(razorResult.Document, passedModelType, viewRenderer.ModelCodeGenerator);
+                this.FindModelType(razorResult.Document, passedModelType, viewRenderer.ModelCodeGenerator);
 
             var assemblies = new List<string>
             {
@@ -210,7 +212,7 @@
                 GetAssemblyPath(modelType)
             };
 
-            assemblies.AddRange(AppDomainAssemblyTypeScanner.Assemblies.Select(GetAssemblyPath));
+            assemblies.AddRange(this.assemblyCatalog.Assemblies.Select(GetAssemblyPath));
 
             if (referencingAssembly != null)
             {
@@ -351,7 +353,7 @@
         /// <param name="passedModelType">The model type from the base class</param>
         /// <param name="modelCodeGenerator">The model code generator</param>
         /// <returns>The model type, if discovered, or the passedModelType if not</returns>
-        private static Type FindModelType(Block block, Type passedModelType, Type modelCodeGenerator)
+        private Type FindModelType(Block block, Type passedModelType, Type modelCodeGenerator)
         {
             var modelBlock =
                 block.Flatten().FirstOrDefault(b => b.CodeGenerator.GetType() == modelCodeGenerator);
@@ -393,7 +395,7 @@
                                                 "Unable to discover CLR Type for model by the name of {0}.\n\nTry using a fully qualified type name and ensure that the assembly is added to the configuration file.\n\nAppDomain Assemblies:\n\t{1}.\n\nCurrent ADATS assemblies:\n\t{2}.\n\nAssemblies in directories\n\t{3}",
                                                 discoveredModelType,
                                                 AppDomain.CurrentDomain.GetAssemblies().Select(a => a.FullName).Aggregate((n1, n2) => n1 + "\n\t" + n2),
-                                                AppDomainAssemblyTypeScanner.Assemblies.Select(a => a.FullName).Aggregate((n1, n2) => n1 + "\n\t" + n2),
+                                                this.assemblyCatalog.Assemblies.Select(a => a.FullName).Aggregate((n1, n2) => n1 + "\n\t" + n2),
                                                 GetAssembliesInDirectories().Aggregate((n1, n2) => n1 + "\n\t" + n2)));
         }
 

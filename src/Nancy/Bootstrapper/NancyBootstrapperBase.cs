@@ -96,7 +96,21 @@
         {
             get
             {
+                // TODO: Change this so a new instance is not created on each call
                 return new DefaultTypeCatalog();
+            }
+        }
+
+        /// <summary>
+        /// Gets the <see cref="IAssemblyCatalog"/> instance.
+        /// </summary>
+        /// <remarks>By default this will return a <see cref="DefaultAssemblyCatalog"/> instance.</remarks>
+        protected IAssemblyCatalog AssemblyCatalog
+        {
+            get
+            {
+                // TODO: Change this so a new instance is not created on each call
+                return new DefaultAssemblyCatalog();
             }
         }
 
@@ -200,7 +214,7 @@
         /// </summary>
         protected virtual IRootPathProvider RootPathProvider
         {
-            get { return this.rootPathProvider ?? (this.rootPathProvider = GetRootPathProvider()); }
+            get { return this.rootPathProvider ?? (this.rootPathProvider = this.GetRootPathProvider()); }
         }
 
         /// <summary>
@@ -263,6 +277,7 @@
                                                   .Concat(this.GetApplicationCollections());
 
             // TODO - should this be after initialiseinternal?
+            this.Conventions.BuildDefaultConventions(this.TypeCatalog);
             this.ConfigureConventions(this.Conventions);
             var conventionValidationResult = this.Conventions.Validate();
             if (!conventionValidationResult.Item1)
@@ -580,6 +595,7 @@
                 new InstanceRegistration(typeof(DiagnosticsConfiguration), this.DiagnosticsConfiguration),
                 new InstanceRegistration(typeof(IRootPathProvider), this.RootPathProvider),
                 new InstanceRegistration(typeof(ITypeCatalog), this.TypeCatalog), 
+                new InstanceRegistration(typeof(IAssemblyCatalog), this.AssemblyCatalog), 
             };
         }
 

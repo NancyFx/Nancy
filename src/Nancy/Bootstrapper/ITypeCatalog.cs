@@ -2,6 +2,7 @@ namespace Nancy.Bootstrapper
 {
     using System;
     using System.Collections.Generic;
+    using System.Reflection;
 
     /// <summary>
     /// Defines the functionality for getting all types implementing a particular interface/base class
@@ -39,5 +40,18 @@ namespace Nancy.Bootstrapper
         /// <param name="mode">A <see cref="ScanMode"/> value to determine which type set to scan in.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> of types.</returns>
         IEnumerable<Type> TypesOf<TType>(ScanMode mode);
+    }
+
+    public interface IAssemblyCatalog
+    {
+        IEnumerable<Assembly> Assemblies { get; } 
+    }
+
+    public class DefaultAssemblyCatalog : IAssemblyCatalog
+    {
+        public IEnumerable<Assembly> Assemblies
+        {
+            get { return AppDomainAssemblyTypeScanner.Assemblies; }
+        }
     }
 }

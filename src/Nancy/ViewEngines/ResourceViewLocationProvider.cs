@@ -24,13 +24,13 @@
         /// </summary>
         public readonly static IList<Assembly> Ignore = new List<Assembly>();
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ResourceViewLocationProvider"/> class.
-        /// </summary>
-        public ResourceViewLocationProvider()
-            : this(new DefaultResourceReader(), new ResourceAssemblyProvider())
-        {
-        }
+        ///// <summary>
+        ///// Initializes a new instance of the <see cref="ResourceViewLocationProvider"/> class.
+        ///// </summary>
+        //public ResourceViewLocationProvider()
+        //    : this(new DefaultResourceReader(), new ResourceAssemblyProvider())
+        //{
+        //}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResourceViewLocationProvider"/> class.

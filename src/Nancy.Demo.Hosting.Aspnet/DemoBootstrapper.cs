@@ -91,16 +91,22 @@
 
     public class CustomResourceAssemblyProvider : IResourceAssemblyProvider
     {
+        private readonly IAssemblyCatalog assemblyCatalog;
         private IEnumerable<Assembly> filteredAssemblies;
+
+        public CustomResourceAssemblyProvider(IAssemblyCatalog assemblyCatalog)
+        {
+            this.assemblyCatalog = assemblyCatalog;
+        }
 
         public IEnumerable<Assembly> GetAssembliesToScan()
         {
             return (this.filteredAssemblies ?? (this.filteredAssemblies = GetFilteredAssemblies()));
         }
 
-        private static IEnumerable<Assembly> GetFilteredAssemblies()
+        private IEnumerable<Assembly> GetFilteredAssemblies()
         {
-            return AppDomainAssemblyTypeScanner.Assemblies.Where(x => !x.IsDynamic);
+            return this.assemblyCatalog.Assemblies.Where(x => !x.IsDynamic);
         }
     }
 }

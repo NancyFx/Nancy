@@ -13,7 +13,13 @@
     /// <remarks>The default convention will scan all assemblies that references another assemblies that has a name that starts with Nancy*</remarks>
     public class ResourceAssemblyProvider : IResourceAssemblyProvider
     {
+        private readonly IAssemblyCatalog assemblyCatalog;
         private IEnumerable<Assembly> filteredAssemblies;
+
+        public ResourceAssemblyProvider(IAssemblyCatalog assemblyCatalog)
+        {
+            this.assemblyCatalog = assemblyCatalog;
+        }
 
         /// <summary>
         /// Gets a list of assemblies that should be scanned for views.
@@ -21,12 +27,12 @@
         /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="Assembly"/> instances.</returns>
         public IEnumerable<Assembly> GetAssembliesToScan()
         {
-            return (this.filteredAssemblies ?? (this.filteredAssemblies = GetFilteredAssemblies()));
+            return (this.filteredAssemblies ?? (this.filteredAssemblies = this.GetFilteredAssemblies()));
         }
 
-        private static IEnumerable<Assembly> GetFilteredAssemblies()
+        private IEnumerable<Assembly> GetFilteredAssemblies()
         {
-            return AppDomainAssemblyTypeScanner.Assemblies
+            return this.assemblyCatalog.Assemblies
                 .Where(x => !x.IsDynamic)
                 .Where(x => !x.GetName().Name.StartsWith("Nancy", StringComparison.OrdinalIgnoreCase));
         }

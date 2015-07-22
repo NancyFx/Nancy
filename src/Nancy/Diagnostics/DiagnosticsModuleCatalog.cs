@@ -12,9 +12,9 @@ namespace Nancy.Diagnostics
     {
         private readonly TinyIoCContainer container;
 
-        public DiagnosticsModuleCatalog(IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration, DiagnosticsConfiguration diagnosticsConfiguration)
+        public DiagnosticsModuleCatalog(IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration, DiagnosticsConfiguration diagnosticsConfiguration, IAssemblyCatalog assemblyCatalog)
         {
-            this.container = ConfigureContainer(providers, rootPathProvider, requestTracing, configuration, diagnosticsConfiguration);
+            this.container = ConfigureContainer(providers, rootPathProvider, requestTracing, configuration, diagnosticsConfiguration, assemblyCatalog);
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace Nancy.Diagnostics
             return this.container.Resolve<INancyModule>(moduleType.FullName);
         }
 
-        private static TinyIoCContainer ConfigureContainer(IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration, DiagnosticsConfiguration diagnosticsConfiguration)
+        private static TinyIoCContainer ConfigureContainer(IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration, DiagnosticsConfiguration diagnosticsConfiguration, IAssemblyCatalog assemblyCatalog)
         {
             var diagContainer = new TinyIoCContainer();
 
@@ -52,6 +52,7 @@ namespace Nancy.Diagnostics
             diagContainer.Register<BindingDefaults, BindingDefaults>();
             diagContainer.Register<ISerializer>(new DefaultJsonSerializer { RetainCasing = false });
             diagContainer.Register<DiagnosticsConfiguration>(diagnosticsConfiguration);
+            diagContainer.Register<IAssemblyCatalog>(assemblyCatalog);
 
             foreach (var diagnosticsProvider in providers)
             {

@@ -20,14 +20,6 @@
         private IEnumerable<IConvention> conventions;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NancyConventions"/> class.
-        /// </summary>
-        public NancyConventions()
-        {
-            this.BuildDefaultConventions();
-        }
-
-        /// <summary>
         /// Gets or sets the conventions for locating view templates
         /// </summary>
         public IList<Func<string, dynamic, ViewLocationContext, string>> ViewLocationConventions { get; set; }
@@ -86,13 +78,13 @@
         /// Locates all the default conventions and calls them in
         /// turn to build up the default conventions.
         /// </summary>
-        private void BuildDefaultConventions()
+        public void BuildDefaultConventions(ITypeCatalog typeCatalog)
         {
             var defaultConventions =
-                AppDomainAssemblyTypeScanner.TypesOf<IConvention>(ScanMode.OnlyNancy);
+                typeCatalog.TypesOf<IConvention>(ScanMode.OnlyNancy);
 
             this.conventions = defaultConventions
-                .Union(AppDomainAssemblyTypeScanner.TypesOf<IConvention>(ScanMode.ExcludeNancy))
+                .Union(typeCatalog.TypesOf<IConvention>(ScanMode.ExcludeNancy))
                 .Select(t => (IConvention)Activator.CreateInstance(t));
 
             foreach (var convention in this.conventions)

@@ -12,16 +12,23 @@
     /// </summary>
     public class CustomResourceAssemblyProvider : IResourceAssemblyProvider
     {
+        private readonly IAssemblyCatalog assemblyCatalog;
+
+        public CustomResourceAssemblyProvider(IAssemblyCatalog assemblyCatalog)
+        {
+            this.assemblyCatalog = assemblyCatalog;
+        }
+
         private IEnumerable<Assembly> filteredAssemblies;
 
         public IEnumerable<Assembly> GetAssembliesToScan()
         {
-            return (this.filteredAssemblies ?? (this.filteredAssemblies = GetFilteredAssemblies()));
+            return (this.filteredAssemblies ?? (this.filteredAssemblies = this.GetFilteredAssemblies()));
         }
 
-        private static IEnumerable<Assembly> GetFilteredAssemblies()
+        private IEnumerable<Assembly> GetFilteredAssemblies()
         {
-            return AppDomainAssemblyTypeScanner.Assemblies.Where(x => !x.IsDynamic);
+            return this.assemblyCatalog.Assemblies.Where(x => !x.IsDynamic);
         }
     }
 }

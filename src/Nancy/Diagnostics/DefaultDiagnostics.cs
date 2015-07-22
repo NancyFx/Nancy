@@ -27,6 +27,7 @@
         private readonly IRequestTraceFactory requestTraceFactory;
         private readonly IEnumerable<IRouteMetadataProvider> routeMetadataProviders;
         private readonly ITextResource textResource;
+        private readonly IAssemblyCatalog assemblyCatalog;
 
         /// <summary>
         /// Creates a new instance of the <see cref="DefaultDiagnostics"/> class.
@@ -43,6 +44,7 @@
         /// <param name="requestTraceFactory"></param>
         /// <param name="routeMetadataProviders"></param>
         /// <param name="textResource"></param>
+        /// <param name="assemblyCatalog"></param>
         public DefaultDiagnostics(
             DiagnosticsConfiguration diagnosticsConfiguration,
             IEnumerable<IDiagnosticsProvider> diagnosticProviders,
@@ -55,7 +57,8 @@
             ICultureService cultureService,
             IRequestTraceFactory requestTraceFactory,
             IEnumerable<IRouteMetadataProvider> routeMetadataProviders,
-            ITextResource textResource)
+            ITextResource textResource,
+            IAssemblyCatalog assemblyCatalog)
         {
             this.diagnosticsConfiguration = diagnosticsConfiguration;
             this.diagnosticProviders = diagnosticProviders;
@@ -69,6 +72,7 @@
             this.requestTraceFactory = requestTraceFactory;
             this.routeMetadataProviders = routeMetadataProviders;
             this.textResource = textResource;
+            this.assemblyCatalog = assemblyCatalog;
         }
 
         /// <summary>
@@ -89,7 +93,8 @@
                 this.cultureService,
                 this.requestTraceFactory,
                 this.routeMetadataProviders,
-                this.textResource);
+                this.textResource,
+                this.assemblyCatalog);
         }
     }
 }

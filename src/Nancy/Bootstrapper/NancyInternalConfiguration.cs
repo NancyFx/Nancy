@@ -3,8 +3,6 @@ namespace Nancy.Bootstrapper
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
-
     using Nancy.Diagnostics;
     using Nancy.ErrorHandling;
     using Nancy.ModelBinding;
