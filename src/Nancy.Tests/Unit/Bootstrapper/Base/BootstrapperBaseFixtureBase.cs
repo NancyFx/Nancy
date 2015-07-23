@@ -20,11 +20,11 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
     public abstract class BootstrapperBaseFixtureBase<TContainer>
         where TContainer : class
     {
-        private readonly NancyInternalConfiguration configuration;
+        private readonly Func<ITypeCatalog, NancyInternalConfiguration> configuration;
 
         protected abstract NancyBootstrapperBase<TContainer> Bootstrapper { get; }
 
-        protected NancyInternalConfiguration Configuration
+        protected Func<ITypeCatalog, NancyInternalConfiguration> Configuration
         {
             get { return this.configuration; }
         }

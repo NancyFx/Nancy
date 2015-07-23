@@ -80,11 +80,11 @@
         /// <summary>
         /// Nancy internal configuration
         /// </summary>
-        protected virtual NancyInternalConfiguration InternalConfiguration
+        protected virtual Func<ITypeCatalog, NancyInternalConfiguration> InternalConfiguration
         {
             get
             {
-                return this.internalConfiguration ?? (this.internalConfiguration = NancyInternalConfiguration.Default);
+                return NancyInternalConfiguration.Default;
             }
         }
 
@@ -249,17 +249,25 @@
             get { return new DiagnosticsConfiguration(); }
         }
 
+        private NancyInternalConfiguration GetInternalConfiguration()
+        {
+            return this.internalConfiguration ?? (this.internalConfiguration = this.InternalConfiguration.Invoke(this.TypeCatalog));
+        }
+
         /// <summary>
         /// Initialise the bootstrapper. Must be called prior to GetEngine.
         /// </summary>
         public void Initialise()
         {
-            if (this.InternalConfiguration == null)
+            var configuration =
+                this.GetInternalConfiguration();
+
+            if (configuration == null)
             {
                 throw new InvalidOperationException("Configuration cannot be null");
             }
 
-            if (!this.InternalConfiguration.IsValid)
+            if (!configuration.IsValid)
             {
                 throw new InvalidOperationException("Configuration is invalid");
             }
@@ -270,10 +278,10 @@
 
             this.ConfigureApplicationContainer(this.ApplicationContainer);
 
-            var typeRegistrations = this.InternalConfiguration.GetTypeRegistations()
+            var typeRegistrations = configuration.GetTypeRegistations()
                                         .Concat(this.GetAdditionalTypes());
 
-            var collectionTypeRegistrations = this.InternalConfiguration.GetCollectionTypeRegistrations()
+            var collectionTypeRegistrations = configuration.GetCollectionTypeRegistrations()
                                                   .Concat(this.GetApplicationCollections());
 
             // TODO - should this be after initialiseinternal?
@@ -591,7 +599,7 @@
         {
             return new[] {
                 new InstanceRegistration(typeof(CryptographyConfiguration), this.CryptographyConfiguration),
-                new InstanceRegistration(typeof(NancyInternalConfiguration), this.InternalConfiguration),
+                //new InstanceRegistration(typeof(NancyInternalConfiguration), this.InternalConfiguration),
                 new InstanceRegistration(typeof(DiagnosticsConfiguration), this.DiagnosticsConfiguration),
                 new InstanceRegistration(typeof(IRootPathProvider), this.RootPathProvider),
                 new InstanceRegistration(typeof(ITypeCatalog), this.TypeCatalog), 

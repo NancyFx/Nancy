@@ -1,5 +1,6 @@
 ﻿namespace Nancy.Demo.Hosting.Aspnet
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
@@ -29,7 +30,7 @@
             existingContainer.Register<IApplicationDependency, ApplicationDependencyClass>().AsSingleton();
         }
 
-        protected override NancyInternalConfiguration InternalConfiguration
+        protected override Func<ITypeCatalog, NancyInternalConfiguration> InternalConfiguration
         {
             get
             {

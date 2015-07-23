@@ -26,9 +26,9 @@ namespace Nancy.Tests.Unit
 
         public class FakeBootstrapper : DefaultNancyBootstrapper
         {
-            private readonly NancyInternalConfiguration configuration;
+            private readonly Func<ITypeCatalog, NancyInternalConfiguration> configuration;
 
-            protected override NancyInternalConfiguration InternalConfiguration
+            protected override Func<ITypeCatalog, NancyInternalConfiguration> InternalConfiguration
             {
                 get { return configuration; }
             }
@@ -41,7 +41,7 @@ namespace Nancy.Tests.Unit
                 }
             }
 
-            public FakeBootstrapper(NancyInternalConfiguration configuration)
+            public FakeBootstrapper(Func<ITypeCatalog, NancyInternalConfiguration> configuration)
             {
                 this.configuration = configuration;
             }

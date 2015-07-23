@@ -14,9 +14,9 @@
     {
         public IEnumerable<Type> OverriddenRegistrationTasks { get; set; }
 
-        private NancyInternalConfiguration configuration;
+        private readonly Func<ITypeCatalog, NancyInternalConfiguration> configuration;
 
-        protected override System.Collections.Generic.IEnumerable<ModuleRegistration> Modules
+        protected override IEnumerable<ModuleRegistration> Modules
         {
             get
             {
@@ -44,13 +44,13 @@
                 return base.AutoRegisterIgnoredAssemblies.Union(new Func<Assembly, bool>[] { asm => asm.FullName.StartsWith("TestAssembly") });
             }
         }
-        public FakeDefaultNancyBootstrapper(NancyInternalConfiguration configuration)
+        public FakeDefaultNancyBootstrapper(Func<ITypeCatalog, NancyInternalConfiguration> configuration)
         {
             this.configuration = configuration;
             this.RequestContainerInitialisations = new Dictionary<NancyContext, int>();
         }
 
-        protected override NancyInternalConfiguration InternalConfiguration
+        protected override Func<ITypeCatalog, NancyInternalConfiguration> InternalConfiguration
         {
             get { return configuration; }
         }
@@ -97,7 +97,7 @@
 
         protected override void ConfigureApplicationContainer(TinyIoCContainer existingContainer)
         {
-            ApplicationContainerConfigured = true;
+            this.ApplicationContainerConfigured = true;
             base.ConfigureApplicationContainer(existingContainer);
         }
     }

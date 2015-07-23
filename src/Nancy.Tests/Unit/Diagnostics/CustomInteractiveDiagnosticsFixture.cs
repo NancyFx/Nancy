@@ -45,6 +45,7 @@
             private readonly IRequestTraceFactory requestTraceFactory;
             private readonly IEnumerable<IRouteMetadataProvider> routeMetadataProviders;
             private readonly ITextResource textResource;
+            private readonly IAssemblyCatalog assemblyCatalog;
 
             public FakeDiagnostics(
                 DiagnosticsConfiguration diagnosticsConfiguration,
@@ -57,7 +58,8 @@
                 ICultureService cultureService,
                 IRequestTraceFactory requestTraceFactory,
                 IEnumerable<IRouteMetadataProvider> routeMetadataProviders,
-                ITextResource textResource)
+                ITextResource textResource,
+                IAssemblyCatalog assemblyCatalog)
             {
                 this.diagnosticsConfiguration = diagnosticsConfiguration;
                 this.diagnosticProviders = (new IDiagnosticsProvider[] { new FakeDiagnosticsProvider() }).ToArray();
@@ -71,6 +73,7 @@
                 this.requestTraceFactory = requestTraceFactory;
                 this.routeMetadataProviders = routeMetadataProviders;
                 this.textResource = textResource;
+                this.assemblyCatalog = assemblyCatalog;
             }
 
             public void Initialize(IPipelines pipelines)
@@ -87,7 +90,8 @@
                     this.cultureService,
                     this.requestTraceFactory,
                     this.routeMetadataProviders,
-                    this.textResource);
+                    this.textResource,
+                    this.assemblyCatalog);
             }
         }
 

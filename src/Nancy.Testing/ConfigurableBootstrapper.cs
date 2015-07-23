@@ -28,7 +28,7 @@ namespace Nancy.Testing
     {
         private readonly List<object> registeredTypes;
         private readonly List<InstanceRegistration> registeredInstances;
-        private readonly NancyInternalConfiguration configuration;
+        private readonly Func<ITypeCatalog, NancyInternalConfiguration> configuration;
         private readonly ConfigurableModuleCatalog catalog;
         private bool enableAutoRegistration;
         private DiagnosticsConfiguration diagnosticConfiguration;
@@ -203,7 +203,7 @@ namespace Nancy.Testing
         /// <summary>
         /// Nancy internal configuration
         /// </summary>
-        protected override sealed NancyInternalConfiguration InternalConfiguration
+        protected override sealed Func<ITypeCatalog, NancyInternalConfiguration> InternalConfiguration
         {
             get { return this.configuration; }
         }
@@ -613,7 +613,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator Binder<T>() where T : IBinder
             {
-                this.bootstrapper.configuration.Binder = typeof(T);
+                //this.bootstrapper.configuration.Binder = typeof(T);
                 return this;
             }
 
@@ -637,7 +637,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator ContextFactory<T>() where T : INancyContextFactory
             {
-                this.bootstrapper.configuration.ContextFactory = typeof(T);
+                //this.bootstrapper.configuration.ContextFactory = typeof(T);
                 return this;
             }
 
@@ -787,7 +787,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator StatusCodeHandlers(params Type[] statusCodeHandlers)
             {
-                this.bootstrapper.configuration.StatusCodeHandlers = new List<Type>(statusCodeHandlers);
+                //this.bootstrapper.configuration.StatusCodeHandlers = new List<Type>(statusCodeHandlers);
 
                 return this;
             }
@@ -799,7 +799,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator StatusCodeHandler<T>() where T : IStatusCodeHandler
             {
-                this.bootstrapper.configuration.StatusCodeHandlers = new List<Type>(new[] { typeof(T) });
+                //this.bootstrapper.configuration.StatusCodeHandlers = new List<Type>(new[] { typeof(T) });
                 return this;
             }
 
@@ -823,7 +823,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator FieldNameConverter<T>() where T : IFieldNameConverter
             {
-                this.bootstrapper.configuration.FieldNameConverter = typeof(T);
+                //this.bootstrapper.configuration.FieldNameConverter = typeof(T);
                 return this;
             }
 
@@ -847,7 +847,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator ModelBinderLocator<T>() where T : IModelBinderLocator
             {
-                this.bootstrapper.configuration.ModelBinderLocator = typeof(T);
+                //this.bootstrapper.configuration.ModelBinderLocator = typeof(T);
                 return this;
             }
 
@@ -908,7 +908,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator NancyEngine<T>() where T : INancyEngine
             {
-                this.bootstrapper.configuration.NancyEngine = typeof(T);
+                //this.bootstrapper.configuration.NancyEngine = typeof(T);
                 return this;
             }
 
@@ -932,7 +932,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator NancyModuleBuilder<T>() where T : INancyModuleBuilder
             {
-                this.bootstrapper.configuration.NancyModuleBuilder = typeof(T);
+                //this.bootstrapper.configuration.NancyModuleBuilder = typeof(T);
                 return this;
             }
 
@@ -956,7 +956,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator RenderContextFactory<T>() where T : IRenderContextFactory
             {
-                this.bootstrapper.configuration.RenderContextFactory = typeof(T);
+                //this.bootstrapper.configuration.RenderContextFactory = typeof(T);
                 return this;
             }
 
@@ -980,7 +980,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator RequestTraceFactory<T>() where T : IRequestTraceFactory
             {
-                this.bootstrapper.configuration.RequestTraceFactory = typeof(T);
+                //this.bootstrapper.configuration.RequestTraceFactory = typeof(T);
                 return this;
             }
 
@@ -1004,7 +1004,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator ResponseFormatterFactory<T>() where T : IResponseFormatterFactory
             {
-                this.bootstrapper.configuration.ResponseFormatterFactory = typeof(T);
+                //this.bootstrapper.configuration.ResponseFormatterFactory = typeof(T);
                 return this;
             }
 
@@ -1028,7 +1028,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator RouteCache<T>() where T : IRouteCache
             {
-                this.bootstrapper.configuration.RouteCache = typeof(T);
+                //this.bootstrapper.configuration.RouteCache = typeof(T);
                 return this;
             }
 
@@ -1052,7 +1052,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator RouteCacheProvider<T>() where T : IRouteCacheProvider
             {
-                this.bootstrapper.configuration.RouteCacheProvider = typeof(T);
+                //this.bootstrapper.configuration.RouteCacheProvider = typeof(T);
                 return this;
             }
 
@@ -1102,7 +1102,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator RouteInvoker<T>() where T : IRouteInvoker
             {
-                this.bootstrapper.configuration.RouteInvoker = typeof(T);
+                //this.bootstrapper.configuration.RouteInvoker = typeof(T);
                 return this;
             }
 
@@ -1126,7 +1126,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator RoutePatternMatcher<T>() where T : IRoutePatternMatcher
             {
-                this.bootstrapper.configuration.RoutePatternMatcher = typeof(T);
+                //this.bootstrapper.configuration.RoutePatternMatcher = typeof(T);
                 return this;
             }
 
@@ -1150,7 +1150,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator RouteResolver<T>() where T : IRouteResolver
             {
-                this.bootstrapper.configuration.RouteResolver = typeof(T);
+                //this.bootstrapper.configuration.RouteResolver = typeof(T);
                 return this;
             }
 
@@ -1174,7 +1174,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator ModelValidatorLocator<T>() where T : IModelValidatorLocator
             {
-                this.bootstrapper.configuration.ModelValidatorLocator = typeof(T);
+                //this.bootstrapper.configuration.ModelValidatorLocator = typeof(T);
                 return this;
             }
 
@@ -1224,7 +1224,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator ResourceAssemblyProvider<T>() where T : IResourceAssemblyProvider
             {
-                this.bootstrapper.configuration.ResourceAssemblyProvider = typeof(T);
+                //this.bootstrapper.configuration.ResourceAssemblyProvider = typeof(T);
                 return this;
             }
 
@@ -1248,7 +1248,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator ResourceReader<T>() where T : IResourceReader
             {
-                this.bootstrapper.configuration.ResourceReader = typeof(T);
+                //this.bootstrapper.configuration.ResourceReader = typeof(T);
                 return this;
             }
 
@@ -1405,7 +1405,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator TextResource<T>() where T : ITextResource
             {
-                this.bootstrapper.configuration.TextResource = typeof(T);
+                //this.bootstrapper.configuration.TextResource = typeof(T);
                 return this;
             }
 
@@ -1429,7 +1429,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator ViewCache<T>() where T : IViewCache
             {
-                this.bootstrapper.configuration.ViewCache = typeof(T);
+                //this.bootstrapper.configuration.ViewCache = typeof(T);
                 return this;
             }
 
@@ -1492,7 +1492,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator ViewFactory<T>() where T : IViewFactory
             {
-                this.bootstrapper.configuration.ViewFactory = typeof(T);
+                //this.bootstrapper.configuration.ViewFactory = typeof(T);
                 return this;
             }
 
@@ -1516,7 +1516,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator ViewLocationProvider<T>() where T : IViewLocationProvider
             {
-                this.bootstrapper.configuration.ViewLocationProvider = typeof(T);
+                //this.bootstrapper.configuration.ViewLocationProvider = typeof(T);
                 return this;
             }
 
@@ -1540,7 +1540,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator ViewLocator<T>() where T : IViewLocator
             {
-                this.bootstrapper.configuration.ViewLocator = typeof(T);
+                //this.bootstrapper.configuration.ViewLocator = typeof(T);
                 return this;
             }
 
@@ -1564,7 +1564,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator ViewResolver<T>() where T : IViewResolver
             {
-                this.bootstrapper.configuration.ViewResolver = typeof(T);
+                //this.bootstrapper.configuration.ViewResolver = typeof(T);
                 return this;
             }
 
@@ -1588,7 +1588,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator CsrfTokenValidator<T>() where T : ICsrfTokenValidator
             {
-                this.bootstrapper.configuration.CsrfTokenValidator = typeof(T);
+                //this.bootstrapper.configuration.CsrfTokenValidator = typeof(T);
                 return this;
             }
 
@@ -1612,7 +1612,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator ObjectSerializer<T>() where T : IObjectSerializer
             {
-                this.bootstrapper.configuration.ObjectSerializer = typeof(T);
+                //this.bootstrapper.configuration.ObjectSerializer = typeof(T);
                 return this;
             }
 
@@ -1624,7 +1624,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator Serializer<T>() where T : ISerializer
             {
-                this.bootstrapper.configuration.Serializers = new List<Type> { typeof(T) };
+                //this.bootstrapper.configuration.Serializers = new List<Type> { typeof(T) };
                 return this;
             }
 
@@ -1635,7 +1635,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator Serializers(params Type[] serializers)
             {
-                this.bootstrapper.configuration.Serializers = new List<Type>(serializers);
+                //this.bootstrapper.configuration.Serializers = new List<Type>(serializers);
                 return this;
             }
 
@@ -1670,7 +1670,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator Diagnostics<T>() where T : IDiagnostics
             {
-                this.bootstrapper.configuration.Diagnostics = typeof(T);
+                //this.bootstrapper.configuration.Diagnostics = typeof(T);
                 return this;
             }
 
@@ -1694,7 +1694,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator CultureService<T>() where T : ICultureService
             {
-                this.bootstrapper.configuration.CultureService = typeof(T);
+                //this.bootstrapper.configuration.CultureService = typeof(T);
                 return this;
             }
 
@@ -1718,7 +1718,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator StaticContentProvider<T>() where T : IStaticContentProvider
             {
-                this.bootstrapper.configuration.StaticContentProvider = typeof(T);
+                //this.bootstrapper.configuration.StaticContentProvider = typeof(T);
                 return this;
             }
 
@@ -1742,7 +1742,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator RouteResolverTrie<T>() where T : IRouteResolverTrie
             {
-                this.bootstrapper.configuration.RouteResolverTrie = typeof(T);
+                //this.bootstrapper.configuration.RouteResolverTrie = typeof(T);
                 return this;
             }
 
@@ -1766,7 +1766,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator TrieNodeFactory<T>() where T : ITrieNodeFactory
             {
-                this.bootstrapper.configuration.TrieNodeFactory = typeof(T);
+                //this.bootstrapper.configuration.TrieNodeFactory = typeof(T);
                 return this;
             }
 
@@ -1777,7 +1777,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator RouteSegmentConstraint<T>() where T : IRouteSegmentConstraint
             {
-                this.bootstrapper.configuration.RouteSegmentConstraints = new List<Type> { typeof(T) };
+                //this.bootstrapper.configuration.RouteSegmentConstraints = new List<Type> { typeof(T) };
                 return this;
             }
 
@@ -1788,7 +1788,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator RouteSegmentConstraints(params Type[] types)
             {
-                this.bootstrapper.configuration.RouteSegmentConstraints = new List<Type>(types);
+                //this.bootstrapper.configuration.RouteSegmentConstraints = new List<Type>(types);
                 return this;
             }
 
@@ -1812,7 +1812,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator ResponseNegotiator<T>() where T : IResponseNegotiator
             {
-                this.bootstrapper.configuration.ResponseNegotiator = typeof(T);
+                //this.bootstrapper.configuration.ResponseNegotiator = typeof(T);
                 return this;
             }
 
