@@ -45,15 +45,12 @@
         /// <returns>A <see cref="ResolveResult"/> containing the resolved route information.</returns>
         public ResolveResult Resolve(NancyContext context)
         {
-            var pathDecoded =
-                HttpUtility.UrlDecode(context.Request.Path);
-
-            var results = this.trie.GetMatches(GetMethod(context), pathDecoded, context);
+            var results = this.trie.GetMatches(GetMethod(context), context.Request.Path, context);
 
             if (!results.Any())
             {
                 var allowedMethods =
-                    this.trie.GetOptions(pathDecoded, context).ToArray();
+                    this.trie.GetOptions(context.Request.Path, context).ToArray();
 
                 if (IsOptionsRequest(context))
                 {

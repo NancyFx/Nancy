@@ -72,6 +72,7 @@
             }
         }
 
+
         [Theory]
         [InlineData("/foo/testing/plop", true, "testing")]
         [InlineData("/foo/testing/plop", false, "testing")]
@@ -180,6 +181,37 @@
             {
               result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
             }
+        }
+
+        [Theory]
+        [InlineData("/bleh/test%2fbar", "GreedyOnEnd", "test/bar")]
+        [InlineData("/foo/test%2ffuzz/plop", "Captured", "test/fuzz")]
+        [InlineData("/bleh/test%2f%2ffuzz/bar", "GreedyInMiddle", "test//fuzz")]
+        [InlineData("/foo/%21%23%24%26%27%28%29%2A%2B%2C%2F%3A%3B%3D%3F%40%5B%5D/plop", "Captured", "!#$&'()*+,/:;=?@[]")]
+        public void Should_resolve_and_decode_capture_groups_with_encoded_forward_slashes(string path, string captureType, string expected)
+        {
+            //Given, When
+            var browser = InitBrowser(true);
+            var result = browser.Get(path);
+
+            //Then
+            result.Body.AsString().ShouldEqual(captureType + " " + expected);
+        }
+
+        [Theory]
+        [InlineData("/bleh/this%2fis%2fsome%2fstuff/bar", "GreedyInMiddle", "this/is/some/stuff")]
+        [InlineData("/bleh/this%2Fis%2Fsome%2Fstuff/bar", "GreedyInMiddle", "this/is/some/stuff")]
+        [InlineData("/foo/double%252fencoded/plop", "Captured", "double%2fencoded")]
+        [InlineData("/foo/%61%62%63%31%32%33/plop", "Captured", "abc123")]
+        [InlineData("/foo/%21%23%24%26%27%28%29%2A%2B%2C%3A%3B%3D%3F%40%5B%5D/plop", "Captured", "!#$&'()*+,:;=?@[]")]
+        public void Should_url_decode_captures(string path, string captureType, string expected)
+        {
+            //Given, When
+            var browser = InitBrowser(true);
+            var result = browser.Get(path);
+
+            //Then
+            result.Body.AsString().ShouldEqual(captureType + " " + expected);
         }
 
         [Theory]

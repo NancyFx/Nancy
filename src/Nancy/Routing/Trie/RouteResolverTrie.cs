@@ -4,6 +4,8 @@ namespace Nancy.Routing.Trie
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+
+    using Nancy.Helpers;
     using Nodes;
 
     /// <summary>
@@ -73,8 +75,14 @@ namespace Nancy.Routing.Trie
                 return MatchResult.NoMatches;
             }
 
-            return this.routeTries[method].GetMatches(path.Split(splitSeparators, StringSplitOptions.RemoveEmptyEntries), context)
-                                          .ToArray();
+            string[] segments = path
+                .Split(splitSeparators, StringSplitOptions.RemoveEmptyEntries)
+                .Select(HttpUtility.UrlDecode)
+                .ToArray();
+
+            MatchResult[] matchResults = this.routeTries[method].GetMatches(segments, context)
+                .ToArray();
+            return matchResults;
         }
 
         /// <summary>
