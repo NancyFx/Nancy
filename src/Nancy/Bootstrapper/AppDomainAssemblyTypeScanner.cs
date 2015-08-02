@@ -237,9 +237,16 @@ namespace Nancy.Bootstrapper
                     {
                         inspectedAssembly = Assembly.ReflectionOnlyLoadFrom(unloadedAssembly);
                     }
-                    catch (BadImageFormatException biEx)
+                    catch (Exception ex)
                     {
-                        //the assembly maybe it's not managed code
+                        if (ex is BadImageFormatException || ex is OutOfMemoryException)
+                        {
+                            //the assembly maybe it's not managed code
+                        }
+                        else
+                        {
+                            throw;
+                        }
                     }
                     catch (FileLoadException)
                     {
