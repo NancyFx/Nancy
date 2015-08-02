@@ -241,6 +241,10 @@ namespace Nancy.Bootstrapper
                     {
                         //the assembly maybe it's not managed code
                     }
+                    catch (FileLoadException)
+                    {
+                        //the assembly might already be loaded
+                    }
 
                     if (inspectedAssembly != null && inspectedAssembly.GetReferencedAssemblies().Any(r => r.Name.StartsWith("Nancy", StringComparison.OrdinalIgnoreCase)))
                     {
