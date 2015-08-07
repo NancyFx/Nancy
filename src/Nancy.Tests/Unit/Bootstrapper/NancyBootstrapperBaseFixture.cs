@@ -9,6 +9,7 @@
     using FakeItEasy;
 
     using Nancy.Bootstrapper;
+    using Nancy.Configuration;
     using Nancy.Diagnostics;
     using Nancy.Tests.Fakes;
 
@@ -125,7 +126,7 @@
             // Given
             var startup = A.Fake<IApplicationStartup>();
             this.bootstrapper.OverriddenApplicationStartupTasks = new[] { startup };
-            
+
             var registrations = A.Fake<IRegistrations>();
             this.bootstrapper.OverriddenRegistrationTasks = new[] { registrations };
 
@@ -338,6 +339,12 @@
             return this.FakeNancyEngine;
         }
 
+        // TODO: CHECK IMPLEMENTATION
+        protected override INancyEnvironmentConfigurator GetEnvironmentConfigurator()
+        {
+            return new FakeEnvironmentalConfigurator();
+        }
+
         /// <summary>
         /// Gets the diagnostics for initialisation
         /// </summary>
@@ -398,6 +405,10 @@
         protected override FakeContainer GetApplicationContainer()
         {
             return FakeContainer;
+        }
+
+        protected override void RegisterNancyEnvironment(FakeContainer container, INancyEnvironment environment)
+        {
         }
 
         /// <summary>
@@ -465,6 +476,14 @@
         public bool Disposed { get; private set; }
     }
 
+    internal class FakeEnvironmentalConfigurator : INancyEnvironmentConfigurator
+    {
+        public INancyEnvironment ConfigureEnvironment(Action<INancyEnvironment> configuration)
+        {
+            return new DefaultNancyEnvironment();
+        }
+    }
+
     internal class FakeBootstrapperBaseGetModulesOverride : NancyBootstrapperBase<object>
     {
         public IEnumerable<ModuleRegistration> RegisterModulesRegistrationTypes { get; set; }
@@ -481,6 +500,12 @@
         public FakeBootstrapperBaseGetModulesOverride()
         {
             ModuleRegistrations = new List<ModuleRegistration>() { new ModuleRegistration(this.GetType()) };
+        }
+
+        // TODO: CHECK IMPLEMENTATION
+        protected override INancyEnvironmentConfigurator GetEnvironmentConfigurator()
+        {
+            return new FakeEnvironmentalConfigurator();
         }
 
         /// <summary>
@@ -544,6 +569,10 @@
         protected override object GetApplicationContainer()
         {
             return new object();
+        }
+
+        protected override void RegisterNancyEnvironment(object container, INancyEnvironment environment)
+        {
         }
 
         /// <summary>

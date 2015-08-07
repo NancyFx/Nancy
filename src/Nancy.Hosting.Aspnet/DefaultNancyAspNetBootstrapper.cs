@@ -5,6 +5,7 @@
     using System.Linq;
 
     using Nancy.Bootstrapper;
+    using Nancy.Configuration;
     using Nancy.Diagnostics;
     using Nancy.TinyIoc;
 
@@ -136,6 +137,18 @@
         protected override sealed void RegisterBootstrapperTypes(TinyIoCContainer applicationContainer)
         {
             applicationContainer.Register<INancyModuleCatalog>(this);
+        }
+
+        // TODO: ADD XML COMMENT
+        protected override void RegisterNancyEnvironment(TinyIoCContainer container, INancyEnvironment environment)
+        {
+            container.Register(environment);
+        }
+
+        // TODO: ADD XML COMMENT
+        protected override INancyEnvironmentConfigurator GetEnvironmentConfigurator()
+        {
+            return this.ApplicationContainer.Resolve<INancyEnvironmentConfigurator>();
         }
 
         /// <summary>

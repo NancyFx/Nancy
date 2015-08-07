@@ -5,6 +5,7 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
+    using Nancy.Configuration;
     using Nancy.Conventions;
     using Nancy.Cryptography;
     using Nancy.Diagnostics;
@@ -227,90 +228,101 @@
         /// <summary>
         /// Initialise the bootstrapper. Must be called prior to GetEngine.
         /// </summary>
-        public void Initialise()
+    public void Initialise()
+    {
+        if (this.InternalConfiguration == null)
         {
-            if (this.InternalConfiguration == null)
-            {
-                throw new InvalidOperationException("Configuration cannot be null");
-            }
-
-            if (!this.InternalConfiguration.IsValid)
-            {
-                throw new InvalidOperationException("Configuration is invalid");
-            }
-
-            this.ApplicationContainer = this.GetApplicationContainer();
-
-            this.RegisterBootstrapperTypes(this.ApplicationContainer);
-
-            this.ConfigureApplicationContainer(this.ApplicationContainer);
-
-            // We need to call this to fix an issue with assemblies that are referenced by DI not being loaded
-            AppDomainAssemblyTypeScanner.UpdateTypes();
-
-            var typeRegistrations = this.InternalConfiguration.GetTypeRegistations()
-                                        .Concat(this.GetAdditionalTypes());
-
-            var collectionTypeRegistrations = this.InternalConfiguration.GetCollectionTypeRegistrations()
-                                                  .Concat(this.GetApplicationCollections());
-
-            // TODO - should this be after initialiseinternal?
-            this.ConfigureConventions(this.Conventions);
-            var conventionValidationResult = this.Conventions.Validate();
-            if (!conventionValidationResult.Item1)
-            {
-                throw new InvalidOperationException(string.Format("Conventions are invalid:\n\n{0}", conventionValidationResult.Item2));
-            }
-
-            var instanceRegistrations = this.Conventions.GetInstanceRegistrations()
-                                            .Concat(this.GetAdditionalInstances());
-
-            this.RegisterTypes(this.ApplicationContainer, typeRegistrations);
-            this.RegisterCollectionTypes(this.ApplicationContainer, collectionTypeRegistrations);
-            this.RegisterInstances(this.ApplicationContainer, instanceRegistrations);
-            this.RegisterRegistrationTasks(this.GetRegistrationTasks());
-            this.RegisterModules(this.ApplicationContainer, this.Modules);
-
-            foreach (var applicationStartupTask in this.GetApplicationStartupTasks().ToList())
-            {
-                applicationStartupTask.Initialize(this.ApplicationPipelines);
-            }
-
-            this.ApplicationStartup(this.ApplicationContainer, this.ApplicationPipelines);
-
-            this.RequestStartupTaskTypeCache = this.RequestStartupTasks.ToArray();
-
-            if (this.FavIcon != null)
-            {
-                this.ApplicationPipelines.BeforeRequest.AddItemToStartOfPipeline(ctx =>
-                    {
-                        if (ctx.Request == null || String.IsNullOrEmpty(ctx.Request.Path))
-                        {
-                            return null;
-                        }
-
-                        if (String.Equals(ctx.Request.Path, "/favicon.ico", StringComparison.OrdinalIgnoreCase))
-                        {
-                            var response = new Response
-                                {
-                                    ContentType = "image/vnd.microsoft.icon",
-                                    StatusCode = HttpStatusCode.OK,
-                                    Contents = s => s.Write(this.FavIcon, 0, this.FavIcon.Length)
-                                };
-
-                            response.Headers["Cache-Control"] = "public, max-age=604800, must-revalidate";
-
-                            return response;
-                        }
-
-                        return null;
-                    });
-            }
-
-            this.GetDiagnostics().Initialize(this.ApplicationPipelines);
-
-            this.initialised = true;
+            throw new InvalidOperationException("Configuration cannot be null");
         }
+
+        if (!this.InternalConfiguration.IsValid)
+        {
+            throw new InvalidOperationException("Configuration is invalid");
+        }
+
+        this.ApplicationContainer = this.GetApplicationContainer();
+
+        this.RegisterBootstrapperTypes(this.ApplicationContainer);
+
+        this.ConfigureApplicationContainer(this.ApplicationContainer);
+
+        // We need to call this to fix an issue with assemblies that are referenced by DI not being loaded
+        AppDomainAssemblyTypeScanner.UpdateTypes();
+
+        var typeRegistrations = this.InternalConfiguration.GetTypeRegistations()
+                                    .Concat(this.GetAdditionalTypes());
+
+        var collectionTypeRegistrations = this.InternalConfiguration.GetCollectionTypeRegistrations()
+                                                .Concat(this.GetApplicationCollections());
+
+        // TODO - should this be after initialiseinternal?
+        this.ConfigureConventions(this.Conventions);
+        var conventionValidationResult = this.Conventions.Validate();
+        if (!conventionValidationResult.Item1)
+        {
+            throw new InvalidOperationException(string.Format("Conventions are invalid:\n\n{0}", conventionValidationResult.Item2));
+        }
+
+        var instanceRegistrations = this.Conventions.GetInstanceRegistrations()
+                                        .Concat(this.GetAdditionalInstances());
+
+        this.RegisterTypes(this.ApplicationContainer, typeRegistrations);
+        this.RegisterCollectionTypes(this.ApplicationContainer, collectionTypeRegistrations);
+        this.RegisterModules(this.ApplicationContainer, this.Modules);
+        this.RegisterInstances(this.ApplicationContainer, instanceRegistrations);
+        this.RegisterRegistrationTasks(this.GetRegistrationTasks());
+
+        var environment = this.GetEnvironmentConfigurator().ConfigureEnvironment(this.Configure);
+        this.RegisterNancyEnvironment(this.ApplicationContainer, environment);
+
+        foreach (var applicationStartupTask in this.GetApplicationStartupTasks().ToList())
+        {
+            applicationStartupTask.Initialize(this.ApplicationPipelines);
+        }
+        
+        this.RegisterModules(this.ApplicationContainer, this.Modules);
+
+        this.ApplicationStartup(this.ApplicationContainer, this.ApplicationPipelines);
+
+        this.RequestStartupTaskTypeCache = this.RequestStartupTasks.ToArray();
+
+        if (this.FavIcon != null)
+        {
+            this.ApplicationPipelines.BeforeRequest.AddItemToStartOfPipeline(ctx =>
+                {
+                    if (ctx.Request == null || String.IsNullOrEmpty(ctx.Request.Path))
+                    {
+                        return null;
+                    }
+
+                    if (String.Equals(ctx.Request.Path, "/favicon.ico", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        var response = new Response
+                            {
+                                ContentType = "image/vnd.microsoft.icon",
+                                StatusCode = HttpStatusCode.OK,
+                                Contents = s => s.Write(this.FavIcon, 0, this.FavIcon.Length)
+                            };
+
+                        response.Headers["Cache-Control"] = "public, max-age=604800, must-revalidate";
+
+                        return response;
+                    }
+
+                    return null;
+                });
+        }
+
+        this.GetDiagnostics().Initialize(this.ApplicationPipelines);
+
+        this.initialised = true;
+    }
+
+        public virtual void Configure(INancyEnvironment environment)
+        {
+        }
+
+        protected abstract INancyEnvironmentConfigurator GetEnvironmentConfigurator();
 
         /// <summary>
         /// Gets the diagnostics for initialisation
@@ -509,6 +521,8 @@
         /// </summary>
         /// <returns>Container instance</returns>
         protected abstract TContainer GetApplicationContainer();
+
+        protected abstract void RegisterNancyEnvironment(TContainer container, INancyEnvironment environment);
 
         /// <summary>
         /// Register the bootstrapper's implemented types into the container.

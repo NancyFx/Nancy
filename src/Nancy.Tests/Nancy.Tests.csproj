@@ -156,6 +156,9 @@
     <Compile Include="Unit\Bootstrapper\InstanceRegistrationFixture.cs" />
     <Compile Include="Unit\Bootstrapper\NancyBootstrapperWithRequestContainerBaseFixture.cs" />
     <Compile Include="Unit\Bootstrapper\PipelinesFixture.cs" />
+    <Compile Include="Unit\Configuration\DefaultNancyEnvironmentConfiguratorFixture.cs" />
+    <Compile Include="Unit\Configuration\DefaultNancyEnvironmentFactoryFixture.cs" />
+    <Compile Include="Unit\Configuration\DefaultNancyEnvironmentFixture.cs" />
     <Compile Include="Unit\Conventions\DefaultAcceptHeaderCoercionConventionsFixture.cs" />
     <Compile Include="Unit\Conventions\DefaultCultureConventionsFixture.cs" />
     <Compile Include="Unit\Conventions\DefaultStaticContentsConventionsFixture.cs" />
