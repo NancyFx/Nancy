@@ -1,5 +1,6 @@
 namespace Nancy
 {
+    using Nancy.Configuration;
     using Nancy.Culture;
     using Nancy.Diagnostics;
     using Nancy.Localization;
