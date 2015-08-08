@@ -49,7 +49,7 @@ namespace Nancy.Configuration
         /// <param name="defaultValue">The value to return if no stored value could be found.</param>
         /// <typeparam name="T">The <see cref="Type"/> of the value to retreive from the environment.</typeparam>
         /// <returns>The stored value.</returns>
-        public static T GetValue<T>(this INancyEnvironment environment, T defaultValue)
+        public static T GetValueWithDefault<T>(this INancyEnvironment environment, T defaultValue)
         {
             T value;
             return environment.TryGetValue(typeof(T).FullName, out value) ? value : defaultValue;
@@ -64,7 +64,7 @@ namespace Nancy.Configuration
         /// <param name="defaultValue">The value to return if no stored value could be found.</param>
         /// <typeparam name="T">The <see cref="Type"/> of the value to retreive from the environment.</typeparam>
         /// <returns>The stored value.</returns>
-        public static T GetValue<T>(this INancyEnvironment environment, string key, T defaultValue)
+        public static T GetValueWithDefault<T>(this INancyEnvironment environment, string key, T defaultValue)
         {
             T value;
             return environment.TryGetValue(key, out value) ? value : defaultValue;
