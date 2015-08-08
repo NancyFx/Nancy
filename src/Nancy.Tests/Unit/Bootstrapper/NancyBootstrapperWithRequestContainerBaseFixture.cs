@@ -251,7 +251,6 @@
                 return this.FakeNancyEngine;
             }
 
-            // TODO: CHECK IMPLEMENTATION
             protected override INancyEnvironmentConfigurator GetEnvironmentConfigurator()
             {
                 return new FakeEnvironmentalConfigurator();
@@ -303,6 +302,11 @@
                 return FakeContainer;
             }
 
+            /// <summary>
+            /// Registers an <see cref="INancyEnvironment"/> instance in the container.
+            /// </summary>
+            /// <param name="container">The container to register into.</param>
+            /// <param name="environment">The <see cref="INancyEnvironment"/> instance to register.</param>
             protected override void RegisterNancyEnvironment(FakeContainer container, INancyEnvironment environment)
             {
             }

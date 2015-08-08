@@ -571,13 +571,20 @@ namespace Nancy.Testing
             }
         }
 
-        // TODO: ADD XML COMMENT
+        /// <summary>
+        /// Gets the <see cref="INancyEnvironmentConfigurator"/> used by th.
+        /// </summary>
+        /// <returns>An <see cref="INancyEnvironmentConfigurator"/> instance.</returns>
         protected override INancyEnvironmentConfigurator GetEnvironmentConfigurator()
         {
             return this.ApplicationContainer.Resolve<INancyEnvironmentConfigurator>();
         }
 
-        // TODO: ADD XML COMMENT
+        /// <summary>
+        /// Registers an <see cref="INancyEnvironment"/> instance in the container.
+        /// </summary>
+        /// <param name="container">The container to register into.</param>
+        /// <param name="environment">The <see cref="INancyEnvironment"/> instance to register.</param>
         protected override void RegisterNancyEnvironment(TinyIoCContainer container, INancyEnvironment environment)
         {
             container.Register(environment);
