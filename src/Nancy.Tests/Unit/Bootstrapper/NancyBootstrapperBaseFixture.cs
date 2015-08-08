@@ -339,7 +339,6 @@
             return this.FakeNancyEngine;
         }
 
-        // TODO: CHECK IMPLEMENTATION
         protected override INancyEnvironmentConfigurator GetEnvironmentConfigurator()
         {
             return new FakeEnvironmentalConfigurator();
@@ -502,7 +501,6 @@
             ModuleRegistrations = new List<ModuleRegistration>() { new ModuleRegistration(this.GetType()) };
         }
 
-        // TODO: CHECK IMPLEMENTATION
         protected override INancyEnvironmentConfigurator GetEnvironmentConfigurator()
         {
             return new FakeEnvironmentalConfigurator();
