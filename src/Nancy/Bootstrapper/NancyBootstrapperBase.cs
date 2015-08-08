@@ -100,7 +100,7 @@
                 return this.conventions;
             }
         }
-
+        
         /// <summary>
         /// Gets all available module types
         /// </summary>
@@ -322,6 +322,10 @@
         {
         }
 
+        /// <summary>
+        /// Gets the <see cref="INancyEnvironmentConfigurator"/> used by th.
+        /// </summary>
+        /// <returns>An <see cref="INancyEnvironmentConfigurator"/> instance.</returns>
         protected abstract INancyEnvironmentConfigurator GetEnvironmentConfigurator();
 
         /// <summary>
@@ -522,6 +526,11 @@
         /// <returns>Container instance</returns>
         protected abstract TContainer GetApplicationContainer();
 
+        /// <summary>
+        /// Registers an <see cref="INancyEnvironment"/> instance in the container.
+        /// </summary>
+        /// <param name="container">The container to register into.</param>
+        /// <param name="environment">The <see cref="INancyEnvironment"/> instance to register.</param>
         protected abstract void RegisterNancyEnvironment(TContainer container, INancyEnvironment environment);
 
         /// <summary>
