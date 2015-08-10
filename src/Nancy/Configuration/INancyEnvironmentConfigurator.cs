@@ -3,7 +3,7 @@ namespace Nancy.Configuration
     using System;
 
     /// <summary>
-    /// Defines the functionality for applyingn configuration to an <see cref="INancyEnvironment"/> instance.
+    /// Defines the functionality for applying configuration to an <see cref="INancyEnvironment"/> instance.
     /// </summary>
     public interface INancyEnvironmentConfigurator
     {
