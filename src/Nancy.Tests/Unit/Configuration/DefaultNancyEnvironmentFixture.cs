@@ -2,9 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-
     using Nancy.Configuration;
-
     using Xunit;
     using Xunit.Extensions;
 
@@ -127,7 +125,7 @@
 
             // When
             var result = environment.TryGetValue("nancy", out output);
-
+            
             // Then
             result.ShouldBeTrue();
         }

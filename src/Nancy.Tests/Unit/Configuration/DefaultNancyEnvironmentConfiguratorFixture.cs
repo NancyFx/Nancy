@@ -22,7 +22,7 @@
         }
 
         [Fact]
-        public void Should_retreive_environment_from_factory()
+        public void Should_retrieve_environment_from_factory()
         {
             // Given, When
             this.configurator.ConfigureEnvironment(env => { });
