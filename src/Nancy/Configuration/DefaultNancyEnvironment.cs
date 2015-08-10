@@ -43,7 +43,7 @@
         /// </summary>
         /// <returns><see langword="true"/> if the environment contains an element that has the specified key; otherwise, <see langword="false"/>.
         /// </returns>
-        /// <param name="key">The key to retreive.</param>
+        /// <param name="key">The key to retrieve.</param>
         public bool ContainsKey(string key)
         {
             return this.values.ContainsKey(key);
