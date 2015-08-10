@@ -228,23 +228,23 @@
         /// <summary>
         /// Initialise the bootstrapper. Must be called prior to GetEngine.
         /// </summary>
-    public void Initialise()
-    {
-        if (this.InternalConfiguration == null)
+        public void Initialise()
         {
-            throw new InvalidOperationException("Configuration cannot be null");
-        }
+            if (this.InternalConfiguration == null)
+            {
+                throw new InvalidOperationException("Configuration cannot be null");
+            }
 
-        if (!this.InternalConfiguration.IsValid)
-        {
-            throw new InvalidOperationException("Configuration is invalid");
-        }
+            if (!this.InternalConfiguration.IsValid)
+            {
+                throw new InvalidOperationException("Configuration is invalid");
+            }
 
-        this.ApplicationContainer = this.GetApplicationContainer();
+            this.ApplicationContainer = this.GetApplicationContainer();
 
-        this.RegisterBootstrapperTypes(this.ApplicationContainer);
+            this.RegisterBootstrapperTypes(this.ApplicationContainer);
 
-        this.ConfigureApplicationContainer(this.ApplicationContainer);
+            this.ConfigureApplicationContainer(this.ApplicationContainer);
 
         // We need to call this to fix an issue with assemblies that are referenced by DI not being loaded
         AppDomainAssemblyTypeScanner.UpdateTypes();
@@ -252,28 +252,28 @@
         var typeRegistrations = this.InternalConfiguration.GetTypeRegistations()
                                     .Concat(this.GetAdditionalTypes());
 
-        var collectionTypeRegistrations = this.InternalConfiguration.GetCollectionTypeRegistrations()
-                                                .Concat(this.GetApplicationCollections());
+            var collectionTypeRegistrations = this.InternalConfiguration.GetCollectionTypeRegistrations()
+                                                    .Concat(this.GetApplicationCollections());
 
-        // TODO - should this be after initialiseinternal?
-        this.ConfigureConventions(this.Conventions);
-        var conventionValidationResult = this.Conventions.Validate();
-        if (!conventionValidationResult.Item1)
-        {
-            throw new InvalidOperationException(string.Format("Conventions are invalid:\n\n{0}", conventionValidationResult.Item2));
-        }
+            // TODO - should this be after initialiseinternal?
+            this.ConfigureConventions(this.Conventions);
+            var conventionValidationResult = this.Conventions.Validate();
+            if (!conventionValidationResult.Item1)
+            {
+                throw new InvalidOperationException(string.Format("Conventions are invalid:\n\n{0}", conventionValidationResult.Item2));
+            }
 
-        var instanceRegistrations = this.Conventions.GetInstanceRegistrations()
-                                        .Concat(this.GetAdditionalInstances());
+            var instanceRegistrations = this.Conventions.GetInstanceRegistrations()
+                                            .Concat(this.GetAdditionalInstances());
 
-        this.RegisterTypes(this.ApplicationContainer, typeRegistrations);
-        this.RegisterCollectionTypes(this.ApplicationContainer, collectionTypeRegistrations);
-        this.RegisterModules(this.ApplicationContainer, this.Modules);
-        this.RegisterInstances(this.ApplicationContainer, instanceRegistrations);
-        this.RegisterRegistrationTasks(this.GetRegistrationTasks());
+            this.RegisterTypes(this.ApplicationContainer, typeRegistrations);
+            this.RegisterCollectionTypes(this.ApplicationContainer, collectionTypeRegistrations);
+            this.RegisterModules(this.ApplicationContainer, this.Modules);
+            this.RegisterInstances(this.ApplicationContainer, instanceRegistrations);
+            this.RegisterRegistrationTasks(this.GetRegistrationTasks());
 
-        var environment = this.GetEnvironmentConfigurator().ConfigureEnvironment(this.Configure);
-        this.RegisterNancyEnvironment(this.ApplicationContainer, environment);
+            var environment = this.GetEnvironmentConfigurator().ConfigureEnvironment(this.Configure);
+            this.RegisterNancyEnvironment(this.ApplicationContainer, environment);
 
         foreach (var applicationStartupTask in this.GetApplicationStartupTasks().ToList())
         {
@@ -282,42 +282,46 @@
         
         this.RegisterModules(this.ApplicationContainer, this.Modules);
 
-        this.ApplicationStartup(this.ApplicationContainer, this.ApplicationPipelines);
+            this.ApplicationStartup(this.ApplicationContainer, this.ApplicationPipelines);
 
-        this.RequestStartupTaskTypeCache = this.RequestStartupTasks.ToArray();
+            this.RequestStartupTaskTypeCache = this.RequestStartupTasks.ToArray();
 
-        if (this.FavIcon != null)
-        {
-            this.ApplicationPipelines.BeforeRequest.AddItemToStartOfPipeline(ctx =>
-                {
-                    if (ctx.Request == null || String.IsNullOrEmpty(ctx.Request.Path))
+            if (this.FavIcon != null)
+            {
+                this.ApplicationPipelines.BeforeRequest.AddItemToStartOfPipeline(ctx =>
                     {
+                        if (ctx.Request == null || String.IsNullOrEmpty(ctx.Request.Path))
+                        {
+                            return null;
+                        }
+
+                        if (String.Equals(ctx.Request.Path, "/favicon.ico", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            var response = new Response
+                                {
+                                    ContentType = "image/vnd.microsoft.icon",
+                                    StatusCode = HttpStatusCode.OK,
+                                    Contents = s => s.Write(this.FavIcon, 0, this.FavIcon.Length)
+                                };
+
+                            response.Headers["Cache-Control"] = "public, max-age=604800, must-revalidate";
+
+                            return response;
+                        }
+
                         return null;
-                    }
+                    });
+            }
 
-                    if (String.Equals(ctx.Request.Path, "/favicon.ico", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        var response = new Response
-                            {
-                                ContentType = "image/vnd.microsoft.icon",
-                                StatusCode = HttpStatusCode.OK,
-                                Contents = s => s.Write(this.FavIcon, 0, this.FavIcon.Length)
-                            };
+            this.GetDiagnostics().Initialize(this.ApplicationPipelines);
 
-                        response.Headers["Cache-Control"] = "public, max-age=604800, must-revalidate";
-
-                        return response;
-                    }
-
-                    return null;
-                });
+            this.initialised = true;
         }
 
-        this.GetDiagnostics().Initialize(this.ApplicationPipelines);
-
-        this.initialised = true;
-    }
-
+        /// <summary>
+        /// Configures the Nancy environment
+        /// </summary>
+        /// <param name="environment">The <see cref="INancyEnvironment"/> instance to configure</param>
         public virtual void Configure(INancyEnvironment environment)
         {
         }
