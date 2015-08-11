@@ -7,6 +7,7 @@
     using Nancy.Bootstrapper;
     using Nancy.Configuration;
     using Nancy.Conventions;
+    using Nancy.Cryptography;
     using Nancy.Diagnostics;
     using Nancy.Security;
     using Nancy.Session;
@@ -15,13 +16,6 @@
 
     public class DemoBootstrapper : DefaultNancyBootstrapper
     {
-        // Override with a valid password (albeit a really really bad one!)
-        // to enable the diagnostics dashboard
-        protected override DiagnosticsConfiguration DiagnosticsConfiguration
-        {
-            get { return new DiagnosticsConfiguration { Password = "password"}; }
-        }
-
         // Overriding this just to show how it works, not actually necessary as autoregister
         // takes care of it all.
         protected override void ConfigureApplicationContainer(TinyIoCContainer existingContainer)
@@ -29,6 +23,18 @@
             // We don't call base because we don't want autoregister
             // we just register our one known dependency as an application level singleton
             existingContainer.Register<IApplicationDependency, ApplicationDependencyClass>().AsSingleton();
+        }
+
+        // Override with a valid password (albeit a really really bad one!)
+        // to enable the diagnostics dashboard
+        public override void Configure(INancyEnvironment environment)
+        {
+            environment.Diagnostics(
+                password: "password",
+                path: "/_Nancy",
+                cookieName: "__custom_cookie",
+                slidingTimeout: 30,
+                cryptographyConfiguration: CryptographyConfiguration.NoEncryption);
         }
 
         protected override NancyInternalConfiguration InternalConfiguration

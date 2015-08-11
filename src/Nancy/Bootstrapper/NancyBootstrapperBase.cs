@@ -218,14 +218,6 @@
         }
 
         /// <summary>
-        /// Gets the diagnostics / dashboard configuration (password etc)
-        /// </summary>
-        protected virtual DiagnosticsConfiguration DiagnosticsConfiguration
-        {
-            get { return new DiagnosticsConfiguration(); }
-        }
-
-        /// <summary>
         /// Initialise the bootstrapper. Must be called prior to GetEngine.
         /// </summary>
         public void Initialise()
@@ -598,7 +590,6 @@
             return new[] {
                 new InstanceRegistration(typeof(CryptographyConfiguration), this.CryptographyConfiguration),
                 new InstanceRegistration(typeof(NancyInternalConfiguration), this.InternalConfiguration),
-                new InstanceRegistration(typeof(DiagnosticsConfiguration), this.DiagnosticsConfiguration),
                 new InstanceRegistration(typeof(IRootPathProvider), this.RootPathProvider),
             };
         }
