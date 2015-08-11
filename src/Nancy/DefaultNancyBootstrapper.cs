@@ -11,7 +11,7 @@ namespace Nancy
 
     /// <summary>
     /// TinyIoC bootstrapper - registers default route resolver and registers itself as
-    /// INancyModuleCatalog for resolving modules but behaviour can be overridden if required.
+    /// INancyModuleCatalog for resolving modules but behavior can be overridden if required.
     /// </summary>
     public class DefaultNancyBootstrapper : NancyBootstrapperWithRequestContainerBase<TinyIoCContainer>
     {
@@ -76,6 +76,11 @@ namespace Nancy
             return new TinyIoCContainer();
         }
 
+        /// <summary>
+        /// Registers an <see cref="INancyEnvironment"/> instance in the container.
+        /// </summary>
+        /// <param name="container">The container to register into.</param>
+        /// <param name="environment">The <see cref="INancyEnvironment"/> instance to register.</param>
         protected override void RegisterNancyEnvironment(TinyIoCContainer container, INancyEnvironment environment)
         {
             container.Register(environment);
@@ -195,7 +200,7 @@ namespace Nancy
         }
 
         /// <summary>
-        /// Gets the diagnostics for initialisation
+        /// Gets the diagnostics for initialization
         /// </summary>
         /// <returns>IDiagnostics implementation</returns>
         protected override IDiagnostics GetDiagnostics()
@@ -257,7 +262,7 @@ namespace Nancy
         }
 
         /// <summary>
-        /// Executes auto registation with the given container.
+        /// Executes auto registration with the given container.
         /// </summary>
         /// <param name="container">Container instance</param>
         private static void AutoRegister(TinyIoCContainer container, IEnumerable<Func<Assembly, bool>> ignoredAssemblies)

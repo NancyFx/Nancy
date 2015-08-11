@@ -5,6 +5,7 @@
     using System.Linq;
 
     using Nancy.Bootstrapper;
+    using Nancy.Configuration;
     using Nancy.Cryptography;
     using Nancy.Culture;
     using Nancy.Diagnostics;
@@ -35,7 +36,6 @@
 
         private class FakeDiagnostics : IDiagnostics
         {
-            private readonly DiagnosticsConfiguration diagnosticsConfiguration;
             private readonly IEnumerable<IDiagnosticsProvider> diagnosticProviders;
             private readonly IRootPathProvider rootPathProvider;
             private readonly IRequestTracing requestTracing;
@@ -47,9 +47,9 @@
             private readonly IRequestTraceFactory requestTraceFactory;
             private readonly IEnumerable<IRouteMetadataProvider> routeMetadataProviders;
             private readonly ITextResource textResource;
+            private readonly INancyEnvironment environment;
 
             public FakeDiagnostics(
-                DiagnosticsConfiguration diagnosticsConfiguration,
                 IRootPathProvider rootPathProvider,
                 IRequestTracing requestTracing,
                 NancyInternalConfiguration configuration,
@@ -59,9 +59,9 @@
                 ICultureService cultureService,
                 IRequestTraceFactory requestTraceFactory,
                 IEnumerable<IRouteMetadataProvider> routeMetadataProviders,
-                ITextResource textResource)
+                ITextResource textResource,
+                INancyEnvironment environment)
             {
-                this.diagnosticsConfiguration = diagnosticsConfiguration;
                 this.diagnosticProviders = (new IDiagnosticsProvider[] { new FakeDiagnosticsProvider() }).ToArray();
                 this.rootPathProvider = rootPathProvider;
                 this.requestTracing = requestTracing;
@@ -73,11 +73,12 @@
                 this.requestTraceFactory = requestTraceFactory;
                 this.routeMetadataProviders = routeMetadataProviders;
                 this.textResource = textResource;
+                this.environment = environment;
             }
 
             public void Initialize(IPipelines pipelines)
             {
-                DiagnosticsHook.Enable(this.diagnosticsConfiguration,
+                DiagnosticsHook.Enable(
                     pipelines,
                     this.diagnosticProviders,
                     this.rootPathProvider,
@@ -89,7 +90,8 @@
                     this.cultureService,
                     this.requestTraceFactory,
                     this.routeMetadataProviders,
-                    this.textResource);
+                    this.textResource,
+                    this.environment);
             }
         }
 
@@ -115,19 +117,23 @@
         public void Should_return_main_page_with_valid_auth_cookie()
         {
             // Given
-            var diagsConfig = new DiagnosticsConfiguration { Password = "password", CryptographyConfiguration = this.cryptoConfig };
-
             var bootstrapper = new ConfigurableBootstrapper(with =>
             {
+                with.Configure(env =>
+                {
+                    env.Diagnostics(
+                        password: "password",
+                        cryptographyConfiguration: this.cryptoConfig);
+                });
+
                 with.EnableAutoRegistration();
-                with.DiagnosticsConfiguration(diagsConfig);
                 with.Diagnostics<FakeDiagnostics>();
             });
 
             var browser = new Browser(bootstrapper);
 
             // When
-            var result = browser.Get(diagsConfig.Path + "/interactive/providers/", with =>
+            var result = browser.Get(DiagnosticsConfiguration.Default.Path + "/interactive/providers/", with =>
                 {
                     with.Cookie(DiagsCookieName, this.GetSessionCookieValue("password"));
                 });
@@ -154,7 +160,7 @@
             var hmacBytes = this.cryptoConfig.HmacProvider.GenerateHmac(encryptedSession);
             var hmacString = Convert.ToBase64String(hmacBytes);
 
-            return String.Format("{1}{0}", encryptedSession, hmacString);
+            return string.Format("{1}{0}", encryptedSession, hmacString);
         }
     }
 }

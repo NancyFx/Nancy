@@ -346,14 +346,6 @@ namespace Nancy.Testing
             }
         }
 
-        protected override DiagnosticsConfiguration DiagnosticsConfiguration
-        {
-            get
-            {
-                return this.diagnosticConfiguration ?? base.DiagnosticsConfiguration;
-            }
-        }
-
         /// <summary>
         /// Gets the root path provider
         /// </summary>
@@ -429,7 +421,7 @@ namespace Nancy.Testing
 
 
         /// <summary>
-        /// Gets the diagnostics for initialisation
+        /// Gets the diagnostics for initialization
         /// </summary>
         /// <returns>IDiagnostics implementation</returns>
         protected override IDiagnostics GetDiagnostics()
@@ -1807,17 +1799,6 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator Serializers(params Type[] serializers)
             {
                 this.bootstrapper.configuration.Serializers = new List<Type>(serializers);
-                return this;
-            }
-
-            /// <summary>
-            /// Configures the bootstrapper to use a specific diagnostics configuration
-            /// </summary>
-            /// <param name="diagnosticsConfiguration">Diagnostics configuration to use</param>
-            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
-            public ConfigurableBootstrapperConfigurator DiagnosticsConfiguration(DiagnosticsConfiguration diagnosticsConfiguration)
-            {
-                this.bootstrapper.diagnosticConfiguration = diagnosticsConfiguration;
                 return this;
             }
 
