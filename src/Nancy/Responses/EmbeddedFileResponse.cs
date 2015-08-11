@@ -48,12 +48,10 @@
         {
             var resourceName = assembly
                 .GetManifestResourceNames()
-                .Where(x => GetFileNameFromResourceName(resourcePath, x).Equals(name, StringComparison.OrdinalIgnoreCase))
-                .Select(x => GetFileNameFromResourceName(resourcePath, x))
-                .FirstOrDefault();
+                .FirstOrDefault(x => GetFileNameFromResourceName(resourcePath, x).Equals(name, StringComparison.OrdinalIgnoreCase));
 
-            resourceName =
-                string.Concat(resourcePath, ".", resourceName);
+            if (resourceName == null)
+                return null;
 
             return assembly.GetManifestResourceStream(resourceName);
         }
