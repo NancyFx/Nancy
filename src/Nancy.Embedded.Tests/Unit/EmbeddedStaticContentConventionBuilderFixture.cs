@@ -77,7 +77,7 @@
                 Assembly.GetExecutingAssembly();
 
             var resolver =
-                EmbeddedStaticContentConventionBuilder.AddDirectory(virtualDirectory, assembly, "Resources");
+                EmbeddedStaticContentConventionBuilder.AddDirectory(virtualDirectory, assembly, contentPath ?? "Resources");
 
             var response =
                 resolver.Invoke(context, null) as EmbeddedFileResponse;
