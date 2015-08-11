@@ -6,6 +6,7 @@
     using System.Reflection;
     using System.Security.Cryptography;
     using System.Text;
+    using System.Text.RegularExpressions;
 
     public class EmbeddedFileResponse : Response
     {
@@ -59,7 +60,7 @@
 
         private static string GetFileNameFromResourceName(string resourcePath, string resourceName)
         {
-            return resourceName.Replace(resourcePath, string.Empty).Substring(1);
+            return Regex.Replace(resourceName, resourcePath, string.Empty, RegexOptions.IgnoreCase).Substring(1);
         }
 
         private static string GenerateETag(Stream stream)
