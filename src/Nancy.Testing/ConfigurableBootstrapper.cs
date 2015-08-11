@@ -713,7 +713,6 @@ namespace Nancy.Testing
                 return this;
             }
 
-            /// <summary>
             /// Configures the bootstrapper to create an <see cref="INancyContextFactory"/> instance of the specified type.
             /// </summary>
             /// <typeparam name="T">The type of the <see cref="INancyContextFactory"/> that the bootstrapper should use.</typeparam>
@@ -750,7 +749,6 @@ namespace Nancy.Testing
 
             /// <summary>
             /// Configures the bootstrapper to use the provided instances of <see cref="INancyDefaultConfigurationProvider"/>.
-            /// </summary>
             /// <param name="defaultConfigurationProvider">The <see cref="INancyDefaultConfigurationProvider"/> types that should be used by the bootstrapper.</param>
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator DefaultConfigurationProviders(INancyDefaultConfigurationProvider defaultConfigurationProvider)
