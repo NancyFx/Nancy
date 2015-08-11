@@ -7,6 +7,7 @@ namespace Nancy.Diagnostics
     using System.Threading;
 
     using Nancy.Bootstrapper;
+    using Nancy.Configuration;
     using Nancy.Cookies;
     using Nancy.Cryptography;
     using Nancy.Culture;
@@ -27,21 +28,11 @@ namespace Nancy.Diagnostics
 
         internal const string ItemsKey = "DIAGS_REQUEST";
 
-        public static void Enable(
-            DiagnosticsConfiguration diagnosticsConfiguration,
-            IPipelines pipelines,
-            IEnumerable<IDiagnosticsProvider> providers,
-            IRootPathProvider rootPathProvider,
-            IRequestTracing requestTracing,
-            NancyInternalConfiguration configuration,
-            IModelBinderLocator modelBinderLocator,
-            IEnumerable<IResponseProcessor> responseProcessors,
-            IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints,
-            ICultureService cultureService,
-            IRequestTraceFactory requestTraceFactory,
-            IEnumerable<IRouteMetadataProvider> routeMetadataProviders,
-            ITextResource textResource)
+        public static void Enable(IPipelines pipelines, IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration, IModelBinderLocator modelBinderLocator, IEnumerable<IResponseProcessor> responseProcessors, IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints, ICultureService cultureService, IRequestTraceFactory requestTraceFactory, IEnumerable<IRouteMetadataProvider> routeMetadataProviders, ITextResource textResource, INancyEnvironment environment)
         {
+            var diagnosticsConfiguration =
+                environment.GetValueWithDefault(DiagnosticsConfiguration.Default);
+
             var diagnosticsModuleCatalog = new DiagnosticsModuleCatalog(providers, rootPathProvider, requestTracing, configuration, diagnosticsConfiguration);
 
             var diagnosticsRouteCache = new RouteCache(
@@ -98,10 +89,18 @@ namespace Nancy.Diagnostics
 
                         RewriteDiagnosticsUrl(diagnosticsConfiguration, ctx);
 
-                        return diagnosticsConfiguration.Valid
+                        return ValidateConfiguration(diagnosticsConfiguration)
                                    ? ExecuteDiagnostics(ctx, diagnosticsRouteResolver, diagnosticsConfiguration, serializer)
                                    : GetDiagnosticsHelpView(ctx);
                     }));
+        }
+
+        private static bool ValidateConfiguration(DiagnosticsConfiguration configuration)
+        {
+            return !string.IsNullOrWhiteSpace(configuration.Password) &&
+                !string.IsNullOrWhiteSpace(configuration.CookieName) &&
+                !string.IsNullOrWhiteSpace(configuration.Path) &&
+                configuration.SlidingTimeout != 0;
         }
 
         public static void Disable(IPipelines pipelines)

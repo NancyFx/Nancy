@@ -37,6 +37,7 @@ namespace Nancy.Testing
         private readonly List<Action<TinyIoCContainer, IPipelines>> applicationStartupActions;
         private readonly List<Action<TinyIoCContainer, IPipelines, NancyContext>> requestStartupActions;
         private readonly Assembly nancyAssembly = typeof(NancyEngine).Assembly;
+        private Action<INancyEnvironment> configure;
 
         /// <summary>
         /// Test project name suffixes that will be stripped from the test name project
@@ -91,6 +92,18 @@ namespace Nancy.Testing
                 testAssembly.GetName().Name;
 
             LoadReferencesForAssemblyUnderTest(testAssemblyName);
+        }
+
+        /// <summary>
+        /// Configures the Nancy environment
+        /// </summary>
+        /// <param name="environment">The <see cref="INancyEnvironment"/> instance to configure</param>
+        public override void Configure(INancyEnvironment environment)
+        {
+            if (this.configure != null)
+            {
+                this.configure.Invoke(environment);
+            }
         }
 
         protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
@@ -286,14 +299,6 @@ namespace Nancy.Testing
             get { return this.Resolve<IApplicationStartup>() ?? base.ApplicationStartupTasks; }
         }
 
-        protected override DiagnosticsConfiguration DiagnosticsConfiguration
-        {
-            get
-            {
-                return this.diagnosticConfiguration ?? base.DiagnosticsConfiguration;
-            }
-        }
-
         /// <summary>
         /// Gets the root path provider
         /// </summary>
@@ -369,7 +374,7 @@ namespace Nancy.Testing
 
 
         /// <summary>
-        /// Gets the diagnostics for initialisation
+        /// Gets the diagnostics for initialization
         /// </summary>
         /// <returns>IDiagnostics implementation</returns>
         protected override IDiagnostics GetDiagnostics()
@@ -647,6 +652,13 @@ namespace Nancy.Testing
             {
                 this.bootstrapper.registeredInstances.Add(
                     new InstanceRegistration(typeof(INancyContextFactory), contextFactory));
+
+                return this;
+            }
+
+            public ConfigurableBootstrapperConfigurator Configure(Action<INancyEnvironment> configuration)
+            {
+                this.bootstrapper.configure = configuration;
 
                 return this;
             }
@@ -1709,17 +1721,6 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator Serializers(params Type[] serializers)
             {
                 this.bootstrapper.configuration.Serializers = new List<Type>(serializers);
-                return this;
-            }
-
-            /// <summary>
-            /// Configures the bootstrapper to use a specific diagnostics configuration
-            /// </summary>
-            /// <param name="diagnosticsConfiguration">Diagnostics configuration to use</param>
-            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
-            public ConfigurableBootstrapperConfigurator DiagnosticsConfiguration(DiagnosticsConfiguration diagnosticsConfiguration)
-            {
-                this.bootstrapper.diagnosticConfiguration = diagnosticsConfiguration;
                 return this;
             }
 

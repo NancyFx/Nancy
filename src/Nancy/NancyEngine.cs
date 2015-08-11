@@ -23,7 +23,6 @@
         private readonly IRequestDispatcher dispatcher;
         private readonly INancyContextFactory contextFactory;
         private readonly IRequestTracing requestTracing;
-        private readonly DiagnosticsConfiguration diagnosticsConfiguration;
         private readonly IEnumerable<IStatusCodeHandler> statusCodeHandlers;
         private readonly IStaticContentProvider staticContentProvider;
 
@@ -34,9 +33,8 @@
         /// <param name="contextFactory">A factory for creating contexts</param>
         /// <param name="statusCodeHandlers">Error handlers</param>
         /// <param name="requestTracing">The request tracing instance.</param>
-        /// <param name="diagnosticsConfiguration"></param>
         /// <param name="staticContentProvider">The provider to use for serving static content</param>
-        public NancyEngine(IRequestDispatcher dispatcher, INancyContextFactory contextFactory, IEnumerable<IStatusCodeHandler> statusCodeHandlers, IRequestTracing requestTracing, DiagnosticsConfiguration diagnosticsConfiguration, IStaticContentProvider staticContentProvider)
+        public NancyEngine(IRequestDispatcher dispatcher, INancyContextFactory contextFactory, IEnumerable<IStatusCodeHandler> statusCodeHandlers, IRequestTracing requestTracing, IStaticContentProvider staticContentProvider)
         {
             if (dispatcher == null)
             {
@@ -57,7 +55,6 @@
             this.contextFactory = contextFactory;
             this.statusCodeHandlers = statusCodeHandlers;
             this.requestTracing = requestTracing;
-            this.diagnosticsConfiguration = diagnosticsConfiguration;
             this.staticContentProvider = staticContentProvider;
         }
 
@@ -67,6 +64,13 @@
         /// <value>An <see cref="IPipelines"/> instance.</value>
         public Func<NancyContext, IPipelines> RequestPipelinesFactory { get; set; }
 
+        /// <summary>
+        /// Handles an incoming <see cref="Request"/> async.
+        /// </summary>
+        /// <param name="request">An <see cref="Request"/> instance, containing the information about the current request.</param>
+        /// <param name="preRequest">Delegate to call before the request is processed</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>The task object representing the asynchronous operation.</returns>
         public Task<NancyContext> HandleRequest(Request request, Func<NancyContext, NancyContext> preRequest, CancellationToken cancellationToken)
         {
             var tcs = new TaskCompletionSource<NancyContext>();

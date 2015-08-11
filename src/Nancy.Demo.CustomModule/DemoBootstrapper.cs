@@ -1,15 +1,13 @@
 ﻿namespace Nancy.Demo.CustomModule
 {
+    using Nancy.Configuration;
     using Nancy.Diagnostics;
 
     public class DemoBootstrapper : DefaultNancyBootstrapper
     {
-        protected override DiagnosticsConfiguration DiagnosticsConfiguration
+        public override void Configure(INancyEnvironment environment)
         {
-            get
-            {
-                return new DiagnosticsConfiguration() { Password = "password" };
-            }
+            environment.Diagnostics("password");
         }
     }
 }

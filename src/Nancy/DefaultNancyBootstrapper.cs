@@ -12,7 +12,7 @@
 
     /// <summary>
     /// TinyIoC bootstrapper - registers default route resolver and registers itself as
-    /// INancyModuleCatalog for resolving modules but behaviour can be overridden if required.
+    /// INancyModuleCatalog for resolving modules but behavior can be overridden if required.
     /// </summary>
     public class DefaultNancyBootstrapper : NancyBootstrapperWithRequestContainerBase<TinyIoCContainer>
     {
@@ -77,6 +77,11 @@
             return new TinyIoCContainer();
         }
 
+        /// <summary>
+        /// Registers an <see cref="INancyEnvironment"/> instance in the container.
+        /// </summary>
+        /// <param name="container">The container to register into.</param>
+        /// <param name="environment">The <see cref="INancyEnvironment"/> instance to register.</param>
         protected override void RegisterNancyEnvironment(TinyIoCContainer container, INancyEnvironment environment)
         {
             container.Register(environment);
@@ -112,7 +117,6 @@
                         break;
                     case Lifetime.PerRequest:
                         throw new InvalidOperationException("Unable to directly register a per request lifetime.");
-                        break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
@@ -139,7 +143,6 @@
                         break;
                     case Lifetime.PerRequest:
                         throw new InvalidOperationException("Unable to directly register a per request lifetime.");
-                        break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
@@ -188,14 +191,17 @@
             return this.ApplicationContainer.GetChildContainer();
         }
 
-        // TODO: ADD XML COMMENT
+        /// <summary>
+        /// Gets the <see cref="INancyEnvironmentConfigurator"/> used by th.
+        /// </summary>
+        /// <returns>An <see cref="INancyEnvironmentConfigurator"/> instance.</returns>
         protected override INancyEnvironmentConfigurator GetEnvironmentConfigurator()
         {
             return this.ApplicationContainer.Resolve<INancyEnvironmentConfigurator>();
         }
 
         /// <summary>
-        /// Gets the diagnostics for initialisation
+        /// Gets the diagnostics for initialization
         /// </summary>
         /// <returns>IDiagnostics implementation</returns>
         protected override IDiagnostics GetDiagnostics()
@@ -257,7 +263,7 @@
         }
 
         /// <summary>
-        /// Executes auto registation with the given container.
+        /// Executes auto registration with the given container.
         /// </summary>
         /// <param name="container">Container instance</param>
         private static void AutoRegister(TinyIoCContainer container, IEnumerable<Func<Assembly, bool>> ignoredAssemblies)
