@@ -5,7 +5,6 @@ namespace Nancy.Testing
     using System.IO;
     using System.Linq;
     using System.Reflection;
-
     using Nancy.Bootstrapper;
     using Nancy.Configuration;
     using Nancy.Conventions;
@@ -33,7 +32,6 @@ namespace Nancy.Testing
         private readonly NancyInternalConfiguration configuration;
         private readonly ConfigurableModuleCatalog catalog;
         private bool enableAutoRegistration;
-        private DiagnosticsConfiguration diagnosticConfiguration;
         private readonly List<Action<TinyIoCContainer, IPipelines>> applicationStartupActions;
         private readonly List<Action<TinyIoCContainer, IPipelines, NancyContext>> requestStartupActions;
         private readonly Assembly nancyAssembly = typeof(NancyEngine).Assembly;
