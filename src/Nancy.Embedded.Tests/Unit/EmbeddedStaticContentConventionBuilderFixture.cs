@@ -58,7 +58,7 @@
             result.ShouldEqual("Embedded Text");
         }
 
-        private static string GetEmbeddedStaticContent(string virtualDirectory, string requestedFilename, string root = null)
+        private static string GetEmbeddedStaticContent(string virtualDirectory, string requestedFilename, string contentPath = null)
         {
             var resource =
                 string.Format("/{0}/{1}", virtualDirectory, requestedFilename);
