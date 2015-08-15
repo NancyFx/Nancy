@@ -37,6 +37,7 @@ namespace Nancy.Testing
         private readonly List<Action<TinyIoCContainer, IPipelines>> applicationStartupActions;
         private readonly List<Action<TinyIoCContainer, IPipelines, NancyContext>> requestStartupActions;
         private readonly Assembly nancyAssembly = typeof(NancyEngine).Assembly;
+        private Action<INancyEnvironment> configure;
 
         /// <summary>
         /// Test project name suffixes that will be stripped from the test name project
@@ -92,6 +93,18 @@ namespace Nancy.Testing
                 testAssembly.GetName().Name;
 
             LoadReferencesForAssemblyUnderTest(testAssemblyName);
+        }
+
+        /// <summary>
+        /// Configures the Nancy environment
+        /// </summary>
+        /// <param name="environment">The <see cref="INancyEnvironment"/> instance to configure</param>
+        public override void Configure(INancyEnvironment environment)
+        {
+            if (this.configure != null)
+            {
+                this.configure.Invoke(environment);
+            }
         }
 
         /// <summary>
@@ -682,6 +695,18 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator Binder<T>() where T : IBinder
             {
                 this.bootstrapper.configuration.Binder = typeof(T);
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the <see cref="INancyEnvironment"/>.
+            /// </summary>
+            /// <param name="configuration">The configuration to apply to the environment.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator Configure(Action<INancyEnvironment> configuration)
+            {
+                this.bootstrapper.configure = configuration;
+
                 return this;
             }
 
