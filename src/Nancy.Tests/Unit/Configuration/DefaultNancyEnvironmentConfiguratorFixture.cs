@@ -1,6 +1,8 @@
 ﻿namespace Nancy.Tests.Unit.Configuration
 {
     using System;
+    using System.Collections.Generic;
+
     using FakeItEasy;
     using Nancy.Configuration;
     using Xunit;
@@ -10,15 +12,17 @@
         private readonly DefaultNancyEnvironmentConfigurator configurator;
         private readonly INancyEnvironmentFactory factory;
         private readonly INancyEnvironment environment;
+        private readonly IEnumerable<INancyDefaultConfigurationProvider> defaultConfigurationProviders;
 
         public DefaultNancyEnvironmentConfiguratorFixture()
         {
             this.environment = A.Fake<INancyEnvironment>();
             this.factory = A.Fake<INancyEnvironmentFactory>();
+            this.defaultConfigurationProviders = A.Fake<IEnumerable<INancyDefaultConfigurationProvider>>();
 
             A.CallTo(() => this.factory.CreateEnvironment()).Returns(this.environment);
 
-            this.configurator = new DefaultNancyEnvironmentConfigurator(this.factory);
+            this.configurator = new DefaultNancyEnvironmentConfigurator(this.factory, this.defaultConfigurationProviders);
         }
 
         [Fact]

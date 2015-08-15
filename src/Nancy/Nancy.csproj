@@ -131,6 +131,7 @@
     <Compile Include="Configuration\DefaultNancyEnvironment.cs" />
     <Compile Include="Configuration\DefaultNancyEnvironmentConfigurator.cs" />
     <Compile Include="Configuration\DefaultNancyEnvironmentFactory.cs" />
+    <Compile Include="Configuration\INancyDefaultConfigurationProvider.cs" />
     <Compile Include="Configuration\INancyEnvironmentConfigurator.cs" />
     <Compile Include="Configuration\INancyEnvironment.cs" />
     <Compile Include="Configuration\INancyEnvironmentFactory.cs" />

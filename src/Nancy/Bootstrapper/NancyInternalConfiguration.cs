@@ -79,9 +79,12 @@ namespace Nancy.Bootstrapper
                     RouteMetadataProviders = AppDomainAssemblyTypeScanner.TypesOf<IRouteMetadataProvider>().ToList(),
                     EnvironmentFactory = typeof(DefaultNancyEnvironmentFactory),
                     EnvironmentConfigurator = typeof(DefaultNancyEnvironmentConfigurator),
+                    DefaultConfigurationProviders = AppDomainAssemblyTypeScanner.TypesOf<INancyDefaultConfigurationProvider>().ToList(),
                 };
             }
         }
+
+        public IList<Type> DefaultConfigurationProviders { get; set; }
 
         public Type EnvironmentConfigurator { get; set; }
 
@@ -180,7 +183,7 @@ namespace Nancy.Bootstrapper
             {
                 try
                 {
-                    return this.GetTypeRegistations().All(tr => tr.RegistrationType != null);
+                    return this.GetTypeRegistrations().All(tr => tr.RegistrationType != null);
                 }
                 catch (ArgumentNullException)
                 {
@@ -207,7 +210,7 @@ namespace Nancy.Bootstrapper
         /// Returns the configuration types as a TypeRegistration collection
         /// </summary>
         /// <returns>TypeRegistration collection representing the configuration types</returns>
-        public IEnumerable<TypeRegistration> GetTypeRegistations()
+        public IEnumerable<TypeRegistration> GetTypeRegistrations()
         {
             return new[]
             {
@@ -266,6 +269,7 @@ namespace Nancy.Bootstrapper
                 new CollectionTypeRegistration(typeof(IDiagnosticsProvider), this.InteractiveDiagnosticProviders),
                 new CollectionTypeRegistration(typeof(IRouteSegmentConstraint), this.RouteSegmentConstraints),
                 new CollectionTypeRegistration(typeof(IRouteMetadataProvider), this.RouteMetadataProviders),
+                new CollectionTypeRegistration(typeof(INancyDefaultConfigurationProvider), this.DefaultConfigurationProviders),
             };
         }
     }
