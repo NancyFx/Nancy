@@ -44,14 +44,15 @@
                     continue;
                 }
 
-                if (environment.ContainsKey(defaultConfiguration.GetType().FullName))
+                var configurationKey =
+                    defaultConfiguration.GetType().FullName;
+
+                if (environment.ContainsKey(configurationKey))
                 {
                     continue;
                 }
 
-                environment.AddValue(
-                    defaultConfiguration.GetType().FullName,
-                    defaultConfiguration);
+                environment.AddValue(configurationKey, defaultConfiguration);
             }
 
             return environment;
