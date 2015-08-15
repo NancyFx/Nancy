@@ -35,7 +35,7 @@ namespace Nancy.Tests.Unit.Bootstrapper
         {
             var config = NancyInternalConfiguration.Default;
 
-            var result = config.GetTypeRegistations();
+            var result = config.GetTypeRegistrations();
 
             result.ShouldNotBeNull();
             result.Count().ShouldBeGreaterThan(0);
@@ -47,7 +47,7 @@ namespace Nancy.Tests.Unit.Bootstrapper
             var fakeModelBinderLocator = A.Fake<IModelBinderLocator>();
             var config = NancyInternalConfiguration.WithOverrides((c) => c.ModelBinderLocator = fakeModelBinderLocator.GetType());
 
-            var result = config.GetTypeRegistations();
+            var result = config.GetTypeRegistrations();
 
             result.Where(tr => tr.ImplementationType == fakeModelBinderLocator.GetType()).Any()
                 .ShouldBeTrue();

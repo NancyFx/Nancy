@@ -1,6 +1,7 @@
 ﻿namespace Nancy.Configuration
 {
     using System;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Default implementation of the <see cref="INancyEnvironmentConfigurator"/> interface.
@@ -8,14 +9,17 @@
     public class DefaultNancyEnvironmentConfigurator : INancyEnvironmentConfigurator
     {
         private readonly INancyEnvironmentFactory factory;
+        private readonly IEnumerable<INancyDefaultConfigurationProvider> defaultConfigurationProviders;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultNancyEnvironmentConfigurator"/> class.
         /// </summary>
         /// <param name="factory">The <see cref="INancyEnvironmentFactory"/> instance to use when configuring an environment.</param>
-        public DefaultNancyEnvironmentConfigurator(INancyEnvironmentFactory factory)
+        /// <param name="defaultConfigurationProviders"></param>
+        public DefaultNancyEnvironmentConfigurator(INancyEnvironmentFactory factory, IEnumerable<INancyDefaultConfigurationProvider> defaultConfigurationProviders)
         {
             this.factory = factory;
+            this.defaultConfigurationProviders = defaultConfigurationProviders;
         }
 
         /// <summary>
@@ -25,9 +29,44 @@
         /// <returns>An <see cref="INancyEnvironment"/> instance.</returns>
         public INancyEnvironment ConfigureEnvironment(Action<INancyEnvironment> configuration)
         {
-            var environment = this.factory.CreateEnvironment();
+            var environment =
+                this.factory.CreateEnvironment();
+
             configuration.Invoke(environment);
+
+            foreach (var configurationProviders in this.defaultConfigurationProviders)
+            {
+                var defaultConfiguration =
+                    SafeGetDefaultConfiguration(configurationProviders);
+
+                if (defaultConfiguration == null)
+                {
+                    continue;
+                }
+
+                if (environment.ContainsKey(defaultConfiguration.GetType().FullName))
+                {
+                    continue;
+                }
+
+                environment.AddValue(
+                    defaultConfiguration.GetType().FullName,
+                    defaultConfiguration);
+            }
+
             return environment;
+        }
+
+        private static object SafeGetDefaultConfiguration(INancyDefaultConfigurationProvider configurationProviders)
+        {
+            try
+            {
+                return configurationProviders.GetDefaultConfiguration();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
     }
 }
