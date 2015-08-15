@@ -15,7 +15,7 @@
         /// Initializes a new instance of the <see cref="DefaultNancyEnvironmentConfigurator"/> class.
         /// </summary>
         /// <param name="factory">The <see cref="INancyEnvironmentFactory"/> instance to use when configuring an environment.</param>
-        /// <param name="defaultConfigurationProviders"></param>
+        /// <param name="defaultConfigurationProviders"><see cref="INancyDefaultConfigurationProvider"/> instances that should be used during the configuration of the environment.</param>
         public DefaultNancyEnvironmentConfigurator(INancyEnvironmentFactory factory, IEnumerable<INancyDefaultConfigurationProvider> defaultConfigurationProviders)
         {
             this.factory = factory;
