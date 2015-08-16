@@ -253,7 +253,7 @@
 
             protected override INancyEnvironmentConfigurator GetEnvironmentConfigurator()
             {
-                return new FakeEnvironmentalConfigurator();
+                return new FakeEnvironmentConfigurator();
             }
 
             /// <summary>
