@@ -341,7 +341,7 @@
 
         protected override INancyEnvironmentConfigurator GetEnvironmentConfigurator()
         {
-            return new FakeEnvironmentalConfigurator();
+            return new FakeEnvironmentConfigurator();
         }
 
         /// <summary>
@@ -475,7 +475,7 @@
         public bool Disposed { get; private set; }
     }
 
-    internal class FakeEnvironmentalConfigurator : INancyEnvironmentConfigurator
+    internal class FakeEnvironmentConfigurator : INancyEnvironmentConfigurator
     {
         public INancyEnvironment ConfigureEnvironment(Action<INancyEnvironment> configuration)
         {
@@ -503,7 +503,7 @@
 
         protected override INancyEnvironmentConfigurator GetEnvironmentConfigurator()
         {
-            return new FakeEnvironmentalConfigurator();
+            return new FakeEnvironmentConfigurator();
         }
 
         /// <summary>

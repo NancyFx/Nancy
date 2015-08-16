@@ -1,6 +1,5 @@
 ﻿namespace Nancy.Tests.Unit.Configuration
 {
-    using System.Collections.Generic;
     using System.Linq;
     using Nancy.Configuration;
     using Xunit;
@@ -32,12 +31,11 @@
         {
             // Given, When
             var environment = CreateEnvironment(numberOfElementsToAdd);
-            IReadOnlyDictionary<string, object> setter = environment;
 
             // Then
             for (var value = 0; value < numberOfElementsToAdd; value++)
             {
-                setter[value.ToString()].Equals(value).ShouldBeTrue();
+                environment[value.ToString()].Equals(value).ShouldBeTrue();
             }
         }
 
@@ -116,21 +114,6 @@
         }
 
         [Fact]
-        public void Should_return_true_if_key_exists_when_invoking_trygetvalue()
-        {
-            // Given
-            var environment = new DefaultNancyEnvironment();
-            environment.AddValue("nancy", new object());
-            object output;
-
-            // When
-            var result = environment.TryGetValue("nancy", out output);
-            
-            // Then
-            result.ShouldBeTrue();
-        }
-
-        [Fact]
         public void Should_return_value_if_key_exists_when_invoking_trygetvalue()
         {
             // Given
@@ -146,8 +129,10 @@
             output.ShouldBeSameAs(expectedValue);
         }
 
-        [Fact]
-        public void Should_return_false_if_key_does_not_exist_when_invoking_trygetvalue()
+        [Theory]
+        [InlineData("nancy", true)]
+        [InlineData("frank", false)]
+        public void Should_return_correct_status_value_when_invoking_trygetvalue(string keyToLookFor, bool expectedResult)
         {
             // Given
             var environment = new DefaultNancyEnvironment();
@@ -155,10 +140,10 @@
             object output;
 
             // When
-            var result = environment.TryGetValue("frank", out output);
+            var result = environment.TryGetValue(keyToLookFor, out output);
 
             // Then
-            result.ShouldBeFalse();
+            result.ShouldEqual(expectedResult);
         }
 
         [Fact]
@@ -177,7 +162,7 @@
             output.ShouldEqual(default(object));
         }
 
-        private static DefaultNancyEnvironment CreateEnvironment(int numberOfElementsToAdd)
+        private static INancyEnvironment CreateEnvironment(int numberOfElementsToAdd)
         {
             var environment = new DefaultNancyEnvironment();
 
