@@ -40,7 +40,7 @@ When you're ready to go you should confirm that you are up to date and rebased w
 1. Send a descriptive [Pull Request](http://help.github.com/pull-requests/) on GitHub - making sure you have selected the correct branch in the GitHub UI!
 1. Wait for @TheCodeJunkie to merge your changes in and reformat all of your code because he has StyleCop OCD :wink:.
 
-And remember; **A pull-request with tests is a pull-request that's likely to be pulled in.** :grin:
+And remember; **A pull-request with tests is a pull-request that's likely to be pulled in.** :grin: Bonus points if you document your feature in our [wiki](https://github.com/NancyFx/Nancy/wiki) once it has been pulled in
 
 ## Style Guidelines
 
@@ -52,3 +52,4 @@ And remember; **A pull-request with tests is a pull-request that's likely to be 
 - Use meaningful names (no hungarian notation).
 - Wrap `if`, `else` and `using` blocks (or blocks in general, really) in curly braces, even if it's a single line.
 - Put `using` statements inside namespace.
+- Pay attention to whitespace and extra blank lines
