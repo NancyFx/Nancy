@@ -42,6 +42,19 @@
         public IDictionary<string, IList<ModelValidationError>> Errors { get; set; }
 
         /// <summary>
+        /// Gets a clean representation of the errors.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<dynamic> FormattedErrors
+        {
+            get
+            {
+                var result = this.Errors.Select(x => new {Key = x.Key, Errors = x.Value.Select(y => y.ErrorMessage).ToArray()}); 
+                return result;
+            }
+        }
+
+        /// <summary>
         /// Gets a value indicating whether the validated instance is valid or not.
         /// </summary>
         /// <value><see langword="true"/> if the validated instance is valid; otherwise, <see langword="false"/>.</value>
