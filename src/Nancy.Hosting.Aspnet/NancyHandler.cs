@@ -50,7 +50,7 @@ namespace Nancy.Hosting.Aspnet
             return tcs.Task;
         }
 
-        public static void EndProcessRequest(Task<Tuple<NancyContext, HttpContextBase>> task)
+        public static void EndProcessRequest(Task<Tuple<NancyContext, HttpContextBase>> task, INancyEngine engine = null)
         {
             if (task.IsFaulted)
             {
@@ -61,7 +61,31 @@ namespace Nancy.Hosting.Aspnet
             var nancyContext = task.Result.Item1;
             var httpContext = task.Result.Item2;
 
-            NancyHandler.SetNancyResponseToHttpResponse(httpContext, nancyContext.Response);
+            try
+            {
+            	NancyHandler.SetNancyResponseToHttpResponse(httpContext, nancyContext.Response);
+            }
+            catch( Exception ex )
+            {
+                bool handled = false;
+                var nancyEngine = engine as NancyEngine;
+                if( httpContext.Response.BufferOutput && nancyEngine != null )
+                {
+                    NancyEngine.SetContextExceptionResponse(nancyContext, ex);
+                    var customHandler = nancyEngine.FindStatusCodeHandler(HttpStatusCode.InternalServerError, nancyContext);
+                    if (customHandler != null)
+                    {
+                        customHandler.Handle(HttpStatusCode.InternalServerError, nancyContext);
+                        httpContext.Response.Clear();
+                        NancyHandler.SetNancyResponseToHttpResponse(httpContext, nancyContext.Response);
+                        handled = true;
+                    }
+                }
+                if (!handled)
+                {
+                    throw;
+                }
+            }
             nancyContext.Dispose();
         }
 

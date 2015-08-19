@@ -99,7 +99,7 @@ namespace Nancy.Hosting.Aspnet
 
         public void EndProcessRequest(IAsyncResult result)
         {
-            NancyHandler.EndProcessRequest((Task<Tuple<NancyContext, HttpContextBase>>)result);
+            NancyHandler.EndProcessRequest((Task<Tuple<NancyContext, HttpContextBase>>)result, engine);
         }
     }
 }

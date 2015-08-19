@@ -134,6 +134,20 @@
             return tcs.Task;
         }
 
+        public IStatusCodeHandler FindStatusCodeHandler(HttpStatusCode statusCode, NancyContext context)
+        {
+            var relevantHandlers = this.statusCodeHandlers.Where(h => h.HandlesStatusCode(statusCode, context)).ToList();
+            var customHandler = relevantHandlers.FirstOrDefault(h => !(h is DefaultStatusCodeHandler));
+            return customHandler ?? relevantHandlers.FirstOrDefault(h => h is DefaultStatusCodeHandler);
+        }
+
+        public static void SetContextExceptionResponse(NancyContext context, Exception e)
+        {
+            context.Response = new Response { StatusCode = HttpStatusCode.InternalServerError };
+            context.Items[ERROR_KEY] = e.ToString();
+            context.Items[ERROR_EXCEPTION] = e;
+        }
+
         private void SaveTraceInformation(NancyContext ctx)
         {
             if (!this.EnableTracing(ctx))
@@ -197,12 +211,10 @@
                 return;
             }
 
-            foreach (var statusCodeHandler in this.statusCodeHandlers)
+            var handler = FindStatusCodeHandler(context.Response.StatusCode, context);
+            if (handler != null)
             {
-                if (statusCodeHandler.HandlesStatusCode(context.Response.StatusCode, context))
-                {
-                    statusCodeHandler.Handle(context.Response.StatusCode, context);
-                }
+                handler.Handle(context.Response.StatusCode, context);
             }
         }
 
@@ -298,9 +310,7 @@
             }
             catch (Exception e)
             {
-                context.Response = new Response { StatusCode = HttpStatusCode.InternalServerError };
-                context.Items[ERROR_KEY] = e.ToString();
-                context.Items[ERROR_EXCEPTION] = e;
+                SetContextExceptionResponse(context, e);
             }
         }
 
