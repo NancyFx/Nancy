@@ -509,6 +509,37 @@ namespace Nancy.Testing.Tests
             result.Body.AsString().ShouldEqual("john++");
         }
 
+        [Fact]
+        public void Should_add_nancy_testing_browser_header_as_default_user_agent()
+        {
+            // Given
+            const string expectedHeaderValue = "Nancy.Testing.Browser";
+
+            // When
+            var result = browser.Get("/useragent").Body.AsString();
+
+            // Then
+            result.ShouldEqual(expectedHeaderValue);
+        }
+
+        [Fact]
+        public void Should_override_default_user_agent_when_explicitly_defined()
+        {
+            // Given
+            const string expectedHeaderValue = "Custom.User.Agent";
+
+            // When
+            var result = browser.Get("/useragent", with =>
+            {
+                with.Header("User-Agent", expectedHeaderValue);    
+            });
+
+            var header = result.Body.AsString();
+
+            // Then
+            header.ShouldEqual(expectedHeaderValue);
+        }
+
         public class EchoModel
         {
             public string SomeString { get; set; }
@@ -568,6 +599,8 @@ namespace Nancy.Testing.Tests
 
                         return response;
                     };
+
+                Get["/useragent"] = _ => this.Request.Headers.UserAgent;
 
                 Get["/type"] = _ => this.Request.Url.Scheme.ToLower();
 

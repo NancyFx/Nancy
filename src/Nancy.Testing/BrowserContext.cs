@@ -18,7 +18,7 @@
         /// </summary>
         public BrowserContext()
         {
-            this.Values.Headers = new Dictionary<string, IEnumerable<string>>();
+            this.Values.Headers = new Dictionary<string, IEnumerable<string>>(StringComparer.OrdinalIgnoreCase);
             this.Values.Protocol = string.Empty;
             this.Values.QueryString = string.Empty;
             this.Values.BodyString = string.Empty;

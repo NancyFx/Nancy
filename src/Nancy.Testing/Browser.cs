@@ -239,7 +239,6 @@ namespace Nancy.Testing
         private static void DefaultBrowserContext(BrowserContext context)
         {
             context.HttpRequest();
-            context.Header("User-Agent", "Nancy.Testing.Browser");
         }
 
         private void SetCookies(BrowserContext context)
@@ -305,6 +304,11 @@ namespace Nancy.Testing
 
             var contextValues =
                 (IBrowserContextValues)context;
+
+            if (!contextValues.Headers.ContainsKey("user-agent"))
+            {
+                contextValues.Headers.Add("user-agent", new[] { "Nancy.Testing.Browser" });
+            }
 
             BuildRequestBody(contextValues);
 
