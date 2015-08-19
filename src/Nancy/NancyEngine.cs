@@ -197,13 +197,23 @@
                 return;
             }
 
-            foreach (var statusCodeHandler in this.statusCodeHandlers)
+            var handlers = this.statusCodeHandlers
+                .Where(x => x.HandlesStatusCode(context.Response.StatusCode, context))
+                .ToList();
+
+            var defaultHandler = handlers
+                .FirstOrDefault(x => x is DefaultStatusCodeHandler);
+
+            var customHandler = handlers
+                .FirstOrDefault(x => !(x is DefaultStatusCodeHandler));
+
+            var handler = customHandler ?? defaultHandler;
+            if (handler == null)
             {
-                if (statusCodeHandler.HandlesStatusCode(context.Response.StatusCode, context))
-                {
-                    statusCodeHandler.Handle(context.Response.StatusCode, context);
-                }
+                return;
             }
+
+            handler.Handle(context.Response.StatusCode, context);
         }
 
         private Task<NancyContext> InvokeRequestLifeCycle(NancyContext context, CancellationToken cancellationToken, IPipelines pipelines)
