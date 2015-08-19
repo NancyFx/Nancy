@@ -41,7 +41,7 @@ namespace Nancy.Testing
             this.bootstrapper = bootstrapper;
             this.bootstrapper.Initialise();
             this.engine = this.bootstrapper.GetEngine();
-            this.defaultBrowserContext = defaults ?? this.DefaultBrowserContext;
+            this.defaultBrowserContext = defaults ?? DefaultBrowserContext;
         }
 
         /// <summary>
@@ -199,10 +199,18 @@ namespace Nancy.Testing
             return this.HandleRequest("PUT", url, browserContext);
         }
 
+        /// <summary>
+        /// Performs a request of the HTTP <paramref name="method"/>, on the given <paramref name="url"/>, using the
+        /// provided <paramref name="browserContext"/> configuration.
+        /// </summary>
+        /// <param name="method">HTTP method to send the request as.</param>
+        /// <param name="url">The URl of the request.</param>
+        /// <param name="browserContext">An closure for providing browser context for the request.</param>
+        /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
         public BrowserResponse HandleRequest(string method, Url url, Action<BrowserContext> browserContext)
         {
             var request =
-                CreateRequest(method, url, browserContext ?? (with => {}));
+                this.CreateRequest(method, url, browserContext ?? (with => {}));
 
             var response = new BrowserResponse(this.engine.HandleRequest(request), this);
 
@@ -211,16 +219,24 @@ namespace Nancy.Testing
             return response;
         }
 
+        /// <summary>
+        /// Performs a request of the HTTP <paramref name="method"/>, on the given <paramref name="path"/>, using the
+        /// provided <paramref name="browserContext"/> configuration.
+        /// </summary>
+        /// <param name="method">HTTP method to send the request as.</param>
+        /// <param name="path">The path that is being requested.</param>
+        /// <param name="browserContext">An closure for providing browser context for the request.</param>
+        /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
         public BrowserResponse HandleRequest(string method, string path, Action<BrowserContext> browserContext)
         {
-            var url = Uri.IsWellFormedUriString(path, UriKind.Relative)
-                          ? new Url {Path = path}
-                          : (Url)new Uri(path);
+            var url = Uri.IsWellFormedUriString(path, UriKind.Relative) ?
+                new Url { Path = path } :
+                (Url)new Uri(path);
 
-            return HandleRequest(method, url, browserContext);
+            return this.HandleRequest(method, url, browserContext);
         }
 
-        private void DefaultBrowserContext(BrowserContext context)
+        private static void DefaultBrowserContext(BrowserContext context)
         {
             context.HttpRequest();
         }
@@ -264,7 +280,7 @@ namespace Nancy.Testing
                 return;
             }
 
-            var useFormValues = !String.IsNullOrEmpty(contextValues.FormValues);
+            var useFormValues = !string.IsNullOrEmpty(contextValues.FormValues);
             var bodyContents = useFormValues ? contextValues.FormValues : contextValues.BodyString;
             var bodyBytes = bodyContents != null ? Encoding.UTF8.GetBytes(bodyContents) : new byte[] { };
 
@@ -283,11 +299,16 @@ namespace Nancy.Testing
 
             this.SetCookies(context);
 
-            defaultBrowserContext.Invoke(context);
+            this.defaultBrowserContext.Invoke(context);
             browserContext.Invoke(context);
 
             var contextValues =
                 (IBrowserContextValues)context;
+
+            if (!contextValues.Headers.ContainsKey("user-agent"))
+            {
+                contextValues.Headers.Add("user-agent", new[] { "Nancy.Testing.Browser" });
+            }
 
             BuildRequestBody(contextValues);
 

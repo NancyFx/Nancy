@@ -1,4 +1,3 @@
-
 namespace Nancy.Testing.Tests
 {
     using System;
@@ -15,8 +14,6 @@ namespace Nancy.Testing.Tests
     using Xunit;
     using FakeItEasy;
     using Nancy.Authentication.Forms;
-
-    using Xunit.Extensions;
 
     public class BrowserFixture
     {
@@ -40,10 +37,10 @@ namespace Nancy.Testing.Tests
 
             // When
             var result = browser.Post("/", with =>
-                                           {
-                                               with.HttpRequest();
-                                               with.Body(thisIsMyRequestBody);
-                                           });
+            {
+                with.HttpRequest();
+                with.Body(thisIsMyRequestBody);
+            });
 
             // Then
             result.Body.AsString().ShouldEqual(thisIsMyRequestBody);
@@ -57,10 +54,10 @@ namespace Nancy.Testing.Tests
 
             // When
             var result = browser.Get("/userHostAddress", with =>
-                                                         {
-                                                             with.HttpRequest();
-                                                             with.UserHostAddress(userHostAddress);
-                                                         });
+            {
+                with.HttpRequest();
+                with.UserHostAddress(userHostAddress);
+            });
 
             // Then
             result.Body.AsString().ShouldEqual(userHostAddress);
@@ -74,11 +71,11 @@ namespace Nancy.Testing.Tests
 
             // When
             var result = browser.Get("/isLocal", with =>
-                    {
-                        with.HttpRequest();
-                        with.HostName("localhost");
-                        with.UserHostAddress(userHostAddress);
-                    });
+            {
+                with.HttpRequest();
+                with.HostName("localhost");
+                with.UserHostAddress(userHostAddress);
+            });
 
             // Then
             result.Body.AsString().ShouldEqual("local");
@@ -92,11 +89,11 @@ namespace Nancy.Testing.Tests
 
             // When
             var result = browser.Get("/isLocal", with =>
-                    {
-                        with.HttpRequest();
-                        with.HostName("localhost");
-                        with.UserHostAddress(userHostAddress);
-                    });
+            {
+                with.HttpRequest();
+                with.HostName("localhost");
+                with.UserHostAddress(userHostAddress);
+            });
 
             // Then
             result.Body.AsString().ShouldEqual("local");
@@ -110,11 +107,11 @@ namespace Nancy.Testing.Tests
 
             // When
             var result = browser.Get("/isLocal", with =>
-                    {
-                        with.HttpRequest();
-                        with.HostName("anotherhost");
-                        with.UserHostAddress(userHostAddress);
-                    });
+            {
+                with.HttpRequest();
+                with.HostName("anotherhost");
+                with.UserHostAddress(userHostAddress);
+            });
 
             // Then
             result.Body.AsString().ShouldEqual("not-local");
@@ -129,12 +126,13 @@ namespace Nancy.Testing.Tests
             var writer = new StreamWriter(stream);
             writer.Write(thisIsMyRequestBody);
             writer.Flush();
+
             // When
             var result = browser.Post("/", with =>
-                                           {
-                                               with.HttpRequest();
-                                               with.Body(stream, "text/plain");
-                                           });
+            {
+                with.HttpRequest();
+                with.Body(stream, "text/plain");
+            });
 
             // Then
             result.Body.AsString().ShouldEqual(thisIsMyRequestBody);
@@ -148,9 +146,9 @@ namespace Nancy.Testing.Tests
 
             // When
             var result = browser.Post("/", with =>
-                                            {
-                                                with.JsonBody(model);
-                                            });
+            {
+                with.JsonBody(model);
+            });
 
             // Then
             var actualModel = result.Body.DeserializeJson<EchoModel>();
@@ -442,6 +440,7 @@ namespace Nancy.Testing.Tests
         [Fact]
         public void Should_return_JSON_serialized_form()
         {
+            // Given
             var response = browser.Post("/serializedform", (with) =>
             {
                 with.HttpRequest();
@@ -451,8 +450,10 @@ namespace Nancy.Testing.Tests
                 with.FormValue("SomeBoolean", "true");
             });
 
+            // When
             var actualModel = response.Body.DeserializeJson<EchoModel>();
 
+            // Then
             Assert.Equal("Hi", actualModel.SomeString);
             Assert.Equal(1, actualModel.SomeInt);
             Assert.Equal(true, actualModel.SomeBoolean);
@@ -461,6 +462,7 @@ namespace Nancy.Testing.Tests
         [Fact]
         public void Should_return_JSON_serialized_querystring()
         {
+            // Given
             var response = browser.Get("/serializedquerystring", (with) =>
             {
                 with.HttpRequest();
@@ -470,8 +472,10 @@ namespace Nancy.Testing.Tests
                 with.Query("SomeBoolean", "true");
             });
 
+            // When
             var actualModel = response.Body.DeserializeJson<EchoModel>();
 
+            // Then
             Assert.Equal("Hi", actualModel.SomeString);
             Assert.Equal(1, actualModel.SomeInt);
             Assert.Equal(true, actualModel.SomeBoolean);
@@ -503,6 +507,37 @@ namespace Nancy.Testing.Tests
 
             //Then
             result.Body.AsString().ShouldEqual("john++");
+        }
+
+        [Fact]
+        public void Should_add_nancy_testing_browser_header_as_default_user_agent()
+        {
+            // Given
+            const string expectedHeaderValue = "Nancy.Testing.Browser";
+
+            // When
+            var result = browser.Get("/useragent").Body.AsString();
+
+            // Then
+            result.ShouldEqual(expectedHeaderValue);
+        }
+
+        [Fact]
+        public void Should_override_default_user_agent_when_explicitly_defined()
+        {
+            // Given
+            const string expectedHeaderValue = "Custom.User.Agent";
+
+            // When
+            var result = browser.Get("/useragent", with =>
+            {
+                with.Header("User-Agent", expectedHeaderValue);    
+            });
+
+            var header = result.Body.AsString();
+
+            // Then
+            header.ShouldEqual(expectedHeaderValue);
         }
 
         public class EchoModel
@@ -564,6 +599,8 @@ namespace Nancy.Testing.Tests
 
                         return response;
                     };
+
+                Get["/useragent"] = _ => this.Request.Headers.UserAgent;
 
                 Get["/type"] = _ => this.Request.Url.Scheme.ToLower();
 
