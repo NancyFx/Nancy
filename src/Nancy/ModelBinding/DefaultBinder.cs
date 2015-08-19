@@ -2,7 +2,6 @@ namespace Nancy.ModelBinding
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.Linq;
     using System.Reflection;
     using System.Text.RegularExpressions;
@@ -24,10 +23,10 @@ namespace Nancy.ModelBinding
 
         private readonly BindingDefaults defaults;
 
-        private readonly static MethodInfo toListMethodInfo = typeof(Enumerable).GetMethod("ToList", BindingFlags.Public | BindingFlags.Static);
-        private readonly static MethodInfo toArrayMethodInfo = typeof(Enumerable).GetMethod("ToArray", BindingFlags.Public | BindingFlags.Static);
-        private static readonly Regex bracketRegex = new Regex(@"\[(\d+)\]\z", RegexOptions.Compiled);
-        private static readonly Regex underscoreRegex = new Regex(@"_(\d+)\z", RegexOptions.Compiled);
+        private readonly static MethodInfo ToListMethodInfo = typeof(Enumerable).GetMethod("ToList", BindingFlags.Public | BindingFlags.Static);
+        private readonly static MethodInfo ToArrayMethodInfo = typeof(Enumerable).GetMethod("ToArray", BindingFlags.Public | BindingFlags.Static);
+        private static readonly Regex BracketRegex = new Regex(@"\[(\d+)\]\z", RegexOptions.Compiled);
+        private static readonly Regex UnderscoreRegex = new Regex(@"_(\d+)\z", RegexOptions.Compiled);
 
         public DefaultBinder(IEnumerable<ITypeConverter> typeConverters, IEnumerable<IBodyDeserializer> bodyDeserializers, IFieldNameConverter fieldNameConverter, BindingDefaults defaults)
         {
@@ -93,11 +92,20 @@ namespace Nancy.ModelBinding
             var bindingContext =
                 this.CreateBindingContext(context, modelType, instance, configuration, blackList, genericType);
 
-            var bodyDeserializedModel = this.DeserializeRequestBody(bindingContext);
-
-            if (bodyDeserializedModel != null)
+            try
             {
-                UpdateModelWithDeserializedModel(bodyDeserializedModel, bindingContext);
+                var bodyDeserializedModel = this.DeserializeRequestBody(bindingContext);
+                if (bodyDeserializedModel != null)
+                {
+                    UpdateModelWithDeserializedModel(bodyDeserializedModel, bindingContext);
+                }
+            }
+            catch (Exception exception)
+            {
+                if (!bindingContext.Configuration.IgnoreErrors)
+                {
+                    throw new ModelBindingException(modelType, innerException: exception);
+                }
             }
 
             var bindingExceptions = new List<PropertyBindingException>();
@@ -106,7 +114,7 @@ namespace Nancy.ModelBinding
             {
                 if (bindingContext.DestinationType.IsCollection() || bindingContext.DestinationType.IsArray() ||bindingContext.DestinationType.IsEnumerable())
                 {
-                    var loopCount = GetBindingListInstanceCount(context);
+                    var loopCount = this.GetBindingListInstanceCount(context);
                     var model = (IList)bindingContext.Model;
                     for (var i = 0; i < loopCount; i++)
                     {
@@ -127,7 +135,7 @@ namespace Nancy.ModelBinding
 
                             var collectionStringValue = GetValue(modelProperty.Name, bindingContext, i);
 
-                            if (BindingValueIsValid(collectionStringValue, existingCollectionValue, modelProperty,
+                            if (this.BindingValueIsValid(collectionStringValue, existingCollectionValue, modelProperty,
                                                     bindingContext))
                             {
                                 try
@@ -150,7 +158,7 @@ namespace Nancy.ModelBinding
 
                         var stringValue = GetValue(modelProperty.Name, bindingContext);
 
-                        if (BindingValueIsValid(stringValue, existingValue, modelProperty, bindingContext))
+                        if (this.BindingValueIsValid(stringValue, existingValue, modelProperty, bindingContext))
                         {
                             try
                             {
@@ -172,7 +180,7 @@ namespace Nancy.ModelBinding
 
             if (modelType.IsArray())
             {
-                var generictoArrayMethod = toArrayMethodInfo.MakeGenericMethod(new[] { genericType });
+                var generictoArrayMethod = ToArrayMethodInfo.MakeGenericMethod(new[] { genericType });
                 return generictoArrayMethod.Invoke(null, new[] { bindingContext.Model });
             }
             return bindingContext.Model;
@@ -194,7 +202,7 @@ namespace Nancy.ModelBinding
         ///  IntProperty_7
         ///  StringProperty_8
         ///  You'll end up with a list of 3 matches: 5,7,8
-        /// 
+        ///
         /// </summary>
         /// <param name="context">Current Context </param>
         /// <returns>An int containing the number of elements</returns>
@@ -212,13 +220,13 @@ namespace Nancy.ModelBinding
 
         private static int IsMatch(string item)
         {
-            var bracketMatch = bracketRegex.Match(item);
+            var bracketMatch = BracketRegex.Match(item);
             if (bracketMatch.Success)
             {
                 return int.Parse(bracketMatch.Groups[1].Value);
             }
 
-            var underscoreMatch = underscoreRegex.Match(item);
+            var underscoreMatch = UnderscoreRegex.Match(item);
 
             if (underscoreMatch.Success)
             {
@@ -247,7 +255,7 @@ namespace Nancy.ModelBinding
                 {
                     var model = (IList)bindingContext.Model;
 
-                    if (o.GetType().IsValueType || o.GetType() == typeof(string))
+                    if (o.GetType().IsValueType || o is string)
                     {
                         HandleValueTypeCollectionElement(model, count, o);
                     }
@@ -418,7 +426,7 @@ namespace Nancy.ModelBinding
                     {
                         return instance;
                     }
-                    var genericMethod = toListMethodInfo.MakeGenericMethod(genericType);
+                    var genericMethod = ToListMethodInfo.MakeGenericMethod(genericType);
                     return genericMethod.Invoke(null, new[] { instance });
                 }
 
@@ -476,18 +484,13 @@ namespace Nancy.ModelBinding
             }
 
             var contentType = GetRequestContentType(context.Context);
-            var bodyDeserializer = this.bodyDeserializers.FirstOrDefault(b => b.CanDeserialize(contentType, context));
 
-            if (bodyDeserializer != null)
-            {
-                return bodyDeserializer.Deserialize(contentType, context.Context.Request.Body, context);
-            }
+            var bodyDeserializer = this.bodyDeserializers.FirstOrDefault(b => b.CanDeserialize(contentType, context))
+                ?? this.defaults.DefaultBodyDeserializers.FirstOrDefault(b => b.CanDeserialize(contentType, context));
 
-            bodyDeserializer = this.defaults.DefaultBodyDeserializers.FirstOrDefault(b => b.CanDeserialize(contentType, context));
-
-            return bodyDeserializer != null ?
-                bodyDeserializer.Deserialize(contentType, context.Context.Request.Body, context) :
-                null;
+            return bodyDeserializer != null
+                ? bodyDeserializer.Deserialize(contentType, context.Context.Request.Body, context)
+                : null;
         }
 
         private static string GetRequestContentType(NancyContext context)
