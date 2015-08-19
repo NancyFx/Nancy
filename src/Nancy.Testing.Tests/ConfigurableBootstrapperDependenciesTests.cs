@@ -95,7 +95,7 @@
         class DisposableDependency : IIinterface, IDisposable
         {
             public bool Disposed { get; private set; }
-      
+
             public void Dispose()
             {
                 this.Disposed = true;
@@ -125,7 +125,7 @@
             var browser = new Browser(with =>
             {
                 with.Module<ModuleWithTwoDependencies>();
-                with.Dependencies(GetFakeDependency(), GetFakeDependency2());
+                with.Dependencies<object>(GetFakeDependency(), GetFakeDependency2());
             });
 
             // When

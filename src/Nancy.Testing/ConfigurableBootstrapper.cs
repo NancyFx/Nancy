@@ -696,32 +696,6 @@ namespace Nancy.Testing
             }
 
             /// <summary>
-            /// Configures the bootstrapper to register the specified type as a dependency.
-            /// </summary>
-            /// <typeparam name="T">The type that the dependencies should be registered as.</typeparam>
-            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
-            public ConfigurableBootstrapperConfigurator Dependency<T>(object instance)
-            {
-                this.bootstrapper.registeredInstances.Add(new InstanceRegistration(typeof(T), instance));
-                return this;
-            }
-
-            /// <summary>
-            /// Configures the bootstrapper to register the specified instances as a dependencies.
-            /// </summary>
-            /// <param name="dependencies">The instances of the dependencies that should be registered with the bootstrapper.</param>
-            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
-            public ConfigurableBootstrapperConfigurator Dependencies(params object[] dependencies)
-            {
-                foreach (var dependency in dependencies)
-                {
-                    this.Dependency(dependency);
-                }
-
-                return this;
-            }
-
-            /// <summary>
             /// Configures the bootstrapper to register the specified types and instances as a dependencies.
             /// </summary>
             /// <param name="dependencies">An array of maps between the interfaces and instances that should be registered with the bootstrapper.</param>
@@ -745,11 +719,11 @@ namespace Nancy.Testing
             /// <param name="dependencies">The instances of the dependencies that should be registered with the bootstrapper.</param>
             /// <typeparam name="T">The type that the dependencies should be registered as.</typeparam>
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
-            public ConfigurableBootstrapperConfigurator Dependencies<T>(params object[] dependencies)
+            public ConfigurableBootstrapperConfigurator Dependencies<T>(params T[] dependencies)
             {
                 foreach (var dependency in dependencies)
                 {
-                    this.Dependency<T>(dependency);
+                    this.Dependency(dependency);
                 }
 
                 return this;
@@ -1057,7 +1031,7 @@ namespace Nancy.Testing
                 return this;
             }
 
-            /// <summary> 
+            /// <summary>
             /// Configures the bootstrapper to use the provided instance of <see cref="IRootPathProvider"/>.
             /// </summary>
             /// <param name="rootPathProvider">The <see cref="IRootPathProvider"/> instance that should be used by the bootstrapper.</param>
