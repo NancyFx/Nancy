@@ -30,7 +30,7 @@ namespace Nancy.Testing
         {
             var contentsStream = new MemoryStream();
             response.Contents.Invoke(contentsStream);
-            contentsStream.Position = 0;
+            //contentsStream.Position = 0;
             return contentsStream;
         }
 
