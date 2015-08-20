@@ -10,29 +10,36 @@
     /// </summary>
     public class TextResponse : Response
     {
+        private const string TextPlainContentType = "text/plain";
+
         /// <summary>
         /// Creates a new instance of the TextResponse class
         /// </summary>
         /// <param name="contents">Text content - defaults to empty if null</param>
         /// <param name="contentType">Content Type - defaults to text/plain</param>
         /// <param name="encoding">String encoding - UTF8 if null</param>
-        public TextResponse(string contents, string contentType = "text/plain", Encoding encoding = null)
+        public TextResponse(string contents, string contentType = null, Encoding encoding = null)
         {
             if (encoding == null)
             {
                 encoding = Encoding.UTF8;
             }
 
-            this.ContentType = contentType;
+            if (string.IsNullOrEmpty(contentType))
+            {
+                contentType = TextPlainContentType;
+            }
+
+            this.ContentType = GetContentType(contentType, encoding);
             this.StatusCode = HttpStatusCode.OK;
 
             if (contents != null)
             {
                 this.Contents = stream =>
-                                {
-                                    var data = encoding.GetBytes(contents);
-                                    stream.Write(data, 0, data.Length);
-                                };
+                {
+                    var data = encoding.GetBytes(contents);
+                    stream.Write(data, 0, data.Length);
+                };
             }
         }
 
@@ -51,7 +58,7 @@
                 encoding = Encoding.UTF8;
             }
 
-            this.ContentType = "text/plain";
+            this.ContentType = GetContentType(TextPlainContentType, encoding);
             this.StatusCode = statusCode;
 
             if (contents != null)
@@ -75,6 +82,13 @@
                     this.Cookies.Add(nancyCookie);
                 }
             }
+        }
+
+        private static string GetContentType(string contentType, Encoding encoding)
+        {
+            return !contentType.Contains("charset") 
+                ? string.Concat(contentType, "; charset=", encoding.WebName)
+                : contentType;
         }
     }
 }
