@@ -55,7 +55,12 @@ namespace Nancy.Diagnostics
 
             foreach (var diagnosticsProvider in providers)
             {
-                diagContainer.Register<IDiagnosticsProvider>(diagnosticsProvider, diagnosticsProvider.GetType().FullName);
+                var key = string.Concat(
+                    diagnosticsProvider.GetType().FullName,
+                    "_",
+                    diagnosticsProvider.DiagnosticObject.GetType().FullName);
+                
+                diagContainer.Register<IDiagnosticsProvider>(diagnosticsProvider, key);
             }
 
             foreach (var moduleType in AppDomainAssemblyTypeScanner.TypesOf<DiagnosticModule>().ToArray())
