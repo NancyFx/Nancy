@@ -22,7 +22,7 @@
 
             // Then
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal("text/html; charset=utf-8", response.ContentType);
+            Assert.Equal("text/plain; charset=utf-8", response.ContentType);
             Assert.Equal("Default get root", response.Body.AsString());
         }
 
@@ -46,7 +46,7 @@
 
             // Then
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal("text/html; charset=utf-8", response.ContentType);
+            Assert.Equal("text/plain; charset=utf-8", response.ContentType);
             Assert.Equal("Default delete root", response.Body.AsString());
         }
 
@@ -70,7 +70,7 @@
 
             // Then
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal("text/html; charset=utf-8", response.ContentType);
+            Assert.Equal("text/plain; charset=utf-8", response.ContentType);
             Assert.Equal("Default post root", response.Body.AsString());
         }
 
@@ -94,7 +94,7 @@
 
             // Then
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal("text/html; charset=utf-8", response.ContentType);
+            Assert.Equal("text/plain; charset=utf-8", response.ContentType);
             Assert.Equal("Default put root", response.Body.AsString());
         }
 
@@ -118,7 +118,7 @@
 
             // Then
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal("text/html; charset=utf-8", response.ContentType);
+            Assert.Equal("text/plain; charset=utf-8", response.ContentType);
             Assert.Equal(string.Empty, response.Body.AsString());
         }
 
