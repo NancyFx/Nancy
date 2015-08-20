@@ -1,7 +1,5 @@
 # Meet Nancy [![NuGet Version](http://img.shields.io/nuget/v/Nancy.svg?style=flat)](https://www.nuget.org/packages/Nancy/) [![NuGet Downloads](http://img.shields.io/nuget/dt/Nancy.svg?style=flat)](https://www.nuget.org/packages/Nancy/)
 
-[![Join the chat at https://gitter.im/NancyFx/Nancy](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/NancyFx/Nancy?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
 Nancy is a lightweight, low-ceremony, framework for building HTTP based services on .Net and [Mono](http://mono-project.com). The goal of the framework is to stay out of the way as much as possible and provide a super-duper-happy-path to all interactions.
 
 Nancy is designed to handle `DELETE`, `GET`, `HEAD`, `OPTIONS`, `POST`, `PUT` and `PATCH` requests and provides a simple, elegant, [Domain Specific Language (DSL)](http://en.wikipedia.org/wiki/Domain-specific_language) for returning a response with just a couple of keystrokes, leaving you with more time to focus on the important bits.. 
