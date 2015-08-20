@@ -3,6 +3,7 @@
     using System;
     using System.IO;
     using System.Text;
+    using System.Threading.Tasks;
     using Nancy;
 
     /// <summary>
@@ -13,29 +14,39 @@
     /// </summary>
     public class CachedResponse : Response
     {
-        private readonly string oldResponseOutput;
+        private readonly Response response;
 
         public CachedResponse(Response response)
         {
+            this.response = response;
+
             this.ContentType = response.ContentType;
             this.Headers = response.Headers;
             this.StatusCode = response.StatusCode;
-
-            using (var memoryStream = new MemoryStream())
-            {
-                response.Contents.Invoke(memoryStream);
-                this.oldResponseOutput = Encoding.ASCII.GetString(memoryStream.GetBuffer());
-            }
-
-            this.Contents = GetContents(this.oldResponseOutput);
+            this.Contents = this.GetContents();
         }
 
-        protected static Action<Stream> GetContents(string contents)
+        public override Task PreExecute(NancyContext context)
+        {
+            return this.response.PreExecute(context);
+        }
+
+        private Action<Stream> GetContents()
         {
             return stream =>
             {
-                var writer = new StreamWriter(stream) { AutoFlush = true };
-                writer.Write(contents);
+                using (var memoryStream = new MemoryStream())
+                {
+                    this.response.Contents.Invoke(memoryStream);
+
+                    var contents =
+                        Encoding.ASCII.GetString(memoryStream.GetBuffer());
+
+                    var writer =
+                        new StreamWriter(stream) { AutoFlush = true };
+
+                    writer.Write(contents);
+                }
             };
         }
     }
