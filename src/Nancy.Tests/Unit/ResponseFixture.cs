@@ -151,7 +151,7 @@
             Response response = value;
 
             // Then
-            response.ContentType.ShouldEqual("text/html");
+            response.ContentType.ShouldEqual("text/html; charset=utf-8");
         }
 
         [Fact]
