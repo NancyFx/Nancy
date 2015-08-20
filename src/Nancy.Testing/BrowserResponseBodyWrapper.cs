@@ -3,6 +3,7 @@ namespace Nancy.Testing
     using System.Collections;
     using System.Collections.Generic;
     using System.IO;
+    using Nancy.IO;
 
     /// <summary>
     /// Wrapper for the HTTP response body that is used by the <see cref="BrowserResponse"/> class.
@@ -13,24 +14,35 @@ namespace Nancy.Testing
         private readonly string contentType;
         private DocumentWrapper responseDocument;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BrowserResponseBodyWrapper"/> class.
+        /// </summary>
+        /// <param name="response">The <see cref="Response"/> to wrap.</param>
         public BrowserResponseBodyWrapper(Response response)
         {
             var contentStream = GetContentStream(response);
 
-            this.responseBytes = contentStream.ToArray();
+            this.responseBytes = ((MemoryStream)contentStream.BaseStream).ToArray();
             this.contentType = response.ContentType;
         }
 
-        internal string ContentType
+        /// <summary>
+        /// Gets the content type of the wrapped response.
+        /// </summary>
+        /// <returns>A string containing the content type.</returns>
+        public string ContentType
         {
             get { return this.contentType; }
         }
 
-        private static MemoryStream GetContentStream(Response response)
+        private static UnclosableStreamWrapper GetContentStream(Response response)
         {
-            var contentsStream = new MemoryStream();
+            var contentsStream = 
+                new UnclosableStreamWrapper(new MemoryStream());
+            
             response.Contents.Invoke(contentsStream);
             contentsStream.Position = 0;
+            
             return contentsStream;
         }
 
