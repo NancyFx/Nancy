@@ -2,7 +2,7 @@ namespace Nancy
 {
     using System;
     using System.IO;
-
+    using System.Text;
     using Nancy.Extensions;
     using Nancy.Responses;
 
@@ -20,6 +20,11 @@ namespace Nancy
         public static Response AsFile(this IResponseFormatter formatter, string applicationRelativeFilePath)
         {
             return new GenericFileResponse(applicationRelativeFilePath);
+        }
+
+        public static Response AsText(this IResponseFormatter formatter, string contents, string contentType, Encoding encoding)
+        {
+            return new TextResponse(contents, contentType, encoding);
         }
 
         public static Response AsText(this IResponseFormatter formatter, string contents, string contentType)
