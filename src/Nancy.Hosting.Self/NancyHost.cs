@@ -279,7 +279,7 @@
             return new Request(
                 request.HttpMethod,
                 nancyUrl,
-                RequestStream.FromStream(request.InputStream, expectedRequestLength, false),
+                RequestStream.FromStream(request.InputStream, expectedRequestLength, StaticConfiguration.DisableRequestStreamSwitching ?? false),
                 request.Headers.ToDictionary(), 
                 (request.RemoteEndPoint != null) ? request.RemoteEndPoint.Address.ToString() : null,
                 certificate,

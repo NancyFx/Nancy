@@ -99,7 +99,7 @@ namespace Nancy.Hosting.Aspnet
 
             if (expectedRequestLength != 0)
             {
-                body = RequestStream.FromStream(context.Request.InputStream, expectedRequestLength, true);
+                body = RequestStream.FromStream(context.Request.InputStream, expectedRequestLength, StaticConfiguration.DisableRequestStreamSwitching ?? true);
             }
 
             var protocolVersion = context.Request.ServerVariables["HTTP_VERSION"];

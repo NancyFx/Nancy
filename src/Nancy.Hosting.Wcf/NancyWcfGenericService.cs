@@ -126,7 +126,7 @@
             return new Request(
                 webRequest.Method,
                 nancyUrl,
-                RequestStream.FromStream(requestBody, expectedRequestLength, false),
+                RequestStream.FromStream(requestBody, expectedRequestLength, StaticConfiguration.DisableRequestStreamSwitching ?? false),
                 webRequest.Headers.ToDictionary(),
                 ip, 
                 certificate);
