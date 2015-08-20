@@ -22,7 +22,7 @@ namespace Nancy.Testing
         {
             var contentStream = GetContentStream(response);
 
-            this.responseBytes = ((MemoryStream)contentStream.BaseStream).ToArray();
+            this.responseBytes = contentStream.ToArray();
             this.contentType = response.ContentType;
         }
 
@@ -35,14 +35,15 @@ namespace Nancy.Testing
             get { return this.contentType; }
         }
 
-        private static UnclosableStreamWrapper GetContentStream(Response response)
+        private static MemoryStream GetContentStream(Response response)
         {
-            var contentsStream = 
-                new UnclosableStreamWrapper(new MemoryStream());
-            
-            response.Contents.Invoke(contentsStream);
+            var contentsStream = new MemoryStream();
+
+            var unclosableStream = new UnclosableStreamWrapper(contentsStream);
+
+            response.Contents.Invoke(unclosableStream);
             contentsStream.Position = 0;
-            
+
             return contentsStream;
         }
 
