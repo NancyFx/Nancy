@@ -741,8 +741,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator DefaultConfigurationProvider<T>() where T : INancyDefaultConfigurationProvider
             {
-                this.bootstrapper.registeredTypes.Add(
-                    new CollectionTypeRegistration(typeof(INancyDefaultConfigurationProvider), new[] { typeof(T) }));
+                this.bootstrapper.configuration.DefaultConfigurationProviders = new List<Type>(new[] { typeof(T) });
 
                 return this;
             }
@@ -754,8 +753,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator DefaultConfigurationProviders(params Type[] defaultConfigurationProviders)
             {
-                this.bootstrapper.registeredTypes.Add(
-                    new CollectionTypeRegistration(typeof(INancyDefaultConfigurationProvider), defaultConfigurationProviders));
+                this.bootstrapper.configuration.DefaultConfigurationProviders = defaultConfigurationProviders;
 
                 return this;
             }
@@ -767,7 +765,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator DefaultConfigurationProviders(INancyDefaultConfigurationProvider defaultConfigurationProvider)
             {
-                this.bootstrapper.registeredTypes.Add(
+                this.bootstrapper.registeredInstances.Add(
                     new InstanceRegistration(typeof(INancyDefaultConfigurationProvider), defaultConfigurationProvider));
 
                 return this;
@@ -782,7 +780,7 @@ namespace Nancy.Testing
             {
                 foreach (var defaultConfigurationProvider in defaultConfigurationProviders)
                 {
-                    this.bootstrapper.registeredTypes.Add(
+                    this.bootstrapper.registeredInstances.Add(
                         new InstanceRegistration(typeof(INancyDefaultConfigurationProvider), defaultConfigurationProvider));
                 }
 
@@ -933,8 +931,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator EnvironmentConfigurator<T>() where T : INancyEnvironmentConfigurator
             {
-                this.bootstrapper.registeredTypes.Add(
-                    new TypeRegistration(typeof(INancyEnvironmentConfigurator), typeof(T)));
+                this.bootstrapper.configuration.EnvironmentConfigurator = typeof(T);
 
                 return this;
             }
@@ -972,8 +969,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator EnvironmentFactory<T>() where T : INancyEnvironmentFactory
             {
-                this.bootstrapper.registeredTypes.Add(
-                    new TypeRegistration(typeof(INancyEnvironmentFactory), typeof(T)));
+                this.bootstrapper.configuration.EnvironmentFactory = typeof(T);
 
                 return this;
             }
