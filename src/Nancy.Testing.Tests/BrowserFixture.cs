@@ -6,7 +6,6 @@ namespace Nancy.Testing.Tests
     using System.Security.Cryptography.X509Certificates;
     using System.Text;
     using System.Linq;
-
     using Nancy.Extensions;
     using Nancy.Tests;
     using Nancy.Helpers;
@@ -14,6 +13,7 @@ namespace Nancy.Testing.Tests
     using Xunit;
     using FakeItEasy;
     using Nancy.Authentication.Forms;
+    using Nancy.Bootstrapper;
 
     public class BrowserFixture
     {
@@ -26,7 +26,7 @@ namespace Nancy.Testing.Tests
 
             CookieBasedSessions.Enable(bootstrapper);
 
-            browser = new Browser(bootstrapper);
+            this.browser = new Browser(bootstrapper);
         }
 
         [Fact]
@@ -538,7 +538,7 @@ namespace Nancy.Testing.Tests
 
             // Then
             header.ShouldEqual(expectedHeaderValue);
-        }
+        }     
 
         public class EchoModel
         {
