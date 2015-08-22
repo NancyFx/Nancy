@@ -48,7 +48,7 @@ namespace Nancy.Helpers
             }
 
             public HttpQSCollection(bool caseSensitive)
-                : base(caseSensitive ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase)
+                : base(caseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase)
             {
             }
 

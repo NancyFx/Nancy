@@ -91,11 +91,11 @@
 
             var contentMimeType = contentType.Split(';')[0];
 
-            return contentMimeType.Equals("application/json", StringComparison.InvariantCultureIgnoreCase) ||
-                   contentMimeType.StartsWith("application/json-", StringComparison.InvariantCultureIgnoreCase) ||
-                   contentMimeType.Equals("text/json", StringComparison.InvariantCultureIgnoreCase) ||
-                  (contentMimeType.StartsWith("application/vnd", StringComparison.InvariantCultureIgnoreCase) &&
-                   contentMimeType.EndsWith("+json", StringComparison.InvariantCultureIgnoreCase));
+            return contentMimeType.Equals("application/json", StringComparison.OrdinalIgnoreCase) ||
+                   contentMimeType.StartsWith("application/json-", StringComparison.OrdinalIgnoreCase) ||
+                   contentMimeType.Equals("text/json", StringComparison.OrdinalIgnoreCase) ||
+                  (contentMimeType.StartsWith("application/vnd", StringComparison.OrdinalIgnoreCase) &&
+                   contentMimeType.EndsWith("+json", StringComparison.OrdinalIgnoreCase));
         }
     }
 }

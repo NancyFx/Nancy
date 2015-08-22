@@ -309,7 +309,7 @@ namespace Nancy.Tests.Unit
             // Given
             StaticConfiguration.CaseSensitive = false;
             var memory =
-                new MemoryStream(BuildMultipartFormValues(new Dictionary<string, string>(StringComparer.InvariantCulture)
+                new MemoryStream(BuildMultipartFormValues(new Dictionary<string, string>(StringComparer.Ordinal)
                 {
                     { "key", "value" },
                     { "KEY", "VALUE" }
@@ -335,7 +335,7 @@ namespace Nancy.Tests.Unit
             // Given
             StaticConfiguration.CaseSensitive = true;
             var memory =
-                new MemoryStream(BuildMultipartFormValues(new Dictionary<string, string>(StringComparer.InvariantCulture)
+                new MemoryStream(BuildMultipartFormValues(new Dictionary<string, string>(StringComparer.Ordinal)
                 {
                     { "key", "value" },
                     { "KEY", "VALUE" }

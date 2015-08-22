@@ -61,7 +61,7 @@
             }
         }
 
-        public static void Equal(string expected, string actual, StringComparison comparisonType = StringComparison.InvariantCulture)
+        public static void Equal(string expected, string actual, StringComparison comparisonType = StringComparison.Ordinal)
         {
             if (!String.Equals(expected, actual, comparisonType))
             {

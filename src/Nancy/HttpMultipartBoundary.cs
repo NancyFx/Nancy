@@ -67,7 +67,7 @@ namespace Nancy
                     this.Filename = Regex.Match(header, @"filename=""?(?<filename>[^\""]*)", RegexOptions.IgnoreCase).Groups["filename"].Value;
                 }
 
-                if (header.StartsWith("Content-Type", StringComparison.InvariantCultureIgnoreCase))
+                if (header.StartsWith("Content-Type", StringComparison.OrdinalIgnoreCase))
                 {
                     this.ContentType = header.Split(new[] { ' ' }).Last().Trim();
                 }

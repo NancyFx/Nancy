@@ -408,7 +408,7 @@ namespace Nancy.ModelBinding
 
         private static IEnumerable<BindingMemberInfo> GetBindingMembers(Type modelType, Type genericType, IEnumerable<string> blackList)
         {
-            var blackListHash = new HashSet<string>(blackList, StringComparer.InvariantCulture);
+            var blackListHash = new HashSet<string>(blackList, StringComparer.Ordinal);
 
             return BindingMemberInfo.Collect(genericType ?? modelType)
                 .Where(member => !blackListHash.Contains(member.Name));
