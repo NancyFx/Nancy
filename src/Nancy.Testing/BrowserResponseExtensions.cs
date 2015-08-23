@@ -15,8 +15,8 @@ namespace Nancy.Testing
         /// </summary>
         /// <param name="response">The <see cref="BrowserResponse"/> that the assert should be made on.</param>
         /// <param name="location">The location that should have been redirected to.</param>
-        /// <param name="stringComparer">The string comparer that should be used by the assertion. The default value is <see cref="StringComparison.InvariantCulture"/>.</param>
-        public static void ShouldHaveRedirectedTo(this BrowserResponse response, string location, StringComparison stringComparer = StringComparison.InvariantCulture)
+        /// <param name="stringComparer">The string comparer that should be used by the assertion. The default value is <see cref="StringComparison.Ordinal"/>.</param>
+        public static void ShouldHaveRedirectedTo(this BrowserResponse response, string location, StringComparison stringComparer = StringComparison.Ordinal)
         {
             var validRedirectStatuses = new[]
             {

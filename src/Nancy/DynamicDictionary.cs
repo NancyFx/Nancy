@@ -11,7 +11,7 @@
     public class DynamicDictionary : DynamicObject, IEquatable<DynamicDictionary>, IHideObjectMembers, IEnumerable<string>, IDictionary<string, object>
     {
         private readonly IDictionary<string, dynamic> dictionary =
-            new Dictionary<string, dynamic>(StaticConfiguration.CaseSensitive ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase);
+            new Dictionary<string, dynamic>(StaticConfiguration.CaseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase);
 
 
         /// <summary>

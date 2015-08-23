@@ -19,21 +19,21 @@ namespace Nancy
         /// </summary>
         public static IEnumerable<Func<Assembly, bool>> DefaultAutoRegisterIgnoredAssemblies = new Func<Assembly, bool>[]
             {
-                asm => asm.FullName.StartsWith("Microsoft.", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("System.", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("System,", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("CR_ExtUnitTest", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("mscorlib,", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("CR_VSTest", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("DevExpress.CodeRush", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("IronPython", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("IronRuby", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("xunit", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("Nancy.Testing", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("MonoDevelop.NUnit", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("SMDiagnostics", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("CppCodeProvider", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("WebDev.WebHost40", StringComparison.InvariantCulture),
+                asm => asm.FullName.StartsWith("Microsoft.", StringComparison.Ordinal),
+                asm => asm.FullName.StartsWith("System.", StringComparison.Ordinal),
+                asm => asm.FullName.StartsWith("System,", StringComparison.Ordinal),
+                asm => asm.FullName.StartsWith("CR_ExtUnitTest", StringComparison.Ordinal),
+                asm => asm.FullName.StartsWith("mscorlib,", StringComparison.Ordinal),
+                asm => asm.FullName.StartsWith("CR_VSTest", StringComparison.Ordinal),
+                asm => asm.FullName.StartsWith("DevExpress.CodeRush", StringComparison.Ordinal),
+                asm => asm.FullName.StartsWith("IronPython", StringComparison.Ordinal),
+                asm => asm.FullName.StartsWith("IronRuby", StringComparison.Ordinal),
+                asm => asm.FullName.StartsWith("xunit", StringComparison.Ordinal),
+                asm => asm.FullName.StartsWith("Nancy.Testing", StringComparison.Ordinal),
+                asm => asm.FullName.StartsWith("MonoDevelop.NUnit", StringComparison.Ordinal),
+                asm => asm.FullName.StartsWith("SMDiagnostics", StringComparison.Ordinal),
+                asm => asm.FullName.StartsWith("CppCodeProvider", StringComparison.Ordinal),
+                asm => asm.FullName.StartsWith("WebDev.WebHost40", StringComparison.Ordinal),
             };
 
         /// <summary>

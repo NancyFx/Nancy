@@ -150,7 +150,7 @@
 
             var matchingViewEngines =
                 from viewEngine in this.viewEngines
-                where viewEngine.Extensions.Any(x => x.Equals(viewLocationResult.Extension, StringComparison.InvariantCultureIgnoreCase))
+                where viewEngine.Extensions.Any(x => x.Equals(viewLocationResult.Extension, StringComparison.OrdinalIgnoreCase))
                 select viewEngine;
 
             return matchingViewEngines.FirstOrDefault();

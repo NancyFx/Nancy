@@ -101,7 +101,7 @@
 
         private static bool IsWildcardXmlContentType(MediaRange requestedContentType)
         {
-            if (!requestedContentType.Type.IsWildcard && !string.Equals("application", requestedContentType.Type, StringComparison.InvariantCultureIgnoreCase))
+            if (!requestedContentType.Type.IsWildcard && !string.Equals("application", requestedContentType.Type, StringComparison.OrdinalIgnoreCase))
             {
                 return false;
             }
@@ -113,8 +113,8 @@
 
             var subtypeString = requestedContentType.Subtype.ToString();
 
-            return (subtypeString.StartsWith("vnd", StringComparison.InvariantCultureIgnoreCase) &&
-                    subtypeString.EndsWith("+xml", StringComparison.InvariantCultureIgnoreCase));
+            return (subtypeString.StartsWith("vnd", StringComparison.OrdinalIgnoreCase) &&
+                    subtypeString.EndsWith("+xml", StringComparison.OrdinalIgnoreCase));
         }
     }
 }

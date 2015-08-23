@@ -208,7 +208,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
             var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
 
             var property =
-                properties.Where(p => string.Equals(p.Name, propertyName, StringComparison.InvariantCulture)).
+                properties.Where(p => string.Equals(p.Name, propertyName, StringComparison.Ordinal)).
                 FirstOrDefault();
 
             if (property != null)
@@ -219,7 +219,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
             var fields = type.GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
 
             var field =
-                fields.Where(p => string.Equals(p.Name, propertyName, StringComparison.InvariantCulture)).
+                fields.Where(p => string.Equals(p.Name, propertyName, StringComparison.Ordinal)).
                 FirstOrDefault();
 
             return field == null ? new Tuple<bool, object>(false, null) : new Tuple<bool, object>(true, field.GetValue(model));

@@ -48,7 +48,7 @@
         public static IDictionary<string, string> Merge(this IEnumerable<IDictionary<string, string>> dictionaries)
         {
             var output =
-                new Dictionary<string, string>(StaticConfiguration.CaseSensitive ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase);
+                new Dictionary<string, string>(StaticConfiguration.CaseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase);
 
             foreach (var dictionary in dictionaries.Where(d => d != null))
             {

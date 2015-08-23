@@ -12,7 +12,7 @@ namespace Nancy.Hosting.Self
         public static bool IsCaseInsensitiveBaseOf(this Uri source, Uri value)
         {
             var uriComponents = source.Host == "localhost" ? (UriComponents.Port | UriComponents.Scheme) : (UriComponents.HostAndPort | UriComponents.Scheme);
-            if (Uri.Compare(source, value, uriComponents, UriFormat.Unescaped, StringComparison.InvariantCultureIgnoreCase) != 0)
+            if (Uri.Compare(source, value, uriComponents, UriFormat.Unescaped, StringComparison.OrdinalIgnoreCase) != 0)
             {
                 return false;
             }
@@ -40,7 +40,7 @@ namespace Nancy.Hosting.Self
 
         private static bool SegmentEquals(string segment1, string segment2)
         {
-            return String.Equals(AppendSlashIfNeeded(segment1), AppendSlashIfNeeded(segment2), StringComparison.InvariantCultureIgnoreCase);
+            return String.Equals(AppendSlashIfNeeded(segment1), AppendSlashIfNeeded(segment2), StringComparison.OrdinalIgnoreCase);
         }
 
         private static bool ZipCompare(this IEnumerable<string> source1, IEnumerable<string> source2, Func<string, string, bool> comparison)

@@ -172,7 +172,7 @@ namespace Nancy.Bootstrapper
 
             var unloadedAssemblies =
                 Directory.GetFiles(containingDirectory, wildcardFilename).Where(
-                    f => !existingAssemblyPaths.Contains(f, StringComparer.InvariantCultureIgnoreCase)).ToArray();
+                    f => !existingAssemblyPaths.Contains(f, StringComparer.OrdinalIgnoreCase)).ToArray();
 
 
             foreach (var unloadedAssembly in unloadedAssemblies)
@@ -228,7 +228,7 @@ namespace Nancy.Bootstrapper
             {
                 var unloadedAssemblies = Directory
                     .GetFiles(directory, "*.dll")
-                    .Where(f => !existingAssemblyPaths.Contains(f, StringComparer.InvariantCultureIgnoreCase)).ToArray();
+                    .Where(f => !existingAssemblyPaths.Contains(f, StringComparer.OrdinalIgnoreCase)).ToArray();
 
                 foreach (var unloadedAssembly in unloadedAssemblies)
                 {
