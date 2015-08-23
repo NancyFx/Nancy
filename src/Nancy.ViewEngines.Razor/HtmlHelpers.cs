@@ -2,6 +2,7 @@
 {
     using System;
     using System.IO;
+    using Nancy.Extensions;
     using Nancy.Security;
 
     /// <summary>
@@ -48,6 +49,8 @@
         /// <returns>An <see cref="IHtmlString"/> representation of the partial.</returns>
         public IHtmlString Partial(string viewName)
         {
+			if (string.IsNullOrWhiteSpace(viewName)) throw new ArgumentNullException("viewName", "Attempted to render a non-existent view");
+			
             return this.Partial(viewName, null);
         }
 
@@ -59,18 +62,29 @@
         /// <returns>An <see cref="IHtmlString"/> representation of the partial.</returns>
         public IHtmlString Partial(string viewName, dynamic modelForPartial)
         {
-            var view = this.RenderContext.LocateView(viewName, modelForPartial);
+			if (string.IsNullOrWhiteSpace(viewName)) throw new ArgumentNullException("viewName", "Attempted to render a non-existent view");
 
-            var response = this.Engine.RenderView(view, modelForPartial, this.RenderContext, true);
-            Action<Stream> action = response.Contents;
-            var mem = new MemoryStream();
+			//this.RenderContext.Context.WriteTraceLog(sb => sb.AppendFormat("Rendered partial view {0} with type {1}", viewName, response));
+			try
+	        {
+		        var view = this.RenderContext.LocateView(viewName, modelForPartial);
 
-            action.Invoke(mem);
-            mem.Position = 0;
+		        var response = this.Engine.RenderView(view, modelForPartial, this.RenderContext, true);
+		        Action<Stream> action = response.Contents;
+		        var mem = new MemoryStream();
 
-            var reader = new StreamReader(mem);
+		        action.Invoke(mem);
+		        mem.Position = 0;
 
-            return new NonEncodedHtmlString(reader.ReadToEnd());
+		        var reader = new StreamReader(mem);
+
+		        return new NonEncodedHtmlString(reader.ReadToEnd());
+	        }
+	        catch (Exception exception)
+	        {
+		        this.RenderContext.Context.WriteTraceLog(sb => sb.AppendFormat("Rendering partial view {0} threw exception {1}", viewName, exception.Message));
+		        throw;
+	        }
         }
 
         /// <summary>

@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
+    using System.Linq;
     using System.Text;
     using Nancy.Helpers;
 
@@ -395,25 +396,25 @@
             }
             catch (NullReferenceException e)
             {
-                throw new ViewRenderException("Unable to render the view.  Most likely the Model, or a property on the Model, is null", e);
+	            throw new ViewRenderException("Unable to render the view.  Most likely the Model, or a property on the Model, is null", e);
             }
 
             this.Body = this.contents.ToString();
 
-            this.SectionContents = new Dictionary<string, string>(this.Sections.Count);
+			this.SectionContents = new Dictionary<string, string>(this.Sections.Count);
             foreach (var section in this.Sections)
             {
-                this.contents.Clear();
+				this.contents.Clear();
                 try
                 {
-                    section.Value.Invoke();
+					section.Value.Invoke();
                 }
                 catch (NullReferenceException e)
                 {
-                    throw new ViewRenderException(string.Format("A null reference was encountered while rendering the section {0}.  Does the section require a model? (maybe it wasn't passed in)", section.Key), e);
+					throw new ViewRenderException(string.Format("A null reference was encountered while rendering the section {0}.  Does the section require a model? (maybe it wasn't passed in)", section.Key), e);
                 }
-                this.SectionContents.Add(section.Key, this.contents.ToString());
-            }
+				this.SectionContents.Add(section.Key, this.contents.ToString());
+			}
         }
 
         /// <summary>

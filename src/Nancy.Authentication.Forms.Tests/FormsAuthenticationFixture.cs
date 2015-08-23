@@ -8,7 +8,6 @@ namespace Nancy.Authentication.Forms.Tests
     using FakeItEasy;
     using Fakes;
     using Helpers;
-    using Nancy.Security;
     using Nancy.Tests;
     using Nancy.Tests.Fakes;
     using Xunit;
@@ -162,7 +161,71 @@ namespace Nancy.Authentication.Forms.Tests
             result.StatusCode.ShouldEqual(HttpStatusCode.OK);
         }
 
-        [Fact]
+		#region Throw helpful exception when the configuration is not enabled
+
+		[Fact]
+		public void Should_throw_helpful_exception_message_when_user_logs_in_without_redirect_and_forms_authentication_not_enabled()
+		{
+			// Given
+			const string expectedMessage = "The internal FormsAuthenticationConfiguration has not been set. Ensure that FormsAuthentication has been enabled in the bootstrapper";
+			FormsAuthentication.Disable();
+
+			// When
+			var result = Record.Exception(() => FormsAuthentication.UserLoggedInResponse(userGuid));
+
+			// Then
+			result.ShouldBeOfType(typeof(InvalidOperationException));
+			result.Message.ShouldBeSameAs(expectedMessage);
+		}
+
+		[Fact]
+		public void Should_throw_helpful_exception_message_when_user_logs_in_with_redirect_and_forms_authentication_not_enabled()
+		{
+			// Given
+			const string expectedMessage = "The internal FormsAuthenticationConfiguration has not been set. Ensure that FormsAuthentication has been enabled in the bootstrapper";
+			FormsAuthentication.Disable();
+
+			// When
+			var result = Record.Exception(() => FormsAuthentication.UserLoggedInRedirectResponse(context, userGuid));
+
+			// Then
+			result.ShouldBeOfType(typeof(InvalidOperationException));
+			result.Message.ShouldBeSameAs(expectedMessage);
+		}
+
+		[Fact]
+		public void Should_throw_helpful_exception_message_when_user_logs_out_with_redirect_and_forms_authentication_not_enabled()
+		{
+			// Given
+			const string expectedMessage = "The internal FormsAuthenticationConfiguration has not been set. Ensure that FormsAuthentication has been enabled in the bootstrapper";
+			FormsAuthentication.Disable();
+
+			// When
+			var result = Record.Exception(() => FormsAuthentication.LogOutAndRedirectResponse(context, "/"));
+
+			// Then
+			result.ShouldBeOfType(typeof(InvalidOperationException));
+			result.Message.ShouldBeSameAs(expectedMessage);
+		}
+	
+		[Fact]
+		public void Should_throw_helpful_exception_message_when_user_logs_out_without_redirect_and_forms_authentication_not_enabled()
+		{
+			// Given
+			const string expectedMessage = "The internal FormsAuthenticationConfiguration has not been set. Ensure that FormsAuthentication has been enabled in the bootstrapper";
+			FormsAuthentication.Disable();
+
+			// When
+			var result = Record.Exception(() => FormsAuthentication.LogOutResponse());
+
+			// Then
+			result.ShouldBeOfType(typeof(InvalidOperationException));
+			result.Message.ShouldBeSameAs(expectedMessage);
+		}
+	
+		#endregion
+
+		[Fact]
         public void Should_have_authentication_cookie_in_login_response_when_logging_in_with_redirect()
         {
             FormsAuthentication.Enable(A.Fake<IPipelines>(), this.config);

@@ -34,7 +34,15 @@ namespace Nancy.Authentication.Forms
             }
         }
 
-        /// <summary>
+		/// <summary>
+		/// To support testing, necessary as everying is static, but not ideal
+		/// </summary>
+		internal static void Disable()
+		{
+			currentConfiguration = null;
+		}
+        
+		/// <summary>
         /// Enables forms authentication for the application
         /// </summary>
         /// <param name="pipelines">Pipelines to add handlers to (usually "this")</param>
@@ -110,7 +118,12 @@ namespace Nancy.Authentication.Forms
         /// <returns>Nancy response with redirect.</returns>
         public static Response UserLoggedInRedirectResponse(NancyContext context, Guid userIdentifier, DateTime? cookieExpiry = null, string fallbackRedirectUrl = null)
         {
-            var redirectUrl = fallbackRedirectUrl;
+			if (currentConfiguration == null)
+			{
+				throw new InvalidOperationException("The internal FormsAuthenticationConfiguration has not been set. Ensure that FormsAuthentication has been enabled in the bootstrapper");
+			}
+			
+			var redirectUrl = fallbackRedirectUrl;
 
             if (string.IsNullOrEmpty(redirectUrl))
             {
@@ -149,11 +162,14 @@ namespace Nancy.Authentication.Forms
         /// <returns>Nancy response with status <see cref="HttpStatusCode.OK"/></returns>
         public static Response UserLoggedInResponse(Guid userIdentifier, DateTime? cookieExpiry = null)
         {
-            var response =
-                (Response)HttpStatusCode.OK;
+			if (currentConfiguration == null)
+			{
+				throw new InvalidOperationException("The internal FormsAuthenticationConfiguration has not been set. Ensure that FormsAuthentication has been enabled in the bootstrapper");
+			}
 
-            var authenticationCookie = 
-                BuildCookie(userIdentifier, cookieExpiry, currentConfiguration);
+            var response = (Response)HttpStatusCode.OK;
+
+            var authenticationCookie = BuildCookie(userIdentifier, cookieExpiry, currentConfiguration);
 
             response.AddCookie(authenticationCookie);
 
@@ -168,7 +184,12 @@ namespace Nancy.Authentication.Forms
         /// <returns>Nancy response</returns>
         public static Response LogOutAndRedirectResponse(NancyContext context, string redirectUrl)
         {
-            var response = context.GetRedirect(redirectUrl);
+			if (currentConfiguration == null)
+			{
+				throw new InvalidOperationException("The internal FormsAuthenticationConfiguration has not been set. Ensure that FormsAuthentication has been enabled in the bootstrapper");
+			}
+			
+			var response = context.GetRedirect(redirectUrl);
             var authenticationCookie = BuildLogoutCookie(currentConfiguration);
             response.AddCookie(authenticationCookie);
 
@@ -181,11 +202,14 @@ namespace Nancy.Authentication.Forms
         /// <returns>Nancy response</returns>
         public static Response LogOutResponse()
         {
-            var response =
-                (Response)HttpStatusCode.OK;
+			if (currentConfiguration == null)
+			{
+				throw new InvalidOperationException("The internal FormsAuthenticationConfiguration has not been set. Ensure that FormsAuthentication has been enabled in the bootstrapper");
+			}
+			
+			var response = (Response)HttpStatusCode.OK;
 
-            var authenticationCookie = 
-                BuildLogoutCookie(currentConfiguration);
+            var authenticationCookie = BuildLogoutCookie(currentConfiguration);
 
             response.AddCookie(authenticationCookie);
 
