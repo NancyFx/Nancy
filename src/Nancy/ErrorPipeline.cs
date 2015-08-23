@@ -14,7 +14,7 @@
     /// composite pipelines.
     /// </para>
     /// </summary>
-    public class ErrorPipeline : NamedPipelineBase<Func<NancyContext, Exception, Response>>
+    public class ErrorPipeline : NamedPipelineBase<Func<NancyContext, Exception, dynamic>>
     {
         public ErrorPipeline()
         {
@@ -24,19 +24,19 @@
         {
         }
 
-        public static implicit operator Func<NancyContext, Exception, Response>(ErrorPipeline pipeline)
+        public static implicit operator Func<NancyContext, Exception, dynamic>(ErrorPipeline pipeline)
         {
             return pipeline.Invoke;
         }
 
-        public static implicit operator ErrorPipeline(Func<NancyContext, Exception, Response> func)
+        public static implicit operator ErrorPipeline(Func<NancyContext, Exception, dynamic> func)
         {
             var pipeline = new ErrorPipeline();
             pipeline.AddItemToEndOfPipeline(func);
             return pipeline;
         }
 
-        public static ErrorPipeline operator +(ErrorPipeline pipeline, Func<NancyContext, Exception, Response> func)
+        public static ErrorPipeline operator +(ErrorPipeline pipeline, Func<NancyContext, Exception, dynamic> func)
         {
             pipeline.AddItemToEndOfPipeline(func);
             return pipeline;
@@ -65,9 +65,9 @@
         /// <returns>
         /// Response from an item invocation, or null if no response was generated.
         /// </returns>
-        public Response Invoke(NancyContext context, Exception ex)
+        public dynamic Invoke(NancyContext context, Exception ex)
         {
-            Response returnValue = null;
+            dynamic returnValue = null;
 
             using (var enumerator = this.PipelineDelegates.GetEnumerator())
             {
