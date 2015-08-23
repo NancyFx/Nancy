@@ -137,7 +137,7 @@ namespace Nancy.Routing
         {
             if (resolveResultOnError != null)
             {
-                var flattenedException = NancyEngine.FlattenException(exception);
+                var flattenedException = exception.FlattenInnerExceptions();
 
                 var result = resolveResultOnError.Invoke(context, flattenedException);
                 if (result != null)

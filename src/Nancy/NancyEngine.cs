@@ -275,7 +275,7 @@
                 {
                     try
                     {
-                        var flattenedException = FlattenException(t.Exception);
+                        var flattenedException = t.Exception.FlattenInnerExceptions();
 
                         this.InvokeOnErrorHook(context, pipelines.OnError, flattenedException);
 
@@ -327,32 +327,6 @@
                 context.Items[ERROR_KEY] = e.ToString();
                 context.Items[ERROR_EXCEPTION] = e;
             }
-        }
-
-        internal static Exception FlattenException(Exception exception)
-        {
-            if (exception is AggregateException)
-            {
-                var aggregateException = exception as AggregateException;
-
-                var flattenedAggregateException = aggregateException.Flatten();
-
-                //If we have more than one exception in the AggregateException
-                //we have to send all exceptions back in order not to swallow any exceptions.
-                if (flattenedAggregateException.InnerExceptions.Count > 1)
-                {
-                    return flattenedAggregateException;
-                }
-
-                return flattenedAggregateException.InnerException;
-            }
-
-            if (exception != null && exception.InnerException != null)
-            {
-                return FlattenException(exception.InnerException);
-            }
-
-            return exception;
         }
     }
 }
