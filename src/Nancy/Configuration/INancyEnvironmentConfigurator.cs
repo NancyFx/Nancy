@@ -5,7 +5,7 @@ namespace Nancy.Configuration
     /// <summary>
     /// Defines the functionality for applying configuration to an <see cref="INancyEnvironment"/> instance.
     /// </summary>
-    public interface INancyEnvironmentConfigurator
+    public interface INancyEnvironmentConfigurator : IHideObjectMembers
     {
         /// <summary>
         /// Configures an <see cref="INancyEnvironment"/> instance.

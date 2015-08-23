@@ -3,7 +3,7 @@ namespace Nancy.Configuration
     /// <summary>
     /// Defines the functionality for providing default configuration values to the <see cref="INancyEnvironment"/>.
     /// </summary>
-    public interface INancyDefaultConfigurationProvider
+    public interface INancyDefaultConfigurationProvider : IHideObjectMembers
     {
         /// <summary>
         /// Gets the default configuration instance to register in the <see cref="INancyEnvironment"/>.
