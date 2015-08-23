@@ -6,7 +6,7 @@ namespace Nancy.Configuration
     /// <summary>
     /// Defines the functionality of a Nancy environment.
     /// </summary>
-    public interface INancyEnvironment : IReadOnlyDictionary<string, object>
+    public interface INancyEnvironment : IReadOnlyDictionary<string, object>, IHideObjectMembers
     {
         /// <summary>
         /// Adds a <paramref name="value"/>, using a provided <paramref name="key"/>, to the environment.
