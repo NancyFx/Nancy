@@ -11,55 +11,66 @@ namespace Nancy.ViewEngines.Razor.VisualBasic
     internal class VisualBasicClrTypeResolver : ClrTypeResolver<VBSymbolType, VBSymbol>
     {
         public VisualBasicClrTypeResolver()
-            : base(VBSymbolType.Identifier, VBSymbolType.Keyword, VBSymbolType.Dot, VBSymbolType.WhiteSpace)
+            : base(VBSymbolType.Identifier, VBSymbolType.Keyword, VBSymbolType.Dot, VBSymbolType.WhiteSpace, VBSymbolType.LeftParenthesis, VBSymbolType.RightParenthesis)
         {
         }
 
-        protected override TypeNameParserStep ResolveType()
+        /// <summary>
+        /// Dequeues symbol ')' representing end of generic arguments
+        /// </summary>
+        /// <returns>Returns true if move was successful</returns>
+        protected override bool MoveOutOfGenericArguments()
         {
-            var identifier = this.PopFullIdentifier();
-
-            var step = new TypeNameParserStep(identifier);
-
-            if (this.symbols.Any() && this.symbols.Peek().Type == VBSymbolType.LeftParenthesis)
+            if (this.Symbols.Peek().Type == VBSymbolType.RightParenthesis)
             {
-                var next = this.symbols.ElementAt(1);
-                if (next.Type == VBSymbolType.Keyword && next.Keyword == VBKeyword.Of)
-                {
-                    this.symbols.Dequeue();
-                    this.symbols.Dequeue();
+                this.Symbols.Dequeue();
 
-                    while (this.symbols.Peek().Type != VBSymbolType.RightParenthesis)
-                    {
-                        step.GenericArguments.Add(this.ResolveType());
-
-                        while (this.symbols.Peek().Type.Equals(this.WhiteSpace) || this.symbols.Peek().Type == VBSymbolType.Comma)
-                        {
-                            this.symbols.Dequeue();
-                        }
-                    }
-
-                    this.symbols.Dequeue();
-                }
+                return true;
             }
 
-            while (this.symbols.Any() && this.symbols.Peek().Type == VBSymbolType.LeftParenthesis)
-            {
-                this.symbols.Dequeue();
-
-                step.ArrayExpression += "[";
-                while (this.symbols.Peek().Type != VBSymbolType.RightParenthesis)
-                {
-                    step.ArrayExpression += this.symbols.Dequeue().Content;
-                }
-
-                step.ArrayExpression += "]";
-                this.symbols.Dequeue();
-            } 
-
-            return step;
+            return false;
         }
 
+        /// <summary>
+        /// Dequeues symbol ',' and whitespace representing separator between generic arguments
+        /// </summary>
+        protected override void MoveToNextGenericArgument()
+        {
+            while (this.Symbols.Peek().Type == VBSymbolType.WhiteSpace || this.Symbols.Peek().Type == VBSymbolType.Comma)
+            {
+                this.Symbols.Dequeue();
+            }
+        }
+
+        /// <summary>
+        /// Dequeues symbols '(Of' representing begin of generic arguments
+        /// </summary>
+        /// <returns>Returns true if move was successful</returns>
+        protected override bool MoveToGenericArguments()
+        {
+            if (this.Symbols.Peek().Type != VBSymbolType.LeftParenthesis)
+            {
+                return false;
+            }
+
+            var next = this.Symbols.ElementAt(1);
+            
+            if (next.Type != VBSymbolType.Keyword || next.Keyword != VBKeyword.Of)
+            {
+                return false;
+            }
+
+            this.Symbols.Dequeue();
+            this.Symbols.Dequeue();
+
+            return true;
+        }
+
+        /// <summary>
+        /// Gets CLR from name (keyword) used by VB.NET
+        /// </summary>
+        /// <param name="typeName">Type name to resolve</param>
+        /// <returns>CLR type</returns>
         protected override Type ResolvePrimitiveType(string typeName)
         {
             var primitives = new Dictionary<string, Type>

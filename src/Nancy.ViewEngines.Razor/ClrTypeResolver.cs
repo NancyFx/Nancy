@@ -20,15 +20,33 @@
         private readonly TSymbolType identifier;
         private readonly TSymbolType keyword;
         private readonly TSymbolType dot;
-        protected readonly TSymbolType WhiteSpace;
-        protected Queue<TSymbol> symbols;
+        private readonly TSymbolType whiteSpace;
+        private readonly TSymbolType arrayBegin;
+        private readonly TSymbolType arrayEnd;
 
-        protected ClrTypeResolver(TSymbolType identifier, TSymbolType keyword, TSymbolType dot, TSymbolType whiteSpace)
+        /// <summary>
+        /// Gets remaining symbols that need to be parsed
+        /// </summary>
+        protected Queue<TSymbol> Symbols { get; private set; }
+
+        /// <summary>
+        /// Initializes new instance of ClrTypeResolver class. 
+        /// Provided parameters are used to recognized specific symbols in particular language
+        /// </summary>
+        /// <param name="identifier">Symbol type for identifier</param>
+        /// <param name="keyword">Symbol type for keyword</param>
+        /// <param name="dot">Symbol type for dot ('.')</param>
+        /// <param name="whiteSpace">Symbol type for whitespace</param>
+        /// <param name="arrayBegin">Type of symbol that begins array</param>
+        /// <param name="arrayEnd">Type of symbol that ends array</param>
+        protected ClrTypeResolver(TSymbolType identifier, TSymbolType keyword, TSymbolType dot, TSymbolType whiteSpace, TSymbolType arrayBegin, TSymbolType arrayEnd)
         {
             this.identifier = identifier;
             this.keyword = keyword;
             this.dot = dot;
-            this.WhiteSpace = whiteSpace;
+            this.whiteSpace = whiteSpace;
+            this.arrayBegin = arrayBegin;
+            this.arrayEnd = arrayEnd;
         }
 
         /// <summary>
@@ -38,43 +56,96 @@
         /// <returns>CLR type</returns>
         public Type Resolve(List<TSymbol> symbols)
         {
-            this.symbols = new Queue<TSymbol>(symbols);
+            this.Symbols = new Queue<TSymbol>(symbols);
 
             var type = this.ResolveType();
 
             return type.Resolve(ResolveTypeByName);
         }
 
-        protected abstract TypeNameParserStep ResolveType();
+        /// <summary>
+        /// Dequeues symbols until first symbol of first generic argument
+        /// </summary>
+        /// <returns>Returns true if move was successful</returns>
+        protected abstract bool MoveToGenericArguments();
 
         /// <summary>
-        /// Pops full identifier from symbols queue. 
-        /// This method recognizes keywords (like int) and multipart identifiers (like System.Object)
+        /// Dequeues symbols representing separator between generic arguments
         /// </summary>
-        /// <returns>Popped identifier</returns>
-        protected string PopFullIdentifier()
+        protected abstract void MoveToNextGenericArgument();
+
+        /// <summary>
+        /// Dequeues symbols representing end of generic arguments
+        /// </summary>
+        /// <returns>Returns true if move was successful</returns>
+        protected abstract bool MoveOutOfGenericArguments();
+
+        /// <summary>
+        /// Gets CLR from name (keyword) used by specific language 
+        /// </summary>
+        /// <param name="typeName">Type name to resolve</param>
+        /// <returns>CLR type</returns>
+        protected abstract Type ResolvePrimitiveType(string typeName);
+
+        private TypeNameParserStep ResolveType()
+        {
+            var identifier = this.PopFullIdentifier();
+
+            var step = new TypeNameParserStep(identifier);
+
+            if (!this.Symbols.Any())
+            {
+                return step;
+            }
+
+            step.GenericArguments.AddRange(this.ReadGenericArguments());
+
+            step.ArrayExpression = this.ReadArrayExpression();
+
+            return step;
+        }
+
+        private List<TypeNameParserStep> ReadGenericArguments()
+        {
+            var genericArgs = new List<TypeNameParserStep>();
+
+            if (this.MoveToGenericArguments())
+            {
+                while (!MoveOutOfGenericArguments())
+                {
+                    genericArgs.Add(this.ResolveType());
+
+                    this.MoveToNextGenericArgument();
+                }
+            }
+
+            return genericArgs;
+        }
+
+        private string PopFullIdentifier()
         {
             var builder = new StringBuilder();
-            while (this.symbols.Any())
+
+            while (this.Symbols.Any())
             {
-                var peekType = this.symbols.Peek().Type;
+                var peekType = this.Symbols.Peek().Type;
 
                 if (peekType.Equals(this.keyword))
                 {
-                    return this.symbols.Dequeue().Content;
+                    return this.Symbols.Dequeue().Content;
                 }
                 else if (peekType.Equals(this.identifier))
                 {
-                    builder.Append(this.symbols.Dequeue().Content);
+                    builder.Append(this.Symbols.Dequeue().Content);
                 }
                 else if (peekType.Equals(this.dot))
                 {
-                    this.symbols.Dequeue();
+                    this.Symbols.Dequeue();
                     builder.Append(".");
                 }
-                else if (peekType.Equals(this.WhiteSpace))
+                else if (peekType.Equals(this.whiteSpace))
                 {
-                    this.symbols.Dequeue();
+                    this.Symbols.Dequeue();
                 }
                 else
                 {
@@ -85,22 +156,38 @@
             return builder.ToString();
         }
 
+        private string ReadArrayExpression()
+        {
+            var arrayExpr = "";
+
+            while (this.Symbols.Any() && this.Symbols.Peek().Type.Equals(this.arrayBegin))
+            {
+                this.Symbols.Dequeue();
+
+                arrayExpr += "[";
+
+                while (!(this.Symbols.Peek().Type.Equals(this.arrayEnd)))
+                {
+                    arrayExpr += this.Symbols.Dequeue().Content;
+                }
+
+                arrayExpr += "]";
+                this.Symbols.Dequeue();
+            }
+
+            return arrayExpr;
+        }
+
         private Type ResolveTypeByName(string typeName)
         {
             return Type.GetType(typeName)
                    ?? ResolvePrimitiveType(typeName)
                    ?? AppDomainAssemblyTypeScanner.Types.FirstOrDefault(t => t.FullName == typeName)
-                   ?? AppDomainAssemblyTypeScanner.Types.FirstOrDefault(t => t.Name == typeName)
-                ;
+                   ?? AppDomainAssemblyTypeScanner.Types.FirstOrDefault(t => t.Name == typeName);
         }
 
-        protected abstract Type ResolvePrimitiveType(string typeName);
-
-        /// <summary>
-        /// Represents partially constructed type name. After construction it is possible to add generic arguments or array expression
-        /// </summary>
         [DebuggerDisplay("{GenericTypeName}`{GenericArguments.Count}")]
-        protected class TypeNameParserStep
+        private class TypeNameParserStep
         {
             public string GenericTypeName { get; set; }
             public List<TypeNameParserStep> GenericArguments { get; private set; }
@@ -113,21 +200,26 @@
                 this.ArrayExpression = string.Empty;
             }
 
+            /// <summary>
+            /// Resolves CLR type that is represented by this instance
+            /// </summary>
+            /// <param name="resolveType">Function that allows resolving any simple (like int or MyNamespace.SuperClass) type name to CLR type</param>
+            /// <returns>Resolved CLR type</returns>
             public Type Resolve(Func<string, Type> resolveType)
             {
-                var effectiveArguments = this.GenericArguments.Where(x => x.GenericTypeName != string.Empty).ToArray();
-
-                var genericType = resolveType(string.Format("{0}`{1}", this.GenericTypeName, effectiveArguments.Length));
+                var effectiveArguments = this.GenericArguments.Where(x => x.GenericTypeName != string.Empty).ToArray();                
 
                 Type resultType = null;
 
                 if (effectiveArguments.Length == 0)
                 {
                     resultType = resolveType(this.GenericTypeName);
-                }              
+                }
                 else
                 {
                     var genericArguments = effectiveArguments.Select(x => x.Resolve(resolveType)).ToArray();
+
+                    var genericType = resolveType(string.Format("{0}`{1}", this.GenericTypeName, effectiveArguments.Length));
 
                     resultType = genericType.MakeGenericType(genericArguments);
                 }

@@ -11,49 +11,58 @@ namespace Nancy.ViewEngines.Razor.CSharp
     internal class CSharpClrTypeResolver : ClrTypeResolver<CSharpSymbolType, CSharpSymbol>
     {
         public CSharpClrTypeResolver()
-            : base(CSharpSymbolType.Identifier, CSharpSymbolType.Keyword, CSharpSymbolType.Dot, CSharpSymbolType.WhiteSpace)
+            : base(CSharpSymbolType.Identifier, CSharpSymbolType.Keyword, CSharpSymbolType.Dot, CSharpSymbolType.WhiteSpace, CSharpSymbolType.LeftBracket, CSharpSymbolType.RightBracket)
         {
         }
 
-        protected override TypeNameParserStep ResolveType()
+        /// <summary>
+        /// Dequeues symbols '>' representing end of generic arguments
+        /// </summary>
+        /// <returns>Returns true if move was successful</returns>
+        protected override bool MoveOutOfGenericArguments()
         {
-            var identifier = this.PopFullIdentifier();
-
-            var step = new TypeNameParserStep(identifier);
-
-            if (!this.symbols.Any()) return step;
-
-            if (this.symbols.Peek().Type == CSharpSymbolType.LessThan)
+            if (this.Symbols.Peek().Type == CSharpSymbolType.GreaterThan)
             {
-                this.symbols.Dequeue();
+                this.Symbols.Dequeue();
 
-                while (this.symbols.Peek().Type != CSharpSymbolType.GreaterThan)
-                {
-                    step.GenericArguments.Add(this.ResolveType());
-
-                    while (this.symbols.Peek().Type.Equals(this.WhiteSpace) || this.symbols.Peek().Type == CSharpSymbolType.Comma)
-                    {
-                        this.symbols.Dequeue();
-                    }
-                }
-
-                this.symbols.Dequeue();
+                return true;
             }
 
-            while (this.symbols.Any() && this.symbols.Peek().Type == CSharpSymbolType.LeftBracket)
-            {
-                while (this.symbols.Peek().Type != CSharpSymbolType.RightBracket)
-                {
-                    step.ArrayExpression += this.symbols.Dequeue().Content;
-                }
-
-                step.ArrayExpression += "]";
-                this.symbols.Dequeue();
-            }
-
-            return step;
+            return false;
         }
 
+        /// <summary>
+        /// Dequeues symbol ',' and whitespace representing separator between generic arguments
+        /// </summary>
+        protected override void MoveToNextGenericArgument()
+        {
+            while (this.Symbols.Peek().Type == CSharpSymbolType.WhiteSpace || this.Symbols.Peek().Type == CSharpSymbolType.Comma)
+            {
+                this.Symbols.Dequeue();
+            }
+        }
+
+        /// <summary>
+        /// equeues symbol '&lt;' representing begin of generic arguments
+        /// </summary>
+        /// <returns>Returns true if move was successful</returns>
+        protected override bool MoveToGenericArguments()
+        {
+            if (this.Symbols.Peek().Type != CSharpSymbolType.LessThan)
+            {
+                return false;
+            }
+
+            this.Symbols.Dequeue();
+
+            return true;
+        }
+
+        /// <summary>
+        /// Gets CLR from name (keyword) used by C#
+        /// </summary>
+        /// <param name="typeName">Type name to resolve</param>
+        /// <returns>CLR type</returns>
         protected override Type ResolvePrimitiveType(string typeName)
         {
             var primitives = new Dictionary<string, Type>
