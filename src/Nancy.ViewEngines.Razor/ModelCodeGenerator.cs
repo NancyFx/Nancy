@@ -5,6 +5,9 @@ namespace Nancy.ViewEngines.Razor
     using System.Web.Razor.Generator;
     using System.Web.Razor.Parser.SyntaxTree;
 
+    /// <summary>
+    /// Adds base type with model type as generic argument for Razor view class
+    /// </summary>
     public class ModelCodeGenerator : SetBaseTypeCodeGenerator
     {
         private readonly Type modelType;
@@ -17,7 +20,7 @@ namespace Nancy.ViewEngines.Razor
 
         protected override string ResolveType(CodeGeneratorContext context, string baseType)
         {
-            return "String.Object";
+            return typeof(object).FullName;
         }
 
         public override void GenerateCode(Span target, CodeGeneratorContext context)
@@ -25,7 +28,6 @@ namespace Nancy.ViewEngines.Razor
             base.GenerateCode(target, context);
 
             context.GeneratedClass.UserData.Add("ModelType", this.modelType);
-
             context.GeneratedClass.BaseTypes.Clear();
             context.GeneratedClass.BaseTypes.Add(new CodeTypeReference(context.Host.DefaultBaseClass, new CodeTypeReference(this.modelType)));
         }

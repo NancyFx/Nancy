@@ -31,6 +31,11 @@
             this.WhiteSpace = whiteSpace;
         }
 
+        /// <summary>
+        /// Parses given list of symbols in order to get CLR type
+        /// </summary>
+        /// <param name="symbols">List of symbols</param>
+        /// <returns>CLR type</returns>
         public Type Resolve(List<TSymbol> symbols)
         {
             this.symbols = new Queue<TSymbol>(symbols);
@@ -42,9 +47,14 @@
 
         protected abstract TypeNameParserStep ResolveType();
 
+        /// <summary>
+        /// Pops full identifier from symbols queue. 
+        /// This method recognizes keywords (like int) and multipart identifiers (like System.Object)
+        /// </summary>
+        /// <returns>Popped identifier</returns>
         protected string PopFullIdentifier()
         {
-            var sb = new StringBuilder();
+            var builder = new StringBuilder();
             while (this.symbols.Any())
             {
                 var peekType = this.symbols.Peek().Type;
@@ -55,12 +65,12 @@
                 }
                 else if (peekType.Equals(this.identifier))
                 {
-                    sb.Append(this.symbols.Dequeue().Content);
+                    builder.Append(this.symbols.Dequeue().Content);
                 }
                 else if (peekType.Equals(this.dot))
                 {
                     this.symbols.Dequeue();
-                    sb.Append(".");
+                    builder.Append(".");
                 }
                 else if (peekType.Equals(this.WhiteSpace))
                 {
@@ -68,11 +78,11 @@
                 }
                 else
                 {
-                    return sb.ToString();
+                    return builder.ToString();
                 }
             }
 
-            return sb.ToString();
+            return builder.ToString();
         }
 
         private Type ResolveTypeByName(string typeName)
@@ -86,6 +96,9 @@
 
         protected abstract Type ResolvePrimitiveType(string typeName);
 
+        /// <summary>
+        /// Represents partially constructed type name. After construction it is possible to add generic arguments or array expression
+        /// </summary>
         [DebuggerDisplay("{GenericTypeName}`{GenericArguments.Count}")]
         protected class TypeNameParserStep
         {
@@ -97,14 +110,14 @@
             {
                 this.GenericTypeName = name;
                 this.GenericArguments = new List<TypeNameParserStep>();
-                this.ArrayExpression = "";
+                this.ArrayExpression = string.Empty;
             }
 
             public Type Resolve(Func<string, Type> resolveType)
             {
                 var effectiveArguments = this.GenericArguments.Where(x => x.GenericTypeName != string.Empty).ToArray();
 
-                var genericType = resolveType(this.GenericTypeName + "`" + effectiveArguments.Length);
+                var genericType = resolveType(string.Format("{0}`{1}", this.GenericTypeName, effectiveArguments.Length));
 
                 Type resultType = null;
 

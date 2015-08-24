@@ -5,12 +5,14 @@ namespace Nancy.ViewEngines.Razor.VisualBasic
     using System.Linq;
     using System.Web.Razor.Tokenizer.Symbols;
 
+    /// <summary>
+    /// Resolves VB.NET type name to CLR type
+    /// </summary>
     internal class VisualBasicClrTypeResolver : ClrTypeResolver<VBSymbolType, VBSymbol>
     {
         public VisualBasicClrTypeResolver()
             : base(VBSymbolType.Identifier, VBSymbolType.Keyword, VBSymbolType.Dot, VBSymbolType.WhiteSpace)
         {
-
         }
 
         protected override TypeNameParserStep ResolveType()

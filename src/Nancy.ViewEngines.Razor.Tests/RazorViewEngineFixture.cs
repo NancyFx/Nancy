@@ -690,7 +690,16 @@
         [InlineData(typeof(Tuple<int, int[][, ,][], string>))]
         public void Should_be_able_to_render_csharp_view_with_generic_model(Type expectedType)
         {
-            this.TestGenericView(expectedType, new CSharpCodeProvider(), "model");
+            // Given
+            var location = this.CreateViewLocationWithModel(expectedType, new CSharpCodeProvider(), "model");
+
+            // When
+            var stream = new MemoryStream();
+            var response = this.engine.RenderView(location, null, this.renderContext);
+            response.Contents.Invoke(stream);
+
+            // Then
+            stream.ShouldEqual(expectedType.FullName, true);
         }
 
 #if !__MonoCS__
@@ -726,64 +735,73 @@
         [InlineData(typeof(Tuple<int, int[][, ,][], string>))]
         public void Should_be_able_to_render_vb_view_with_generic_model(Type expectedType)
         {
-            this.TestGenericView(expectedType, new VBCodeProvider(), "ModelType");
-        }
-#endif
-
-        private void TestGenericView(Type expectedType, CodeDomProvider provider, string modelDirective)
-        {
-            var codeTypeRef = new CodeTypeReference(expectedType);
-            var modelType = provider.GetTypeOutput(codeTypeRef);
-
-            var modelTypeExpression = new CodeFieldReferenceExpression
-                (
-                new CodeArrayIndexerExpression
-                    (
-                    new CodeMethodInvokeExpression
-                        (
-                        new CodeFieldReferenceExpression
-                            (
-                            new CodeMethodInvokeExpression
-                                (
-                                new CodeThisReferenceExpression(),
-                                "GetType"
-                                ),
-                            "BaseType"
-                            ),
-                        "GetGenericArguments"
-                        ),
-                    new CodePrimitiveExpression(0)
-                    ),
-                "FullName"
-                );
-
-            string modelTypeCode;
-            using (var sw = new StringWriter())
-            {
-                provider.GenerateCodeFromExpression(modelTypeExpression, sw, new CodeGeneratorOptions());
-                modelTypeCode = sw.ToString();
-            }
-
-            //modelTypeCode = "Me.GetType.FullName";
-
-            var view = "@" + modelDirective + " " + modelType + "\n\n@" + modelTypeCode;
-
-            //this.GetType().BaseType.GetGenericArguments()[0].FullName
-            var location = new ViewLocationResult(
-                string.Empty,
-                string.Empty,
-                provider.FileExtension + "html",
-                () => new StringReader(view)
-                );
-
-            var stream = new MemoryStream();
-
+            // Given
+            var location = this.CreateViewLocationWithModel(expectedType, new VBCodeProvider(), "ModelType");
+            
             // When
+            var stream = new MemoryStream();
             var response = this.engine.RenderView(location, null, this.renderContext);
             response.Contents.Invoke(stream);
 
             // Then
             stream.ShouldEqual(expectedType.FullName, true);
+        }
+#endif
+
+        private ViewLocationResult CreateViewLocationWithModel(Type expectedType, CodeDomProvider provider, string modelDirective)
+        {
+            var codeTypeRef = new CodeTypeReference(expectedType);
+            var modelType = provider.GetTypeOutput(codeTypeRef);
+
+            var modelTypeCode = BuildCodeExtractingModelType(provider);
+
+            var view = string.Format("@{0} {1}\n\n@{2}", modelDirective, modelType, modelTypeCode);
+            
+            return new ViewLocationResult(
+                string.Empty,
+                string.Empty,
+                string.Concat(provider.FileExtension, "html"),
+                () => new StringReader(view)
+                );           
+        }
+
+        private static string BuildCodeExtractingModelType(CodeDomProvider provider)
+        {
+            var getType = new CodeMethodInvokeExpression
+                (
+                    new CodeThisReferenceExpression(),
+                    "GetType"
+                );
+            
+            var baseType = new CodeFieldReferenceExpression
+                (
+                    getType,
+                    "BaseType"
+                );
+            
+            var getFirstGenericArgument = new CodeArrayIndexerExpression
+                (
+                    new CodeMethodInvokeExpression
+                        (
+                        baseType,
+                        "GetGenericArguments"
+                        ),
+                    new CodePrimitiveExpression(0)
+                );
+            
+            var fullName = new CodeFieldReferenceExpression
+                (
+                    getFirstGenericArgument,
+                    "FullName"
+                );
+
+            string modelTypeCode;
+            using (var writer = new StringWriter())
+            {
+                provider.GenerateCodeFromExpression(fullName, writer, new CodeGeneratorOptions());
+                modelTypeCode = writer.ToString();
+            }
+            return modelTypeCode;
         }
 
         private static string ReadAll(Stream stream)

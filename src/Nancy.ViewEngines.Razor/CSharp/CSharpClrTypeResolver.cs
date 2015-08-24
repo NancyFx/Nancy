@@ -5,6 +5,9 @@ namespace Nancy.ViewEngines.Razor.CSharp
     using System.Linq;
     using System.Web.Razor.Tokenizer.Symbols;
 
+    /// <summary>
+    /// Resolves C# type name to CLR type
+    /// </summary>
     internal class CSharpClrTypeResolver : ClrTypeResolver<CSharpSymbolType, CSharpSymbol>
     {
         public CSharpClrTypeResolver()

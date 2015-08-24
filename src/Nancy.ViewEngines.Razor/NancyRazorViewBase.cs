@@ -125,6 +125,7 @@
         public virtual void Initialize(RazorViewEngine engine, IRenderContext renderContext, object model)
         {
             var castedModel = default(TModel);
+
             if (model != null)
             {
                 castedModel = (TModel)model;
