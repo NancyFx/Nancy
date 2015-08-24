@@ -104,8 +104,9 @@
         /// <param name="module">Module object</param>
         /// <param name="validityPeriod">Optional validity period before it times out</param>
         /// <exception cref="CsrfValidationException">If validation fails</exception>
-        public static void ValidateCsrfToken(this INancyModule module, TimeSpan? validityPeriod = null)
+        public static void ValidateCsrfToken(this INancyModule module, TimeSpan? validityPeriod = null, Func<INancyModule, CsrfToken> getSentToken = null)
         {
+            getSentToken = getSentToken ?? new Func<INancyModule, CsrfToken>(GetFormToken);
             var request = module.Request;
 
             if (request == null)
@@ -114,9 +115,9 @@
             }
 
             var cookieToken = GetCookieToken(request);
-            var formToken = GetFormToken(request);
+            var sentToken = getSentToken(request);
 
-            var result = CsrfApplicationStartup.TokenValidator.Validate(cookieToken, formToken, validityPeriod);
+            var result = CsrfApplicationStartup.TokenValidator.Validate(cookieToken, sentToken, validityPeriod);
 
             if (result != CsrfTokenValidationResult.Ok)
             {
