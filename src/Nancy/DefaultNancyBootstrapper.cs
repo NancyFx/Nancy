@@ -38,8 +38,8 @@ namespace Nancy
 
         /// <summary>
         /// Gets the assemblies to ignore when autoregistering the application container
-        /// Return true from the delegate to ignore that particular assembly, returning true
-        /// does not mean the assembly *will* be included, a false from another delegate will
+        /// Return true from the delegate to ignore that particular assembly, returning false
+        /// does not mean the assembly *will* be included, a true from another delegate will
         /// take precedence.
         /// </summary>
         protected virtual IEnumerable<Func<Assembly, bool>> AutoRegisterIgnoredAssemblies
