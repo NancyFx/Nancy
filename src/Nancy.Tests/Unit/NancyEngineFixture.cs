@@ -27,7 +27,6 @@ namespace Nancy.Tests.Unit
         private readonly IStatusCodeHandler statusCodeHandler;
         private readonly IRouteInvoker routeInvoker;
         private readonly IRequestDispatcher requestDispatcher;
-        private readonly DiagnosticsConfiguration diagnosticsConfiguration;
 
         public NancyEngineFixture()
         {
@@ -37,7 +36,6 @@ namespace Nancy.Tests.Unit
             this.context = new NancyContext();
             this.statusCodeHandler = A.Fake<IStatusCodeHandler>();
             this.requestDispatcher = A.Fake<IRequestDispatcher>();
-            this.diagnosticsConfiguration = new DiagnosticsConfiguration();
 
             A.CallTo(() => this.requestDispatcher.Dispatch(A<NancyContext>._, A<CancellationToken>._))
                 .Returns(CreateResponseTask(new Response()));
@@ -60,7 +58,7 @@ namespace Nancy.Tests.Unit
             });
 
             this.engine =
-                new NancyEngine(this.requestDispatcher, this.contextFactory, new[] { this.statusCodeHandler }, A.Fake<IRequestTracing>(), this.diagnosticsConfiguration, new DisabledStaticContentProvider())
+                new NancyEngine(this.requestDispatcher, this.contextFactory, new[] { this.statusCodeHandler }, A.Fake<IRequestTracing>(), new DisabledStaticContentProvider())
                 {
                     RequestPipelinesFactory = ctx => applicationPipelines
                 };
@@ -71,7 +69,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new NancyEngine(null, A.Fake<INancyContextFactory>(), new[] { this.statusCodeHandler }, A.Fake<IRequestTracing>(), this.diagnosticsConfiguration, new DisabledStaticContentProvider()));
+                Record.Exception(() => new NancyEngine(null, A.Fake<INancyContextFactory>(), new[] { this.statusCodeHandler }, A.Fake<IRequestTracing>(), new DisabledStaticContentProvider()));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -82,7 +80,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new NancyEngine(this.requestDispatcher, null, new[] { this.statusCodeHandler }, A.Fake<IRequestTracing>(), this.diagnosticsConfiguration, new DisabledStaticContentProvider()));
+                Record.Exception(() => new NancyEngine(this.requestDispatcher, null, new[] { this.statusCodeHandler }, A.Fake<IRequestTracing>(), new DisabledStaticContentProvider()));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -93,7 +91,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new NancyEngine(this.requestDispatcher, A.Fake<INancyContextFactory>(), null, A.Fake<IRequestTracing>(), this.diagnosticsConfiguration, new DisabledStaticContentProvider()));
+                Record.Exception(() => new NancyEngine(this.requestDispatcher, A.Fake<INancyContextFactory>(), null, A.Fake<IRequestTracing>(), new DisabledStaticContentProvider()));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -714,7 +712,6 @@ namespace Nancy.Tests.Unit
                                     this.contextFactory,
                                     new[] { this.statusCodeHandler },
                                     A.Fake<IRequestTracing>(),
-                                    this.diagnosticsConfiguration,
                                     staticContent);
             var request = new Request("GET", "/", "http");
 
