@@ -8,12 +8,13 @@
 
     using Bootstrapper;
 
-    using Nancy.Cookies;
-    using Nancy.Diagnostics;
-    using Nancy.ErrorHandling;
-    using Nancy.Routing;
+    using Cookies;
+    using Diagnostics;
+    using ErrorHandling;
+    using Routing;
 
-    using Nancy.Helpers;
+    using Helpers;
+    using Responses.Negotiation;
 
     /// <summary>
     /// Default engine for handling Nancy <see cref="Request"/>s.
@@ -28,6 +29,7 @@
         private readonly IRequestTracing requestTracing;
         private readonly IEnumerable<IStatusCodeHandler> statusCodeHandlers;
         private readonly IStaticContentProvider staticContentProvider;
+        private readonly IResponseNegotiator negotiator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyEngine"/> class.
@@ -37,7 +39,13 @@
         /// <param name="statusCodeHandlers">Error handlers</param>
         /// <param name="requestTracing">The request tracing instance.</param>
         /// <param name="staticContentProvider">The provider to use for serving static content</param>
-        public NancyEngine(IRequestDispatcher dispatcher, INancyContextFactory contextFactory, IEnumerable<IStatusCodeHandler> statusCodeHandlers, IRequestTracing requestTracing, IStaticContentProvider staticContentProvider)
+        /// <param name="negotiator">The response negotiator.</param>
+        public NancyEngine(IRequestDispatcher dispatcher,
+            INancyContextFactory contextFactory,
+            IEnumerable<IStatusCodeHandler> statusCodeHandlers,
+            IRequestTracing requestTracing,
+            IStaticContentProvider staticContentProvider,
+            IResponseNegotiator negotiator)
         {
             if (dispatcher == null)
             {
@@ -64,11 +72,17 @@
                 throw new ArgumentNullException("staticContentProvider");
             }
 
+            if (negotiator == null)
+            {
+                throw new ArgumentNullException("negotiator");
+            }
+
             this.dispatcher = dispatcher;
             this.contextFactory = contextFactory;
             this.statusCodeHandlers = statusCodeHandlers;
             this.requestTracing = requestTracing;
             this.staticContentProvider = staticContentProvider;
+            this.negotiator = negotiator;
         }
 
         /// <summary>
@@ -183,8 +197,12 @@
 
         private void UpdateTraceCookie(NancyContext ctx, Guid sessionGuid)
         {
-            var cookie = new NancyCookie("__NCTRACE", sessionGuid.ToString(), true) { Expires = DateTime.Now.AddMinutes(30) };
-            ctx.Response.AddCookie(cookie);
+            var cookie = new NancyCookie("__NCTRACE", sessionGuid.ToString(), true)
+            {
+                Expires = DateTime.Now.AddMinutes(30)
+            };
+
+            ctx.Response = ctx.Response.WithCookie(cookie);
         }
 
         private void CheckStatusCodeHandler(NancyContext context)
@@ -228,13 +246,13 @@
                         {
                             context.Response = completedTask.Result;
 
-                            var postHookTask = InvokePostRequestHook(context, cancellationToken, pipelines.AfterRequest);
+                            var postHookTask = this.InvokePostRequestHook(context, cancellationToken, pipelines.AfterRequest);
 
-                            postHookTask.WhenCompleted(PreExecute(context, pipelines, tcs), HandleFaultedTask(context, pipelines, tcs));
+                            postHookTask.WhenCompleted(this.PreExecute(context, pipelines, tcs), this.HandleFaultedTask(context, pipelines, tcs));
                         },
-                        HandleFaultedTask(context, pipelines, tcs));
+                        this.HandleFaultedTask(context, pipelines, tcs));
                 },
-                HandleFaultedTask(context, pipelines, tcs));
+                this.HandleFaultedTask(context, pipelines, tcs));
 
             return tcs.Task;
         }
@@ -247,19 +265,19 @@
 
                 preExecuteTask.WhenCompleted(
                     completedPostHookTask => tcs.SetResult(context),
-                    HandleFaultedTask(context, pipelines, tcs));
+                    this.HandleFaultedTask(context, pipelines, tcs));
             };
         }
 
-        private static Action<Task> HandleFaultedTask(NancyContext context, IPipelines pipelines, TaskCompletionSource<NancyContext> tcs)
+        private Action<Task> HandleFaultedTask(NancyContext context, IPipelines pipelines, TaskCompletionSource<NancyContext> tcs)
         {
             return t =>
                 {
                     try
                     {
-                        var flattenedException = FlattenException(t.Exception);
+                        var flattenedException = t.Exception.FlattenInnerExceptions();
 
-                        InvokeOnErrorHook(context, pipelines.OnError, flattenedException);
+                        this.InvokeOnErrorHook(context, pipelines.OnError, flattenedException);
 
                         tcs.SetResult(context);
                     }
@@ -285,7 +303,7 @@
             return pipeline == null ? TaskHelpers.GetCompletedTask() : pipeline.Invoke(context, cancellationToken);
         }
 
-        private static void InvokeOnErrorHook(NancyContext context, ErrorPipeline pipeline, Exception ex)
+        private void InvokeOnErrorHook(NancyContext context, ErrorPipeline pipeline, Exception ex)
         {
             try
             {
@@ -294,14 +312,14 @@
                     throw new RequestExecutionException(ex);
                 }
 
-                var onErrorResponse = pipeline.Invoke(context, ex);
+                var onErrorResult = pipeline.Invoke(context, ex);
 
-                if (onErrorResponse == null)
+                if (onErrorResult == null)
                 {
                     throw new RequestExecutionException(ex);
                 }
 
-                context.Response = onErrorResponse;
+                context.Response = this.negotiator.NegotiateResponse(onErrorResult, context);
             }
             catch (Exception e)
             {
@@ -309,32 +327,6 @@
                 context.Items[ERROR_KEY] = e.ToString();
                 context.Items[ERROR_EXCEPTION] = e;
             }
-        }
-
-        internal static Exception FlattenException(Exception exception)
-        {
-            if (exception is AggregateException)
-            {
-                var aggregateException = exception as AggregateException;
-
-                var flattenedAggregateException = aggregateException.Flatten();
-
-                //If we have more than one exception in the AggregateException
-                //we have to send all exceptions back in order not to swallow any exceptions.
-                if (flattenedAggregateException.InnerExceptions.Count > 1)
-                {
-                    return flattenedAggregateException;
-                }
-
-                return flattenedAggregateException.InnerException;
-            }
-
-            if (exception != null && exception.InnerException != null)
-            {
-                return FlattenException(exception.InnerException);
-            }
-
-            return exception;
         }
     }
 }

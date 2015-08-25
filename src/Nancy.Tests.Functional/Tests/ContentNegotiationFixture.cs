@@ -10,7 +10,7 @@ namespace Nancy.Tests.Functional.Tests
     using Nancy.IO;
     using Nancy.Responses.Negotiation;
     using Nancy.Testing;
-
+    using Nancy.Tests.Functional.Modules;
     using Xunit;
     using Xunit.Extensions;
 
@@ -177,7 +177,7 @@ namespace Nancy.Tests.Functional.Tests
             var response = brower.Get("/customPhrase");
 
             // Then
-            Assert.Equal("The test is passing!", response.ReasonPhrase);  
+            Assert.Equal("The test is passing!", response.ReasonPhrase);
         }
 
         [Fact]
@@ -523,7 +523,7 @@ namespace Nancy.Tests.Functional.Tests
         public void Should_set_negotiated_cookies_to_response()
         {
             // Given
-            var negotiatedCookie = 
+            var negotiatedCookie =
                 new NancyCookie("test", "test");
 
             var browser = new Browser(with =>
@@ -671,6 +671,24 @@ namespace Nancy.Tests.Functional.Tests
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
             Assert.Equal("Not Found.", response.Message);
+        }
+
+        [Fact]
+        public void Can_negotiate_in_error_pipeline()
+        {
+            // Given
+            var browser = new Browser(with => with.Module<ThrowingModule>());
+
+            // When
+            var jsonResult = browser.Get("/", with => with.Accept("application/json"));
+            var xmlResult = browser.Get("/", with => with.Accept("application/xml"));
+
+            var jsonResponse = jsonResult.Body.DeserializeJson<ThrowingModule.Error>();
+            var xmlResponse = xmlResult.Body.DeserializeXml<ThrowingModule.Error>();
+
+            // Then
+            Assert.Equal("Oh noes!", jsonResponse.Message);
+            Assert.Equal("Oh noes!", xmlResponse.Message);
         }
 
         private static Func<dynamic, NancyModule, dynamic> CreateNegotiatedResponse(Action<Negotiator> action = null)

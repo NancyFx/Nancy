@@ -173,6 +173,7 @@
     <Compile Include="Diagnostics\DefaultDiagnostics.cs" />
     <Compile Include="Diagnostics\DiagnosticsViewRenderer.cs" />
     <Compile Include="Helpers\CacheHelpers.cs" />
+    <Compile Include="Helpers\ExceptionExtensions.cs" />
     <Compile Include="IncludeInNancyAssemblyScanningAttribute.cs" />
     <Compile Include="IStaticContentProvider.cs" />
     <Compile Include="Json\Converters\TupleConverter.cs" />

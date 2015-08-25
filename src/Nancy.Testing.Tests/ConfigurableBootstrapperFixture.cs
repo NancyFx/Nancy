@@ -196,7 +196,7 @@
 
             public Action<NancyContext> PostRequestHook { get; set; }
 
-            public Func<NancyContext, Exception, Response> OnErrorHook { get; set; }
+            public Func<NancyContext, Exception, dynamic> OnErrorHook { get; set; }
 
             public Func<NancyContext, IPipelines> RequestPipelinesFactory { get; set; }
 

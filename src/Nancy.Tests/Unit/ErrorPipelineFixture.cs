@@ -54,11 +54,11 @@
         {
             // Given
             var item1Called = false;
-            Func<NancyContext, Exception, Response> item1 = (ctx, ex) => { item1Called = true; return null; };
+            Func<NancyContext, Exception, dynamic> item1 = (ctx, ex) => { item1Called = true; return null; };
             var item2Called = false;
-            Func<NancyContext, Exception, Response> item2 = (ctx, ex) => { item2Called = true; return null; };
+            Func<NancyContext, Exception, dynamic> item2 = (ctx, ex) => { item2Called = true; return null; };
             var item3Called = false;
-            Func<NancyContext, Exception, Response> item3 = (ctx, ex) => { item3Called = true; return null; };
+            Func<NancyContext, Exception, dynamic> item3 = (ctx, ex) => { item3Called = true; return null; };
             pipeline.AddItemToEndOfPipeline(item1);
             pipeline.AddItemToEndOfPipeline(item2);
             pipeline.AddItemToEndOfPipeline(item3);
@@ -77,7 +77,7 @@
         {
             // Given
             var castPipeline = new ErrorPipeline();
-            
+
             // When
             castPipeline += (ctx, ex) => null;
 
@@ -90,13 +90,13 @@
         {
             // Given
             var item1Called = false;
-            Func<NancyContext, Exception, Response> item1 = (ctx, ex) => { item1Called = true; return null; };
+            Func<NancyContext, Exception, dynamic> item1 = (ctx, ex) => { item1Called = true; return null; };
             var item2Called = false;
-            Func<NancyContext, Exception, Response> item2 = (ctx, ex) => { item2Called = true; return null; };
+            Func<NancyContext, Exception, dynamic> item2 = (ctx, ex) => { item2Called = true; return null; };
             var item3Called = false;
-            Func<NancyContext, Exception, Response> item3 = (ctx, ex) => { item3Called = true; return null; };
+            Func<NancyContext, Exception, dynamic> item3 = (ctx, ex) => { item3Called = true; return null; };
             var item4Called = false;
-            Func<NancyContext, Exception, Response> item4 = (ctx, ex) => { item4Called = true; return null; };
+            Func<NancyContext, Exception, dynamic> item4 = (ctx, ex) => { item4Called = true; return null; };
             pipeline += item1;
             pipeline += item2;
             var subPipeline = new ErrorPipeline();
