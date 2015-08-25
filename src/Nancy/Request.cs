@@ -3,6 +3,7 @@ namespace Nancy
     using System;
     using System.Collections.Generic;
     using System.Collections.Specialized;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
@@ -15,6 +16,7 @@ namespace Nancy
     /// <summary>
     /// Encapsulates HTTP-request information to an Nancy application.
     /// </summary>
+    [DebuggerDisplay("{DebuggerDisplay}")]
     public class Request : IDisposable
     {
         private readonly List<HttpFile> files = new List<HttpFile>();
@@ -315,6 +317,14 @@ namespace Nancy
             }
 
             this.Method = providedOverride.Single().Item2;
+        }
+
+        private string DebuggerDisplay
+        {
+            get
+            {
+                return String.Format("{0} {1}", this.Method, this.Url);
+            }
         }
     }
 }
