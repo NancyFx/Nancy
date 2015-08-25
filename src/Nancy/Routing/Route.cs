@@ -8,7 +8,7 @@
     /// <summary>
     /// Stores information about a declared route in Nancy.
     /// </summary>
-    [DebuggerDisplay("{Description.DebuggerDisplay}")]
+    [DebuggerDisplay("{Description.DebuggerDisplay, nq}")]
     public class Route
     {
         /// <summary>

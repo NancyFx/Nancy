@@ -16,7 +16,7 @@ namespace Nancy
     /// <summary>
     /// Encapsulates HTTP-request information to an Nancy application.
     /// </summary>
-    [DebuggerDisplay("{DebuggerDisplay}")]
+    [DebuggerDisplay("{DebuggerDisplay, nq}")]
     public class Request : IDisposable
     {
         private readonly List<HttpFile> files = new List<HttpFile>();

@@ -11,7 +11,7 @@
     /// <summary>
     /// A dictionary that supports dynamic access.
     /// </summary>
-    [DebuggerDisplay("{DebuggerDisplay}")]
+    [DebuggerDisplay("{DebuggerDisplay, nq}")]
     public class DynamicDictionary : DynamicObject, IEquatable<DynamicDictionary>, IHideObjectMembers, IEnumerable<string>, IDictionary<string, object>
     {
         private readonly IDictionary<string, dynamic> dictionary =

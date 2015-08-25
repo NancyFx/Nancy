@@ -9,7 +9,7 @@ namespace Nancy.Routing
     /// <summary>
     /// Represents the various parts of a route lambda.
     /// </summary>
-    [DebuggerDisplay("{DebuggerDisplay}")]
+    [DebuggerDisplay("{DebuggerDisplay, nq}")]
     public sealed class RouteDescription
     {
         /// <summary>
