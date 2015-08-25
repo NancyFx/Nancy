@@ -2,11 +2,13 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
 
     /// <summary>
     /// Represents the result of a model validation.
     /// </summary>
+    [DebuggerDisplay("IsValid = {IsValid}")]
     public class ModelValidationResult
     {
         /// <summary>
