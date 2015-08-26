@@ -10,6 +10,8 @@ CONFIGURATION = 'Release'
 CONFIGURATIONMONO = 'MonoRelease'
 SHARED_ASSEMBLY_INFO = 'src/SharedAssemblyInfo.cs'
 SOLUTION_FILE = 'src/Nancy.sln'
+TOOLS = File.expand_path("tools")
+NUGET = File.expand_path("#{TOOLS}/nuget")
 
 Albacore.configure do |config|
     config.log_level = :verbose
@@ -17,13 +19,13 @@ Albacore.configure do |config|
 end
 
 desc "Compiles solution and runs unit tests"
-task :default => [:clean, :assembly_info, :compile, :test, :publish, :package]
+task :default => [:clean, :assembly_info,:nuget_retrieve, :compile, :test, :publish, :package]
 
 desc "Executes all Xunit tests"
 task :test => [:xunit]
 
 desc "Compiles solution and runs unit tests for Mono"
-task :mono => [:clean, :assembly_info, :compilemono, :testmono]
+task :mono => [:clean, :assembly_info, :nuget_retrieve, :compilemono, :testmono]
 
 desc "Executes all tests with Mono"
 task :testmono => [:xunitmono]
@@ -45,15 +47,36 @@ task :assembly_info do
   puts "Main project does not update assembly info"
 end
 
+# Fetch nuget dependencies for all packages
+task :nuget_retrieve do
+
+  # If we aren't running under windows, assume we're using mono
+  CMD_PREFIX = ""
+  if ENV['OS'] != 'Windows_NT'
+    CMD_PREFIX = "mono --runtime=v4.0"
+    begin
+      sh "mozroots --import --sync"
+    rescue
+    end
+    
+  end
+  #Uncomment if we need solution-level deps
+  #sh "#{CMD_PREFIX} #{NUGET}/nuget.exe i src/.nuget/packages.config -o src/packages"
+
+  FileList["**/packages.config"].each { |filepath|
+    sh "#{CMD_PREFIX} #{NUGET}/NuGet.exe i #{filepath} -o src/packages"
+  }
+end
+
 desc "Compile solution file"
-msbuild :compile => [:assembly_info] do |msb|
+msbuild :compile => [:assembly_info, :nuget_retrieve] do |msb|
     msb.properties = { :configuration => CONFIGURATION, "VisualStudioVersion" => get_vs_version() }
     msb.targets :Clean, :Build
     msb.solution = SOLUTION_FILE
 end
 
 desc "Compile solution file for Mono"
-xbuild :compilemono => [:assembly_info] do |xb|
+xbuild :compilemono => [:assembly_info, :nuget_retrieve] do |xb|
     xb.solution = SOLUTION_FILE
     xb.properties = { :configuration => CONFIGURATIONMONO, "TargetFrameworkProfile" => "", "TargetFrameworkVersion" => "v4.0" }
 end
@@ -75,7 +98,7 @@ xunit :xunit => [:compile] do |xunit|
 
     xunit.command = "tools/xunit/xunit.console.clr4.x86.exe"
     xunit.assemblies = tests
-end 
+end
 
 desc "Executes xUnit tests using Mono"
 xunit :xunitmono => [] do |xunit|
@@ -138,9 +161,9 @@ task :nuget_package => [:publish] do
     end
 
     # Generate the NuGet packages from the newly edited nuspec fileiles
-    nuspecs.each do |nuspec|        
+    nuspecs.each do |nuspec|
         nuget = NuGetPack.new
-        nuget.command = "tools/nuget/nuget.exe"
+        nuget.command = "#{NUGET}/nuget.exe"
         nuget.nuspec = "\"" + root + '/' + nuspec + "\""
         nuget.output = "#{OUTPUT}/nuget"
         nuget.parameters = "-Symbols", "-BasePath \"#{root}\""     #using base_folder throws as there are two options that begin with b in nuget 1.4
@@ -151,11 +174,11 @@ end
 desc "Pushes the nuget packages in the nuget folder up to the nuget gallary and symbolsource.org. Also publishes the packages into the feeds."
 task :nuget_publish, :api_key do |task, args|
     nupkgs = FileList["#{OUTPUT}/nuget/*#{$nancy_version}.nupkg"]
-    nupkgs.each do |nupkg| 
+    nupkgs.each do |nupkg|
         puts "Pushing #{nupkg}"
         nuget_push = NuGetPush.new
 	nuget_push.apikey = args.api_key if !args.empty?
-        nuget_push.command = "tools/nuget/nuget.exe"
+        nuget_push.command = "#{NUGET}/nuget.exe"
         nuget_push.package = "\"" + nupkg + "\""
         nuget_push.create_only = false
         nuget_push.execute
@@ -166,11 +189,11 @@ desc "Pushes the nuget packages in the nuget folder up to the specified feed"
 task :nuget_publish_alt, :api_key, :source do |task, args|
     raise "Missing source" if args.source.nil?
     nupkgs = FileList["#{OUTPUT}/nuget/*#{$nancy_version}.nupkg"]
-    nupkgs.each do |nupkg| 
+    nupkgs.each do |nupkg|
         puts "Pushing #{nupkg} to {#args.source}"
         nuget_push = NuGetPush.new
         nuget_push.apikey = args.api_key if !args.empty?
-        nuget_push.command = "tools/nuget/nuget.exe"
+        nuget_push.command = "#{NUGET}/nuget.exe"
         nuget_push.package = "\"" + nupkg + "\""
         nuget_push.source = args.source
         nuget_push.create_only = false
@@ -215,17 +238,17 @@ def update_xml(xml_path)
     #Open up the xml file
     xml_file = File.new(xml_path)
     xml = REXML::Document.new xml_file
- 
+
     #Allow caller to make the changes
     yield xml
- 
+
     xml_file.close
-         
+
     #Save the changes
     xml_file = File.open(xml_path, "w")
     formatter = REXML::Formatters::Default.new(5)
     formatter.write(xml, xml_file)
-    xml_file.close 
+    xml_file.close
 end
 
 def get_assembly_version(file)
