@@ -53,3 +53,4 @@ And remember; **A pull-request with tests is a pull-request that's likely to be 
 - Wrap `if`, `else` and `using` blocks (or blocks in general, really) in curly braces, even if it's a single line.
 - Put `using` statements inside namespace.
 - Pay attention to whitespace and extra blank lines
+- Absolutely **no** regions
