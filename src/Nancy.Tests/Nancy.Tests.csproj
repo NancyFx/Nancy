@@ -110,6 +110,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Fakes\FakeConventionWithDependencies.cs" />
     <Compile Include="Fakes\PersonWithAgeField.cs" />
     <Compile Include="Fakes\StructModel.cs" />
     <Compile Include="NoAppStartupsFixture.cs" />
