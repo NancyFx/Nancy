@@ -321,10 +321,7 @@ namespace Nancy
 
         private string DebuggerDisplay
         {
-            get
-            {
-                return String.Format("{0} {1}", this.Method, this.Url);
-            }
+            get { return string.Format("{0} {1} {2}", this.Method, this.Url, this.ProtocolVersion).Trim(); }
         }
     }
 }

@@ -352,21 +352,26 @@
         {
             get
             {
-                var sb = new StringBuilder();
-                sb.Append("{");
-                var maxItens = Math.Min(this.dictionary.Count, 5);
-                for (var i = 0; i < maxItens; i++)
+                var builder = new StringBuilder();
+                var maxItems = Math.Min(this.dictionary.Count, 5);
+
+                builder.Append("{");
+
+                for (var i = 0; i < maxItems; i++)
                 {
                     var item = this.dictionary.ElementAt(i);
-                    sb.AppendFormat(" {0} = {1}{2}", item.Key, item.Value, i < maxItens - 1 ? "," : String.Empty);
+                    
+                    builder.AppendFormat(" {0} = {1}{2}", item.Key, item.Value, i < maxItems - 1 ? "," : string.Empty);
                 }
-                if (maxItens < this.dictionary.Count)
-                {
-                    sb.Append("...");
-                }
-                sb.Append(" }");
 
-                return sb.ToString();
+                if (maxItems < this.dictionary.Count)
+                {
+                    builder.Append("...");
+                }
+
+                builder.Append(" }");
+
+                return builder.ToString();
             }
         }
     }

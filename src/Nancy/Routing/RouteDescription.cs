@@ -82,8 +82,16 @@ namespace Nancy.Routing
         {
             get
             {
-                var fields = new[] {this.Name, this.Method, this.Path}.Where(x => !String.IsNullOrEmpty(x)).ToArray();
-                return String.Join(" - ", fields);
+                var builder = new StringBuilder();
+
+                if (!string.IsNullOrEmpty(this.Name))
+                {
+                    builder.AppendFormat("{0} - ", this.Name);
+                }
+
+                builder.AppendFormat("{0} {1}", this.Method, this.Path);
+
+                return builder.ToString();
             }
         }
     }
