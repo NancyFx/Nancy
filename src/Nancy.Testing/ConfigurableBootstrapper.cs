@@ -45,7 +45,8 @@ namespace Nancy.Testing
 
         private bool allDiscoveredModules;
         private bool autoRegistrations = true;
-
+        private bool disableAutoApplicationStartupRegistration;
+        private bool disableAutoRequestStartupRegistration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConfigurableBootstrapper"/> class.
@@ -91,6 +92,12 @@ namespace Nancy.Testing
             LoadReferencesForAssemblyUnderTest(testAssemblyName);
         }
 
+        /// <summary>
+        /// Initialise the bootstrapper - can be used for adding pre/post hooks and
+        /// any other initialisation tasks that aren't specifically container setup
+        /// related
+        /// </summary>
+        /// <param name="container">Container instance for resolving types if required.</param>
         protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
         {
             base.ApplicationStartup(container, pipelines);
@@ -100,6 +107,14 @@ namespace Nancy.Testing
             }
         }
 
+        /// <summary>
+        /// Initialise the request - can be used for adding pre/post hooks and
+        /// any other per-request initialisation tasks that aren't specifically container setup
+        /// related
+        /// </summary>
+        /// <param name="container">Container</param>
+        /// <param name="pipelines">Current pipelines</param>
+        /// <param name="context">Current context</param>
         protected override void RequestStartup(TinyIoCContainer container, IPipelines pipelines, NancyContext context)
         {
             base.RequestStartup(container, pipelines, context);
@@ -187,7 +202,7 @@ namespace Nancy.Testing
 
         private static string GetSafePathExtension(string name)
         {
-            return Path.GetExtension(name) ?? String.Empty;
+            return Path.GetExtension(name) ?? string.Empty;
         }
 
         private IEnumerable<Type> Resolve<T>()
@@ -281,7 +296,39 @@ namespace Nancy.Testing
         /// </summary>
         protected override IEnumerable<Type> ApplicationStartupTasks
         {
-            get { return this.Resolve<IApplicationStartup>() ?? base.ApplicationStartupTasks; }
+            get
+            {
+                var tasks = base.ApplicationStartupTasks;
+
+                var user = (this.Resolve<IApplicationStartup>() ?? Enumerable.Empty<Type>()).ToArray();
+
+                if (this.disableAutoApplicationStartupRegistration || user.Any())
+                {
+                    tasks = tasks.Where(x => x.Assembly.GetName().Name.StartsWith("Nancy", StringComparison.OrdinalIgnoreCase));
+                }
+
+                return tasks.Union(user);
+            }
+        }
+
+        /// <summary>
+        /// Gets all request startup tasks
+        /// </summary>
+        protected override IEnumerable<Type> RequestStartupTasks
+        {
+            get
+            {
+                var tasks = base.RequestStartupTasks;
+
+                var user = (this.Resolve<IRequestStartup>() ?? Enumerable.Empty<Type>()).ToArray();
+
+                if (this.disableAutoRequestStartupRegistration || user.Any())
+                {
+                    tasks = tasks.Where(x => x.Assembly.GetName().Name.StartsWith("Nancy", StringComparison.OrdinalIgnoreCase));
+                }
+
+                return tasks.Union(user);
+            }
         }
 
         protected override DiagnosticsConfiguration DiagnosticsConfiguration
@@ -1791,18 +1838,114 @@ namespace Nancy.Testing
                 return this;
             }
 
+            /// <summary>
+            /// Configures the bootstrapper to use the provided instance of <see cref="IApplicationStartup"/>.
+            /// </summary>
+            /// <typeparam name="T">The type of the <see cref="IApplicationStartup"/> that the bootstrapper should use.</typeparam>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator ApplicationStartupTask<T>() where T : IApplicationStartup
+            {
+                this.bootstrapper.registeredTypes.Add(
+                    new TypeRegistration(typeof(IApplicationStartup), typeof(T)));
+
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to use the provided <see cref="IApplicationStartup"/> types.
+            /// </summary>
+            /// <param name="applicationStartupTypes">The <see cref="IApplicationStartup"/> types that should be used by the bootstrapper.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator ApplicationStartupTasks(params Type[] applicationStartupTypes)
+            {
+                foreach (var type in applicationStartupTypes)
+                {
+                    this.bootstrapper.registeredTypes.Add(
+                        new TypeRegistration(typeof(IApplicationStartup), type));
+                }
+
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to use the provided instance of <see cref="IRequestStartup"/>.
+            /// </summary>
+            /// <typeparam name="T">The type of the <see cref="IApplicationStartup"/> that the bootstrapper should use.</typeparam>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator RequestStartupTask<T>() where T : IRequestStartup
+            {
+                this.bootstrapper.registeredTypes.Add(
+                    new TypeRegistration(typeof(IRequestStartup), typeof(T)));
+
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to use the provided <see cref="IRequestStartup"/> types.
+            /// </summary>
+            /// <param name="requestStartupTypes">The <see cref="IRequestStartup"/> types that should be used by the bootstrapper.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator RequestStartupTasks(params Type[] requestStartupTypes)
+            {
+                foreach (var type in requestStartupTypes)
+                {
+                    this.bootstrapper.registeredTypes.Add(
+                        new TypeRegistration(typeof(IRequestStartup), type));
+                }
+
+                return this;
+            }
+
+            /// <summary>
+            /// Disables automatic registration of user-defined <see cref="IApplicationStartup"/> instances. It
+            /// will not prevent auto-registration of implementations bundled with Nancy.
+            /// </summary>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator DisableAutoApplicationStartupRegistration()
+            {
+                this.bootstrapper.disableAutoApplicationStartupRegistration = true;
+                return this;
+            }
+
+            /// <summary>
+            /// Disables automatic registration of user-defined <see cref="IRequestStartup"/> instances. It
+            /// will not prevent auto-registration of implementations bundled with Nancy.
+            /// </summary>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator DisableAutoRequestStartupRegistration()
+            {
+                this.bootstrapper.disableAutoRequestStartupRegistration = true;
+                return this;
+            }
+
+            /// <summary>
+            /// Adds a hook to the application startup pipeline. This can be called multiple times to add
+            /// more hooks.
+            /// </summary>
+            /// <param name="action">The pipeline hook.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator ApplicationStartup(Action<TinyIoCContainer, IPipelines> action)
             {
                 this.bootstrapper.applicationStartupActions.Add(action);
                 return this;
             }
 
+            /// <summary>
+            /// Adds a hook to the request startup pipeline. This can be called multiple times to add
+            /// more hooks.
+            /// </summary>
+            /// <param name="action">The pipeline hook.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator RequestStartup(Action<TinyIoCContainer, IPipelines, NancyContext> action)
             {
                 this.bootstrapper.requestStartupActions.Add(action);
                 return this;
             }
 
+            /// <summary>
+            /// Disables registrations performed by <see cref="IRegistrations"/> instances.
+            /// </summary>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator DisableAutoRegistrations()
             {
                 this.bootstrapper.autoRegistrations = false;
