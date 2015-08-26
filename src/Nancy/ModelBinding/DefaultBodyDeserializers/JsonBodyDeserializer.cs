@@ -2,7 +2,7 @@ namespace Nancy.ModelBinding.DefaultBodyDeserializers
 {
     using System.IO;
     using System.Reflection;
-    using Json;
+    using Nancy.Json;
 
     /// <summary>
     /// Deserializes request bodies in JSON format
@@ -31,7 +31,7 @@ namespace Nancy.ModelBinding.DefaultBodyDeserializers
         /// <returns>Model instance</returns>
         public object Deserialize(string contentType, Stream bodyStream, BindingContext context)
         {
-            var serializer = new JavaScriptSerializer(null, false, JsonSettings.MaxJsonLength, JsonSettings.MaxRecursions, JsonSettings.RetainCasing, JsonSettings.ISO8601DateFormat);
+            var serializer = this.GetSerializer();
             serializer.RegisterConverters(JsonSettings.Converters, JsonSettings.PrimitiveConverters);
 
             bodyStream.Position = 0;
@@ -46,6 +46,17 @@ namespace Nancy.ModelBinding.DefaultBodyDeserializers
             var deserializedObject = genericDeserializeMethod.Invoke(serializer, new[] { bodyText });
 
             return deserializedObject;
+        }
+
+        protected virtual JavaScriptSerializer GetSerializer()
+        {
+            var serializer = new JavaScriptSerializer(null,
+                                                      false,
+                                                      JsonSettings.MaxJsonLength,
+                                                      JsonSettings.MaxRecursions,
+                                                      JsonSettings.RetainCasing,
+                                                      JsonSettings.ISO8601DateFormat);
+            return serializer;
         }
     }
 }
