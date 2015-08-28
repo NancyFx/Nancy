@@ -219,7 +219,7 @@
             }
         }
 
-        private IEnumerable<string> GetPrefixes()
+        internal IEnumerable<string> GetPrefixes()
         {
             foreach (var baseUri in this.baseUriList)
             {

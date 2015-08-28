@@ -3,6 +3,7 @@ namespace Nancy.Hosting.Self.Tests
 {
     using System;
     using System.IO;
+    using System.Linq;
     using System.Net;
     using System.Threading;
     using System.Threading.Tasks;
@@ -232,6 +233,19 @@ namespace Nancy.Hosting.Self.Tests
         {
             var type = typeof(NancyHost);
             Assert.True(type.Attributes.ToString().Contains("Serializable"));
+        }
+
+        [Fact]
+        public void Should_include_default_port_in_uri_prefixes()
+        {
+            // Given
+            var host = new NancyHost(new Uri("http://localhost/"));
+
+            // When
+            var prefix = host.GetPrefixes().Single();
+
+            // Then
+            prefix.ShouldEqual("http://+:80/");
         }
 
         private class NancyHostWrapper : IDisposable

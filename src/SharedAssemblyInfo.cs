@@ -1,4 +1,3 @@
-using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 using System.Reflection;
 
@@ -11,3 +10,4 @@ using System.Reflection;
 [assembly: AssemblyInformationalVersion("1.2.0")]
 
 [assembly: InternalsVisibleTo("Nancy.Tests")]
+[assembly: InternalsVisibleTo("Nancy.Hosting.Self.Tests")]
