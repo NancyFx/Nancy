@@ -223,7 +223,7 @@
         {
             foreach (var baseUri in this.baseUriList)
             {
-                var prefix = baseUri.ToString();
+                var prefix = new UriBuilder(baseUri).ToString();
 
                 if (this.configuration.RewriteLocalhost && !baseUri.Host.Contains("."))
                 {
