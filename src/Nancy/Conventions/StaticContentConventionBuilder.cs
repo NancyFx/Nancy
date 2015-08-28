@@ -1,3 +1,5 @@
+using Nancy.Diagnostics;
+
 namespace Nancy.Conventions
 {
     using System;
@@ -52,7 +54,7 @@ namespace Nancy.Conventions
 
                 if (!pathWithoutFilename.StartsWith(requestedPath, StringComparison.OrdinalIgnoreCase))
                 {
-                    ctx.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] The requested resource '", path, "' does not match convention mapped to '", requestedPath, "'" )));
+                    (ctx.Trace.TraceLog ?? new NullLog()).WriteLog(x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] The requested resource '", path, "' does not match convention mapped to '", requestedPath, "'" )));
                     return null;
                 }
 
