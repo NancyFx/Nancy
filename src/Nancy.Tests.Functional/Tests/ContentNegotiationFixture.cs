@@ -691,6 +691,51 @@ namespace Nancy.Tests.Functional.Tests
             Assert.Equal("Oh noes!", xmlResponse.Message);
         }
 
+        [Fact]
+        public void Should_return_negotiated_not_found_response_when_accept_header_is_html()
+        {
+            // Given
+            var browser = new Browser(with => with.StatusCodeHandler<DefaultStatusCodeHandler>());
+            var contentType = "text/html";
+
+            // When
+            var result = browser.Get("/not-found", with => with.Accept(contentType));
+
+            // Then
+            Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
+            Assert.Equal(contentType, result.ContentType);
+        }
+
+        [Fact]
+        public void Should_return_negotiated_not_found_response_when_accept_header_is_json()
+        {
+            // Given
+            var browser = new Browser(with => with.StatusCodeHandler<DefaultStatusCodeHandler>());
+            var contentType = "application/json";
+
+            // When
+            var result = browser.Get("/not-found", with => with.Accept(contentType));
+
+            // Then
+            Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
+            Assert.Equal(string.Format("{0}; charset=utf-8", contentType), result.ContentType);
+        }
+
+        [Fact]
+        public void Should_return_negotiated_not_found_response_when_accept_header_is_xml()
+        {
+            // Given
+            var browser = new Browser(with => with.StatusCodeHandler<DefaultStatusCodeHandler>());
+            var contentType = "application/xml";
+
+            // When
+            var result = browser.Get("/not-found", with => with.Accept(contentType));
+
+            // Then
+            Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
+            Assert.Equal(contentType, result.ContentType);
+        }
+
         private static Func<dynamic, NancyModule, dynamic> CreateNegotiatedResponse(Action<Negotiator> action = null)
         {
             return (parameters, module) =>
