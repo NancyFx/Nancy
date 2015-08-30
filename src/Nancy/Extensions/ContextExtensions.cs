@@ -72,7 +72,7 @@ namespace Nancy.Extensions
             object errorObject;
             context.Items.TryGetValue(NancyEngine.ERROR_KEY, out errorObject);
 
-            return (errorObject as string) ?? "None";
+            return (errorObject as string) ?? string.Empty;
         }
 
         /// <summary>
