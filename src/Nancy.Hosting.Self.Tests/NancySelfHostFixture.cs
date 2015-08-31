@@ -1,8 +1,9 @@
-﻿#if !__MonoCS__ 
+﻿#if !__MonoCS__
 namespace Nancy.Hosting.Self.Tests
 {
     using System;
     using System.IO;
+    using System.Linq;
     using System.Net;
     using System.Threading;
     using System.Threading.Tasks;
@@ -15,7 +16,7 @@ namespace Nancy.Hosting.Self.Tests
     using Xunit;
 
     /// <remarks>
-    /// These tests attempt to listen on port 1234, and so require either administrative 
+    /// These tests attempt to listen on port 1234, and so require either administrative
     /// privileges or that a command similar to the following has been run with
     /// administrative privileges:
     /// <code>netsh http add urlacl url=http://+:1234/base user=DOMAIN\user</code>
@@ -232,6 +233,19 @@ namespace Nancy.Hosting.Self.Tests
         {
             var type = typeof(NancyHost);
             Assert.True(type.Attributes.ToString().Contains("Serializable"));
+        }
+
+        [Fact]
+        public void Should_include_default_port_in_uri_prefixes()
+        {
+            // Given
+            var host = new NancyHost(new Uri("http://localhost/"));
+
+            // When
+            var prefix = host.GetPrefixes().Single();
+
+            // Then
+            prefix.ShouldEqual("http://+:80/");
         }
 
         private class NancyHostWrapper : IDisposable
