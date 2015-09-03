@@ -6,19 +6,17 @@ How to build Nancy
 Prerequisites
 -------------
 
-1. Download and install Ruby 1.8.7+ from http://www.ruby-lang.org/en/downloads
+1. Download and install Ruby 1.9.3 from http://www.ruby-lang.org/en/downloads
 2. At the command prompt run the following to update RubyGems to the latest version: 
 
 	gem update --system
 
 3. You will need the albacore gem, install this at the command prompt with:
 
-	gem install albacore
+	gem install albacore --version "1.0.0.rc2"
 
-If you have already installed albacore, please update to the lastest version (0.2.6+):
-
-	gem update albacore
-
+4. If you don't have Visual Studio 2010 installed you'll need to download and install Visual Studio 2010 Shell from http://www.microsoft.com/en-us/download/details.aspx?id=1366
+5. Download and install the Windows 8.1 SDK from https://msdn.microsoft.com/en-us/windows/desktop/bg162891.aspx (or the appropriate version for your OS)
 
 Building Nancy
 --------------
