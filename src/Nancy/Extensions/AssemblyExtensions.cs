@@ -31,7 +31,10 @@ namespace Nancy.Extensions
             {
                 types = new Type[] { };
             }
-
+            catch (FileLoadException) {
+                // probably assembly version conflict
+                types = new Type[] { };
+            }
             return types;
         }
     }
