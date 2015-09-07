@@ -2,6 +2,7 @@ namespace Nancy
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
@@ -13,6 +14,7 @@ namespace Nancy
     /// <summary>
     /// Encapsulates HTTP-response information from an Nancy operation.
     /// </summary>
+    [DebuggerDisplay("{DebuggerDisplay, nq}")]
     public class Response: IDisposable
     {
         /// <summary>
@@ -214,6 +216,11 @@ namespace Nancy
         /// <remarks>This method can be overridden in sub-classes to dispose of response specific resources.</remarks>
         public virtual void Dispose()
         {
+        }
+
+        private string DebuggerDisplay
+        {
+            get { return string.Join(" ", new string[] { this.StatusCode.ToString(), this.ReasonPhrase, this.ContentType }.Where(x => !string.IsNullOrEmpty(x)).ToArray()); }
         }
     }
 }

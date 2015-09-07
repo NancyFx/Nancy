@@ -1,12 +1,14 @@
 ﻿namespace Nancy.Routing
 {
     using System;
+    using System.Diagnostics;
     using System.Threading;
     using System.Threading.Tasks;
 
     /// <summary>
     /// Stores information about a declared route in Nancy.
     /// </summary>
+    [DebuggerDisplay("{Description.DebuggerDisplay, nq}")]
     public class Route
     {
         /// <summary>

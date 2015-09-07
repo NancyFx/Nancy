@@ -2,10 +2,14 @@ namespace Nancy.Routing
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Text;
 
     /// <summary>
     /// Represents the various parts of a route lambda.
     /// </summary>
+    [DebuggerDisplay("{DebuggerDisplay, nq}")]
     public sealed class RouteDescription
     {
         /// <summary>
@@ -73,5 +77,22 @@ namespace Nancy.Routing
         /// </summary>
         /// <value>An <see cref="IEnumerable{T}"/>, containing the segments for the route.</value>
         public IEnumerable<string> Segments { get; set; }
+
+        private string DebuggerDisplay
+        {
+            get
+            {
+                var builder = new StringBuilder();
+
+                if (!string.IsNullOrEmpty(this.Name))
+                {
+                    builder.AppendFormat("{0} - ", this.Name);
+                }
+
+                builder.AppendFormat("{0} {1}", this.Method, this.Path);
+
+                return builder.ToString();
+            }
+        }
     }
 }

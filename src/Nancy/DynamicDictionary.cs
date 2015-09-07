@@ -3,11 +3,15 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Dynamic;
+    using System.Linq;
+    using System.Text;
 
     /// <summary>
     /// A dictionary that supports dynamic access.
     /// </summary>
+    [DebuggerDisplay("{DebuggerDisplay, nq}")]
     public class DynamicDictionary : DynamicObject, IEquatable<DynamicDictionary>, IHideObjectMembers, IEnumerable<string>, IDictionary<string, object>
     {
         private readonly IDictionary<string, dynamic> dictionary =
@@ -342,6 +346,33 @@
             }
 
             return data;
+        }
+
+        private string DebuggerDisplay
+        {
+            get
+            {
+                var builder = new StringBuilder();
+                var maxItems = Math.Min(this.dictionary.Count, 5);
+
+                builder.Append("{");
+
+                for (var i = 0; i < maxItems; i++)
+                {
+                    var item = this.dictionary.ElementAt(i);
+                    
+                    builder.AppendFormat(" {0} = {1}{2}", item.Key, item.Value, i < maxItems - 1 ? "," : string.Empty);
+                }
+
+                if (maxItems < this.dictionary.Count)
+                {
+                    builder.Append("...");
+                }
+
+                builder.Append(" }");
+
+                return builder.ToString();
+            }
         }
     }
 }
