@@ -1,18 +1,15 @@
 ﻿namespace Nancy.Demo.Hosting.Owin
 {
-    using System.Threading;
-    using System.Threading.Tasks;
-
     public class MainModule : NancyModule
     {
         public MainModule()
         {
-            Get["", true] = Root;
+            Get[""] = Root;
         }
 
-        private Task<object> Root(dynamic o, CancellationToken cancellationToken)
+        private object Root(dynamic o)
         {
-            return Task.FromResult<object>(View["Root"]);
+            return View["Root"];
         }
     }
 }
