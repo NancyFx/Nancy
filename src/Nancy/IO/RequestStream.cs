@@ -78,7 +78,7 @@
 
                 if (task.IsFaulted)
                 {
-                   throw new InvalidOperationException("Unable to copy stream", task.Exception);
+                    throw new InvalidOperationException("Unable to copy stream", task.Exception);
                 }
             }
 
@@ -359,7 +359,7 @@
         {
             var filePath = Path.GetTempFileName();
 
-            return new FileStream(filePath, FileMode.Create, FileAccess.ReadWrite, FileShare.None, 8192, true);
+            return new FileStream(filePath, FileMode.Create, FileAccess.ReadWrite, FileShare.None, 8192, StaticConfiguration.AllowFileStreamUploadAsync);
         }
 
         private Stream CreateDefaultMemoryStream(long expectedLength)

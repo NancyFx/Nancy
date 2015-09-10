@@ -18,6 +18,7 @@ namespace Nancy
             disableErrorTraces = !(disableCaches = IsRunningDebug);
             CaseSensitive = false;
             RequestQueryFormMultipartLimit = 1000;
+            AllowFileStreamUploadAsync = true;
         }
 
         /// <summary>
@@ -104,6 +105,8 @@ namespace Nancy
         /// Gets or sets a value indicating whether or not to disable request stream switching
         /// </summary>
         public static bool? DisableRequestStreamSwitching { get; set; }
+
+        public static bool AllowFileStreamUploadAsync { get; set; }
 
         public static class Caching
         {
