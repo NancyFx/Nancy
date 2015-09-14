@@ -295,9 +295,9 @@ namespace Nancy
 
         private IEnumerable<Tuple<string, decimal>> GetWeightedValues(string headerName)
         {
-            return this.cache.GetOrAdd(headerName, header => { 
+            return this.cache.GetOrAdd(headerName, header => {
 
-                var values = this.GetSplitValues(header);
+            var values = this.GetSplitValues(header);
 
                 var parsed = values.Select(x =>
                 {
@@ -408,6 +408,8 @@ namespace Nancy
 
         private void SetHeaderValues<T>(string header, T value, Func<T, IEnumerable<string>> valueTransformer)
         {
+            this.InvalidateCacheEntry(header);
+
             if (EqualityComparer<T>.Default.Equals(value, default(T)))
             {
                 if (this.headers.ContainsKey(header))
@@ -419,6 +421,12 @@ namespace Nancy
             {
                 this.headers[header] = valueTransformer.Invoke(value);
             }
+        }
+
+        private void InvalidateCacheEntry(string header)
+        {
+            IEnumerable<Tuple<string, decimal>> values;
+            this.cache.TryRemove(header, out values);
         }
     }
 }
