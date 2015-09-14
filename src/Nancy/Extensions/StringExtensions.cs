@@ -33,15 +33,9 @@ namespace Nancy.Extensions
 
             var nameMatch = matches
                 .Cast<Match>()
-                .Select(x => x)
                 .ToList();
 
-            if (nameMatch.Any())
-            {
-                return nameMatch.Select(x => new ParameterSegmentInformation(x.Groups["name"].Value, x.Groups["default"].Value, x.Groups["default"].Success));
-            }
-
-            throw new FormatException("The segment did not contain any parameters.");
+            return nameMatch.Select(x => new ParameterSegmentInformation(x.Groups["name"].Value, x.Groups["default"].Value, x.Groups["default"].Success));
         }
 
         /// <summary>
