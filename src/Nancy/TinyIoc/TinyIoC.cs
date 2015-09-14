@@ -513,7 +513,6 @@ namespace Nancy.TinyIoc
 
     // @mbrit - 2012-05-22 - shim for ForEach call on List<T>...
 #if NETFX_CORE
-	{
     internal static class ListExtender
     {
         internal static void ForEach<T>(this List<T> list, Action<T> callback)
