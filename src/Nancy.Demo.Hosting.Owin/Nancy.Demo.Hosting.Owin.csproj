@@ -128,7 +128,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Root.html" />
+    <None Include="Views\Root.spark" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

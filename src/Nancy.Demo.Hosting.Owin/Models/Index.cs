@@ -2,6 +2,6 @@ namespace Nancy.Demo.Hosting.Owin.Models
 {
     public class Index
     {
-        public string Name { get; set; }
+        public string StatusMessage { get; set; }
     }
 }
