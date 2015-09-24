@@ -129,6 +129,7 @@
     <Compile Include="Fakes\Person.cs" />
     <Compile Include="Fakes\ViewModel.cs" />
     <Compile Include="Helpers\CacheHelpersFixture.cs" />
+    <Compile Include="Responses\MaterialisingResponseFixture.cs" />
     <Compile Include="Unit\Bootstrapper\BootstrapperLocatorFixture.cs" />
     <Compile Include="Unit\Bootstrapper\CollectionTypeRegistrationFixture.cs" />
     <Compile Include="Unit\Bootstrapper\InstanceRegistrationFixture.cs" />

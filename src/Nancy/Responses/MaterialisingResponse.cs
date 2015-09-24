@@ -43,7 +43,19 @@
             this.StatusCode = sourceResponse.StatusCode;
             this.ReasonPhrase = sourceResponse.ReasonPhrase;
 
-            this.Contents = stream => stream.Write(this.oldResponseOutput, 0, this.oldResponseOutput.Length);
+            this.Contents = WriteContents;
+        }
+
+        private void WriteContents(Stream stream)
+        {
+            if (this.oldResponseOutput == null)
+            {
+                this.sourceResponse.Contents.Invoke(stream);
+            }
+            else
+            {
+                stream.Write(this.oldResponseOutput, 0, this.oldResponseOutput.Length);
+            }
         }
     }
 }
