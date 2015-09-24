@@ -297,7 +297,7 @@ namespace Nancy
         {
             return this.cache.GetOrAdd(headerName, header => {
 
-            var values = this.GetSplitValues(header);
+                var values = this.GetSplitValues(header);
 
                 var parsed = values.Select(x =>
                 {
