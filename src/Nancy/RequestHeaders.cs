@@ -2,6 +2,7 @@ namespace Nancy
 {
     using System;
     using System.Collections;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
@@ -14,6 +15,7 @@ namespace Nancy
     public class RequestHeaders : IEnumerable<KeyValuePair<string, IEnumerable<string>>>
     {
         private readonly IDictionary<string, IEnumerable<string>> headers;
+        private readonly ConcurrentDictionary<string, IEnumerable<Tuple<string, decimal>>> cache;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RequestHeaders"/> class.
@@ -22,6 +24,7 @@ namespace Nancy
         public RequestHeaders(IDictionary<string, IEnumerable<string>> headers)
         {
             this.headers = new Dictionary<string, IEnumerable<string>>(headers, StringComparer.OrdinalIgnoreCase);
+            this.cache = new ConcurrentDictionary<string, IEnumerable<Tuple<string, decimal>>>(StringComparer.OrdinalIgnoreCase);
         }
 
         /// <summary>
@@ -30,7 +33,7 @@ namespace Nancy
         /// <value>An <see cref="IEnumerable{T}"/> that contains the header values if they are available; otherwise it will be empty.</value>
         public IEnumerable<Tuple<string, decimal>> Accept
         {
-            get { return GetWeightedValues("Accept").ToList(); }
+            get { return this.GetWeightedValues("Accept").ToList(); }
             set { this.SetHeaderValues("Accept", value, GetWeightedValuesAsStrings); }
         }
 
@@ -257,7 +260,7 @@ namespace Nancy
         /// <returns>An <see cref="IEnumerator"/> object that can be used to iterate through the collection.</returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return GetEnumerator();
+            return this.GetEnumerator();
         }
 
         /// <summary>
@@ -292,37 +295,39 @@ namespace Nancy
 
         private IEnumerable<Tuple<string, decimal>> GetWeightedValues(string headerName)
         {
-            var values = this.GetSplitValues(headerName);
+            return this.cache.GetOrAdd(headerName, header => {
 
-            var parsed = values.Select(x =>
-            {
-                var sections = x.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
-                var mediaRange = sections[0].Trim();
-                var quality = 1m;
+                var values = this.GetSplitValues(header);
 
-                for (var index = 1; index < sections.Length; index++)
+                var parsed = values.Select(x =>
                 {
-                    var trimmedValue = sections[index].Trim();
-                    if (trimmedValue.StartsWith("q=", StringComparison.OrdinalIgnoreCase))
+                    var sections = x.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+                    var mediaRange = sections[0].Trim();
+                    var quality = 1m;
+
+                    for (var index = 1; index < sections.Length; index++)
                     {
-                        decimal temp;
-                        var stringValue = trimmedValue.Substring(2);
-                        if (decimal.TryParse(stringValue, NumberStyles.Number, CultureInfo.InvariantCulture, out temp))
+                        var trimmedValue = sections[index].Trim();
+                        if (trimmedValue.StartsWith("q=", StringComparison.OrdinalIgnoreCase))
                         {
-                            quality = temp;
+                            decimal temp;
+                            var stringValue = trimmedValue.Substring(2);
+                            if (decimal.TryParse(stringValue, NumberStyles.Number, CultureInfo.InvariantCulture, out temp))
+                            {
+                                quality = temp;
+                            }
+                        }
+                        else
+                        {
+                            mediaRange += ";" + trimmedValue;
                         }
                     }
-                    else
-                    {
-                        mediaRange += ";" + trimmedValue;
-                    }
-                }
 
-                return new Tuple<string, decimal>(mediaRange, quality);
+                    return new Tuple<string, decimal>(mediaRange, quality);
+                });
+
+                return parsed.OrderByDescending(x => x.Item2).ToArray();
             });
-
-            return parsed
-                    .OrderByDescending(x => x.Item2);
         }
 
         private static object GetDefaultValue(Type T)
@@ -403,6 +408,8 @@ namespace Nancy
 
         private void SetHeaderValues<T>(string header, T value, Func<T, IEnumerable<string>> valueTransformer)
         {
+            this.InvalidateCacheEntry(header);
+
             if (EqualityComparer<T>.Default.Equals(value, default(T)))
             {
                 if (this.headers.ContainsKey(header))
@@ -414,6 +421,12 @@ namespace Nancy
             {
                 this.headers[header] = valueTransformer.Invoke(value);
             }
+        }
+
+        private void InvalidateCacheEntry(string header)
+        {
+            IEnumerable<Tuple<string, decimal>> values;
+            this.cache.TryRemove(header, out values);
         }
     }
 }
