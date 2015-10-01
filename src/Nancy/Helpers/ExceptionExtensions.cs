@@ -18,12 +18,7 @@
                     return flattenedAggregateException;
                 }
 
-                return flattenedAggregateException.InnerException.FlattenInnerExceptions();
-            }
-
-            if (exception != null && exception.InnerException != null)
-            {
-                return exception.InnerException.FlattenInnerExceptions();
+                return flattenedAggregateException.InnerException;
             }
 
             return exception;
