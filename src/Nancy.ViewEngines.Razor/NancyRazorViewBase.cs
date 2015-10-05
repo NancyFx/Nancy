@@ -166,7 +166,7 @@
         /// <param name="value">The value.</param>
         public virtual void Write(object value)
         {
-            WriteLiteral(HtmlEncode(value));
+            WriteLiteral(NancyPageBuilder.HtmlEncode(value));
         }
 
         /// <summary>
@@ -180,13 +180,13 @@
 
         public virtual void WriteAttribute(string name, Tuple<string, int> prefix, Tuple<string, int> suffix, params AttributeValue[] values)
         {
-            var attributeValue = this.BuildAttribute(name, prefix, suffix, values);
+            var attributeValue = NancyPageBuilder.BuildAttribute(name, prefix, suffix, values);
             this.WriteLiteral(attributeValue);
         }
 
         public virtual void WriteAttributeTo(TextWriter writer, string name, Tuple<string, int> prefix, Tuple<string, int> suffix, params AttributeValue[] values)
         {
-            var attributeValue = this.BuildAttribute(name, prefix, suffix, values);
+            var attributeValue = NancyPageBuilder.BuildAttribute(name, prefix, suffix, values);
             this.WriteLiteralTo(writer, attributeValue);
         }
 
@@ -276,7 +276,7 @@
         /// <param name="value">The value that should be written.</param>
         public virtual void WriteTo(TextWriter writer, object value)
         {
-            writer.Write(HtmlEncode(value));
+            writer.Write(NancyPageBuilder.HtmlEncode(value));
         }
 
         /// <summary>

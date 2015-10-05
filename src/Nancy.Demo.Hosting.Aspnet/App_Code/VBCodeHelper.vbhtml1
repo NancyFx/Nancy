@@ -1,0 +1,3 @@
+﻿@Helper Render(text as String)
+    @<p>Rendered from App_Code/VBCodeHelper - @text</p>
+End Helper

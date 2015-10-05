@@ -118,9 +118,11 @@
     <Content Include="Views\razor2.cshtml" />
     <Content Include="Views\nustachePartial.nustache" />
     <Content Include="Views\uber-meta.cshtml" />
-    <None Include="Views\FileUpload.sshtml">
-      <SubType>Designer</SubType>
-    </None>
+    <Content Include="Views\razor-helpers.cshtml" />
+    <None Include="App_Code\CodeHelper.cshtml" />
+    <None Include="App_Code\VBCodeHelper.vbhtml1" />
+    <None Include="Views\razor-helpers.vbhtml" />
+    <None Include="Views\FileUpload.sshtml" />
     <None Include="Views\interactive-diags-results.sshtml" />
     <None Include="Views\interactive-diags-methods.sshtml" />
     <None Include="Views\interactive-diags.sshtml" />
@@ -184,6 +186,10 @@
     <ProjectReference Include="..\Nancy.ViewEngines.Nustache\Nancy.ViewEngines.Nustache.csproj">
       <Project>{A1A9E636-A37C-4170-B2E4-99D4F69B415D}</Project>
       <Name>Nancy.ViewEngines.Nustache</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nancy.ViewEngines.Razor.BuildProviders\Nancy.ViewEngines.Razor.BuildProviders.csproj">
+      <Project>{edf3e264-2d0f-4440-99ff-45d279a598a9}</Project>
+      <Name>Nancy.ViewEngines.Razor.BuildProviders</Name>
     </ProjectReference>
     <ProjectReference Include="..\Nancy.ViewEngines.Razor\Nancy.ViewEngines.Razor.csproj">
       <Project>{2c6f51df-015c-4db6-b44c-0e5e4f25e2a9}</Project>

@@ -10,7 +10,7 @@ namespace Nancy.ViewEngines.Razor.BuildProviders
     [BuildProviderAppliesTo(BuildProviderAppliesTo.Code | BuildProviderAppliesTo.Web)]
     public class NancyVisualBasicRazorBuildProvider : BuildProvider
     {
-        private readonly RazorEngineHost host;
+        private RazorEngineHost host;
 
         private readonly CompilerType compilerType;
 
@@ -22,8 +22,6 @@ namespace Nancy.ViewEngines.Razor.BuildProviders
         public NancyVisualBasicRazorBuildProvider()
         {
             this.compilerType = this.GetDefaultCompilerTypeForLanguage("VB");
-
-            this.host = new NancyRazorEngineHost(new VBRazorCodeLanguage());
         }
 
         /// <summary>
@@ -43,7 +41,7 @@ namespace Nancy.ViewEngines.Razor.BuildProviders
         {
             assemblyBuilder.AddCodeCompileUnit(this, this.GetGeneratedCode());
 
-            assemblyBuilder.GenerateTypeFactory(string.Format(CultureInfo.InvariantCulture, "{0}.{1}", new object[] { this.host.DefaultNamespace, this.host.DefaultClassName }));
+            assemblyBuilder.GenerateTypeFactory(string.Format(CultureInfo.InvariantCulture, "{0}.{1}", new object[] { this.Host.DefaultNamespace, this.Host.DefaultClassName }));
         }
 
         /// <summary>
@@ -53,18 +51,31 @@ namespace Nancy.ViewEngines.Razor.BuildProviders
         /// <param name="results">The compilation results for the build provider's virtual path.</param>
         public override Type GetGeneratedType(CompilerResults results)
         {
-            return results.CompiledAssembly.GetType(string.Format(CultureInfo.CurrentCulture, "{0}.{1}", new object[] { this.host.DefaultNamespace, this.host.DefaultClassName }));
+            return results.CompiledAssembly.GetType(string.Format(CultureInfo.CurrentCulture, "{0}.{1}", new object[] { this.Host.DefaultNamespace, this.Host.DefaultClassName }));
+        }
+
+        private RazorEngineHost Host
+        {
+            get
+            {
+                if (this.host == null)
+                {
+                    this.host = new NancyRazorEngineHostFactory().Create(new VBRazorCodeLanguage(), this.VirtualPath);
+                }
+
+                return this.host;
+            }
         }
 
         private CodeCompileUnit GetGeneratedCode()
         {
             if (this.generatedCode == null)
             {
-                var engine = new RazorTemplateEngine(this.host);
+                var engine = new RazorTemplateEngine(this.Host);
                 GeneratorResults results;
                 using (var reader = this.OpenReader())
                 {
-                    results = engine.GenerateCode(reader);
+                    results = engine.GenerateCode(reader, this.host.DefaultClassName, this.host.DefaultNamespace, this.VirtualPath);
                 }
 
                 if (!results.Success)

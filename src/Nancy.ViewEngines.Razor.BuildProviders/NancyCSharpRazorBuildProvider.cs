@@ -11,7 +11,7 @@
     [BuildProviderAppliesTo(BuildProviderAppliesTo.Code | BuildProviderAppliesTo.Web)]
     public class NancyCSharpRazorBuildProvider : BuildProvider
     {
-        private readonly RazorEngineHost host;
+        private RazorEngineHost host;
 
         private readonly CompilerType compilerType;
 
@@ -23,8 +23,6 @@
         public NancyCSharpRazorBuildProvider()
         {
             this.compilerType = this.GetDefaultCompilerTypeForLanguage("C#");
-
-            this.host = new NancyRazorEngineHost(new CSharpRazorCodeLanguage());
         }
 
         /// <summary>
@@ -43,7 +41,6 @@
         public override void GenerateCode(AssemblyBuilder assemblyBuilder)
         {
             assemblyBuilder.AddCodeCompileUnit(this, this.GetGeneratedCode());
-
             assemblyBuilder.GenerateTypeFactory(string.Format(CultureInfo.InvariantCulture, "{0}.{1}", new object[] { this.host.DefaultNamespace, this.host.DefaultClassName }));
         }
 
@@ -54,18 +51,31 @@
         /// <param name="results">The compilation results for the build provider's virtual path.</param>
         public override Type GetGeneratedType(CompilerResults results)
         {
-            return results.CompiledAssembly.GetType(string.Format(CultureInfo.CurrentCulture, "{0}.{1}", new object[] { this.host.DefaultNamespace, this.host.DefaultClassName }));
+            return results.CompiledAssembly.GetType(string.Format(CultureInfo.CurrentCulture, "{0}.{1}", new object[] { this.Host.DefaultNamespace, this.Host.DefaultClassName }));
+        }
+
+        private RazorEngineHost Host
+        {
+            get
+            {
+                if (this.host == null)
+                {
+                    this.host = new NancyRazorEngineHostFactory().Create(new CSharpRazorCodeLanguage(), this.VirtualPath);
+                }
+
+                return this.host;
+            }
         }
 
         private CodeCompileUnit GetGeneratedCode()
         {
             if (this.generatedCode == null)
             {
-                var engine = new RazorTemplateEngine(this.host);
+                var engine = new RazorTemplateEngine(this.Host);
                 GeneratorResults results;
                 using (var reader = this.OpenReader())
                 {
-                    results = engine.GenerateCode(reader);
+                    results = engine.GenerateCode(reader, this.Host.DefaultClassName, this.Host.DefaultNamespace, this.VirtualPath);
                 }
 
                 if (!results.Success)
