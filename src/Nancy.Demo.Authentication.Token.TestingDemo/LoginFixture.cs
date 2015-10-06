@@ -98,6 +98,7 @@ namespace Nancy.Demo.Authentication.Token.TestingDemo
                 with.Accept("application/json");
                 with.FormValue("UserName", "demo");
                 with.FormValue("Password", "demo");
+                with.Header("User-Agent", null);
             });
 
             // Then
