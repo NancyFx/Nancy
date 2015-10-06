@@ -1,7 +1,6 @@
 ﻿namespace Nancy.Tests.Helpers
 {
     using System;
-    using System.Linq;
     using Nancy.Helpers;
     using Xunit;
 
@@ -37,7 +36,10 @@
             var innerExceptions = ((AggregateException)result).InnerExceptions;
             var expectedExceptions = new[] { exception1, exception2, exception3 };
 
-            Assert.True(innerExceptions.SequenceEqual(expectedExceptions));
+            Assert.Equal(3, innerExceptions.Count);
+
+            foreach (var exception in expectedExceptions)
+                Assert.True(innerExceptions.Contains(exception));
         }
     }
 }
