@@ -1,7 +1,7 @@
 ﻿namespace Nancy.Tests.Helpers
 {
     using System;
-    using System.Collections.Generic;
+    using System.Linq;
     using Nancy.Helpers;
     using Xunit;
 
@@ -34,8 +34,10 @@
 
             // Only the inner exceptions of any aggregates should be returned. The inner exception
             // of a non-aggregate should not be flattened.
-            var expectedExceptions = new List<Exception>() { exception1, exception2, exception3 };
-            Assert.Equal(((AggregateException)result).InnerExceptions, expectedExceptions);
+            var innerExceptions = ((AggregateException)result).InnerExceptions;
+            var expectedExceptions = new[] { exception1, exception2, exception3 };
+
+            Assert.True(innerExceptions.SequenceEqual(expectedExceptions));
         }
     }
 }
