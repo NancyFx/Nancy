@@ -103,7 +103,7 @@ namespace Nancy.Json
         /// Supports:
         ///   application/json
         ///   text/json
-        ///   application/vnd[something]+json
+        ///   [something]+json
         /// Matches are case insensitive to try and be as "accepting" as possible.
         /// </summary>
         /// <param name="contentType">Request content type</param>
@@ -120,9 +120,7 @@ namespace Nancy.Json
             return contentMimeType.Equals("application/json", StringComparison.OrdinalIgnoreCase) ||
             contentMimeType.StartsWith("application/json-", StringComparison.OrdinalIgnoreCase) ||
             contentMimeType.Equals("text/json", StringComparison.OrdinalIgnoreCase) ||
-            (contentMimeType.StartsWith("application/vnd", StringComparison.OrdinalIgnoreCase) &&
-            contentMimeType.EndsWith("+json", StringComparison.OrdinalIgnoreCase)) ||
-            contentMimeType.Equals("application/merge-patch+json");
+            contentMimeType.EndsWith("+json", StringComparison.OrdinalIgnoreCase);
         }
     }
 }
