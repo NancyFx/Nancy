@@ -80,10 +80,10 @@ namespace Nancy.TinyIoc
 #endif
 
 #if NETFX_CORE
-	using System.Threading.Tasks;
-	using Windows.Storage.Search;
+    using System.Threading.Tasks;
+    using Windows.Storage.Search;
     using Windows.Storage;
-	using Windows.UI.Xaml.Shapes;
+    using Windows.UI.Xaml.Shapes;
 #endif
 
     #region SafeDictionary
@@ -291,7 +291,7 @@ namespace Nancy.TinyIoc
 
             try
             {
-				assemblies = assembly.GetTypes();
+                assemblies = assembly.GetTypes();
             }
             catch (System.IO.FileNotFoundException)
             {
@@ -321,32 +321,32 @@ namespace Nancy.TinyIoc
         }
 
 //#if NETFX_CORE
-//		/// <summary>
-//		/// Gets a generic method from a type given the method name, generic types and parameter types
-//		/// </summary>
-//		/// <param name="sourceType">Source type</param>
-//		/// <param name="methodName">Name of the method</param>
-//		/// <param name="genericTypes">Generic types to use to make the method generic</param>
-//		/// <param name="parameterTypes">Method parameters</param>
-//		/// <returns>MethodInfo or null if no matches found</returns>
-//		/// <exception cref="System.Reflection.AmbiguousMatchException"/>
-//		/// <exception cref="System.ArgumentException"/>
-//		public static MethodInfo GetGenericMethod(this Type sourceType, string methodName, Type[] genericTypes, Type[] parameterTypes)
-//		{
-//			MethodInfo method;
-//			var cacheKey = new GenericMethodCacheKey(sourceType, methodName, genericTypes, parameterTypes);
+//      /// <summary>
+//      /// Gets a generic method from a type given the method name, generic types and parameter types
+//      /// </summary>
+//      /// <param name="sourceType">Source type</param>
+//      /// <param name="methodName">Name of the method</param>
+//      /// <param name="genericTypes">Generic types to use to make the method generic</param>
+//      /// <param name="parameterTypes">Method parameters</param>
+//      /// <returns>MethodInfo or null if no matches found</returns>
+//      /// <exception cref="System.Reflection.AmbiguousMatchException"/>
+//      /// <exception cref="System.ArgumentException"/>
+//      public static MethodInfo GetGenericMethod(this Type sourceType, string methodName, Type[] genericTypes, Type[] parameterTypes)
+//      {
+//          MethodInfo method;
+//          var cacheKey = new GenericMethodCacheKey(sourceType, methodName, genericTypes, parameterTypes);
 
-//			// Shouldn't need any additional locking
-//			// we don't care if we do the method info generation
-//			// more than once before it gets cached.
-//			if (!_genericMethodCache.TryGetValue(cacheKey, out method))
-//			{
-//				method = GetMethod(sourceType, methodName, genericTypes, parameterTypes);
-//				_genericMethodCache[cacheKey] = method;
-//			}
+//          // Shouldn't need any additional locking
+//          // we don't care if we do the method info generation
+//          // more than once before it gets cached.
+//          if (!_genericMethodCache.TryGetValue(cacheKey, out method))
+//          {
+//              method = GetMethod(sourceType, methodName, genericTypes, parameterTypes);
+//              _genericMethodCache[cacheKey] = method;
+//          }
 
-//			return method;
-//		}
+//          return method;
+//      }
 //#else
         /// <summary>
         /// Gets a generic method from a type given the method name, binding flags, generic types and parameter types
@@ -509,18 +509,18 @@ namespace Nancy.TinyIoc
             }
         }
 
-	}
+    }
 
-	// @mbrit - 2012-05-22 - shim for ForEach call on List<T>...
+    // @mbrit - 2012-05-22 - shim for ForEach call on List<T>...
 #if NETFX_CORE
-	internal static class ListExtender
-	{
-		internal static void ForEach<T>(this List<T> list, Action<T> callback)
-		{
-			foreach (T obj in list)
-				callback(obj);
-		}
-	}
+    internal static class ListExtender
+    {
+        internal static void ForEach<T>(this List<T> list, Action<T> callback)
+        {
+            foreach (T obj in list)
+                callback(obj);
+        }
+    }
 #endif
 
     #endregion
@@ -681,7 +681,7 @@ namespace Nancy.TinyIoc
     {
         /// <summary>
         /// Attempt to resolve type, even if the type isn't registered.
-        /// 
+        ///
         /// Registered types/options will always take precedence.
         /// </summary>
         AttemptResolve,
@@ -694,7 +694,7 @@ namespace Nancy.TinyIoc
         /// <summary>
         /// Attempt to resolve unregistered type if requested type is generic
         /// and no registration exists for the specific generic parameters used.
-        /// 
+        ///
         /// Registered types/options will always take precedence.
         /// </summary>
         GenericsOnly
@@ -800,33 +800,33 @@ namespace Nancy.TinyIoc
                 CurrentDomain = new AppDomain();
             }
 
-			// @mbrit - 2012-05-30 - in WinRT, this should be done async...
+            // @mbrit - 2012-05-30 - in WinRT, this should be done async...
             public async Task<List<Assembly>> GetAssembliesAsync()
             {
                 var folder = Windows.ApplicationModel.Package.Current.InstalledLocation;
 
                 List<Assembly> assemblies = new List<Assembly>();
 
-				var files = await folder.GetFilesAsync();
+                var files = await folder.GetFilesAsync();
 
                 foreach (StorageFile file in files)
                 {
                     if (file.FileType == ".dll" || file.FileType == ".exe")
                     {
                         AssemblyName name = new AssemblyName() { Name = System.IO.Path.GetFileNameWithoutExtension(file.Name) };
-						try
-						{
-							var asm = Assembly.Load(name);
-							assemblies.Add(asm);
-						}
-						catch
-						{
-							// ignore exceptions here...
-						}
+                        try
+                        {
+                            var asm = Assembly.Load(name);
+                            assemblies.Add(asm);
+                        }
+                        catch
+                        {
+                            // ignore exceptions here...
+                        }
                     }
                 }
 
-				return assemblies;
+                return assemblies;
             }
         }
 #endif
@@ -933,7 +933,7 @@ namespace Nancy.TinyIoc
 #endif
             /// <summary>
             /// Switches to a custom lifetime manager factory if possible.
-            /// 
+            ///
             /// Usually used for RegisterOptions "To*" extension methods such as the ASP.Net per-request one.
             /// </summary>
             /// <param name="instance">RegisterOptions instance</param>
@@ -1000,7 +1000,7 @@ namespace Nancy.TinyIoc
 
             /// <summary>
             /// Switches to a custom lifetime manager factory if possible.
-            /// 
+            ///
             /// Usually used for RegisterOptions "To*" extension methods such as the ASP.Net per-request one.
             /// </summary>
             /// <param name="instance">MultiRegisterOptions instance</param>
@@ -1051,7 +1051,7 @@ namespace Nancy.TinyIoc
         #region Registration
         /// <summary>
         /// Attempt to automatically register all non-generic classes and interfaces in the current app domain.
-        /// 
+        ///
         /// If more than one class implements an interface then only one implementation will be registered
         /// although no error will be thrown.
         /// </summary>
@@ -1067,7 +1067,7 @@ namespace Nancy.TinyIoc
         /// <summary>
         /// Attempt to automatically register all non-generic classes and interfaces in the current app domain.
         /// Types will only be registered if they pass the supplied registration predicate.
-        /// 
+        ///
         /// If more than one class implements an interface then only one implementation will be registered
         /// although no error will be thrown.
         /// </summary>
@@ -1111,9 +1111,9 @@ namespace Nancy.TinyIoc
 #endif
         }
 
-		/// <summary>
+        /// <summary>
         /// Attempt to automatically register all non-generic classes and interfaces in the specified assemblies
-        /// 
+        ///
         /// If more than one class implements an interface then only one implementation will be registered
         /// although no error will be thrown.
         /// </summary>
@@ -1126,7 +1126,7 @@ namespace Nancy.TinyIoc
         /// <summary>
         /// Attempt to automatically register all non-generic classes and interfaces in the specified assemblies
         /// Types will only be registered if they pass the supplied registration predicate.
-        /// 
+        ///
         /// If more than one class implements an interface then only one implementation will be registered
         /// although no error will be thrown.
         /// </summary>
@@ -1270,7 +1270,7 @@ namespace Nancy.TinyIoc
         /// </summary>
         /// <param name="registerType">Type to register</param>
         /// <param name="factory">Factory/lambda that returns an instance of RegisterType</param>
-        /// <param name="name">Name of registation</param>
+        /// <param name="name">Name of registration</param>
         /// <returns>RegisterOptions for fluent API</returns>
         public RegisterOptions Register(Type registerType, Func<TinyIoCContainer, NamedParameterOverloads, object> factory, string name)
         {
@@ -1403,7 +1403,7 @@ namespace Nancy.TinyIoc
         /// </summary>
         /// <typeparam name="RegisterType">Type to register</typeparam>
         /// <param name="factory">Factory/lambda that returns an instance of RegisterType</param>
-        /// <param name="name">Name of registation</param>
+        /// <param name="name">Name of registration</param>
         /// <returns>RegisterOptions for fluent API</returns>
         public RegisterOptions Register<RegisterType>(Func<TinyIoCContainer, NamedParameterOverloads, RegisterType> factory, string name)
             where RegisterType : class
@@ -1418,7 +1418,7 @@ namespace Nancy.TinyIoc
 
         /// <summary>
         /// Register multiple implementations of a type.
-        /// 
+        ///
         /// Internally this registers each implementation using the full name of the class as its registration name.
         /// </summary>
         /// <typeparam name="RegisterType">Type that each implementation implements</typeparam>
@@ -1431,7 +1431,7 @@ namespace Nancy.TinyIoc
 
         /// <summary>
         /// Register multiple implementations of a type.
-        /// 
+        ///
         /// Internally this registers each implementation using the full name of the class as its registration name.
         /// </summary>
         /// <param name="registrationType">Type that each implementation implements</param>
@@ -1444,11 +1444,11 @@ namespace Nancy.TinyIoc
 
             foreach (var type in implementationTypes)
 //#if NETFX_CORE
-//				if (!registrationType.GetTypeInfo().IsAssignableFrom(type.GetTypeInfo()))
+//              if (!registrationType.GetTypeInfo().IsAssignableFrom(type.GetTypeInfo()))
 //#else
                 if (!registrationType.IsAssignableFrom(type))
 //#endif
-					throw new ArgumentException(String.Format("types: The type {0} is not assignable from {1}", registrationType.FullName, type.FullName));
+                    throw new ArgumentException(String.Format("types: The type {0} is not assignable from {1}", registrationType.FullName, type.FullName));
 
             if (implementationTypes.Count() != implementationTypes.Distinct().Count())
             {
@@ -1722,10 +1722,9 @@ namespace Nancy.TinyIoc
         /// <summary>
         /// Attempts to predict whether a given type can be resolved with default options.
         ///
-        /// Note: Resolution may still fail if user defined factory registations fail to construct objects when called.
+        /// Note: Resolution may still fail if user defined factory registrations fail to construct objects when called.
         /// </summary>
         /// <param name="resolveType">Type to resolve</param>
-        /// <param name="name">Name of registration</param>
         /// <returns>Bool indicating whether the type can be resolved</returns>
         public bool CanResolve(Type resolveType)
         {
@@ -1735,9 +1734,10 @@ namespace Nancy.TinyIoc
         /// <summary>
         /// Attempts to predict whether a given named type can be resolved with default options.
         ///
-        /// Note: Resolution may still fail if user defined factory registations fail to construct objects when called.
+        /// Note: Resolution may still fail if user defined factory registrations fail to construct objects when called.
         /// </summary>
         /// <param name="resolveType">Type to resolve</param>
+        /// <param name="name">Name of registration</param>
         /// <returns>Bool indicating whether the type can be resolved</returns>
         private bool CanResolve(Type resolveType, string name)
         {
@@ -1750,7 +1750,6 @@ namespace Nancy.TinyIoc
         /// Note: Resolution may still fail if user defined factory registrations fail to construct objects when called.
         /// </summary>
         /// <param name="resolveType">Type to resolve</param>
-        /// <param name="name">Name of registration</param>
         /// <param name="options">Resolution options</param>
         /// <returns>Bool indicating whether the type can be resolved</returns>
         public bool CanResolve(Type resolveType, ResolveOptions options)
@@ -1777,8 +1776,8 @@ namespace Nancy.TinyIoc
         ///
         /// Parameters are used in conjunction with normal container resolution to find the most suitable constructor (if one exists).
         /// All user supplied parameters must exist in at least one resolvable constructor of RegisterType or resolution will fail.
-        /// 
-        /// Note: Resolution may still fail if user defined factory registations fail to construct objects when called.
+        ///
+        /// Note: Resolution may still fail if user defined factory registrations fail to construct objects when called.
         /// </summary>
         /// <param name="resolveType">Type to resolve</param>
         /// <param name="parameters">User supplied named parameter overloads</param>
@@ -1793,8 +1792,8 @@ namespace Nancy.TinyIoc
         ///
         /// Parameters are used in conjunction with normal container resolution to find the most suitable constructor (if one exists).
         /// All user supplied parameters must exist in at least one resolvable constructor of RegisterType or resolution will fail.
-        /// 
-        /// Note: Resolution may still fail if user defined factory registations fail to construct objects when called.
+        ///
+        /// Note: Resolution may still fail if user defined factory registrations fail to construct objects when called.
         /// </summary>
         /// <param name="resolveType">Type to resolve</param>
         /// <param name="name">Name of registration</param>
@@ -1810,8 +1809,8 @@ namespace Nancy.TinyIoc
         ///
         /// Parameters are used in conjunction with normal container resolution to find the most suitable constructor (if one exists).
         /// All user supplied parameters must exist in at least one resolvable constructor of RegisterType or resolution will fail.
-        /// 
-        /// Note: Resolution may still fail if user defined factory registations fail to construct objects when called.
+        ///
+        /// Note: Resolution may still fail if user defined factory registrations fail to construct objects when called.
         /// </summary>
         /// <param name="resolveType">Type to resolve</param>
         /// <param name="parameters">User supplied named parameter overloads</param>
@@ -1827,8 +1826,8 @@ namespace Nancy.TinyIoc
         ///
         /// Parameters are used in conjunction with normal container resolution to find the most suitable constructor (if one exists).
         /// All user supplied parameters must exist in at least one resolvable constructor of RegisterType or resolution will fail.
-        /// 
-        /// Note: Resolution may still fail if user defined factory registations fail to construct objects when called.
+        ///
+        /// Note: Resolution may still fail if user defined factory registrations fail to construct objects when called.
         /// </summary>
         /// <param name="resolveType">Type to resolve</param>
         /// <param name="name">Name of registration</param>
@@ -1843,10 +1842,9 @@ namespace Nancy.TinyIoc
         /// <summary>
         /// Attempts to predict whether a given type can be resolved with default options.
         ///
-        /// Note: Resolution may still fail if user defined factory registations fail to construct objects when called.
+        /// Note: Resolution may still fail if user defined factory registrations fail to construct objects when called.
         /// </summary>
         /// <typeparam name="ResolveType">Type to resolve</typeparam>
-        /// <param name="name">Name of registration</param>
         /// <returns>Bool indicating whether the type can be resolved</returns>
         public bool CanResolve<ResolveType>()
             where ResolveType : class
@@ -1857,7 +1855,7 @@ namespace Nancy.TinyIoc
         /// <summary>
         /// Attempts to predict whether a given named type can be resolved with default options.
         ///
-        /// Note: Resolution may still fail if user defined factory registations fail to construct objects when called.
+        /// Note: Resolution may still fail if user defined factory registrations fail to construct objects when called.
         /// </summary>
         /// <typeparam name="ResolveType">Type to resolve</typeparam>
         /// <returns>Bool indicating whether the type can be resolved</returns>
@@ -1870,10 +1868,9 @@ namespace Nancy.TinyIoc
         /// <summary>
         /// Attempts to predict whether a given type can be resolved with the specified options.
         ///
-        /// Note: Resolution may still fail if user defined factory registations fail to construct objects when called.
+        /// Note: Resolution may still fail if user defined factory registrations fail to construct objects when called.
         /// </summary>
         /// <typeparam name="ResolveType">Type to resolve</typeparam>
-        /// <param name="name">Name of registration</param>
         /// <param name="options">Resolution options</param>
         /// <returns>Bool indicating whether the type can be resolved</returns>
         public bool CanResolve<ResolveType>(ResolveOptions options)
@@ -1885,7 +1882,7 @@ namespace Nancy.TinyIoc
         /// <summary>
         /// Attempts to predict whether a given named type can be resolved with the specified options.
         ///
-        /// Note: Resolution may still fail if user defined factory registations fail to construct objects when called.
+        /// Note: Resolution may still fail if user defined factory registrations fail to construct objects when called.
         /// </summary>
         /// <typeparam name="ResolveType">Type to resolve</typeparam>
         /// <param name="name">Name of registration</param>
@@ -1902,8 +1899,8 @@ namespace Nancy.TinyIoc
         ///
         /// Parameters are used in conjunction with normal container resolution to find the most suitable constructor (if one exists).
         /// All user supplied parameters must exist in at least one resolvable constructor of RegisterType or resolution will fail.
-        /// 
-        /// Note: Resolution may still fail if user defined factory registations fail to construct objects when called.
+        ///
+        /// Note: Resolution may still fail if user defined factory registrations fail to construct objects when called.
         /// </summary>
         /// <typeparam name="ResolveType">Type to resolve</typeparam>
         /// <param name="parameters">User supplied named parameter overloads</param>
@@ -1919,8 +1916,8 @@ namespace Nancy.TinyIoc
         ///
         /// Parameters are used in conjunction with normal container resolution to find the most suitable constructor (if one exists).
         /// All user supplied parameters must exist in at least one resolvable constructor of RegisterType or resolution will fail.
-        /// 
-        /// Note: Resolution may still fail if user defined factory registations fail to construct objects when called.
+        ///
+        /// Note: Resolution may still fail if user defined factory registrations fail to construct objects when called.
         /// </summary>
         /// <typeparam name="ResolveType">Type to resolve</typeparam>
         /// <param name="name">Name of registration</param>
@@ -1937,7 +1934,7 @@ namespace Nancy.TinyIoc
         ///
         /// Parameters are used in conjunction with normal container resolution to find the most suitable constructor (if one exists).
         /// All user supplied parameters must exist in at least one resolvable constructor of RegisterType or resolution will fail.
-        /// 
+        ///
         /// Note: Resolution may still fail if user defined factory registrations fail to construct objects when called.
         /// </summary>
         /// <typeparam name="ResolveType">Type to resolve</typeparam>
@@ -1955,8 +1952,8 @@ namespace Nancy.TinyIoc
         ///
         /// Parameters are used in conjunction with normal container resolution to find the most suitable constructor (if one exists).
         /// All user supplied parameters must exist in at least one resolvable constructor of RegisterType or resolution will fail.
-        /// 
-        /// Note: Resolution may still fail if user defined factory registations fail to construct objects when called.
+        ///
+        /// Note: Resolution may still fail if user defined factory registrations fail to construct objects when called.
         /// </summary>
         /// <typeparam name="ResolveType">Type to resolve</typeparam>
         /// <param name="name">Name of registration</param>
@@ -1970,11 +1967,11 @@ namespace Nancy.TinyIoc
         }
 
         /// <summary>
-        /// Attemps to resolve a type using the default options
+        /// Attempts to resolve a type using the default options
         /// </summary>
-        /// <param name="ResolveType">Type to resolve</param>
+        /// <param name="resolveType">Type to resolve</param>
         /// <param name="resolvedType">Resolved type or default if resolve fails</param>
-        /// <returns>True if resolved sucessfully, false otherwise</returns>
+        /// <returns>True if resolved successfully, false otherwise</returns>
         public bool TryResolve(Type resolveType, out object resolvedType)
         {
             try
@@ -1990,12 +1987,12 @@ namespace Nancy.TinyIoc
         }
 
         /// <summary>
-        /// Attemps to resolve a type using the given options
+        /// Attempts to resolve a type using the given options
         /// </summary>
-        /// <param name="ResolveType">Type to resolve</param>
+        /// <param name="resolveType">Type to resolve</param>
         /// <param name="options">Resolution options</param>
         /// <param name="resolvedType">Resolved type or default if resolve fails</param>
-        /// <returns>True if resolved sucessfully, false otherwise</returns>
+        /// <returns>True if resolved successfully, false otherwise</returns>
         public bool TryResolve(Type resolveType, ResolveOptions options, out object resolvedType)
         {
             try
@@ -2011,9 +2008,9 @@ namespace Nancy.TinyIoc
         }
 
         /// <summary>
-        /// Attemps to resolve a type using the default options and given name
+        /// Attempts to resolve a type using the default options and given name
         /// </summary>
-        /// <param name="ResolveType">Type to resolve</param>
+        /// <param name="resolveType">Type to resolve</param>
         /// <param name="name">Name of registration</param>
         /// <param name="resolvedType">Resolved type or default if resolve fails</param>
         /// <returns>True if resolved successfully, false otherwise</returns>
@@ -2032,13 +2029,13 @@ namespace Nancy.TinyIoc
         }
 
         /// <summary>
-        /// Attemps to resolve a type using the given options and name
+        /// Attempts to resolve a type using the given options and name
         /// </summary>
-        /// <param name="ResolveType">Type to resolve</param>
+        /// <param name="resolveType">Type to resolve</param>
         /// <param name="name">Name of registration</param>
         /// <param name="options">Resolution options</param>
         /// <param name="resolvedType">Resolved type or default if resolve fails</param>
-        /// <returns>True if resolved sucessfully, false otherwise</returns>
+        /// <returns>True if resolved successfully, false otherwise</returns>
         public bool TryResolve(Type resolveType, string name, ResolveOptions options, out object resolvedType)
         {
             try
@@ -2054,12 +2051,12 @@ namespace Nancy.TinyIoc
         }
 
         /// <summary>
-        /// Attemps to resolve a type using the default options and supplied constructor parameters
+        /// Attempts to resolve a type using the default options and supplied constructor parameters
         /// </summary>
-        /// <param name="ResolveType">Type to resolve</param>
+        /// <param name="resolveType">Type to resolve</param>
         /// <param name="parameters">User specified constructor parameters</param>
         /// <param name="resolvedType">Resolved type or default if resolve fails</param>
-        /// <returns>True if resolved sucessfully, false otherwise</returns>
+        /// <returns>True if resolved successfully, false otherwise</returns>
         public bool TryResolve(Type resolveType, NamedParameterOverloads parameters, out object resolvedType)
         {
             try
@@ -2075,9 +2072,9 @@ namespace Nancy.TinyIoc
         }
 
         /// <summary>
-        /// Attemps to resolve a type using the default options and supplied name and constructor parameters
+        /// Attempts to resolve a type using the default options and supplied name and constructor parameters
         /// </summary>
-        /// <param name="ResolveType">Type to resolve</param>
+        /// <param name="resolveType">Type to resolve</param>
         /// <param name="name">Name of registration</param>
         /// <param name="parameters">User specified constructor parameters</param>
         /// <param name="resolvedType">Resolved type or default if resolve fails</param>
@@ -2097,10 +2094,9 @@ namespace Nancy.TinyIoc
         }
 
         /// <summary>
-        /// Attemps to resolve a type using the supplied options and constructor parameters
+        /// Attempts to resolve a type using the supplied options and constructor parameters
         /// </summary>
-        /// <param name="ResolveType">Type to resolve</param>
-        /// <param name="name">Name of registration</param>
+        /// <param name="resolveType">Type to resolve</param>
         /// <param name="parameters">User specified constructor parameters</param>
         /// <param name="options">Resolution options</param>
         /// <param name="resolvedType">Resolved type or default if resolve fails</param>
@@ -2120,9 +2116,9 @@ namespace Nancy.TinyIoc
         }
 
         /// <summary>
-        /// Attemps to resolve a type using the supplied name, options and constructor parameters
+        /// Attempt to resolve a type using the supplied name, options and constructor parameters
         /// </summary>
-        /// <param name="ResolveType">Type to resolve</param>
+        /// <param name="resolveType">Type to resolve</param>
         /// <param name="name">Name of registration</param>
         /// <param name="parameters">User specified constructor parameters</param>
         /// <param name="options">Resolution options</param>
@@ -2143,7 +2139,7 @@ namespace Nancy.TinyIoc
         }
 
         /// <summary>
-        /// Attemps to resolve a type using the default options
+        /// Attempts to resolve a type using the default options
         /// </summary>
         /// <typeparam name="ResolveType">Type to resolve</typeparam>
         /// <param name="resolvedType">Resolved type or default if resolve fails</param>
@@ -2164,7 +2160,7 @@ namespace Nancy.TinyIoc
         }
 
         /// <summary>
-        /// Attemps to resolve a type using the given options
+        /// Attempts to resolve a type using the given options
         /// </summary>
         /// <typeparam name="ResolveType">Type to resolve</typeparam>
         /// <param name="options">Resolution options</param>
@@ -2186,7 +2182,7 @@ namespace Nancy.TinyIoc
         }
 
         /// <summary>
-        /// Attemps to resolve a type using the default options and given name
+        /// Attempts to resolve a type using the default options and given name
         /// </summary>
         /// <typeparam name="ResolveType">Type to resolve</typeparam>
         /// <param name="name">Name of registration</param>
@@ -2208,7 +2204,7 @@ namespace Nancy.TinyIoc
         }
 
         /// <summary>
-        /// Attemps to resolve a type using the given options and name
+        /// Attempts to resolve a type using the given options and name
         /// </summary>
         /// <typeparam name="ResolveType">Type to resolve</typeparam>
         /// <param name="name">Name of registration</param>
@@ -2231,7 +2227,7 @@ namespace Nancy.TinyIoc
         }
 
         /// <summary>
-        /// Attemps to resolve a type using the default options and supplied constructor parameters
+        /// Attempts to resolve a type using the default options and supplied constructor parameters
         /// </summary>
         /// <typeparam name="ResolveType">Type to resolve</typeparam>
         /// <param name="parameters">User specified constructor parameters</param>
@@ -2253,7 +2249,7 @@ namespace Nancy.TinyIoc
         }
 
         /// <summary>
-        /// Attemps to resolve a type using the default options and supplied name and constructor parameters
+        /// Attempts to resolve a type using the default options and supplied name and constructor parameters
         /// </summary>
         /// <typeparam name="ResolveType">Type to resolve</typeparam>
         /// <param name="name">Name of registration</param>
@@ -2276,10 +2272,9 @@ namespace Nancy.TinyIoc
         }
 
         /// <summary>
-        /// Attemps to resolve a type using the supplied options and constructor parameters
+        /// Attempts to resolve a type using the supplied options and constructor parameters
         /// </summary>
         /// <typeparam name="ResolveType">Type to resolve</typeparam>
-        /// <param name="name">Name of registration</param>
         /// <param name="parameters">User specified constructor parameters</param>
         /// <param name="options">Resolution options</param>
         /// <param name="resolvedType">Resolved type or default if resolve fails</param>
@@ -2300,7 +2295,7 @@ namespace Nancy.TinyIoc
         }
 
         /// <summary>
-        /// Attemps to resolve a type using the supplied name, options and constructor parameters
+        /// Attempts to resolve a type using the supplied name, options and constructor parameters
         /// </summary>
         /// <typeparam name="ResolveType">Type to resolve</typeparam>
         /// <param name="name">Name of registration</param>
@@ -2326,7 +2321,7 @@ namespace Nancy.TinyIoc
         /// <summary>
         /// Returns all registrations of a type
         /// </summary>
-        /// <param name="ResolveType">Type to resolveAll</param>
+        /// <param name="resolveType">Type to resolveAll</param>
         /// <param name="includeUnnamed">Whether to include un-named (default) registrations</param>
         /// <returns>IEnumerable</returns>
         public IEnumerable<object> ResolveAll(Type resolveType, bool includeUnnamed)
@@ -2337,7 +2332,7 @@ namespace Nancy.TinyIoc
         /// <summary>
         /// Returns all registrations of a type, both named and unnamed
         /// </summary>
-        /// <param name="ResolveType">Type to resolveAll</param>
+        /// <param name="resolveType">Type to resolveAll</param>
         /// <returns>IEnumerable</returns>
         public IEnumerable<object> ResolveAll(Type resolveType)
         {
@@ -2360,7 +2355,6 @@ namespace Nancy.TinyIoc
         /// Returns all registrations of a type, both named and unnamed
         /// </summary>
         /// <typeparam name="ResolveType">Type to resolveAll</typeparam>
-        /// <param name="includeUnnamed">Whether to include un-named (default) registrations</param>
         /// <returns>IEnumerable</returns>
         public IEnumerable<ResolveType> ResolveAll<ResolveType>()
             where ResolveType : class
@@ -2417,7 +2411,7 @@ namespace Nancy.TinyIoc
         {
             /// <summary>
             /// Whether to assume this factory successfully constructs its objects
-            /// 
+            ///
             /// Generally set to true for delegate style factories as CanResolve cannot delve
             /// into the delegates they contain.
             /// </summary>
@@ -2503,8 +2497,8 @@ namespace Nancy.TinyIoc
             public MultiInstanceFactory(Type registerType, Type registerImplementation)
             {
 //#if NETFX_CORE
-//				if (registerImplementation.GetTypeInfo().IsAbstract() || registerImplementation.GetTypeInfo().IsInterface())
-//					throw new TinyIoCRegistrationTypeException(registerImplementation, "MultiInstanceFactory");
+//              if (registerImplementation.GetTypeInfo().IsAbstract() || registerImplementation.GetTypeInfo().IsInterface())
+//                  throw new TinyIoCRegistrationTypeException(registerImplementation, "MultiInstanceFactory");
 //#else
                 if (registerImplementation.IsAbstract() || registerImplementation.IsInterface())
                     throw new TinyIoCRegistrationTypeException(registerImplementation, "MultiInstanceFactory");
@@ -2743,7 +2737,7 @@ namespace Nancy.TinyIoc
 
         /// <summary>
         /// Stores an particular instance to return for a type
-        /// 
+        ///
         /// Stores the instance with a weak reference
         /// </summary>
         private class WeakInstanceFactory : ObjectFactoryBase, IDisposable
@@ -2833,7 +2827,7 @@ namespace Nancy.TinyIoc
             public SingletonFactory(Type registerType, Type registerImplementation)
             {
 //#if NETFX_CORE
-//				if (registerImplementation.GetTypeInfo().IsAbstract() || registerImplementation.GetTypeInfo().IsInterface())
+//              if (registerImplementation.GetTypeInfo().IsAbstract() || registerImplementation.GetTypeInfo().IsInterface())
 //#else
                 if (registerImplementation.IsAbstract() || registerImplementation.IsInterface())
 //#endif
@@ -2895,7 +2889,7 @@ namespace Nancy.TinyIoc
 
             public void Dispose()
             {
-                if (this._Current == null) 
+                if (this._Current == null)
                     return;
 
                 var disposable = this._Current as IDisposable;
@@ -2924,7 +2918,7 @@ namespace Nancy.TinyIoc
                     throw new TinyIoCRegistrationTypeException(registerImplementation, "SingletonFactory");
 
 //#if NETFX_CORE
-//				if (registerImplementation.GetTypeInfo().IsAbstract() || registerImplementation.GetTypeInfo().IsInterface())
+//              if (registerImplementation.GetTypeInfo().IsAbstract() || registerImplementation.GetTypeInfo().IsInterface())
 //#else
                 if (registerImplementation.IsAbstract() || registerImplementation.IsInterface())
 //#endif
@@ -3059,7 +3053,7 @@ namespace Nancy.TinyIoc
             }
         }
         private readonly SafeDictionary<TypeRegistration, ObjectFactoryBase> _RegisteredTypes;
-#if USE_OBJECT_CONSTRUCTOR 
+#if USE_OBJECT_CONSTRUCTOR
         private delegate object ObjectConstructor(params object[] parameters);
         private static readonly SafeDictionary<ConstructorInfo, ObjectConstructor> _ObjectConstructorCache = new SafeDictionary<ConstructorInfo, ObjectConstructor>();
 #endif
@@ -3125,7 +3119,7 @@ namespace Nancy.TinyIoc
                         {
                             RegisterMultiple(type, implementations);
                         }
-                    }   
+                    }
 
                     var firstImplementation = implementations.FirstOrDefault();
                     if (firstImplementation != null)
@@ -3182,7 +3176,7 @@ namespace Nancy.TinyIoc
 
             if (registrationPredicate != null)
             {
-                ignoreChecks.Add(t => !registrationPredicate(t));    
+                ignoreChecks.Add(t => !registrationPredicate(t));
             }
 
             foreach (var check in ignoreChecks)
@@ -3236,7 +3230,7 @@ namespace Nancy.TinyIoc
         private ObjectFactoryBase GetDefaultObjectFactory(Type registerType, Type registerImplementation)
         {
 //#if NETFX_CORE
-//			if (registerType.GetTypeInfo().IsInterface() || registerType.GetTypeInfo().IsAbstract())
+//          if (registerType.GetTypeInfo().IsInterface() || registerType.GetTypeInfo().IsAbstract())
 //#else
             if (registerType.IsInterface() || registerType.IsAbstract())
 //#endif
@@ -3270,7 +3264,7 @@ namespace Nancy.TinyIoc
             if (!String.IsNullOrEmpty(name) && options.NamedResolutionFailureAction == NamedResolutionFailureActions.Fail)
                 return (_Parent != null) ? _Parent.CanResolveInternal(registration, parameters, options) : false;
 
-            // Attemped unnamed fallback container resolution if relevant and requested
+            // Attempted unnamed fallback container resolution if relevant and requested
             if (!String.IsNullOrEmpty(name) && options.NamedResolutionFailureAction == NamedResolutionFailureActions.AttemptUnnamedResolution)
             {
                 if (_RegisteredTypes.TryGetValue(new TypeRegistration(checkType), out factory))
@@ -3328,7 +3322,7 @@ namespace Nancy.TinyIoc
 
             // 2 parameter func with string as first parameter (name)
 //#if NETFX_CORE
-//			if ((genericType == typeof(Func<,>) && type.GetTypeInfo().GenericTypeArguments[0] == typeof(string)))
+//          if ((genericType == typeof(Func<,>) && type.GetTypeInfo().GenericTypeArguments[0] == typeof(string)))
 //#else
             if ((genericType == typeof(Func<,>) && type.GetGenericArguments()[0] == typeof(string)))
 //#endif
@@ -3336,7 +3330,7 @@ namespace Nancy.TinyIoc
 
             // 3 parameter func with string as first parameter (name) and IDictionary<string, object> as second (parameters)
 //#if NETFX_CORE
-//			if ((genericType == typeof(Func<,,>) && type.GetTypeInfo().GenericTypeArguments[0] == typeof(string) && type.GetTypeInfo().GenericTypeArguments[1] == typeof(IDictionary<String, object>)))
+//          if ((genericType == typeof(Func<,,>) && type.GetTypeInfo().GenericTypeArguments[0] == typeof(string) && type.GetTypeInfo().GenericTypeArguments[1] == typeof(IDictionary<String, object>)))
 //#else
             if ((genericType == typeof(Func<,,>) && type.GetGenericArguments()[0] == typeof(string) && type.GetGenericArguments()[1] == typeof(IDictionary<String, object>)))
 //#endif
@@ -3427,7 +3421,7 @@ namespace Nancy.TinyIoc
             if (!String.IsNullOrEmpty(registration.Name) && options.NamedResolutionFailureAction == NamedResolutionFailureActions.Fail)
                 throw new TinyIoCResolutionException(registration.Type);
 
-            // Attemped unnamed fallback container resolution if relevant and requested
+            // Attempted unnamed fallback container resolution if relevant and requested
             if (!String.IsNullOrEmpty(registration.Name) && options.NamedResolutionFailureAction == NamedResolutionFailureActions.AttemptUnnamedResolution)
             {
                 if (_RegisteredTypes.TryGetValue(new TypeRegistration(registration.Type, string.Empty), out factory))
@@ -3474,7 +3468,7 @@ namespace Nancy.TinyIoc
 
             Type genericType = type.GetGenericTypeDefinition();
 //#if NETFX_CORE
-//			Type[] genericArguments = type.GetTypeInfo().GenericTypeArguments.ToArray();
+//          Type[] genericArguments = type.GetTypeInfo().GenericTypeArguments.ToArray();
 //#else
             Type[] genericArguments = type.GetGenericArguments();
 //#endif
@@ -3485,7 +3479,7 @@ namespace Nancy.TinyIoc
                 Type returnType = genericArguments[0];
 
 //#if NETFX_CORE
-//				MethodInfo resolveMethod = typeof(TinyIoCContainer).GetTypeInfo().GetDeclaredMethods("Resolve").First(mi => !mi.GetParameters().Any());
+//              MethodInfo resolveMethod = typeof(TinyIoCContainer).GetTypeInfo().GetDeclaredMethods("Resolve").First(mi => !mi.GetParameters().Any());
 //#else
                 MethodInfo resolveMethod = typeof(TinyIoCContainer).GetMethod("Resolve", new Type[] { });
 //#endif
@@ -3504,7 +3498,7 @@ namespace Nancy.TinyIoc
                 Type returnType = genericArguments[1];
 
 //#if NETFX_CORE
-//				MethodInfo resolveMethod = typeof(TinyIoCContainer).GetTypeInfo().GetDeclaredMethods("Resolve").First(mi => mi.GetParameters().Length == 1 && mi.GetParameters()[0].GetType() == typeof(String));
+//              MethodInfo resolveMethod = typeof(TinyIoCContainer).GetTypeInfo().GetDeclaredMethods("Resolve").First(mi => mi.GetParameters().Length == 1 && mi.GetParameters()[0].GetType() == typeof(String));
 //#else
                 MethodInfo resolveMethod = typeof(TinyIoCContainer).GetMethod("Resolve", new Type[] { typeof(String) });
 //#endif
@@ -3520,7 +3514,7 @@ namespace Nancy.TinyIoc
 
             // 3 parameter func with string as first parameter (name) and IDictionary<string, object> as second (parameters)
 //#if NETFX_CORE
-//			if ((genericType == typeof(Func<,,>) && type.GenericTypeArguments[0] == typeof(string) && type.GenericTypeArguments[1] == typeof(IDictionary<string, object>)))
+//          if ((genericType == typeof(Func<,,>) && type.GenericTypeArguments[0] == typeof(string) && type.GenericTypeArguments[1] == typeof(IDictionary<string, object>)))
 //#else
             if ((genericType == typeof(Func<,,>) && type.GetGenericArguments()[0] == typeof(string) && type.GetGenericArguments()[1] == typeof(IDictionary<string, object>)))
 //#endif
@@ -3531,7 +3525,7 @@ namespace Nancy.TinyIoc
                 var parameters = Expression.Parameter(typeof(IDictionary<string, object>), "parameters");
 
 //#if NETFX_CORE
-//				MethodInfo resolveMethod = typeof(TinyIoCContainer).GetTypeInfo().GetDeclaredMethods("Resolve").First(mi => mi.GetParameters().Length == 2 && mi.GetParameters()[0].GetType() == typeof(String) && mi.GetParameters()[1].GetType() == typeof(NamedParameterOverloads));
+//              MethodInfo resolveMethod = typeof(TinyIoCContainer).GetTypeInfo().GetDeclaredMethods("Resolve").First(mi => mi.GetParameters().Length == 2 && mi.GetParameters()[0].GetType() == typeof(String) && mi.GetParameters()[1].GetType() == typeof(NamedParameterOverloads));
 //#else
                 MethodInfo resolveMethod = typeof(TinyIoCContainer).GetMethod("Resolve", new Type[] { typeof(String), typeof(NamedParameterOverloads) });
 //#endif
@@ -3550,7 +3544,7 @@ namespace Nancy.TinyIoc
         private object GetIEnumerableRequest(Type type)
         {
 //#if NETFX_CORE
-//			var genericResolveAllMethod = this.GetType().GetGenericMethod("ResolveAll", type.GenericTypeArguments, new[] { typeof(bool) });
+//          var genericResolveAllMethod = this.GetType().GetGenericMethod("ResolveAll", type.GenericTypeArguments, new[] { typeof(bool) });
 //#else
             var genericResolveAllMethod = this.GetType().GetGenericMethod(BindingFlags.Public | BindingFlags.Instance, "ResolveAll", type.GetGenericArguments(), new[] { typeof(bool) });
 //#endif
@@ -3570,8 +3564,8 @@ namespace Nancy.TinyIoc
 
                 var isParameterOverload = parameters.ContainsKey(parameter.Name);
 
-//#if NETFX_CORE                
-//				if (parameter.ParameterType.GetTypeInfo().IsPrimitive && !isParameterOverload)
+//#if NETFX_CORE
+//              if (parameter.ParameterType.GetTypeInfo().IsPrimitive && !isParameterOverload)
 //#else
                 if (parameter.ParameterType.IsPrimitive() && !isParameterOverload)
 //#endif
@@ -3590,7 +3584,7 @@ namespace Nancy.TinyIoc
                 throw new ArgumentNullException("parameters");
 
 //#if NETFX_CORE
-//			if (type.GetTypeInfo().IsValueType)
+//          if (type.GetTypeInfo().IsValueType)
 //#else
             if (type.IsValueType())
 //#endif
@@ -3612,7 +3606,7 @@ namespace Nancy.TinyIoc
         private IEnumerable<ConstructorInfo> GetTypeConstructors(Type type)
         {
 //#if NETFX_CORE
-//			return type.GetTypeInfo().DeclaredConstructors.OrderByDescending(ctor => ctor.GetParameters().Count());
+//          return type.GetTypeInfo().DeclaredConstructors.OrderByDescending(ctor => ctor.GetParameters().Count());
 //#else
             return type.GetConstructors().OrderByDescending(ctor => ctor.GetParameters().Count());
 //#endif
@@ -3642,7 +3636,7 @@ namespace Nancy.TinyIoc
             {
                 if (requestedType == null || !requestedType.IsGenericType() || !requestedType.GetGenericArguments().Any())
                     throw new TinyIoCResolutionException(typeToConstruct);
-                 
+
                 typeToConstruct = typeToConstruct.MakeGenericType(requestedType.GetGenericArguments());
             }
 #endif
@@ -3667,11 +3661,11 @@ namespace Nancy.TinyIoc
 
                 try
                 {
-                    args[parameterIndex] = parameters.ContainsKey(currentParam.Name) ? 
-                                            parameters[currentParam.Name] : 
+                    args[parameterIndex] = parameters.ContainsKey(currentParam.Name) ?
+                                            parameters[currentParam.Name] :
                                             ResolveInternal(
-                                                new TypeRegistration(currentParam.ParameterType), 
-                                                NamedParameterOverloads.Default, 
+                                                new TypeRegistration(currentParam.ParameterType),
+                                                NamedParameterOverloads.Default,
                                                 options);
                 }
                 catch (TinyIoCResolutionException ex)
@@ -3702,7 +3696,7 @@ namespace Nancy.TinyIoc
             }
         }
 
-#if USE_OBJECT_CONSTRUCTOR 
+#if USE_OBJECT_CONSTRUCTOR
         private static ObjectConstructor CreateObjectConstructionDelegateWithCache(ConstructorInfo constructor)
         {
             ObjectConstructor objectConstructor;
@@ -3711,7 +3705,7 @@ namespace Nancy.TinyIoc
 
             // We could lock the cache here, but there's no real side
             // effect to two threads creating the same ObjectConstructor
-            // at the same time, compared to the cost of a lock for 
+            // at the same time, compared to the cost of a lock for
             // every creation.
             var constructorParams = constructor.GetParameters();
             var lambdaParams = Expression.Parameter(typeof(object[]), "parameters");
@@ -3738,9 +3732,9 @@ namespace Nancy.TinyIoc
         private void BuildUpInternal(object input, ResolveOptions resolveOptions)
         {
 //#if NETFX_CORE
-//			var properties = from property in input.GetType().GetTypeInfo().DeclaredProperties
-//							 where (property.GetMethod != null) && (property.SetMethod != null) && !property.PropertyType.GetTypeInfo().IsValueType
-//							 select property;
+//          var properties = from property in input.GetType().GetTypeInfo().DeclaredProperties
+//                           where (property.GetMethod != null) && (property.SetMethod != null) && !property.PropertyType.GetTypeInfo().IsValueType
+//                           select property;
 //#else
             var properties = from property in input.GetType().GetProperties()
                              where (property.GetGetMethod() != null) && (property.GetSetMethod() != null) && !property.PropertyType.IsValueType()
@@ -3786,26 +3780,26 @@ namespace Nancy.TinyIoc
         private static bool IsValidAssignment(Type registerType, Type registerImplementation)
         {
 //#if NETFX_CORE
-//			var registerTypeDef = registerType.GetTypeInfo();
-//			var registerImplementationDef = registerImplementation.GetTypeInfo();
+//          var registerTypeDef = registerType.GetTypeInfo();
+//          var registerImplementationDef = registerImplementation.GetTypeInfo();
 
-//			if (!registerTypeDef.IsGenericTypeDefinition)
-//			{
-//				if (!registerTypeDef.IsAssignableFrom(registerImplementationDef))
-//					return false;
-//			}
-//			else
-//			{
-//				if (registerTypeDef.IsInterface())
-//				{
-//					if (!registerImplementationDef.ImplementedInterfaces.Any(t => t.GetTypeInfo().Name == registerTypeDef.Name))
-//						return false;
-//				}
-//				else if (registerTypeDef.IsAbstract() && registerImplementationDef.BaseType() != registerType)
-//				{
-//					return false;
-//				}
-//			}
+//          if (!registerTypeDef.IsGenericTypeDefinition)
+//          {
+//              if (!registerTypeDef.IsAssignableFrom(registerImplementationDef))
+//                  return false;
+//          }
+//          else
+//          {
+//              if (registerTypeDef.IsInterface())
+//              {
+//                  if (!registerImplementationDef.ImplementedInterfaces.Any(t => t.GetTypeInfo().Name == registerTypeDef.Name))
+//                      return false;
+//              }
+//              else if (registerTypeDef.IsAbstract() && registerImplementationDef.BaseType() != registerType)
+//              {
+//                  return false;
+//              }
+//          }
 //#else
             if (!registerType.IsGenericTypeDefinition())
             {
