@@ -8,7 +8,7 @@
     /// Helpers to generate html content.
     /// </summary>
     /// <typeparam name="TModel">The type of the model.</typeparam>
-    public class HtmlHelpers<TModel>
+    public class HtmlHelpers<TModel> : HtmlHelpers
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="HtmlHelpers{T}"/> class.
@@ -16,10 +16,8 @@
         /// <param name="engine">The razor view engine instance that the helpers are being used by.</param>
         /// <param name="renderContext">The <see cref="IRenderContext"/> that the helper are being used by.</param>
         /// <param name="model">The model that is used by the page where the helpers are invoked.</param>
-        public HtmlHelpers(RazorViewEngine engine, IRenderContext renderContext, TModel model)
+        public HtmlHelpers(RazorViewEngine engine, IRenderContext renderContext, TModel model) : base(engine, renderContext)
         {
-            this.Engine = engine;
-            this.RenderContext = renderContext;
             this.Model = model;
         }
 
@@ -28,6 +26,23 @@
         /// </summary>
         /// <value>An instance of the view model.</value>
         public TModel Model { get; set; }
+    }
+
+    /// <summary>
+    /// Base helpers to generate html content.
+    /// </summary>
+    public abstract class HtmlHelpers
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HtmlHelpers"/> class.
+        /// </summary>
+        /// <param name="engine">The razor view engine instance that the helpers are being used by.</param>
+        /// <param name="renderContext">The <see cref="IRenderContext"/> that the helper are being used by.</param>
+        protected HtmlHelpers(RazorViewEngine engine, IRenderContext renderContext)
+        {
+            this.Engine = engine;
+            this.RenderContext = renderContext;
+        }
 
         /// <summary>
         /// The engine that is currently rendering the view.
