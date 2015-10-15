@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Xml;
     using System.Xml.Serialization;
 
     using Nancy.Xml;
@@ -39,13 +40,36 @@
         {
             var serializer = new XmlSerializer(typeof(TModel));
 
-            if (XmlSettings.EncodingEnabled)
+            if (XmlSettings.IncludeWhiteSpace)
             {
-                serializer.Serialize(new StreamWriter(outputStream, XmlSettings.DefaultEncoding), model);
+                if (XmlSettings.EncodingEnabled)
+                {
+                    serializer.Serialize(new StreamWriter(outputStream, XmlSettings.DefaultEncoding), model);
+                }
+                else
+                {
+                    serializer.Serialize(outputStream, model);
+                }
             }
             else
             {
-                serializer.Serialize(outputStream, model);
+                var xmlSettings = new XmlWriterSettings
+                {
+                    Indent = XmlSettings.IncludeWhiteSpace
+                };
+
+                XmlWriter xmlWriter;
+
+                if (XmlSettings.EncodingEnabled)
+                {
+                    var streamWriter = new StreamWriter(outputStream, XmlSettings.DefaultEncoding);
+                    xmlWriter = XmlWriter.Create(streamWriter, xmlSettings);
+                }
+                else
+                {
+                    xmlWriter = XmlWriter.Create(outputStream, xmlSettings);
+                }
+                serializer.Serialize(xmlWriter, model);
             }
         }
 
