@@ -13,6 +13,6 @@
         /// <param name="username">Username</param>
         /// <param name="password">Password</param>
         /// <returns>A value representing the authenticated user, null if the user was not authenticated.</returns>
-        IUserIdentity Validate(string username, string password);
+        ClaimsPrincipal Validate(string username, string password);
     }
 }
