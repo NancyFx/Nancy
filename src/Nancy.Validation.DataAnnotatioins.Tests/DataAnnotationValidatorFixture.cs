@@ -1,6 +1,7 @@
 ﻿namespace Nancy.Validation.DataAnnotations.Tests
 {
     using System;
+    using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
 
@@ -64,7 +65,7 @@
 
             // Then
             subject.Description.ShouldNotBeNull();
-            subject.Description.Rules.SelectMany(r => r.Value).ShouldHaveCount(9);
+            subject.Description.Rules.SelectMany(r => r.Value).ShouldHaveCount(10);
         }
 
         [Fact]
@@ -161,12 +162,47 @@
             subject.Description.Rules.SelectMany(r => r.Value).ShouldHave(r => r.RuleType == "Oops" && r.MemberNames.Contains(string.Empty));
         }
 
+        [Fact]
+        public void Should_use_display_attribute()
+        {
+            // Given
+            var subject = this.factory.Create(typeof(TestModel));
+            var instance = new TestModel { FirstName = "name", LastName = "a long name", Age = "1" };
+
+            // When
+            var result = subject.Validate(instance, new NancyContext());
+
+            // Then
+            result.IsValid.ShouldBeFalse();
+            result.Errors["LastName"][0].ErrorMessage.ShouldContain("Last Name");
+        }
+
+        [Fact]
+        public void Should_use_displayname_attribute()
+        {
+            // Given
+            var subject = this.factory.Create(typeof(TestModel));
+            var instance = new TestModel { FirstName = "a long name", Age = "1" };
+
+            // When
+            var result = subject.Validate(instance, new NancyContext());
+
+            // Then
+            result.IsValid.ShouldBeFalse();
+            result.Errors["FirstName"][0].ErrorMessage.ShouldContain("First Name");
+        }
+
         [OopsValidation]
         private class TestModel : IValidatableObject
         {
+            [DisplayName("First Name")]
             [Required]
             [StringLength(5)]
             public string FirstName { get; set; }
+
+            [Display(Name = "Last Name")]
+            [StringLength(5)]
+            public string LastName { get; set; }
 
             [RegularExpression("\\d+")]
             [Required]
@@ -185,7 +221,7 @@
         {
             protected override ValidationResult IsValid(object value, ValidationContext validationContext)
             {
-                return new ValidationResult("Oops", new[] { string.Empty });
+                return new ValidationResult("Oops");
             }
         }
 
@@ -199,6 +235,11 @@
             public override bool CanHandle(ValidationAttribute attribute)
             {
                 return attribute.GetType() == typeof(OopsValidationAttribute);
+            }
+
+            protected override ModelValidationError GetValidationError(ValidationResult result, ValidationContext context, ValidationAttribute attribute)
+            {
+                return new ModelValidationError(new[] { string.Empty }, result.ErrorMessage);
             }
         }
 
