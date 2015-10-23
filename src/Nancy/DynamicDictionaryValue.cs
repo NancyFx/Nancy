@@ -320,7 +320,7 @@
         {
             if (!dynamicValue.HasValue)
             {
-                return new bool?();
+                return default(bool?);
             }
 
             return (bool)dynamicValue;
@@ -358,7 +358,7 @@
         {
             if (!dynamicValue.HasValue)
             {
-                return new int?();
+                return default(int?);
             }
 
             return (int)dynamicValue;
@@ -383,7 +383,7 @@
         {
             if (!dynamicValue.HasValue)
             {
-                return new Guid?();
+                return default(Guid?);
             }
 
             return (Guid)dynamicValue;
@@ -408,7 +408,7 @@
         {
             if (!dynamicValue.HasValue)
             {
-                return new DateTime?();
+                return default(DateTime?);
             }
 
             return (DateTime)dynamicValue;
@@ -433,7 +433,7 @@
         {
             if (!dynamicValue.HasValue)
             {
-                return new TimeSpan?();
+                return default(TimeSpan?);
             }
 
             return (TimeSpan)dynamicValue;
@@ -458,7 +458,7 @@
         {
             if (!dynamicValue.HasValue)
             {
-                return new long?();
+                return default(long?);
             }
 
             return (long)dynamicValue;
@@ -483,7 +483,7 @@
         {
             if (!dynamicValue.HasValue)
             {
-                return new float?();
+                return default(float?);
             }
 
             return (float)dynamicValue;
@@ -508,7 +508,7 @@
         {
             if (!dynamicValue.HasValue)
             {
-                return new decimal?();
+                return default(decimal?);
             }
 
             return (decimal)dynamicValue;
@@ -533,7 +533,7 @@
         {
             if (!dynamicValue.HasValue)
             {
-                return new double?();
+                return default(double?);
             }
 
             return (double)dynamicValue;
