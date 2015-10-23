@@ -2,10 +2,10 @@ namespace Nancy.Tests.Unit.ModelBinding
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Text;
-    using System.Globalization;
     using System.Xml.Serialization;
     using FakeItEasy;
     using Fakes;
@@ -15,8 +15,8 @@ namespace Nancy.Tests.Unit.ModelBinding
     using Nancy.ModelBinding.DefaultBodyDeserializers;
     using Nancy.ModelBinding.DefaultConverters;
     using Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers;
-    using Xunit.Extensions;
     using Xunit;
+    using Xunit.Extensions;
 
     public class DefaultBinderFixture
     {
@@ -291,25 +291,6 @@ namespace Nancy.Tests.Unit.ModelBinding
         }
 
         [Fact]
-        public void Should_ignore_properties_that_cannot_be_converted()
-        {
-            // Given
-            var binder = this.GetBinder(typeConverters: new[] { new FallbackConverter() });
-            var context = new NancyContext { Request = new FakeRequest("GET", "/") };
-            context.Request.Form["StringProperty"] = "Test";
-            context.Request.Form["IntProperty"] = "12";
-            context.Request.Form["DateProperty"] = "Broken";
-
-            // When
-            var result = (TestModel)binder.Bind(context, typeof(TestModel), null, BindingConfig.Default);
-
-            // Then
-            result.StringProperty.ShouldEqual("Test");
-            result.IntProperty.ShouldEqual(12);
-            result.DateProperty.ShouldEqual(default(DateTime));
-        }
-
-        [Fact]
         public void Should_throw_ModelBindingException_if_convertion_of_a_property_fails()
         {
             // Given
@@ -330,8 +311,8 @@ namespace Nancy.Tests.Unit.ModelBinding
                                                                         pe.PropertyName == "AnotherIntProperty"
                                                                         && pe.AttemptedValue == "morebad")
                              && exception.PropertyBindingExceptions.All(pe =>
-                                                                        pe.InnerException.Message.Contains(pe.AttemptedValue)
-                                                                        && pe.InnerException.Message.Contains(modelType.GetProperty(pe.PropertyName).PropertyType.Name)));
+                                                                        pe.Message.Contains(pe.AttemptedValue)
+                                                                        && pe.Message.Contains(pe.PropertyName)));
         }
 
         [Fact]
@@ -391,7 +372,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             binder.Bind(context, typeof(TestModel), null, BindingConfig.Default);
 
             // Then
-            validProperties.ShouldEqual(22);
+            validProperties.ShouldEqual(23);
         }
 
         [Fact]
@@ -566,6 +547,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
             context.Request.Query["StringProperty"] = "Test";
             context.Request.Query["IntProperty"] = "3";
+            context.Request.Query["ObjectProperty"] = "testObject";
 
             // When
             var result = (TestModel)binder.Bind(context, typeof(TestModel), null, BindingConfig.Default);
@@ -573,6 +555,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             // Then
             result.StringProperty.ShouldEqual("Test");
             result.IntProperty.ShouldEqual(3);
+            result.ObjectProperty.ShouldEqual("testObject");
         }
 
         [Fact]
@@ -1570,6 +1553,8 @@ namespace Nancy.Tests.Unit.ModelBinding
             public double DoubleProperty { get; set; }
 
             public double DoubleField;
+            
+            public object ObjectProperty { get; set; }
 
             [XmlIgnore]
             public IEnumerable<int> IntValuesProperty { get; set; }

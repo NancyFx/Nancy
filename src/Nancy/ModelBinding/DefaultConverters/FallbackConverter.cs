@@ -29,24 +29,23 @@ namespace Nancy.ModelBinding.DefaultConverters
         /// <returns>Converted object of the destination type</returns>
         public object Convert(string input, Type destinationType, BindingContext context)
         {
-            var converter = TypeDescriptor.GetConverter(destinationType);
-
-            if (converter == null || !converter.CanConvertFrom(typeof(string)))
-            {
-                return null;
-            }
-
             try
             {
-                return converter.ConvertFrom(input);
+                if (destinationType.IsEnum)
+                {
+                    return Enum.Parse(destinationType, input);
+                }
+
+                return System.Convert.ChangeType(input, destinationType);
             }
             catch (FormatException)
             {
-                if (destinationType == typeof(bool) && converter.GetType() == typeof(BooleanConverter) && "on".Equals(input, StringComparison.OrdinalIgnoreCase))
+                if (destinationType == typeof(bool) && "on".Equals(input, StringComparison.OrdinalIgnoreCase))
                 {
                     return true;
                 }
-                return null;
+
+                throw;
             }
         }
     }
