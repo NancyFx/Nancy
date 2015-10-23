@@ -6,6 +6,7 @@
     using System.Globalization;
     using System.Linq.Expressions;
     using Microsoft.CSharp.RuntimeBinder;
+    using Nancy.Routing.Trie.Nodes;
 
     public class DynamicDictionaryValue : DynamicObject, IEquatable<DynamicDictionaryValue>, IHideObjectMembers, IConvertible
     {
@@ -315,6 +316,16 @@
             return this.value == null ? base.ToString() : Convert.ToString(this.value);
         }
 
+        public static implicit operator bool?(DynamicDictionaryValue dynamicValue)
+        {
+            if (!dynamicValue.HasValue)
+            {
+                return new bool?();
+            }
+
+            return (bool)dynamicValue;
+        }
+
         public static implicit operator bool(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -343,8 +354,23 @@
                        : null;
         }
 
+        public static implicit operator int?(DynamicDictionaryValue dynamicValue)
+        {
+            if (!dynamicValue.HasValue)
+            {
+                return new int?();
+            }
+
+            return (int)dynamicValue;
+        }
+
         public static implicit operator int(DynamicDictionaryValue dynamicValue)
         {
+            if (!dynamicValue.HasValue)
+            {
+                return default(int);
+            }
+
             if (dynamicValue.value.GetType().IsValueType)
             {
                 return Convert.ToInt32(dynamicValue.value);
@@ -353,8 +379,23 @@
             return int.Parse(dynamicValue.ToString());
         }
 
+        public static implicit operator Guid?(DynamicDictionaryValue dynamicValue)
+        {
+            if (!dynamicValue.HasValue)
+            {
+                return new Guid?();
+            }
+
+            return (Guid)dynamicValue;
+        }
+
         public static implicit operator Guid(DynamicDictionaryValue dynamicValue)
         {
+            if (!dynamicValue.HasValue)
+            {
+                return default(Guid);
+            }
+
             if (dynamicValue.value is Guid)
             {
                 return (Guid)dynamicValue.value;
@@ -363,8 +404,23 @@
             return Guid.Parse(dynamicValue.ToString());
         }
 
+        public static implicit operator DateTime?(DynamicDictionaryValue dynamicValue)
+        {
+            if (!dynamicValue.HasValue)
+            {
+                return new DateTime?();
+            }
+
+            return (DateTime)dynamicValue;
+        }
+
         public static implicit operator DateTime(DynamicDictionaryValue dynamicValue)
         {
+            if (!dynamicValue.HasValue)
+            {
+                return default(DateTime);
+            }
+
             if (dynamicValue.value is DateTime)
             {
                 return (DateTime)dynamicValue.value;
@@ -373,8 +429,23 @@
             return DateTime.Parse(dynamicValue.ToString());
         }
 
+        public static implicit operator TimeSpan?(DynamicDictionaryValue dynamicValue)
+        {
+            if (!dynamicValue.HasValue)
+            {
+                return new TimeSpan?();
+            }
+
+            return (TimeSpan)dynamicValue;
+        }
+
         public static implicit operator TimeSpan(DynamicDictionaryValue dynamicValue)
         {
+            if (!dynamicValue.HasValue)
+            {
+                return default(TimeSpan);
+            }
+
             if (dynamicValue.value is TimeSpan)
             {
                 return (TimeSpan)dynamicValue.value;
@@ -383,8 +454,23 @@
             return TimeSpan.Parse(dynamicValue.ToString());
         }
 
+        public static implicit operator long?(DynamicDictionaryValue dynamicValue)
+        {
+            if (!dynamicValue.HasValue)
+            {
+                return new long?();
+            }
+
+            return (long)dynamicValue;
+        }
+
         public static implicit operator long(DynamicDictionaryValue dynamicValue)
         {
+            if (!dynamicValue.HasValue)
+            {
+                return default(long);
+            }
+
             if (dynamicValue.value.GetType().IsValueType)
             {
                 return Convert.ToInt64(dynamicValue.value);
@@ -393,8 +479,23 @@
             return long.Parse(dynamicValue.ToString());
         }
 
+        public static implicit operator float?(DynamicDictionaryValue dynamicValue)
+        {
+            if (!dynamicValue.HasValue)
+            {
+                return new float?();
+            }
+
+            return (float)dynamicValue;
+        }
+
         public static implicit operator float(DynamicDictionaryValue dynamicValue)
         {
+            if (!dynamicValue.HasValue)
+            {
+                return default(float);
+            }
+
             if (dynamicValue.value.GetType().IsValueType)
             {
                 return Convert.ToSingle(dynamicValue.value);
@@ -403,8 +504,23 @@
             return float.Parse(dynamicValue.ToString());
         }
 
+        public static implicit operator decimal?(DynamicDictionaryValue dynamicValue)
+        {
+            if (!dynamicValue.HasValue)
+            {
+                return new decimal?();
+            }
+
+            return (decimal)dynamicValue;
+        }
+
         public static implicit operator decimal(DynamicDictionaryValue dynamicValue)
         {
+            if (!dynamicValue.HasValue)
+            {
+                return default(decimal);
+            }
+
             if (dynamicValue.value.GetType().IsValueType)
             {
                 return Convert.ToDecimal(dynamicValue.value);
@@ -413,8 +529,23 @@
             return decimal.Parse(dynamicValue.ToString());
         }
 
+        public static implicit operator double?(DynamicDictionaryValue dynamicValue)
+        {
+            if (!dynamicValue.HasValue)
+            {
+                return new double?();
+            }
+
+            return (double)dynamicValue;
+        }
+
         public static implicit operator double(DynamicDictionaryValue dynamicValue)
         {
+            if (!dynamicValue.HasValue)
+            {
+                return default(double);
+            }
+
             if (dynamicValue.value.GetType().IsValueType)
             {
                 return Convert.ToDouble(dynamicValue.value);
