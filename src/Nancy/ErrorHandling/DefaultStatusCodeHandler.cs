@@ -71,13 +71,7 @@ namespace Nancy.ErrorHandling
                 return;
             }
 
-            var result = new DefaultStatusCodeHandlerResult
-            {
-                Details = StaticConfiguration.DisableErrorTraces ? DisableErrorTracesTrueMessage : context.GetExceptionDetails(),
-                Message = this.errorMessages[statusCode],
-                StatusCode = statusCode
-            };
-
+            var result = new DefaultStatusCodeHandlerResult(statusCode, this.errorMessages[statusCode], StaticConfiguration.DisableErrorTraces ? DisableErrorTracesTrueMessage : context.GetExceptionDetails());
             try
             {
                 context.Response = this.responseNegotiator.NegotiateResponse(result, context);
@@ -134,11 +128,18 @@ namespace Nancy.ErrorHandling
 
         internal class DefaultStatusCodeHandlerResult
         {
-            public HttpStatusCode StatusCode { get; set; }
+            public DefaultStatusCodeHandlerResult(HttpStatusCode statusCode, string message, string details)
+            {
+                this.StatusCode = statusCode;
+                this.Message = message;
+                this.Details = details;
+            }
 
-            public string Message { get; set; }
+            public HttpStatusCode StatusCode { get; private set; }
 
-            public string Details { get; set; }
+            public string Message { get; private set; }
+
+            public string Details { get; private set; }
         }
     }    
 }
