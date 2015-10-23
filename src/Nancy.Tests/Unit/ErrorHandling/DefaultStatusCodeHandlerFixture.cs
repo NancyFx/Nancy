@@ -2,17 +2,22 @@ namespace Nancy.Tests.Unit.ErrorHandling
 {
     using System;
     using System.IO;
+    using FakeItEasy;
     using Nancy.ErrorHandling;
+    using Nancy.Responses.Negotiation;
+    using Nancy.ViewEngines;
     using Xunit;
     using Xunit.Extensions;
 
     public class DefaultStatusCodeHandlerFixture
     {
+        private readonly IResponseNegotiator responseNegotiator;
         private readonly IStatusCodeHandler statusCodeHandler;
 
         public DefaultStatusCodeHandlerFixture()
         {
-            this.statusCodeHandler = new DefaultStatusCodeHandler();
+            this.responseNegotiator = A.Fake<IResponseNegotiator>();
+            this.statusCodeHandler = new DefaultStatusCodeHandler(this.responseNegotiator);
         }
 
         [Theory]
@@ -39,11 +44,47 @@ namespace Nancy.Tests.Unit.ErrorHandling
         [InlineData(HttpStatusCode.TemporaryRedirect)]
         [InlineData(HttpStatusCode.ResumeIncomplete)]
         [InlineData(HttpStatusCode.Unauthorized)]
-        public void Should_not_handle_non_error_codes(HttpStatusCode code)
+        public void Should_not_handle_non_error_codes(HttpStatusCode statusCode)
         {
-            var result = this.statusCodeHandler.HandlesStatusCode(code, null);
+            var result = this.statusCodeHandler.HandlesStatusCode(statusCode, null);
 
             result.ShouldBeFalse();
+        }
+
+        [Theory]
+        [InlineData(HttpStatusCode.Continue)]
+        [InlineData(HttpStatusCode.SwitchingProtocols)]
+        [InlineData(HttpStatusCode.Processing)]
+        [InlineData(HttpStatusCode.Checkpoint)]
+        [InlineData(HttpStatusCode.OK)]
+        [InlineData(HttpStatusCode.Created)]
+        [InlineData(HttpStatusCode.Accepted)]
+        [InlineData(HttpStatusCode.NonAuthoritativeInformation)]
+        [InlineData(HttpStatusCode.NoContent)]
+        [InlineData(HttpStatusCode.ResetContent)]
+        [InlineData(HttpStatusCode.PartialContent)]
+        [InlineData(HttpStatusCode.MultipleStatus)]
+        [InlineData(HttpStatusCode.IMUsed)]
+        [InlineData(HttpStatusCode.MultipleChoices)]
+        [InlineData(HttpStatusCode.MovedPermanently)]
+        [InlineData(HttpStatusCode.Found)]
+        [InlineData(HttpStatusCode.SeeOther)]
+        [InlineData(HttpStatusCode.NotModified)]
+        [InlineData(HttpStatusCode.UseProxy)]
+        [InlineData(HttpStatusCode.SwitchProxy)]
+        [InlineData(HttpStatusCode.TemporaryRedirect)]
+        [InlineData(HttpStatusCode.ResumeIncomplete)]
+        [InlineData(HttpStatusCode.Unauthorized)]
+        public void Should_not_respond_when_handling_non_error_codes(HttpStatusCode statusCode)
+        {
+            // Given
+            var context = new NancyContext();
+
+            // When
+            this.statusCodeHandler.Handle(statusCode, context);
+
+            // Then
+            context.Response.ShouldBeNull();
         }
 
         [Fact]
@@ -81,6 +122,7 @@ namespace Nancy.Tests.Unit.ErrorHandling
             // Given
             var context = new NancyContext();
             context.Response = new Response { StatusCode = HttpStatusCode.NotFound };
+            A.CallTo(() => this.responseNegotiator.NegotiateResponse(A<DefaultStatusCodeHandler.DefaultStatusCodeHandlerResult>._, context)).Throws(new ViewNotFoundException(string.Empty));
 
             // When
             this.statusCodeHandler.Handle(HttpStatusCode.NotFound, context);
@@ -119,6 +161,33 @@ namespace Nancy.Tests.Unit.ErrorHandling
 
             // Then
             memoryStream.CanRead.ShouldBeTrue();
+        }
+
+        [Fact]
+        public void Should_negotiate_response_with_content_negotiator()
+        {
+            // Given
+            var context = new NancyContext();
+
+            // When
+            this.statusCodeHandler.Handle(HttpStatusCode.InternalServerError, context);
+
+            // Then
+            A.CallTo(() => this.responseNegotiator.NegotiateResponse(A<DefaultStatusCodeHandler.DefaultStatusCodeHandlerResult>._, context)).MustHaveHappened();
+        }
+
+        [Fact]
+        public void Should_render_html_response_from_static_resources()
+        {
+            // Given
+            var context = new NancyContext();
+            A.CallTo(() => this.responseNegotiator.NegotiateResponse(A<DefaultStatusCodeHandler.DefaultStatusCodeHandlerResult>._, context)).Throws(new ViewNotFoundException(string.Empty));
+
+            // When
+            this.statusCodeHandler.Handle(HttpStatusCode.InternalServerError, context);
+
+            // Then
+            Assert.Equal("text/html", context.Response.ContentType);
         }
     }
 }
