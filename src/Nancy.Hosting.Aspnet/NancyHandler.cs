@@ -158,7 +158,7 @@ namespace Nancy.Hosting.Aspnet
                 context.Response.StatusDescription = response.ReasonPhrase;
             }
 
-            response.Contents.Invoke(context.Response.OutputStream);
+            response.Contents.Invoke(new NancyResponseStream(context.Response));
         }
 
         private static void SetHttpResponseHeaders(HttpContextBase context, Response response)
