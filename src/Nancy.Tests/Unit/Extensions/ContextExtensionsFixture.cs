@@ -206,6 +206,19 @@
             result.ShouldBeFalse();
         }
 
+        [Fact]
+        public void Should_return_empty_string_if_no_exception_details()
+        {
+            // Given
+            var context = this.CreateContext();
+
+            // When
+            var exceptionDetails = context.GetExceptionDetails();
+
+            // Then
+            exceptionDetails.ShouldBeEmpty();
+        }
+
         private NancyContext CreateContext(Url url = null)
         {
             var request = new Request(
