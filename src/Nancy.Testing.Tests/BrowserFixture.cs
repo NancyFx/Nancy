@@ -547,10 +547,13 @@ namespace Nancy.Testing.Tests
         public void Should_return_error_message_on_cyclical_exception(string accept)
         {
             //Given/When
-            var result = browser.Get("/cyclical", with => with.Accept(accept));
+            using (new StaticConfigurationContext(x => x.DisableErrorTraces = false))
+            {
+                var result = browser.Get("/cyclical", with => with.Accept(accept));
 
-            //Then
-            result.Body.AsString().ShouldNotBeEmpty();
+                //Then
+                result.Body.AsString().ShouldNotBeEmpty();
+            }
         }
 
         [Theory]
@@ -559,11 +562,13 @@ namespace Nancy.Testing.Tests
         public void Should_return_no_error_message_on_cyclical_exception_when_disabled_error_trace(string accept)
         {
             //Given/When
-            StaticConfiguration.DisableErrorTraces = true;
-            var result = browser.Get("/cyclical", with => with.Accept(accept));
+            using (new StaticConfigurationContext(x => x.DisableErrorTraces = true))
+            {
+                var result = browser.Get("/cyclical", with => with.Accept(accept));
 
-            //Then
-            result.Body.AsString().ShouldBeEmpty();
+                //Then
+                result.Body.AsString().ShouldBeEmpty();
+            }
         }
 
         public class EchoModel
