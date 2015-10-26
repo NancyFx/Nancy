@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Xml.Serialization;
-
+    using System.Text;
     using Nancy.Xml;
 
     public class DefaultXmlSerializer : ISerializer
@@ -25,7 +25,10 @@
         /// <value>An <see cref="IEnumerable{T}"/> of extensions if any are available, otherwise an empty enumerable.</value>
         public IEnumerable<string> Extensions
         {
-            get { yield return "xml"; }
+            get
+            {
+                yield return "xml";
+            }
         }
 
         /// <summary>
@@ -37,15 +40,26 @@
         /// <returns>Serialised object</returns>
         public void Serialize<TModel>(string contentType, TModel model, Stream outputStream)
         {
-            var serializer = new XmlSerializer(typeof(TModel));
+            try
+            {
+                var serializer = new XmlSerializer(typeof(TModel));
 
-            if (XmlSettings.EncodingEnabled)
-            {
-                serializer.Serialize(new StreamWriter(outputStream, XmlSettings.DefaultEncoding), model);
+                if (XmlSettings.EncodingEnabled)
+                {
+                    serializer.Serialize(new StreamWriter(outputStream, XmlSettings.DefaultEncoding), model);
+                }
+                else
+                {
+                    serializer.Serialize(outputStream, model);
+                }
             }
-            else
+            catch (Exception exception)
             {
-                serializer.Serialize(outputStream, model);
+                if (!StaticConfiguration.DisableErrorTraces)
+                {
+                    var bytes = Encoding.UTF8.GetBytes(exception.Message);
+                    outputStream.Write(bytes, 0, exception.Message.Length);
+                }
             }
         }
 
@@ -59,9 +73,9 @@
             var contentMimeType = contentType.Split(';')[0];
 
             return contentMimeType.Equals("application/xml", StringComparison.OrdinalIgnoreCase) ||
-                   contentMimeType.Equals("text/xml", StringComparison.OrdinalIgnoreCase) ||
-                  (contentMimeType.StartsWith("application/vnd", StringComparison.OrdinalIgnoreCase) &&
-                   contentMimeType.EndsWith("+xml", StringComparison.OrdinalIgnoreCase));
+            contentMimeType.Equals("text/xml", StringComparison.OrdinalIgnoreCase) ||
+            (contentMimeType.StartsWith("application/vnd", StringComparison.OrdinalIgnoreCase) &&
+            contentMimeType.EndsWith("+xml", StringComparison.OrdinalIgnoreCase));
         }
     }
 }
