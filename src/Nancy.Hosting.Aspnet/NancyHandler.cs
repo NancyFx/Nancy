@@ -2,6 +2,7 @@ namespace Nancy.Hosting.Aspnet
 {
     using System;
     using System.Collections.Generic;
+    using System.Configuration;
     using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
@@ -151,6 +152,11 @@ namespace Nancy.Hosting.Aspnet
                 context.Response.ContentType = response.ContentType;
             }
 
+            if (IsOutputBufferDisabled())
+            {
+                context.Response.BufferOutput = false;
+            }
+
             context.Response.StatusCode = (int) response.StatusCode;
 
             if (response.ReasonPhrase != null)
@@ -159,6 +165,19 @@ namespace Nancy.Hosting.Aspnet
             }
 
             response.Contents.Invoke(new NancyResponseStream(context.Response));
+        }
+
+        private static bool IsOutputBufferDisabled()
+        {
+            var configurationSection =
+                ConfigurationManager.GetSection("nancyFx") as NancyFxSection;
+
+            if (configurationSection == null || configurationSection.DisableOutputBuffer == null)
+            {
+                return false;
+            }
+
+            return configurationSection.DisableOutputBuffer.Value;
         }
 
         private static void SetHttpResponseHeaders(HttpContextBase context, Response response)
