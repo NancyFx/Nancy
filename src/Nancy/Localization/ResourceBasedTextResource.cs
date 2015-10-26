@@ -65,7 +65,7 @@ namespace Nancy.Localization
 
                 var candidates =
                     this.resourceManagers.Where(
-                        x => x.Key.EndsWith(components.Item1, StringComparison.OrdinalIgnoreCase)).ToArray();
+                        x => x.Key.EndsWith("." + components.Item1, StringComparison.OrdinalIgnoreCase)).ToArray();
 
                 if (candidates.Count() > 1)
                 {
