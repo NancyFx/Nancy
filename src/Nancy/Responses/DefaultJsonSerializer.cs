@@ -28,7 +28,10 @@
         /// <value>An <see cref="IEnumerable{T}"/> of extensions if any are available, otherwise an empty enumerable.</value>
         public IEnumerable<string> Extensions
         {
-            get { yield return "json"; }
+            get
+            {
+                yield return "json";
+            }
         }
 
         /// <summary>
@@ -68,7 +71,17 @@
 
                 serializer.RegisterConverters(JsonSettings.Converters, JsonSettings.PrimitiveConverters);
 
-                serializer.Serialize(model, writer);
+                try
+                {
+                    serializer.Serialize(model, writer);
+                }
+                catch (Exception exception)
+                {
+                    if (!StaticConfiguration.DisableErrorTraces)
+                    {
+                        writer.Write(exception.Message);
+                    }
+                }
             }
         }
 
@@ -92,10 +105,10 @@
             var contentMimeType = contentType.Split(';')[0];
 
             return contentMimeType.Equals("application/json", StringComparison.OrdinalIgnoreCase) ||
-                   contentMimeType.StartsWith("application/json-", StringComparison.OrdinalIgnoreCase) ||
-                   contentMimeType.Equals("text/json", StringComparison.OrdinalIgnoreCase) ||
-                  (contentMimeType.StartsWith("application/vnd", StringComparison.OrdinalIgnoreCase) &&
-                   contentMimeType.EndsWith("+json", StringComparison.OrdinalIgnoreCase));
+            contentMimeType.StartsWith("application/json-", StringComparison.OrdinalIgnoreCase) ||
+            contentMimeType.Equals("text/json", StringComparison.OrdinalIgnoreCase) ||
+            (contentMimeType.StartsWith("application/vnd", StringComparison.OrdinalIgnoreCase) &&
+            contentMimeType.EndsWith("+json", StringComparison.OrdinalIgnoreCase));
         }
     }
 }
