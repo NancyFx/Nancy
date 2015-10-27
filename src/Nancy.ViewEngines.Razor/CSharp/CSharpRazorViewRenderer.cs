@@ -52,7 +52,7 @@
                 typeof(Microsoft.CSharp.RuntimeBinder.Binder).GetAssemblyPath()
             };
 
-            this.ModelCodeGenerator = typeof(CSharpModelCodeGenerator);
+            this.ModelCodeGenerator = typeof(ModelCodeGenerator);
 
             this.Provider = new CSharpCodeProvider();
 

@@ -1,20 +1,30 @@
 ﻿namespace Nancy.ViewEngines.Razor.Tests
 {
     using System;
+    using System.CodeDom;
+    using System.CodeDom.Compiler;
+    using System.Collections;
+    using System.Collections.Generic;
     using System.Dynamic;
     using System.IO;
     using System.Linq;
     using System.Reflection;
     using System.Text;
+    using System.Text.RegularExpressions;
     using System.Threading;
 
     using FakeItEasy;
+
+    using Microsoft.CSharp;
+    using Microsoft.VisualBasic;
 
     using Nancy.Bootstrapper;
     using Nancy.Tests;
     using Nancy.ViewEngines.Razor.Tests.Models;
 
     using Xunit;
+    using Xunit.Extensions;
+    using Xunit.Sdk;
 
     public class RazorViewEngineFixture
     {
@@ -646,6 +656,152 @@
             // Then
             var output = ReadAll(stream);
             output.ShouldContain(string.Format("<input value=\"{0}\" />", PHRASE));
+        }
+
+        [Theory]
+        [InlineData(typeof(string))]
+        [InlineData(typeof(byte))]
+        [InlineData(typeof(sbyte))]
+        [InlineData(typeof(short))]
+        [InlineData(typeof(ushort))]
+        [InlineData(typeof(int))]
+        [InlineData(typeof(uint))]
+        [InlineData(typeof(long))]
+        [InlineData(typeof(ulong))]
+        [InlineData(typeof(float))]
+        [InlineData(typeof(double))]
+        [InlineData(typeof(decimal))]
+        [InlineData(typeof(char))]
+        [InlineData(typeof(bool))]
+        [InlineData(typeof(object))]
+        [InlineData(typeof(Tuple<string>))]
+        [InlineData(typeof(Tuple<Tuple<string>>))]
+        [InlineData(typeof(Tuple<string, int>))]
+        [InlineData(typeof(Tuple<string, Tuple<int>>))]
+        [InlineData(typeof(Tuple<string, Tuple<int>, int>))]
+        [InlineData(typeof(Tuple<string, Tuple<int, string>, Tuple<int>, int>))]
+        [InlineData(typeof(Tuple<string, Tuple<int, string>, Tuple<int>, int, Tuple<string, Tuple<int, int>>>))]
+        [InlineData(typeof(int[]))]
+        [InlineData(typeof(int[,]))]
+        [InlineData(typeof(int[, , , ,]))]
+        [InlineData(typeof(int[][]))]
+        [InlineData(typeof(int[][, ,][]))]
+        [InlineData(typeof(Tuple<int, string>[][, ,][]))]
+        [InlineData(typeof(Tuple<int, int[][, ,][], string>))]
+        public void Should_be_able_to_render_csharp_view_with_generic_model(Type expectedType)
+        {
+            // Given
+            var location = this.CreateViewLocationWithModel(expectedType, new CSharpCodeProvider(), "model");
+
+            // When
+            var stream = new MemoryStream();
+            var response = this.engine.RenderView(location, null, this.renderContext);
+            response.Contents.Invoke(stream);
+
+            // Then
+            stream.ShouldEqual(expectedType.FullName, true);
+        }
+
+#if !__MonoCS__
+        [Theory]
+        [InlineData(typeof(string))]
+        [InlineData(typeof(byte))]
+        [InlineData(typeof(sbyte))]
+        [InlineData(typeof(short))]
+        [InlineData(typeof(ushort))]
+        [InlineData(typeof(int))]
+        [InlineData(typeof(uint))]
+        [InlineData(typeof(long))]
+        [InlineData(typeof(ulong))]
+        [InlineData(typeof(float))]
+        [InlineData(typeof(double))]
+        [InlineData(typeof(decimal))]
+        [InlineData(typeof(char))]
+        [InlineData(typeof(bool))]
+        [InlineData(typeof(object))]
+        [InlineData(typeof(Tuple<string>))]
+        [InlineData(typeof(Tuple<Tuple<string>>))]
+        [InlineData(typeof(Tuple<string, int>))]
+        [InlineData(typeof(Tuple<string, Tuple<int>>))]
+        [InlineData(typeof(Tuple<string, Tuple<int>, int>))]
+        [InlineData(typeof(Tuple<string, Tuple<int, string>, Tuple<int>, int>))]
+        [InlineData(typeof(Tuple<string, Tuple<int, string>, Tuple<int>, int, Tuple<string, Tuple<int, int>>>))]
+        [InlineData(typeof(int[]))]
+        [InlineData(typeof(int[,]))]
+        [InlineData(typeof(int[, , , ,]))]
+        [InlineData(typeof(int[][]))]
+        [InlineData(typeof(int[][, ,][]))]
+        [InlineData(typeof(Tuple<int, string>[][, ,][]))]
+        [InlineData(typeof(Tuple<int, int[][, ,][], string>))]
+        public void Should_be_able_to_render_vb_view_with_generic_model(Type expectedType)
+        {
+            // Given
+            var location = this.CreateViewLocationWithModel(expectedType, new VBCodeProvider(), "ModelType");
+            
+            // When
+            var stream = new MemoryStream();
+            var response = this.engine.RenderView(location, null, this.renderContext);
+            response.Contents.Invoke(stream);
+
+            // Then
+            stream.ShouldEqual(expectedType.FullName, true);
+        }
+#endif
+
+        private ViewLocationResult CreateViewLocationWithModel(Type expectedType, CodeDomProvider provider, string modelDirective)
+        {
+            var codeTypeRef = new CodeTypeReference(expectedType);
+            var modelType = provider.GetTypeOutput(codeTypeRef);
+
+            var modelTypeCode = BuildCodeExtractingModelType(provider);
+
+            var view = string.Format("@{0} {1}\n\n@{2}", modelDirective, modelType, modelTypeCode);
+            
+            return new ViewLocationResult(
+                string.Empty,
+                string.Empty,
+                string.Concat(provider.FileExtension, "html"),
+                () => new StringReader(view)
+                );           
+        }
+
+        private static string BuildCodeExtractingModelType(CodeDomProvider provider)
+        {
+            var getType = new CodeMethodInvokeExpression
+                (
+                    new CodeThisReferenceExpression(),
+                    "GetType"
+                );
+            
+            var baseType = new CodeFieldReferenceExpression
+                (
+                    getType,
+                    "BaseType"
+                );
+            
+            var getFirstGenericArgument = new CodeArrayIndexerExpression
+                (
+                    new CodeMethodInvokeExpression
+                        (
+                        baseType,
+                        "GetGenericArguments"
+                        ),
+                    new CodePrimitiveExpression(0)
+                );
+            
+            var fullName = new CodeFieldReferenceExpression
+                (
+                    getFirstGenericArgument,
+                    "FullName"
+                );
+
+            string modelTypeCode;
+            using (var writer = new StringWriter())
+            {
+                provider.GenerateCodeFromExpression(fullName, writer, new CodeGeneratorOptions());
+                modelTypeCode = writer.ToString();
+            }
+            return modelTypeCode;
         }
 
         private static string ReadAll(Stream stream)

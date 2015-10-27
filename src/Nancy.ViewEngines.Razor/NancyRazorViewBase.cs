@@ -124,9 +124,16 @@
         /// <param name="model">The model.</param>
         public virtual void Initialize(RazorViewEngine engine, IRenderContext renderContext, object model)
         {
+            var castedModel = default(TModel);
+
+            if (model != null)
+            {
+                castedModel = (TModel)model;
+            }
+
             this.RenderContext = renderContext;
-            this.Html = new HtmlHelpers<TModel>(engine, renderContext, (TModel)model);
-            this.Model = (TModel)model;
+            this.Html = new HtmlHelpers<TModel>(engine, renderContext, castedModel);
+            this.Model = castedModel;
             this.Url = new UrlHelpers<TModel>(engine, renderContext);
             this.ViewBag = renderContext.Context.ViewBag;
         }
@@ -261,7 +268,7 @@
 
             if (value is bool)
             {
-                var boolValue = (bool) value;
+                var boolValue = (bool)value;
 
                 return boolValue;
             }

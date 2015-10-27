@@ -9,7 +9,8 @@
     using System.Reflection;
     using System.Text;
     using System.Web.Razor;
-    using System.Web.Razor.Parser.SyntaxTree;
+
+    using Microsoft.CSharp;
 
     using Nancy.Bootstrapper;
     using Nancy.Helpers;
@@ -207,8 +208,9 @@
             var outputAssemblyName =
                 Path.Combine(Path.GetTempPath(), String.Format("Temp_{0}.dll", Guid.NewGuid().ToString("N")));
 
-            var modelType =
-                FindModelType(razorResult.Document, passedModelType, viewRenderer.ModelCodeGenerator);
+            var modelType = (Type)razorResult.GeneratedCode.Namespaces[0].Types[0].UserData["ModelType"]
+                            ?? passedModelType
+                            ?? typeof(object);
 
             var assemblies = new List<string>
             {
@@ -349,89 +351,6 @@
                 }
             }
             return templateLines.ToArray();
-        }
-
-        /// <summary>
-        /// Tries to find the model type from the document
-        /// So documents using @model will actually be able to reference the model type
-        /// </summary>
-        /// <param name="block">The document</param>
-        /// <param name="passedModelType">The model type from the base class</param>
-        /// <param name="modelCodeGenerator">The model code generator</param>
-        /// <returns>The model type, if discovered, or the passedModelType if not</returns>
-        private static Type FindModelType(Block block, Type passedModelType, Type modelCodeGenerator)
-        {
-            var modelBlock =
-                block.Flatten().FirstOrDefault(b => b.CodeGenerator.GetType() == modelCodeGenerator);
-
-            if (modelBlock == null)
-            {
-                return passedModelType ?? typeof(object);
-            }
-
-            if (string.IsNullOrEmpty(modelBlock.Content))
-            {
-                return passedModelType ?? typeof(object);
-            }
-
-            var discoveredModelType = modelBlock.Content.Trim();
-
-            var modelType = Type.GetType(discoveredModelType);
-
-            if (modelType != null)
-            {
-                return modelType;
-            }
-
-            modelType = AppDomainAssemblyTypeScanner.Types.FirstOrDefault(t => t.FullName == discoveredModelType);
-
-            if (modelType != null)
-            {
-                return modelType;
-            }
-
-            modelType = AppDomainAssemblyTypeScanner.Types.FirstOrDefault(t => t.Name == discoveredModelType);
-
-            if (modelType != null)
-            {
-                return modelType;
-            }
-
-            throw new NotSupportedException(string.Format(
-                                                "Unable to discover CLR Type for model by the name of {0}.\n\nTry using a fully qualified type name and ensure that the assembly is added to the configuration file.\n\nAppDomain Assemblies:\n\t{1}.\n\nCurrent ADATS assemblies:\n\t{2}.\n\nAssemblies in directories\n\t{3}",
-                                                discoveredModelType,
-                                                AppDomain.CurrentDomain.GetAssemblies().Select(a => a.FullName).Aggregate((n1, n2) => n1 + "\n\t" + n2),
-                                                AppDomainAssemblyTypeScanner.Assemblies.Select(a => a.FullName).Aggregate((n1, n2) => n1 + "\n\t" + n2),
-                                                GetAssembliesInDirectories().Aggregate((n1, n2) => n1 + "\n\t" + n2)));
-        }
-
-        private static IEnumerable<String> GetAssembliesInDirectories()
-        {
-            return GetAssemblyDirectories().SelectMany(d => Directory.GetFiles(d, "*.dll"));
-        }
-
-        /// <summary>
-        /// Returns the directories containing dll files. It uses the default convention as stated by microsoft.
-        /// </summary>
-        /// <see cref="http://msdn.microsoft.com/en-us/library/system.appdomainsetup.privatebinpathprobe.aspx"/>
-        private static IEnumerable<string> GetAssemblyDirectories()
-        {
-            var privateBinPathDirectories = AppDomain.CurrentDomain.SetupInformation.PrivateBinPath == null
-                                                ? new string[] { }
-                                                : AppDomain.CurrentDomain.SetupInformation.PrivateBinPath.Split(';');
-
-            foreach (var privateBinPathDirectory in privateBinPathDirectories)
-            {
-                if (!string.IsNullOrWhiteSpace(privateBinPathDirectory))
-                {
-                    yield return privateBinPathDirectory;
-                }
-            }
-
-            if (AppDomain.CurrentDomain.SetupInformation.PrivateBinPathProbe == null)
-            {
-                yield return AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
-            }
         }
 
         private static void AddModelNamespace(GeneratorResults razorResult, Type modelType)
