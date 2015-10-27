@@ -66,8 +66,6 @@ namespace Nancy
             nancyEngine
                 .HandleRequest(request, preRequest, cancellationToken)
                 .WhenCompleted(t => onComplete(t.Result), t => onError(t.Exception));
-
-            //this.HandleRequest(request, null, onComplete, onError);
         }
 
         /// <summary>

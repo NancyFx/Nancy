@@ -204,6 +204,10 @@
             {
                 throw new NotImplementedException();
             }
+
+            public void Dispose()
+            {
+            }
         }
 
         private class BlowUpModule : NancyModule

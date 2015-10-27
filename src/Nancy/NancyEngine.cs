@@ -19,7 +19,7 @@
     /// <summary>
     /// Default engine for handling Nancy <see cref="Request"/>s.
     /// </summary>
-    public class NancyEngine : INancyEngine
+    public sealed class NancyEngine : INancyEngine
     {
         public const string ERROR_KEY = "ERROR_TRACE";
         public const string ERROR_EXCEPTION = "ERROR_EXCEPTION";
@@ -30,6 +30,7 @@
         private readonly IEnumerable<IStatusCodeHandler> statusCodeHandlers;
         private readonly IStaticContentProvider staticContentProvider;
         private readonly IResponseNegotiator negotiator;
+        private readonly CancellationTokenSource engineDisposedCts;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyEngine"/> class.
@@ -83,6 +84,7 @@
             this.requestTracing = requestTracing;
             this.staticContentProvider = staticContentProvider;
             this.negotiator = negotiator;
+            this.engineDisposedCts = new CancellationTokenSource();
         }
 
         /// <summary>
@@ -93,6 +95,10 @@
 
         public Task<NancyContext> HandleRequest(Request request, Func<NancyContext, NancyContext> preRequest, CancellationToken cancellationToken)
         {
+            var cts = CancellationTokenSource.CreateLinkedTokenSource(this.engineDisposedCts.Token, cancellationToken);
+
+            cts.Token.ThrowIfCancellationRequested();
+
             var tcs = new TaskCompletionSource<NancyContext>();
 
             if (request == null)
@@ -117,7 +123,7 @@
 
             var pipelines = this.RequestPipelinesFactory.Invoke(context);
 
-            var lifeCycleTask = this.InvokeRequestLifeCycle(context, cancellationToken, pipelines);
+            var lifeCycleTask = this.InvokeRequestLifeCycle(context, cts.Token, pipelines);
 
             lifeCycleTask.WhenCompleted(
                 completeTask =>
@@ -143,6 +149,11 @@
                 true);
 
             return tcs.Task;
+        }
+
+        public void Dispose()
+        {
+            this.engineDisposedCts.Cancel();
         }
 
         private void SaveTraceInformation(NancyContext ctx)
