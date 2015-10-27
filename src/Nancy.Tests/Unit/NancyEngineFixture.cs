@@ -751,6 +751,23 @@ namespace Nancy.Tests.Unit
             result.Response.StatusCode.ShouldEqual(HttpStatusCode.InternalServerError);
         }
 
+        [Fact]
+        public void Should_throw_operationcancelledexception_when_disposed_handling_request()
+        {
+            // Given
+            var request = new Request("GET", "/", "http");
+            var engine = new NancyEngine(A.Fake<IRequestDispatcher>(), A.Fake<INancyContextFactory>(),
+                new[] {this.statusCodeHandler}, A.Fake<IRequestTracing>(), new DisabledStaticContentProvider(),
+                this.negotiator);
+            engine.Dispose();
+
+            // When
+            var exception = Record.Exception(() => engine.HandleRequest(request));
+
+            // Then
+            exception.ShouldBeOfType<OperationCanceledException>();
+        }
+
         private static Task<Response> CreateResponseTask(Response response)
         {
             var tcs =

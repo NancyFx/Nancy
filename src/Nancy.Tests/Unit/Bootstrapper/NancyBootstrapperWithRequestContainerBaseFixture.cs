@@ -184,6 +184,10 @@
                 
                 return tcs.Task;
             }
+
+            public void Dispose()
+            {
+            }
         }
 
         internal class FakeBootstrapper : NancyBootstrapperWithRequestContainerBase<FakeContainer>

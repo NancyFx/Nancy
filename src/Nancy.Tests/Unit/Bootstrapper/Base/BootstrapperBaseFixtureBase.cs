@@ -171,6 +171,9 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
                 this.routeCache = routeCache;
                 this.contextFactory = contextFactory;
             }
+
+            public void Dispose()
+            {}
         }
     }
 
