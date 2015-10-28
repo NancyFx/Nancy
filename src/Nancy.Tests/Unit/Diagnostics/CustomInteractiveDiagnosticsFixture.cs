@@ -8,6 +8,7 @@
     using Nancy.Cryptography;
     using Nancy.Culture;
     using Nancy.Diagnostics;
+    using Nancy.Helpers;
     using Nancy.Localization;
     using Nancy.ModelBinding;
     using Nancy.Responses.Negotiation;
@@ -127,7 +128,7 @@
             // When
             var result = browser.Get(diagsConfig.Path + "/interactive/providers/", with =>
                 {
-                    with.Cookie(DiagsCookieName, Nancy.Helpers.HttpUtility.UrlEncode(this.GetSessionCookieValue("password")));
+                    with.Cookie(DiagsCookieName, HttpUtility.UrlEncode(this.GetSessionCookieValue("password")));
                 });
 
             // Then should see our fake provider and not the default testing provider

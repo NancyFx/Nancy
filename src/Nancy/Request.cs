@@ -11,6 +11,7 @@ namespace Nancy
 
     using IO;
     using Nancy.Extensions;
+    using Nancy.Helpers;
     using Session;
 
     /// <summary>
@@ -192,7 +193,7 @@ namespace Nancy
                 }
                 else
                 {
-                    cookieValue = Helpers.HttpUtility.UrlDecode(parts[1]);
+                    cookieValue = HttpUtility.UrlDecode(parts[1]);
                 }
 
                 cookieDictionary[cookieName] = cookieValue;

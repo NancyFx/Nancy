@@ -5,6 +5,7 @@
     using Nancy.Cookies;
     using Nancy.Cryptography;
     using Nancy.Diagnostics;
+    using Nancy.Helpers;
     using Nancy.Testing;
     using Xunit;
 
@@ -108,7 +109,7 @@
             // When
             var result = browser.Get(diagsConfig.Path, with =>
                 {
-                    with.Cookie(DiagsCookieName, Nancy.Helpers.HttpUtility.UrlEncode(this.GetSessionCookieValue("password")));
+                    with.Cookie(DiagsCookieName, HttpUtility.UrlEncode(this.GetSessionCookieValue("password")));
                 });
 
             // Then
@@ -133,7 +134,7 @@
             // When
             var result = browser.Get(diagsConfig.Path, with =>
             {
-                with.Cookie(DiagsCookieName, Nancy.Helpers.HttpUtility.UrlEncode(this.GetSessionCookieValue("password", DateTime.Now.AddMinutes(-10))));
+                with.Cookie(DiagsCookieName, HttpUtility.UrlEncode(this.GetSessionCookieValue("password", DateTime.Now.AddMinutes(-10))));
             });
 
             // Then
@@ -158,7 +159,7 @@
             // When
             var result = browser.Get(diagsConfig.Path, with =>
             {
-                with.Cookie(DiagsCookieName, Nancy.Helpers.HttpUtility.UrlEncode(this.GetSessionCookieValue("wrongPassword")));
+                with.Cookie(DiagsCookieName, HttpUtility.UrlEncode(this.GetSessionCookieValue("wrongPassword")));
             });
 
             // Then
@@ -236,7 +237,7 @@
             // When
             var result = browser.Get(diagsConfig.Path, with =>
             {
-                with.Cookie(DiagsCookieName, Nancy.Helpers.HttpUtility.UrlEncode(this.GetSessionCookieValue("password", expiryDate)));
+                with.Cookie(DiagsCookieName, HttpUtility.UrlEncode(this.GetSessionCookieValue("password", expiryDate)));
             });
 
             // Then
@@ -263,12 +264,12 @@
             // When querying the list of interactive providers
             var result = browser.Get(diagsConfig.Path + "/interactive/providers/", with =>
                 {
-                    with.Cookie(DiagsCookieName, Nancy.Helpers.HttpUtility.UrlEncode(this.GetSessionCookieValue("password")));
+                    with.Cookie(DiagsCookieName, HttpUtility.UrlEncode(this.GetSessionCookieValue("password")));
                 });
 
             // Then we should see the fake testing provider and not the Nancy provided testing example
             result.Body.AsString().ShouldNotContain("Fake testing provider");
-            result.Body.AsString().Contains("Testing Diagnostic Provider");
+            result.Body.AsString().ShouldContain("Testing Diagnostic Provider");
         }
 
         private string GetSessionCookieValue(string password, DateTime? expiry = null)
