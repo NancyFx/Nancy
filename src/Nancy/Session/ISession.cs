@@ -28,6 +28,9 @@ namespace Nancy.Session
         /// </summary>
         object this[string key] { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this session has been changed, since its creation.
+        /// </summary>
         bool HasChanged { get; }
     }
 }

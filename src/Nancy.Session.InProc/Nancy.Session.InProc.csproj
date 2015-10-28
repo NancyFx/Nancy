@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D69B93D2-C336-4132-A5AB-89EB88C2B842}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Nancy.Session.InProc</RootNamespace>
+    <AssemblyName>Nancy.Session.InProc</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Nancy.Session.InProc.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Nancy.Session.InProc.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'MonoRelease|AnyCPU'">
+    <OutputPath>bin\MonoRelease\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>bin\MonoRelease\Nancy.Session.InProc.XML</DocumentationFile>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'MonoDebug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\MonoDebug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>bin\MonoDebug\Nancy.Session.InProc.XML</DocumentationFile>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="InProcSessions.cs" />
+    <Compile Include="InProcSessionsConfiguration.cs" />
+    <Compile Include="InProcSessionsManagement\ByQueryStringParam\ByQueryStringParamIdentificationMethod.cs" />
+    <Compile Include="InProcSessionsManagement\ByQueryStringParam\IByQueryStringParamIdentificationMethod.cs" />
+    <Compile Include="InProcSessionsManagement\ByQueryStringParam\IResponseManipulatorForSession.cs" />
+    <Compile Include="InProcSessionsManagement\ByQueryStringParam\ISessionIdentificationDataProvider.cs" />
+    <Compile Include="InProcSessionsManagement\ByQueryStringParam\ResponseManipulatorForSession.cs" />
+    <Compile Include="InProcSessionsManagement\ByQueryStringParam\SessionIdentificationDataProvider.cs" />
+    <Compile Include="InProcSessionsManagement\BySessionIdCookie\BySessionIdCookieIdentificationMethod.cs" />
+    <Compile Include="InProcSessionsManagement\BySessionIdCookie\CookieFactory.cs" />
+    <Compile Include="InProcSessionsManagement\BySessionIdCookie\IBySessionIdCookieIdentificationMethod.cs" />
+    <Compile Include="InProcSessionsManagement\BySessionIdCookie\ICookieFactory.cs" />
+    <Compile Include="InProcSessionsManagement\BySessionIdCookie\ISessionIdentificationDataProvider.cs" />
+    <Compile Include="InProcSessionsManagement\BySessionIdCookie\SessionIdentificationDataProvider.cs" />
+    <Compile Include="InProcSessionsManagement\Cache\HeldLock.cs" />
+    <Compile Include="InProcSessionsManagement\Cache\HeldReadLock.cs" />
+    <Compile Include="InProcSessionsManagement\Cache\HeldUpgradeableReadLock.cs" />
+    <Compile Include="InProcSessionsManagement\Cache\HeldWriteLock.cs" />
+    <Compile Include="InProcSessionsManagement\Cache\IHeldLock.cs" />
+    <Compile Include="InProcSessionsManagement\Cache\IInProcSessionCache.cs" />
+    <Compile Include="InProcSessionsManagement\Cache\InProcSessionCache.cs" />
+    <Compile Include="InProcSessionsManagement\Cache\ISystemClock.cs" />
+    <Compile Include="InProcSessionsManagement\Cache\RealSystemClock.cs" />
+    <Compile Include="InProcSessionsManagement\HmacValidator.cs" />
+    <Compile Include="InProcSessionsManagement\IHmacValidator.cs" />
+    <Compile Include="InProcSessionsManagement\IInProcSessionFactory.cs" />
+    <Compile Include="InProcSessionsManagement\IInProcSessionIdentificationMethod.cs" />
+    <Compile Include="InProcSessionsManagement\IInProcSessionManager.cs" />
+    <Compile Include="InProcSessionsManagement\InProcSession.cs" />
+    <Compile Include="InProcSessionsManagement\InProcSessionFactory.cs" />
+    <Compile Include="InProcSessionsManagement\InProcSessionManager.cs" />
+    <Compile Include="InProcSessionsManagement\IPeriodicCacheCleaner.cs" />
+    <Compile Include="InProcSessionsManagement\ISessionIdFactory.cs" />
+    <Compile Include="InProcSessionsManagement\PeriodicCacheCleaner.cs" />
+    <Compile Include="InProcSessionsManagement\PeriodicTasks\CancellationTokenSourceFactory.cs" />
+    <Compile Include="InProcSessionsManagement\PeriodicTasks\ICancellationTokenSourceFactory.cs" />
+    <Compile Include="InProcSessionsManagement\PeriodicTasks\IPeriodicTask.cs" />
+    <Compile Include="InProcSessionsManagement\PeriodicTasks\IPeriodicTaskFactory.cs" />
+    <Compile Include="InProcSessionsManagement\PeriodicTasks\ITimer.cs" />
+    <Compile Include="InProcSessionsManagement\PeriodicTasks\PeriodicTask.cs" />
+    <Compile Include="InProcSessionsManagement\PeriodicTasks\PeriodicTaskFactory.cs" />
+    <Compile Include="InProcSessionsManagement\PeriodicTasks\RealTimer.cs" />
+    <Compile Include="InProcSessionsManagement\SessionId.cs" />
+    <Compile Include="InProcSessionsManagement\SessionIdentificationData.cs" />
+    <Compile Include="InProcSessionsManagement\SessionIdFactory.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Nancy\Nancy.csproj">
+      <Project>{34576216-0dca-4b0f-a0dc-9075e75a676f}</Project>
+      <Name>Nancy</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
