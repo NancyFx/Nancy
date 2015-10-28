@@ -4,9 +4,9 @@ namespace Nancy.Tests.Functional.Modules
 {
     using Nancy.Cookies;
 
-    public class CookieTestsModule : NancyModule
+    public class CookieModule : NancyModule
     {
-        public CookieTestsModule()
+        public CookieModule()
         {
             Get["/setcookie"] = _ =>
             {
