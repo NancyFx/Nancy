@@ -104,7 +104,7 @@
             /// Adds a route that is valid for DELETE requests.
             /// </summary>
             /// <param name="path">The path that the route should be registered for.</param>
-            /// <param name="condition">The condition that has to be furfilled in order for the route to be invoked</param>
+            /// <param name="condition">The condition that has to be fulfilled in order for the route to be invoked</param>
             /// <param name="action">The action that should be invoked by the route.</param>
             /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
             public ConfigurableNancyModuleConfigurator Delete(string path, Func<NancyContext, bool> condition, Func<dynamic, NancyModule, dynamic> action)
@@ -140,7 +140,7 @@
             /// Adds a route that is valid for GET requests.
             /// </summary>
             /// <param name="path">The path that the route should be registered for.</param>
-            /// <param name="condition">The condition that has to be furfilled in order for the route to be invoked</param>
+            /// <param name="condition">The condition that has to be fulfilled in order for the route to be invoked</param>
             /// <param name="action">The action that should be invoked by the route.</param>
             /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
             public ConfigurableNancyModuleConfigurator Get(string path, Func<NancyContext, bool> condition, Func<dynamic, NancyModule, dynamic> action)
@@ -176,7 +176,7 @@
             /// Adds a route that is valid for PATCH requests.
             /// </summary>
             /// <param name="path">The path that the route should be registered for.</param>
-            /// <param name="condition">The condition that has to be furfilled in order for the route to be invoked</param>
+            /// <param name="condition">The condition that has to be fulfilled in order for the route to be invoked</param>
             /// <param name="action">The action that should be invoked by the route.</param>
             /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
             public ConfigurableNancyModuleConfigurator Patch(string path, Func<NancyContext, bool> condition, Func<dynamic, NancyModule, dynamic> action)
@@ -212,7 +212,7 @@
             /// Adds a route that is valid for POST requests.
             /// </summary>
             /// <param name="path">The path that the route should be registered for.</param>
-            /// <param name="condition">The condition that has to be furfilled in order for the route to be invoked</param>
+            /// <param name="condition">The condition that has to be fulfilled in order for the route to be invoked</param>
             /// <param name="action">The action that should be invoked by the route.</param>
             /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
             public ConfigurableNancyModuleConfigurator Post(string path, Func<NancyContext, bool> condition, Func<dynamic, NancyModule, dynamic> action)
@@ -248,7 +248,7 @@
             /// Adds a route that is valid for PUT requests.
             /// </summary>
             /// <param name="path">The path that the route should be registered for.</param>
-            /// <param name="condition">The condition that has to be furfilled in order for the route to be invoked</param>
+            /// <param name="condition">The condition that has to be fulfilled in order for the route to be invoked</param>
             /// <param name="action">The action that should be invoked by the route.</param>
             /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
             public ConfigurableNancyModuleConfigurator Put(string path, Func<NancyContext, bool> condition, Func<dynamic, NancyModule, dynamic> action)
@@ -284,7 +284,7 @@
             /// Adds a route that is valid for OPTIONS requests.
             /// </summary>
             /// <param name="path">The path that the route should be registered for.</param>
-            /// <param name="condition">The condition that has to be furfilled in order for the route to be invoked</param>
+            /// <param name="condition">The condition that has to be fulfilled in order for the route to be invoked</param>
             /// <param name="action">The action that should be invoked by the route.</param>
             /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
             public ConfigurableNancyModuleConfigurator Options(string path, Func<NancyContext, bool> condition, Func<dynamic, NancyModule, dynamic> action)

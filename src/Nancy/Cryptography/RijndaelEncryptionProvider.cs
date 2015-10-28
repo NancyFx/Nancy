@@ -24,9 +24,9 @@ namespace Nancy.Cryptography
         }
 
         /// <summary>
-        /// Encyrypt data
+        /// Encrypt data
         /// </summary>
-        /// <param name="data">Data to encrypyt</param>
+        /// <param name="data">Data to encrypt</param>
         /// <returns>Encrypted string</returns>
         public string Encrypt(string data)
         {

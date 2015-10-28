@@ -28,11 +28,16 @@ namespace Nancy
         public static NancyContext HandleRequest(this INancyEngine nancyEngine, Request request, Func<NancyContext, NancyContext> preRequest)
         {
             var task = nancyEngine.HandleRequest(request, preRequest, CancellationToken.None);
-            task.Wait();
-            if (task.IsFaulted)
+
+            try
             {
-                throw task.Exception ?? new Exception("Request task faulted");
+                task.Wait();
             }
+            catch (Exception ex)
+            {
+                throw ex.FlattenInnerExceptions();
+            }
+
             return task.Result;
         }
 
@@ -43,7 +48,7 @@ namespace Nancy
         /// <param name="request">An <see cref="Request"/> instance, containing the information about the current request.</param>
         /// <param name="preRequest">Delegate to call before the request is processed</param>
         /// <param name="onComplete">Delegate to call when the request is complete</param>
-        /// <param name="onError">Deletate to call when any errors occur</param>
+        /// <param name="onError">Delegate to call when any errors occur</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         public static void HandleRequest(
             this INancyEngine nancyEngine,
@@ -61,8 +66,6 @@ namespace Nancy
             nancyEngine
                 .HandleRequest(request, preRequest, cancellationToken)
                 .WhenCompleted(t => onComplete(t.Result), t => onError(t.Exception));
-
-            //this.HandleRequest(request, null, onComplete, onError);
         }
 
         /// <summary>
@@ -71,7 +74,7 @@ namespace Nancy
         /// <param name="nancyEngine">The <see cref="INancyEngine"/> instance.</param>
         /// <param name="request">An <see cref="Request"/> instance, containing the information about the current request.</param>
         /// <param name="onComplete">Delegate to call when the request is complete</param>
-        /// <param name="onError">Deletate to call when any errors occur</param>
+        /// <param name="onError">Delegate to call when any errors occur</param>
         public static void HandleRequest(
             this INancyEngine nancyEngine,
             Request request,

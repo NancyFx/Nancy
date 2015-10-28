@@ -116,12 +116,12 @@ namespace Nancy.ViewEngines.Spark
             }
             finally
             {
-                this.padlock.ExitReadLock();                
+                this.padlock.ExitReadLock();
             }
         }
 
         /// <summary>
-        /// Gets a value that indicates wether or not the view folder contains a specific view.
+        /// Gets a value that indicates whether or not the view folder contains a specific view.
         /// </summary>
         /// <param name="path">The view to check for.</param>
         /// <returns><see langword="true"/> if the view exists in the view folder; otherwise <see langword="false"/>.</returns>
@@ -185,13 +185,7 @@ namespace Nancy.ViewEngines.Spark
         // Horrible hack, but we have no way to get a context
         private static NancyContext GetFakeContext()
         {
-            var ctx = new NancyContext();
-
-            ctx.Request = new Request("GET", "/", "http");
-
-            ctx.NegotiationContext = new NegotiationContext();
-
-            return ctx;
+            return new NancyContext { Request = new Request("GET", "/", "http") };
         }
 
         public class NancyViewFile : IViewFile

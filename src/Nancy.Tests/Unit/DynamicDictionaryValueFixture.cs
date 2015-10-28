@@ -1,8 +1,13 @@
 ﻿namespace Nancy.Tests.Unit
 {
     using System;
+    using System.Dynamic;
     using System.Globalization;
+
+    using FakeItEasy;
+
     using Xunit;
+    using Xunit.Extensions;
 
     public class DynamicDictionaryValueFixture
     {
@@ -69,6 +74,20 @@
 
             // Then
             result.ShouldBeTrue();
+        }
+
+
+        [Fact]
+        public void Should_not_throw_null_reference_exception_if_value_is_null_using_equality_operator()
+        {
+            // Given
+            DynamicDictionaryValue value = null;
+
+            // When
+            var result = (value == 11);
+
+            // Then
+            result.ShouldBeFalse();
         }
 
         [Fact]
@@ -222,10 +241,10 @@
             Assert.False(valueFalse);
         }
 
-		[Fact]
+        [Fact]
         public void Should_be_able_to_implictly_cast_long_to_other_value_types()
         {
-            // Given 
+            // Given
             dynamic valueLong = new DynamicDictionaryValue((long)10);
 
             // Then
@@ -894,6 +913,66 @@
         }
 
         [Fact]
+        public void Should_implicitly_convert_from_int_based_on_given_parameter_type_of_short()
+        {
+            //Given
+            const int expected = 42;
+            const short notExpected = 100;
+            dynamic value = new DynamicDictionaryValue (expected);
+
+            //When
+            int actual = (int)value.TryParse<short> (notExpected);
+
+            //Then
+            Assert.Equal (expected, actual);
+        }
+
+        [Fact]
+        public void Should_implicitly_convert_from_int_based_on_given_parameter_type_of_long()
+        {
+            //Given
+            const int expected = 42;
+            const long notExpected = 100;
+            dynamic value = new DynamicDictionaryValue (expected);
+
+            //When
+            int actual = (int)value.TryParse<long> (notExpected);
+
+            //Then
+            Assert.Equal (expected, actual);
+        }
+
+        [Fact]
+        public void Should_implicitly_convert_from_int_based_on_given_parameter_type_of_nullable_long()
+        {
+            //Given
+            const int expected = 42;
+            long? notExpected = 100;
+            dynamic value = new DynamicDictionaryValue (expected);
+
+            //When
+            int actual = (int)value.TryParse<long?> (notExpected);
+
+            //Then
+            Assert.Equal (expected, actual);
+        }
+
+        [Fact]
+        public void Should_implicitly_convert_from_datetime_based_on_given_parameter_type_of_nullable_datetime()
+        {
+            //Given
+            DateTime expected = DateTime.Parse ("13 December 2012");
+            DateTime? notExpected = expected.AddDays (10);
+            dynamic value = new DynamicDictionaryValue (expected);
+
+            //When
+            DateTime actual = (DateTime)value.TryParse<DateTime?> (notExpected);
+
+            //Then
+            Assert.Equal (expected, actual);
+        }
+
+        [Fact]
         public void Should_return_default_value_if_implicit_convert_fails_on_datetime()
         {
             //Given
@@ -981,6 +1060,599 @@
             {
                 EventArgs e = (EventArgs)value;
             });
+        }
+
+        [Fact]
+        public void Should_return_false_when_converting_enums_of_different_types()
+        {
+            // Given
+            var binder = A.Fake<ConvertBinder>(o => o.WithArgumentsForConstructor(new object[] { typeof(IntEnum), false }));
+            var value = new DynamicDictionaryValue(ByteEnum.Value1);
+
+            // When
+            object valueResult;
+            var result = value.TryConvert(binder, out valueResult);
+
+            // Then
+            result.ShouldBeFalse();
+            valueResult.ShouldBeNull();
+        }
+
+        [Fact]
+        public void Should_return_true_when_converting_enums_of_same_type()
+        {
+            // Given
+            var binder = A.Fake<ConvertBinder>(o => o.WithArgumentsForConstructor(new object[] { typeof(IntEnum), false }));
+            var value = new DynamicDictionaryValue(IntEnum.Value1);
+
+            // When
+            object valueResult;
+            var result = value.TryConvert(binder, out valueResult);
+
+            // Then
+            result.ShouldBeTrue();
+            valueResult.ShouldEqual(IntEnum.Value1);
+        }
+
+        [Fact]
+        public void Should_return_false_when_converting_incorrect_enum_base_type_to_enum()
+        {
+            // Given
+            var binder = A.Fake<ConvertBinder>(o => o.WithArgumentsForConstructor(new object[] { typeof(IntEnum), false }));
+            var value = new DynamicDictionaryValue((byte)1);
+
+            // When
+            object valueResult;
+            var result = value.TryConvert(binder, out valueResult);
+
+            // Then
+            result.ShouldBeFalse();
+            valueResult.ShouldBeNull();
+        }
+
+        [Fact]
+        public void Should_return_true_when_converting_enum_base_type_to_enum()
+        {
+            // Given
+            var binder = A.Fake<ConvertBinder>(o => o.WithArgumentsForConstructor(new object[] { typeof(IntEnum), false }));
+            var value = new DynamicDictionaryValue(1);
+
+            // When
+            object valueResult;
+            var result = value.TryConvert(binder, out valueResult);
+
+            // Then
+            result.ShouldBeTrue();
+            valueResult.ShouldEqual(IntEnum.Value1);
+        }
+
+        [Fact]
+        public void Should_be_able_to_cast_null_to_default_int()
+        {
+            // Given
+            dynamic value = new DynamicDictionaryValue(null);
+
+            // When
+            int result = value;
+
+            // Then
+            result.ShouldEqual(default(int));
+        }
+
+        [Theory]
+        [InlineData(1234)]
+        [InlineData(4321)]
+        public void Should_be_able_to_cast_int_to_int(int expectedValue)
+        {
+            // Given
+            dynamic value = new DynamicDictionaryValue(expectedValue);
+
+            // When
+            int result = value;
+
+            // Then
+            result.ShouldEqual(expectedValue);
+        }
+
+        [Fact]
+        public void Should_be_able_to_cast_null_to_nullable_int()
+        {
+            // Given
+            dynamic value = new DynamicDictionaryValue(null);
+
+            // When
+            int? result = value;
+
+            // Then
+            result.HasValue.ShouldBeFalse();
+        }
+
+        [Theory]
+        [InlineData(1234)]
+        [InlineData(4321)]
+        public void Should_be_able_to_cast_int_to_nullable_int(int expectedValue)
+        {
+            // Given
+            dynamic value = new DynamicDictionaryValue(expectedValue);
+
+            // When
+            int? result = value;
+
+            // Then
+            result.HasValue.ShouldBeTrue();
+            result.Value.ShouldEqual(expectedValue);
+        }
+
+        [Fact]
+        public void Should_be_able_to_cast_null_to_default_bool()
+        {
+            // Given
+            dynamic value = new DynamicDictionaryValue(null);
+
+            // When
+            bool result = value;
+
+            // Then
+            result.ShouldEqual(default(bool));
+        }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public void Should_be_able_to_cast_bool_to_bool(bool expectedValue)
+        {
+            // Given
+            dynamic value = new DynamicDictionaryValue(expectedValue);
+
+            // When
+            bool result = value;
+
+            // Then
+            result.ShouldEqual(expectedValue);
+        }
+
+        [Fact]
+        public void Should_be_able_to_cast_null_to_nullable_bool()
+        {
+            // Given
+            dynamic value = new DynamicDictionaryValue(null);
+
+            // When
+            bool? result = value;
+
+            // Then
+            result.HasValue.ShouldBeFalse();
+        }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public void Should_be_able_to_cast_bool_to_nullable_bool(bool expectedValue)
+        {
+            // Given
+            dynamic value = new DynamicDictionaryValue(expectedValue);
+
+            // When
+            bool? result = value;
+
+            // Then
+            result.HasValue.ShouldBeTrue();
+            result.Value.ShouldEqual(expectedValue);
+        }
+
+        [Fact]
+        public void Should_be_able_to_cast_null_to_default_datetime()
+        {
+            // Given
+            dynamic value = new DynamicDictionaryValue(null);
+
+            // When
+            DateTime result = value;
+
+            // Then
+            result.ShouldEqual(default(DateTime));
+        }
+
+        [Theory]
+        [InlineData(2015, 10, 13)]
+        [InlineData(2015, 10, 24)]
+        public void Should_be_able_to_cast_datetime_to_datetime(int year, int month, int day)
+        {
+            // Given
+            var expectedValue = new DateTime(year, month, day);
+            dynamic value = new DynamicDictionaryValue(expectedValue);
+
+            // When
+            DateTime result = value;
+
+            // Then
+            result.ShouldEqual(expectedValue);
+        }
+
+        [Fact]
+        public void Should_be_able_to_cast_null_to_nullable_datetime()
+        {
+            // Given
+            dynamic value = new DynamicDictionaryValue(null);
+
+            // When
+            DateTime? result = value;
+
+            // Then
+            result.HasValue.ShouldBeFalse();
+        }
+
+        [Theory]
+        [InlineData(2015, 10, 13)]
+        [InlineData(2015, 10, 24)]
+        public void Should_be_able_to_cast_datetime_to_nullable_datetime(int year, int month, int day)
+        {
+            // Given
+            var expectedValue = new DateTime(year, month, day);
+            dynamic value = new DynamicDictionaryValue(expectedValue);
+
+            // When
+            DateTime? result = value;
+
+            // Then
+            result.HasValue.ShouldBeTrue();
+            result.Value.ShouldEqual(expectedValue);
+        }
+
+        [Fact]
+        public void Should_be_able_to_cast_null_to_default_decimal()
+        {
+            // Given
+            dynamic value = new DynamicDictionaryValue(null);
+
+            // When
+            decimal result = value;
+
+            // Then
+            result.ShouldEqual(default(decimal));
+        }
+
+        [Theory]
+        [InlineData("1234")]
+        [InlineData("4321")]
+        public void Should_be_able_to_cast_decimal_to_decimal(string input)
+        {
+            // Given
+            var expectedValue = decimal.Parse(input);
+            dynamic value = new DynamicDictionaryValue(expectedValue);
+
+            // When
+            decimal result = value;
+
+            // Then
+            result.ShouldEqual(expectedValue);
+        }
+
+        [Fact]
+        public void Should_be_able_to_cast_null_to_nullable_decimal()
+        {
+            // Given
+            dynamic value = new DynamicDictionaryValue(null);
+
+            // When
+            decimal? result = value;
+
+            // Then
+            result.HasValue.ShouldBeFalse();
+        }
+
+        [Theory]
+        [InlineData("1234")]
+        [InlineData("4321")]
+        public void Should_be_able_to_cast_decimal_to_nullable_decimal(string input)
+        {
+            // Given
+            var expectedValue = decimal.Parse(input);
+            dynamic value = new DynamicDictionaryValue(expectedValue);
+
+            // When
+            decimal? result = value;
+
+            // Then
+            result.HasValue.ShouldBeTrue();
+            result.Value.ShouldEqual(expectedValue);
+        }
+
+        [Fact]
+        public void Should_be_able_to_cast_null_to_default_double()
+        {
+            // Given
+            dynamic value = new DynamicDictionaryValue(null);
+
+            // When
+            double result = value;
+
+            // Then
+            result.ShouldEqual(default(double));
+        }
+
+        [Theory]
+        [InlineData(1234d)]
+        [InlineData(4321d)]
+        public void Should_be_able_to_cast_double_to_double(double expectedValue)
+        {
+            // Given
+            dynamic value = new DynamicDictionaryValue(expectedValue);
+
+            // When
+            double result = value;
+
+            // Then
+            result.ShouldEqual(expectedValue);
+        }
+
+        [Fact]
+        public void Should_be_able_to_cast_null_to_nullable_double()
+        {
+            // Given
+            dynamic value = new DynamicDictionaryValue(null);
+
+            // When
+            double? result = value;
+
+            // Then
+            result.HasValue.ShouldBeFalse();
+        }
+
+        [Theory]
+        [InlineData(1234d)]
+        [InlineData(4321d)]
+        public void Should_be_able_to_cast_double_to_nullable_double(double expectedValue)
+        {
+            // Given
+            dynamic value = new DynamicDictionaryValue(expectedValue);
+
+            // When
+            double? result = value;
+
+            // Then
+            result.HasValue.ShouldBeTrue();
+            result.Value.ShouldEqual(expectedValue);
+        }
+
+        [Fact]
+        public void Should_be_able_to_cast_null_to_default_float()
+        {
+            // Given
+            dynamic value = new DynamicDictionaryValue(null);
+
+            // When
+            float result = value;
+
+            // Then
+            result.ShouldEqual(default(float));
+        }
+
+        [Theory]
+        [InlineData(1234f)]
+        [InlineData(4321f)]
+        public void Should_be_able_to_cast_float_to_float(float expectedValue)
+        {
+            // Given
+            dynamic value = new DynamicDictionaryValue(expectedValue);
+
+            // When
+            float result = value;
+
+            // Then
+            result.ShouldEqual(expectedValue);
+        }
+
+        [Fact]
+        public void Should_be_able_to_cast_null_to_nullable_float()
+        {
+            // Given
+            dynamic value = new DynamicDictionaryValue(null);
+
+            // When
+            float? result = value;
+
+            // Then
+            result.HasValue.ShouldBeFalse();
+        }
+
+        [Theory]
+        [InlineData(1234f)]
+        [InlineData(4321f)]
+        public void Should_be_able_to_cast_float_to_nullable_float(float expectedValue)
+        {
+            // Given
+            dynamic value = new DynamicDictionaryValue(expectedValue);
+
+            // When
+            float? result = value;
+
+            // Then
+            result.HasValue.ShouldBeTrue();
+            result.Value.ShouldEqual(expectedValue);
+        }
+
+        [Fact]
+        public void Should_be_able_to_cast_null_to_default_long()
+        {
+            // Given
+            dynamic value = new DynamicDictionaryValue(null);
+
+            // When
+            long result = value;
+
+            // Then
+            result.ShouldEqual(default(long));
+        }
+
+        [Theory]
+        [InlineData(1234L)]
+        [InlineData(4321L)]
+        public void Should_be_able_to_cast_long_to_long(long expectedValue)
+        {
+            // Given
+            dynamic value = new DynamicDictionaryValue(expectedValue);
+
+            // When
+            long result = value;
+
+            // Then
+            result.ShouldEqual(expectedValue);
+        }
+
+        [Fact]
+        public void Should_be_able_to_cast_null_to_nullable_long()
+        {
+            // Given
+            dynamic value = new DynamicDictionaryValue(null);
+
+            // When
+            long? result = value;
+
+            // Then
+            result.HasValue.ShouldBeFalse();
+        }
+
+        [Theory]
+        [InlineData(1234L)]
+        [InlineData(4321L)]
+        public void Should_be_able_to_cast_long_to_nullable_long(long expectedValue)
+        {
+            // Given
+            dynamic value = new DynamicDictionaryValue(expectedValue);
+
+            // When
+            long? result = value;
+
+            // Then
+            result.HasValue.ShouldBeTrue();
+            result.Value.ShouldEqual(expectedValue);
+        }
+
+        [Fact]
+        public void Should_be_able_to_cast_null_to_default_guid()
+        {
+            // Given
+            dynamic value = new DynamicDictionaryValue(null);
+
+            // When
+            Guid result = value;
+
+            // Then
+            result.ShouldEqual(default(Guid));
+        }
+
+        [Fact]
+        public void Should_be_able_to_cast_guid_to_guid()
+        {
+            // Given
+            var expectedValue = Guid.NewGuid();
+            dynamic value = new DynamicDictionaryValue(expectedValue);
+
+            // When
+            Guid result = value;
+
+            // Then
+            result.ShouldEqual(expectedValue);
+        }
+
+        [Fact]
+        public void Should_be_able_to_cast_null_to_nullable_guid()
+        {
+            // Given
+            dynamic value = new DynamicDictionaryValue(null);
+
+            // When
+            Guid? result = value;
+
+            // Then
+            result.HasValue.ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Should_be_able_to_cast_guid_to_nullable_guid()
+        {
+            // Given
+            var expectedValue = Guid.NewGuid();
+            dynamic value = new DynamicDictionaryValue(expectedValue);
+
+            // When
+            Guid? result = value;
+
+            // Then
+            result.HasValue.ShouldBeTrue();
+            result.Value.ShouldEqual(expectedValue);
+        }
+
+        [Fact]
+        public void Should_be_able_to_cast_null_to_default_timespan()
+        {
+            // Given
+            dynamic value = new DynamicDictionaryValue(null);
+
+            // When
+            TimeSpan result = value;
+
+            // Then
+            result.ShouldEqual(default(TimeSpan));
+        }
+
+        [Theory]
+        [InlineData(4, 24, 18)]
+        [InlineData(16, 10, 34)]
+        public void Should_be_able_to_cast_timespan_to_timespan(int hours, int minutes, int seconds)
+        {
+            // Given
+            var expectedValue = new TimeSpan(hours, minutes, seconds);
+            dynamic value = new DynamicDictionaryValue(expectedValue);
+
+            // When
+            TimeSpan result = value;
+
+            // Then
+            result.ShouldEqual(expectedValue);
+        }
+
+        [Fact]
+        public void Should_be_able_to_cast_null_to_nullable_timespan()
+        {
+            // Given
+            dynamic value = new DynamicDictionaryValue(null);
+
+            // When
+            TimeSpan? result = value;
+
+            // Then
+            result.HasValue.ShouldBeFalse();
+        }
+
+        [Theory]
+        [InlineData(4, 24, 18)]
+        [InlineData(16, 10, 34)]
+        public void Should_be_able_to_cast_timespan_to_nullable_timespan(int hours, int minutes, int seconds)
+        {
+            // Given
+            var expectedValue = new TimeSpan(hours, minutes, seconds);
+            dynamic value = new DynamicDictionaryValue(expectedValue);
+
+            // When
+            TimeSpan? result = value;
+
+            // Then
+            result.HasValue.ShouldBeTrue();
+            result.Value.ShouldEqual(expectedValue);
+        }
+
+        private enum ByteEnum : byte
+        {
+            Value1 = 1,
+            Value2 = 2
+        }
+
+        private enum IntEnum
+        {
+            Value1 = 1,
+            Value2 = 2
         }
     }
 }

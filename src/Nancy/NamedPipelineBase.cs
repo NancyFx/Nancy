@@ -140,7 +140,7 @@ namespace Nancy
         public virtual void InsertBefore(string name, PipelineItem<TDelegate> item)
         {
             var existingIndex =
-                this.pipelineItems.FindIndex(i => String.Equals(name, i.Name, StringComparison.InvariantCulture));
+                this.pipelineItems.FindIndex(i => String.Equals(name, i.Name, StringComparison.Ordinal));
 
             if (existingIndex == -1)
             {
@@ -170,7 +170,7 @@ namespace Nancy
         public virtual void InsertAfter(string name, PipelineItem<TDelegate> item)
         {
             var existingIndex =
-                this.pipelineItems.FindIndex(i => String.Equals(name, i.Name, StringComparison.InvariantCulture));
+                this.pipelineItems.FindIndex(i => String.Equals(name, i.Name, StringComparison.Ordinal));
 
             if (existingIndex == -1)
             {
@@ -181,7 +181,7 @@ namespace Nancy
 
             if (existingIndex > this.pipelineItems.Count)
             {
-                this.AddItemToEndOfPipeline(item);                
+                this.AddItemToEndOfPipeline(item);
             }
             else
             {
@@ -196,8 +196,13 @@ namespace Nancy
         /// <returns>Index of item that was removed or -1 if nothing removed</returns>
         public virtual int RemoveByName(string name)
         {
+            if (string.IsNullOrEmpty(name))
+            {
+                return -1;
+            }
+
             var existingIndex =
-                this.pipelineItems.FindIndex(i => String.Equals(name, i.Name, StringComparison.InvariantCulture));
+                this.pipelineItems.FindIndex(i => String.Equals(name, i.Name, StringComparison.Ordinal));
 
             if (existingIndex != -1)
             {

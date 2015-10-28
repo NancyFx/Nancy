@@ -31,23 +31,34 @@ namespace Nancy.Hosting.Aspnet
 
         private static INancyBootstrapper GetConfigurationBootstrapper()
         {
-            var configurationBootstrapperType = 
-                GetConfigurationBootstrapperType();
-
-            if (configurationBootstrapperType != null)
+            var bootstrapperEntry = GetConfiguredBootstrapperEntry();
+            if (bootstrapperEntry == null)
             {
-                var bootstrapperType =
-                    Type.GetType(string.Concat(configurationBootstrapperType.Name, ", ", configurationBootstrapperType.Assembly));
-
-                return Activator.CreateInstance(bootstrapperType) as INancyBootstrapper;
+                return null;
             }
 
-            return null;
+            var assemblyQualifiedName = string.Concat(bootstrapperEntry.Name, ", ", bootstrapperEntry.Assembly);
+
+            var bootstrapperType = Type.GetType(assemblyQualifiedName);
+            if (bootstrapperType == null)
+            {
+                throw new BootstrapperException(string.Format("Could not locate bootstrapper of type '{0}'.", assemblyQualifiedName));
+            }
+
+            try
+            {
+                return Activator.CreateInstance(bootstrapperType) as INancyBootstrapper;
+            }
+            catch (Exception ex)
+            {
+                var errorMessage = string.Format("Could not initialize bootstrapper of type '{0}'.", bootstrapperType.FullName);
+                throw new BootstrapperException(errorMessage, ex);
+            }
         }
 
-        private static BootstrapperEntry GetConfigurationBootstrapperType()
+        private static BootstrapperEntry GetConfiguredBootstrapperEntry()
         {
-            var configurationSection = 
+            var configurationSection =
                 ConfigurationManager.GetSection("nancyFx") as NancyFxSection;
 
             if (configurationSection == null)
@@ -55,15 +66,20 @@ namespace Nancy.Hosting.Aspnet
                 return null;
             }
 
-            var bootstrapperOverrideType = 
+            var bootstrapperOverrideType =
                 configurationSection.Bootstrapper.Type;
 
-            var bootstrapperOverrideAssembly = 
+            var bootstrapperOverrideAssembly =
                 configurationSection.Bootstrapper.Assembly;
 
-            if (string.IsNullOrWhiteSpace(bootstrapperOverrideType) || string.IsNullOrWhiteSpace(bootstrapperOverrideAssembly))
+            if (string.IsNullOrWhiteSpace(bootstrapperOverrideType))
             {
-                return null;
+                throw new BootstrapperException("The 'type' attribute of the 'bootstrapper' element under the 'nancyFx' config section is empty. Please specify the full type name.");
+            }
+
+            if (string.IsNullOrWhiteSpace(bootstrapperOverrideAssembly))
+            {
+                throw new BootstrapperException("The 'assembly' attribute of the 'bootstrapper' element under the 'nancyFx' config section is empty. Please specify the full assembly name.");
             }
 
             return new BootstrapperEntry(bootstrapperOverrideAssembly, bootstrapperOverrideType);

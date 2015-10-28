@@ -3,15 +3,20 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Dynamic;
-    
+    using System.Linq;
+    using System.Text;
+
     /// <summary>
     /// A dictionary that supports dynamic access.
     /// </summary>
+    [DebuggerDisplay("{DebuggerDisplay, nq}")]
     public class DynamicDictionary : DynamicObject, IEquatable<DynamicDictionary>, IHideObjectMembers, IEnumerable<string>, IDictionary<string, object>
     {
         private readonly IDictionary<string, dynamic> dictionary =
-            new Dictionary<string, dynamic>(StaticConfiguration.CaseSensitive ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase);
+            new Dictionary<string, dynamic>(StaticConfiguration.CaseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase);
+
 
         /// <summary>
         /// Returns an empty dynamic dictionary.
@@ -49,7 +54,7 @@
         /// <param name="binder">Provides information about the object that called the dynamic operation. The binder.Name property provides the name of the member to which the value is being assigned. For example, for the statement sampleObject.SampleProperty = "Test", where sampleObject is an instance of the class derived from the <see cref="T:System.Dynamic.DynamicObject"/> class, binder.Name returns "SampleProperty". The binder.IgnoreCase property specifies whether the member name is case-sensitive.</param><param name="value">The value to set to the member. For example, for sampleObject.SampleProperty = "Test", where sampleObject is an instance of the class derived from the <see cref="T:System.Dynamic.DynamicObject"/> class, the <paramref name="value"/> is "Test".</param>
         public override bool TrySetMember(SetMemberBinder binder, object value)
         {
-        	this[binder.Name] = value;
+            this[binder.Name] = value;
             return true;
         }
 
@@ -153,7 +158,7 @@
                 return true;
             }
 
-            return obj.GetType() == typeof (DynamicDictionary) && this.Equals((DynamicDictionary) obj);
+            return obj.GetType() == typeof(DynamicDictionary) && this.Equals((DynamicDictionary)obj);
         }
 
         /// <summary>
@@ -201,6 +206,7 @@
         /// <param name="key">The key to locate in the <see cref="DynamicDictionary"/>.</param>
         public bool ContainsKey(string key)
         {
+            key = GetNeutralKey(key);
             return this.dictionary.ContainsKey(key);
         }
 
@@ -221,6 +227,7 @@
         /// <param name="value">When this method returns, the value associated with the specified key, if the key is found; otherwise, the default value for the type of the <paramref name="value"/> parameter. This parameter is passed uninitialized.</param>
         public bool TryGetValue(string key, out dynamic value)
         {
+            key = GetNeutralKey(key);
             return this.dictionary.TryGetValue(key, out value);
         }
 
@@ -292,7 +299,7 @@
         /// <param name="item">The object to remove from the <see cref="DynamicDictionary"/>.</param>
         public bool Remove(KeyValuePair<string, dynamic> item)
         {
-            var dynamicValueKeyValuePair = 
+            var dynamicValueKeyValuePair =
                 GetDynamicKeyValuePair(item);
 
             return this.dictionary.Remove(dynamicValueKeyValuePair);
@@ -304,7 +311,10 @@
         /// <returns>An <see cref="T:System.Collections.Generic.ICollection`1"/> containing the values in the <see cref="DynamicDictionary"/>.</returns>
         public ICollection<dynamic> Values
         {
-            get { return this.dictionary.Values; }
+            get
+            {
+                return this.dictionary.Values;
+            }
         }
 
         private static KeyValuePair<string, dynamic> GetDynamicKeyValuePair(KeyValuePair<string, dynamic> item)
@@ -317,6 +327,52 @@
         private static string GetNeutralKey(string key)
         {
             return key.Replace("-", string.Empty);
+        }
+
+        /// <summary>
+        /// Gets a typed Dictionary of <see cref="T:Dictionary{String, Object}" /> from <see cref="DynamicDictionary"/>
+        /// </summary>
+        /// <returns>Gets a typed Dictionary of <see cref="T:Dictionary{String, Object}" /> from <see cref="DynamicDictionary"/></returns>
+        public Dictionary<string, object> ToDictionary()
+        {
+            var data = new Dictionary<string, object>();
+
+            foreach (var item in dictionary)
+            {
+                var newKey = item.Key;
+                var newValue = ((DynamicDictionaryValue)item.Value).Value;
+
+                data.Add(newKey, newValue);
+            }
+
+            return data;
+        }
+
+        private string DebuggerDisplay
+        {
+            get
+            {
+                var builder = new StringBuilder();
+                var maxItems = Math.Min(this.dictionary.Count, 5);
+
+                builder.Append("{");
+
+                for (var i = 0; i < maxItems; i++)
+                {
+                    var item = this.dictionary.ElementAt(i);
+                    
+                    builder.AppendFormat(" {0} = {1}{2}", item.Key, item.Value, i < maxItems - 1 ? "," : string.Empty);
+                }
+
+                if (maxItems < this.dictionary.Count)
+                {
+                    builder.Append("...");
+                }
+
+                builder.Append(" }");
+
+                return builder.ToString();
+            }
         }
     }
 }

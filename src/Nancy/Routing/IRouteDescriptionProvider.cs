@@ -1,7 +1,7 @@
 ﻿namespace Nancy.Routing
 {
     /// <summary>
-    /// Defines the functionality for retriving a description for a specific route.
+    /// Defines the functionality for retrieving a description for a specific route.
     /// </summary>
     public interface IRouteDescriptionProvider
     {

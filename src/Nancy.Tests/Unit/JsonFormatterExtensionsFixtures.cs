@@ -41,7 +41,7 @@ namespace Nancy.Tests.Unit
             {
                 response.Contents(stream);
 
-                Encoding.UTF8.GetString(stream.ToArray()).ShouldEqual("{\"FirstName\":\"Andy\",\"LastName\":\"Pike\"}");
+                Encoding.UTF8.GetString(stream.ToArray()).ShouldEqual("{\"firstName\":\"Andy\",\"lastName\":\"Pike\"}");
             }
         }
 
@@ -52,26 +52,26 @@ namespace Nancy.Tests.Unit
             using (var stream = new MemoryStream())
             {
                 nullResponse.Contents(stream);
-                Encoding.UTF8.GetString(stream.ToArray()).ShouldEqual("null");
+                Encoding.UTF8.GetString(stream.ToArray()).ShouldHaveCount(0);
             }
         }
 
-		[Fact]
-		public void Json_formatter_can_deserialize_objects_of_type_Type()
-		{
-			var response = formatter.AsJson(new {type = typeof (string)});
-			using (var stream = new MemoryStream())
-			{
-				response.Contents(stream);
-				Encoding.UTF8.GetString(stream.ToArray()).ShouldEqual(@"{""type"":""System.String""}");
-			}
-		}
+        [Fact]
+        public void Json_formatter_can_deserialize_objects_of_type_Type()
+        {
+            var response = formatter.AsJson(new { type = typeof(string) });
+            using (var stream = new MemoryStream())
+            {
+                response.Contents(stream);
+                Encoding.UTF8.GetString(stream.ToArray()).ShouldEqual(@"{""type"":""System.String""}");
+            }
+        }
 
-		[Fact]
-		public void Can_set_status_on_json_response()
-		{
-			var response = formatter.AsJson(new {foo = "bar"}, HttpStatusCode.InternalServerError);
-			Assert.Equal(response.StatusCode, HttpStatusCode.InternalServerError);
-		}
+        [Fact]
+        public void Can_set_status_on_json_response()
+        {
+            var response = formatter.AsJson(new { foo = "bar" }, HttpStatusCode.InternalServerError);
+            Assert.Equal(response.StatusCode, HttpStatusCode.InternalServerError);
+        }
     }
 }

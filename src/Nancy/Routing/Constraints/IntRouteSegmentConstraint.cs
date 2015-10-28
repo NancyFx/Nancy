@@ -3,18 +3,18 @@
     using System.Globalization;
 
     /// <summary>
-    /// Constraint for <see cref="long"/> route segments.
+    /// Constraint for <see cref="int"/> route segments.
     /// </summary>
-    public class IntRouteSegmentConstraint : RouteSegmentConstraintBase<long>
+    public class IntRouteSegmentConstraint : RouteSegmentConstraintBase<int>
     {
         public override string Name
         {
             get { return "int"; }
         }
 
-        protected override bool TryMatch(string constraint, string segment, out long matchedValue)
+        protected override bool TryMatch(string constraint, string segment, out int matchedValue)
         {
-            return long.TryParse(segment, NumberStyles.Integer, CultureInfo.InvariantCulture, out matchedValue);
+            return int.TryParse(segment, NumberStyles.Integer, CultureInfo.InvariantCulture, out matchedValue);
         }
     }
 }

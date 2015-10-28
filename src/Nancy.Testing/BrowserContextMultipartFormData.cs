@@ -111,7 +111,7 @@
 
                 builder.Append(CRLF);
                 builder.Append("--" + this.boundary);
-                builder.Append(CRLF);  
+                builder.Append(CRLF);
                 builder.AppendFormat(@"Content-Disposition: form-data; name=""{0}""", name);
                 if (!String.IsNullOrWhiteSpace(filename))
                 {

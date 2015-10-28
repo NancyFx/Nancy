@@ -91,6 +91,32 @@
             Assert.Contains("Implemented ITestDependency", response.Body.AsString());
         }
 
+        interface IIinterface { }
+        class DisposableDependency : IIinterface, IDisposable
+        {
+            public bool Disposed { get; private set; }
+
+            public void Dispose()
+            {
+                this.Disposed = true;
+            }
+        }
+
+        [Fact]
+        public void should_be_able_to_configure_disposbale_dependency_implementing_interface_by_interface()
+        {
+            // Given
+            var disposableDependency = new DisposableDependency();
+
+            // When
+            new Browser(with =>
+              with.Dependency<IIinterface>(disposableDependency)
+            );
+
+            // Then
+            Assert.False(disposableDependency.Disposed);
+        }
+
 
         [Fact]
         public void should_be_able_to_configure_dependencies_by_instances()
@@ -99,7 +125,7 @@
             var browser = new Browser(with =>
             {
                 with.Module<ModuleWithTwoDependencies>();
-                with.Dependencies(GetFakeDependency(), GetFakeDependency2());
+                with.Dependencies<object>(GetFakeDependency(), GetFakeDependency2());
             });
 
             // When

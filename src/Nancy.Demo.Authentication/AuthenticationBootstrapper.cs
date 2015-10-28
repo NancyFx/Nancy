@@ -54,7 +54,7 @@ namespace Nancy.Demo.Authentication
             var claims = new List<string>();
 
             // Only bob can have access to SuperSecure
-            if (String.Equals(userName, "bob", StringComparison.InvariantCultureIgnoreCase))
+            if (String.Equals(userName, "bob", StringComparison.OrdinalIgnoreCase))
             {
                 claims.Add("SuperSecure");
             }

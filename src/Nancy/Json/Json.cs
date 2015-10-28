@@ -26,74 +26,74 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-using System.Globalization;
-
 namespace Nancy.Json
 {
     using System;
     using System.IO;
     using System.Text;
-    
-    internal static class Json
-	{
+    using System.Globalization;
 
-    public static void Serialize (object obj, StringBuilder output)
+    internal static class Json
+    {
+
+        public static void Serialize(object obj, StringBuilder output)
         {
             Serialize(obj, JavaScriptSerializer.DefaultSerializer, output);    
         }
 
-        public static void Serialize (object obj, JavaScriptSerializer jss, StringBuilder output)
-		{
-			JsonSerializer js = new JsonSerializer (jss);
-			js.Serialize (obj, output);
-			js = null;
-		}
+        public static void Serialize(object obj, JavaScriptSerializer jss, StringBuilder output)
+        {
+            JsonSerializer js = new JsonSerializer(jss);
+            js.Serialize(obj, output);
+            js = null;
+        }
 
         public static void Serialize(object obj, TextWriter output)
         {
             Serialize(obj, JavaScriptSerializer.DefaultSerializer, output);
         }
 
-		public static void Serialize (object obj, JavaScriptSerializer jss, TextWriter output)
-		{
-			JsonSerializer js = new JsonSerializer (jss);
-			js.Serialize (obj, output);
-			js = null;
-		}
+        public static void Serialize(object obj, JavaScriptSerializer jss, TextWriter output)
+        {
+            JsonSerializer js = new JsonSerializer(jss);
+            js.Serialize(obj, output);
+            js = null;
+        }
 
-    	public static object Deserialize (string input)
-    	{
-    	    return Deserialize(input, JavaScriptSerializer.DefaultSerializer);
-    	}
+        public static object Deserialize(string input)
+        {
+            return Deserialize(input, JavaScriptSerializer.DefaultSerializer);
+        }
 
-		public static object Deserialize (string input, JavaScriptSerializer jss)
-		{
-			if (jss == null)
-				throw new ArgumentNullException ("jss");
-			
-			return Deserialize (new StringReader (input), jss);
-		}
+        public static object Deserialize(string input, JavaScriptSerializer jss)
+        {
+            if (jss == null)
+            {
+                throw new ArgumentNullException("jss");
+            }
+            return Deserialize(new StringReader(input), jss);
+        }
 
         public static object Deserialize(TextReader input)
         {
             return Deserialize(input, JavaScriptSerializer.DefaultSerializer);
         }
 
-		public static object Deserialize (TextReader input, JavaScriptSerializer jss)
-		{
-			if (jss == null)
-				throw new ArgumentNullException ("jss");
-			
-			JsonDeserializer ser = new JsonDeserializer (jss);
-			return ser.Deserialize (input);
-		}
+        public static object Deserialize(TextReader input, JavaScriptSerializer jss)
+        {
+            if (jss == null)
+            {
+                throw new ArgumentNullException("jss");
+            }
+            JsonDeserializer ser = new JsonDeserializer(jss);
+            return ser.Deserialize(input);
+        }
 
         public static IFormatProvider DefaultNumberFormatInfo
         {
             get
             {
-                return new NumberFormatInfo()
-                                                    {NumberDecimalSeparator = ".", NumberGroupSeparator = string.Empty};
+                return new NumberFormatInfo(){ NumberDecimalSeparator = ".", NumberGroupSeparator = string.Empty };
             }
             
         }
@@ -103,8 +103,8 @@ namespace Nancy.Json
         /// Supports:
         ///   application/json
         ///   text/json
-        ///   application/vnd[something]+json
-        /// Matches are case insentitive to try and be as "accepting" as possible.
+        ///   [something]+json
+        /// Matches are case insensitive to try and be as "accepting" as possible.
         /// </summary>
         /// <param name="contentType">Request content type</param>
         /// <returns>True if content type is JSON, false otherwise</returns>
@@ -117,11 +117,10 @@ namespace Nancy.Json
 
             var contentMimeType = contentType.Split(';')[0];
 
-            return contentMimeType.Equals("application/json", StringComparison.InvariantCultureIgnoreCase) ||
-                   contentMimeType.StartsWith("application/json-", StringComparison.InvariantCultureIgnoreCase) ||
-                   contentMimeType.Equals("text/json", StringComparison.InvariantCultureIgnoreCase) ||
-                  (contentMimeType.StartsWith("application/vnd", StringComparison.InvariantCultureIgnoreCase) &&
-                   contentMimeType.EndsWith("+json", StringComparison.InvariantCultureIgnoreCase));
+            return contentMimeType.Equals("application/json", StringComparison.OrdinalIgnoreCase) ||
+            contentMimeType.StartsWith("application/json-", StringComparison.OrdinalIgnoreCase) ||
+            contentMimeType.Equals("text/json", StringComparison.OrdinalIgnoreCase) ||
+            contentMimeType.EndsWith("+json", StringComparison.OrdinalIgnoreCase);
         }
-	}
+    }
 }

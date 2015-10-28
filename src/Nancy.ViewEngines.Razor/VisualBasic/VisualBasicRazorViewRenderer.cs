@@ -45,7 +45,7 @@
         /// </summary>
         public VisualBasicRazorViewRenderer()
         {
-            this.ModelCodeGenerator = typeof(VisualBasicModelCodeGenerator);
+            this.ModelCodeGenerator = typeof(ModelCodeGenerator);
 
             this.Assemblies = new List<string>();
 

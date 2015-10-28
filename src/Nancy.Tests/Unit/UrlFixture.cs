@@ -173,26 +173,25 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
-        public void Should_append_fragment_when_converting_to_string()
+        public void Should_implicitly_cast_from_string()
         {
             // Given
-            this.url.Scheme = "https";
-            this.url.HostName = "www.nancyfx.org";
-            this.url.Port = 1234;
-            this.url.BasePath = "/base";
-            this.url.Path = "/";
-            this.url.Query = "?foo=some%20text";
-            this.url.Fragment = "anchor";
+            string urlAsString = "https://www.nancyfx.org:1234/base?foo=some%20text#anchor";
 
             // When
-            var result = this.url.ToString();
+            Url result = urlAsString;
 
             // Then
-            result.ShouldEndWith("https://www.nancyfx.org:1234/base?foo=some%20text#anchor");
+            result.Scheme.ShouldEqual("https");
+            result.HostName.ShouldEqual("www.nancyfx.org");
+            result.Port.ShouldEqual(1234);
+            result.BasePath.ShouldEqual(string.Empty);
+            result.Path.ShouldEqual("/base");
+            result.Query.ShouldEqual("?foo=some%20text");
         }
 
         [Fact]
-        public void Should_implicitliy_cast_to_uri()
+        public void Should_implicitly_cast_to_string()
         {
             // Given
             this.url.Scheme = "https";
@@ -201,13 +200,71 @@ namespace Nancy.Tests.Unit
             this.url.BasePath = "/base";
             this.url.Path = "/";
             this.url.Query = "?foo=some%20text";
-            this.url.Fragment = "anchor";
+
+            // When
+            string result = this.url;
+
+            // Then
+            result.ShouldEqual("https://www.nancyfx.org:1234/base?foo=some%20text");
+        }
+
+        [Fact]
+        public void Should_implicitly_cast_from_uri()
+        {
+            // Given
+            Uri uri = new Uri("https://www.nancyfx.org:1234/base?foo=some%20text#anchor");
+
+            // When
+            Url result = uri;
+
+            // Then
+            result.Scheme.ShouldEqual("https");
+            result.HostName.ShouldEqual("www.nancyfx.org");
+            result.Port.ShouldEqual(1234);
+            result.BasePath.ShouldEqual(string.Empty);
+            result.Path.ShouldEqual("/base");
+            result.Query.ShouldEqual("?foo=some%20text");
+        }
+
+        [Fact]
+        public void Should_implicitly_cast_from_relative_uri()
+        {
+            // Given
+            var uri = new Uri("/hello", UriKind.Relative);
+
+            // When
+            Url result = uri;
+
+            // Then
+            result.Scheme.ShouldEqual(Uri.UriSchemeHttp);
+            result.HostName.ShouldEqual(string.Empty);
+            result.Port.ShouldEqual(null);
+            result.BasePath.ShouldEqual(string.Empty);
+            result.Path.ShouldEqual("/hello");
+            result.Query.ShouldEqual(string.Empty);
+        }
+
+        [Fact]
+        public void Should_implicitly_cast_to_uri()
+        {
+            // Given
+            this.url.Scheme = "https";
+            this.url.HostName = "www.nancyfx.org";
+            this.url.Port = 1234;
+            this.url.BasePath = "/base";
+            this.url.Path = "/";
+            this.url.Query = "?foo=some%20text";
 
             // When
             Uri result = this.url;
 
             // Then
-            result.ToString().ShouldEqual("https://www.nancyfx.org:1234/base?foo=some text#anchor");
+            result.Scheme.ShouldEqual("https");
+            result.Host.ShouldEqual("www.nancyfx.org");
+            result.Port.ShouldEqual(1234);
+            result.AbsolutePath.ShouldEqual("/base");
+            result.Query.ShouldEqual("?foo=some%20text");
+            result.Fragment.ShouldBeEmpty();
         }
 
         [Fact]
@@ -220,7 +277,6 @@ namespace Nancy.Tests.Unit
             this.url.BasePath = "/base";
             this.url.Path = "/";
             this.url.Query = "?foo=some%20text";
-            this.url.Fragment = "anchor";
 
             // When
             Uri result = this.url;
@@ -229,6 +285,20 @@ namespace Nancy.Tests.Unit
             result.IsAbsoluteUri.ShouldBeTrue();
         }
 
+        [Fact]
+        public void Should_be_able_to_take_a_string_in_the_constructor()
+        {
+            //Given, When
+            var url = new Url("https://www.nancyfx.org:1234/base?foo=some text");
+
+            //Then
+            url.Scheme.ShouldEqual("https");
+            url.HostName.ShouldEqual("www.nancyfx.org");
+            url.Port.ShouldEqual(1234);
+            url.Path.ShouldEqual("/base");
+            url.Query.ShouldEqual("?foo=some%20text");
+        }
+        
         [Theory]
         [InlineData("https://www.nancyfx.org:1234/base?foo=some%20text", "https", "www.nancyfx.org", 1234, "/base", "?foo=some%20text")]
         [InlineData("http://nancyfx.org", "http", "nancyfx.org", 80, "/", "")]

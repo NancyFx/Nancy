@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Configuration;
     using System.IO;
     using System.Reflection;
     using System.Security.Cryptography.X509Certificates;
@@ -19,11 +18,12 @@
         /// </summary>
         public BrowserContext()
         {
-            this.Values.Headers = new Dictionary<string, IEnumerable<string>>();
-            this.Values.Protocol = "http";
-            this.Values.QueryString = String.Empty;
-            this.Values.BodyString = String.Empty;
-            this.Values.FormValues = String.Empty;
+            this.Values.Headers = new Dictionary<string, IEnumerable<string>>(StringComparer.OrdinalIgnoreCase);
+            this.Values.Protocol = string.Empty;
+            this.Values.QueryString = string.Empty;
+            this.Values.BodyString = string.Empty;
+            this.Values.FormValues = string.Empty;
+            this.Values.HostName = string.Empty;
         }
 
         /// <summary>
@@ -35,13 +35,18 @@
         /// <summary>
         /// Gets or sets the protocol that should be sent with the HTTP request.
         /// </summary>
-        /// <value>A <see cref="string"/> contains the the protocol that should be sent with the HTTP request..</value>
+        /// <value>A <see cref="string"/> contains the protocol that should be sent with the HTTP request..</value>
         string IBrowserContextValues.Protocol { get; set; }
 
         /// <summary>
         /// Gets or sets the querystring
         /// </summary>
         string IBrowserContextValues.QueryString { get; set; }
+
+        /// <summary>
+        /// Gets or sets the user host name
+        /// </summary>
+        string IBrowserContextValues.HostName { get; set; }
 
         /// <summary>
         /// Gets or sets the user host address
@@ -107,14 +112,14 @@
         /// <param name="value">The value of the form element.</param>
         public void FormValue(string key, string value)
         {
-            if (!String.IsNullOrEmpty(this.Values.BodyString))
+            if (!string.IsNullOrEmpty(this.Values.BodyString))
             {
                 throw new InvalidOperationException("Form value cannot be set as well as body string");
             }
 
-            this.Values.FormValues += String.Format(
+            this.Values.FormValues += string.Format(
                 "{0}{1}={2}",
-                this.Values.FormValues.Length == 0 ? String.Empty : "&",
+                this.Values.FormValues.Length == 0 ? string.Empty : "&",
                 key,
                 HttpUtility.UrlEncode(value));
         }
@@ -158,7 +163,7 @@
         /// </summary>
         public void Query(string key, string value)
         {
-            this.Values.QueryString += String.Format(
+            this.Values.QueryString += string.Format(
                 "{0}{1}={2}",
                 this.Values.QueryString.Length == 0 ? "?" : "&",
                 key,
@@ -171,6 +176,15 @@
         public void UserHostAddress(string userHostAddress)
         {
             this.Values.UserHostAddress = userHostAddress;
+        }
+
+        /// <summary>
+        /// Sets the host name.
+        /// </summary>
+        /// <param name="hostName">is the host name of request url string</param>
+        public void HostName(string hostName)
+        {
+            this.Values.HostName = hostName;
         }
 
         /// <summary>
@@ -230,11 +244,9 @@
 
             if (certificatesFound.Count <= 0)
             {
-                throw new InvalidOperationException(
-                    String.Format("No certificates found in {0} {1} with a {2} that looks like \"{3}\"", storeLocation,
-                                  storeName, findType, findBy));
+                throw new InvalidOperationException(string.Format("No certificates found in {0} {1} with a {2} that looks like \"{3}\"", storeLocation, storeName, findType, findBy));
             }
-            
+
             this.Values.ClientCertificate = certificatesFound[0];
         }
 

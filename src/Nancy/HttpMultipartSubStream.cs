@@ -154,7 +154,7 @@
             this.stream.Position = this.position;
 
             var byteReadFromStream = this.stream.ReadByte();
-            
+
             this.RepositionAfterRead(1);
 
             return byteReadFromStream;
@@ -180,7 +180,7 @@
         /// <param name="origin">A value of type <see cref="SeekOrigin"/> indicating the reference point used to obtain the new position.</param>
         public override long Seek(long offset, SeekOrigin origin)
         {
-            var subStreamRelativePosition = 
+            var subStreamRelativePosition =
                 this.CalculateSubStreamRelativePosition(origin, offset);
 
             this.ThrowExceptionIsPositionIsOutOfBounds(subStreamRelativePosition);

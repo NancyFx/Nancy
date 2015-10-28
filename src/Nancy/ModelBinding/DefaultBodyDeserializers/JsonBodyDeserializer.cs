@@ -1,10 +1,7 @@
 namespace Nancy.ModelBinding.DefaultBodyDeserializers
 {
-    using System;
-    using System.Collections;
     using System.IO;
     using System.Reflection;
-    using Extensions;
     using Json;
 
     /// <summary>
@@ -34,8 +31,8 @@ namespace Nancy.ModelBinding.DefaultBodyDeserializers
         /// <returns>Model instance</returns>
         public object Deserialize(string contentType, Stream bodyStream, BindingContext context)
         {
-            var serializer = new JavaScriptSerializer(null, false, JsonSettings.MaxJsonLength, JsonSettings.MaxRecursions);
-            serializer.RegisterConverters(JsonSettings.Converters);
+            var serializer = new JavaScriptSerializer(null, false, JsonSettings.MaxJsonLength, JsonSettings.MaxRecursions, JsonSettings.RetainCasing, JsonSettings.ISO8601DateFormat);
+            serializer.RegisterConverters(JsonSettings.Converters, JsonSettings.PrimitiveConverters);
 
             bodyStream.Position = 0;
             string bodyText;
@@ -49,43 +46,6 @@ namespace Nancy.ModelBinding.DefaultBodyDeserializers
             var deserializedObject = genericDeserializeMethod.Invoke(serializer, new[] { bodyText });
 
             return deserializedObject;
-        }
-
-        private static object ConvertCollection(object items, Type destinationType, BindingContext context)
-        {
-            var returnCollection = Activator.CreateInstance(destinationType);
-
-            var collectionAddMethod = 
-                destinationType.GetMethod("Add", BindingFlags.Public | BindingFlags.Instance);
-
-            foreach (var item in (IEnumerable)items)
-            {
-                collectionAddMethod.Invoke(returnCollection, new[] { item });
-            }
-
-            return returnCollection;
-        }
-
-        private static object CreateObjectWithBlacklistExcluded(BindingContext context, object deserializedObject)
-        {
-            var returnObject = Activator.CreateInstance(context.DestinationType);
-
-            if (context.DestinationType.IsCollection())
-            {
-                return ConvertCollection(deserializedObject, context.DestinationType, context);
-            }
-
-            foreach (var property in context.ValidModelProperties)
-            {
-                CopyPropertyValue(property, deserializedObject, returnObject);
-            }
-
-            return returnObject;
-        }
-
-        private static void CopyPropertyValue(PropertyInfo property, object sourceObject, object destinationObject)
-        {
-            property.SetValue(destinationObject, property.GetValue(sourceObject, null), null);
         }
     }
 }

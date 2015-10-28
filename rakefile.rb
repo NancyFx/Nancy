@@ -66,7 +66,7 @@ task :publish => [:compile] do
         mkpath(output)
     end
 
-    FileUtils.cp_r FileList["src/**/#{CONFIGURATION}/*.dll", "src/**/#{CONFIGURATION}/*.XML", "src/**/#{CONFIGURATION}/*.pdb", "src/**/*.ps1"].exclude(/obj\//).exclude(/.Tests/), output
+    FileUtils.cp_r FileList["src/**/#{CONFIGURATION}/*.dll", "src/**/#{CONFIGURATION}/*.XML", "src/**/#{CONFIGURATION}/*.pdb", "src/**/*.ps1"].exclude(/obj\//).exclude(/.Tests/).exclude(/packages\//), output
 end
 
 desc "Executes xUnit tests"
@@ -123,10 +123,11 @@ task :nuget_package => [:publish] do
         update_xml nuspec do |xml|
             # Override the version number in the nuspec file with the one from this rake file (set above)
             xml.root.elements["metadata/version"].text = $nancy_version
-			
-			# Override the Nancy dependencies to match this version
-            nancy_dependencies = xml.root.elements["metadata/dependencies/dependency[contains(@id,'Nancy')]"]
-            nancy_dependencies.attributes["version"] = "#{$nancy_version}" unless nancy_dependencies.nil?
+
+            # Override the Nancy dependencies to match this version
+            xml.root.elements.each("metadata/dependencies//dependency[contains(@id,'Nancy')]") do |dependency|
+            	dependency.attributes["version"] = "#{$nancy_version}"
+            end
 
             # Override common values
             xml.root.elements["metadata/authors"].text = "Andreas Håkansson, Steven Robbins and contributors"

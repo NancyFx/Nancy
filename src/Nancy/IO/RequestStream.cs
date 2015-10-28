@@ -73,12 +73,12 @@
             {
                 var task =
                     MoveToWritableStream();
- 
+
                 task.Wait();
-  
+
                 if (task.IsFaulted)
                 {
-                   throw new InvalidOperationException("Unable to copy stream", task.Exception);
+                    throw new InvalidOperationException("Unable to copy stream", task.Exception);
                 }
             }
 
@@ -318,7 +318,7 @@
         /// </summary>
         /// <param name="value">The desired length of the current stream in bytes. </param>
         /// <exception cref="NotSupportedException">The stream does not support having it's length set.</exception>
-        /// <remarks>This functionalitry is not supported by the <see cref="RequestStream"/> type and will always throw <see cref="NotSupportedException"/>.</remarks>
+        /// <remarks>This functionality is not supported by the <see cref="RequestStream"/> type and will always throw <see cref="NotSupportedException"/>.</remarks>
         public override void SetLength(long value)
         {
             throw new NotSupportedException();
@@ -346,8 +346,8 @@
 
             if (this.stream.Length >= this.thresholdLength)
             {
-                // Close the stream here as closing it every time we call 
-                // MoveStreamContentsToFileStream causes an (ObjectDisposedException) 
+                // Close the stream here as closing it every time we call
+                // MoveStreamContentsToFileStream causes an (ObjectDisposedException)
                 // in NancyWcfGenericService - webRequest.UriTemplateMatch
                 var old = this.stream;
                 this.MoveStreamContentsToFileStream();
@@ -359,7 +359,7 @@
         {
             var filePath = Path.GetTempFileName();
 
-            return new FileStream(filePath, FileMode.Create, FileAccess.ReadWrite, FileShare.None, 8192, true);
+            return new FileStream(filePath, FileMode.Create, FileAccess.ReadWrite, FileShare.None, 8192, StaticConfiguration.AllowFileStreamUploadAsync);
         }
 
         private Stream CreateDefaultMemoryStream(long expectedLength)
@@ -434,7 +434,7 @@
             }
 
             // Seek to 0 if we can, although if we can't seek, and we've already written (if the size is unknown) then
-            // we are screwed anyway, and some streams that don't support seek also don't let you read hte position so
+            // we are screwed anyway, and some streams that don't support seek also don't let you read the position so
             // there's no real way to check :-/
             if (this.stream.CanSeek)
             {

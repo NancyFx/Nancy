@@ -1,5 +1,6 @@
 namespace Nancy.ViewEngines.SuperSimpleViewEngine
 {
+    using Microsoft.CSharp.RuntimeBinder;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -7,13 +8,20 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Runtime.CompilerServices;
     using System.Text.RegularExpressions;
+    using System.Text;
 
     /// <summary>
     /// A super-simple view engine
     /// </summary>
     public class SuperSimpleViewEngine
     {
+        /// <summary>
+        /// Compiled Regex for viewbag substitutions
+        /// </summary>
+        private static readonly Regex ViewBagSubstitutionsRegEx = new Regex(@"@(?<Encode>!)?ViewBag(?:\.(?<ParameterName>[a-zA-Z0-9-_]+))*;?", RegexOptions.Compiled);
+
         /// <summary>
         /// Compiled Regex for single substitutions
         /// </summary>
@@ -42,7 +50,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         /// <summary>
         /// Compiled regex for partial blocks
         /// </summary>
-        private static readonly Regex PartialSubstitutionRegEx = new Regex(@"@Partial\['(?<ViewName>.+)'(?<Model>.[ ]?Model(?:\.(?<ParameterName>[a-zA-Z0-9-_]+))*)?\];?", RegexOptions.Compiled);
+        private static readonly Regex PartialSubstitutionRegEx = new Regex(@"@Partial\['(?<ViewName>[^\]]+)'(?:.[ ]?@?(?<Model>(Model|Current)(?:\.(?<ParameterName>[a-zA-Z0-9-_]+))*))?\];?", RegexOptions.Compiled);
 
         /// <summary>
         /// Compiled RegEx for section block declarations
@@ -63,6 +71,11 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         /// Compiled RegEx for path expansion
         /// </summary>
         private static readonly Regex PathExpansionRegEx = new Regex(@"(?:@Path\[\'(?<Path>.+?)\'\]);?", RegexOptions.Compiled);
+
+        /// <summary>
+        /// Compiled RegEx for path expansion in attribute values
+        /// </summary>
+        private static readonly Regex AttributeValuePathExpansionRegEx = new Regex(@"(?<Attribute>[a-zA-Z]+)=(?<Quote>[""'])(?<Path>~.+?)\k<Quote>", RegexOptions.Compiled);
 
         /// <summary>
         /// Compiled RegEx for the CSRF anti forgery token
@@ -98,6 +111,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
 
             this.processors = new List<Func<string, object, IViewEngineHost, string>>
             {
+                PerformViewBagSubstitutions,
                 PerformSingleSubstitutions,
                 PerformContextSubstitutions,
                 PerformEachSubstitutions,
@@ -118,7 +132,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         /// <returns>A string containing the expanded template.</returns>
         public string Render(string template, dynamic model, IViewEngineHost host)
         {
-            var output = 
+            var output =
                 this.processors.Aggregate(template, (current, processor) => processor(current, model ?? new object(), host));
 
             return this.matchers.Aggregate(output, (current, extension) => extension.Invoke(current, model, host));
@@ -130,13 +144,13 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         /// </para>
         /// <para>
         /// Anonymous types, standard types and ExpandoObject are supported.
-        /// Arbitrary dynamics (implementing IDynamicMetaObjectProvicer) are not, unless
+        /// Arbitrary dynamics (implementing IDynamicMetaObjectProvider) are not, unless
         /// they also implement IDictionary string, object for accessing properties.
         /// </para>
         /// </summary>
         /// <param name="model">The model.</param>
         /// <param name="propertyName">The property name to evaluate.</param>
-        /// <returns>Tuple - Item1 being a bool for whether the evaluation was sucessful, Item2 being the value.</returns>
+        /// <returns>Tuple - Item1 being a bool for whether the evaluation was successful, Item2 being the value.</returns>
         /// <exception cref="ArgumentException">Model type is not supported.</exception>
         private static Tuple<bool, object> GetPropertyValue(object model, string propertyName)
         {
@@ -145,17 +159,41 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
                 return new Tuple<bool, object>(false, null);
             }
 
-            if (!typeof(IDynamicMetaObjectProvider).IsAssignableFrom(model.GetType()))
-            {
-                return StandardTypePropertyEvaluator(model, propertyName);
-            }
-
-            if (typeof(IDictionary<string, object>).IsAssignableFrom(model.GetType()))
+            if (model is IDictionary<string, object>)
             {
                 return DynamicDictionaryPropertyEvaluator(model, propertyName);
             }
 
+            if (!(model is IDynamicMetaObjectProvider))
+            {
+                return StandardTypePropertyEvaluator(model, propertyName);
+            }
+
+            if (model is DynamicDictionaryValue)
+            {
+                var dynamicModel = model as DynamicDictionaryValue;
+
+                return GetPropertyValue(dynamicModel.Value, propertyName);
+            }
+
+            if (model is DynamicObject)
+            {
+                return GetDynamicMember(model, propertyName);
+            }
+
             throw new ArgumentException("model must be a standard type or implement IDictionary<string, object>", "model");
+        }
+
+        private static Tuple<bool, object> GetDynamicMember(object obj, string memberName)
+        {
+            var binder = Microsoft.CSharp.RuntimeBinder.Binder.GetMember(CSharpBinderFlags.None, memberName, obj.GetType(),
+                new[] { CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, null) });
+
+            var callsite = CallSite<Func<CallSite, object, object>>.Create(binder);
+
+            var result = callsite.Target(callsite, obj);
+
+            return result == null ? new Tuple<bool, object>(false, null) : new Tuple<bool, object>(true, result);
         }
 
         /// <summary>
@@ -163,16 +201,28 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         /// </summary>
         /// <param name="model">The model.</param>
         /// <param name="propertyName">The property name.</param>
-        /// <returns>Tuple - Item1 being a bool for whether the evaluation was sucessful, Item2 being the value.</returns>
+        /// <returns>Tuple - Item1 being a bool for whether the evaluation was successful, Item2 being the value.</returns>
         private static Tuple<bool, object> StandardTypePropertyEvaluator(object model, string propertyName)
         {
-            var properties = model.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
+            var type = model.GetType();
+            var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
 
             var property =
-                properties.Where(p => string.Equals(p.Name, propertyName, StringComparison.InvariantCulture)).
+                properties.Where(p => string.Equals(p.Name, propertyName, StringComparison.Ordinal)).
                 FirstOrDefault();
 
-            return property == null ? new Tuple<bool, object>(false, null) : new Tuple<bool, object>(true, property.GetValue(model, null));
+            if (property != null)
+            {
+                return new Tuple<bool, object>(true, property.GetValue(model, null));
+            }
+
+            var fields = type.GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
+
+            var field =
+                fields.Where(p => string.Equals(p.Name, propertyName, StringComparison.Ordinal)).
+                FirstOrDefault();
+
+            return field == null ? new Tuple<bool, object>(false, null) : new Tuple<bool, object>(true, field.GetValue(model));
         }
 
         /// <summary>
@@ -182,7 +232,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         /// </summary>
         /// <param name="model">The model.</param>
         /// <param name="propertyName">The property name.</param>
-        /// <returns>Tuple - Item1 being a bool for whether the evaluation was sucessful, Item2 being the value.</returns>
+        /// <returns>Tuple - Item1 being a bool for whether the evaluation was successful, Item2 being the value.</returns>
         private static Tuple<bool, object> DynamicDictionaryPropertyEvaluator(object model, string propertyName)
         {
             var dictionaryModel = (IDictionary<string, object>)model;
@@ -207,7 +257,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         /// </summary>
         /// <param name="model">The model containing properties.</param>
         /// <param name="parameters">A collection of nested parameters (e.g. User, Name</param>
-        /// <returns>Tuple - Item1 being a bool for whether the evaluation was sucessful, Item2 being the value.</returns>
+        /// <returns>Tuple - Item1 being a bool for whether the evaluation was successful, Item2 being the value.</returns>
         private static Tuple<bool, object> GetPropertyValueFromParameterCollection(object model, IEnumerable<string> parameters)
         {
             if (parameters == null)
@@ -308,6 +358,37 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         }
 
         /// <summary>
+        /// Performs single @ViewBag.PropertyName substitutions.
+        /// </summary>
+        /// <param name="template">The template.</param>
+        /// <param name="model">This parameter is not used, the model is based on the "host.Context.ViewBag".</param>
+        /// <param name="host">View engine host</param>
+        /// <returns>Template with @ViewBag.PropertyName blocks expanded.</returns>
+        private static string PerformViewBagSubstitutions(string template, object model, IViewEngineHost host)
+        {
+            return ViewBagSubstitutionsRegEx.Replace(
+                template,
+                m =>
+                {
+                    var properties = GetCaptureGroupValues(m, "ParameterName");
+
+                    var substitution = GetPropertyValueFromParameterCollection(((dynamic)host.Context).ViewBag, properties);
+
+                    if (!substitution.Item1)
+                    {
+                        return "[ERR!]";
+                    }
+
+                    if (substitution.Item2 == null)
+                    {
+                        return string.Empty;
+                    }
+
+                    return m.Groups["Encode"].Success ? host.HtmlEncode(substitution.Item2.ToString()) : substitution.Item2.ToString();
+                });
+        }
+
+        /// <summary>
         /// Performs single @Model.PropertyName substitutions.
         /// </summary>
         /// <param name="template">The template.</param>
@@ -339,7 +420,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         }
 
         /// <summary>
-        /// Peforms single @Context.PropertyName substitutions.
+        /// Performs single @Context.PropertyName substitutions.
         /// </summary>
         /// <param name="template">The template.</param>
         /// <param name="model">The model.</param>
@@ -376,7 +457,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         /// <param name="model">The model.</param>
         /// <param name="host">View engine host</param>
         /// <returns>Template with @Each.PropertyName blocks expanded.</returns>
-        private static string PerformEachSubstitutions(string template, object model, IViewEngineHost host)
+        private string PerformEachSubstitutions(string template, object model, IViewEngineHost host)
         {
             return EachSubstitutionRegEx.Replace(
                 template,
@@ -410,14 +491,16 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
                     }
 
                     var contents = m.Groups["Contents"].Value;
-                    var result = string.Empty;
+
+                    var result = new StringBuilder();
                     foreach (var item in substitutionEnumerable)
                     {
-                        var postConditionalResult = PerformConditionalSubstitutions(contents, item, host);
-                        result += ReplaceCurrentMatch(postConditionalResult, item, host);
+                        var modifiedContent = PerformPartialSubstitutions(contents, item, host);
+                        modifiedContent = PerformConditionalSubstitutions(modifiedContent, item, host);
+                        result.Append(ReplaceCurrentMatch(modifiedContent, item, host));
                     }
 
-                    return result;
+                    return result.ToString();
                 });
         }
 
@@ -514,6 +597,19 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
                     return host.ExpandPath(path);
                 });
 
+            result = AttributeValuePathExpansionRegEx.Replace(
+                result, 
+                m =>
+                {
+                    var attribute = m.Groups["Attribute"];
+                    var quote = m.Groups["Quote"].Value;
+                    var path = m.Groups["Path"].Value;
+
+                    var expandedPath = host.ExpandPath(path);
+                
+                    return string.Format("{0}={1}{2}{1}", attribute, quote, expandedPath);
+                });
+
             return result;
         }
 
@@ -536,7 +632,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         /// <param name="model">The model.</param>
         /// <param name="host">View engine host</param>
         /// <returns>Template with partials expanded</returns>
-        private string PerformPartialSubstitutions(string template, object model, IViewEngineHost host)
+        private string PerformPartialSubstitutions(string template, dynamic model, IViewEngineHost host)
         {
             var result = template;
 
@@ -550,7 +646,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
 
                     if (m.Groups["Model"].Length > 0)
                     {
-                        var modelValue = GetPropertyValueFromParameterCollection(model, properties);
+                        var modelValue = GetPropertyValueFromParameterCollection(partialModel, properties);
 
                         if (modelValue.Item1 != true)
                         {
@@ -616,7 +712,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         }
 
         /// <summary>
-		/// Gets the master page name, if one is specified
+        /// Gets the master page name, if one is specified
         /// </summary>
         /// <param name="template">The template</param>
         /// <returns>Master page name or String.Empty</returns>

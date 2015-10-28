@@ -10,9 +10,9 @@
     /// </summary>
     public class OptionsRoute : Route
     {
-        public OptionsRoute(string path, IEnumerable<string> allowedMethods) 
+        public OptionsRoute(string path, IEnumerable<string> allowedMethods)
             : base("OPTIONS", path, null, (x,c) => CreateMethodOptionsResponse(allowedMethods))
-        {            
+        {
         }
 
         private static Task<dynamic> CreateMethodOptionsResponse(IEnumerable<string> allowedMethods)

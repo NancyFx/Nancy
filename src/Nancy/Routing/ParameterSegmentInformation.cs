@@ -38,7 +38,7 @@
         }
 
         /// <summary>
-        /// Gets wether or not the parameter is optional.
+        /// Gets whether or not the parameter is optional.
         /// </summary>
         /// <value><see langword="true"/> if the parameter is optional, otherwise <see langword="false" />.</value>
         public bool IsOptional { get; private set; }

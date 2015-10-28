@@ -1,15 +1,35 @@
 namespace Nancy.Json
 {
+    using System;
     using System.Collections.Generic;
-    using Converters;
+    using System.Text;
+
+    using Nancy.Json.Converters;
 
     /// <summary>
-    /// Json serializer settings
+    /// JSON serializer settings
     /// </summary>
     public static class JsonSettings
     {
+        private static string _defaultCharset;
+
+        static JsonSettings()
+        {
+            ISO8601DateFormat = true;
+            MaxJsonLength = 102400;
+            MaxRecursions = 100;
+            DefaultEncoding = Encoding.UTF8;
+            Converters = new List<JavaScriptConverter>
+            {
+                new TimeSpanConverter(),
+                new TupleConverter()
+            };
+            PrimitiveConverters = new List<JavaScriptPrimitiveConverter>();
+            RetainCasing = false;
+        }
+
         /// <summary>
-        /// Max length of json output
+        /// Max length of JSON output
         /// </summary>
         public static int MaxJsonLength { get; set; }
 
@@ -19,21 +39,37 @@ namespace Nancy.Json
         public static int MaxRecursions { get; set; }
 
         /// <summary>
-        /// Default charset for json responses.
+        /// Default charset for JSON responses.
         /// </summary>
-        public static string DefaultCharset { get; set; }
+        [Obsolete("This property is obsolete and will be removed in a future version. Please use DefaultEncoding instead.")]
+        public static string DefaultCharset
+        {
+            get { return _defaultCharset ?? DefaultEncoding.WebName; }
+            set { _defaultCharset = value; }
+        }
+
+        /// <summary>
+        /// Gets the default encoding for JSON responses.
+        /// </summary>
+        /// <remarks>
+        /// The default value is <see langword="Encoding.UTF8" />
+        /// </remarks>
+        public static Encoding DefaultEncoding { get; set; }
 
         public static IList<JavaScriptConverter> Converters { get; set; }
 
-        static JsonSettings()
-        {
-            MaxJsonLength = 102400;
-            MaxRecursions = 100;
-            DefaultCharset = "utf-8";
-            Converters = new List<JavaScriptConverter>
-                             {
-                                 new TimeSpanConverter(),
-                             };
-        }
+        public static IList<JavaScriptPrimitiveConverter> PrimitiveConverters { get; set; }
+
+        /// <summary>
+        /// Set to true to retain the casing used in the C# code in produced JSON.
+        /// Set to false to use camelCasing in the produced JSON.
+        /// False by default.
+        /// </summary>
+        public static bool RetainCasing { get; set; }
+
+        /// <summary>
+        /// Serialized date format
+        /// </summary>
+        public static bool ISO8601DateFormat { get; set; }
     }
 }

@@ -36,7 +36,7 @@ namespace Nancy.Session
                 MarkAsChanged();
             }
 
-            dictionary.Clear();            
+            dictionary.Clear();
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace Nancy.Session
         /// <param name="key">Key to delete</param>
         public void Delete(string key)
         {
-            if (dictionary.Remove(key)) { MarkAsChanged(); }            
+            if (dictionary.Remove(key)) { MarkAsChanged(); }
         }
 
         /// <summary>

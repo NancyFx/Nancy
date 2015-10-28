@@ -19,7 +19,7 @@ You should **never** work on a clone of master, and you should **never** send a 
 
 While you're working away in your branch it's quite possible that your upstream master (most likely the canonical NancyFx version) may be updated. If this happens you should:
 
-1. [Stash](http://progit.org/book/ch6-3.html) any un-committed changes you need to
+1. [Stash](http://git-scm.com/book/en/Git-Tools-Stashing) any un-committed changes you need to
 1. `git checkout master`
 1. `git pull upstream master`
 1. `git checkout myBranch`
@@ -39,3 +39,18 @@ When you're ready to go you should confirm that you are up to date and rebased w
 1. `git push origin myBranch`
 1. Send a descriptive [Pull Request](http://help.github.com/pull-requests/) on GitHub - making sure you have selected the correct branch in the GitHub UI!
 1. Wait for @TheCodeJunkie to merge your changes in and reformat all of your code because he has StyleCop OCD :wink:.
+
+And remember; **A pull-request with tests is a pull-request that's likely to be pulled in.** :grin: Bonus points if you document your feature in our [wiki](https://github.com/NancyFx/Nancy/wiki) once it has been pulled in
+
+## Style Guidelines
+
+- Indent with 4 spaces, **not** tabs.
+- No underscore (`_`) prefix for member names.
+- Use `this` when accessing instance members, e.g. `this.Name = "TheCodeJunkie";`.
+- Use the `var` keyword unless the inferred type is not obvious.
+- Use the C# type aliases for types that have them, e.g. `int` instead of `Int32`, `string` instead of `String` etc.
+- Use meaningful names (no hungarian notation).
+- Wrap `if`, `else` and `using` blocks (or blocks in general, really) in curly braces, even if it's a single line.
+- Put `using` statements inside namespace.
+- Pay attention to whitespace and extra blank lines
+- Absolutely **no** regions

@@ -88,7 +88,7 @@ namespace Nancy.Tests.Unit
             var date = new DateTime(2016, 11, 8, 9, 10, 11, DateTimeKind.Utc);
             var tuesday = GetInvariantAbbreviatedWeekdayName(date);
             var november = GetInvariantAbbreviatedMonthName(date);
-            var cookie = new NancyCookie("paul", "blind", true, true) { Expires = date, Path = "/frank", Domain = "gmail.com" };
+            var cookie = new NancyCookie("paul", "blind", true, true, date) { Path = "/frank", Domain = "gmail.com" };
 
             // When
             var stringified = cookie.ToString();
@@ -100,7 +100,7 @@ namespace Nancy.Tests.Unit
         [Fact]
         public void Should_not_add_secure_if_set_to_false()
         {
-            var cookie = new NancyCookie("Test", "Value", false, false);
+            var cookie = new NancyCookie("Test", "Value");
 
             var result = cookie.ToString();
 
@@ -110,7 +110,7 @@ namespace Nancy.Tests.Unit
         [Fact]
         public void Should_add_secure_if_set_to_true()
         {
-            var cookie = new NancyCookie("Test", "Value", true, true);
+            var cookie = new NancyCookie("Test", "Value", true, true, null);
 
             var result = cookie.ToString();
 

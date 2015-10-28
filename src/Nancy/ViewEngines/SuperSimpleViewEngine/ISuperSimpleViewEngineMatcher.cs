@@ -1,7 +1,7 @@
 ﻿namespace Nancy.ViewEngines.SuperSimpleViewEngine
 {
     /// <summary>
-    /// Matches and modifes the content of a rendered SuperSimpleViewEngine view.
+    /// Matches and modifies the content of a rendered SuperSimpleViewEngine view.
     /// </summary>
     public interface ISuperSimpleViewEngineMatcher
     {

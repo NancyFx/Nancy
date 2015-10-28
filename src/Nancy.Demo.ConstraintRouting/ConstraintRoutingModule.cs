@@ -32,6 +32,8 @@
 
             Get["/lengthConstraint/{value:length(1, 20)}"] = _ => "Value " + _.value + " is a string with length between 1 and 20.";
 
+            Get["/versionConstraint/{value:version}"] = _ => "Value " + _.value + " is a version number.";
+
             Get["/emailConstraint/{value:email}"] = _ => "Value " + _.value + " is an e-mail address (according to @jchannon).";
         }
     }

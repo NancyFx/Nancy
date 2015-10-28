@@ -19,7 +19,7 @@ namespace Nancy.Extensions
         /// <value>A <see cref="Regex"/> object.</value>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private static readonly Regex ParameterExpression =
-            new Regex(@"{(?<name>[A-Za-z0-9_]*)(?:\?(?<default>[A-Za-z0-9_]*))?}", RegexOptions.Compiled);
+            new Regex(@"{(?<name>[A-Za-z0-9_]*)(?:\?(?<default>[A-Za-z0-9_-]*))?}", RegexOptions.Compiled);
 
         /// <summary>
         /// Extracts information about the parameters in the <paramref name="segment"/>.
@@ -33,19 +33,13 @@ namespace Nancy.Extensions
 
             var nameMatch = matches
                 .Cast<Match>()
-                .Select(x => x)
                 .ToList();
 
-            if (nameMatch.Any())
-            {
-                return nameMatch.Select(x => new ParameterSegmentInformation(x.Groups["name"].Value, x.Groups["default"].Value, x.Groups["default"].Success));
-            }
-
-            throw new FormatException("The segment did not contain any parameters.");
+            return nameMatch.Select(x => new ParameterSegmentInformation(x.Groups["name"].Value, x.Groups["default"].Value, x.Groups["default"].Success));
         }
 
         /// <summary>
-        /// Checks if a segement contains any parameters.
+        /// Checks if a segment contains any parameters.
         /// </summary>
         /// <param name="segment">The segment to check for parameters.</param>
         /// <returns>true if the segment contains a parameter; otherwise false.</returns>
@@ -81,8 +75,38 @@ namespace Nancy.Extensions
                     break;
                 }
             }
-            
+
             return ret;
+        }
+
+        /// <summary>
+        /// Converts the value from PascalCase to camelCase.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>System.String.</returns>
+        public static string ToCamelCase(this string value)
+        {
+            return value.ConvertFirstCharacter(x => x.ToLowerInvariant());
+        }
+
+        /// <summary>
+        /// Converts the value from camelCase to PascalCase.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>System.String.</returns>
+        public static string ToPascalCase(this string value)
+        {
+            return value.ConvertFirstCharacter(x => x.ToUpperInvariant());
+        }
+
+        private static string ConvertFirstCharacter(this string value, Func<string, string> converter)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return string.Empty;
+            }
+
+            return string.Concat(converter(value.Substring(0, 1)), value.Substring(1));
         }
     }
 }

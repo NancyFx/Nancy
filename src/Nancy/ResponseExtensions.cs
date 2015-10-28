@@ -17,7 +17,7 @@ namespace Nancy
         /// <param name="response">Response object</param>
         /// <param name="fileName">Filename for the download</param>
         /// <param name="contentType">Optional content type</param>
-        /// <returns>Mopdified Response object</returns>
+        /// <returns>Modified Response object</returns>
         public static Response AsAttachment(this Response response, string fileName = null, string contentType = null)
         {
             var actualFilename = fileName;
@@ -58,7 +58,7 @@ namespace Nancy
         /// <param name="response">Response object</param>
         /// <param name="name">The name of the cookie.</param>
         /// <param name="value">The value of the cookie.</param>
-        /// <param name="expires">The expiration date of the cookie. Can be <see langword="null" /> if it should never expire.</param>
+        /// <param name="expires">The expiration date of the cookie. Can be <see langword="null" /> if it should expire at the end of the session.</param>
         /// <returns>The <see cref="Response"/> instance.</returns>
         public static Response WithCookie(this Response response, string name, string value, DateTime? expires)
         {
@@ -71,7 +71,7 @@ namespace Nancy
         /// <param name="response">Response object</param>
         /// <param name="name">The name of the cookie.</param>
         /// <param name="value">The value of the cookie.</param>
-        /// <param name="expires">The expiration date of the cookie. Can be <see langword="null" /> if it should never expire.</param>
+        /// <param name="expires">The expiration date of the cookie. Can be <see langword="null" /> if it should expire at the end of the session.</param>
         /// <param name="domain">The domain of the cookie.</param>
         /// <param name="path">The path of the cookie.</param>
         /// <returns>The <see cref="Response"/> instance.</returns>
@@ -186,11 +186,11 @@ namespace Nancy
                                    .ToArray();
 
             var headerProperty = properties
-                                    .Where(p => string.Equals(p.Name, "Header", StringComparison.InvariantCultureIgnoreCase))
+                                    .Where(p => string.Equals(p.Name, "Header", StringComparison.OrdinalIgnoreCase))
                                     .FirstOrDefault();
 
             var valueProperty = properties
-                                    .Where(p => string.Equals(p.Name, "Value", StringComparison.InvariantCultureIgnoreCase))
+                                    .Where(p => string.Equals(p.Name, "Value", StringComparison.OrdinalIgnoreCase))
                                     .FirstOrDefault();
 
             if (headerProperty == null || valueProperty == null)

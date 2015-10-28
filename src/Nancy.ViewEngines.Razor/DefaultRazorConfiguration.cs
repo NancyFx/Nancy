@@ -39,7 +39,7 @@
             {
                 return null;
             }
-			
+
             return this.razorConfigurationSection.Assemblies.Select(a=>a.AssemblyName);
         }
 
@@ -47,13 +47,13 @@
         /// Gets the default namespaces to be included in the generated code.
         /// </summary>
         public IEnumerable<string> GetDefaultNamespaces()
-		{
-			if (this.razorConfigurationSection == null || this.razorConfigurationSection.Namespaces == null)
-			{
-			    return null;
-			}
+        {
+            if (this.razorConfigurationSection == null || this.razorConfigurationSection.Namespaces == null)
+            {
+                return null;
+            }
 
-			return this.razorConfigurationSection.Namespaces.Select(n=>n.NamespaceName);
-		}
-	}
+            return this.razorConfigurationSection.Namespaces.Select(n=>n.NamespaceName);
+        }
+    }
 }

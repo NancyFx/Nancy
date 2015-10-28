@@ -22,13 +22,18 @@ namespace Nancy.Routing
             var assembly =
                 module.GetType().Assembly;
 
+            if (assembly.IsDynamic)
+            {
+                return string.Empty;
+            }
+
             var moduleName =
                 string.Concat(module.GetType().FullName, ".resources");
 
             var resourceName = assembly
                 .GetManifestResourceNames()
                 .FirstOrDefault(x => x.Equals(moduleName, StringComparison.OrdinalIgnoreCase));
-                
+
             if (resourceName != null)
             {
                 var manager =

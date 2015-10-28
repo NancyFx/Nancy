@@ -80,7 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CustomResourceAssemblyProvider.cs" />
-    <Compile Include="DemoBoostrapper.cs" />
+    <Compile Include="DemoBootstrapper.cs" />
     <Compile Include="Modules\HomeModule.cs" />
     <Compile Include="Resources\Text.Designer.cs">
       <AutoGen>True</AutoGen>

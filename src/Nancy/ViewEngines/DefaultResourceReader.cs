@@ -24,7 +24,7 @@
                 from viewEngineExtension in supportedViewEngineExtensions
                 where GetResourceExtension(resourceName).Equals(viewEngineExtension, StringComparison.OrdinalIgnoreCase)
                 select new Tuple<string, Func<StreamReader>>(
-                    resourceName, 
+                    resourceName,
                     () => new StreamReader(assembly.GetManifestResourceStream(resourceName)));
 
             return resourceStreams.ToList();

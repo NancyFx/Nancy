@@ -26,7 +26,7 @@ namespace Owin
 
             HookDisposal(builder, nancyOptions);
 
-            return builder.Use(typeof(NancyOwinHost), nancyOptions);
+            return builder.Use(NancyMiddleware.UseNancy(nancyOptions));
         }
 
         /// <summary>

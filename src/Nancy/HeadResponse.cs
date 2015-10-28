@@ -3,13 +3,15 @@
     using System;
     using System.Globalization;
     using System.IO;
+    using System.Threading.Tasks;
 
-    /// <summary>
+ 	  /// <summary>
     /// Represents a HEAD only response.
     /// </summary>
-	public class HeadResponse : Response
-	{
+    public class HeadResponse : Response
+    {
         private const string ContentLength = "Content-Length";
+        private readonly Response innerResponse;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HeadResponse"/> class.
@@ -19,11 +21,21 @@
         /// </param>
         public HeadResponse(Response response)
         {
-            this.Contents = GetStringContents(string.Empty);
+            this.innerResponse = response;
+            this.Contents = stream =>
+            {
+                this.CheckAndSetContentLength(this.innerResponse);
+                GetStringContents(string.Empty)(stream);
+            };
             this.ContentType = response.ContentType;
             this.Headers = response.Headers;
             this.StatusCode = response.StatusCode;
-            this.CheckAndSetContentLength(response);
+            this.ReasonPhrase = response.ReasonPhrase;
+        }
+
+        public override Task PreExecute(NancyContext context)
+        {
+            return this.innerResponse.PreExecute(context);
         }
 
         private void CheckAndSetContentLength(Response response)

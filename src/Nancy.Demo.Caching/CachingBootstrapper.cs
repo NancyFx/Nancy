@@ -64,7 +64,7 @@ namespace Nancy.Demo.Caching
 
             int cacheSeconds;
             if (!int.TryParse(cacheSecondsObject.ToString(), out cacheSeconds))
-            {       
+            {
                 return;
             }
 

@@ -9,7 +9,7 @@
         /// Never present user with login prompt
         /// </summary>
         Never,
-        
+
         /// <summary>
         /// Always present user with login prompt
         /// </summary>

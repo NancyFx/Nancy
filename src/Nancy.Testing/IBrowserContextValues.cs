@@ -35,13 +35,18 @@
         /// <summary>
         /// Gets or sets the protocol that should be sent with the HTTP request.
         /// </summary>
-        /// <value>A <see cref="string"/> contains the the protocol that should be sent with the HTTP request.</value>
+        /// <value>A <see cref="string"/> contains the protocol that should be sent with the HTTP request.</value>
         string Protocol { get; set; }
 
         /// <summary>
         /// Gets or sets the querystring
         /// </summary>
         string QueryString { get; set; }
+
+        /// <summary>
+        /// Gets or sets the basePath string
+        /// </summary>
+        string HostName { get; set; }
 
         /// <summary>
         /// Gets or sets the user host address

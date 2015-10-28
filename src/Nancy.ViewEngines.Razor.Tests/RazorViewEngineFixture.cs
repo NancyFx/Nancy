@@ -1,20 +1,30 @@
 ﻿namespace Nancy.ViewEngines.Razor.Tests
 {
     using System;
+    using System.CodeDom;
+    using System.CodeDom.Compiler;
+    using System.Collections;
+    using System.Collections.Generic;
     using System.Dynamic;
     using System.IO;
     using System.Linq;
     using System.Reflection;
     using System.Text;
+    using System.Text.RegularExpressions;
     using System.Threading;
 
     using FakeItEasy;
+
+    using Microsoft.CSharp;
+    using Microsoft.VisualBasic;
 
     using Nancy.Bootstrapper;
     using Nancy.Tests;
     using Nancy.ViewEngines.Razor.Tests.Models;
 
     using Xunit;
+    using Xunit.Extensions;
+    using Xunit.Sdk;
 
     public class RazorViewEngineFixture
     {
@@ -279,7 +289,7 @@
             stream.ShouldEqual("<h1>Mr. Jeff likes Music!</h1>", true);
         }
 
-#if !__MonoCS__			
+#if !__MonoCS__
         [Fact]
         public void RenderView_vb_should_use_model_directive_for_strongly_typed_view()
         {
@@ -398,15 +408,15 @@
         [Fact]
         public void Should_be_able_to_render_view_with_layout_and_optional_section_with_default_to_stream()
         {
-            //Given
+            // Given
             var location = FindView("ViewThatUsesLayoutAndOptionalSectionWithDefaults");
             var stream = new MemoryStream();
 
-            //When
+            // When
             var response = this.engine.RenderView(location, null, this.renderContext);
             response.Contents.Invoke(stream);
 
-            //Then
+            // Then
             var output = ReadAll(stream);
             output.ShouldContainInOrder("<h1>SectionWithDefaultsLayout</h1>",
                                         "<div>OptionalSectionDefault</div>",
@@ -416,15 +426,15 @@
         [Fact]
         public void Should_be_able_to_render_view_with_layout_and_optional_section_overriding_the_default_to_stream()
         {
-            //Given
+            // Given
             var location = FindView("ViewThatUsesLayoutAndOptionalSectionOverridingDefaults");
             var stream = new MemoryStream();
 
-            //When
+            // When
             var response = this.engine.RenderView(location, null, this.renderContext);
             response.Contents.Invoke(stream);
 
-            //Then
+            // Then
             var output = ReadAll(stream);
             output.ShouldContainInOrder("<h1>SectionWithDefaultsLayout</h1>",
                                         "<div>OptionalSectionOverride</div>",
@@ -476,7 +486,7 @@
             output.ShouldEqual("<h1>Hi, Nancy!</h1>");
         }
 
-#if !__MonoCS__			
+#if !__MonoCS__
         [Fact]
         public void Should_use_custom_view_base_with_vb_views()
         {
@@ -545,11 +555,11 @@
             var location = FindView("ViewThatUsesAttributeWithCodeInside");
             var stream = new MemoryStream();
 
-            //When
+            // When
             var response = this.engine.RenderView(location, new TestModel { Name = "Bob", Slug = "BobSlug" }, this.renderContext);
             response.Contents.Invoke(stream);
 
-            //Then
+            // Then
             var output = ReadAll(stream);
             output.ShouldContain("<a href=\"BobSlug\">Bob</a>");
         }
@@ -571,11 +581,11 @@
 
             var stream = new MemoryStream();
 
-            //When
+            // When
             var response = this.engine.RenderView(location, null, this.renderContext);
             response.Contents.Invoke(stream);
 
-            //Then
+            // Then
             var output = ReadAll(stream);
             output.ShouldContain("namespace RazorOutput {");
         }
@@ -583,32 +593,215 @@
         [Fact]
         public void Should_render_attributes_with_dynamic_null_inside()
         {
+            // Given
             var location = FindView("ViewThatUsesAttributeWithDynamicNullInside");
             var stream = new MemoryStream();
 
-            //When
+            // When
             var response = this.engine.RenderView(location, null, this.renderContext);
             response.Contents.Invoke(stream);
 
-            //Then
+            // Then
             var output = ReadAll(stream);
             output.ShouldContain("<input value=\"\" />");
         }
 
         [Fact]
+        public void Should_render_attributes_with_HtmlString_inside()
+        {
+            // Given
+            var location = FindView("ViewThatUsesAttributeWithHtmlStringInside");
+            var stream = new MemoryStream();
+            const string PHRASE = "Slugs & bugs are secret spies on gardeners, but <strong>no one</strong> knows who they spy for";
+            const string PHRASE_RESULT = "Slugs &amp; bugs are secret spies on gardeners, but &lt;strong&gt;no one&lt;/strong&gt; knows who they spy for";
+
+            // When
+            var response = this.engine.RenderView(location, PHRASE, this.renderContext);
+            response.Contents.Invoke(stream);
+
+            // Then
+            var output = ReadAll(stream);
+            output.ShouldContain(string.Format("<input value=\"{0}\" />", PHRASE_RESULT));
+        }
+
+        [Fact]
+        public void Should_render_attributes_with_RawHtmlString_inside()
+        {
+            // Given
+            var location = FindView("ViewThatUsesAttributeWithRawHtmlStringInside");
+            var stream = new MemoryStream();
+            const string PHRASE = "Slugs & bugs are secret spies on gardeners, but <strong>no one</strong> knows who they spy for";
+
+            // When
+            var response = this.engine.RenderView(location, PHRASE, this.renderContext);
+            response.Contents.Invoke(stream);
+
+            // Then
+            var output = ReadAll(stream);
+            output.ShouldContain(string.Format("<input value=\"{0}\" />", PHRASE));
+        }
+
+        [Fact]
         public void Should_render_attributes_with_NonEncodedHtmlString_inside()
         {
+            // Given
             var location = FindView("ViewThatUsesAttributeWithNonEncodedHtmlStringInside");
             var stream = new MemoryStream();
-            const string PHRASE = "Slugs are secret spies on gardeners, but no ones who they spy for";
+            const string PHRASE = "Slugs are secret spies on gardeners, but no one knows who they spy for";
 
-            //When
+            // When
             var response = this.engine.RenderView(location, new NonEncodedHtmlString(PHRASE), this.renderContext);
             response.Contents.Invoke(stream);
 
-            //Then
+            // Then
             var output = ReadAll(stream);
             output.ShouldContain(string.Format("<input value=\"{0}\" />", PHRASE));
+        }
+
+        [Theory]
+        [InlineData(typeof(string))]
+        [InlineData(typeof(byte))]
+        [InlineData(typeof(sbyte))]
+        [InlineData(typeof(short))]
+        [InlineData(typeof(ushort))]
+        [InlineData(typeof(int))]
+        [InlineData(typeof(uint))]
+        [InlineData(typeof(long))]
+        [InlineData(typeof(ulong))]
+        [InlineData(typeof(float))]
+        [InlineData(typeof(double))]
+        [InlineData(typeof(decimal))]
+        [InlineData(typeof(char))]
+        [InlineData(typeof(bool))]
+        [InlineData(typeof(object))]
+        [InlineData(typeof(Tuple<string>))]
+        [InlineData(typeof(Tuple<Tuple<string>>))]
+        [InlineData(typeof(Tuple<string, int>))]
+        [InlineData(typeof(Tuple<string, Tuple<int>>))]
+        [InlineData(typeof(Tuple<string, Tuple<int>, int>))]
+        [InlineData(typeof(Tuple<string, Tuple<int, string>, Tuple<int>, int>))]
+        [InlineData(typeof(Tuple<string, Tuple<int, string>, Tuple<int>, int, Tuple<string, Tuple<int, int>>>))]
+        [InlineData(typeof(int[]))]
+        [InlineData(typeof(int[,]))]
+        [InlineData(typeof(int[, , , ,]))]
+        [InlineData(typeof(int[][]))]
+        [InlineData(typeof(int[][, ,][]))]
+        [InlineData(typeof(Tuple<int, string>[][, ,][]))]
+        [InlineData(typeof(Tuple<int, int[][, ,][], string>))]
+        public void Should_be_able_to_render_csharp_view_with_generic_model(Type expectedType)
+        {
+            // Given
+            var location = this.CreateViewLocationWithModel(expectedType, new CSharpCodeProvider(), "model");
+
+            // When
+            var stream = new MemoryStream();
+            var response = this.engine.RenderView(location, null, this.renderContext);
+            response.Contents.Invoke(stream);
+
+            // Then
+            stream.ShouldEqual(expectedType.FullName, true);
+        }
+
+#if !__MonoCS__
+        [Theory]
+        [InlineData(typeof(string))]
+        [InlineData(typeof(byte))]
+        [InlineData(typeof(sbyte))]
+        [InlineData(typeof(short))]
+        [InlineData(typeof(ushort))]
+        [InlineData(typeof(int))]
+        [InlineData(typeof(uint))]
+        [InlineData(typeof(long))]
+        [InlineData(typeof(ulong))]
+        [InlineData(typeof(float))]
+        [InlineData(typeof(double))]
+        [InlineData(typeof(decimal))]
+        [InlineData(typeof(char))]
+        [InlineData(typeof(bool))]
+        [InlineData(typeof(object))]
+        [InlineData(typeof(Tuple<string>))]
+        [InlineData(typeof(Tuple<Tuple<string>>))]
+        [InlineData(typeof(Tuple<string, int>))]
+        [InlineData(typeof(Tuple<string, Tuple<int>>))]
+        [InlineData(typeof(Tuple<string, Tuple<int>, int>))]
+        [InlineData(typeof(Tuple<string, Tuple<int, string>, Tuple<int>, int>))]
+        [InlineData(typeof(Tuple<string, Tuple<int, string>, Tuple<int>, int, Tuple<string, Tuple<int, int>>>))]
+        [InlineData(typeof(int[]))]
+        [InlineData(typeof(int[,]))]
+        [InlineData(typeof(int[, , , ,]))]
+        [InlineData(typeof(int[][]))]
+        [InlineData(typeof(int[][, ,][]))]
+        [InlineData(typeof(Tuple<int, string>[][, ,][]))]
+        [InlineData(typeof(Tuple<int, int[][, ,][], string>))]
+        public void Should_be_able_to_render_vb_view_with_generic_model(Type expectedType)
+        {
+            // Given
+            var location = this.CreateViewLocationWithModel(expectedType, new VBCodeProvider(), "ModelType");
+            
+            // When
+            var stream = new MemoryStream();
+            var response = this.engine.RenderView(location, null, this.renderContext);
+            response.Contents.Invoke(stream);
+
+            // Then
+            stream.ShouldEqual(expectedType.FullName, true);
+        }
+#endif
+
+        private ViewLocationResult CreateViewLocationWithModel(Type expectedType, CodeDomProvider provider, string modelDirective)
+        {
+            var codeTypeRef = new CodeTypeReference(expectedType);
+            var modelType = provider.GetTypeOutput(codeTypeRef);
+
+            var modelTypeCode = BuildCodeExtractingModelType(provider);
+
+            var view = string.Format("@{0} {1}\n\n@{2}", modelDirective, modelType, modelTypeCode);
+            
+            return new ViewLocationResult(
+                string.Empty,
+                string.Empty,
+                string.Concat(provider.FileExtension, "html"),
+                () => new StringReader(view)
+                );           
+        }
+
+        private static string BuildCodeExtractingModelType(CodeDomProvider provider)
+        {
+            var getType = new CodeMethodInvokeExpression
+                (
+                    new CodeThisReferenceExpression(),
+                    "GetType"
+                );
+            
+            var baseType = new CodeFieldReferenceExpression
+                (
+                    getType,
+                    "BaseType"
+                );
+            
+            var getFirstGenericArgument = new CodeArrayIndexerExpression
+                (
+                    new CodeMethodInvokeExpression
+                        (
+                        baseType,
+                        "GetGenericArguments"
+                        ),
+                    new CodePrimitiveExpression(0)
+                );
+            
+            var fullName = new CodeFieldReferenceExpression
+                (
+                    getFirstGenericArgument,
+                    "FullName"
+                );
+
+            string modelTypeCode;
+            using (var writer = new StringWriter())
+            {
+                provider.GenerateCodeFromExpression(fullName, writer, new CodeGeneratorOptions());
+                modelTypeCode = writer.ToString();
+            }
+            return modelTypeCode;
         }
 
         private static string ReadAll(Stream stream)

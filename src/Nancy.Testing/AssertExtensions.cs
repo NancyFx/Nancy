@@ -3,8 +3,6 @@ namespace Nancy.Testing
     using System;
     using System.Linq;
 
-    //using Xunit;
-
     /// <summary>
     /// Defines assert extensions for HTML validation.
     /// </summary>
@@ -57,11 +55,11 @@ namespace Nancy.Testing
 
         /// <summary>
         /// Asserts that an element or element should exist exactly the specified number of times
-        /// <param name="expectedNumberOfOccurrances">The expected number of times the element should exist</param>
+        /// <param name="expectedNumberOfOccurrences">The expected number of times the element should exist</param>
         /// </summary>
-        public static AndConnector<QueryWrapper> ShouldExistExactly(this QueryWrapper query, int expectedNumberOfOccurrances)
+        public static AndConnector<QueryWrapper> ShouldExistExactly(this QueryWrapper query, int expectedNumberOfOccurrences)
         {
-            var nodeWrappers = Asserts.Exactly(query, expectedNumberOfOccurrances);
+            var nodeWrappers = Asserts.Exactly(query, expectedNumberOfOccurrences);
             return new AndConnector<QueryWrapper>(nodeWrappers as QueryWrapper);
         }
 
@@ -70,7 +68,7 @@ namespace Nancy.Testing
         /// </summary>
         public static AndConnector<NodeWrapper> ShouldBeOfClass(this NodeWrapper node, string className)
         {
-            Asserts.Equal(node.Attributes["class"], className);
+            Asserts.Equal(className, node.Attributes["class"]);
 
             return new AndConnector<NodeWrapper>(node);
         }
@@ -93,7 +91,7 @@ namespace Nancy.Testing
         /// <summary>
         /// Asserts that a node contains the specified text
         /// </summary>
-        public static AndConnector<NodeWrapper> ShouldContain(this NodeWrapper node, string contents, StringComparison comparisonType = StringComparison.InvariantCulture)
+        public static AndConnector<NodeWrapper> ShouldContain(this NodeWrapper node, string contents, StringComparison comparisonType = StringComparison.Ordinal)
         {
             Asserts.Contains(contents, node.InnerText, comparisonType);
 
@@ -104,7 +102,7 @@ namespace Nancy.Testing
         /// Asserts that every node contains the specified text
         /// </summary>
         [Obsolete("This method has a ambiguous name and will be removed. Use AllShouldContain instead.")]
-        public static AndConnector<QueryWrapper> ShouldContain(this QueryWrapper query, string contents, StringComparison comparisonType = StringComparison.InvariantCulture)
+        public static AndConnector<QueryWrapper> ShouldContain(this QueryWrapper query, string contents, StringComparison comparisonType = StringComparison.Ordinal)
         {
             return query.AllShouldContain(contents, comparisonType);
         }
@@ -112,7 +110,7 @@ namespace Nancy.Testing
         /// <summary>
         /// Asserts that every node contains the specified text
         /// </summary>
-        public static AndConnector<QueryWrapper> AllShouldContain(this QueryWrapper query, string contents, StringComparison comparisonType = StringComparison.InvariantCulture)
+        public static AndConnector<QueryWrapper> AllShouldContain(this QueryWrapper query, string contents, StringComparison comparisonType = StringComparison.Ordinal)
         {
             query.ShouldExist();
 
@@ -124,7 +122,7 @@ namespace Nancy.Testing
         /// <summary>
         /// Asserts that any node contains the specified text
         /// </summary>
-        public static AndConnector<QueryWrapper> AnyShouldContain(this QueryWrapper query, string contents, StringComparison comparisonType = StringComparison.InvariantCulture)
+        public static AndConnector<QueryWrapper> AnyShouldContain(this QueryWrapper query, string contents, StringComparison comparisonType = StringComparison.Ordinal)
         {
             query.ShouldExist();
 
@@ -146,9 +144,9 @@ namespace Nancy.Testing
         /// <summary>
         /// Asserts that an element has a specific attribute with a specified value
         /// </summary>
-        public static AndConnector<NodeWrapper> ShouldContainAttribute(this NodeWrapper node, string name, string value, StringComparison comparisonType = StringComparison.InvariantCulture)
+        public static AndConnector<NodeWrapper> ShouldContainAttribute(this NodeWrapper node, string name, string value, StringComparison comparisonType = StringComparison.Ordinal)
         {
-            Asserts.Equal(node.Attributes[name], value, comparisonType);
+            Asserts.Equal(value, node.Attributes[name], comparisonType);
 
             return new AndConnector<NodeWrapper>(node);
         }
@@ -171,7 +169,7 @@ namespace Nancy.Testing
         /// <summary>
         /// Asserts that an element has a specific attribute with a specified value
         /// </summary>
-        public static AndConnector<QueryWrapper> ShouldContainAttribute(this QueryWrapper query, string name, string value, StringComparison comparisonType = StringComparison.InvariantCulture)
+        public static AndConnector<QueryWrapper> ShouldContainAttribute(this QueryWrapper query, string name, string value, StringComparison comparisonType = StringComparison.Ordinal)
         {
             query.ShouldExist();
 

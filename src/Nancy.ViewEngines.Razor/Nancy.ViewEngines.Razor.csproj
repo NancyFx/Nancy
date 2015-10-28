@@ -92,8 +92,9 @@
     </Reference>
     <Reference Include="System.Core">
     </Reference>
-    <Reference Include="System.Web.Razor.Unofficial">
-      <HintPath>..\packages\System.Web.Razor.Unofficial.2.0.2\lib\net40\System.Web.Razor.Unofficial.dll</HintPath>
+    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.2.0.30506.0\lib\net40\System.Web.Razor.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq">
     </Reference>
@@ -111,7 +112,9 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AttributeValue.cs" />
-    <Compile Include="CSharp\CSharpModelCodeGenerator.cs" />
+    <Compile Include="ClrTypeResolver.cs" />
+    <Compile Include="CodeParserHelper.cs" />
+    <Compile Include="CSharp\CSharpClrTypeResolver.cs" />
     <Compile Include="CSharp\CSharpRazorViewRenderer.cs" />
     <Compile Include="DefaultRazorConfiguration.cs" />
     <Compile Include="HelperResult.cs" />
@@ -122,6 +125,7 @@
     <Compile Include="IRazorConfiguration.cs" />
     <Compile Include="IRazorViewRenderer.cs" />
     <Compile Include="CSharp\NancyCSharpRazorCodeParser.cs" />
+    <Compile Include="ModelCodeGenerator.cs" />
     <Compile Include="NancyRazorEngineHost.cs" />
     <Compile Include="NancyRazorErrorView.cs" />
     <Compile Include="NancyRazorViewBase.cs" />
@@ -131,14 +135,9 @@
     <Compile Include="RazorViewEngineApplicationStartupRegistrations.cs" />
     <Compile Include="UrlHelpers.cs" />
     <Compile Include="VisualBasic\NancyVisualBasicRazorCodeParser.cs" />
-    <Compile Include="VisualBasic\VisualBasicModelCodeGenerator.cs" />
+    <Compile Include="VisualBasic\VisualBasicClrTypeResolver.cs" />
     <Compile Include="VisualBasic\VisualBasicRazorViewRenderer.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Nancy\Nancy.csproj">
-      <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
-      <Name>Nancy</Name>
-    </ProjectReference>
+    <Compile Include="EncodedHtmlString.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\CompilationError.html" />
@@ -165,9 +164,6 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -176,4 +172,13 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <ProjectReference Include="..\Nancy\Nancy.csproj">
+      <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
+      <Name>Nancy</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
 </Project>

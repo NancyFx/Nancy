@@ -14,7 +14,7 @@ namespace Nancy.Tests.Unit
     using Nancy.Routing;
     using Nancy.Tests.Fakes;
     using Xunit;
-    using Nancy.Culture;
+    using Nancy.Responses.Negotiation;
 
     public class NancyEngineFixture
     {
@@ -27,7 +27,7 @@ namespace Nancy.Tests.Unit
         private readonly IStatusCodeHandler statusCodeHandler;
         private readonly IRouteInvoker routeInvoker;
         private readonly IRequestDispatcher requestDispatcher;
-        private readonly DiagnosticsConfiguration diagnosticsConfiguration;
+        private readonly IResponseNegotiator negotiator;
 
         public NancyEngineFixture()
         {
@@ -37,7 +37,7 @@ namespace Nancy.Tests.Unit
             this.context = new NancyContext();
             this.statusCodeHandler = A.Fake<IStatusCodeHandler>();
             this.requestDispatcher = A.Fake<IRequestDispatcher>();
-            this.diagnosticsConfiguration = new DiagnosticsConfiguration();
+            this.negotiator = A.Fake<IResponseNegotiator>();
 
             A.CallTo(() => this.requestDispatcher.Dispatch(A<NancyContext>._, A<CancellationToken>._))
                 .Returns(CreateResponseTask(new Response()));
@@ -60,7 +60,7 @@ namespace Nancy.Tests.Unit
             });
 
             this.engine =
-                new NancyEngine(this.requestDispatcher, this.contextFactory, new[] { this.statusCodeHandler }, A.Fake<IRequestTracing>(), this.diagnosticsConfiguration, new DisabledStaticContentProvider())
+                new NancyEngine(this.requestDispatcher, this.contextFactory, new[] { this.statusCodeHandler }, A.Fake<IRequestTracing>(), new DisabledStaticContentProvider(), this.negotiator)
                 {
                     RequestPipelinesFactory = ctx => applicationPipelines
                 };
@@ -71,7 +71,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new NancyEngine(null, A.Fake<INancyContextFactory>(), new[] { this.statusCodeHandler }, A.Fake<IRequestTracing>(), this.diagnosticsConfiguration, new DisabledStaticContentProvider()));
+                Record.Exception(() => new NancyEngine(null, A.Fake<INancyContextFactory>(), new[] { this.statusCodeHandler }, A.Fake<IRequestTracing>(), new DisabledStaticContentProvider(), this.negotiator));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -82,7 +82,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new NancyEngine(this.requestDispatcher, null, new[] { this.statusCodeHandler }, A.Fake<IRequestTracing>(), this.diagnosticsConfiguration, new DisabledStaticContentProvider()));
+                Record.Exception(() => new NancyEngine(this.requestDispatcher, null, new[] { this.statusCodeHandler }, A.Fake<IRequestTracing>(), new DisabledStaticContentProvider(), this.negotiator));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -93,7 +93,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new NancyEngine(this.requestDispatcher, A.Fake<INancyContextFactory>(), null, A.Fake<IRequestTracing>(), this.diagnosticsConfiguration, new DisabledStaticContentProvider()));
+                Record.Exception(() => new NancyEngine(this.requestDispatcher, A.Fake<INancyContextFactory>(), null, A.Fake<IRequestTracing>(), new DisabledStaticContentProvider(), this.negotiator));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -407,7 +407,10 @@ namespace Nancy.Tests.Unit
             NancyContext handledContext = null;
             var errorResponse = new Response();
 
-            Func<NancyContext, Exception, Response> routeErrorHook = (ctx, ex) =>
+            A.CallTo(() => this.negotiator.NegotiateResponse(A<object>.Ignored, A<NancyContext>.Ignored))
+                .Returns(errorResponse);
+
+            Func<NancyContext, Exception, dynamic> routeErrorHook = (ctx, ex) =>
             {
                 handledContext = ctx;
                 handledException = ex;
@@ -714,13 +717,55 @@ namespace Nancy.Tests.Unit
                                     this.contextFactory,
                                     new[] { this.statusCodeHandler },
                                     A.Fake<IRequestTracing>(),
-                                    this.diagnosticsConfiguration,
-                                    staticContent);
+                                    staticContent,
+                                    this.negotiator);
             var request = new Request("GET", "/", "http");
 
             var result = localEngine.HandleRequest(request);
 
             result.Response.ShouldBeSameAs(localResponse);
+        }
+
+        [Fact]
+        public void Should_set_status_code_to_500_if_pre_execute_response_throws()
+        {
+            // Given
+            var resolvedRoute = new ResolveResult(
+                new FakeRoute(),
+                DynamicDictionary.Empty,
+                null,
+                null,
+                null);
+
+            A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored)).Returns(resolvedRoute);
+
+            A.CallTo(() => this.requestDispatcher.Dispatch(context, A<CancellationToken>._))
+                .Returns(TaskHelpers.GetCompletedTask<Response>(new PreExecuteFailureResponse()));
+
+            var request = new Request("GET", "/", "http");
+
+            // When
+            var result = this.engine.HandleRequest(request);
+
+            // Then
+            result.Response.StatusCode.ShouldEqual(HttpStatusCode.InternalServerError);
+        }
+
+        [Fact]
+        public void Should_throw_operationcancelledexception_when_disposed_handling_request()
+        {
+            // Given
+            var request = new Request("GET", "/", "http");
+            var engine = new NancyEngine(A.Fake<IRequestDispatcher>(), A.Fake<INancyContextFactory>(),
+                new[] {this.statusCodeHandler}, A.Fake<IRequestTracing>(), new DisabledStaticContentProvider(),
+                this.negotiator);
+            engine.Dispose();
+
+            // When
+            var exception = Record.Exception(() => engine.HandleRequest(request));
+
+            // Then
+            exception.ShouldBeOfType<OperationCanceledException>();
         }
 
         private static Task<Response> CreateResponseTask(Response response)
@@ -731,6 +776,14 @@ namespace Nancy.Tests.Unit
             tcs.SetResult(response);
 
             return tcs.Task;
+        }
+    }
+
+    public class PreExecuteFailureResponse : Response
+    {
+        public override Task PreExecute(NancyContext context)
+        {
+            return TaskHelpers.GetFaultedTask<object>(new InvalidOperationException());
         }
     }
 }

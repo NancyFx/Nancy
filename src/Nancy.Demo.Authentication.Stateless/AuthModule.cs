@@ -15,7 +15,7 @@
                                : this.Response.AsJson(new {ApiKey = apiKey});
                 };
 
-            //do something to destroy the api key, maybe?                    
+            //do something to destroy the api key, maybe?
             Delete["/"] = x =>
                 {
                     var apiKey = (string) this.Request.Form.ApiKey;

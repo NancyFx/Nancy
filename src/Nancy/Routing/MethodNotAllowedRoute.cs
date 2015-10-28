@@ -13,7 +13,7 @@
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MethodNotAllowedRoute"/> type, for the
-        /// specifed <paramref name="path"/>, <paramref name="method"/> and <paramref name="allowedMethods"/>.
+        /// specified <paramref name="path"/>, <paramref name="method"/> and <paramref name="allowedMethods"/>.
         /// </summary>
         /// <param name="path">The path of the route.</param>
         /// <param name="method">The HTTP method of the route.</param>

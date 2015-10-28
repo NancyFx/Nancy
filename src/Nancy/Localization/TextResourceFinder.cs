@@ -23,6 +23,15 @@
         }
 
         /// <summary>
+        /// Gets the <see cref="ITextResource"/> that is being used to locate texts.
+        /// </summary>
+        /// <value>An <see cref="ITextResource"/> instance.</value>
+        public ITextResource Resource
+        {
+            get { return this.textResource; }
+        }
+
+        /// <summary>
         /// Finds text resource
         /// </summary>
         /// <param name="binder">GetMemberBinder with dynamic text key</param>
@@ -30,10 +39,22 @@
         /// <returns>Returns a value or a non existing value from the <see cref="ITextResource"/> implementation</returns>
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
-            result = 
+            result =
                 new DynamicMemberChainer(binder.Name, this.context, this.textResource);
 
             return true;
+        }
+
+        /// <summary>
+        /// Gets a translation based on the provided key.
+        /// </summary>
+        /// <param name="key">The key to look up the translation for.</param>
+        public string this[string key]
+        {
+            get
+            {
+                return this.textResource[key, this.context];
+            }
         }
 
         public class DynamicMemberChainer : DynamicObject
@@ -72,7 +93,7 @@
 
             public override string ToString()
             {
-                return this.textResource[this.memberName, this.context]; ;
+                return this.textResource[this.memberName, this.context];
             }
         }
     }

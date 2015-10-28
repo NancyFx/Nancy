@@ -27,7 +27,7 @@ namespace Nancy.Routing.Trie
         public int RouteIndex { get; set; }
 
         /// <summary>
-        /// Gets or sets the numer of segments in the route
+        /// Gets or sets the number of segments in the route
         /// </summary>
         public int RouteLength { get; set; }
 

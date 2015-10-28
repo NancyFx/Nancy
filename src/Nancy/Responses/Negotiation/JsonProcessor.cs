@@ -11,12 +11,12 @@
     {
         private readonly ISerializer serializer;
 
-        private static readonly IEnumerable<Tuple<string, MediaRange>> extensionMappings = 
-            new[] { new Tuple<string, MediaRange>("json", MediaRange.FromString("application/json")) };
+        private static readonly IEnumerable<Tuple<string, MediaRange>> extensionMappings =
+            new[] { new Tuple<string, MediaRange>("json", new MediaRange("application/json")) };
 
         /// <summary>
         /// Initializes a new instance of the <see cref="JsonProcessor"/> class,
-        /// with the provided <see cref="serializers"/>.
+        /// with the provided <paramref name="serializers"/>.
         /// </summary>
         /// <param name="serializers">The serializes that the processor will use to process the request.</param>
         public JsonProcessor(IEnumerable<ISerializer> serializers)
@@ -34,7 +34,7 @@
         }
 
         /// <summary>
-        /// Determines whether the the processor can handle a given content type and model
+        /// Determines whether the processor can handle a given content type and model
         /// </summary>
         /// <param name="requestedMediaRange">Content type requested by the client</param>
         /// <param name="model">The model for the given media range</param>
@@ -91,7 +91,7 @@
 
         private static bool IsWildcardJsonContentType(MediaRange requestedContentType)
         {
-            if (!requestedContentType.Type.IsWildcard && !string.Equals("application", requestedContentType.Type, StringComparison.InvariantCultureIgnoreCase))
+            if (!requestedContentType.Type.IsWildcard && !string.Equals("application", requestedContentType.Type, StringComparison.OrdinalIgnoreCase))
             {
                 return false;
             }
@@ -103,8 +103,8 @@
 
             var subtypeString = requestedContentType.Subtype.ToString();
 
-            return (subtypeString.StartsWith("vnd", StringComparison.InvariantCultureIgnoreCase) &&
-                    subtypeString.EndsWith("+json", StringComparison.InvariantCultureIgnoreCase));
+            return (subtypeString.StartsWith("vnd", StringComparison.OrdinalIgnoreCase) &&
+                    subtypeString.EndsWith("+json", StringComparison.OrdinalIgnoreCase));
         }
     }
 }

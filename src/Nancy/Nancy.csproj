@@ -99,8 +99,6 @@
     </Reference>
     <Reference Include="System.Core">
     </Reference>
-    <Reference Include="System.Drawing">
-    </Reference>
     <Reference Include="System.Xml">
     </Reference>
   </ItemGroup>
@@ -110,15 +108,18 @@
     </Compile>
     <Compile Include="AsyncNamedPipelineBase.cs" />
     <Compile Include="Bootstrapper\AppDomainAssemblyTypeScanner.cs" />
-    <Compile Include="Bootstrapper\ApplicationRegistrations.cs" />
+    <Compile Include="Bootstrapper\IApplicationRegistrations.cs" />
+    <Compile Include="Bootstrapper\IRequestStartup.cs" />
+    <Compile Include="Bootstrapper\Registrations.cs" />
     <Compile Include="Bootstrapper\BootstrapperException.cs" />
     <Compile Include="Bootstrapper\CollectionTypeRegistration.cs" />
     <Compile Include="Bootstrapper\ContainerRegistration.cs" />
     <Compile Include="Bootstrapper\FavIconApplicationStartup.cs" />
-    <Compile Include="Bootstrapper\IApplicationRegistrations.cs" />
+    <Compile Include="Bootstrapper\IRegistrations.cs" />
     <Compile Include="Bootstrapper\IPipelines.cs" />
     <Compile Include="Bootstrapper\InstanceRegistration.cs" />
     <Compile Include="Bootstrapper\IApplicationStartup.cs" />
+    <Compile Include="Bootstrapper\Lifetime.cs" />
     <Compile Include="Bootstrapper\MultipleRootPathProvidersLocatedException.cs" />
     <Compile Include="Bootstrapper\NancyInternalConfiguration.cs" />
     <Compile Include="Bootstrapper\Pipelines.cs" />
@@ -142,17 +143,25 @@
     <Compile Include="Culture\DefaultCultureService.cs" />
     <Compile Include="Culture\ICultureService.cs" />
     <Compile Include="DefaultResponseFormatterFactory.cs" />
+    <Compile Include="DefaultRootPathProvider.cs" />
     <Compile Include="DefaultStaticContentProvider.cs" />
+    <Compile Include="Diagnostics\DefaultRequestTraceFactory.cs" />
+    <Compile Include="Diagnostics\DefaultTraceLog.cs" />
     <Compile Include="Diagnostics\DiagnosticsConfiguration.cs" />
     <Compile Include="Diagnostics\DiagnosticsSession.cs" />
     <Compile Include="Diagnostics\ConcurrentLimitedCollection.cs" />
     <Compile Include="Diagnostics\DisabledDiagnostics.cs" />
     <Compile Include="Diagnostics\IDiagnostics.cs" />
+    <Compile Include="Diagnostics\IRequestTrace.cs" />
+    <Compile Include="Diagnostics\IRequestTraceFactory.cs" />
     <Compile Include="Diagnostics\ITraceLog.cs" />
     <Compile Include="Diagnostics\NullLog.cs" />
+    <Compile Include="Diagnostics\RequestData.cs" />
+    <Compile Include="Diagnostics\ResponseData.cs" />
     <Compile Include="DisabledStaticContentProvider.cs" />
     <Compile Include="ErrorHandling\RouteExecutionEarlyExitException.cs" />
     <Compile Include="Extensions\ModelValidationErrorExtensions.cs" />
+    <Compile Include="Extensions\RequestStreamExtensions.cs" />
     <Compile Include="Extensions\StreamExtensions.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="Diagnostics\DefaultRequestTracing.cs" />
@@ -164,10 +173,15 @@
     <Compile Include="Diagnostics\DefaultDiagnostics.cs" />
     <Compile Include="Diagnostics\DiagnosticsViewRenderer.cs" />
     <Compile Include="Helpers\CacheHelpers.cs" />
+    <Compile Include="Helpers\ExceptionExtensions.cs" />
+    <Compile Include="IncludeInNancyAssemblyScanningAttribute.cs" />
     <Compile Include="IStaticContentProvider.cs" />
+    <Compile Include="Json\Converters\TupleConverter.cs" />
+    <Compile Include="Json\JavaScriptPrimitiveConverter.cs" />
     <Compile Include="Localization\TextResourceFinder.cs" />
     <Compile Include="Helpers\TaskHelpers.cs" />
     <Compile Include="ModelBinding\BindingConfig.cs" />
+    <Compile Include="ModelBinding\BindingMemberInfo.cs" />
     <Compile Include="ModelBinding\DefaultConverters\DateTimeConverter.cs" />
     <Compile Include="ModelBinding\DefaultConverters\NumericConverter.cs" />
     <Compile Include="ModelBinding\ExpressionExtensions.cs" />
@@ -175,6 +189,11 @@
     <Compile Include="INancyModule.cs" />
     <Compile Include="NancyEngineExtensions.cs" />
     <Compile Include="NegotiatorExtensions.cs" />
+    <Compile Include="Owin\DelegateExtensions.cs" />
+    <Compile Include="Owin\NancyContextExtensions.cs" />
+    <Compile Include="Owin\NancyOptions.cs" />
+    <Compile Include="Owin\NancyOptionsExtensions.cs" />
+    <Compile Include="Owin\NancyMiddleware.cs" />
     <Compile Include="Responses\EmbeddedFileResponse.cs" />
     <Compile Include="Diagnostics\IDiagnosticsProvider.cs" />
     <Compile Include="Diagnostics\IInteractiveDiagnostics.cs" />
@@ -192,7 +211,10 @@
     <Compile Include="Jsonp.cs" />
     <Compile Include="JsonpApplicationStartup.cs" />
     <Compile Include="RequestExecutionException.cs" />
+    <Compile Include="Responses\MaterialisingResponse.cs" />
     <Compile Include="Responses\NegotiatedResponse.cs" />
+    <Compile Include="Responses\Negotiation\DefaultResponseNegotiator.cs" />
+    <Compile Include="Responses\Negotiation\IResponseNegotiator.cs" />
     <Compile Include="Responses\Negotiation\IResponseProcessor.cs" />
     <Compile Include="Responses\Negotiation\JsonProcessor.cs" />
     <Compile Include="Responses\Negotiation\MatchResult.cs" />
@@ -220,6 +242,7 @@
     <Compile Include="Routing\Constraints\DateTimeRouteSegmentConstraint.cs" />
     <Compile Include="Routing\Constraints\DecimalRouteSegmentConstraint.cs" />
     <Compile Include="Routing\Constraints\GuidRouteSegmentConstraint.cs" />
+    <Compile Include="Routing\Constraints\LongRouteSegmentConstraint.cs" />
     <Compile Include="Routing\Constraints\IntRouteSegmentConstraint.cs" />
     <Compile Include="Routing\Constraints\IRouteSegmentConstraint.cs" />
     <Compile Include="Routing\Constraints\LengthRouteSegmentConstraint.cs" />
@@ -230,6 +253,7 @@
     <Compile Include="Routing\Constraints\RangeRouteSegmentConstraint.cs" />
     <Compile Include="Routing\Constraints\RouteSegmentConstraintBase.cs" />
     <Compile Include="Routing\Constraints\ParameterizedRouteSegmentConstraintBase.cs" />
+    <Compile Include="Routing\Constraints\VersionRouteSegmentConstraint.cs" />
     <Compile Include="Routing\DefaultRequestDispatcher.cs" />
     <Compile Include="Routing\DefaultRouteDescriptionProvider.cs" />
     <Compile Include="Routing\DefaultRouteInvoker.cs" />
@@ -237,10 +261,14 @@
     <Compile Include="Routing\IRequestDispatcher.cs" />
     <Compile Include="Routing\IRouteDescriptionProvider.cs" />
     <Compile Include="Routing\IRouteInvoker.cs" />
+    <Compile Include="Routing\IRouteMetadataProvider.cs" />
     <Compile Include="Routing\IRouteSegmentExtractor.cs" />
     <Compile Include="Routing\ParameterSegmentInformation.cs" />
     <Compile Include="Routing\ResolveResult.cs" />
     <Compile Include="Routing\OptionsRoute.cs" />
+    <Compile Include="Routing\RouteCacheExtensions.cs" />
+    <Compile Include="Routing\RouteMetadata.cs" />
+    <Compile Include="Routing\RouteMetadataProvider.cs" />
     <Compile Include="Routing\Trie\IRouteResolverTrie.cs" />
     <Compile Include="Routing\Trie\ITrieNodeFactory.cs" />
     <Compile Include="Routing\Trie\MatchResult.cs" />
@@ -260,6 +288,8 @@
     <Compile Include="Routing\Trie\RouteResolverTrie.cs" />
     <Compile Include="Routing\Trie\SegmentMatch.cs" />
     <Compile Include="Routing\Trie\TrieNodeFactory.cs" />
+    <Compile Include="Security\SSLProxy.cs" />
+    <Compile Include="Session\CookieBasedSessionsConfiguration.cs" />
     <Compile Include="StaticContent.cs" />
     <Compile Include="Conventions\ViewLocationConventions.cs" />
     <Compile Include="Cryptography\Base64Helpers.cs" />
@@ -274,8 +304,7 @@
     <Compile Include="DefaultNancyContextFactory.cs" />
     <Compile Include="Diagnostics\RequestTraceSession.cs" />
     <Compile Include="Diagnostics\IRequestTracing.cs" />
-    <Compile Include="Diagnostics\RequestTrace.cs" />
-    <Compile Include="Diagnostics\TraceLog.cs" />
+    <Compile Include="Diagnostics\DefaultRequestTrace.cs" />
     <Compile Include="DynamicDictionaryValue.cs" />
     <Compile Include="ErrorHandling\DefaultStatusCodeHandler.cs" />
     <Compile Include="IStatusCodeHandler.cs" />
@@ -458,6 +487,8 @@
     <Compile Include="ViewEngines\ViewLocationResult.cs" />
     <Compile Include="ViewEngines\ViewNotFoundException.cs" />
     <Compile Include="ViewEngines\ViewRenderException.cs" />
+    <Compile Include="ViewRenderer.cs" />
+    <Compile Include="Xml\XmlSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Diagnostics\Views\Dashboard.sshtml" />

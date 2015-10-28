@@ -41,13 +41,22 @@
         public string ErrorMessage { get; private set; }
 
         /// <summary>
-        /// Implictly cast a validation error to a string.
+        /// Implicitly cast a validation error to a string.
         /// </summary>
         /// <param name="error">The <see cref="ModelValidationError"/> that should be cast.</param>
         /// <returns>A <see cref="string"/> containing the validation error description.</returns>
         public static implicit operator string(ModelValidationError error)
         {
             return error.ErrorMessage;
+        }
+
+        /// <summary>
+        /// Returns the <see cref="ErrorMessage"/>.
+        /// </summary>
+        /// <returns>A string containing the error message.</returns>
+        public override string ToString()
+        {
+            return this.ErrorMessage;
         }
     }
 }

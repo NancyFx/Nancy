@@ -9,11 +9,11 @@
     public class NancyRazorErrorView : NancyRazorViewBase
     {
         private const string DisableErrorTracesTrueMessage = "Error details are currently disabled. Please set <code>StaticConfiguration.DisableErrorTraces = false;</code> to enable.";
-        
+
         private static string template;
 
         /// <summary>
-        /// Gets or sets the template for rendinger errors.
+        /// Gets or sets the template for rendering errors.
         /// The token "[DETAILS]" will be replaced by the HTML for
         /// the actual error.
         /// </summary>

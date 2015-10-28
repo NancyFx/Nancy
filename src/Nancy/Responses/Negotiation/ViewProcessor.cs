@@ -31,7 +31,7 @@
         }
 
         /// <summary>
-        /// Determines whether the the processor can handle a given content type and model.
+        /// Determines whether the processor can handle a given content type and model.
         /// </summary>
         /// <param name="requestedMediaRange">Content type requested by the client.</param>
         /// <param name="model">The model for the given media range.</param>
@@ -39,11 +39,11 @@
         /// <returns>A <see cref="ProcessorMatch"/> result that determines the priority of the processor.</returns>
         public ProcessorMatch CanProcess(MediaRange requestedMediaRange, dynamic model, NancyContext context)
         {
-            var matchingContentType = 
+            var matchingContentType =
                 requestedMediaRange.Matches("text/html");
 
-            return matchingContentType 
-                ? new ProcessorMatch { ModelResult = MatchResult.DontCare, RequestedContentTypeResult = MatchResult.ExactMatch } 
+            return matchingContentType
+                ? new ProcessorMatch { ModelResult = MatchResult.DontCare, RequestedContentTypeResult = MatchResult.ExactMatch }
                 : new ProcessorMatch();
         }
 
@@ -56,7 +56,9 @@
         /// <returns>A <see cref="Response"/> instance.</returns>
         public Response Process(MediaRange requestedMediaRange, dynamic model, NancyContext context)
         {
-            return this.viewFactory.RenderView(context.NegotiationContext.ViewName, model, GetViewLocationContext(context));
+            var viewResponse = this.viewFactory.RenderView(context.NegotiationContext.ViewName, model, GetViewLocationContext(context));
+
+            return StaticConfiguration.DisableErrorTraces ? viewResponse : new MaterialisingResponse(viewResponse);
         }
 
         private static ViewLocationContext GetViewLocationContext(NancyContext context)

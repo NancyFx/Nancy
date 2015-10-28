@@ -3,6 +3,7 @@ namespace Nancy.Testing
     using System.Collections;
     using System.Collections.Generic;
     using System.IO;
+    using Nancy.IO;
 
     /// <summary>
     /// Wrapper for the HTTP response body that is used by the <see cref="BrowserResponse"/> class.
@@ -13,6 +14,10 @@ namespace Nancy.Testing
         private readonly string contentType;
         private DocumentWrapper responseDocument;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BrowserResponseBodyWrapper"/> class.
+        /// </summary>
+        /// <param name="response">The <see cref="Response"/> to wrap.</param>
         public BrowserResponseBodyWrapper(Response response)
         {
             var contentStream = GetContentStream(response);
@@ -21,7 +26,11 @@ namespace Nancy.Testing
             this.contentType = response.ContentType;
         }
 
-        internal string ContentType
+        /// <summary>
+        /// Gets the content type of the wrapped response.
+        /// </summary>
+        /// <returns>A string containing the content type.</returns>
+        public string ContentType
         {
             get { return this.contentType; }
         }
@@ -29,15 +38,19 @@ namespace Nancy.Testing
         private static MemoryStream GetContentStream(Response response)
         {
             var contentsStream = new MemoryStream();
-            response.Contents.Invoke(contentsStream);
+
+            var unclosableStream = new UnclosableStreamWrapper(contentsStream);
+
+            response.Contents.Invoke(unclosableStream);
             contentsStream.Position = 0;
+
             return contentsStream;
         }
 
         /// <summary>
         /// Gets a <see cref="QueryWrapper"/> for the provided <paramref name="selector"/>.
         /// </summary>
-        /// <param name="selector">The CSS3 that shuold be applied.</param>
+        /// <param name="selector">The CSS3 selector that should be applied.</param>
         /// <returns>A <see cref="QueryWrapper"/> instance.</returns>
         public QueryWrapper this[string selector]
         {

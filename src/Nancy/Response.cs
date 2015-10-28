@@ -2,18 +2,27 @@ namespace Nancy
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.IO;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     using Cookies;
+
+    using Nancy.Helpers;
 
     /// <summary>
     /// Encapsulates HTTP-response information from an Nancy operation.
     /// </summary>
+    [DebuggerDisplay("{DebuggerDisplay, nq}")]
     public class Response: IDisposable
     {
         /// <summary>
-        /// Null object representing no body    
+        /// Null object representing no body
         /// </summary>
         public static Action<Stream> NoBody = s => { };
+
+        private string contentType;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Response"/> class.
@@ -22,7 +31,7 @@ namespace Nancy
         {
             this.Contents = NoBody;
             this.ContentType = "text/html";
-            this.Headers = new Dictionary<string, string>();
+            this.Headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             this.StatusCode = HttpStatusCode.OK;
             this.Cookies = new List<INancyCookie>(2);
         }
@@ -32,7 +41,11 @@ namespace Nancy
         /// </summary>
         /// <value>The type of the content.</value>
         /// <remarks>The default value is <c>text/html</c>.</remarks>
-        public string ContentType { get; set; }
+        public string ContentType
+        {
+            get { return Headers.ContainsKey("content-type") ? Headers["content-type"] : this.contentType; }
+            set { this.contentType = value; }
+        }
 
         /// <summary>
         /// Gets the delegate that will render contents to the response stream.
@@ -44,7 +57,7 @@ namespace Nancy
         /// <summary>
         /// Gets the collection of HTTP response headers that should be sent back to the client.
         /// </summary>
-        /// <value>An <see cref="IDictionary{TKey,TValue}"/> instance, contaning the key/value pair of headers.</value>
+        /// <value>An <see cref="IDictionary{TKey,TValue}"/> instance, containing the key/value pair of headers.</value>
         public IDictionary<string, string> Headers { get; set; }
 
         /// <summary>
@@ -64,7 +77,18 @@ namespace Nancy
         /// </summary>
         /// <value>A <see cref="IList{T}"/> instance, containing <see cref="INancyCookie"/> instances.</value>
         public IList<INancyCookie> Cookies { get; private set; }
-        
+
+        /// <summary>
+        /// Executes at the end of the nancy execution pipeline and before control is passed back to the hosting.
+        /// Can be used to pre-render/validate views while still inside the main pipeline/error handling.
+        /// </summary>
+        /// <param name="context">Nancy context</param>
+        /// <returns>Task for completion/erroring</returns>
+        public virtual Task PreExecute(NancyContext context)
+        {
+            return TaskHelpers.GetCompletedTask();
+        }
+
         /// <summary>
         /// Adds a <see cref="INancyCookie"/> to the response.
         /// </summary>
@@ -82,20 +106,20 @@ namespace Nancy
         /// </summary>
         /// <param name="name">The name of the cookie.</param>
         /// <param name="value">The value of the cookie.</param>
-        /// <param name="expires">The expiration date of the cookie. Can be <see langword="null" /> if it should never expire.</param>
+        /// <param name="expires">The expiration date of the cookie. Can be <see langword="null" /> if it should expire at the end of the session.</param>
         /// <returns>The <see cref="Response"/> instance.</returns>
         [Obsolete("This method has been replaced with Response.WithCookie and will be removed in a subsequent release.")]
         public Response AddCookie(string name, string value, DateTime? expires)
         {
             return AddCookie(name, value, expires, null, null);
         }
-    
+
         /// <summary>
         /// Adds a <see cref="INancyCookie"/> to the response.
         /// </summary>
         /// <param name="name">The name of the cookie.</param>
         /// <param name="value">The value of the cookie.</param>
-        /// <param name="expires">The expiration date of the cookie. Can be <see langword="null" /> if it should never expire.</param>
+        /// <param name="expires">The expiration date of the cookie. Can be <see langword="null" /> if it should expire at the end of the session.</param>
         /// <param name="domain">The domain of the cookie.</param>
         /// <param name="path">The path of the cookie.</param>
         /// <returns>The <see cref="Response"/> instance.</returns>
@@ -189,9 +213,14 @@ namespace Nancy
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
-        /// <remarks>This method can be overriden in sub-classes to dispose of response specific resources.</remarks>
+        /// <remarks>This method can be overridden in sub-classes to dispose of response specific resources.</remarks>
         public virtual void Dispose()
         {
+        }
+
+        private string DebuggerDisplay
+        {
+            get { return string.Join(" ", new string[] { this.StatusCode.ToString(), this.ReasonPhrase, this.ContentType }.Where(x => !string.IsNullOrEmpty(x)).ToArray()); }
         }
     }
 }

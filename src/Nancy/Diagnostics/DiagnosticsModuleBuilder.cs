@@ -15,14 +15,14 @@ namespace Nancy.Diagnostics
         public DiagnosticsModuleBuilder(IRootPathProvider rootPathProvider, IModelBinderLocator modelBinderLocator)
         {
             this.rootPathProvider = rootPathProvider;
-            this.serializers = new[] { new DefaultJsonSerializer() };
+            this.serializers = new[] { new DefaultJsonSerializer { RetainCasing = false } };
             this.modelBinderLocator = modelBinderLocator;
         }
 
         /// <summary>
         /// Builds a fully configured <see cref="INancyModule"/> instance, based upon the provided <paramref name="module"/>.
         /// </summary>
-        /// <param name="module">The <see cref="INancyModule"/> that shoule be configured.</param>
+        /// <param name="module">The <see cref="INancyModule"/> that should be configured.</param>
         /// <param name="context">The current request context.</param>
         /// <returns>A fully configured <see cref="INancyModule"/> instance.</returns>
         public INancyModule BuildModule(INancyModule module, NancyContext context)

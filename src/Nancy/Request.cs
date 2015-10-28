@@ -3,6 +3,7 @@ namespace Nancy
     using System;
     using System.Collections.Generic;
     using System.Collections.Specialized;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
@@ -15,6 +16,7 @@ namespace Nancy
     /// <summary>
     /// Encapsulates HTTP-request information to an Nancy application.
     /// </summary>
+    [DebuggerDisplay("{DebuggerDisplay, nq}")]
     public class Request : IDisposable
     {
         private readonly List<HttpFile> files = new List<HttpFile>();
@@ -26,7 +28,7 @@ namespace Nancy
         /// Initializes a new instance of the <see cref="Request"/> class.
         /// </summary>
         /// <param name="method">The HTTP data transfer method used by the client.</param>
-        /// <param name="path">The path of the requested resource, relative to the "Nancy root". This shold not not include the scheme, host name, or query portion of the URI.</param>
+        /// <param name="path">The path of the requested resource, relative to the "Nancy root". This should not include the scheme, host name, or query portion of the URI.</param>
         /// <param name="scheme">The HTTP protocol that was used by the client.</param>
         public Request(string method, string path, string scheme)
             : this(method, new Url { Path = path, Scheme = scheme })
@@ -37,12 +39,19 @@ namespace Nancy
         /// Initializes a new instance of the <see cref="Request"/> class.
         /// </summary>
         /// <param name="method">The HTTP data transfer method used by the client.</param>
-        /// <param name="url">The <see cref="Url"/>url of the requested resource</param>
+        /// <param name="url">The <see cref="Url"/> of the requested resource</param>
         /// <param name="headers">The headers that was passed in by the client.</param>
         /// <param name="body">The <see cref="Stream"/> that represents the incoming HTTP body.</param>
         /// <param name="ip">The client's IP address</param>
         /// <param name="certificate">The client's certificate when present.</param>
-        public Request(string method, Url url, RequestStream body = null, IDictionary<string, IEnumerable<string>> headers = null, string ip = null, byte[] certificate = null)
+        /// <param name="protocolVersion">The HTTP protocol version.</param>
+        public Request(string method,
+            Url url,
+            RequestStream body = null,
+            IDictionary<string, IEnumerable<string>> headers = null,
+            string ip = null,
+            byte[] certificate = null,
+            string protocolVersion = null)
         {
             if (String.IsNullOrEmpty(method))
             {
@@ -83,6 +92,8 @@ namespace Nancy
                 this.ClientCertificate = new X509Certificate2(certificate);
             }
 
+            this.ProtocolVersion = protocolVersion ?? string.Empty;
+
             if (String.IsNullOrEmpty(this.Url.Path))
             {
                 this.Url.Path = "/";
@@ -96,6 +107,11 @@ namespace Nancy
         /// Gets the certificate sent by the client.
         /// </summary>
         public X509Certificate ClientCertificate { get; private set; }
+
+        /// <summary>
+        /// Gets the HTTP protocol version.
+        /// </summary>
+        public string ProtocolVersion { get; private set; }
 
         /// <summary>
         /// Gets the IP address of the client
@@ -126,9 +142,9 @@ namespace Nancy
         }
 
         /// <summary>
-        /// Gets the querystring data of the requested resource.
+        /// Gets the query string data of the requested resource.
         /// </summary>
-        /// <value>A <see cref="DynamicDictionary"/>instance, containing the key/value pairs of querystring data.</value>
+        /// <value>A <see cref="DynamicDictionary"/>instance, containing the key/value pairs of query string data.</value>
         public dynamic Query { get; set; }
 
         /// <summary>
@@ -167,17 +183,19 @@ namespace Nancy
             foreach (var parts in values.Select(c => c.Split(new[] { '=' }, 2)))
             {
                 var cookieName = parts[0].Trim();
+                string cookieValue;
 
                 if (parts.Length == 1)
                 {
-                    if (cookieName.Equals("HttpOnly", StringComparison.InvariantCulture) ||
-                        cookieName.Equals("Secure", StringComparison.InvariantCulture))
-                    {
-                        continue;
-                    }
+                    //Cookie attribute
+                    cookieValue = string.Empty;
+                }
+                else
+                {
+                    cookieValue = parts[1];
                 }
 
-                cookieDictionary[cookieName] = parts[1];
+                cookieDictionary[cookieName] = cookieValue;
             }
 
             return cookieDictionary;
@@ -239,7 +257,7 @@ namespace Nancy
             var multipart = new HttpMultipart(this.Body, boundary);
 
             var formValues =
-                new NameValueCollection(StaticConfiguration.CaseSensitive ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase);
+                new NameValueCollection(StaticConfiguration.CaseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase);
 
             foreach (var httpMultipartBoundary in multipart.GetBoundaries())
             {
@@ -271,7 +289,7 @@ namespace Nancy
                 return;
             }
 
-            var overrides = 
+            var overrides =
                 new List<Tuple<string, string>>
                 {
                     Tuple.Create("_method form input element", (string)this.Form["_method"]),
@@ -299,6 +317,11 @@ namespace Nancy
             }
 
             this.Method = providedOverride.Single().Item2;
+        }
+
+        private string DebuggerDisplay
+        {
+            get { return string.Format("{0} {1} {2}", this.Method, this.Url, this.ProtocolVersion).Trim(); }
         }
     }
 }

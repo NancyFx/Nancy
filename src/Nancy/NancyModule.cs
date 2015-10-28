@@ -3,7 +3,6 @@ namespace Nancy
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -15,7 +14,7 @@ namespace Nancy
     using Nancy.ViewEngines;
 
     /// <summary>
-    /// Basic class containing the functionality for defining routes and actions in Nancy. 
+    /// Basic class containing the functionality for defining routes and actions in Nancy.
     /// </summary>
     public abstract class NancyModule : INancyModule, IHideObjectMembers
     {
@@ -54,6 +53,11 @@ namespace Nancy
             }
         }
 
+        public dynamic Text
+        {
+            get { return this.Context.Text; }
+        }
+
         /// <summary>
         /// Gets <see cref="RouteBuilder"/> for declaring actions for DELETE requests.
         /// </summary>
@@ -67,10 +71,26 @@ namespace Nancy
         /// Gets <see cref="RouteBuilder"/> for declaring actions for GET requests.
         /// </summary>
         /// <value>A <see cref="RouteBuilder"/> instance.</value>
-        /// <remarks>These actions will also be used when a HEAD request is recieved.</remarks>
         public RouteBuilder Get
         {
             get { return new RouteBuilder("GET", this); }
+        }
+
+        /// <summary>
+        /// Gets <see cref="RouteBuilder"/> for declaring actions for HEAD requests.
+        /// </summary>
+        /// <value>A <see cref="RouteBuilder"/> instance.</value>
+        public RouteBuilder Head
+        {
+            get
+            {
+                if (!StaticConfiguration.EnableHeadRouting)
+                {
+                    throw new InvalidOperationException("Explicit HEAD routing is disabled. Set StaticConfiguration.EnableHeadRouting to enable.");
+                }
+
+                return new RouteBuilder("HEAD", this);
+            }
         }
 
         /// <summary>
@@ -113,7 +133,7 @@ namespace Nancy
         /// Get the root path of the routes in the current module.
         /// </summary>
         /// <value>
-        /// A <see cref="T:System.String" /> containing the root path of the module or <see langword="null" /> 
+        /// A <see cref="T:System.String" /> containing the root path of the module or <see langword="null" />
         /// if no root path should be used.</value><remarks>All routes will be relative to this root path.
         /// </remarks>
         public string ModulePath { get; protected set; }
@@ -140,12 +160,16 @@ namespace Nancy
         /// <summary>
         /// Renders a view from inside a route handler.
         /// </summary>
-        /// <value>A <see cref="ViewRenderer"/> instance that is used to determin which view that should be rendered.</value>
+        /// <value>A <see cref="ViewRenderer"/> instance that is used to determine which view that should be rendered.</value>
         public ViewRenderer View
         {
             get { return new ViewRenderer(this); }
         }
 
+        /// <summary>
+        /// Used to negotiate the content returned based on Accepts header.
+        /// </summary>
+        /// <value>A <see cref="Negotiator"/> instance that is used to negotiate the content returned.</value>
         public Negotiator Negotiate
         {
             get { return new Negotiator(this.Context); }
@@ -271,7 +295,7 @@ namespace Nancy
             /// <value>A delegate that is used to invoke the route.</value>
             public Func<dynamic, dynamic> this[string path]
             {
-                set { this.AddRoute(path, null, value); }
+                set { this.AddRoute(string.Empty, path, null, value); }
             }
 
             /// <summary>
@@ -280,31 +304,71 @@ namespace Nancy
             /// <value>A delegate that is used to invoke the route.</value>
             public Func<dynamic, dynamic> this[string path, Func<NancyContext, bool> condition]
             {
-                set { this.AddRoute(path, condition, value); }
+                set { this.AddRoute(string.Empty, path, condition, value); }
             }
 
+            /// <summary>
+            /// Defines an async route for the specified <paramref name="path"/>
+            /// </summary>
             public Func<dynamic, CancellationToken, Task<dynamic>> this[string path, bool runAsync]
             {
-                set { this.AddRoute(path, null, value); }
+                set { this.AddRoute(string.Empty, path, null, value); }
             }
 
+            /// <summary>
+            /// Defines an async route for the specified <paramref name="path"/> and <paramref name="condition"/>.
+            /// </summary>
             public Func<dynamic, CancellationToken, Task<dynamic>> this[string path, Func<NancyContext, bool> condition, bool runAsync]
             {
-                set { this.AddRoute(path, condition, value); }
+                set { this.AddRoute(string.Empty, path, condition, value); }
             }
 
-            protected void AddRoute(string path, Func<NancyContext, bool> condition, Func<dynamic, dynamic> value)
+            /// <summary>
+            /// Defines a Nancy route for the specified <paramref name="path"/> and <paramref name="name"/>
+            /// </summary>
+            /// <value>A delegate that is used to invoke the route.</value>
+            public Func<dynamic, dynamic> this[string name, string path]
+            {
+                set { this.AddRoute(name, path, null, value); }
+            }
+
+            /// <summary>
+            /// Defines a Nancy route for the specified <paramref name="path"/>, <paramref name="condition"/> and <paramref name="name"/>
+            /// </summary>
+            /// <value>A delegate that is used to invoke the route.</value>
+            public Func<dynamic, dynamic> this[string name, string path, Func<NancyContext, bool> condition]
+            {
+                set { this.AddRoute(name, path, condition, value); }
+            }
+
+            /// <summary>
+            /// Defines an async route for the specified <paramref name="path"/> and <paramref name="name"/>
+            /// </summary>
+            public Func<dynamic, CancellationToken, Task<dynamic>> this[string name, string path, bool runAsync]
+            {
+                set { this.AddRoute(name, path, null, value); }
+            }
+
+            /// <summary>
+            /// Defines an async route for the specified <paramref name="path"/>, <paramref name="condition"/> and <paramref name="name"/>
+            /// </summary>
+            public Func<dynamic, CancellationToken, Task<dynamic>> this[string name, string path, Func<NancyContext, bool> condition, bool runAsync]
+            {
+                set { this.AddRoute(name, path, condition, value); }
+            }
+
+            protected void AddRoute(string name, string path, Func<NancyContext, bool> condition, Func<dynamic, dynamic> value)
             {
                 var fullPath = GetFullPath(path);
 
-                this.parentModule.routes.Add(Route.FromSync(this.method, fullPath, condition, value));
+                this.parentModule.routes.Add(Route.FromSync(name, this.method, fullPath, condition, value));
             }
 
-            protected void AddRoute(string path, Func<NancyContext, bool> condition, Func<dynamic, CancellationToken, Task<dynamic>> value)
+            protected void AddRoute(string name, string path, Func<NancyContext, bool> condition, Func<dynamic, CancellationToken, Task<dynamic>> value)
             {
                 var fullPath = GetFullPath(path);
 
-                this.parentModule.routes.Add(new Route(this.method, fullPath, condition, value));
+                this.parentModule.routes.Add(new Route(name, this.method, fullPath, condition, value));
             }
 
             private string GetFullPath(string path)
@@ -323,69 +387,6 @@ namespace Nancy
                 }
 
                 return string.Concat("/", parentPath, "/", relativePath);
-            }
-        }
-
-        /// <summary>
-        /// Helper class for rendering a view from a route handler.
-        /// </summary>
-        public class ViewRenderer : IHideObjectMembers
-        {
-            private readonly INancyModule module;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="ViewRenderer"/> class.
-            /// </summary>
-            /// <param name="module">The <see cref="INancyModule"/> instance that is rendering the view.</param>
-            public ViewRenderer(INancyModule module)
-            {
-                this.module = module;
-            }
-
-            /// <summary>
-            /// Renders the view with its name resolved from the model type, and model defined by the <paramref name="model"/> parameter.
-            /// </summary>
-            /// <param name="model">The model that should be passed into the view.</param>
-            /// <returns>A delegate that can be invoked with the <see cref="Stream"/> that the view should be rendered to.</returns>
-            /// <remarks>The view name is model.GetType().Name with any Model suffix removed.</remarks>
-            public Negotiator this[dynamic model]
-            {
-                get { return this.GetNegotiator(null, model); }
-            }
-
-            /// <summary>
-            /// Renders the view with the name defined by the <paramref name="viewName"/> parameter.
-            /// </summary>
-            /// <param name="viewName">The name of the view to render.</param>
-            /// <returns>A delegate that can be invoked with the <see cref="Stream"/> that the view should be rendered to.</returns>
-            /// <remarks>The extension in the view name is optional. If it is omitted, then Nancy will try to resolve which of the available engines that should be used to render the view.</remarks>
-            public Negotiator this[string viewName]
-            {
-                get { return this.GetNegotiator(viewName, null); }
-            }
-
-            /// <summary>
-            /// Renders the view with the name and model defined by the <paramref name="viewName"/> and <paramref name="model"/> parameters.
-            /// </summary>
-            /// <param name="viewName">The name of the view to render.</param>
-            /// <param name="model">The model that should be passed into the view.</param>
-            /// <returns>A delegate that can be invoked with the <see cref="Stream"/> that the view should be rendered to.</returns>
-            /// <remarks>The extension in the view name is optional. If it is omitted, then Nancy will try to resolve which of the available engines that should be used to render the view.</remarks>
-            public Negotiator this[string viewName, dynamic model]
-            {
-                get { return this.GetNegotiator(viewName, model); }
-            }
-
-            private Negotiator GetNegotiator(string viewName, object model)
-            {
-                var negotiationContext = this.module.Context.NegotiationContext;
-
-                negotiationContext.ViewName = viewName;
-                negotiationContext.DefaultModel = model;
-                negotiationContext.PermissableMediaRanges.Clear();
-                negotiationContext.PermissableMediaRanges.Add("text/html");
-
-                return new Negotiator(this.module.Context);
             }
         }
     }

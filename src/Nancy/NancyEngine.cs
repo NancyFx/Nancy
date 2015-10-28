@@ -8,17 +8,18 @@
 
     using Bootstrapper;
 
-    using Nancy.Cookies;
-    using Nancy.Diagnostics;
-    using Nancy.ErrorHandling;
-    using Nancy.Routing;
+    using Cookies;
+    using Diagnostics;
+    using ErrorHandling;
+    using Routing;
 
-    using Nancy.Helpers;
+    using Helpers;
+    using Responses.Negotiation;
 
     /// <summary>
     /// Default engine for handling Nancy <see cref="Request"/>s.
     /// </summary>
-    public class NancyEngine : INancyEngine
+    public sealed class NancyEngine : INancyEngine
     {
         public const string ERROR_KEY = "ERROR_TRACE";
         public const string ERROR_EXCEPTION = "ERROR_EXCEPTION";
@@ -26,9 +27,10 @@
         private readonly IRequestDispatcher dispatcher;
         private readonly INancyContextFactory contextFactory;
         private readonly IRequestTracing requestTracing;
-        private readonly DiagnosticsConfiguration diagnosticsConfiguration;
         private readonly IEnumerable<IStatusCodeHandler> statusCodeHandlers;
         private readonly IStaticContentProvider staticContentProvider;
+        private readonly IResponseNegotiator negotiator;
+        private readonly CancellationTokenSource engineDisposedCts;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyEngine"/> class.
@@ -37,9 +39,14 @@
         /// <param name="contextFactory">A factory for creating contexts</param>
         /// <param name="statusCodeHandlers">Error handlers</param>
         /// <param name="requestTracing">The request tracing instance.</param>
-        /// <param name="diagnosticsConfiguration"></param>
         /// <param name="staticContentProvider">The provider to use for serving static content</param>
-        public NancyEngine(IRequestDispatcher dispatcher, INancyContextFactory contextFactory, IEnumerable<IStatusCodeHandler> statusCodeHandlers, IRequestTracing requestTracing, DiagnosticsConfiguration diagnosticsConfiguration, IStaticContentProvider staticContentProvider)
+        /// <param name="negotiator">The response negotiator.</param>
+        public NancyEngine(IRequestDispatcher dispatcher,
+            INancyContextFactory contextFactory,
+            IEnumerable<IStatusCodeHandler> statusCodeHandlers,
+            IRequestTracing requestTracing,
+            IStaticContentProvider staticContentProvider,
+            IResponseNegotiator negotiator)
         {
             if (dispatcher == null)
             {
@@ -56,12 +63,28 @@
                 throw new ArgumentNullException("statusCodeHandlers");
             }
 
+            if (requestTracing == null)
+            {
+                throw new ArgumentNullException("requestTracing");
+            }
+
+            if (staticContentProvider == null)
+            {
+                throw new ArgumentNullException("staticContentProvider");
+            }
+
+            if (negotiator == null)
+            {
+                throw new ArgumentNullException("negotiator");
+            }
+
             this.dispatcher = dispatcher;
             this.contextFactory = contextFactory;
             this.statusCodeHandlers = statusCodeHandlers;
             this.requestTracing = requestTracing;
-            this.diagnosticsConfiguration = diagnosticsConfiguration;
             this.staticContentProvider = staticContentProvider;
+            this.negotiator = negotiator;
+            this.engineDisposedCts = new CancellationTokenSource();
         }
 
         /// <summary>
@@ -72,6 +95,10 @@
 
         public Task<NancyContext> HandleRequest(Request request, Func<NancyContext, NancyContext> preRequest, CancellationToken cancellationToken)
         {
+            var cts = CancellationTokenSource.CreateLinkedTokenSource(this.engineDisposedCts.Token, cancellationToken);
+
+            cts.Token.ThrowIfCancellationRequested();
+
             var tcs = new TaskCompletionSource<NancyContext>();
 
             if (request == null)
@@ -96,14 +123,22 @@
 
             var pipelines = this.RequestPipelinesFactory.Invoke(context);
 
-            var task = this.InvokeRequestLifeCycle(context, cancellationToken, pipelines);
+            var lifeCycleTask = this.InvokeRequestLifeCycle(context, cts.Token, pipelines);
 
-            task.WhenCompleted(
+            lifeCycleTask.WhenCompleted(
                 completeTask =>
                 {
-                    this.CheckStatusCodeHandler(completeTask.Result);
+                    try
+                    {
+                        this.CheckStatusCodeHandler(completeTask.Result);
 
-                    this.SaveTraceInformation(completeTask.Result);
+                        this.SaveTraceInformation(completeTask.Result);
+                    }
+                    catch (Exception ex)
+                    {
+                        tcs.SetException(ex);
+                        return;
+                    }
 
                     tcs.SetResult(completeTask.Result);
                 },
@@ -114,6 +149,11 @@
                 true);
 
             return tcs.Task;
+        }
+
+        public void Dispose()
+        {
+            this.engineDisposedCts.Cancel();
         }
 
         private void SaveTraceInformation(NancyContext ctx)
@@ -130,12 +170,8 @@
 
             var sessionGuid = this.GetDiagnosticsSessionGuid(ctx);
 
-            ctx.Trace.ResponseType = ctx.Response.GetType();
-            ctx.Trace.StatusCode = ctx.Response.StatusCode;
-            ctx.Trace.RequestContentType = ctx.Request.Headers.ContentType;
-            ctx.Trace.ResponseContentType = ctx.Response.ContentType;
-            ctx.Trace.RequestHeaders = ctx.Request.Headers.ToDictionary(kv => kv.Key, kv => kv.Value);
-            ctx.Trace.ResponseHeaders = ctx.Response.Headers;
+            ctx.Trace.RequestData = ctx.Request;
+            ctx.Trace.ResponseData = ctx.Response;
 
             this.requestTracing.AddRequestDiagnosticToSession(sessionGuid, ctx);
 
@@ -172,8 +208,12 @@
 
         private void UpdateTraceCookie(NancyContext ctx, Guid sessionGuid)
         {
-            var cookie = new NancyCookie("__NCTRACE", sessionGuid.ToString(), true) { Expires = DateTime.Now.AddMinutes(30) };
-            ctx.Response.AddCookie(cookie);
+            var cookie = new NancyCookie("__NCTRACE", sessionGuid.ToString(), true)
+            {
+                Expires = DateTime.Now.AddMinutes(30)
+            };
+
+            ctx.Response = ctx.Response.WithCookie(cookie);
         }
 
         private void CheckStatusCodeHandler(NancyContext context)
@@ -183,13 +223,23 @@
                 return;
             }
 
-            foreach (var statusCodeHandler in this.statusCodeHandlers)
+            var handlers = this.statusCodeHandlers
+                .Where(x => x.HandlesStatusCode(context.Response.StatusCode, context))
+                .ToList();
+
+            var defaultHandler = handlers
+                .FirstOrDefault(x => x is DefaultStatusCodeHandler);
+
+            var customHandler = handlers
+                .FirstOrDefault(x => !(x is DefaultStatusCodeHandler));
+
+            var handler = customHandler ?? defaultHandler;
+            if (handler == null)
             {
-                if (statusCodeHandler.HandlesStatusCode(context.Response.StatusCode, context))
-                {
-                    statusCodeHandler.Handle(context.Response.StatusCode, context);
-                }
+                return;
             }
+
+            handler.Handle(context.Response.StatusCode, context);
         }
 
         private Task<NancyContext> InvokeRequestLifeCycle(NancyContext context, CancellationToken cancellationToken, IPipelines pipelines)
@@ -207,28 +257,38 @@
                         {
                             context.Response = completedTask.Result;
 
-                            var postHookTask = InvokePostRequestHook(context, cancellationToken, pipelines.AfterRequest);
+                            var postHookTask = this.InvokePostRequestHook(context, cancellationToken, pipelines.AfterRequest);
 
-                            postHookTask.WhenCompleted(
-                                completedPostHookTask => tcs.SetResult(context),
-                                HandleFaultedTask(context, pipelines, tcs));
+                            postHookTask.WhenCompleted(this.PreExecute(context, pipelines, tcs), this.HandleFaultedTask(context, pipelines, tcs));
                         },
-                        HandleFaultedTask(context, pipelines, tcs));
+                        this.HandleFaultedTask(context, pipelines, tcs));
                 },
-                HandleFaultedTask(context, pipelines, tcs));
+                this.HandleFaultedTask(context, pipelines, tcs));
 
             return tcs.Task;
         }
 
-        private static Action<Task> HandleFaultedTask(NancyContext context, IPipelines pipelines, TaskCompletionSource<NancyContext> tcs)
+        private Action<Task> PreExecute(NancyContext context, IPipelines pipelines, TaskCompletionSource<NancyContext> tcs)
+        {
+            return postHookTask =>
+            {
+                var preExecuteTask = context.Response.PreExecute(context);
+
+                preExecuteTask.WhenCompleted(
+                    completedPostHookTask => tcs.SetResult(context),
+                    this.HandleFaultedTask(context, pipelines, tcs));
+            };
+        }
+
+        private Action<Task> HandleFaultedTask(NancyContext context, IPipelines pipelines, TaskCompletionSource<NancyContext> tcs)
         {
             return t =>
                 {
                     try
                     {
-                        var flattenedException = FlattenException(t.Exception);
+                        var flattenedException = t.Exception.FlattenInnerExceptions();
 
-                        InvokeOnErrorHook(context, pipelines.OnError, flattenedException);
+                        this.InvokeOnErrorHook(context, pipelines.OnError, flattenedException);
 
                         tcs.SetResult(context);
                     }
@@ -254,7 +314,7 @@
             return pipeline == null ? TaskHelpers.GetCompletedTask() : pipeline.Invoke(context, cancellationToken);
         }
 
-        private static void InvokeOnErrorHook(NancyContext context, ErrorPipeline pipeline, Exception ex)
+        private void InvokeOnErrorHook(NancyContext context, ErrorPipeline pipeline, Exception ex)
         {
             try
             {
@@ -263,14 +323,14 @@
                     throw new RequestExecutionException(ex);
                 }
 
-                var onErrorResponse = pipeline.Invoke(context, ex);
+                var onErrorResult = pipeline.Invoke(context, ex);
 
-                if (onErrorResponse == null)
+                if (onErrorResult == null)
                 {
                     throw new RequestExecutionException(ex);
                 }
 
-                context.Response = onErrorResponse;
+                context.Response = this.negotiator.NegotiateResponse(onErrorResult, context);
             }
             catch (Exception e)
             {
@@ -278,32 +338,6 @@
                 context.Items[ERROR_KEY] = e.ToString();
                 context.Items[ERROR_EXCEPTION] = e;
             }
-        }
-
-        private static Exception FlattenException(Exception exception)
-        {
-            if (exception is AggregateException)
-            {
-                var aggregateException = exception as AggregateException;
-
-                var flattenedAggregateException = aggregateException.Flatten();
-
-                //If we have more than one exception in the AggregateException
-                //we have to send all exceptions back in order not to swallow any exceptions.
-                if (flattenedAggregateException.InnerExceptions.Count > 1)
-                {
-                    return flattenedAggregateException;
-                }
-
-                return flattenedAggregateException.InnerException;
-            }
-
-            if (exception != null && exception.InnerException != null)
-            {
-                return FlattenException(exception.InnerException);
-            }
-
-            return exception;
         }
     }
 }

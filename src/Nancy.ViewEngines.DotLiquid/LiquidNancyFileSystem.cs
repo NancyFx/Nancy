@@ -5,7 +5,7 @@
     using System.Text.RegularExpressions;
     using global::DotLiquid;
     using global::DotLiquid.FileSystems;
-    using liquid = global::DotLiquid;    
+    using liquid = global::DotLiquid;
     using System.Linq;
 
     /// <summary>

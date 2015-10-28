@@ -96,7 +96,7 @@ namespace Nancy.Testing.Tests
         public void Should_create_new_wrapper_from_xml_response_if_not_already_present()
         {
             // Given
-            var response = new XmlResponse<Model>(new Model() { Dummy = "Data" }, "text/xml", new DefaultXmlSerializer());
+            var response = new XmlResponse<Model>(new Model() { Dummy = "Data" }, new DefaultXmlSerializer());
             var context = new NancyContext() { Response = response };
 
             // When

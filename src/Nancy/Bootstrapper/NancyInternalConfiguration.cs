@@ -22,7 +22,7 @@ namespace Nancy.Bootstrapper
     /// <summary>
     /// Configuration class for Nancy's internals.
     /// Contains implementation types/configuration for Nancy that usually
-    /// remain do not require overriding in "general use".
+    /// do not require overriding in "general use".
     /// </summary>
     public sealed class NancyInternalConfiguration
     {
@@ -73,10 +73,15 @@ namespace Nancy.Bootstrapper
                     StaticContentProvider = typeof(DefaultStaticContentProvider),
                     RouteResolverTrie = typeof(RouteResolverTrie),
                     TrieNodeFactory = typeof(TrieNodeFactory),
-                    RouteSegmentConstraints = AppDomainAssemblyTypeScanner.TypesOf<IRouteSegmentConstraint>().ToList()
+                    RouteSegmentConstraints = AppDomainAssemblyTypeScanner.TypesOf<IRouteSegmentConstraint>().ToList(),
+                    RequestTraceFactory = typeof(DefaultRequestTraceFactory),
+                    ResponseNegotiator = typeof(DefaultResponseNegotiator),
+                    RouteMetadataProviders = AppDomainAssemblyTypeScanner.TypesOf<IRouteMetadataProvider>().ToList()
                 };
             }
         }
+
+        public IList<Type> RouteMetadataProviders { get; set; }
 
         public Type RouteResolver { get; set; }
 
@@ -154,7 +159,11 @@ namespace Nancy.Bootstrapper
 
         public Type TrieNodeFactory { get; set; }
 
-        public IList<Type> RouteSegmentConstraints { get; set; } 
+        public IList<Type> RouteSegmentConstraints { get; set; }
+
+        public Type RequestTraceFactory { get; set; }
+
+        public Type ResponseNegotiator { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether the configuration is valid.
@@ -191,7 +200,7 @@ namespace Nancy.Bootstrapper
         /// <summary>
         /// Returns the configuration types as a TypeRegistration collection
         /// </summary>
-        /// <returns>TypeRegistration collection representing the configurationt types</returns>
+        /// <returns>TypeRegistration collection representing the configuration types</returns>
         public IEnumerable<TypeRegistration> GetTypeRegistations()
         {
             return new[]
@@ -206,30 +215,32 @@ namespace Nancy.Bootstrapper
                 new TypeRegistration(typeof(INancyContextFactory), this.ContextFactory),
                 new TypeRegistration(typeof(INancyModuleBuilder), this.NancyModuleBuilder),
                 new TypeRegistration(typeof(IResponseFormatterFactory), this.ResponseFormatterFactory),
-                new TypeRegistration(typeof(IModelBinderLocator), this.ModelBinderLocator), 
-                new TypeRegistration(typeof(IBinder), this.Binder), 
-                new TypeRegistration(typeof(BindingDefaults), this.BindingDefaults), 
-                new TypeRegistration(typeof(IFieldNameConverter), this.FieldNameConverter), 
+                new TypeRegistration(typeof(IModelBinderLocator), this.ModelBinderLocator),
+                new TypeRegistration(typeof(IBinder), this.Binder),
+                new TypeRegistration(typeof(BindingDefaults), this.BindingDefaults),
+                new TypeRegistration(typeof(IFieldNameConverter), this.FieldNameConverter),
                 new TypeRegistration(typeof(IViewResolver), this.ViewResolver),
                 new TypeRegistration(typeof(IViewCache), this.ViewCache),
                 new TypeRegistration(typeof(IRenderContextFactory), this.RenderContextFactory),
                 new TypeRegistration(typeof(IViewLocationProvider), this.ViewLocationProvider),
-                new TypeRegistration(typeof(ICsrfTokenValidator), this.CsrfTokenValidator), 
-                new TypeRegistration(typeof(IObjectSerializer), this.ObjectSerializer), 
+                new TypeRegistration(typeof(ICsrfTokenValidator), this.CsrfTokenValidator),
+                new TypeRegistration(typeof(IObjectSerializer), this.ObjectSerializer),
                 new TypeRegistration(typeof(IModelValidatorLocator), this.ModelValidatorLocator),
                 new TypeRegistration(typeof(IRequestTracing), this.RequestTracing),
                 new TypeRegistration(typeof(IRouteInvoker), this.RouteInvoker),
                 new TypeRegistration(typeof(IRequestDispatcher), this.RequestDispatcher),
-                new TypeRegistration(typeof(IDiagnostics), this.Diagnostics), 
+                new TypeRegistration(typeof(IDiagnostics), this.Diagnostics),
                 new TypeRegistration(typeof(IRouteSegmentExtractor), this.RouteSegmentExtractor),
                 new TypeRegistration(typeof(IRouteDescriptionProvider), this.RouteDescriptionProvider),
                 new TypeRegistration(typeof(ICultureService), this.CultureService),
-                new TypeRegistration(typeof(ITextResource), this.TextResource), 
-                new TypeRegistration(typeof(IResourceAssemblyProvider), this.ResourceAssemblyProvider), 
-                new TypeRegistration(typeof(IResourceReader), this.ResourceReader), 
-                new TypeRegistration(typeof(IStaticContentProvider), this.StaticContentProvider), 
-                new TypeRegistration(typeof(IRouteResolverTrie), this.RouteResolverTrie), 
-                new TypeRegistration(typeof(ITrieNodeFactory), this.TrieNodeFactory), 
+                new TypeRegistration(typeof(ITextResource), this.TextResource),
+                new TypeRegistration(typeof(IResourceAssemblyProvider), this.ResourceAssemblyProvider),
+                new TypeRegistration(typeof(IResourceReader), this.ResourceReader),
+                new TypeRegistration(typeof(IStaticContentProvider), this.StaticContentProvider),
+                new TypeRegistration(typeof(IRouteResolverTrie), this.RouteResolverTrie),
+                new TypeRegistration(typeof(ITrieNodeFactory), this.TrieNodeFactory),
+                new TypeRegistration(typeof(IRequestTraceFactory), this.RequestTraceFactory),
+                new TypeRegistration(typeof(IResponseNegotiator), this.ResponseNegotiator)
             };
         }
 
@@ -241,11 +252,12 @@ namespace Nancy.Bootstrapper
         {
             return new[]
             {
-                new CollectionTypeRegistration(typeof(IResponseProcessor), this.ResponseProcessors), 
-                new CollectionTypeRegistration(typeof(ISerializer), this.Serializers), 
-                new CollectionTypeRegistration(typeof(IStatusCodeHandler), this.StatusCodeHandlers), 
+                new CollectionTypeRegistration(typeof(IResponseProcessor), this.ResponseProcessors),
+                new CollectionTypeRegistration(typeof(ISerializer), this.Serializers),
+                new CollectionTypeRegistration(typeof(IStatusCodeHandler), this.StatusCodeHandlers),
                 new CollectionTypeRegistration(typeof(IDiagnosticsProvider), this.InteractiveDiagnosticProviders),
-                new CollectionTypeRegistration(typeof(IRouteSegmentConstraint), this.RouteSegmentConstraints), 
+                new CollectionTypeRegistration(typeof(IRouteSegmentConstraint), this.RouteSegmentConstraints),
+                new CollectionTypeRegistration(typeof(IRouteMetadataProvider), this.RouteMetadataProviders),
             };
         }
     }

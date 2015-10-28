@@ -1,3 +1,5 @@
+using Nancy.Diagnostics;
+
 namespace Nancy.Conventions
 {
     using System;
@@ -15,7 +17,7 @@ namespace Nancy.Conventions
     {
         private static readonly ConcurrentDictionary<ResponseFactoryCacheKey, Func<NancyContext, Response>> ResponseFactoryCache;
         private static readonly Regex PathReplaceRegex = new Regex(@"[/\\]", RegexOptions.Compiled);
-		
+
         static StaticContentConventionBuilder()
         {
             ResponseFactoryCache = new ConcurrentDictionary<ResponseFactoryCacheKey, Func<NancyContext, Response>>();
@@ -47,16 +49,16 @@ namespace Nancy.Conventions
                     return null;
                 }
 
-                var pathWithoutFilename = 
+                var pathWithoutFilename =
                     GetPathWithoutFilename(fileName, path);
 
                 if (!pathWithoutFilename.StartsWith(requestedPath, StringComparison.OrdinalIgnoreCase))
                 {
-                    ctx.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] The requested resource '", path, "' does not match convention mapped to '", requestedPath, "'" )));
+                    (ctx.Trace.TraceLog ?? new NullLog()).WriteLog(x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] The requested resource '", path, "' does not match convention mapped to '", requestedPath, "'" )));
                     return null;
                 }
 
-                contentPath = 
+                contentPath =
                     GetContentPath(requestedPath, contentPath);
 
                 if (contentPath.Equals("/"))
@@ -72,7 +74,7 @@ namespace Nancy.Conventions
         }
 
         /// <summary>
-        /// Adds a directory-based convention for static convention.
+        /// Adds a file-based convention for static convention.
         /// </summary>
         /// <param name="requestedFile">The file that should be matched with the request.</param>
         /// <param name="contentFile">The file that should be served when the requested path is matched.</param>
@@ -106,7 +108,7 @@ namespace Nancy.Conventions
             catch (Exception)
             {
             }
-                
+
             return null;
         }
 
@@ -129,7 +131,7 @@ namespace Nancy.Conventions
             {
                 context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] Attempting to resolve static content '", pathAndRootPair, "'")));
 
-                var extension = 
+                var extension =
                     Path.GetExtension(pathAndRootPair.Path);
 
                 if (!string.IsNullOrEmpty(extension))
@@ -143,16 +145,16 @@ namespace Nancy.Conventions
                     return ctx => null;
                 }
 
-                var transformedRequestPath = 
+                var transformedRequestPath =
                     GetSafeRequestPath(pathAndRootPair.Path, requestedPath, contentPath);
 
-                transformedRequestPath = 
+                transformedRequestPath =
                     GetEncodedPath(transformedRequestPath);
 
                 var fileName =
                     Path.GetFullPath(Path.Combine(applicationRootPath, transformedRequestPath));
 
-                var contentRootPath = 
+                var contentRootPath =
                     Path.GetFullPath(Path.Combine(applicationRootPath, GetEncodedPath(contentPath)));
 
                 if (!IsWithinContentFolder(contentRootPath, fileName))
@@ -179,11 +181,11 @@ namespace Nancy.Conventions
 
         private static string GetPathWithoutFilename(string fileName, string path)
         {
-            var pathWithoutFileName = 
+            var pathWithoutFileName =
                 path.Replace(fileName, string.Empty);
 
-            return (pathWithoutFileName.Equals("/")) ? 
-                pathWithoutFileName : 
+            return (pathWithoutFileName.Equals("/")) ?
+                pathWithoutFileName :
                 pathWithoutFileName.TrimEnd(new[] {'/'});
         }
 
@@ -271,7 +273,7 @@ namespace Nancy.Conventions
                 {
                     return true;
                 }
-                
+
                 if (obj.GetType() != this.GetType())
                 {
                     return false;

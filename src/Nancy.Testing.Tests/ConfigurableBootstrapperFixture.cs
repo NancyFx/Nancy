@@ -196,13 +196,17 @@
 
             public Action<NancyContext> PostRequestHook { get; set; }
 
-            public Func<NancyContext, Exception, Response> OnErrorHook { get; set; }
+            public Func<NancyContext, Exception, dynamic> OnErrorHook { get; set; }
 
             public Func<NancyContext, IPipelines> RequestPipelinesFactory { get; set; }
 
             public Task<NancyContext> HandleRequest(Request request, Func<NancyContext, NancyContext> preRequest, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
+            }
+
+            public void Dispose()
+            {
             }
         }
 

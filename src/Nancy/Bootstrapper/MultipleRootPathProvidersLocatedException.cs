@@ -22,7 +22,8 @@
         /// </summary>
         public MultipleRootPathProvidersLocatedException()
             : base(DefaultMessage)
-        {}
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MultipleRootPathProvidersLocatedException"/> class.
@@ -74,7 +75,7 @@
         /// <param name="providerTypes">The provider types.</param>
         private void StoreProviderTypes(IEnumerable<Type> providerTypes)
         {
-            this.ProviderTypes = 
+            this.ProviderTypes =
                 providerTypes.ToList().AsReadOnly();
 
             this.Data.Add("ProviderTypes", this.ProviderTypes);
@@ -86,9 +87,9 @@
         /// <remarks>
         /// Message generated will be of the format:
         /// <example>
-        /// More than one IRootPathProvider was found: 
-        ///    Nancy.Tests.Functional.Tests.CustomRootPathProvider2 
-        ///    Nancy.Tests.Functional.Tests.CustomRootPathProvider 
+        /// More than one IRootPathProvider was found:
+        ///    Nancy.Tests.Functional.Tests.CustomRootPathProvider2
+        ///    Nancy.Tests.Functional.Tests.CustomRootPathProvider
         /// and since we do not know which one you want to use, you need to override the RootPathProvider property on your bootstrapper and specify which one to use. Sorry for the inconvenience.
         /// </example>
         /// </remarks>
@@ -107,7 +108,7 @@
                 return base.Message;
             }
 
-            var builder = 
+            var builder =
                 new StringBuilder(DefaultMessageIntroduction);
 
             foreach (var providerType in this.ProviderTypes)

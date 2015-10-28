@@ -2,7 +2,6 @@ namespace Nancy.ModelBinding
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.Linq;
     using System.Reflection;
     using System.Text.RegularExpressions;
@@ -24,10 +23,10 @@ namespace Nancy.ModelBinding
 
         private readonly BindingDefaults defaults;
 
-        private readonly static MethodInfo toListMethodInfo = typeof(Enumerable).GetMethod("ToList", BindingFlags.Public | BindingFlags.Static);
-        private readonly static MethodInfo toArrayMethodInfo = typeof(Enumerable).GetMethod("ToArray", BindingFlags.Public | BindingFlags.Static);
-        private static readonly Regex bracketRegex = new Regex(@"\[(\d+)\]\z", RegexOptions.Compiled);
-        private static readonly Regex underscoreRegex = new Regex(@"_(\d+)\z", RegexOptions.Compiled);
+        private readonly static MethodInfo ToListMethodInfo = typeof(Enumerable).GetMethod("ToList", BindingFlags.Public | BindingFlags.Static);
+        private readonly static MethodInfo ToArrayMethodInfo = typeof(Enumerable).GetMethod("ToArray", BindingFlags.Public | BindingFlags.Static);
+        private static readonly Regex BracketRegex = new Regex(@"\[(\d+)\]\z", RegexOptions.Compiled);
+        private static readonly Regex UnderscoreRegex = new Regex(@"_(\d+)\z", RegexOptions.Compiled);
 
         public DefaultBinder(IEnumerable<ITypeConverter> typeConverters, IEnumerable<IBodyDeserializer> bodyDeserializers, IFieldNameConverter fieldNameConverter, BindingDefaults defaults)
         {
@@ -64,7 +63,7 @@ namespace Nancy.ModelBinding
         /// <param name="modelType">Model type to bind to</param>
         /// <param name="instance">Optional existing instance</param>
         /// <param name="configuration">The <see cref="BindingConfig"/> that should be applied during binding.</param>
-        /// <param name="blackList">Blacklisted property names</param>
+        /// <param name="blackList">Blacklisted binding property names</param>
         /// <returns>Bound model</returns>
         public object Bind(NancyContext context, Type modelType, object instance, BindingConfig configuration, params string[] blackList)
         {
@@ -93,11 +92,20 @@ namespace Nancy.ModelBinding
             var bindingContext =
                 this.CreateBindingContext(context, modelType, instance, configuration, blackList, genericType);
 
-            var bodyDeserializedModel = this.DeserializeRequestBody(bindingContext);
-
-            if (bodyDeserializedModel != null)
+            try
             {
-                UpdateModelWithDeserializedModel(bodyDeserializedModel, bindingContext);
+                var bodyDeserializedModel = this.DeserializeRequestBody(bindingContext);
+                if (bodyDeserializedModel != null)
+                {
+                    UpdateModelWithDeserializedModel(bodyDeserializedModel, bindingContext);
+                }
+            }
+            catch (Exception exception)
+            {
+                if (!bindingContext.Configuration.IgnoreErrors)
+                {
+                    throw new ModelBindingException(modelType, innerException: exception);
+                }
             }
 
             var bindingExceptions = new List<PropertyBindingException>();
@@ -106,7 +114,7 @@ namespace Nancy.ModelBinding
             {
                 if (bindingContext.DestinationType.IsCollection() || bindingContext.DestinationType.IsArray() ||bindingContext.DestinationType.IsEnumerable())
                 {
-                    var loopCount = GetBindingListInstanceCount(context);
+                    var loopCount = this.GetBindingListInstanceCount(context);
                     var model = (IList)bindingContext.Model;
                     for (var i = 0; i < loopCount; i++)
                     {
@@ -121,18 +129,18 @@ namespace Nancy.ModelBinding
                             model.Add(genericinstance);
                         }
 
-                        foreach (var modelProperty in bindingContext.ValidModelProperties)
+                        foreach (var modelProperty in bindingContext.ValidModelBindingMembers)
                         {
-                            var existingCollectionValue = modelProperty.GetValue(genericinstance, null);
+                            var existingCollectionValue = modelProperty.GetValue(genericinstance);
 
                             var collectionStringValue = GetValue(modelProperty.Name, bindingContext, i);
 
-                            if (BindingValueIsValid(collectionStringValue, existingCollectionValue, modelProperty,
+                            if (this.BindingValueIsValid(collectionStringValue, existingCollectionValue, modelProperty,
                                                     bindingContext))
                             {
                                 try
                                 {
-                                    BindProperty(modelProperty, collectionStringValue, bindingContext, genericinstance);
+                                    BindValue(modelProperty, collectionStringValue, bindingContext, genericinstance);
                                 }
                                 catch (PropertyBindingException ex)
                                 {
@@ -144,17 +152,17 @@ namespace Nancy.ModelBinding
                 }
                 else
                 {
-                    foreach (var modelProperty in bindingContext.ValidModelProperties)
+                    foreach (var modelProperty in bindingContext.ValidModelBindingMembers)
                     {
-                        var existingValue = modelProperty.GetValue(bindingContext.Model, null);
+                        var existingValue = modelProperty.GetValue(bindingContext.Model);
 
                         var stringValue = GetValue(modelProperty.Name, bindingContext);
 
-                        if (BindingValueIsValid(stringValue, existingValue, modelProperty, bindingContext))
+                        if (this.BindingValueIsValid(stringValue, existingValue, modelProperty, bindingContext))
                         {
                             try
                             {
-                                BindProperty(modelProperty, stringValue, bindingContext);
+                                BindValue(modelProperty, stringValue, bindingContext);
                             }
                             catch (PropertyBindingException ex)
                             {
@@ -172,13 +180,13 @@ namespace Nancy.ModelBinding
 
             if (modelType.IsArray())
             {
-                var generictoArrayMethod = toArrayMethodInfo.MakeGenericMethod(new[] { genericType });
+                var generictoArrayMethod = ToArrayMethodInfo.MakeGenericMethod(new[] { genericType });
                 return generictoArrayMethod.Invoke(null, new[] { bindingContext.Model });
             }
             return bindingContext.Model;
         }
 
-        private bool BindingValueIsValid(string bindingValue, object existingValue, PropertyInfo modelProperty, BindingContext bindingContext)
+        private bool BindingValueIsValid(string bindingValue, object existingValue, BindingMemberInfo modelProperty, BindingContext bindingContext)
         {
             return (!String.IsNullOrEmpty(bindingValue) &&
                     (IsDefaultValue(existingValue, modelProperty.PropertyType) ||
@@ -194,14 +202,14 @@ namespace Nancy.ModelBinding
         ///  IntProperty_7
         ///  StringProperty_8
         ///  You'll end up with a list of 3 matches: 5,7,8
-        /// 
+        ///
         /// </summary>
         /// <param name="context">Current Context </param>
         /// <returns>An int containing the number of elements</returns>
         private int GetBindingListInstanceCount(NancyContext context)
         {
             var dictionary = context.Request.Form as IDictionary<string, object>;
-            
+
             if (dictionary == null)
             {
                 return 0;
@@ -212,13 +220,13 @@ namespace Nancy.ModelBinding
 
         private static int IsMatch(string item)
         {
-            var bracketMatch = bracketRegex.Match(item);
+            var bracketMatch = BracketRegex.Match(item);
             if (bracketMatch.Success)
             {
                 return int.Parse(bracketMatch.Groups[1].Value);
             }
 
-            var underscoreMatch = underscoreRegex.Match(item);
+            var underscoreMatch = UnderscoreRegex.Match(item);
 
             if (underscoreMatch.Success)
             {
@@ -247,7 +255,7 @@ namespace Nancy.ModelBinding
                 {
                     var model = (IList)bindingContext.Model;
 
-                    if (o.GetType().IsValueType || o.GetType() == typeof(string))
+                    if (o.GetType().IsValueType || o is string)
                     {
                         HandleValueTypeCollectionElement(model, count, o);
                     }
@@ -261,10 +269,10 @@ namespace Nancy.ModelBinding
             }
             else
             {
-                foreach (var modelProperty in bindingContext.ValidModelProperties)
+                foreach (var modelProperty in bindingContext.ValidModelBindingMembers)
                 {
                     var existingValue =
-                        modelProperty.GetValue(bindingContext.Model, null);
+                        modelProperty.GetValue(bindingContext.Model);
 
                     if (IsDefaultValue(existingValue, modelProperty.PropertyType) || bindingContext.Configuration.Overwrite)
                     {
@@ -276,7 +284,7 @@ namespace Nancy.ModelBinding
 
         private static void HandleValueTypeCollectionElement(IList model, int count, object o)
         {
-            // If the instance specified in the binder contains the n-th element use that 
+            // If the instance specified in the binder contains the n-th element use that
             if (model.Count > count)
             {
                 return;
@@ -299,9 +307,9 @@ namespace Nancy.ModelBinding
                 model.Add(genericTypeInstance);
             }
 
-            foreach (var modelProperty in bindingContext.ValidModelProperties)
+            foreach (var modelProperty in bindingContext.ValidModelBindingMembers)
             {
-                var existingValue = modelProperty.GetValue(genericTypeInstance, null);
+                var existingValue = modelProperty.GetValue(genericTypeInstance);
 
                 if (IsDefaultValue(existingValue, modelProperty.PropertyType) || bindingContext.Configuration.Overwrite)
                 {
@@ -310,11 +318,11 @@ namespace Nancy.ModelBinding
             }
         }
 
-        private static void CopyValue(PropertyInfo modelProperty, object source, object destination)
+        private static void CopyValue(BindingMemberInfo modelProperty, object source, object destination)
         {
-            var newValue = modelProperty.GetValue(source, null);
+            var newValue = modelProperty.GetValue(source);
 
-            modelProperty.SetValue(destination, newValue, null);
+            modelProperty.SetValue(destination, newValue);
         }
 
         private static bool IsDefaultValue(object existingValue, Type propertyType)
@@ -332,7 +340,7 @@ namespace Nancy.ModelBinding
                 Context = context,
                 DestinationType = modelType,
                 Model = CreateModel(modelType, genericType, instance),
-                ValidModelProperties = GetProperties(modelType, genericType, blackList),
+                ValidModelBindingMembers = GetBindingMembers(modelType, genericType, blackList).ToList(),
                 RequestData = this.GetDataFields(context),
                 GenericType = genericType,
                 TypeConverters = this.typeConverters.Concat(this.defaults.DefaultTypeConverters),
@@ -343,8 +351,8 @@ namespace Nancy.ModelBinding
         {
             var dictionaries = new IDictionary<string, string>[]
                 {
-                    ConvertDynamicDictionary(context.Request.Form), 
-                    ConvertDynamicDictionary(context.Request.Query), 
+                    ConvertDynamicDictionary(context.Request.Form),
+                    ConvertDynamicDictionary(context.Request.Query),
                     ConvertDynamicDictionary(context.Parameters)
                 };
 
@@ -363,7 +371,12 @@ namespace Nancy.ModelBinding
                     memberName => (string)dictionary[memberName]);
         }
 
-        private static void BindProperty(PropertyInfo modelProperty, string stringValue, BindingContext context)
+        private static void BindValue(BindingMemberInfo modelProperty, string stringValue, BindingContext context)
+        {
+            BindValue(modelProperty, stringValue, context, context.Model);
+        }
+
+        private static void BindValue(BindingMemberInfo modelProperty, string stringValue, BindingContext context, object targetInstance)
         {
             var destinationType = modelProperty.PropertyType;
 
@@ -374,7 +387,7 @@ namespace Nancy.ModelBinding
             {
                 try
                 {
-                    SetPropertyValue(modelProperty, context.Model, typeConverter.Convert(stringValue, destinationType, context));
+                    SetBindingMemberValue(modelProperty, targetInstance, typeConverter.Convert(stringValue, destinationType, context));
                 }
                 catch (Exception e)
                 {
@@ -383,54 +396,22 @@ namespace Nancy.ModelBinding
             }
             else if (destinationType == typeof(string))
             {
-                SetPropertyValue(modelProperty, context.Model, stringValue);
+                SetBindingMemberValue(modelProperty, targetInstance, stringValue);
             }
         }
 
-        private static void BindProperty(PropertyInfo modelProperty, string stringValue, BindingContext context, object genericInstance)
-        {
-            var destinationType = modelProperty.PropertyType;
-
-            var typeConverter =
-                context.TypeConverters.FirstOrDefault(c => c.CanConvertTo(destinationType, context));
-
-            if (typeConverter != null)
-            {
-                try
-                {
-                    SetPropertyValue(modelProperty, genericInstance, typeConverter.Convert(stringValue, destinationType, context));
-                }
-                catch (Exception e)
-                {
-                    throw new PropertyBindingException(modelProperty.Name, stringValue, e);
-                }
-            }
-            else if (destinationType == typeof(string))
-            {
-                SetPropertyValue(modelProperty, context.Model, stringValue);
-            }
-        }
-
-        private static void SetPropertyValue(PropertyInfo modelProperty, object model, object value)
+        private static void SetBindingMemberValue(BindingMemberInfo modelProperty, object model, object value)
         {
             // TODO - catch reflection exceptions?
-            modelProperty.SetValue(model, value, null);
+            modelProperty.SetValue(model, value);
         }
 
-        private static IEnumerable<PropertyInfo> GetProperties(Type modelType, Type genericType, IEnumerable<string> blackList)
+        private static IEnumerable<BindingMemberInfo> GetBindingMembers(Type modelType, Type genericType, IEnumerable<string> blackList)
         {
-            if (genericType != null)
-            {
-                return genericType
-                .GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.CanWrite && !blackList.Contains(p.Name, StringComparer.InvariantCulture))
-                .Where(property => !property.GetIndexParameters().Any());
-            }
-            else
-            {
-                return modelType
-                .GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.CanWrite && !blackList.Contains(p.Name, StringComparer.InvariantCulture))
-                .Where(property => !property.GetIndexParameters().Any());
-            }
+            var blackListHash = new HashSet<string>(blackList, StringComparer.Ordinal);
+
+            return BindingMemberInfo.Collect(genericType ?? modelType)
+                .Where(member => !blackListHash.Contains(member.Name));
         }
 
         private static object CreateModel(Type modelType, Type genericType, object instance)
@@ -445,7 +426,7 @@ namespace Nancy.ModelBinding
                     {
                         return instance;
                     }
-                    var genericMethod = toListMethodInfo.MakeGenericMethod(genericType);
+                    var genericMethod = ToListMethodInfo.MakeGenericMethod(genericType);
                     return genericMethod.Invoke(null, new[] { instance });
                 }
 
@@ -456,11 +437,11 @@ namespace Nancy.ModelBinding
 
             if (instance == null)
             {
-                return Activator.CreateInstance(modelType);
+                return Activator.CreateInstance(modelType, true);
             }
 
             return !modelType.IsInstanceOfType(instance) ?
-                Activator.CreateInstance(modelType) :
+                Activator.CreateInstance(modelType, true) :
                 instance;
         }
 
@@ -482,17 +463,17 @@ namespace Nancy.ModelBinding
                         context.RequestData.Where(c =>
                         {
                             var indexId = IsMatch(c.Key);
-                            return c.Key.StartsWith(propertyName) && indexId != -1 && indexId == indexindexes[index];
+                            return c.Key.StartsWith(propertyName, StringComparison.OrdinalIgnoreCase) && indexId != -1 && indexId == indexindexes[index];
                         })
                         .Select(k => k.Value)
                         .FirstOrDefault();
 
                     return propertyValue ?? string.Empty;
                 }
-                
-                return String.Empty;
+
+                return string.Empty;
             }
-            return context.RequestData.ContainsKey(propertyName) ? context.RequestData[propertyName] : String.Empty;
+            return context.RequestData.ContainsKey(propertyName) ? context.RequestData[propertyName] : string.Empty;
         }
 
         private object DeserializeRequestBody(BindingContext context)
@@ -503,18 +484,13 @@ namespace Nancy.ModelBinding
             }
 
             var contentType = GetRequestContentType(context.Context);
-            var bodyDeserializer = this.bodyDeserializers.FirstOrDefault(b => b.CanDeserialize(contentType, context));
 
-            if (bodyDeserializer != null)
-            {
-                return bodyDeserializer.Deserialize(contentType, context.Context.Request.Body, context);
-            }
+            var bodyDeserializer = this.bodyDeserializers.FirstOrDefault(b => b.CanDeserialize(contentType, context))
+                ?? this.defaults.DefaultBodyDeserializers.FirstOrDefault(b => b.CanDeserialize(contentType, context));
 
-            bodyDeserializer = this.defaults.DefaultBodyDeserializers.FirstOrDefault(b => b.CanDeserialize(contentType, context));
-
-            return bodyDeserializer != null ?
-                bodyDeserializer.Deserialize(contentType, context.Context.Request.Body, context) :
-                null;
+            return bodyDeserializer != null
+                ? bodyDeserializer.Deserialize(contentType, context.Context.Request.Body, context)
+                : null;
         }
 
         private static string GetRequestContentType(NancyContext context)

@@ -1,4 +1,4 @@
-// 
+//
 // System.Web.HttpUtility
 //
 // Authors:
@@ -16,10 +16,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -43,7 +43,12 @@ namespace Nancy.Helpers
         sealed class HttpQSCollection : NameValueCollection
         {
             public HttpQSCollection()
-                : base(StaticConfiguration.CaseSensitive ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase)
+                : this(StaticConfiguration.CaseSensitive)
+            {
+            }
+
+            public HttpQSCollection(bool caseSensitive)
+                : base(caseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase)
             {
             }
 
@@ -96,7 +101,7 @@ namespace Nancy.Helpers
 #if NET_4_0
 			if (s == null)
 				return null;
-			
+
 			using (var sw = new StringWriter ()) {
 				HttpEncoder.Current.HtmlAttributeEncode (s, sw);
 				return sw.ToString ();
@@ -508,7 +513,7 @@ namespace Nancy.Helpers
 #if NET_4_0
 			if (s == null)
 				return null;
-			
+
 			using (var sw = new StringWriter ()) {
 				HttpEncoder.Current.HtmlDecode (s, sw);
 				return sw.ToString ();
@@ -549,7 +554,7 @@ namespace Nancy.Helpers
 #if NET_4_0
 			if (s == null)
 				return null;
-			
+
 			using (var sw = new StringWriter ()) {
 				HttpEncoder.Current.HtmlEncode (s, sw);
 				return sw.ToString ();
@@ -593,7 +598,7 @@ namespace Nancy.Helpers
 			IHtmlString htmlString = value as IHtmlString;
 			if (htmlString != null)
 				return htmlString.ToHtmlString ();
-			
+
 			return HtmlEncode (value.ToString ());
 		}
 
@@ -685,18 +690,28 @@ namespace Nancy.Helpers
             return ParseQueryString(query, Encoding.UTF8);
         }
 
+        public static NameValueCollection ParseQueryString(string query, bool caseSensitive)
+        {
+            return ParseQueryString(query, Encoding.UTF8, caseSensitive);
+        }
+
         public static NameValueCollection ParseQueryString(string query, Encoding encoding)
+        {
+            return ParseQueryString(query, encoding, StaticConfiguration.CaseSensitive);
+        }
+
+        public static NameValueCollection ParseQueryString(string query, Encoding encoding, bool caseSensitive)
         {
             if (query == null)
                 throw new ArgumentNullException("query");
             if (encoding == null)
                 throw new ArgumentNullException("encoding");
             if (query.Length == 0 || (query.Length == 1 && query[0] == '?'))
-                return new HttpQSCollection();
+                return new HttpQSCollection(caseSensitive);
             if (query[0] == '?')
                 query = query.Substring(1);
 
-            NameValueCollection result = new HttpQSCollection();
+            NameValueCollection result = new HttpQSCollection(caseSensitive);
             ParseQueryString(query, encoding, result);
             return result;
         }
@@ -706,59 +721,35 @@ namespace Nancy.Helpers
             if (query.Length == 0)
                 return;
 
-            string decoded = HtmlDecode(query);
-            int decodedLength = decoded.Length;
-            int namePos = 0;
-            bool first = true;
-            while (namePos <= decodedLength)
+            var decoded = HtmlDecode(query);
+            var segments = decoded.Split(new[] {'&'}, StringSplitOptions.None);
+
+            foreach (var segment in segments)
             {
-                int valuePos = -1, valueEnd = -1;
-                for (int q = namePos; q < decodedLength; q++)
-                {
-                    if (valuePos == -1 && decoded[q] == '=')
-                    {
-                        valuePos = q + 1;
-                    }
-                    else if (decoded[q] == '&')
-                    {
-                        valueEnd = q;
-                        break;
-                    }
-                }
-
-                if (first)
-                {
-                    first = false;
-                    if (decoded[namePos] == '?')
-                        namePos++;
-                }
-
-                string name, value;
-                if (valuePos == -1)
-                {
-                    name = null;
-                    valuePos = namePos;
-                }
-                else
-                {
-                    name = UrlDecode(decoded.Substring(namePos, valuePos - namePos - 1), encoding);
-                }
-                if (valueEnd < 0)
-                {
-                    namePos = -1;
-                    valueEnd = decoded.Length;
-                }
-                else
-                {
-                    namePos = valueEnd + 1;
-                }
-                value = UrlDecode(decoded.Substring(valuePos, valueEnd - valuePos), encoding);
-
-                result.Add(name, value);
-                if (namePos == -1)
-                    break;
+                var keyValuePair = ParseQueryStringSegment(segment, encoding);
+                if (!Equals(keyValuePair, default(KeyValuePair<string, string>)))
+                    result.Add(keyValuePair.Key, keyValuePair.Value);
             }
         }
+
+        private static KeyValuePair<string, string> ParseQueryStringSegment(string segment, Encoding encoding)
+        {
+            if (String.IsNullOrWhiteSpace(segment))
+                return default(KeyValuePair<string, string>);
+
+            var indexOfEquals = segment.IndexOf('=');
+            if (indexOfEquals == -1)
+            {
+                var decoded = UrlDecode(segment, encoding);
+                return new KeyValuePair<string, string>(decoded, decoded);
+            }
+
+            var key = UrlDecode(segment.Substring(0, indexOfEquals), encoding);
+            var length = (segment.Length - indexOfEquals) - 1;
+            var value = UrlDecode(segment.Substring(indexOfEquals + 1, length), encoding);
+            return new KeyValuePair<string, string>(key, value);
+        }
+
         #endregion // Methods
     }
 }

@@ -4,15 +4,15 @@
     <title>Stateless Authentication Demo</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"> </script>
     <script src="Scripts/apiToken.js"> </script>
-    <script src="Scripts/api.js"> </script>                
+    <script src="Scripts/api.js"> </script>
 </head>
     <body>
         <div id='loggedIn' style='display: none;'><p>Welcome <span id='username'></span>. <a href='#' id='logout'>Logout</a></p></div>
-        
+
         <h1>Non-Secure Zone</h1>
         <p><a href="secure.html">Enter the "Secure Zone"!</a></p>
-        
-        
+
+
         <script type="text/javascript">
             $(document).ready(function () {
                 var apiToken = ApiToken.Get();

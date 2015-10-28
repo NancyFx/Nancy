@@ -9,7 +9,7 @@ namespace Nancy.Responses
     using Nancy.Helpers;
 
     /// <summary>
-    /// A response representing a file. 
+    /// A response representing a file.
     /// </summary>
     /// <remarks>If the response contains an invalid file (not found, empty name, missing extension and so on) the status code of the response will be set to <see cref="HttpStatusCode.NotFound"/>.</remarks>
     public class GenericFileResponse : Response
@@ -26,7 +26,7 @@ namespace Nancy.Responses
         ///  Size of buffer for transmitting file. Default size 4 Mb
         /// </summary>
         public static int BufferSize = 4 * 1024 * 1024;
-                
+
         static GenericFileResponse()
         {
             SafePaths = new List<string>();
@@ -34,18 +34,18 @@ namespace Nancy.Responses
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GenericFileResponse"/> for the file specified
-        /// by the <param name="filePath" /> parameter.
+        /// by the <paramref name="filePath"/> parameter.
         /// </summary>
         /// <param name="filePath">The name of the file, including path relative to the root of the application, that should be returned.</param>
         /// <remarks>The <see cref="MimeTypes.GetMimeType"/> method will be used to determine the mimetype of the file and will be used as the content-type of the response. If no match if found the content-type will be set to application/octet-stream.</remarks>
-        public GenericFileResponse(string filePath) : 
+        public GenericFileResponse(string filePath) :
             this (filePath, MimeTypes.GetMimeType(filePath))
         {
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GenericFileResponse"/> for the file specified
-        /// by the <param name="filePath" /> parameter.
+        /// by the <paramref name="filePath"/> parameter.
         /// </summary>
         /// <param name="filePath">The name of the file, including path relative to the root of the application, that should be returned.</param>
         /// <remarks>The <see cref="MimeTypes.GetMimeType"/> method will be used to determine the mimetype of the file and will be used as the content-type of the response. If no match if found the content-type will be set to application/octet-stream.</remarks>
@@ -57,14 +57,14 @@ namespace Nancy.Responses
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GenericFileResponse"/> for the file specified
-        /// by the <param name="filePath" /> parameter and the content-type specified by the <param name="contentType" /> parameter.
+        /// by the <paramref name="filePath"/> parameter and the content-type specified by the <paramref name="contentType"/> parameter.
         /// </summary>
         /// <param name="filePath">The name of the file, including path relative to the root of the application, that should be returned.</param>
         /// <param name="contentType">The content-type of the response.</param>
         /// <param name="context">Current context</param>
         public GenericFileResponse(string filePath, string contentType, NancyContext context = null)
         {
-            InitializeGenericFileResonse(filePath, contentType, context);
+            InitializeGenericFileResponse(filePath, contentType, context);
         }
 
         /// <summary>
@@ -86,11 +86,6 @@ namespace Nancy.Responses
 
         static bool IsSafeFilePath(string rootPath, string filePath)
         {
-            if (!Path.HasExtension(filePath))
-            {
-                return false;
-            }
-
             if (!File.Exists(filePath))
             {
                 return false;
@@ -98,10 +93,10 @@ namespace Nancy.Responses
 
             var fullPath = Path.GetFullPath(filePath);
 
-            return fullPath.StartsWith(rootPath, StringComparison.OrdinalIgnoreCase);
+            return fullPath.StartsWith(Path.GetFullPath(rootPath), StringComparison.OrdinalIgnoreCase);
         }
 
-        private void InitializeGenericFileResonse(string filePath, string contentType, NancyContext context)
+        private void InitializeGenericFileResponse(string filePath, string contentType, NancyContext context)
         {
             if (string.IsNullOrEmpty(filePath))
             {
@@ -145,6 +140,7 @@ namespace Nancy.Responses
             var lastWriteTimeUtc = fi.LastWriteTimeUtc;
             var etag = string.Concat("\"", lastWriteTimeUtc.Ticks.ToString("x"), "\"");
             var lastModified = lastWriteTimeUtc.ToString("R");
+            var length = fi.Length;
 
             if (CacheHelpers.ReturnNotModified(etag, lastWriteTimeUtc, context))
             {
@@ -157,7 +153,13 @@ namespace Nancy.Responses
 
             this.Headers["ETag"] = etag;
             this.Headers["Last-Modified"] = lastModified;
-            this.Contents = GetFileContent(fullPath, fi.Length);
+            this.Headers["Content-Length"] = length.ToString();
+
+            if (length > 0)
+            {
+                this.Contents = GetFileContent(fullPath, length);
+            }
+
             this.ContentType = contentType;
             this.StatusCode = HttpStatusCode.OK;
         }

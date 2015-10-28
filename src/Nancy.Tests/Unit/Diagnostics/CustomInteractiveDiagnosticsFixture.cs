@@ -8,8 +8,10 @@
     using Nancy.Cryptography;
     using Nancy.Culture;
     using Nancy.Diagnostics;
+    using Nancy.Localization;
     using Nancy.ModelBinding;
     using Nancy.Responses.Negotiation;
+    using Nancy.Routing;
     using Nancy.Routing.Constraints;
     using Nancy.Testing;
     using Nancy.Tests; //While this directive is redundant, it's required to build on mono 2.x to allow it to resolve the Should* extension methods
@@ -40,6 +42,9 @@
             private readonly IEnumerable<IResponseProcessor> responseProcessors;
             private readonly IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints;
             private readonly ICultureService cultureService;
+            private readonly IRequestTraceFactory requestTraceFactory;
+            private readonly IEnumerable<IRouteMetadataProvider> routeMetadataProviders;
+            private readonly ITextResource textResource;
 
             public FakeDiagnostics(
                 DiagnosticsConfiguration diagnosticsConfiguration,
@@ -49,7 +54,10 @@
                 IModelBinderLocator modelBinderLocator,
                 IEnumerable<IResponseProcessor> responseProcessors,
                 IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints,
-                ICultureService cultureService)
+                ICultureService cultureService,
+                IRequestTraceFactory requestTraceFactory,
+                IEnumerable<IRouteMetadataProvider> routeMetadataProviders,
+                ITextResource textResource)
             {
                 this.diagnosticsConfiguration = diagnosticsConfiguration;
                 this.diagnosticProviders = (new IDiagnosticsProvider[] { new FakeDiagnosticsProvider() }).ToArray();
@@ -60,6 +68,9 @@
                 this.responseProcessors = responseProcessors;
                 this.routeSegmentConstraints = routeSegmentConstraints;
                 this.cultureService = cultureService;
+                this.requestTraceFactory = requestTraceFactory;
+                this.routeMetadataProviders = routeMetadataProviders;
+                this.textResource = textResource;
             }
 
             public void Initialize(IPipelines pipelines)
@@ -73,7 +84,10 @@
                     this.modelBinderLocator,
                     this.responseProcessors,
                     this.routeSegmentConstraints,
-                    this.cultureService);
+                    this.cultureService,
+                    this.requestTraceFactory,
+                    this.routeMetadataProviders,
+                    this.textResource);
             }
         }
 

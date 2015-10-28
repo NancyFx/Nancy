@@ -1,9 +1,9 @@
 ﻿namespace Nancy.Routing
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Nancy.Bootstrapper;
-    using System;
+
     using Nancy.Culture;
 
     /// <summary>
@@ -13,6 +13,7 @@
     {
         private readonly IRouteSegmentExtractor routeSegmentExtractor;
         private readonly IRouteDescriptionProvider routeDescriptionProvider;
+        private readonly IEnumerable<IRouteMetadataProvider> routeMetadataProviders;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RouteCache"/> class.
@@ -20,10 +21,20 @@
         /// <param name="moduleCatalog">The <see cref="INancyModuleCatalog"/> that should be used by the cache.</param>
         /// <param name="contextFactory">The <see cref="INancyContextFactory"/> that should be used to create a context instance.</param>
         /// <param name="routeSegmentExtractor"> </param>
-        public RouteCache(INancyModuleCatalog moduleCatalog, INancyContextFactory contextFactory, IRouteSegmentExtractor routeSegmentExtractor, IRouteDescriptionProvider routeDescriptionProvider, ICultureService cultureService)
+        /// <param name="cultureService"></param>
+        /// <param name="routeMetadataProviders"></param>
+        /// <param name="routeDescriptionProvider"></param>
+        public RouteCache(
+            INancyModuleCatalog moduleCatalog,
+            INancyContextFactory contextFactory,
+            IRouteSegmentExtractor routeSegmentExtractor,
+            IRouteDescriptionProvider routeDescriptionProvider,
+            ICultureService cultureService,
+            IEnumerable<IRouteMetadataProvider> routeMetadataProviders)
         {
             this.routeSegmentExtractor = routeSegmentExtractor;
             this.routeDescriptionProvider = routeDescriptionProvider;
+            this.routeMetadataProviders = routeMetadataProviders;
 
             var request = new Request("GET", "/", "http");
 
@@ -55,10 +66,29 @@
                 {
                     routeDescription.Description = this.routeDescriptionProvider.GetDescription(module, routeDescription.Path);
                     routeDescription.Segments = this.routeSegmentExtractor.Extract(routeDescription.Path).ToArray();
+                    routeDescription.Metadata = this.GetRouteMetadata(module, routeDescription);
                 }
 
                 this.AddRoutesToCache(routes, moduleType);
             }
+        }
+
+        private RouteMetadata GetRouteMetadata(INancyModule module, RouteDescription routeDescription)
+        {
+            var data = new Dictionary<Type, object>();
+
+            foreach (var provider in this.routeMetadataProviders)
+            {
+                var type = provider.GetMetadataType(module, routeDescription);
+                var metadata = provider.GetMetadata(module, routeDescription);
+
+                if (type != null && metadata != null)
+                {
+                    data.Add(type, metadata);
+                }
+            }
+
+            return new RouteMetadata(data);
         }
 
         private void AddRoutesToCache(IEnumerable<RouteDescription> routes, Type moduleType)

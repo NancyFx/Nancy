@@ -1,6 +1,7 @@
 ﻿namespace Nancy.Tests.Fakes
 {
     using System.Collections.Generic;
+    using Nancy.Responses;
     using Nancy.ViewEngines;
     using Responses;
 

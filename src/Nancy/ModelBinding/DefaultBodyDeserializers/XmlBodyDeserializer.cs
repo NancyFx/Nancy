@@ -24,10 +24,10 @@ namespace Nancy.ModelBinding.DefaultBodyDeserializers
 
             var contentMimeType = contentType.Split(';')[0];
 
-            return contentMimeType.Equals("application/xml", StringComparison.InvariantCultureIgnoreCase) ||
-                   contentMimeType.Equals("text/xml", StringComparison.InvariantCultureIgnoreCase) ||
-                  (contentMimeType.StartsWith("application/vnd", StringComparison.InvariantCultureIgnoreCase) &&
-                   contentMimeType.EndsWith("+xml", StringComparison.InvariantCultureIgnoreCase));
+            return contentMimeType.Equals("application/xml", StringComparison.OrdinalIgnoreCase) ||
+                   contentMimeType.Equals("text/xml", StringComparison.OrdinalIgnoreCase) ||
+                  (contentMimeType.StartsWith("application/vnd", StringComparison.OrdinalIgnoreCase) &&
+                   contentMimeType.EndsWith("+xml", StringComparison.OrdinalIgnoreCase));
         }
 
         /// <summary>
@@ -39,6 +39,7 @@ namespace Nancy.ModelBinding.DefaultBodyDeserializers
         /// <returns>Model instance</returns>
         public object Deserialize(string contentType, Stream bodyStream, BindingContext context)
         {
+            bodyStream.Position = 0;
             var ser = new XmlSerializer(context.DestinationType);
             return ser.Deserialize(bodyStream);
         }

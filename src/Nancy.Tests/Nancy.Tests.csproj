@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\xunit.runner.visualstudio.2.0.0\build\net20\xunit.runner.visualstudio.props" Condition="Exists('..\packages\xunit.runner.visualstudio.2.0.0\build\net20\xunit.runner.visualstudio.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -84,7 +85,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FakeItEasy">
-      <HintPath>..\packages\FakeItEasy.1.14.0\lib\net40\FakeItEasy.dll</HintPath>
+      <HintPath>..\packages\FakeItEasy.1.19.0\lib\net40\FakeItEasy.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp">
     </Reference>
@@ -109,6 +110,10 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Fakes\PersonWithAgeField.cs" />
+    <Compile Include="Fakes\StructModel.cs" />
+    <Compile Include="Helpers\ExceptionExtensionsFixture.cs" />
+    <Compile Include="NoAppStartupsFixture.cs" />
     <Compile Include="Extensions\ResponseExtensions.cs" />
     <Compile Include="Fakes\FakeNancyModuleNoRoutes.cs" />
     <Compile Include="Fakes\FakeNancyModuleWithBasePath.cs" />
@@ -125,8 +130,26 @@
     <Compile Include="Fakes\Person.cs" />
     <Compile Include="Fakes\ViewModel.cs" />
     <Compile Include="Helpers\CacheHelpersFixture.cs" />
+    <Compile Include="Resources\Link.Texts.Designer.cs">
+      <DependentUpon>Link.Texts.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Resources\Menu.Texts.Designer.cs">
+      <DependentUpon>Menu.Texts.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Resources\Menu.Designer.cs">
+      <DependentUpon>Menu.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Responses\MaterialisingResponseFixture.cs" />
+    <Compile Include="Unit\Bootstrapper\BootstrapperLocatorFixture.cs" />
     <Compile Include="Unit\Bootstrapper\CollectionTypeRegistrationFixture.cs" />
     <Compile Include="Unit\Bootstrapper\InstanceRegistrationFixture.cs" />
+    <Compile Include="Unit\Bootstrapper\NancyBootstrapperWithRequestContainerBaseFixture.cs" />
     <Compile Include="Unit\Bootstrapper\PipelinesFixture.cs" />
     <Compile Include="Unit\Conventions\DefaultAcceptHeaderCoercionConventionsFixture.cs" />
     <Compile Include="Unit\Conventions\DefaultCultureConventionsFixture.cs" />
@@ -136,12 +159,23 @@
     <Compile Include="Unit\DefaultResponseFormatterFactoryFixture.cs" />
     <Compile Include="Unit\Diagnostics\ConcurrentLimitedCollectionFixture.cs" />
     <Compile Include="Unit\Diagnostics\CustomInteractiveDiagnosticsFixture.cs" />
+    <Compile Include="Unit\Diagnostics\DefaultRequestTraceFactoryFixture.cs" />
     <Compile Include="Unit\Diagnostics\DiagnosticsHookFixture.cs" />
+    <Compile Include="Unit\Diagnostics\InteractiveDiagnosticsFixture.cs" />
     <Compile Include="Unit\ErrorHandling\DefaultStatusCodeHandlerFixture.cs" />
     <Compile Include="Unit\Extensions\TypeExtensionsFixture.cs" />
     <Compile Include="Unit\FormatterExtensionsFixture.cs" />
     <Compile Include="Unit\Helpers\HttpUtilityFixture.cs" />
+    <Compile Include="Unit\JsonSerializerFixture.cs" />
+    <Compile Include="Unit\Json\JavaScriptSerializerFixture.cs" />
+    <Compile Include="Unit\Json\TestConverter.cs" />
+    <Compile Include="Unit\Json\TestConverterType.cs" />
+    <Compile Include="Unit\Json\TestData.cs" />
+    <Compile Include="Unit\Json\TestPrimitiveConverter.cs" />
+    <Compile Include="Unit\Json\TestPrimitiveConverterType.cs" />
+    <Compile Include="Unit\Json\TypeWithTuple.cs" />
     <Compile Include="Unit\MimeTypesFixture.cs" />
+    <Compile Include="Unit\ModelBinding\BindingMemberInfoFixture.cs" />
     <Compile Include="Unit\ModelBinding\ModelBindingExceptionFixture.cs" />
     <Compile Include="Unit\ModelBinding\PropertyBindingExceptionFixture.cs" />
     <Compile Include="Unit\NamedPipelineBaseFixture.cs" />
@@ -184,17 +218,20 @@
     <Compile Include="Unit\NancyModuleFixture.cs" />
     <Compile Include="Unit\AfterPipelineFixture.cs" />
     <Compile Include="Unit\BeforePipelineFixture.cs" />
+    <Compile Include="Unit\ErrorPipelineFixture.cs" />
     <Compile Include="Unit\RequestFixture.cs" />
     <Compile Include="Fakes\FakeModuleCatalog.cs" />
     <Compile Include="Unit\DefaultResponseFormatterFixture.cs" />
     <Compile Include="Unit\RequestHeadersFixture.cs" />
     <Compile Include="Unit\ResponseExtensionsFixture.cs" />
+    <Compile Include="Unit\Responses\DefaultJsonSerializerFixture.cs" />
     <Compile Include="Unit\Responses\EmbeddedFileResponseFixture.cs" />
     <Compile Include="Unit\Responses\Negotiation\MediaRangeFixture.cs" />
     <Compile Include="Unit\Responses\RedirectResponseFixture.cs" />
     <Compile Include="Unit\Responses\StreamResponseFixture.cs" />
     <Compile Include="Unit\Responses\TextResponseFixture.cs" />
     <Compile Include="Unit\Routing\ConstraintNodeRouteResolverFixture.cs" />
+    <Compile Include="Unit\Routing\ConstraintNodeRouteScoringFixture.cs" />
     <Compile Include="Unit\Routing\DefaultNancyModuleBuilderFixture.cs" />
     <Compile Include="Unit\Routing\DefaultRequestDispatcherFixture.cs" />
     <Compile Include="Unit\Routing\DefaultRouteCacheProviderFixture.cs" />
@@ -215,7 +252,9 @@
     <Compile Include="Unit\Security\CsrfFixture.cs" />
     <Compile Include="Unit\Security\DefaultCsrfTokenValidatorFixture.cs" />
     <Compile Include="Unit\Security\ModuleSecurityFixture.cs" />
+    <Compile Include="Unit\Security\SSLProxyFixture.cs" />
     <Compile Include="Unit\Security\UserIdentityExtensionsFixture.cs" />
+    <Compile Include="Unit\Sessions\CookieBasedSessionsConfigurationFixture.cs" />
     <Compile Include="Unit\Sessions\CookieBasedSessionsFixture.cs" />
     <Compile Include="Unit\Cryptography\RijndaelEncryptionProviderFixture.cs" />
     <Compile Include="Unit\Sessions\DefaultSessionObjectFormatterFixture.cs" />
@@ -257,6 +296,18 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\Link.Texts.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Link.Texts.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Menu.Texts.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Menu.Texts.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Menu.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Menu.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\Views\staticviewresource.html" />
   </ItemGroup>
   <ItemGroup>
@@ -312,6 +363,9 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

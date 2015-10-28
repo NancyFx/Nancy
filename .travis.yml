@@ -8,9 +8,11 @@ install:
   - sudo apt-get install mono-devel mono-gmcs mono-vbnc
   - sudo apt-get install gettext
   - sudo wget -q -P "/opt"  "http://samples.nancyfx.org/content/mono-3.0.12-x64-bin.tar.bz2"
-  - gem install rake
-  - gem install albacore --version "~> 1.0.rc"
+  - gem install bundle
+  - bundle
+  - echo \#\!/bin/bash >> ./travis.sh
   - echo set -e >> ./travis.sh
+  - echo set -x >> ./travis.sh
   - echo set -o pipefail >> ./travis.sh
   - echo echo Running on Mono 2.x >> ./travis.sh
   - echo rake mono >> ./travis.sh
@@ -20,6 +22,7 @@ install:
   - echo export LD_LIBRARY_PATH="/opt/mono/bin" >> ./travis.sh
   - echo rake mono >> ./travis.sh
   - chmod +x ./travis.sh
+  - cat travis.sh
 script: ./travis.sh
 notifications:
   email:

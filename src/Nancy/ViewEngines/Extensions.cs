@@ -5,12 +5,12 @@
     using System.Runtime.CompilerServices;
 
     /// <summary>
-    /// Contains miscellaneous extension methods. 
+    /// Contains miscellaneous extension methods.
     /// </summary>
     public static class Extensions
     {
         /// <summary>
-        /// Checks if the evaluated instance is an anonymous 
+        /// Checks if the evaluated instance is an anonymous
         /// </summary>
         /// <param name="source">The object instance to check.</param>
         /// <returns><see langword="true"/> if the object is an anonymous type; otherwise <see langword="false"/>.</returns>

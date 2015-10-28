@@ -4,7 +4,6 @@ namespace Nancy.Security
     using System.Collections.Generic;
     using System.Linq;
 
-    using Nancy.ErrorHandling;
     using Nancy.Extensions;
     using Nancy.Responses;
 
@@ -34,6 +33,16 @@ namespace Nancy.Security
         }
 
         /// <summary>
+        /// This module requires authentication and certain claims to be present.
+        /// </summary>
+        /// <param name="module">Module to enable</param>
+        /// <param name="requiredClaims">Claim(s) required</param>
+        public static void RequiresClaims(this INancyModule module, params string[] requiredClaims)
+        {
+            module.RequiresClaims(requiredClaims.AsEnumerable());
+        }
+        
+        /// <summary>
         /// This module requires authentication and any one of certain claims to be present.
         /// </summary>
         /// <param name="module">Module to enable</param>
@@ -42,6 +51,16 @@ namespace Nancy.Security
         {
             module.AddBeforeHookOrExecute(SecurityHooks.RequiresAuthentication(), "Requires Authentication");
             module.AddBeforeHookOrExecute(SecurityHooks.RequiresAnyClaim(requiredClaims), "Requires Any Claim");
+        }
+        
+        /// <summary>
+        /// This module requires authentication and any one of certain claims to be present.
+        /// </summary>
+        /// <param name="module">Module to enable</param>
+        /// <param name="requiredClaims">Claim(s) required</param>
+        public static void RequiresAnyClaim(this INancyModule module, params string[] requiredClaims)
+        {
+            module.RequiresAnyClaim(requiredClaims.AsEnumerable());
         }
 
         /// <summary>
@@ -71,7 +90,7 @@ namespace Nancy.Security
         /// <param name="redirect"><see langword="true"/> if the user should be redirected to HTTPS (no port number) if the incoming request was made using HTTP, otherwise <see langword="false"/> if <see cref="HttpStatusCode.Forbidden"/> should be returned.</param>
         public static void RequiresHttps(this INancyModule module, bool redirect)
         {
-            module.Before.AddItemToEndOfPipeline(RequiresHttps(redirect, null));
+            module.Before.AddItemToEndOfPipeline(SecurityHooks.RequiresHttps(redirect, null));
         }
 
         /// <summary>
@@ -82,32 +101,7 @@ namespace Nancy.Security
         /// <param name="httpsPort">The HTTPS port number to use</param>
         public static void RequiresHttps(this INancyModule module, bool redirect, int httpsPort)
         {
-            module.Before.AddItemToEndOfPipeline(RequiresHttps(redirect, httpsPort));
-        }
-
-        private static Func<NancyContext, Response> RequiresHttps(bool redirect, int? httpsPort)
-        {
-            return (ctx) =>
-                   {
-                       Response response = null;
-                       var request = ctx.Request;
-                       if (!request.Url.IsSecure)
-                       {
-                           if (redirect && request.Method.Equals("GET", StringComparison.OrdinalIgnoreCase))
-                           {
-                               var redirectUrl = request.Url.Clone();
-                               redirectUrl.Port = httpsPort;
-                               redirectUrl.Scheme = "https";
-                               response = new RedirectResponse(redirectUrl.ToString());
-                           }
-                           else
-                           {
-                               response = new Response { StatusCode = HttpStatusCode.Forbidden };                               
-                           }
-                       }
-
-                       return response;
-                   };
+            module.Before.AddItemToEndOfPipeline(SecurityHooks.RequiresHttps(redirect, httpsPort));
         }
     }
 }

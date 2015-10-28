@@ -1,8 +1,13 @@
 ﻿namespace Nancy.ViewEngines.Razor.CSharp
 {
+    using System;
     using System.Globalization;
+    using System.Linq;
     using System.Web.Razor.Parser;
     using System.Web.Razor.Text;
+    using System.Web.Razor.Tokenizer.Symbols;
+
+    using Nancy.Bootstrapper;
 
     /// <summary>
     /// Nancy razor parser for csharp files.
@@ -11,6 +16,7 @@
     {
         private bool modelStatementFound;
         private SourceLocation? endInheritsLocation;
+        private readonly ClrTypeResolver<CSharpSymbolType, CSharpSymbol> clrTypeResolver;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyCSharpRazorCodeParser"/> class.
@@ -18,6 +24,8 @@
         public NancyCSharpRazorCodeParser()
         {
             this.MapDirectives(this.ModelDirective, "model");
+
+            this.clrTypeResolver = new CSharpClrTypeResolver();
         }
 
         protected virtual void ModelDirective()
@@ -28,7 +36,18 @@
 
             var endModelLocation = CurrentLocation;
 
-            this.BaseTypeDirective("The 'model' keyword must be followed by a type name on the same line.", s => new CSharpModelCodeGenerator(s));
+            this.BaseTypeDirective("The 'model' keyword must be followed by a type name on the same line.", s =>
+            {
+                var symbols = this.Language.TokenizeString(s);
+                var modelType = this.clrTypeResolver.Resolve(symbols.ToList());
+
+                if (modelType == null)
+                {
+                    CodeParserHelper.ThrowTypeNotFound(s);
+                }
+
+                return new ModelCodeGenerator(modelType, modelType.FullName);
+            });
 
             if (this.modelStatementFound)
             {

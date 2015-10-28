@@ -12,7 +12,7 @@ var ApiToken = {
     Get: function () {
         var key = readCookie(apiKeyKey);
         var username = readCookie(usernameKey);
-        var token = { Key: key, Username: username, IsValid: key != null };        
+        var token = { Key: key, Username: username, IsValid: key != null };
         return token;
     },
 

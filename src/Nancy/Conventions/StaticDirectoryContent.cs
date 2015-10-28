@@ -10,7 +10,7 @@
         /// <summary>
         /// Creates a new instance of StaticDirectoryContent
         /// </summary>
-        /// <param name="conventions">NancyConventions, to wich static directories get added</param>
+        /// <param name="conventions">NancyConventions, to which static directories get added</param>
         public StaticDirectoryContent(NancyConventions conventions)
         {
             this.conventions = conventions;

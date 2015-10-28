@@ -1,11 +1,9 @@
 ﻿namespace Nancy.Tests.Unit.Routing
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
     using System.Threading;
-    using Nancy.Conventions;
+
+    using FakeItEasy;
+
     using Nancy.Diagnostics;
     using Nancy.ErrorHandling;
     using Nancy.Responses.Negotiation;
@@ -13,14 +11,17 @@
     using Nancy.Tests.Fakes;
 
     using Xunit;
+    using Xunit.Extensions;
 
     public class DefaultRouteInvokerFixture
     {
         private readonly DefaultRouteInvoker invoker;
+        private readonly IResponseNegotiator responseNegotiator;
 
         public DefaultRouteInvokerFixture()
         {
-            this.invoker = new DefaultRouteInvoker(Enumerable.Empty<IResponseProcessor>(), new AcceptHeaderCoercionConventions(new List<Func<IEnumerable<Tuple<string, decimal>>, NancyContext, IEnumerable<Tuple<string, decimal>>>>()));
+            this.responseNegotiator = A.Fake<IResponseNegotiator>();
+            this.invoker = new DefaultRouteInvoker(responseNegotiator);
         }
 
         [Fact]
@@ -29,7 +30,13 @@
             // Given
             var parameters = new DynamicDictionary();
             var route = new FakeRoute(10);
-            var context = new NancyContext();
+            var context = new NancyContext
+            {
+                Trace = new DefaultRequestTrace
+                {
+                    TraceLog = new DefaultTraceLog()
+                }
+            };
 
             // When
             this.invoker.Invoke(route, new CancellationToken(), parameters, context);
@@ -39,74 +46,19 @@
         }
 
         [Fact]
-        public void Should_return_response_when_route_returns_int()
-        {
-            // Given
-            var parameters = new DynamicDictionary();
-            var route = new FakeRoute(10);
-            var context = new NancyContext();
-
-            // When
-            var result = this.invoker.Invoke(route, new CancellationToken(), parameters, context).Result;
-
-            // Then
-            Assert.IsType<Response>(result);
-        }
-
-        [Fact]
-        public void Should_return_response_when_route_returns_string()
-        {
-            // Given
-            var parameters = new DynamicDictionary();
-            var route = new FakeRoute("Hello World");
-            var context = new NancyContext();
-
-            // When
-            var result = this.invoker.Invoke(route, new CancellationToken(), parameters, context).Result;
-
-            // Then
-            Assert.IsType<Response>(result);
-        }
-
-        [Fact]
-        public void Should_return_response_when_route_returns_status_code()
-        {
-            // Given
-            var parameters = new DynamicDictionary();
-            var route = new FakeRoute(HttpStatusCode.OK);
-            var context = new NancyContext();
-
-            // When
-            var result = this.invoker.Invoke(route, new CancellationToken(), parameters, context).Result;
-
-            // Then
-            Assert.IsType<Response>(result);
-        }
-
-        [Fact]
-        public void Should_return_response_when_route_returns_action()
-        {
-            // Given
-            Action<Stream> action = s => { };
-            var parameters = new DynamicDictionary();
-            var route = new FakeRoute(action);
-            var context = new NancyContext();
-
-            // When
-            var result = this.invoker.Invoke(route, new CancellationToken(), parameters, context).Result;
-
-            // Then
-            Assert.IsType<Response>(result);
-        }
-
-        [Fact]
         public void Should_handle_RouteExecutionEarlyExitException_gracefully()
         {
             // Given
             var response = new Response();
             var route = new FakeRoute((c, t) => { throw new RouteExecutionEarlyExitException(response); });
             var parameters = new DynamicDictionary();
-            var context = new NancyContext();
+            var context = new NancyContext
+            {
+                Trace = new DefaultRequestTrace
+                {
+                    TraceLog = new DefaultTraceLog()
+                }
+            };
 
             // When
             var result = this.invoker.Invoke(route, new CancellationToken(), parameters, context).Result;
@@ -122,13 +74,57 @@
             var response = new Response();
             var route = new FakeRoute((c, t) => { throw new RouteExecutionEarlyExitException(response, "Reason Testing"); });
             var parameters = new DynamicDictionary();
-            var context = new NancyContext { Trace = new RequestTrace(true) };
+            var context = new NancyContext
+            {
+                Trace = new DefaultRequestTrace
+                {
+                    TraceLog = new DefaultTraceLog()
+                }
+            };
 
             // When
             var result = this.invoker.Invoke(route, new CancellationToken(), parameters, context).Result;
 
             // Then
             context.Trace.TraceLog.ToString().ShouldContain("Reason Testing");
+        }
+
+        [Fact]
+        public void Should_invoke_response_negotiator_for_reference_model()
+        {
+            // Given
+            var model = new Person { FirstName = "First", LastName = "Last" };
+            var route = new FakeRoute(model);
+            var parameters = new DynamicDictionary();
+            var context = new NancyContext
+            {
+                Trace = new DefaultRequestTrace()
+            };
+
+            // When
+            var result = this.invoker.Invoke(route, new CancellationToken(), parameters, context).Result;
+
+            // Then
+            A.CallTo(() => this.responseNegotiator.NegotiateResponse(model, context)).MustHaveHappened();
+        }
+
+        [Fact]
+        public void Should_invoke_response_negotiator_for_value_type_model()
+        {
+            // Given
+            var model = new StructModel();
+            var route = new FakeRoute(model);
+            var parameters = new DynamicDictionary();
+            var context = new NancyContext
+            {
+                Trace = new DefaultRequestTrace()
+            };
+
+            // When
+            var result = this.invoker.Invoke(route, new CancellationToken(), parameters, context).Result;
+
+            // Then
+            A.CallTo(() => this.responseNegotiator.NegotiateResponse(model, context)).MustHaveHappened();
         }
     }
 }

@@ -6,6 +6,8 @@
     using System.Reflection;
     using System.Text;
     using Conventions;
+
+    using Nancy.Diagnostics;
     using Nancy.Tests;
     using Responses;
     using Xunit;
@@ -56,7 +58,18 @@
             result.ShouldEqual("Embedded Text");
         }
 
-        private static string GetEmbeddedStaticContent(string virtualDirectory, string requestedFilename, string root = null)
+        [Fact]
+        public void Should_retrieve_static_content_ignoring_casing()
+        {
+            // Given
+            // When
+            var result = GetEmbeddedStaticContent("Foo", "Subfolder/embedded2.txt", "resources");
+
+            // Then
+            result.ShouldEqual("Embedded2 Text");
+        }
+
+        private static string GetEmbeddedStaticContent(string virtualDirectory, string requestedFilename, string contentPath = null)
         {
             var resource =
                 string.Format("/{0}/{1}", virtualDirectory, requestedFilename);
@@ -64,14 +77,18 @@
             var context =
                 new NancyContext
                 {
-                    Request = new Request("GET", resource, "http")
+                    Request = new Request("GET", resource, "http"),
+                    Trace = new DefaultRequestTrace
+                    {
+                        TraceLog = new DefaultTraceLog()
+                    }
                 };
 
             var assembly =
                 Assembly.GetExecutingAssembly();
 
             var resolver =
-                EmbeddedStaticContentConventionBuilder.AddDirectory(virtualDirectory, assembly, "Resources");
+                EmbeddedStaticContentConventionBuilder.AddDirectory(virtualDirectory, assembly, contentPath ?? "Resources");
 
             var response =
                 resolver.Invoke(context, null) as EmbeddedFileResponse;

@@ -13,7 +13,7 @@ namespace Nancy.Extensions
         /// Gets exported types from an assembly and catches common errors
         /// that occur when running under test runners.
         /// </summary>
-        /// <param name="assembly">Assembly to retreive from</param>
+        /// <param name="assembly">Assembly to retrieve from</param>
         /// <returns>An array of types</returns>
         public static Type[] SafeGetExportedTypes(this Assembly assembly)
         {
@@ -31,7 +31,10 @@ namespace Nancy.Extensions
             {
                 types = new Type[] { };
             }
-
+            catch (FileLoadException) {
+                // probably assembly version conflict
+                types = new Type[] { };
+            }
             return types;
         }
     }

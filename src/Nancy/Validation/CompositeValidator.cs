@@ -18,7 +18,7 @@
         /// <param name="modelType">The type of the model that is being validated.</param>
         public CompositeValidator(IEnumerable<IModelValidator> validators, Type modelType)
         {
-            var modelValidators = 
+            var modelValidators =
                 validators.ToArray();
 
             this.ModelType = modelType;
@@ -48,10 +48,10 @@
                 .Select(v => v.Validate(instance, context))
                 .Where(r => r != null)
                 .SelectMany(r => r.Errors)
-                .ToDictionary(x => x.Key, x => x.Value); ;
+                .ToDictionary(x => x.Key, x => x.Value);
 
             return (!errors.Any()) ?
-                ModelValidationResult.Valid :
+                new ModelValidationResult() :
                 new ModelValidationResult(errors);
         }
 

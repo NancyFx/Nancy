@@ -12,7 +12,8 @@ namespace Nancy.Bootstrapper
         /// </summary>
         /// <param name="registrationType">Registration type i.e. IMyInterface</param>
         /// <param name="implementationType">Implementation type i.e. MyClassThatImplementsIMyInterface</param>
-        public TypeRegistration(Type registrationType, Type implementationType)
+        /// <param name="lifetime">Lifetime to register the type as</param>
+        public TypeRegistration(Type registrationType, Type implementationType, Lifetime lifetime = Lifetime.Singleton)
         {
             if (registrationType == null)
             {
@@ -26,6 +27,7 @@ namespace Nancy.Bootstrapper
 
             this.RegistrationType = registrationType;
             this.ImplementationType = implementationType;
+            this.Lifetime = lifetime;
 
             this.ValidateTypeCompatibility(implementationType);
         }

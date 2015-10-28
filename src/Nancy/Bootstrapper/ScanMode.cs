@@ -1,7 +1,7 @@
 ﻿namespace Nancy.Bootstrapper
 {
     /// <summary>
-    /// Determins which set of types that the <see cref="AppDomainAssemblyTypeScanner"/> should scan in.
+    /// Determines which set of types that the <see cref="AppDomainAssemblyTypeScanner"/> should scan in.
     /// </summary>
     public enum ScanMode
     {
@@ -18,6 +18,16 @@
         /// <summary>
         /// Only types that are defined outside the Nancy assembly.
         /// </summary>
-        ExcludeNancy
+        ExcludeNancy,
+
+        /// <summary>
+        /// Only Namespaces that starts with 'Nancy'
+        /// </summary>
+        OnlyNancyNamespace,
+
+        /// <summary>
+        /// Only Namespaces that does not start with Nancy
+        /// </summary>
+        ExcludeNancyNamespace
     }
 }

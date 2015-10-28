@@ -14,7 +14,7 @@
                 new EmbeddedFileResponse(this.GetType().Assembly, "Nancy.Tests", "Resources.Views.staticviewresource.html");
 
             // Then
-            response.Headers["ETag"].ShouldEqual("\"5D6EFDFDB135DC90F16D57E05603DA1E\"");
+            response.Headers["ETag"].ShouldEqual("\"B9D9DC2B50ADFD0867749D4837C63556339080CE\"");
         }
 
         [Fact]
@@ -30,7 +30,7 @@
             response.Contents.Invoke(outputStream);
 
             // Then
-            response.Headers["ETag"].ShouldEqual("\"5D6EFDFDB135DC90F16D57E05603DA1E\"");
+            response.Headers["ETag"].ShouldEqual("\"B9D9DC2B50ADFD0867749D4837C63556339080CE\"");
         }
 
         [Fact]
@@ -58,6 +58,17 @@
 
             // Then
             response.Headers.ContainsKey("ETag").ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Should_ignore_casing_in_resource_name_if_embedded_resource_exists()
+        {
+            // Given, when
+            var response =
+                new EmbeddedFileResponse(this.GetType().Assembly, "nancy.tests", "Resources.Views.staticviewresource.html");
+
+            // Then
+            response.Headers["ETag"].ShouldEqual("\"B9D9DC2B50ADFD0867749D4837C63556339080CE\"");
         }
     }
 }

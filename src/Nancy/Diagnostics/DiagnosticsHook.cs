@@ -12,6 +12,7 @@ namespace Nancy.Diagnostics
     using Helpers;
     using ModelBinding;
 
+    using Nancy.Localization;
     using Nancy.Routing.Constraints;
     using Nancy.Routing.Trie;
 
@@ -38,11 +39,20 @@ namespace Nancy.Diagnostics
             IModelBinderLocator modelBinderLocator,
             IEnumerable<IResponseProcessor> responseProcessors,
             IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints,
-            ICultureService cultureService)
+            ICultureService cultureService,
+            IRequestTraceFactory requestTraceFactory,
+            IEnumerable<IRouteMetadataProvider> routeMetadataProviders,
+            ITextResource textResource)
         {
             var diagnosticsModuleCatalog = new DiagnosticsModuleCatalog(providers, rootPathProvider, requestTracing, configuration, diagnosticsConfiguration);
 
-            var diagnosticsRouteCache = new RouteCache(diagnosticsModuleCatalog, new DefaultNancyContextFactory(cultureService), new DefaultRouteSegmentExtractor(), new DefaultRouteDescriptionProvider(), cultureService);
+            var diagnosticsRouteCache = new RouteCache(
+                diagnosticsModuleCatalog,
+                new DefaultNancyContextFactory(cultureService, requestTraceFactory, textResource),
+                new DefaultRouteSegmentExtractor(),
+                new DefaultRouteDescriptionProvider(),
+                cultureService,
+                routeMetadataProviders);
 
             var diagnosticsRouteResolver = new DefaultRouteResolver(
                 diagnosticsModuleCatalog,
@@ -172,7 +182,7 @@ namespace Nancy.Diagnostics
             var hmacString = Convert.ToBase64String(hmacBytes);
 
             var cookie = new NancyCookie(diagnosticsConfiguration.CookieName, String.Format("{1}{0}", encryptedSession, hmacString), true);
-            
+
             context.Response.AddCookie(cookie);
         }
 
@@ -209,7 +219,7 @@ namespace Nancy.Diagnostics
 
             var decryptedValue = diagnosticsConfiguration.CryptographyConfiguration.EncryptionProvider.Decrypt(encryptedSession);
             var session = serializer.Deserialize(decryptedValue) as DiagnosticsSession;
-            
+
             if (session == null || session.Expiry < DateTime.Now || !SessionPasswordValid(session, diagnosticsConfiguration.Password))
             {
                 return null;

@@ -26,7 +26,7 @@ namespace Nancy.ViewEngines.Razor
         /// <summary>
         /// The context of the current render operation.
         /// </summary>
-        /// <value>An <see cref="IRenderContext"/> intance.</value>
+        /// <value>An <see cref="IRenderContext"/> instance.</value>
         public IRenderContext RenderContext { get; set; }
 
         /// <summary>

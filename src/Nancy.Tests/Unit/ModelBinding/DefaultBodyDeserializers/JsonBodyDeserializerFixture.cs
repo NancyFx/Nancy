@@ -115,7 +115,7 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
             var context = new BindingContext()
             {
                 DestinationType = typeof(TimeSpan),
-                ValidModelProperties = typeof(TimeSpan).GetProperties(),
+                ValidModelBindingMembers = BindingMemberInfo.Collect<TimeSpan>().ToList(),
             };
 
             // When
@@ -129,19 +129,69 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
         }
 
         [Fact]
+        public void Should_deserialize_enum()
+        {
+            // Given
+            var json = this.serializer.Serialize(TestEnum.One);
+            var bodyStream = new MemoryStream(Encoding.UTF8.GetBytes(json));
+            var context = new BindingContext()
+            {
+                DestinationType = typeof (TestEnum),
+                ValidModelBindingMembers = BindingMemberInfo.Collect<TestEnum>().ToList(),
+            };
+
+            // When
+            var result = (TestEnum)this.deserialize.Deserialize(
+                "application/json",
+                bodyStream,
+                context);
+
+            // Then
+            result.ShouldEqual(TestEnum.One);
+        }
+
+        [Theory]
+        [InlineData(TestEnum.Hundred)]
+        [InlineData(null)]
+        public void Should_deserialize_nullable_enum(TestEnum? propertyValue)
+        {
+            var context = new BindingContext()
+            {
+                DestinationType = typeof(TestModel),
+                ValidModelBindingMembers = BindingMemberInfo.Collect<TestModel>().ToList(),
+            };
+
+            var model = new TestModel { NullableEnumProperty = propertyValue };
+
+            var s = new JavaScriptSerializer();
+            var serialized = s.Serialize(model);
+            var bodyStream = new MemoryStream(Encoding.UTF8.GetBytes(serialized));
+
+            // When
+            var result = (TestModel)this.deserialize.Deserialize(
+                "application/json",
+                bodyStream,
+                context);
+
+            // Then
+            result.NullableEnumProperty.ShouldEqual(propertyValue);
+        }
+
+        [Fact]
         public void Should_deserialize_list_of_primitives()
         {
             // Given
             var context = new BindingContext()
             {
-                DestinationType = typeof(TestModel),
-                ValidModelProperties = typeof(TestModel).GetProperties(),
+                DestinationType = typeof (TestModel),
+                ValidModelBindingMembers = BindingMemberInfo.Collect<TestModel>().ToList(),
             };
 
             var model =
                 new TestModel
                 {
-                    ListOfPrimitivesProperty = new List<int> { 1, 3, 5 }
+                    ListOfPrimitivesProperty = new List<int> { 1, 3, 5 },
+                    ListOfPrimitivesField = new List<int> { 2, 4, 6 },
                 };
 
             var s = new JavaScriptSerializer();
@@ -159,6 +209,11 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
             result.ListOfPrimitivesProperty[0].ShouldEqual(1);
             result.ListOfPrimitivesProperty[1].ShouldEqual(3);
             result.ListOfPrimitivesProperty[2].ShouldEqual(5);
+
+            result.ListOfPrimitivesField.ShouldHaveCount(3);
+            result.ListOfPrimitivesField[0].ShouldEqual(2);
+            result.ListOfPrimitivesField[1].ShouldEqual(4);
+            result.ListOfPrimitivesField[2].ShouldEqual(6);
         }
 
         [Fact]
@@ -168,7 +223,7 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
             var context = new BindingContext()
             {
                 DestinationType = typeof(TestModel),
-                ValidModelProperties = typeof(TestModel).GetProperties(),
+                ValidModelBindingMembers = BindingMemberInfo.Collect<TestModel>().ToList(),
             };
 
             var model =
@@ -178,6 +233,11 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
                     {
                         new ModelWithStringValues() { Value1 = "one", Value2 = "two"},
                         new ModelWithStringValues() { Value1 = "three", Value2 = "four"}
+                    },
+                    ListOfComplexObjectsField = new List<ModelWithStringValues>
+                    {
+                        new ModelWithStringValues() { Value1 = "five", Value2 = "six"},
+                        new ModelWithStringValues() { Value1 = "seven", Value2 = "eight"}
                     }
                 };
 
@@ -197,6 +257,29 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
             result.ListOfComplexObjectsProperty[0].Value2.ShouldEqual("two");
             result.ListOfComplexObjectsProperty[1].Value1.ShouldEqual("three");
             result.ListOfComplexObjectsProperty[1].Value2.ShouldEqual("four");
+            result.ListOfComplexObjectsField.ShouldHaveCount(2);
+            result.ListOfComplexObjectsField[0].Value1.ShouldEqual("five");
+            result.ListOfComplexObjectsField[0].Value2.ShouldEqual("six");
+            result.ListOfComplexObjectsField[1].Value1.ShouldEqual("seven");
+            result.ListOfComplexObjectsField[1].Value2.ShouldEqual("eight");
+        }
+
+        [Fact]
+        public void Should_Deserialize_Signed_And_Unsigned_Nullable_Numeric_Types()
+        {
+            //Given
+            const string json = "{P1: 1, P2: 2, P3: 3, F1: 4, F2: 5, F3: 6}";
+
+            //When
+            var model = this.serializer.Deserialize<ModelWithNullables> (json);
+
+            //Should
+            Assert.Equal (1, model.P1);
+            Assert.Equal ((uint)2, model.P2);
+            Assert.Equal ((uint)3, model.P3);
+            Assert.Equal (4, model.F1);
+            Assert.Equal ((uint)5, model.F2);
+            Assert.Equal ((uint)6, model.F3);
         }
 
 #if !__MonoCS__
@@ -269,9 +352,15 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
 
             public string[] ArrayProperty { get; set; }
 
+            public TestEnum? NullableEnumProperty { get; set; }
+
             public List<int> ListOfPrimitivesProperty { get; set; }
 
+            public List<int> ListOfPrimitivesField;
+
             public List<ModelWithStringValues> ListOfComplexObjectsProperty { get; set; }
+
+            public List<ModelWithStringValues> ListOfComplexObjectsField { get; set; }
 
             public bool Equals(TestModel other)
             {
@@ -333,19 +422,37 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
                 return !Equals(left, right);
             }
         }
+
+        public enum TestEnum
+        {
+            One = 1,
+            Hundred = 100
+        }
     }
 
     public class ModelWithStringValues
     {
         public string Value1 { get; set; }
 
-        public string Value2 { get; set; }
+        public string Value2;
     }
 
     public class ModelWithDoubleValues
     {
         public double Latitude { get; set; }
 
-        public double Longitude { get; set; }
+        public double Longitude;
     }
+
+    public class ModelWithNullables 
+    {
+        public int? P1 { get; set; }
+        public uint P2 { get; set; }
+        public uint? P3 { get; set; }
+
+        public int? F1;
+        public uint F2;
+        public uint? F3;
+    }
+
 }

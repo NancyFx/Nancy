@@ -14,14 +14,14 @@
         }
 
         /// <summary>
-        /// Binding configuration that permitts that the binder overwrites non-default values.
+        /// Binding configuration that permits that the binder overwrites non-default values.
         /// </summary>
-        public static BindingConfig NoOverwrite = new BindingConfig { Overwrite = false };
+        public static readonly BindingConfig NoOverwrite = new BindingConfig { Overwrite = false };
 
         /// <summary>
         /// Default binding configuration.
         /// </summary>
-        public static BindingConfig Default = new BindingConfig();
+        public static readonly BindingConfig Default = new BindingConfig();
 
         /// <summary>
         /// Gets or sets whether the binder should be happy once it has bound to the request body. In this case,

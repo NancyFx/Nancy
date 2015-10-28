@@ -18,10 +18,10 @@ namespace Nancy.Extensions
         private static readonly Regex ModuleNameExpression =
             new Regex(@"(?<name>[\w]+)Module$", RegexOptions.Compiled);
 
-        /// <summary>   
+        /// <summary>
         /// Extracts the friendly name of a Nancy module given its type.
         /// </summary>
-        /// <param name="name">The type name taken from GetType().Name.</param>
+        /// <param name="module">The module instance</param>
         /// <returns>A string containing the name of the parameter.</returns>
         /// <exception cref="FormatException"></exception>
         public static string GetModuleName(this INancyModule module)

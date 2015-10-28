@@ -52,6 +52,16 @@
             Assert.True(selection.Any());
         }
 
+        public static void ShouldNotContainType<T>(this IEnumerable collection)
+        {
+            var selection =
+                from c in collection.Cast<object>()
+                where c.GetType().IsAssignableFrom(typeof(T))
+                select c;
+
+            Assert.False(selection.Any());
+        }
+
         public static void ShouldContainInOrder(this string actual, params string[] values)
         {
             int index = 0;
@@ -181,7 +191,7 @@
             using (var reader = new StreamReader(stream))
             {
                 var actual = reader.ReadToEnd();
-                    
+
                 if (trim)
                 {
                     actual = actual.Trim();

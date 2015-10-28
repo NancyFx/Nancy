@@ -110,12 +110,13 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="AspNetRootSourceProvider.cs" />
+    <Compile Include="AspNetRootPathProvider.cs" />
     <Compile Include="BootstrapperEntry.cs" />
     <Compile Include="DefaultNancyAspNetBootstrapper.cs" />
     <Compile Include="NancyFxSection.cs" />
     <Compile Include="NancyHandler.cs" />
     <Compile Include="NancyHttpRequestHandler.cs" />
+    <Compile Include="NancyResponseStream.cs" />
     <Compile Include="TinyIoCAspNetExtensions.cs" />
   </ItemGroup>
   <ItemGroup>

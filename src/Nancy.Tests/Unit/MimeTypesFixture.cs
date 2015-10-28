@@ -8,7 +8,7 @@
         public void Should_return_appropriate_mime_for_common_extensions()
         {
             // Given, When, Then
-            MimeTypes.GetMimeType(".js").ShouldEqual("application/x-javascript");
+            MimeTypes.GetMimeType(".js").ShouldEqual("application/javascript");
             MimeTypes.GetMimeType(".css").ShouldEqual("text/css");
             MimeTypes.GetMimeType(".png").ShouldEqual("image/png");
             MimeTypes.GetMimeType(".gif").ShouldEqual("image/gif");
@@ -42,6 +42,16 @@
         {
             // Given, When, Then
             MimeTypes.GetMimeType(".docx").ShouldEqual("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+        }
+
+        [Fact]
+        public void Should_support_adding_mime_extensions()
+        {
+            // Given, When
+            MimeTypes.AddType("php", "text/plain");
+
+            // Then
+            MimeTypes.GetMimeType(".php").ShouldEqual("text/plain");
         }
     }
 }

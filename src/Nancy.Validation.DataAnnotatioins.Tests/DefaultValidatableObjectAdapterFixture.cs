@@ -25,7 +25,7 @@
             var instance = new ModelUnderTest();
 
             // When
-            this.validator.Validate(instance);
+            this.validator.Validate(instance, new NancyContext());
 
             // Then
             instance.ValidatedWasInvoked.ShouldBeTrue();
@@ -38,7 +38,7 @@
             var instance = new ModelUnderTest();
 
             // When
-            this.validator.Validate(instance);
+            this.validator.Validate(instance, new NancyContext());
 
             // Then
             instance.InstanceBeingValidated.ShouldBeSameAs(instance);
@@ -57,10 +57,23 @@
             };
 
             // When
-            var results = this.validator.Validate(instance);
+            var results = this.validator.Validate(instance, new NancyContext());
 
             // Then
             results.Count().ShouldEqual(2);
+        }
+
+        [Fact]
+        public void Should_not_return_errors_if_model_not_implements_IValidatableObject()
+        {
+            // Given
+            var instance = new ModelNotImplementingIValidatableObject();
+
+            // When
+            var result = this.validator.Validate(instance, new NancyContext());
+
+            // Then
+            result.Count().ShouldEqual(0);
         }
 
         public class ModelUnderTest : IValidatableObject
@@ -78,6 +91,11 @@
                 
                 return this.ExpectedResults ?? Enumerable.Empty<ValidationResult>();
             }
+        }
+
+        public class ModelNotImplementingIValidatableObject
+        {
+            public int Value { get; set; }
         }
     }
 }

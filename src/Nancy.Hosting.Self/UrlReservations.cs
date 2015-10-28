@@ -1,14 +1,22 @@
 ﻿namespace Nancy.Hosting.Self
 {
+    using System;
+    using System.Security.Principal;
+
     /// <summary>
     /// Configuration for automatic url reservation creation
     /// </summary>
     public class UrlReservations
     {
+        private const string EveryoneAccountName = "Everyone";
+
+        private static readonly IdentityReference EveryoneReference =
+            new SecurityIdentifier(WellKnownSidType.WorldSid, null);
+
         public UrlReservations()
         {
             this.CreateAutomatically = false;
-            this.User = "Everyone";
+            this.User = GetEveryoneAccountName();
         }
 
         /// <summary>
@@ -23,5 +31,23 @@
         /// Defaults to the "Everyone" group.
         /// </summary>
         public string User { get; set; }
+
+        private static string GetEveryoneAccountName()
+        {
+            try
+            {
+                var account = EveryoneReference.Translate(typeof(NTAccount)) as NTAccount;
+                if (account != null)
+                {
+                    return account.Value;
+                }
+
+                return EveryoneAccountName;
+            }
+            catch (Exception)
+            {
+                return EveryoneAccountName;
+            }
+        }
     }
 }

@@ -12,7 +12,8 @@
         /// Validates the given instance.
         /// </summary>
         /// <param name="instance">The instance.</param>
+        /// <param name="context">The <see cref="NancyContext"/> of the current request.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="ModelValidationRule"/> instances.</returns>
-        IEnumerable<ModelValidationError> Validate(object instance);
+        IEnumerable<ModelValidationError> Validate(object instance, NancyContext context);
     }
 }

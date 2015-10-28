@@ -42,10 +42,10 @@
         /// Gets the route, and the corresponding parameter dictionary from the URL
         /// </summary>
         /// <param name="context">Current context</param>
-        /// <returns>Tuple - Item1 being the Route, Item2 being the parameters dictionary, Item3 being the prereq, Item4 being the postreq, Item5 being the error handler</returns>
+        /// <returns>A <see cref="ResolveResult"/> containing the resolved route information.</returns>
         public ResolveResult Resolve(NancyContext context)
         {
-            var pathDecoded = 
+            var pathDecoded =
                 HttpUtility.UrlDecode(context.Request.Path);
 
             var results = this.trie.GetMatches(GetMethod(context), pathDecoded, context);
@@ -60,8 +60,8 @@
                     return BuildOptionsResult(allowedMethods, context);
                 }
 
-                return IsMethodNotAllowed(allowedMethods) ? 
-                    BuildMethodNotAllowedResult(context, allowedMethods) : 
+                return IsMethodNotAllowed(allowedMethods) ?
+                    BuildMethodNotAllowedResult(context, allowedMethods) :
                     GetNotFoundResult(context);
             }
 
@@ -105,23 +105,26 @@
 
         private static ResolveResult BuildOptionsResult(IEnumerable<string> allowedMethods, NancyContext context)
         {
-            var path = 
+            var path =
                 context.Request.Path;
 
-            var optionsResult = 
+            var optionsResult =
                 new OptionsRoute(path, allowedMethods);
 
             return new ResolveResult(
                 optionsResult,
-                new DynamicDictionary(), 
+                new DynamicDictionary(),
                 null,
                 null,
-                null);                        
+                null);
         }
 
         private ResolveResult BuildResult(NancyContext context, MatchResult result)
         {
             var associatedModule = this.GetModuleFromMatchResult(context, result);
+
+            context.NegotiationContext.SetModule(associatedModule);
+
             var route = associatedModule.Routes.ElementAt(result.RouteIndex);
             var parameters = DynamicDictionary.Create(result.Parameters);
 
@@ -137,7 +140,7 @@
 
         private INancyModule GetModuleFromMatchResult(NancyContext context, MatchResult result)
         {
-            var module = 
+            var module =
                 this.catalog.GetModule(result.ModuleType, context);
 
             return this.moduleBuilder.BuildModule(module, context);
@@ -157,12 +160,17 @@
 
         private static string GetMethod(NancyContext context)
         {
-            var requestedMethod = 
+            var requestedMethod =
                 context.Request.Method;
-            
-            return requestedMethod.Equals("HEAD", StringComparison.Ordinal) ?
-                "GET" :
-                requestedMethod;
+
+            if (!StaticConfiguration.EnableHeadRouting)
+            {
+                return requestedMethod.Equals("HEAD", StringComparison.Ordinal) ?
+                    "GET" :
+                    requestedMethod;
+            }
+
+            return requestedMethod;
         }
     }
 }

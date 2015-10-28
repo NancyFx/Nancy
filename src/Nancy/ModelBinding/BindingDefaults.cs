@@ -21,7 +21,7 @@ namespace Nancy.ModelBinding
         public BindingDefaults()
         {
             // Ordering is important - for now we will new just these up
-            // as the binding defaults class itself is replacable if necessary,
+            // as the binding defaults class itself is replaceable if necessary,
             // and none of defaults have any dependencies.
             this.defaultTypeConverters = new ITypeConverter[]
                 {

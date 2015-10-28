@@ -9,7 +9,7 @@
         public string NotNullTwo { get; set; }
 
         public string NullOne { get; set; }
-        
+
         public string NullTwo { get; set; }
 
         public bool FalseBool { get; set; }

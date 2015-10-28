@@ -9,6 +9,41 @@ namespace Nancy.Responses.Negotiation
     public class MediaRange
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="MediaRange"/> class from a string representation of a media range
+        /// </summary>
+        /// <param name="contentType">the content type</param>
+        public MediaRange(string contentType) : this()
+        {
+            if (string.IsNullOrEmpty(contentType))
+            {
+                throw new ArgumentException("inputString cannot be null or empty", contentType);
+            }
+
+            if (contentType.Equals("*"))
+            {
+                contentType = "*/*";
+            }
+
+            var parts = contentType.Split('/', ';');
+
+            if (parts.Length < 2)
+            {
+                {
+                    throw new ArgumentException("inputString not in correct Type/SubType format", contentType);
+                }
+            }
+
+            this.Type = parts[0];
+            this.Subtype = parts[1].TrimEnd();
+
+            if (parts.Length > 2)
+            {
+                var separator = contentType.IndexOf(';');
+                this.Parameters = MediaRangeParameters.FromString(contentType.Substring(separator));
+            }
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="MediaRange"/> class.
         /// </summary>
         public MediaRange()
@@ -19,17 +54,17 @@ namespace Nancy.Responses.Negotiation
         /// <summary>
         /// Media range type
         /// </summary>
-        public MediaType Type { get; set; }
+        public MediaType Type { get; private set; }
 
         /// <summary>
         /// Media range subtype
         /// </summary>
-        public MediaType Subtype { get; set; }
+        public MediaType Subtype { get; private set; }
 
         /// <summary>
         /// Media range parameters
         /// </summary>
-        public MediaRangeParameters Parameters { get; set; }
+        public MediaRangeParameters Parameters { get; private set; }
 
         /// <summary>
         /// Gets a value indicating if the media range is the */* wildcard
@@ -67,41 +102,15 @@ namespace Nancy.Responses.Negotiation
         /// </summary>
         /// <param name="contentType"></param>
         /// <returns></returns>
+        [Obsolete("Please use the constructor")]
         public static MediaRange FromString(string contentType)
         {
-            if (string.IsNullOrEmpty(contentType))
-            {
-                throw new ArgumentException("inputString cannot be null or empty", contentType);
-            }
-
-            if (contentType.Equals("*"))
-            {
-                contentType = "*/*";
-            }
-
-            var parts = contentType.Split('/', ';');
-
-            if (parts.Length < 2)
-            {
-                {
-                    throw new ArgumentException("inputString not in correct Type/SubType format", contentType);
-                }
-            }
-
-            var range = new MediaRange { Type = parts[0], Subtype = parts[1].TrimEnd() };
-
-            if (parts.Length > 2)
-            {
-                var separator = contentType.IndexOf(';');
-                range.Parameters = MediaRangeParameters.FromString(contentType.Substring(separator));
-            }
-
-            return range;
+            return new MediaRange(contentType);
         }
 
         public static implicit operator MediaRange(string contentType)
         {
-            return MediaRange.FromString(contentType);
+            return new MediaRange(contentType);
         }
 
         public static implicit operator string(MediaRange mediaRange)

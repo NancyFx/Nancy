@@ -26,9 +26,10 @@ namespace Nancy
         public NancyContext()
         {
             this.Items = new Dictionary<string, object>();
-            this.Trace = new RequestTrace();
+            this.Trace = new DefaultRequestTrace();
             this.ViewBag = new DynamicDictionary();
-            
+            this.NegotiationContext = new NegotiationContext();
+
             // TODO - potentially additional logic to lock to ip etc?
             this.ControlPanelEnabled = true;
         }
@@ -39,12 +40,12 @@ namespace Nancy
         public IDictionary<string, object> Items { get; private set; }
 
         /// <summary>
-        /// Gets or sets the resolved route 
+        /// Gets or sets the resolved route
         /// </summary>
         public Route ResolvedRoute { get; set; }
 
         /// <summary>
-        /// Gets or sets the parameters for the resolved route 
+        /// Gets or sets the parameters for the resolved route
         /// </summary>
         public dynamic Parameters { get; set; }
 
@@ -61,8 +62,7 @@ namespace Nancy
             set
             {
                 this.request = value;
-                this.Trace.Method = request.Method;
-                this.Trace.RequestUrl = request.Url;
+                this.Trace.RequestData = value;
             }
         }
 
@@ -79,7 +79,7 @@ namespace Nancy
         /// <summary>
         /// Diagnostic request tracing
         /// </summary>
-        public RequestTrace Trace { get; set; }
+        public IRequestTrace Trace { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether control panel access is enabled for this request
@@ -96,7 +96,7 @@ namespace Nancy
         /// </summary>
         public ModelValidationResult ModelValidationResult
         {
-            get { return this.modelValidationResult ?? ModelValidationResult.Valid; }
+            get { return this.modelValidationResult ?? (this.modelValidationResult = new ModelValidationResult()); }
             set { this.modelValidationResult = value; }
         }
 
@@ -106,9 +106,14 @@ namespace Nancy
         public CultureInfo Culture { get; set; }
 
         /// <summary>
-        /// Context of content negotiation (if relevent)
+        /// Context of content negotiation (if relevant)
         /// </summary>
         public NegotiationContext NegotiationContext { get; set; }
+
+        /// <summary>
+        /// Gets or sets the dynamic object used to locate text resources.
+        /// </summary>
+        public dynamic Text { get; set; }
 
         /// <summary>
         /// Disposes any disposable items in the <see cref="Items"/> dictionary.

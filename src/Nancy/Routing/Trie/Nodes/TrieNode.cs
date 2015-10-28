@@ -54,7 +54,7 @@ namespace Nancy.Routing.Trie.Nodes
             this.Parent = parent;
             this.RouteDefinitionSegment = segment;
 
-            this.Children = new Dictionary<string, TrieNode>();
+            this.Children = new Dictionary<string, TrieNode>(StaticConfiguration.CaseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase);
             this.AdditionalParameters = new Dictionary<string, object>();
             this.NodeData = new List<NodeData>();
         }
