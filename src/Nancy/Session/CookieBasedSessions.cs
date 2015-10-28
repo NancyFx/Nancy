@@ -148,7 +148,7 @@ namespace Nancy.Session
             var cryptographyConfiguration = this.currentConfiguration.CryptographyConfiguration;
             var encryptedData = cryptographyConfiguration.EncryptionProvider.Encrypt(sb.ToString());
             var hmacBytes = cryptographyConfiguration.HmacProvider.GenerateHmac(encryptedData);
-            var cookieData = String.Format("{0}{1}", Convert.ToBase64String(hmacBytes), encryptedData);
+            var cookieData = HttpUtility.UrlEncode(String.Format("{0}{1}", Convert.ToBase64String(hmacBytes), encryptedData));
 
             var cookie = new NancyCookie(this.currentConfiguration.CookieName, cookieData, true)
             {

@@ -84,6 +84,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Modules\AbsoluteUrlTestModule.cs" />
+    <Compile Include="Modules\CookieModule.cs" />
     <Compile Include="Modules\PerRouteAuthModule.cs" />
     <Compile Include="Modules\RazorWithTracingTestModule.cs" />
     <Compile Include="Modules\JsonpTestModule.cs" />
@@ -95,6 +96,7 @@
     <Compile Include="Tests\BasicRouteInvocationsFixture.cs" />
     <Compile Include="Modules\SerializeTestModule.cs" />
     <Compile Include="Tests\ContentNegotiationFixture.cs" />
+    <Compile Include="Tests\CookieFixture.cs" />
     <Compile Include="Tests\MethodRewriteFixture.cs" />
     <Compile Include="Tests\PerRouteAuthFixture.cs" />
     <Compile Include="Tests\RouteConstraintTests.cs" />
