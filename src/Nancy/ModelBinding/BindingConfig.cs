@@ -43,5 +43,11 @@
         /// </summary>
         /// <value><see langword="true" /> if the binder is allowed to overwrite non-default values, otherwise <see langword="false" />.</value>
         public bool Overwrite { get; set; }
+
+        /// <summary>
+        /// If the string passed in is empty the binder will not bind it.
+        /// </summary>
+        /// <value><see langword="true" /> if the binder will convert empty strings to null, otherwise <see langword="false" />.</value>
+        public bool ConvertEmptyStringToNull { get; set; }
     }
 }

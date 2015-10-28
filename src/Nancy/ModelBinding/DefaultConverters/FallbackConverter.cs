@@ -3,7 +3,9 @@ namespace Nancy.ModelBinding.DefaultConverters
     using System;
     using System.ComponentModel;
 
-    /// <summary>
+    using Nancy.Extensions;
+
+	/// <summary>
     /// A fallback converter that uses TypeDescriptor.GetConverter to try
     /// and convert the value.
     /// </summary>
@@ -31,7 +33,7 @@ namespace Nancy.ModelBinding.DefaultConverters
         {
             var converter = TypeDescriptor.GetConverter(destinationType);
 
-            if (converter == null || !converter.CanConvertFrom(typeof(string)))
+            if (!converter.CanConvertFrom(typeof(string)) || (destinationType.IsNumeric() && string.IsNullOrEmpty(input)))
             {
                 return null;
             }

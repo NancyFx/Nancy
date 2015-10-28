@@ -188,9 +188,13 @@ namespace Nancy.ModelBinding
 
         private bool BindingValueIsValid(string bindingValue, object existingValue, BindingMemberInfo modelProperty, BindingContext bindingContext)
         {
-            return (!String.IsNullOrEmpty(bindingValue) &&
-                    (IsDefaultValue(existingValue, modelProperty.PropertyType) ||
-                     bindingContext.Configuration.Overwrite));
+            var passedValueContainsSomething = !String.IsNullOrEmpty(bindingValue);
+            var passedValueNotNull = bindingValue != null;
+            var doNotConvertEmptyStringsToNull = !bindingContext.Configuration.ConvertEmptyStringToNull && passedValueNotNull;
+            var passedValueIsTheDefaultValue = IsDefaultValue(existingValue, modelProperty.PropertyType);
+            var overwriteValuesThatDoNotHaveADefaultValue = bindingContext.Configuration.Overwrite;
+
+            return ((passedValueContainsSomething || doNotConvertEmptyStringsToNull) && (passedValueIsTheDefaultValue || overwriteValuesThatDoNotHaveADefaultValue));
         }
 
         /// <summary>
