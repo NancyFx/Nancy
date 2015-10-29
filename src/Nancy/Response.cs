@@ -89,58 +89,6 @@ namespace Nancy
         }
 
         /// <summary>
-        /// Adds a <see cref="INancyCookie"/> to the response.
-        /// </summary>
-        /// <param name="name">The name of the cookie.</param>
-        /// <param name="value">The value of the cookie.</param>
-        /// <returns>The <see cref="Response"/> instance.</returns>
-        [Obsolete("This method has been replaced with Response.WithCookie and will be removed in a subsequent release.")]
-        public Response AddCookie(string name, string value)
-        {
-            return AddCookie(name, value, null, null, null);
-        }
-
-        /// <summary>
-        /// Adds a <see cref="INancyCookie"/> to the response.
-        /// </summary>
-        /// <param name="name">The name of the cookie.</param>
-        /// <param name="value">The value of the cookie.</param>
-        /// <param name="expires">The expiration date of the cookie. Can be <see langword="null" /> if it should expire at the end of the session.</param>
-        /// <returns>The <see cref="Response"/> instance.</returns>
-        [Obsolete("This method has been replaced with Response.WithCookie and will be removed in a subsequent release.")]
-        public Response AddCookie(string name, string value, DateTime? expires)
-        {
-            return AddCookie(name, value, expires, null, null);
-        }
-
-        /// <summary>
-        /// Adds a <see cref="INancyCookie"/> to the response.
-        /// </summary>
-        /// <param name="name">The name of the cookie.</param>
-        /// <param name="value">The value of the cookie.</param>
-        /// <param name="expires">The expiration date of the cookie. Can be <see langword="null" /> if it should expire at the end of the session.</param>
-        /// <param name="domain">The domain of the cookie.</param>
-        /// <param name="path">The path of the cookie.</param>
-        /// <returns>The <see cref="Response"/> instance.</returns>
-        [Obsolete("This method has been replaced with Response.WithCookie and will be removed in a subsequent release.")]
-        public Response AddCookie(string name, string value, DateTime? expires, string domain, string path)
-        {
-            return AddCookie(new NancyCookie(name, value){ Expires = expires, Domain = domain, Path = path });
-        }
-
-        /// <summary>
-        /// Adds a <see cref="INancyCookie"/> to the response.
-        /// </summary>
-        /// <param name="nancyCookie">A <see cref="INancyCookie"/> instance.</param>
-        /// <returns></returns>
-        [Obsolete("This method has been replaced with Response.WithCookie and will be removed in a subsequent release.")]
-        public Response AddCookie(INancyCookie nancyCookie)
-        {
-            Cookies.Add(nancyCookie);
-            return this;
-        }
-
-        /// <summary>
         /// Implicitly cast an <see cref="HttpStatusCode"/> value to a <see cref="Response"/> instance, with the <see cref="StatusCode"/>
         /// set to the value of the <see cref="HttpStatusCode"/>.
         /// </summary>

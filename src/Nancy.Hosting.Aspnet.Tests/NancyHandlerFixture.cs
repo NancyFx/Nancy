@@ -72,7 +72,7 @@ namespace Nancy.Hosting.Aspnet.Tests
             var cookie1 = A.Fake<INancyCookie>();
             var cookie2 = A.Fake<INancyCookie>();
             var r = new Response();
-            r.AddCookie(cookie1).AddCookie(cookie2);
+            r.WithCookie(cookie1).WithCookie(cookie2);
             var nancyContext = new NancyContext { Response = r };
 
             A.CallTo(() => cookie1.ToString()).Returns("the first cookie");

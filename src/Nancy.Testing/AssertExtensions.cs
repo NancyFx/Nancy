@@ -101,15 +101,6 @@ namespace Nancy.Testing
         /// <summary>
         /// Asserts that every node contains the specified text
         /// </summary>
-        [Obsolete("This method has a ambiguous name and will be removed. Use AllShouldContain instead.")]
-        public static AndConnector<QueryWrapper> ShouldContain(this QueryWrapper query, string contents, StringComparison comparisonType = StringComparison.Ordinal)
-        {
-            return query.AllShouldContain(contents, comparisonType);
-        }
-
-        /// <summary>
-        /// Asserts that every node contains the specified text
-        /// </summary>
         public static AndConnector<QueryWrapper> AllShouldContain(this QueryWrapper query, string contents, StringComparison comparisonType = StringComparison.Ordinal)
         {
             query.ShouldExist();

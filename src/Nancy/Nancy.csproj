@@ -113,7 +113,6 @@
     </Compile>
     <Compile Include="AsyncNamedPipelineBase.cs" />
     <Compile Include="Bootstrapper\AppDomainAssemblyTypeScanner.cs" />
-    <Compile Include="Bootstrapper\IApplicationRegistrations.cs" />
     <Compile Include="Bootstrapper\IRequestStartup.cs" />
     <Compile Include="Bootstrapper\Registrations.cs" />
     <Compile Include="Bootstrapper\BootstrapperException.cs" />

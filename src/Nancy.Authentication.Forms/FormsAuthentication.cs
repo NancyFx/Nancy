@@ -62,7 +62,7 @@ namespace Nancy.Authentication.Forms
             pipelines.BeforeRequest.AddItemToStartOfPipeline(GetLoadAuthenticationHook(configuration));
             if (!configuration.DisableRedirect)
             {
-                pipelines.AfterRequest.AddItemToEndOfPipeline(GetRedirectToLoginHook(configuration));                
+                pipelines.AfterRequest.AddItemToEndOfPipeline(GetRedirectToLoginHook(configuration));
             }
         }
 
@@ -137,7 +137,7 @@ namespace Nancy.Authentication.Forms
 
             var response = context.GetRedirect(redirectUrl);
             var authenticationCookie = BuildCookie(userIdentifier, cookieExpiry, currentConfiguration);
-            response.AddCookie(authenticationCookie);
+            response.WithCookie(authenticationCookie);
 
             return response;
         }
@@ -153,10 +153,10 @@ namespace Nancy.Authentication.Forms
             var response =
                 (Response)HttpStatusCode.OK;
 
-            var authenticationCookie = 
+            var authenticationCookie =
                 BuildCookie(userIdentifier, cookieExpiry, currentConfiguration);
 
-            response.AddCookie(authenticationCookie);
+            response.WithCookie(authenticationCookie);
 
             return response;
         }
@@ -171,7 +171,7 @@ namespace Nancy.Authentication.Forms
         {
             var response = context.GetRedirect(redirectUrl);
             var authenticationCookie = BuildLogoutCookie(currentConfiguration);
-            response.AddCookie(authenticationCookie);
+            response.WithCookie(authenticationCookie);
 
             return response;
         }
@@ -185,10 +185,10 @@ namespace Nancy.Authentication.Forms
             var response =
                 (Response)HttpStatusCode.OK;
 
-            var authenticationCookie = 
+            var authenticationCookie =
                 BuildLogoutCookie(currentConfiguration);
 
-            response.AddCookie(authenticationCookie);
+            response.WithCookie(authenticationCookie);
 
             return response;
         }
@@ -233,7 +233,7 @@ namespace Nancy.Authentication.Forms
                         string redirectQuerystringKey = GetRedirectQuerystringKey(configuration);
 
                         context.Response = context.GetRedirect(
-                            string.Format("{0}?{1}={2}", 
+                            string.Format("{0}?{1}={2}",
                             configuration.RedirectUrl,
                             redirectQuerystringKey,
                             context.ToFullPath("~" + context.Request.Path + HttpUtility.UrlEncode(context.Request.Url.Query))));

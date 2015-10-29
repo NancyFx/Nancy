@@ -7,12 +7,6 @@
 
     public class XmlResponse<TModel> : Response
     {
-        [Obsolete("This constructor is obsolete and will be removed in a future version.")]
-        public XmlResponse(TModel model, string contentType, ISerializer serializer) : this(model, serializer)
-        {
-            this.ContentType = contentType;
-        }
-
         public XmlResponse(TModel model, ISerializer serializer)
         {
             if (serializer == null)
