@@ -131,7 +131,7 @@ namespace Nancy.Diagnostics
             {
                 var view = GetDiagnosticsLoginView(ctx);
 
-                view.AddCookie(
+                view.WithCookie(
                     new NancyCookie(diagnosticsConfiguration.CookieName, String.Empty, true) { Expires = DateTime.Now.AddDays(-1) });
 
                 return view;
@@ -181,7 +181,7 @@ namespace Nancy.Diagnostics
 
             var cookie = new NancyCookie(diagnosticsConfiguration.CookieName, String.Format("{1}{0}", encryptedSession, hmacString), true);
 
-            context.Response.AddCookie(cookie);
+            context.Response.WithCookie(cookie);
         }
 
         private static DiagnosticsSession GetSession(NancyContext context, DiagnosticsConfiguration diagnosticsConfiguration, DefaultObjectSerializer serializer)

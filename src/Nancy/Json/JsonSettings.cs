@@ -39,16 +39,6 @@ namespace Nancy.Json
         public static int MaxRecursions { get; set; }
 
         /// <summary>
-        /// Default charset for JSON responses.
-        /// </summary>
-        [Obsolete("This property is obsolete and will be removed in a future version. Please use DefaultEncoding instead.")]
-        public static string DefaultCharset
-        {
-            get { return _defaultCharset ?? DefaultEncoding.WebName; }
-            set { _defaultCharset = value; }
-        }
-
-        /// <summary>
         /// Gets the default encoding for JSON responses.
         /// </summary>
         /// <remarks>

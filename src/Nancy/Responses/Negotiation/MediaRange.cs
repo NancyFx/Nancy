@@ -97,17 +97,6 @@ namespace Nancy.Responses.Negotiation
             return this.Matches(other) && this.Parameters.Matches(other.Parameters);
         }
 
-        /// <summary>
-        /// Creates a MediaRange from a "Type/SubType" string
-        /// </summary>
-        /// <param name="contentType"></param>
-        /// <returns></returns>
-        [Obsolete("Please use the constructor")]
-        public static MediaRange FromString(string contentType)
-        {
-            return new MediaRange(contentType);
-        }
-
         public static implicit operator MediaRange(string contentType)
         {
             return new MediaRange(contentType);

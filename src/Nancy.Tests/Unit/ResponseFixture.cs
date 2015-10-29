@@ -15,7 +15,7 @@
             // Given
             var response = new Response();
 
-            // When 
+            // When
             var content = response.GetStringContentsFromResponse();
 
             // Then
@@ -57,7 +57,7 @@
         {
             // Given, When
             Response response = 200;
-            
+
             // Then
             response.StatusCode.ShouldEqual(HttpStatusCode.OK);
         }
@@ -154,7 +154,7 @@
             response.ContentType.ShouldEqual("text/html");
         }
 
-        [Fact] 
+        [Fact]
         public void Should_overwrite_content_type_from_headers()
         {
             // Given
@@ -173,10 +173,10 @@
         {
 			// Given
             var response = new Response();
-			
+
 			// When
-            response.AddCookie("itsover", "9000");
-			
+            response.WithCookie("itsover", "9000");
+
 			// Then
             response.Cookies.Count.ShouldEqual(1);
             ValidateCookie(response.Cookies[0], "itsover", "9000", null, null, null);
@@ -188,10 +188,10 @@
 			// Given
             var response = new Response();
             var date = DateTime.Now;
-			
+
 			// When
-            response.AddCookie("itsover", "9000", date);
-			
+            response.WithCookie("itsover", "9000", date);
+
 			// Then
             response.Cookies.Count.ShouldEqual(1);
             ValidateCookie(response.Cookies[0], "itsover", "9000", date, null, null);
@@ -203,15 +203,15 @@
 			// Given
             var response = new Response();
             var date = DateTime.Now;
-			
+
 			// When
-            response.AddCookie("itsover", "9000", date, "life", "/andeverything");
-			
+            response.WithCookie("itsover", "9000", date, "life", "/andeverything");
+
 			// Then
             response.Cookies.Count.ShouldEqual(1);
             ValidateCookie(response.Cookies[0], "itsover", "9000", date, "life", "/andeverything");
         }
-						
+
 		private static void ValidateCookie(INancyCookie cookie, string name, string value, DateTime? expires, string domain, string path)
         {
             cookie.Name.ShouldEqual(name);

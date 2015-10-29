@@ -633,7 +633,7 @@ namespace Nancy.Testing.Tests
 
                     foreach (var cookie in this.Request.Cookies)
                     {
-                        response.AddCookie(cookie.Key, cookie.Value);
+                        response.WithCookie(cookie.Key, cookie.Value);
                     }
 
                     return response;
