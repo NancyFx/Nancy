@@ -19,7 +19,7 @@
     /// <summary>
     /// Default engine for handling Nancy <see cref="Request"/>s.
     /// </summary>
-    public sealed class NancyEngine : INancyEngine
+    public class NancyEngine : INancyEngine
     {
         public const string ERROR_KEY = "ERROR_TRACE";
         public const string ERROR_EXCEPTION = "ERROR_EXCEPTION";
@@ -151,7 +151,10 @@
             return tcs.Task;
         }
 
-        public void Dispose()
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public virtual void Dispose()
         {
             this.engineDisposedCts.Cancel();
         }
