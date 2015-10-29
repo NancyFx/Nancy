@@ -6,7 +6,6 @@ namespace Nancy
     using System.Reflection;
     using Nancy.Diagnostics;
     using Nancy.Bootstrapper;
-    using Nancy.Diagnostics;
     using Nancy.TinyIoc;
 
     /// <summary>
@@ -106,7 +105,6 @@ namespace Nancy
                         break;
                     case Lifetime.PerRequest:
                         throw new InvalidOperationException("Unable to directly register a per request lifetime.");
-                        break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
@@ -133,7 +131,6 @@ namespace Nancy
                         break;
                     case Lifetime.PerRequest:
                         throw new InvalidOperationException("Unable to directly register a per request lifetime.");
-                        break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }

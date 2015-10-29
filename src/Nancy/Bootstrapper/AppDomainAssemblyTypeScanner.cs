@@ -58,7 +58,7 @@ namespace Nancy.Bootstrapper
         /// Gets or sets a set of rules for which assemblies are scanned
         /// Defaults to just assemblies that have references to nancy, and nancy
         /// itself.
-        /// Each item in the enumerable is a delegate that takes the assembly and 
+        /// Each item in the enumerable is a delegate that takes the assembly and
         /// returns true if it is to be included. Returning false doesn't mean it won't
         /// be included as a true from another delegate will take precedence.
         /// </summary>
@@ -237,7 +237,7 @@ namespace Nancy.Bootstrapper
                     {
                         inspectedAssembly = Assembly.ReflectionOnlyLoadFrom(unloadedAssembly);
                     }
-                    catch (BadImageFormatException biEx)
+                    catch (BadImageFormatException)
                     {
                         //the assembly maybe it's not managed code
                     }

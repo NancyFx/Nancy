@@ -11,6 +11,7 @@ namespace Nancy
 
     using Nancy.Extensions;
     using Nancy.Helpers;
+    using Nancy.IO;
     using Session;
 
     /// <summary>
