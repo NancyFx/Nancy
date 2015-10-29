@@ -355,7 +355,7 @@ namespace Nancy.Authentication.Forms
         public static string DecryptAndValidateAuthenticationCookie(string cookieValue, FormsAuthenticationConfiguration configuration)
         {
             // TODO - shouldn't this be automatically decoded by nancy cookie when that change is made?
-            var decodedCookie = Helpers.HttpUtility.UrlDecode(cookieValue);
+            var decodedCookie = cookieValue;
 
             var hmacStringLength = Base64Helpers.GetBase64Length(configuration.CryptographyConfiguration.HmacProvider.HmacLength);
 
