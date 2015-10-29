@@ -326,7 +326,7 @@ namespace Nancy.Bootstrapper
         /// <summary>
         /// Returns the directories containing dll files. It uses the default convention as stated by microsoft.
         /// </summary>
-        /// <see cref="http://msdn.microsoft.com/en-us/library/system.appdomainsetup.privatebinpathprobe.aspx"/>
+        /// <see href="http://msdn.microsoft.com/en-us/library/system.appdomainsetup.privatebinpathprobe.aspx"/>
         private static IEnumerable<string> GetAssemblyDirectories()
         {
             var privateBinPathDirectories = AppDomain.CurrentDomain.SetupInformation.PrivateBinPath == null
