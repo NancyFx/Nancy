@@ -5,6 +5,7 @@ namespace Nancy.ErrorHandling
     using System.Linq;
     using System.Text;
     using Nancy.Extensions;
+    using Nancy.IO;
     using Nancy.Responses.Negotiation;
     using Nancy.ViewEngines;
 
@@ -98,8 +99,8 @@ namespace Nancy.ErrorHandling
             if (!string.IsNullOrEmpty(contents))
             {
                 contents = contents.Replace("[DETAILS]", result.Details);
-            }   
-                
+            }
+
             context.Response.ContentType = "text/html";
             context.Response.Contents = s =>
             {
@@ -140,5 +141,5 @@ namespace Nancy.ErrorHandling
 
             public string Details { get; private set; }
         }
-    }    
+    }
 }
