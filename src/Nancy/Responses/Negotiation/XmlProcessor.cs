@@ -16,7 +16,7 @@
 
         /// <summary>
         /// Initializes a new instance of the <see cref="XmlProcessor"/> class,
-        /// with the provided <see cref="serializers"/>.
+        /// with the provided <see paramref="serializers"/>.
         /// </summary>
         /// <param name="serializers">The serializes that the processor will use to process the request.</param>
         public XmlProcessor(IEnumerable<ISerializer> serializers)

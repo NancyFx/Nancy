@@ -27,7 +27,7 @@
         }
 
         /// <summary>
-        /// Gets the <see cref="Type"/> of metadata based on <see cref="TMetadata"/>.
+        /// Gets the <see cref="Type"/> of metadata based on <typeparamref name="TMetadata" />.
         /// </summary>
         public Type MetadataType
         {

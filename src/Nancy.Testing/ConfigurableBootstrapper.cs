@@ -1991,7 +1991,7 @@ namespace Nancy.Testing
             }
 
             /// <summary>
-            /// Registers a <see cref="INancyModule"/> instance, with the specified <paramref name="moduleKey"/> value.
+            /// Registers a <see cref="INancyModule"/> instance.
             /// </summary>
             /// <param name="module">The <see cref="INancyModule"/> instance to register.</param>
             public void RegisterModuleInstance(INancyModule module)

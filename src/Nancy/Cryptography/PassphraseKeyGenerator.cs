@@ -35,7 +35,7 @@
         /// Generate a sequence of bytes
         /// </summary>
         /// <param name="count">Number of bytes to return</param>
-        /// <returns>Array <see cref="count"/> bytes</returns>
+        /// <returns>Array <see paramref="count"/> bytes</returns>
         public byte[] GetBytes(int count)
         {
             return provider.GetBytes(count);
