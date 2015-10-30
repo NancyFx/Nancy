@@ -43,12 +43,12 @@
 
                     if (context.Request.Cookies.ContainsKey(CsrfToken.DEFAULT_CSRF_KEY))
                     {
-                        var decodedValue = HttpUtility.UrlDecode(context.Request.Cookies[CsrfToken.DEFAULT_CSRF_KEY]);
-                        var cookieToken = CsrfApplicationStartup.ObjectSerializer.Deserialize(decodedValue) as CsrfToken;
+                        var cookieValue = context.Request.Cookies[CsrfToken.DEFAULT_CSRF_KEY];
+                        var cookieToken = CsrfApplicationStartup.ObjectSerializer.Deserialize(cookieValue) as CsrfToken;
 
                         if (CsrfApplicationStartup.TokenValidator.CookieTokenStillValid(cookieToken))
                         {
-                            context.Items[CsrfToken.DEFAULT_CSRF_KEY] = decodedValue;
+                            context.Items[CsrfToken.DEFAULT_CSRF_KEY] = cookieValue;
                             return;
                         }
                     }
@@ -148,7 +148,7 @@
             string cookieTokenString;
             if (request.Cookies.TryGetValue(CsrfToken.DEFAULT_CSRF_KEY, out cookieTokenString))
             {
-                cookieToken = CsrfApplicationStartup.ObjectSerializer.Deserialize(HttpUtility.UrlDecode(cookieTokenString)) as CsrfToken;
+                cookieToken = CsrfApplicationStartup.ObjectSerializer.Deserialize(cookieTokenString) as CsrfToken;
             }
 
             return cookieToken;

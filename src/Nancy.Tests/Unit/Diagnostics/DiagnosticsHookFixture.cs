@@ -109,7 +109,7 @@
             // When
             var result = browser.Get(diagsConfig.Path, with =>
                 {
-                    with.Cookie(DiagsCookieName, HttpUtility.UrlEncode(this.GetSessionCookieValue("password")));
+                    with.Cookie(DiagsCookieName, this.GetSessionCookieValue("password"));
                 });
 
             // Then
@@ -134,7 +134,7 @@
             // When
             var result = browser.Get(diagsConfig.Path, with =>
             {
-                with.Cookie(DiagsCookieName, HttpUtility.UrlEncode(this.GetSessionCookieValue("password", DateTime.Now.AddMinutes(-10))));
+                with.Cookie(DiagsCookieName, this.GetSessionCookieValue("password", DateTime.Now.AddMinutes(-10)));
             });
 
             // Then
@@ -159,7 +159,7 @@
             // When
             var result = browser.Get(diagsConfig.Path, with =>
             {
-                with.Cookie(DiagsCookieName, HttpUtility.UrlEncode(this.GetSessionCookieValue("wrongPassword")));
+                with.Cookie(DiagsCookieName, this.GetSessionCookieValue("wrongPassword"));
             });
 
             // Then
@@ -237,7 +237,7 @@
             // When
             var result = browser.Get(diagsConfig.Path, with =>
             {
-                with.Cookie(DiagsCookieName, HttpUtility.UrlEncode(this.GetSessionCookieValue("password", expiryDate)));
+                with.Cookie(DiagsCookieName, this.GetSessionCookieValue("password", expiryDate));
             });
 
             // Then
@@ -264,7 +264,7 @@
             // When querying the list of interactive providers
             var result = browser.Get(diagsConfig.Path + "/interactive/providers/", with =>
                 {
-                    with.Cookie(DiagsCookieName, HttpUtility.UrlEncode(this.GetSessionCookieValue("password")));
+                    with.Cookie(DiagsCookieName, this.GetSessionCookieValue("password"));
                 });
 
             // Then we should see the fake testing provider and not the Nancy provided testing example
