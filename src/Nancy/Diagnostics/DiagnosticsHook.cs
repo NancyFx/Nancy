@@ -203,7 +203,7 @@ namespace Nancy.Diagnostics
                 return null;
             }
 
-            var encryptedValue = HttpUtility.UrlDecode(context.Request.Cookies[diagnosticsConfiguration.CookieName]);
+            var encryptedValue = context.Request.Cookies[diagnosticsConfiguration.CookieName];
             var hmacStringLength = Base64Helpers.GetBase64Length(diagnosticsConfiguration.CryptographyConfiguration.HmacProvider.HmacLength);
             var encryptedSession = encryptedValue.Substring(hmacStringLength);
             var hmacString = encryptedValue.Substring(0, hmacStringLength);
