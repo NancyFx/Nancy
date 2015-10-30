@@ -128,7 +128,7 @@
             // When
             var result = browser.Get(diagsConfig.Path + "/interactive/providers/", with =>
                 {
-                    with.Cookie(DiagsCookieName, HttpUtility.UrlEncode(this.GetSessionCookieValue("password")));
+                    with.Cookie(DiagsCookieName, this.GetSessionCookieValue("password"));
                 });
 
             // Then should see our fake provider and not the default testing provider
