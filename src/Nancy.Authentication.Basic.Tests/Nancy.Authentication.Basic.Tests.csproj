@@ -124,6 +124,7 @@
     <Compile Include="..\Nancy.Tests\ShouldExtensions.cs">
       <Link>ShouldExtensions.cs</Link>
     </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BasicAuthenticationConfigurationFixture.cs" />
     <Compile Include="BasicAuthenticationFixture.cs" />
   </ItemGroup>
@@ -137,9 +138,7 @@
       <Name>Nancy</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
       <Visible>False</Visible>
