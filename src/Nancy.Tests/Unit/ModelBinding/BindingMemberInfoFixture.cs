@@ -5,7 +5,7 @@
     using System.Xml.Serialization;
 
     using Nancy.ModelBinding;
-
+    using Nancy.Testing;
     using Xunit;
     using Xunit.Sdk;
 

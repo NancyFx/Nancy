@@ -13,7 +13,7 @@ SOLUTION_FILE = 'src/Nancy.sln'
 
 Albacore.configure do |config|
     config.log_level = :verbose
-    config.msbuild.use :net4
+    config.msbuild.use :net45
 end
 
 desc "Compiles solution and runs unit tests"
@@ -73,9 +73,9 @@ desc "Executes xUnit tests"
 xunit :xunit => [:compile] do |xunit|
     tests = FileList["src/**/#{CONFIGURATION}/*.Tests*.dll"].exclude(/obj\//).exclude(/Nancy.ViewEngines.Razor.Tests.Models/)
 
-    xunit.command = "tools/xunit/xunit.console.clr4.x86.exe"
+    xunit.command = "tools/xunit/xunit.console.x86.exe"
     xunit.assemblies = tests
-end 
+end
 
 desc "Executes xUnit tests using Mono"
 xunit :xunitmono => [] do |xunit|
@@ -138,7 +138,7 @@ task :nuget_package => [:publish] do
     end
 
     # Generate the NuGet packages from the newly edited nuspec fileiles
-    nuspecs.each do |nuspec|        
+    nuspecs.each do |nuspec|
         nuget = NuGetPack.new
         nuget.command = "tools/nuget/nuget.exe"
         nuget.nuspec = "\"" + root + '/' + nuspec + "\""
@@ -151,7 +151,7 @@ end
 desc "Pushes the nuget packages in the nuget folder up to the nuget gallary and symbolsource.org. Also publishes the packages into the feeds."
 task :nuget_publish, :api_key do |task, args|
     nupkgs = FileList["#{OUTPUT}/nuget/*#{$nancy_version}.nupkg"]
-    nupkgs.each do |nupkg| 
+    nupkgs.each do |nupkg|
         puts "Pushing #{nupkg}"
         nuget_push = NuGetPush.new
 	nuget_push.apikey = args.api_key if !args.empty?
@@ -166,7 +166,7 @@ desc "Pushes the nuget packages in the nuget folder up to the specified feed"
 task :nuget_publish_alt, :api_key, :source do |task, args|
     raise "Missing source" if args.source.nil?
     nupkgs = FileList["#{OUTPUT}/nuget/*#{$nancy_version}.nupkg"]
-    nupkgs.each do |nupkg| 
+    nupkgs.each do |nupkg|
         puts "Pushing #{nupkg} to {#args.source}"
         nuget_push = NuGetPush.new
         nuget_push.apikey = args.api_key if !args.empty?
@@ -215,17 +215,17 @@ def update_xml(xml_path)
     #Open up the xml file
     xml_file = File.new(xml_path)
     xml = REXML::Document.new xml_file
- 
+
     #Allow caller to make the changes
     yield xml
- 
+
     xml_file.close
-         
+
     #Save the changes
     xml_file = File.open(xml_path, "w")
     formatter = REXML::Formatters::Default.new(5)
     formatter.write(xml, xml_file)
-    xml_file.close 
+    xml_file.close
 end
 
 def get_assembly_version(file)

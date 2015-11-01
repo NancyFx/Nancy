@@ -1056,10 +1056,8 @@
 
             //When
             //Then
-            Assert.DoesNotThrow(() =>
-            {
-                EventArgs e = (EventArgs)value;
-            });
+            Record.Exception(() => (EventArgs)value)
+                .ShouldBeNull();
         }
 
         [Fact]

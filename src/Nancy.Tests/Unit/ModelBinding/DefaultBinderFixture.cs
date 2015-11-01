@@ -95,7 +95,8 @@ namespace Nancy.Tests.Unit.ModelBinding
             var config = new BindingConfig { IgnoreErrors = true };
 
             // When, Then
-            Assert.DoesNotThrow(() => binder.Bind(context, this.GetType(), null, config));
+            Record.Exception(() => binder.Bind(context, this.GetType(), null, config))
+                .ShouldBeNull();
         }
 
         [Fact]
@@ -350,7 +351,8 @@ namespace Nancy.Tests.Unit.ModelBinding
 
             // When
             // Then
-            Assert.DoesNotThrow(() => binder.Bind(context, typeof(TestModel), null, config));
+            Record.Exception(() => binder.Bind(context, typeof(TestModel), null, config))
+                .ShouldBeNull();
         }
 
         [Fact]

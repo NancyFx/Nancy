@@ -62,10 +62,8 @@
                 trace.Items.Add("foo", "bar");
 
                 // Then
-                Assert.DoesNotThrow(() =>
-                {
-                    var value = trace.Items["FOO"];
-                });
+                Record.Exception(() => trace.Items["FOO"])
+                    .ShouldBeNull();
             }
         }
 
