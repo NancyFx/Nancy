@@ -112,10 +112,6 @@
     <Compile Include="Program.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nancy.Hosting.Wcf\Nancy.Hosting.Wcf.csproj">
-      <Project>{8B7EC9F2-44D2-426C-AE7F-801DC3238259}</Project>
-      <Name>Nancy.Hosting.Wcf</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Nancy\Nancy.csproj">
       <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
       <Name>Nancy</Name>
