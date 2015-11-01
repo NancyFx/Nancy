@@ -874,7 +874,7 @@ namespace Nancy.Tests.Unit.Routing
         }
 
         [Fact]
-        public void Should_rethrow_exception_when_onerror_hook_does_return_response()
+        public async Task Should_rethrow_exception_when_onerror_hook_does_return_response()
         {
             // Given
             var route = new FakeRoute
@@ -903,7 +903,7 @@ namespace Nancy.Tests.Unit.Routing
             //When
 
             // Then
-            Assert.Throws<Exception>(() => this.requestDispatcher.Dispatch(context, new CancellationToken()));
+            await Assert.ThrowsAsync<Exception>(() => this.requestDispatcher.Dispatch(context, new CancellationToken()));
         }
 
         [Fact]
@@ -941,7 +941,7 @@ namespace Nancy.Tests.Unit.Routing
 
 #if !__MonoCS__
         [Fact]
-        public void should_preserve_stacktrace_when_rethrowing_the_excption()
+        public async Task should_preserve_stacktrace_when_rethrowing_the_excption()
         {
             // Given
             var route = new FakeRoute
@@ -960,14 +960,14 @@ namespace Nancy.Tests.Unit.Routing
                 DynamicDictionary.Empty,
                 before,
                 after,
-                (ctx, ex) => { return null; });
+                (ctx, ex) => null);
 
             A.CallTo(() => this.routeResolver.Resolve(A<NancyContext>.Ignored)).Returns(resolvedRoute);
 
             var context =
                 new NancyContext { Request = new Request("GET", "/", "http") };
 
-            var exception = Assert.Throws<Exception>(() => this.requestDispatcher.Dispatch(context, new CancellationToken()));
+            var exception = await Assert.ThrowsAsync<Exception>(() => this.requestDispatcher.Dispatch(context, new CancellationToken()));
 
             exception.StackTrace.ShouldContain("BrokenMethod");
         }
