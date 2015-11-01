@@ -62,7 +62,8 @@
                 trace.Items.Add("foo", "bar");
 
                 // Then
-                var value = trace.Items["FOO"];
+                Record.Exception(() => trace.Items["FOO"])
+                    .ShouldBeNull();
             }
         }
 

@@ -1056,7 +1056,8 @@
 
             //When
             //Then
-            EventArgs e = (EventArgs)value;
+            Record.Exception(() => (EventArgs)value)
+                .ShouldBeNull();
         }
 
         [Fact]

@@ -907,7 +907,7 @@ namespace Nancy.Tests.Unit.Routing
         }
 
         [Fact]
-        public void Should_not_rethrow_exception_when_onerror_hook_returns_response()
+        public async Task Should_not_rethrow_exception_when_onerror_hook_returns_response()
         {
             // Given
             var route = new FakeRoute
@@ -934,9 +934,10 @@ namespace Nancy.Tests.Unit.Routing
                 new NancyContext { Request = new Request("GET", "/", "http") };
 
             //When
+            var exception = await Record.ExceptionAsync(() => this.requestDispatcher.Dispatch(context, new CancellationToken()));
 
             // Then
-            this.requestDispatcher.Dispatch(context, new CancellationToken());
+            exception.ShouldBeNull();
         }
 
 #if !__MonoCS__
