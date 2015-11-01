@@ -212,10 +212,7 @@ namespace Nancy.Tests.Unit
             var moduleWithNullPath = new CustomModulePathModule(null);
 
             // Then
-            Assert.DoesNotThrow(() =>
-            {
-                moduleWithNullPath.Post["/Test1"] = d => null;
-            });
+            moduleWithNullPath.Post["/Test1"] = d => null;
         }
 
         [Fact]

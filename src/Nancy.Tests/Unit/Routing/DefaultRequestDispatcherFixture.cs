@@ -936,7 +936,7 @@ namespace Nancy.Tests.Unit.Routing
             //When
 
             // Then
-            Assert.DoesNotThrow(() => this.requestDispatcher.Dispatch(context, new CancellationToken()));
+            this.requestDispatcher.Dispatch(context, new CancellationToken());
         }
 
 #if !__MonoCS__

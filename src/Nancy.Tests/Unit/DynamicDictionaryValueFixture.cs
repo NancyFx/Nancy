@@ -1056,10 +1056,7 @@
 
             //When
             //Then
-            Assert.DoesNotThrow(() =>
-            {
-                EventArgs e = (EventArgs)value;
-            });
+            EventArgs e = (EventArgs)value;
         }
 
         [Fact]
