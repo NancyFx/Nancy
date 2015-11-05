@@ -576,6 +576,23 @@ namespace Nancy.Tests.Unit.ModelBinding
         }
 
         [Fact]
+        public void Should_bind_inherited_model_from_request()
+        {
+            // Given
+            var binder = this.GetBinder();
+            var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
+            context.Request.Query["StringProperty"] = "Test";
+            context.Request.Query["IntProperty"] = "3";
+
+            // When
+            var result = (InheritedTestModel)binder.Bind(context, typeof(InheritedTestModel), null, BindingConfig.Default);
+
+            // Then
+            result.StringProperty.ShouldEqual("Test");
+            result.IntProperty.ShouldEqual(3);
+        }
+
+        [Fact]
         public void Should_bind_model_from_context_parameters()
         {
             // Given
@@ -1590,6 +1607,10 @@ namespace Nancy.Tests.Unit.ModelBinding
             public List<AnotherTestModel> ModelsProperty { get; set; }
 
             public List<AnotherTestModel> ModelsField;
+        }
+
+        public class InheritedTestModel : TestModel
+        {
         }
 
         public class AnotherTestModel
