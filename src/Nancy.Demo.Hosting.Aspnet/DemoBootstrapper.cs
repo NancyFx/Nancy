@@ -35,6 +35,8 @@
                 cookieName: "__custom_cookie",
                 slidingTimeout: 30,
                 cryptographyConfiguration: CryptographyConfiguration.NoEncryption);
+
+            environment.MyConfig("Hello World");
         }
 
         protected override NancyInternalConfiguration InternalConfiguration
@@ -43,15 +45,6 @@
             {
                 return NancyInternalConfiguration.WithOverrides(x => x.ResourceAssemblyProvider = typeof(CustomResourceAssemblyProvider));
             }
-        }
-
-        /// <summary>
-        /// Configures the Nancy environment
-        /// </summary>
-        /// <param name="environment">The <see cref="INancyEnvironment"/> instance to configure</param>
-        public override void Configure(INancyEnvironment environment)
-        {
-            environment.MyConfig("Hello World");
         }
 
         protected override void ConfigureRequestContainer(TinyIoCContainer existingContainer, NancyContext context)
