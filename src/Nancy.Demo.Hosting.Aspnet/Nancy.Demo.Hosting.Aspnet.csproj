@@ -25,6 +25,7 @@
     <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
     <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
     <TargetFrameworkProfile />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -156,6 +157,8 @@
     <Compile Include="Models\RatPackWithDependencyText.cs" />
     <Compile Include="Models\Razor2.cs" />
     <Compile Include="Models\SomeViewModel.cs" />
+    <Compile Include="MyConfig.cs" />
+    <Compile Include="MyConfigExtensions.cs" />
     <Compile Include="Piratizer4000.cs" />
     <Compile Include="PngSerializer.cs" />
     <Compile Include="RequestDependencyClass.cs" />

@@ -5,6 +5,7 @@
     using System.Reflection;
 
     using Nancy.Bootstrapper;
+    using Nancy.Configuration;
     using Nancy.Conventions;
     using Nancy.Diagnostics;
     using Nancy.Security;
@@ -36,6 +37,15 @@
             {
                 return NancyInternalConfiguration.WithOverrides(x => x.ResourceAssemblyProvider = typeof(CustomResourceAssemblyProvider));
             }
+        }
+
+        /// <summary>
+        /// Configures the Nancy environment
+        /// </summary>
+        /// <param name="environment">The <see cref="INancyEnvironment"/> instance to configure</param>
+        public override void Configure(INancyEnvironment environment)
+        {
+            environment.MyConfig("Hello World");
         }
 
         protected override void ConfigureRequestContainer(TinyIoCContainer existingContainer, NancyContext context)
