@@ -185,7 +185,10 @@ namespace Nancy
             return this.ApplicationContainer.GetChildContainer();
         }
 
-        // TODO: ADD XML COMMENT
+        /// <summary>
+        /// Gets the <see cref="INancyEnvironmentConfigurator"/> used by th.
+        /// </summary>
+        /// <returns>An <see cref="INancyEnvironmentConfigurator"/> instance.</returns>
         protected override INancyEnvironmentConfigurator GetEnvironmentConfigurator()
         {
             return this.ApplicationContainer.Resolve<INancyEnvironmentConfigurator>();
