@@ -4,6 +4,7 @@ namespace Nancy.Bootstrapper
     using System.Collections.Generic;
     using System.Linq;
 
+    using Nancy.Configuration;
     using Nancy.Culture;
     using Nancy.Diagnostics;
     using Nancy.ErrorHandling;
@@ -75,10 +76,19 @@ namespace Nancy.Bootstrapper
                     RouteSegmentConstraints = AppDomainAssemblyTypeScanner.TypesOf<IRouteSegmentConstraint>().ToList(),
                     RequestTraceFactory = typeof(DefaultRequestTraceFactory),
                     ResponseNegotiator = typeof(DefaultResponseNegotiator),
-                    RouteMetadataProviders = AppDomainAssemblyTypeScanner.TypesOf<IRouteMetadataProvider>().ToList()
+                    RouteMetadataProviders = AppDomainAssemblyTypeScanner.TypesOf<IRouteMetadataProvider>().ToList(),
+                    EnvironmentFactory = typeof(DefaultNancyEnvironmentFactory),
+                    EnvironmentConfigurator = typeof(DefaultNancyEnvironmentConfigurator),
+                    DefaultConfigurationProviders = AppDomainAssemblyTypeScanner.TypesOf<INancyDefaultConfigurationProvider>().ToList(),
                 };
             }
         }
+
+        public IList<Type> DefaultConfigurationProviders { get; set; }
+
+        public Type EnvironmentConfigurator { get; set; }
+
+        public Type EnvironmentFactory { get; set; }
 
         public IList<Type> RouteMetadataProviders { get; set; }
 
@@ -173,7 +183,7 @@ namespace Nancy.Bootstrapper
             {
                 try
                 {
-                    return this.GetTypeRegistations().All(tr => tr.RegistrationType != null);
+                    return this.GetTypeRegistrations().All(tr => tr.RegistrationType != null);
                 }
                 catch (ArgumentNullException)
                 {
@@ -200,7 +210,7 @@ namespace Nancy.Bootstrapper
         /// Returns the configuration types as a TypeRegistration collection
         /// </summary>
         /// <returns>TypeRegistration collection representing the configuration types</returns>
-        public IEnumerable<TypeRegistration> GetTypeRegistations()
+        public IEnumerable<TypeRegistration> GetTypeRegistrations()
         {
             return new[]
             {
@@ -239,7 +249,9 @@ namespace Nancy.Bootstrapper
                 new TypeRegistration(typeof(IRouteResolverTrie), this.RouteResolverTrie),
                 new TypeRegistration(typeof(ITrieNodeFactory), this.TrieNodeFactory),
                 new TypeRegistration(typeof(IRequestTraceFactory), this.RequestTraceFactory),
-                new TypeRegistration(typeof(IResponseNegotiator), this.ResponseNegotiator)
+                new TypeRegistration(typeof(IResponseNegotiator), this.ResponseNegotiator),
+                new TypeRegistration(typeof(INancyEnvironmentConfigurator), this.EnvironmentConfigurator),
+                new TypeRegistration(typeof(INancyEnvironmentFactory), this.EnvironmentFactory)
             };
         }
 
@@ -257,6 +269,7 @@ namespace Nancy.Bootstrapper
                 new CollectionTypeRegistration(typeof(IDiagnosticsProvider), this.InteractiveDiagnosticProviders),
                 new CollectionTypeRegistration(typeof(IRouteSegmentConstraint), this.RouteSegmentConstraints),
                 new CollectionTypeRegistration(typeof(IRouteMetadataProvider), this.RouteMetadataProviders),
+                new CollectionTypeRegistration(typeof(INancyDefaultConfigurationProvider), this.DefaultConfigurationProviders),
             };
         }
     }

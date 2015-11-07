@@ -9,6 +9,7 @@
     using FakeItEasy;
 
     using Nancy.Bootstrapper;
+    using Nancy.Configuration;
     using Nancy.Diagnostics;
     using Nancy.Tests.Fakes;
 
@@ -181,7 +182,7 @@
                 this.RequestPipelinesFactory.Invoke(nancyContext);
 
                 tcs.SetResult(nancyContext);
-                
+
                 return tcs.Task;
             }
 
@@ -250,6 +251,11 @@
                 return this.FakeNancyEngine;
             }
 
+            protected override INancyEnvironmentConfigurator GetEnvironmentConfigurator()
+            {
+                return new FakeEnvironmentConfigurator();
+            }
+
             /// <summary>
             /// Gets the diagnostics for initialisation
             /// </summary>
@@ -294,6 +300,15 @@
             protected override FakeContainer GetApplicationContainer()
             {
                 return FakeContainer;
+            }
+
+            /// <summary>
+            /// Registers an <see cref="INancyEnvironment"/> instance in the container.
+            /// </summary>
+            /// <param name="container">The container to register into.</param>
+            /// <param name="environment">The <see cref="INancyEnvironment"/> instance to register.</param>
+            protected override void RegisterNancyEnvironment(FakeContainer container, INancyEnvironment environment)
+            {
             }
 
             /// <summary>

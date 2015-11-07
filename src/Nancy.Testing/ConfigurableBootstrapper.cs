@@ -7,6 +7,7 @@ namespace Nancy.Testing
     using System.Reflection;
 
     using Nancy.Bootstrapper;
+    using Nancy.Configuration;
     using Nancy.Conventions;
     using Nancy.Culture;
     using Nancy.Diagnostics;
@@ -36,6 +37,7 @@ namespace Nancy.Testing
         private readonly List<Action<TinyIoCContainer, IPipelines>> applicationStartupActions;
         private readonly List<Action<TinyIoCContainer, IPipelines, NancyContext>> requestStartupActions;
         private readonly Assembly nancyAssembly = typeof(NancyEngine).Assembly;
+        private Action<INancyEnvironment> configure;
 
         /// <summary>
         /// Test project name suffixes that will be stripped from the test name project
@@ -91,6 +93,18 @@ namespace Nancy.Testing
                 testAssembly.GetName().Name;
 
             LoadReferencesForAssemblyUnderTest(testAssemblyName);
+        }
+
+        /// <summary>
+        /// Configures the Nancy environment
+        /// </summary>
+        /// <param name="environment">The <see cref="INancyEnvironment"/> instance to configure</param>
+        public override void Configure(INancyEnvironment environment)
+        {
+            if (this.configure != null)
+            {
+                this.configure.Invoke(environment);
+            }
         }
 
         /// <summary>
@@ -571,6 +585,25 @@ namespace Nancy.Testing
         }
 
         /// <summary>
+        /// Gets the <see cref="INancyEnvironmentConfigurator"/> used by th.
+        /// </summary>
+        /// <returns>An <see cref="INancyEnvironmentConfigurator"/> instance.</returns>
+        protected override INancyEnvironmentConfigurator GetEnvironmentConfigurator()
+        {
+            return this.ApplicationContainer.Resolve<INancyEnvironmentConfigurator>();
+        }
+
+        /// <summary>
+        /// Registers an <see cref="INancyEnvironment"/> instance in the container.
+        /// </summary>
+        /// <param name="container">The container to register into.</param>
+        /// <param name="environment">The <see cref="INancyEnvironment"/> instance to register.</param>
+        protected override void RegisterNancyEnvironment(TinyIoCContainer container, INancyEnvironment environment)
+        {
+            container.Register(environment);
+        }
+
+        /// <summary>
         /// <para>
         /// The pre-request hook
         /// </para>
@@ -666,6 +699,18 @@ namespace Nancy.Testing
             }
 
             /// <summary>
+            /// Configures the <see cref="INancyEnvironment"/>.
+            /// </summary>
+            /// <param name="configuration">The configuration to apply to the environment.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator Configure(Action<INancyEnvironment> configuration)
+            {
+                this.bootstrapper.configure = configuration;
+
+                return this;
+            }
+
+            /// <summary>
             /// Configures the bootstrapper to use the provided instance of <see cref="INancyContextFactory"/>.
             /// </summary>
             /// <param name="contextFactory">The <see cref="INancyContextFactory"/> instance that should be used by the bootstrapper.</param>
@@ -686,6 +731,59 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator ContextFactory<T>() where T : INancyContextFactory
             {
                 this.bootstrapper.configuration.ContextFactory = typeof(T);
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to create an <see cref="INancyDefaultConfigurationProvider"/> instance of the specified type.
+            /// </summary>
+            /// <typeparam name="T">The type of the <see cref="IRouteMetadataProvider"/> that the bootstrapper should use.</typeparam>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator DefaultConfigurationProvider<T>() where T : INancyDefaultConfigurationProvider
+            {
+                this.bootstrapper.configuration.DefaultConfigurationProviders = new List<Type>(new[] { typeof(T) });
+
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to use the provided <see cref="INancyDefaultConfigurationProvider"/> types.
+            /// </summary>
+            /// <param name="defaultConfigurationProviders">The <see cref="INancyDefaultConfigurationProvider"/> types that should be used by the bootstrapper.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator DefaultConfigurationProviders(params Type[] defaultConfigurationProviders)
+            {
+                this.bootstrapper.configuration.DefaultConfigurationProviders = defaultConfigurationProviders;
+
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to use the provided instances of <see cref="INancyDefaultConfigurationProvider"/>.
+            /// </summary>
+            /// <param name="defaultConfigurationProvider">The <see cref="INancyDefaultConfigurationProvider"/> types that should be used by the bootstrapper.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator DefaultConfigurationProviders(INancyDefaultConfigurationProvider defaultConfigurationProvider)
+            {
+                this.bootstrapper.registeredInstances.Add(
+                    new InstanceRegistration(typeof(INancyDefaultConfigurationProvider), defaultConfigurationProvider));
+
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to use the provided instances of <see cref="INancyDefaultConfigurationProvider"/>.
+            /// </summary>
+            /// <param name="defaultConfigurationProviders">The <see cref="INancyDefaultConfigurationProvider"/> types that should be used by the bootstrapper.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator DefaultConfigurationProviders(params INancyDefaultConfigurationProvider[] defaultConfigurationProviders)
+            {
+                foreach (var defaultConfigurationProvider in defaultConfigurationProviders)
+                {
+                    this.bootstrapper.registeredInstances.Add(
+                        new InstanceRegistration(typeof(INancyDefaultConfigurationProvider), defaultConfigurationProvider));
+                }
+
                 return this;
             }
 
@@ -823,6 +921,56 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator StatusCodeHandler<T>() where T : IStatusCodeHandler
             {
                 this.bootstrapper.configuration.StatusCodeHandlers = new List<Type>(new[] { typeof(T) });
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to create an <see cref="INancyEnvironmentConfigurator"/> instance of the specified type.
+            /// </summary>
+            /// <typeparam name="T">The type of the <see cref="INancyEnvironmentConfigurator"/> that the bootstrapper should use.</typeparam>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator EnvironmentConfigurator<T>() where T : INancyEnvironmentConfigurator
+            {
+                this.bootstrapper.configuration.EnvironmentConfigurator = typeof(T);
+
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to use the provided instance of <see cref="INancyEnvironmentConfigurator"/>.
+            /// </summary>
+            /// <param name="environmentConfigurator">The <see cref="INancyEnvironmentConfigurator"/> instance that should be used by the bootstrapper.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator EnvironmentConfigurator(INancyEnvironmentConfigurator environmentConfigurator)
+            {
+                this.bootstrapper.registeredInstances.Add(
+                    new InstanceRegistration(typeof(INancyEnvironmentConfigurator), environmentConfigurator));
+
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to use the provided instance of <see cref="INancyEnvironmentFactory"/>.
+            /// </summary>
+            /// <param name="environmentFactory">The <see cref="INancyEnvironmentFactory"/> instance that should be used by the bootstrapper.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator EnvironmentFactory(INancyEnvironmentFactory environmentFactory)
+            {
+                this.bootstrapper.registeredInstances.Add(
+                    new InstanceRegistration(typeof(INancyEnvironmentConfigurator), environmentFactory));
+
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to create an <see cref="INancyEnvironmentFactory"/> instance of the specified type.
+            /// </summary>
+            /// <typeparam name="T">The type of the <see cref="INancyEnvironmentFactory"/> that the bootstrapper should use.</typeparam>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator EnvironmentFactory<T>() where T : INancyEnvironmentFactory
+            {
+                this.bootstrapper.configuration.EnvironmentFactory = typeof(T);
+
                 return this;
             }
 
@@ -1106,7 +1254,7 @@ namespace Nancy.Testing
             }
 
             /// <summary>
-            /// Configures the bootstrapper to usgezze the provided instance of <see cref="IRoutePatternMatcher"/>.
+            /// Configures the bootstrapper to use the provided instance of <see cref="IRoutePatternMatcher"/>.
             /// </summary>
             /// <param name="routePatternMatcher">The <see cref="IRoutePatternMatcher"/> instance that should be used by the bootstrapper.</param>
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>

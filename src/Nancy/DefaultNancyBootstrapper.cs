@@ -4,8 +4,9 @@ namespace Nancy
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-    using Nancy.Diagnostics;
     using Nancy.Bootstrapper;
+    using Nancy.Configuration;
+    using Nancy.Diagnostics;
     using Nancy.TinyIoc;
 
     /// <summary>
@@ -73,6 +74,11 @@ namespace Nancy
         protected override TinyIoCContainer GetApplicationContainer()
         {
             return new TinyIoCContainer();
+        }
+
+        protected override void RegisterNancyEnvironment(TinyIoCContainer container, INancyEnvironment environment)
+        {
+            container.Register(environment);
         }
 
         /// <summary>
@@ -177,6 +183,15 @@ namespace Nancy
         protected override TinyIoCContainer CreateRequestContainer(NancyContext context)
         {
             return this.ApplicationContainer.GetChildContainer();
+        }
+
+        /// <summary>
+        /// Gets the <see cref="INancyEnvironmentConfigurator"/> used by th.
+        /// </summary>
+        /// <returns>An <see cref="INancyEnvironmentConfigurator"/> instance.</returns>
+        protected override INancyEnvironmentConfigurator GetEnvironmentConfigurator()
+        {
+            return this.ApplicationContainer.Resolve<INancyEnvironmentConfigurator>();
         }
 
         /// <summary>
