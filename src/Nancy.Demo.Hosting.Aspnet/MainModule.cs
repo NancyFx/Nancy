@@ -2,7 +2,7 @@ namespace Nancy.Demo.Hosting.Aspnet
 {
     using System;
     using System.Linq;
-
+    using Nancy.Configuration;
     using Nancy.Demo.Hosting.Aspnet.Metadata;
     using Nancy.Demo.Hosting.Aspnet.Models;
     using Nancy.Routing;
@@ -10,7 +10,7 @@ namespace Nancy.Demo.Hosting.Aspnet
 
     public class MainModule : NancyModule
     {
-        public MainModule(IRouteCacheProvider routeCacheProvider)
+        public MainModule(IRouteCacheProvider routeCacheProvider, INancyEnvironment environment)
         {
             Get["/"] = x => {
                 return View["routes", routeCacheProvider.GetCache()];
@@ -19,6 +19,11 @@ namespace Nancy.Demo.Hosting.Aspnet
             Get["/texts"] = parameters => {
                 return (string)this.Context.Text.Menu.Home;
                 
+            };
+
+            Get["/env"] = _ =>
+            {
+                return "From nancy environment: " + environment.GetValue<MyConfig>().Value;
             };
 
             Get["/meta"] = parameters =>
