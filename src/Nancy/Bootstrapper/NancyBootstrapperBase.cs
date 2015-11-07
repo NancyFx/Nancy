@@ -246,14 +246,16 @@
 
             this.ConfigureApplicationContainer(this.ApplicationContainer);
 
-        // We need to call this to fix an issue with assemblies that are referenced by DI not being loaded
-        AppDomainAssemblyTypeScanner.UpdateTypes();
+            // We need to call this to fix an issue with assemblies that are referenced by DI not being loaded
+            AppDomainAssemblyTypeScanner.UpdateTypes();
 
-        var typeRegistrations = this.InternalConfiguration.GetTypeRegistations()
-                                    .Concat(this.GetAdditionalTypes());
+            var typeRegistrations = this.InternalConfiguration
+                .GetTypeRegistrations()
+                .Concat(this.GetAdditionalTypes());
 
-            var collectionTypeRegistrations = this.InternalConfiguration.GetCollectionTypeRegistrations()
-                                                    .Concat(this.GetApplicationCollections());
+            var collectionTypeRegistrations = this.InternalConfiguration
+                .GetCollectionTypeRegistrations()
+                .Concat(this.GetApplicationCollections());
 
             // TODO - should this be after initialiseinternal?
             this.ConfigureConventions(this.Conventions);
