@@ -45,7 +45,7 @@
         [InlineData(12)]
         public void Should_return_all_keys_when_invoking_keys(int numberOfElementsToAdd)
         {
-            // Given,
+            // Given
             var environment = CreateEnvironment(numberOfElementsToAdd);
 
             // When
@@ -66,7 +66,7 @@
         [InlineData(12)]
         public void Should_return_all_values_when_invoking_values(int numberOfElementsToAdd)
         {
-            // Given,
+            // Given
             var environment = CreateEnvironment(numberOfElementsToAdd);
 
             // When
