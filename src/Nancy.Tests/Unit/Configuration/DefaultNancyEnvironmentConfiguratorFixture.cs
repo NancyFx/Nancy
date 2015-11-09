@@ -110,9 +110,10 @@
         [InlineData(typeof(object))]
         [InlineData(typeof(int))]
         [InlineData(typeof(double))]
-        public void Should_use_full_type_name_as_configuration_key_for_default_configuration_object(Type type)
+        public void Should_get_key_from_configuration_provider_for_default_configuration_object(Type type)
         {
             // Given
+            var expectedKey = string.Concat("the-expected-key-", type.Name);
             var env = new DefaultNancyEnvironment();
 
             var fact = A.Fake<INancyEnvironmentFactory>();
@@ -120,6 +121,7 @@
 
             var provider = A.Fake<INancyDefaultConfigurationProvider>();
             A.CallTo(() => provider.GetDefaultConfiguration()).ReturnsLazily(() => Activator.CreateInstance(type));
+            A.CallTo(() => provider.GetKey()).Returns(expectedKey);
 
             var config = new DefaultNancyEnvironmentConfigurator(fact, new[] { provider });
 
@@ -127,7 +129,7 @@
             config.ConfigureEnvironment(x => { });
 
             // Then
-            env.ContainsKey(type.FullName).ShouldBeTrue();
+            env.ContainsKey(expectedKey).ShouldBeTrue();
         }
 
         [Fact]

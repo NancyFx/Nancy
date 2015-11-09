@@ -34,10 +34,10 @@
 
             configuration.Invoke(environment);
 
-            foreach (var configurationProviders in this.defaultConfigurationProviders)
+            foreach (var configurationProvider in this.defaultConfigurationProviders)
             {
                 var defaultConfiguration =
-                    SafeGetDefaultConfiguration(configurationProviders);
+                    SafeGetDefaultConfiguration(configurationProvider);
 
                 if (defaultConfiguration == null)
                 {
@@ -45,7 +45,7 @@
                 }
 
                 var configurationKey =
-                    defaultConfiguration.GetType().FullName;
+                    configurationProvider.GetKey();
 
                 if (environment.ContainsKey(configurationKey))
                 {
