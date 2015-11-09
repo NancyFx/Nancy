@@ -25,9 +25,9 @@ namespace Nancy.Configuration
         /// Gets the full type name of <typeparamref name="T"/>.
         /// </summary>
         /// <returns>A <see cref="string"/> containing the key.</returns>
-        public virtual string GetKey()
+        public virtual string Key
         {
-            return typeof(T).FullName;
+            get { return typeof(T).FullName; }
         }
     }
 }

@@ -45,7 +45,7 @@
                 }
 
                 var configurationKey =
-                    configurationProvider.GetKey();
+                    configurationProvider.Key;
 
                 if (environment.ContainsKey(configurationKey))
                 {

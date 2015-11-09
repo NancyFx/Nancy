@@ -15,6 +15,6 @@ namespace Nancy.Configuration
         /// Gets the key that will be used to store the configuration object in the <see cref="INancyEnvironment"/>.
         /// </summary>
         /// <returns>A <see cref="string"/> containing the key.</returns>
-        string GetKey();
+        string Key { get; }
     }
 }

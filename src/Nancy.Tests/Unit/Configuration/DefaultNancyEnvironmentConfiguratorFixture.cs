@@ -121,7 +121,7 @@
 
             var provider = A.Fake<INancyDefaultConfigurationProvider>();
             A.CallTo(() => provider.GetDefaultConfiguration()).ReturnsLazily(() => Activator.CreateInstance(type));
-            A.CallTo(() => provider.GetKey()).Returns(expectedKey);
+            A.CallTo(() => provider.Key).Returns(expectedKey);
 
             var config = new DefaultNancyEnvironmentConfigurator(fact, new[] { provider });
 
