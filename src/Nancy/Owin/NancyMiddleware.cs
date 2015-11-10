@@ -92,7 +92,9 @@
                                 certificate,
                                 owinRequestProtocol);
 
-                        var nancyContext = await engine.HandleRequest(nancyRequest, StoreEnvironment(environment, owinUser),
+                        var nancyContext = await engine.HandleRequest(
+                            nancyRequest,
+                            StoreEnvironment(environment, owinUser),
                             owinCallCancelled);
                         await RequestComplete(nancyContext, environment, options.PerformPassThrough, next);
                     };
