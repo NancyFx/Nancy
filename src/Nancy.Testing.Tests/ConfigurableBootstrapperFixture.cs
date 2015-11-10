@@ -114,7 +114,7 @@
         }
 
         [Fact]
-        public void Should_throw_exceptions_if_any_occur_in_route()
+        public async Task Should_throw_exceptions_if_any_occur_in_route()
         {
             var bootstrapper = new ConfigurableBootstrapper(with =>
                 {
@@ -124,7 +124,7 @@
             var engine = bootstrapper.GetEngine();
             var request = new Request("GET", "/", "http");
 
-            var result = Record.Exception(() => engine.HandleRequest(request));
+            var result = await Record.Exception(() => engine.HandleRequest(request));
 
             result.ShouldNotBeNull();
             result.ShouldBeOfType<Exception>();
@@ -132,7 +132,7 @@
         }
 
         [Fact]
-        public void Should_run_application_startup_closure()
+        public async Task Should_run_application_startup_closure()
         {
             var date = new DateTime(2112,10,31);
 
@@ -152,13 +152,13 @@
 
             var engine = bootstrapper.GetEngine();
             var request = new Request("GET", "/", "http");
-            var result = engine.HandleRequest(request);
+            var result = await engine.HandleRequest(request);
 
             result.Items["date"].ShouldEqual(date);
         }
 
         [Fact]
-        public void Should_run_request_startup_closure()
+        public async Task Should_run_request_startup_closure()
         {
             var date = new DateTime(2112, 10, 31);
             var bootstrapper =
@@ -170,12 +170,12 @@
 
             var engine = bootstrapper.GetEngine();
             var request = new Request("GET", "/", "http");
-            var result = engine.HandleRequest(request);
+            var result = await engine.HandleRequest(request);
 
             result.Items["date"].ShouldEqual(date);
         }
 
-        public IEnumerable<string> GetConfigurableBootstrapperMembers()
+        private IEnumerable<string> GetConfigurableBootstrapperMembers()
         {
             var ignoreList = new[]
             {
@@ -217,6 +217,22 @@
             public BlowUpModule()
             {
                 Get["/"] = _ => { throw new InvalidOperationException("Oh noes!"); };
+            }
+        }
+
+        private static class Record
+        {
+            internal static async Task<Exception> Exception(Func<Task> code)
+            {
+                try
+                {
+                    await code();
+                    return null;
+                }
+                catch (Exception ex)
+                {
+                    return ex;
+                }
             }
         }
     }

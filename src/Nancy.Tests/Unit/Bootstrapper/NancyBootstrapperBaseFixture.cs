@@ -5,7 +5,7 @@
     using System.IO;
     using System.Linq;
     using System.Threading;
-
+    using System.Threading.Tasks;
     using FakeItEasy;
 
     using Nancy.Bootstrapper;
@@ -235,7 +235,7 @@
         }
 
         [Fact]
-        public void Should_only_get_request_startup_tasks_once()
+        public async Task Should_only_get_request_startup_tasks_once()
         {
             // Given
             var uninitialiedBootstrapper = new FakeBootstrapperBaseImplementation();
@@ -243,8 +243,8 @@
             var engine = uninitialiedBootstrapper.GetEngine();
 
             // When
-            engine.HandleRequest(new FakeRequest("GET", "/"));
-            engine.HandleRequest(new FakeRequest("GET", "/"));
+            await engine.HandleRequest(new FakeRequest("GET", "/"));
+            await engine.HandleRequest(new FakeRequest("GET", "/"));
 
             // Then
             uninitialiedBootstrapper.RequestStartupTasksCalls.ShouldEqual(1);
