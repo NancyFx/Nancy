@@ -219,7 +219,7 @@ namespace Nancy.Testing
             var request =
                 CreateRequest(method, url, browserContextValues);
 
-            var response = new BrowserResponse(this.engine.HandleRequest(request), this, (BrowserContext)browserContextValues);
+            var response = new BrowserResponse(this.engine.HandleRequestSync(request), this, (BrowserContext)browserContextValues);
 
             this.CaptureCookies(response);
 

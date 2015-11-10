@@ -430,7 +430,7 @@
             try
             {
                 var nancyRequest = this.ConvertRequestToNancyRequest(ctx.Request);
-                using (var nancyContext = this.engine.HandleRequest(nancyRequest))
+                using (var nancyContext = this.engine.HandleRequestSync(nancyRequest))
                 {
                     try
                     {
