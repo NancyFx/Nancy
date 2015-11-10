@@ -2,7 +2,7 @@ namespace Nancy
 {
     using System;
     using System.Threading;
-
+    using System.Threading.Tasks;
     using Nancy.Helpers;
 
     public static class NancyEngineExtensions
@@ -13,7 +13,12 @@ namespace Nancy
         /// <param name="nancyEngine">The <see cref="INancyEngine"/> instance.</param>
         /// <param name="request">An <see cref="Request"/> instance, containing the information about the current request.</param>
         /// <returns>A <see cref="NancyContext"/> instance containing the request/response context.</returns>
-        public static NancyContext HandleRequest(this INancyEngine nancyEngine, Request request)
+        public static Task<NancyContext> HandleRequest(this INancyEngine nancyEngine, Request request)
+        {
+            return nancyEngine.HandleRequest(request, context => context, CancellationToken.None);
+        }
+
+        public static NancyContext HandleRequestSync(this INancyEngine nancyEngine, Request request)
         {
             return HandleRequest(nancyEngine, request, context => context);
         }
