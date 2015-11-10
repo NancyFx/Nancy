@@ -74,7 +74,7 @@
                         if (options.EnableClientCertificates)
                         {
                             var clientCertificate = Get<X509Certificate>(environment, "ssl.ClientCertificate");
-                            certificate = clientCertificate?.GetRawCertData();
+                            certificate = (clientCertificate == null) ? null : clientCertificate.GetRawCertData();
                         }
 
                         var serverClientIp = Get<string>(environment, "server.RemoteIpAddress");
