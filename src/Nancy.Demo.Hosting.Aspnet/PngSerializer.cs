@@ -26,7 +26,7 @@
         /// <returns>True if supported, false otherwise</returns>
         public bool CanSerialize(MediaRange mediaRange)
         {
-            return ((string)mediaRange).Equals("image/png", StringComparison.OrdinalIgnoreCase);
+            return mediaRange.Matches("image/png");
         }
 
         /// <summary>
