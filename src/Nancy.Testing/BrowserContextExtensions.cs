@@ -1,5 +1,4 @@
-﻿
-namespace Nancy.Testing
+﻿namespace Nancy.Testing
 {
     using System;
     using System.Collections.Generic;
@@ -187,7 +186,7 @@ namespace Nancy.Testing
                     if (contextValues.Headers["accept"].Any(x => x.Equals("*/*")))
                     {
                         contextValues.Headers.Remove("accept");
-                    }    
+                    }
                 }
             }
 

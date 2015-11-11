@@ -32,10 +32,7 @@
         /// <value>An <see cref="IEnumerable{T}"/> of extensions if any are available, otherwise an empty enumerable.</value>
         public IEnumerable<string> Extensions
         {
-            get
-            {
-                yield return "json";
-            }
+            get { yield return "json"; }
         }
 
         /// <summary>
