@@ -166,6 +166,7 @@
     <Compile Include="Unit\Culture\BuiltInCultureConventionFixture.cs" />
     <Compile Include="Unit\DefaultNancyBootstrapperFixture.cs" />
     <Compile Include="Unit\DefaultResponseFormatterFactoryFixture.cs" />
+    <Compile Include="Unit\DefaultSerializerFactoryFixture.cs" />
     <Compile Include="Unit\Diagnostics\ConcurrentLimitedCollectionFixture.cs" />
     <Compile Include="Unit\Diagnostics\CustomInteractiveDiagnosticsFixture.cs" />
     <Compile Include="Unit\Diagnostics\DefaultRequestTraceFactoryFixture.cs" />

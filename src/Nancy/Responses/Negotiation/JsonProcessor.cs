@@ -30,7 +30,7 @@
         /// </summary>
         public IEnumerable<Tuple<string, MediaRange>> ExtensionMappings
         {
-            get {  return extensionMappings; }
+            get { return extensionMappings; }
         }
 
         /// <summary>
@@ -45,10 +45,10 @@
             if (IsExactJsonContentType(requestedMediaRange))
             {
                 return new ProcessorMatch
-                    {
-                        ModelResult = MatchResult.DontCare,
-                        RequestedContentTypeResult = MatchResult.ExactMatch
-                    };
+                {
+                    ModelResult = MatchResult.DontCare,
+                    RequestedContentTypeResult = MatchResult.ExactMatch
+                };
             }
 
             if (IsWildcardJsonContentType(requestedMediaRange))

@@ -9,9 +9,9 @@
     public interface IResponseFormatter : IHideObjectMembers
     {
         /// <summary>
-        /// Gets all serializers currently registered
+        /// Gets all <see cref="ISerializerFactory"/> factory.
         /// </summary>
-        IEnumerable<ISerializer> Serializers { get; }
+        ISerializerFactory SerializerFactory { get; }
 
         /// <summary>
         /// Gets the context for which the response is being formatted.

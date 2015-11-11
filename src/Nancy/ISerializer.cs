@@ -2,15 +2,19 @@
 {
     using System.Collections.Generic;
     using System.IO;
+    using Nancy.Responses.Negotiation;
 
+    /// <summary>
+    /// Defines the functionality for providing serialization support.
+    /// </summary>
     public interface ISerializer
     {
         /// <summary>
         /// Whether the serializer can serialize the content type
         /// </summary>
-        /// <param name="contentType">Content type to serialise</param>
+        /// <param name="mediaRange">Content type to serialise</param>
         /// <returns>True if supported, false otherwise</returns>
-        bool CanSerialize(string contentType);
+        bool CanSerialize(MediaRange mediaRange);
 
         /// <summary>
         /// Gets the list of extensions that the serializer can handle.
@@ -21,10 +25,10 @@
         /// <summary>
         /// Serialize the given model with the given contentType
         /// </summary>
-        /// <param name="contentType">Content type to serialize into</param>
+        /// <param name="mediaRange">Content type to serialize into</param>
         /// <param name="model">Model to serialize</param>
         /// <param name="outputStream">Output stream to serialize to</param>
         /// <returns>Serialised object</returns>
-        void Serialize<TModel>(string contentType, TModel model, Stream outputStream);
+        void Serialize<TModel>(MediaRange mediaRange, TModel model, Stream outputStream);
     }
 }

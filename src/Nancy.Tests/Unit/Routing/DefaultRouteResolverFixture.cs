@@ -387,7 +387,7 @@
             // Given
             StaticConfiguration.DisableMethodNotAllowedResponses = false;
             var localBrowser = new Browser(with => with.Module<MethodNotAllowedModule>());
-            
+
             // When
             var result = localBrowser.Get("/");
 
@@ -412,7 +412,7 @@
             public MethodNotAllowedModule()
             {
                 Delete["/"] = x => 200;
-                
+
                 Post["/"] = x => 200;
             }
         }
@@ -422,7 +422,7 @@
             public NoRootModule()
             {
                 Get["/notroot"] = _ => "foo";
-            }        
+            }
         }
 
         private class TestModule : NancyModule
@@ -456,7 +456,7 @@
                 Get["/multipleparameters/{file}.{extension}"] = _ => "Multiple parameters " + _.file + "." + _.extension;
 
                 Get["/capturenodewithliteral/{file}.html"] = _ => "CaptureNodeWithLiteral " + _.file + ".html";
-                
+
                 Get[@"/regex/(?<foo>\d{2,4})/{bar}"] = x => string.Format("RegEx {0} {1}", x.foo, x.bar);
             }
         }

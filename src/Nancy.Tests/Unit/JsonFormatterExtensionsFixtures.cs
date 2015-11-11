@@ -18,8 +18,11 @@ namespace Nancy.Tests.Unit
 
         public JsonFormatterExtensionsFixtures()
         {
+            var serializerFactory =
+               new DefaultSerializerFactory(new ISerializer[] { new DefaultJsonSerializer() });
+
             this.formatter = A.Fake<IResponseFormatter>();
-            A.CallTo(() => this.formatter.Serializers).Returns(new[] { new DefaultJsonSerializer() });
+            A.CallTo(() => this.formatter.SerializerFactory).Returns(serializerFactory);
             this.model = new Person { FirstName = "Andy", LastName = "Pike" };
             this.response = this.formatter.AsJson(model);
         }

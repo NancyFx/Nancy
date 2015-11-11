@@ -5,6 +5,7 @@
     using System.Drawing;
     using System.Drawing.Imaging;
     using System.IO;
+    using Nancy.Responses.Negotiation;
 
     /// <summary>
     /// If you request /negotiated with an accept header with the value image/png you will get an image back
@@ -21,11 +22,11 @@
         /// <summary>
         /// Whether the serializer can serialize the content type
         /// </summary>
-        /// <param name="contentType">Content type to serialise</param>
+        /// <param name="mediaRange">Content type to serialise</param>
         /// <returns>True if supported, false otherwise</returns>
-        public bool CanSerialize(string contentType)
+        public bool CanSerialize(MediaRange mediaRange)
         {
-            return contentType.Equals("image/png", StringComparison.OrdinalIgnoreCase);
+            return mediaRange.Matches("image/png");
         }
 
         /// <summary>
@@ -40,11 +41,11 @@
         /// <summary>
         /// Serialize the given model with the given contentType
         /// </summary>
-        /// <param name="contentType">Content type to serialize into</param>
+        /// <param name="mediaRange">Content type to serialize into</param>
         /// <param name="model">Model to serialize</param>
         /// <param name="outputStream">Output stream to serialize to</param>
         /// <returns>Serialised object</returns>
-        public void Serialize<TModel>(string contentType, TModel model, Stream outputStream)
+        public void Serialize<TModel>(MediaRange mediaRange, TModel model, Stream outputStream)
         {
             var path =
                 Path.Combine(this.rootPathProvider.GetRootPath(), "content/face.png");

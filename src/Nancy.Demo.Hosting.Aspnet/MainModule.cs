@@ -18,7 +18,6 @@ namespace Nancy.Demo.Hosting.Aspnet
 
             Get["/texts"] = parameters => {
                 return (string)this.Context.Text.Menu.Home;
-                
             };
 
             Get["/env"] = _ =>

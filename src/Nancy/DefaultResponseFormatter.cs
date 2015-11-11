@@ -9,30 +9,28 @@
     public class DefaultResponseFormatter : IResponseFormatter
     {
         private readonly IRootPathProvider rootPathProvider;
-        private readonly IEnumerable<ISerializer> serializers;
         private readonly NancyContext context;
+        private readonly ISerializerFactory serializerFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultResponseFormatter"/> class.
         /// </summary>
         /// <param name="rootPathProvider">The <see cref="IRootPathProvider"/> that should be used by the instance.</param>
         /// <param name="context">The <see cref="NancyContext"/> that should be used by the instance.</param>
-        public DefaultResponseFormatter(IRootPathProvider rootPathProvider, NancyContext context, IEnumerable<ISerializer> serializers)
+        /// <param name="serializerFactory"></param>
+        public DefaultResponseFormatter(IRootPathProvider rootPathProvider, NancyContext context, ISerializerFactory serializerFactory)
         {
-            this.serializers = serializers.ToArray();
             this.rootPathProvider = rootPathProvider;
             this.context = context;
+            this.serializerFactory = serializerFactory;
         }
 
         /// <summary>
-        /// Gets all serializers currently registered
+        /// Gets all <see cref="ISerializerFactory"/> factory.
         /// </summary>
-        public IEnumerable<ISerializer> Serializers
+        public ISerializerFactory SerializerFactory
         {
-            get
-            {
-                return this.serializers;
-            }
+            get { return this.serializerFactory; }
         }
 
         /// <summary>
