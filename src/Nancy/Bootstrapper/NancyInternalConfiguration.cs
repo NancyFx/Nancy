@@ -80,9 +80,12 @@ namespace Nancy.Bootstrapper
                     EnvironmentFactory = typeof(DefaultNancyEnvironmentFactory),
                     EnvironmentConfigurator = typeof(DefaultNancyEnvironmentConfigurator),
                     DefaultConfigurationProviders = AppDomainAssemblyTypeScanner.TypesOf<INancyDefaultConfigurationProvider>().ToList(),
+                    SerializerFactory = typeof(DefaultSerializerFactory),
                 };
             }
         }
+
+        public Type SerializerFactory { get; set; }
 
         public IList<Type> DefaultConfigurationProviders { get; set; }
 
@@ -251,7 +254,8 @@ namespace Nancy.Bootstrapper
                 new TypeRegistration(typeof(IRequestTraceFactory), this.RequestTraceFactory),
                 new TypeRegistration(typeof(IResponseNegotiator), this.ResponseNegotiator),
                 new TypeRegistration(typeof(INancyEnvironmentConfigurator), this.EnvironmentConfigurator),
-                new TypeRegistration(typeof(INancyEnvironmentFactory), this.EnvironmentFactory)
+                new TypeRegistration(typeof(INancyEnvironmentFactory), this.EnvironmentFactory),
+                new TypeRegistration(typeof(ISerializerFactory), this.SerializerFactory)
             };
         }
 

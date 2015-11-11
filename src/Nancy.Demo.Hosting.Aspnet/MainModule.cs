@@ -10,7 +10,7 @@ namespace Nancy.Demo.Hosting.Aspnet
 
     public class MainModule : NancyModule
     {
-        public MainModule(IRouteCacheProvider routeCacheProvider, INancyEnvironment environment)
+        public MainModule(IRouteCacheProvider routeCacheProvider, INancyEnvironment environment, ISerializerFactory serializerFactory)
         {
             Get["/"] = x => {
                 return View["routes", routeCacheProvider.GetCache()];
@@ -18,7 +18,6 @@ namespace Nancy.Demo.Hosting.Aspnet
 
             Get["/texts"] = parameters => {
                 return (string)this.Context.Text.Menu.Home;
-                
             };
 
             Get["/env"] = _ =>

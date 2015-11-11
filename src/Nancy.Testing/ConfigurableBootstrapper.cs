@@ -1965,6 +1965,30 @@ namespace Nancy.Testing
             }
 
             /// <summary>
+            /// Configures the bootstrapper to create an <see cref="ISerializerFactory"/> instance of the specified type.
+            /// </summary>
+            /// <typeparam name="T">The type of the <see cref="ISerializerFactory"/> that the bootstrapper should use.</typeparam>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator SerializerFactory<T>() where T : ISerializerFactory
+            {
+                this.bootstrapper.configuration.SerializerFactory = typeof(T);
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to use the provided instance of <see cref="IResponseNegotiator"/>.
+            /// </summary>
+            /// <param name="serializer">The <see cref="IResponseNegotiator"/> instance that should be used by the bootstrapper.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator SerializerFactory(ISerializerFactory serializer)
+            {
+                this.bootstrapper.registeredInstances.Add(
+                    new InstanceRegistration(typeof(ISerializerFactory), serializer));
+
+                return this;
+            }
+
+            /// <summary>
             /// Configures the bootstrapper to use the provided instance of <see cref="IApplicationStartup"/>.
             /// </summary>
             /// <typeparam name="T">The type of the <see cref="IApplicationStartup"/> that the bootstrapper should use.</typeparam>
