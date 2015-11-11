@@ -8,6 +8,9 @@
     using Nancy.Responses.Negotiation;
     using Nancy.Xml;
 
+    /// <summary>
+    /// Default <see cref="ISerializer"/> implementation for XML serialization.
+    /// </summary>
     public class DefaultXmlSerializer : ISerializer
     {
         /// <summary>

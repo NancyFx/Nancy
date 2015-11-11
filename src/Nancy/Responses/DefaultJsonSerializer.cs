@@ -8,6 +8,9 @@
     using Nancy.Json;
     using Nancy.Responses.Negotiation;
 
+    /// <summary>
+    /// Default <see cref="ISerializer"/> implementation for JSON serialization.
+    /// </summary>
     public class DefaultJsonSerializer : ISerializer
     {
         private bool? retainCasing;
