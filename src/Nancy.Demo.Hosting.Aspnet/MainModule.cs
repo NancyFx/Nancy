@@ -10,7 +10,7 @@ namespace Nancy.Demo.Hosting.Aspnet
 
     public class MainModule : NancyModule
     {
-        public MainModule(IRouteCacheProvider routeCacheProvider, INancyEnvironment environment, ISerializerFactory serializerFactory)
+        public MainModule(IRouteCacheProvider routeCacheProvider, INancyEnvironment environment)
         {
             Get["/"] = x => {
                 return View["routes", routeCacheProvider.GetCache()];
