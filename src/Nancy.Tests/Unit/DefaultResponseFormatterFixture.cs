@@ -1,7 +1,6 @@
 namespace Nancy.Tests.Unit
 {
     using FakeItEasy;
-
     using Xunit;
 
     public class DefaultResponseFormatterFixture
@@ -12,7 +11,7 @@ namespace Nancy.Tests.Unit
             // Given
             var rootPathProvider = A.Fake<IRootPathProvider>();
             A.CallTo(() => rootPathProvider.GetRootPath()).Returns("foo");
-            var formatter = new DefaultResponseFormatter(rootPathProvider, null, new ISerializer[] { });
+            var formatter = new DefaultResponseFormatter(rootPathProvider, null, new DefaultSerializerFactory(null));
 
             // When
             var result = formatter.RootPath;
@@ -28,7 +27,7 @@ namespace Nancy.Tests.Unit
             var context = new NancyContext();
 
             // When
-            var formatter = new DefaultResponseFormatter(null, context, new ISerializer[] { });
+            var formatter = new DefaultResponseFormatter(null, context, new DefaultSerializerFactory(null));
 
             // Then
             formatter.Context.ShouldBeSameAs(context);

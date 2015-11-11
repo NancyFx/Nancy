@@ -9,18 +9,17 @@
     public class DefaultResponseFormatterFactory : IResponseFormatterFactory
     {
         private readonly IRootPathProvider rootPathProvider;
-
-        private readonly IEnumerable<ISerializer> serializers;
+        private readonly ISerializerFactory serializerFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultResponseFormatter"/> class, with the
         /// provided <see cref="IRootPathProvider"/>.
         /// </summary>
         /// <param name="rootPathProvider"></param>
-        public DefaultResponseFormatterFactory(IRootPathProvider rootPathProvider, IEnumerable<ISerializer> serializers)
+        public DefaultResponseFormatterFactory(IRootPathProvider rootPathProvider, ISerializerFactory serializerFactory)
         {
             this.rootPathProvider = rootPathProvider;
-            this.serializers = serializers.ToArray();
+            this.serializerFactory = serializerFactory;
         }
 
         /// <summary>
@@ -30,7 +29,7 @@
         /// <returns>An <see cref="IResponseFormatter"/> instance.</returns>
         public IResponseFormatter Create(NancyContext context)
         {
-            return new DefaultResponseFormatter(this.rootPathProvider, context, this.serializers);
+            return new DefaultResponseFormatter(this.rootPathProvider, context, this.serializerFactory);
         }
     }
 }

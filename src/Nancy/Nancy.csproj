@@ -164,6 +164,7 @@
     <Compile Include="Diagnostics\DiagnosticsConfiguration.cs" />
     <Compile Include="Diagnostics\DiagnosticsConfigurationExtensions.cs" />
     <Compile Include="Diagnostics\DiagnosticsDefaultConfigurationProvider.cs" />
+    <Compile Include="Diagnostics\DiagnosticsSerializerFactory.cs" />
     <Compile Include="Diagnostics\DiagnosticsSession.cs" />
     <Compile Include="Diagnostics\ConcurrentLimitedCollection.cs" />
     <Compile Include="Diagnostics\DisabledDiagnostics.cs" />

@@ -2,7 +2,6 @@ namespace Nancy
 {
     using System;
     using System.IO;
-    using System.Linq;
 
     using Nancy.Extensions;
     using Nancy.Responses;
@@ -40,12 +39,12 @@ namespace Nancy
 
         public static Response AsJson<TModel>(this IResponseFormatter formatter, TModel model, HttpStatusCode statusCode = HttpStatusCode.OK)
         {
-            var serializer = jsonSerializer ?? (jsonSerializer = formatter.Serializers.FirstOrDefault(s => s.CanSerialize("application/json")));
+            var serializer = jsonSerializer ?? (jsonSerializer = formatter.SerializerFactory.GetSerializer("application/json"));
 
-            var r = new JsonResponse<TModel>(model, serializer);
-        	r.StatusCode = statusCode;
-
-        	return r;
+            return new JsonResponse<TModel>(model, serializer)
+            {
+                StatusCode = statusCode
+            };
         }
 
         public static Response AsRedirect(this IResponseFormatter formatter, string location, RedirectResponse.RedirectType type = RedirectResponse.RedirectType.SeeOther)
@@ -55,7 +54,7 @@ namespace Nancy
 
         public static Response AsXml<TModel>(this IResponseFormatter formatter, TModel model)
         {
-            var serializer = xmlSerializer ?? (xmlSerializer = formatter.Serializers.FirstOrDefault(s => s.CanSerialize("application/xml")));
+            var serializer = xmlSerializer ?? (xmlSerializer = formatter.SerializerFactory.GetSerializer("application/xml"));
 
             return new XmlResponse<TModel>(model, serializer);
         }

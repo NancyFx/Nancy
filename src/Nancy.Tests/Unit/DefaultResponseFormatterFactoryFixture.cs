@@ -1,22 +1,23 @@
 ﻿namespace Nancy.Tests.Unit
 {
     using FakeItEasy;
-
+    using Nancy.Responses.Negotiation;
     using Xunit;
 
     public class DefaultResponseFormatterFactoryFixture
     {
         private readonly IRootPathProvider rootPathProvider;
         private readonly DefaultResponseFormatterFactory factory;
-        private readonly ISerializer[] serializers;
+        private readonly ISerializerFactory serializerFactory;
 
         public DefaultResponseFormatterFactoryFixture()
         {
             this.rootPathProvider = A.Fake<IRootPathProvider>();
             A.CallTo(() => this.rootPathProvider.GetRootPath()).Returns("RootPath");
 
-            this.serializers = new[] { A.Fake<ISerializer>() };
-            this.factory = new DefaultResponseFormatterFactory(this.rootPathProvider, this.serializers);
+            this.serializerFactory = A.Fake<ISerializerFactory>();
+            A.CallTo(() => this.serializerFactory.GetSerializer(A<MediaRange>._));
+            this.factory = new DefaultResponseFormatterFactory(this.rootPathProvider, this.serializerFactory);
         }
 
         [Fact]
@@ -43,7 +44,7 @@
         }
 
         [Fact]
-        public void Should_create_response_formmater_with_serializers_set()
+        public void Should_create_response_formater_with_serializer_factory()
         {
             // Given
             var context = new NancyContext();
@@ -52,7 +53,7 @@
             var formatter = this.factory.Create(context);
 
             // Then
-            formatter.Serializers.ShouldEqualSequence(this.serializers);
+            formatter.SerializerFactory.ShouldBeSameAs(this.serializerFactory);
         }
     }
 }
