@@ -35,8 +35,8 @@ namespace Nancy
                 this.GetDefaultSerializerForMediaRange(mediaRange);
 
             var matches = this.serializers
-                              .Where(x => x != defaultSerializerForMediaRange)
-                              .Where(x => SafeCanSerialize(x, mediaRange)).ToArray();
+                .Where(x => x != defaultSerializerForMediaRange)
+                .Where(x => SafeCanSerialize(x, mediaRange)).ToArray();
 
             if (matches.Length > 1)
             {
@@ -53,8 +53,8 @@ namespace Nancy
             try
             {
                 return this.serializers
-                           .Where(x => x.GetType().Assembly.Equals(typeof(INancyEngine).Assembly))
-                           .SingleOrDefault(x => x.CanSerialize(mediaRange));
+                    .Where(x => x.GetType().Assembly.Equals(typeof(INancyEngine).Assembly))
+                    .SingleOrDefault(x => x.CanSerialize(mediaRange));
             }
             catch
             {
