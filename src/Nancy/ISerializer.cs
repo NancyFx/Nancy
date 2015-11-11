@@ -3,9 +3,11 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
     using Nancy.Responses.Negotiation;
 
+    /// <summary>
+    /// Defines the functionality for providing serialization support.
+    /// </summary>
     public interface ISerializer
     {
         /// <summary>
