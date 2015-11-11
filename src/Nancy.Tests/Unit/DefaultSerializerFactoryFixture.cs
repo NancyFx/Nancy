@@ -162,7 +162,7 @@
                 throw new Exception();
             }
 
-            public IEnumerable<string> Extensions { get; }
+            public IEnumerable<string> Extensions { get; set; }
 
             public void Serialize<TModel>(MediaRange mediaRange, TModel model, Stream outputStream)
             {
@@ -184,7 +184,7 @@
                 return this.mediaRange.Matches(mediaRange);
             }
 
-            public IEnumerable<string> Extensions { get; }
+            public IEnumerable<string> Extensions { get; set; }
 
             public void Serialize<TModel>(MediaRange mediaRange, TModel model, Stream outputStream)
             {
