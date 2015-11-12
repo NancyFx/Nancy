@@ -485,6 +485,11 @@ namespace Nancy.ModelBinding
 
             var contentType = GetRequestContentType(context.Context);
 
+            if (string.IsNullOrEmpty(contentType))
+            {
+                return null;
+            }
+
             var bodyDeserializer = this.bodyDeserializers.FirstOrDefault(b => b.CanDeserialize(contentType, context))
                 ?? this.defaults.DefaultBodyDeserializers.FirstOrDefault(b => b.CanDeserialize(contentType, context));
 

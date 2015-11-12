@@ -2,41 +2,11 @@
 {
     using Nancy.ModelBinding;
     using Nancy.Tests;
-
     using Xunit;
 
     public class CaseSensitivityFixture
     {
-        private Browser browser;
-
-        public class MainModule : NancyModule
-        {
-            public MainModule()
-            {
-                Get["/"] = _ =>
-                {
-                    string name = this.Request.Query.animal.HasValue ? this.Request.Query.animal : "";
-                    return name;
-                };
-
-                Get["/{ANIMAL}"] = args =>
-                {
-                    string name = args.animal.HasValue ? args.animal : "";
-                    return name;
-                };
-
-                Get["/animal"] = _ =>
-                {
-                    Animal animal = this.Bind<Animal>();
-                    return (animal.Type == null) ? HttpStatusCode.NoContent : HttpStatusCode.Accepted;
-                };
-            }
-        }
-
-        public class Animal
-        {
-            public string Type { get; set; }
-        }
+        private readonly Browser browser;
 
         public CaseSensitivityFixture()
         {
@@ -51,79 +21,139 @@
         [Fact]
         public void Should_pull_query_parameter_with_different_case()
         {
-            StaticConfiguration.CaseSensitive = false;
-            string animal = "dog";
-            var response = browser.Get("/", with =>
-            {
-                with.Query("ANIMAL", animal);
-            });
+            // Given
+            const string animal = "dog";
 
-            response.Body.AsString().ShouldEqual(animal);
+            using (new StaticConfigurationContext(x => x.CaseSensitive = false))
+            {
+                // When
+                var response = browser.Get("/", with =>
+                {
+                    with.Query("ANIMAL", animal);
+                });
+
+                // Then
+                response.Body.AsString().ShouldEqual(animal);
+            }
         }
 
         [Fact]
         public void Should_not_pull_query_parameter_with_different_case_when_sensitivity_is_on()
         {
-            StaticConfiguration.CaseSensitive = true;
-            string animal = "dog";
-            var response = browser.Get("/", with =>
-            {
-                with.Query("ANIMAL", animal);
-            });
+            // Given
+            const string animal = "dog";
 
-            response.Body.AsString().ShouldEqual("");
+            using (new StaticConfigurationContext(x => x.CaseSensitive = true))
+            {
+
+                // When
+                var response = browser.Get("/", with =>
+                {
+                    with.Query("ANIMAL", animal);
+                });
+
+                // Then
+                response.Body.AsString().ShouldEqual(string.Empty);
+            }
         }
 
         [Fact]
         public void Should_pull_parameter_with_different_case()
         {
-            StaticConfiguration.CaseSensitive = false;
-            string animal = "dog";
-            var response = browser.Get("/dog", with =>
-            {
-            });
+            // Given
+            const string animal = "dog";
 
-            response.Body.AsString().ShouldEqual(animal);
+            using (new StaticConfigurationContext(x => x.CaseSensitive = false))
+            {
+                // When
+                var response = browser.Get("/dog", with =>
+                {
+                });
+
+                // Then
+                response.Body.AsString().ShouldEqual(animal);
+            }
         }
 
         [Fact]
         public void Should_not_pull_parameter_with_different_case_when_sensitivity_is_on()
         {
-            StaticConfiguration.CaseSensitive = true;
-            
-            var response = browser.Get("/dog", with =>
+            // Given
+            using (new StaticConfigurationContext(x => x.CaseSensitive = true))
             {
-            });
+                // When
+                var response = browser.Get("/dog");
 
-            response.Body.AsString().ShouldEqual("");
+                // Then
+                response.Body.AsString().ShouldEqual(string.Empty);
+            }
         }
 
         [Fact]
-        public void Should_bind_with_different_case()
+        public void Should_bind_query_with_different_case_when_sensitivity_is_off()
         {
-            StaticConfiguration.CaseSensitive = false;
-            string animal = "dog";
-            var response = browser.Get("/animal", with =>
-            {
-                with.Query("TYPE", animal);
-            });
+            // Given
+            const string animal = "dog";
 
-            response.StatusCode.ShouldEqual(HttpStatusCode.Accepted);
+            using (new StaticConfigurationContext(x => x.CaseSensitive = false))
+            {
+                // When
+                var response = browser.Get("/animal", with =>
+                {
+                    with.Query("TYPE", animal);
+                });
+
+                // Then
+                response.StatusCode.ShouldEqual(HttpStatusCode.Accepted);
+            }
         }
 
         [Fact]
-        public void Should_not_bind_with_different_case_when_sensitivity_is_on()
+        public void Should_not_bind_query_with_different_case_when_sensitivity_is_on()
         {
-            StaticConfiguration.CaseSensitive = true;
-            string animal = "dog";
-            var response = browser.Get("/animal", with =>
-            {
-                with.Query("TYPE", animal);
-            });
+            // Given
+            const string animal = "dog";
 
-            response.StatusCode.ShouldEqual(HttpStatusCode.NoContent);
+            using (new StaticConfigurationContext(x => x.CaseSensitive = true))
+            {
+                // When
+                var response = browser.Get("/animal", with =>
+                {
+                    with.Query("TYPE", animal);
+                });
+
+                // Then
+                response.StatusCode.ShouldEqual(HttpStatusCode.NoContent);
+            }
         }
 
+        public class MainModule : NancyModule
+        {
+            public MainModule()
+            {
+                Get["/"] = _ =>
+                {
+                    var name = this.Request.Query.animal.HasValue ? this.Request.Query.animal : "";
+                    return name;
+                };
 
+                Get["/{ANIMAL}"] = args =>
+                {
+                    var name = args.animal.HasValue ? args.animal : "";
+                    return name;
+                };
+
+                Get["/animal"] = _ =>
+                {
+                    var animal = this.Bind<Animal>();
+                    return (animal.Type == null) ? HttpStatusCode.NoContent : HttpStatusCode.Accepted;
+                };
+            }
+        }
+
+        public class Animal
+        {
+            public string Type { get; set; }
+        }
     }
 }
