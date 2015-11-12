@@ -15,6 +15,7 @@ namespace Nancy.Tests.Unit.ModelBinding
     using Nancy.ModelBinding;
     using Nancy.ModelBinding.DefaultBodyDeserializers;
     using Nancy.ModelBinding.DefaultConverters;
+    using Nancy.Responses.Negotiation;
     using Nancy.Tests.Fakes;
     using Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers;
 
@@ -167,7 +168,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             binder.Bind(context, this.GetType(), null, BindingConfig.Default);
 
             // Then
-            A.CallTo(() => deserializer.CanDeserialize("application/xml", A<BindingContext>._))
+            A.CallTo(() => deserializer.CanDeserialize(A<MediaRange>.That.Matches(x => x.Matches("application/xml")), A<BindingContext>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
@@ -184,7 +185,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             binder.Bind(context, this.GetType(), null, BindingConfig.Default);
 
             // Then
-            A.CallTo(() => deserializer.CanDeserialize("application/xml", A<BindingContext>.That.Not.IsNull()))
+            A.CallTo(() => deserializer.CanDeserialize(A<MediaRange>.That.Matches(x => x.Matches("application/xml")), A<BindingContext>.That.Not.IsNull()))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
@@ -380,8 +381,8 @@ namespace Nancy.Tests.Unit.ModelBinding
 
             var validProperties = 0;
             var deserializer = A.Fake<IBodyDeserializer>();
-            A.CallTo(() => deserializer.CanDeserialize(A<string>.Ignored, A<BindingContext>._)).Returns(true);
-            A.CallTo(() => deserializer.Deserialize(A<string>.Ignored, A<Stream>.Ignored, A<BindingContext>.Ignored))
+            A.CallTo(() => deserializer.CanDeserialize(A<MediaRange>._, A<BindingContext>._)).Returns(true);
+            A.CallTo(() => deserializer.Deserialize(A<MediaRange>._, A<Stream>.Ignored, A<BindingContext>.Ignored))
                                        .Invokes(f =>
                                            {
                                                validProperties = f.Arguments.Get<BindingContext>(2).ValidModelBindingMembers.Count();
@@ -411,7 +412,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             binder.Bind(context, this.GetType(), null, BindingConfig.Default);
 
             // Then
-            A.CallTo(() => deserializer.CanDeserialize("application/xml", A<BindingContext>.That.Not.IsNull()))
+            A.CallTo(() => deserializer.CanDeserialize(A<MediaRange>.That.Matches(x => x.Matches("application/xml")), A<BindingContext>.That.Not.IsNull()))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
@@ -1608,12 +1609,12 @@ namespace Nancy.Tests.Unit.ModelBinding
 
         private class ThrowingBodyDeserializer<T> : IBodyDeserializer where T : Exception, new()
         {
-            public bool CanDeserialize(string contentType, BindingContext context)
+            public bool CanDeserialize(MediaRange mediaRange, BindingContext context)
             {
                 return true;
             }
 
-            public object Deserialize(string contentType, Stream bodyStream, BindingContext context)
+            public object Deserialize(MediaRange mediaRange, Stream bodyStream, BindingContext context)
             {
                 throw new T();
             }
