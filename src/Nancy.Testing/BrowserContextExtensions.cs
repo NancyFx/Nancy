@@ -75,7 +75,7 @@
         {
             if (serializer == null)
             {
-                serializer = new DefaultXmlSerializer();
+                serializer = new DefaultXmlSerializer(null);
             }
 
             var contextValues =

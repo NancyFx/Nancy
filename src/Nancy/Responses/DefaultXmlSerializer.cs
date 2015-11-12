@@ -5,6 +5,7 @@
     using System.IO;
     using System.Xml.Serialization;
     using System.Text;
+    using Nancy.Configuration;
     using Nancy.Responses.Negotiation;
     using Nancy.Xml;
 
@@ -13,6 +14,18 @@
     /// </summary>
     public class DefaultXmlSerializer : ISerializer
     {
+        private readonly XmlSettings settings;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultXmlSerializer"/> class,
+        /// with the provided <see cref="INancyEnvironment"/>.
+        /// </summary>
+        /// <param name="environment">An <see cref="INancyEnvironment"/> instance.</param>
+        public DefaultXmlSerializer(INancyEnvironment environment)
+        {
+            this.settings = environment.GetValue<XmlSettings>();
+        }
+
         /// <summary>
         /// Whether the serializer can serialize the content type
         /// </summary>
@@ -45,9 +58,9 @@
             {
                 var serializer = new XmlSerializer(typeof(TModel));
 
-                if (XmlSettings.EncodingEnabled)
+                if (this.settings.EncodingEnabled)
                 {
-                    serializer.Serialize(new StreamWriter(outputStream, XmlSettings.DefaultEncoding), model);
+                    serializer.Serialize(new StreamWriter(outputStream, this.settings.DefaultEncoding), model);
                 }
                 else
                 {
@@ -64,19 +77,19 @@
             }
         }
 
-        private static bool IsXmlType(string contentType)
+        private static bool IsXmlType(MediaRange mediaRange)
         {
-            if (string.IsNullOrEmpty(contentType))
+            if (string.IsNullOrEmpty(mediaRange))
             {
                 return false;
             }
 
-            var contentMimeType = contentType.Split(';')[0];
+            var contentMimeType = mediaRange.ToString();
 
-            return contentMimeType.Equals("application/xml", StringComparison.OrdinalIgnoreCase) ||
-            contentMimeType.Equals("text/xml", StringComparison.OrdinalIgnoreCase) ||
-            (contentMimeType.StartsWith("application/vnd", StringComparison.OrdinalIgnoreCase) &&
-            contentMimeType.EndsWith("+xml", StringComparison.OrdinalIgnoreCase));
+            return contentMimeType.Equals("application/xml", StringComparison.OrdinalIgnoreCase)
+                || contentMimeType.Equals("text/xml", StringComparison.OrdinalIgnoreCase)
+                || (contentMimeType.StartsWith("application/vnd", StringComparison.OrdinalIgnoreCase)
+                && contentMimeType.EndsWith("+xml", StringComparison.OrdinalIgnoreCase));
         }
     }
 }

@@ -45,7 +45,7 @@ namespace Nancy.Diagnostics
 
             var diagnosticsRouteResolver = new DefaultRouteResolver(
                 diagnosticsModuleCatalog,
-                new DiagnosticsModuleBuilder(rootPathProvider, modelBinderLocator),
+                new DiagnosticsModuleBuilder(rootPathProvider, modelBinderLocator, environment),
                 diagnosticsRouteCache,
                 new RouteResolverTrie(new TrieNodeFactory(routeSegmentConstraints)));
 

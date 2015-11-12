@@ -1,7 +1,6 @@
 ﻿namespace Nancy
 {
-    using System.Collections.Generic;
-    using System.Linq;
+    using Nancy.Configuration;
 
     /// <summary>
     /// The default implementation of the <see cref="IResponseFormatterFactory"/> interface.
@@ -10,16 +9,19 @@
     {
         private readonly IRootPathProvider rootPathProvider;
         private readonly ISerializerFactory serializerFactory;
+        private readonly INancyEnvironment environment;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultResponseFormatter"/> class, with the
-        /// provided <see cref="IRootPathProvider"/>.
+        /// Initializes a new instance of the <see cref="DefaultResponseFormatter"/> class.
         /// </summary>
-        /// <param name="rootPathProvider"></param>
-        public DefaultResponseFormatterFactory(IRootPathProvider rootPathProvider, ISerializerFactory serializerFactory)
+        /// <param name="rootPathProvider">An <see cref="IRootPathProvider"/> instance.</param>
+        /// <param name="serializerFactory">An <see cref="ISerializerFactory"/> instance.</param>
+        /// <param name="environment">An <see cref="INancyEnvironment"/> instance.</param>
+        public DefaultResponseFormatterFactory(IRootPathProvider rootPathProvider, ISerializerFactory serializerFactory, INancyEnvironment environment)
         {
             this.rootPathProvider = rootPathProvider;
             this.serializerFactory = serializerFactory;
+            this.environment = environment;
         }
 
         /// <summary>
@@ -29,7 +31,7 @@
         /// <returns>An <see cref="IResponseFormatter"/> instance.</returns>
         public IResponseFormatter Create(NancyContext context)
         {
-            return new DefaultResponseFormatter(this.rootPathProvider, context, this.serializerFactory);
+            return new DefaultResponseFormatter(this.rootPathProvider, context, this.serializerFactory, this.environment);
         }
     }
 }

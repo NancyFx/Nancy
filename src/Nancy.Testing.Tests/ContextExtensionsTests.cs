@@ -3,10 +3,10 @@ namespace Nancy.Testing.Tests
     using System;
     using System.IO;
     using System.Text;
-
+    using Nancy.Configuration;
     using Nancy.Responses;
     using Nancy.Tests;
-
+    using Nancy.Xml;
     using Xunit;
 
     public class ContextExtensionsTests
@@ -98,7 +98,9 @@ namespace Nancy.Testing.Tests
         public void Should_create_new_wrapper_from_xml_response_if_not_already_present()
         {
             // Given
-            var response = new XmlResponse<Model>(new Model() { Dummy = "Data" }, new DefaultXmlSerializer());
+            var environment = new DefaultNancyEnvironment();
+            environment.AddValue(XmlSettings.Default);
+            var response = new XmlResponse<Model>(new Model() { Dummy = "Data" }, new DefaultXmlSerializer(environment), environment);
             var context = new NancyContext() { Response = response };
 
             // When

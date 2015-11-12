@@ -2,6 +2,7 @@ namespace Nancy
 {
     using System;
     using System.IO;
+    using System.Runtime.CompilerServices;
     using System.Text;
     using Extensions;
     using Responses;
@@ -129,7 +130,7 @@ namespace Nancy
         {
             var serializer = xmlSerializer ?? (xmlSerializer = formatter.SerializerFactory.GetSerializer("application/xml"));
 
-            return new XmlResponse<TModel>(model, serializer);
+            return new XmlResponse<TModel>(model, serializer, formatter.Environment);
         }
 
         /// <summary>

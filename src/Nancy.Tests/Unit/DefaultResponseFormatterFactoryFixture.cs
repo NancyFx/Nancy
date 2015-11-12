@@ -1,6 +1,7 @@
 ﻿namespace Nancy.Tests.Unit
 {
     using FakeItEasy;
+    using Nancy.Configuration;
     using Nancy.Responses.Negotiation;
     using Xunit;
 
@@ -9,6 +10,7 @@
         private readonly IRootPathProvider rootPathProvider;
         private readonly DefaultResponseFormatterFactory factory;
         private readonly ISerializerFactory serializerFactory;
+        private readonly INancyEnvironment environment;
 
         public DefaultResponseFormatterFactoryFixture()
         {
@@ -17,7 +19,10 @@
 
             this.serializerFactory = A.Fake<ISerializerFactory>();
             A.CallTo(() => this.serializerFactory.GetSerializer(A<MediaRange>._));
-            this.factory = new DefaultResponseFormatterFactory(this.rootPathProvider, this.serializerFactory);
+
+            this.environment = A.Fake<INancyEnvironment>();
+
+            this.factory = new DefaultResponseFormatterFactory(this.rootPathProvider, this.serializerFactory, this.environment);
         }
 
         [Fact]
