@@ -37,11 +37,6 @@ namespace Nancy
             return new TextResponse(contents);
         }
 
-        public static Response AsImage(this IResponseFormatter formatter, string applicationRelativeFilePath)
-        {
-            return AsFile(formatter, applicationRelativeFilePath);
-        }
-
         public static Response AsJson<TModel>(this IResponseFormatter formatter, TModel model, HttpStatusCode statusCode = HttpStatusCode.OK)
         {
             var serializer = jsonSerializer ?? (jsonSerializer = formatter.SerializerFactory.GetSerializer("application/json"));
