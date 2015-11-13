@@ -73,7 +73,7 @@
         /// </summary>
         /// <param name="context">Current request context</param>
         /// <returns>IEnumerable of INancyModule</returns>
-        public override sealed IEnumerable<INancyModule> GetAllModules(NancyContext context)
+        public sealed override IEnumerable<INancyModule> GetAllModules(NancyContext context)
         {
             return this.ApplicationContainer.ResolveAll<INancyModule>(false);
         }
@@ -94,7 +94,7 @@
         /// </summary>
         /// <param name="context">The <see cref="NancyContext"/> used by the request.</param>
         /// <returns>An <see cref="IPipelines"/> instance.</returns>
-        protected override sealed IPipelines InitializeRequestPipelines(NancyContext context)
+        protected sealed override IPipelines InitializeRequestPipelines(NancyContext context)
         {
             return base.InitializeRequestPipelines(context);
         }
@@ -114,7 +114,7 @@
         /// Resolve INancyEngine
         /// </summary>
         /// <returns>INancyEngine implementation</returns>
-        protected override sealed INancyEngine GetEngineInternal()
+        protected sealed override INancyEngine GetEngineInternal()
         {
             return this.ApplicationContainer.Resolve<INancyEngine>();
         }
@@ -134,7 +134,7 @@
         /// to take the responsibility of registering things like INancyModuleCatalog manually.
         /// </summary>
         /// <param name="applicationContainer">Application container to register into</param>
-        protected override sealed void RegisterBootstrapperTypes(TinyIoCContainer applicationContainer)
+        protected sealed override void RegisterBootstrapperTypes(TinyIoCContainer applicationContainer)
         {
             applicationContainer.Register<INancyModuleCatalog>(this);
         }
@@ -159,11 +159,21 @@
         }
 
         /// <summary>
+        /// Get the <see cref="INancyEnvironment"/> instance.
+        /// </summary>
+        /// <returns>An configured <see cref="INancyEnvironment"/> instance.</returns>
+        /// <remarks>The boostrapper must be initialised (<see cref="INancyBootstrapper.Initialise"/>) prior to calling this.</remarks>
+        public override INancyEnvironment GetEnvironment()
+        {
+            return this.ApplicationContainer.Resolve<INancyEnvironment>();
+        }
+
+        /// <summary>
         /// Register the default implementations of internally used types into the container as singletons
         /// </summary>
         /// <param name="container">Container to register into</param>
         /// <param name="typeRegistrations">Type registrations to register</param>
-        protected override sealed void RegisterTypes(TinyIoCContainer container, IEnumerable<TypeRegistration> typeRegistrations)
+        protected sealed override void RegisterTypes(TinyIoCContainer container, IEnumerable<TypeRegistration> typeRegistrations)
         {
             foreach (var typeRegistration in typeRegistrations)
             {
@@ -190,7 +200,7 @@
         /// </summary>
         /// <param name="container">Container to register into</param>
         /// <param name="collectionTypeRegistrations">Collection type registrations to register</param>
-        protected override sealed void RegisterCollectionTypes(TinyIoCContainer container, IEnumerable<CollectionTypeRegistration> collectionTypeRegistrations)
+        protected sealed override void RegisterCollectionTypes(TinyIoCContainer container, IEnumerable<CollectionTypeRegistration> collectionTypeRegistrations)
         {
             foreach (var collectionTypeRegistration in collectionTypeRegistrations)
             {
@@ -216,7 +226,7 @@
         /// </summary>
         /// <param name="container">Container to register into</param>
         /// <param name="moduleRegistrationTypes">NancyModule types</param>
-        protected override sealed void RegisterModules(TinyIoCContainer container, IEnumerable<ModuleRegistration> moduleRegistrationTypes)
+        protected sealed override void RegisterModules(TinyIoCContainer container, IEnumerable<ModuleRegistration> moduleRegistrationTypes)
         {
             foreach (var registrationType in moduleRegistrationTypes)
             {

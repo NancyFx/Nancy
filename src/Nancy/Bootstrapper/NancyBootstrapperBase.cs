@@ -100,7 +100,7 @@
                 return this.conventions;
             }
         }
-        
+
         /// <summary>
         /// Gets all available module types
         /// </summary>
@@ -273,7 +273,7 @@
         {
             applicationStartupTask.Initialize(this.ApplicationPipelines);
         }
-        
+
         this.RegisterModules(this.ApplicationContainer, this.Modules);
 
             this.ApplicationStartup(this.ApplicationContainer, this.ApplicationPipelines);
@@ -384,6 +384,13 @@
 
             return engine;
         }
+
+        /// <summary>
+        /// Get the <see cref="INancyEnvironment"/> instance.
+        /// </summary>
+        /// <returns>An configured <see cref="INancyEnvironment"/> instance.</returns>
+        /// <remarks>The boostrapper must be initialised (<see cref="INancyBootstrapper.Initialise"/>) prior to calling this.</remarks>
+        public abstract INancyEnvironment GetEnvironment();
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.

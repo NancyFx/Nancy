@@ -292,6 +292,11 @@
                 return this.OverriddenRegistrationTasks ?? new IRegistrations[] { };
             }
 
+            public override INancyEnvironment GetEnvironment()
+            {
+                throw new NotImplementedException();
+            }
+
             protected override void ConfigureApplicationContainer(FakeContainer existingContainer)
             {
                 this.AppContainer = existingContainer;

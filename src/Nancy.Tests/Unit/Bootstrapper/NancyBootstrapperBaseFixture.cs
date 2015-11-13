@@ -396,6 +396,11 @@
                     .FirstOrDefault();
         }
 
+        public override INancyEnvironment GetEnvironment()
+        {
+            throw new NotImplementedException();
+        }
+
         protected override void ConfigureApplicationContainer(FakeContainer existingContainer)
         {
             this.AppContainer = existingContainer;
@@ -555,6 +560,11 @@
         /// <param name="context">The current context</param>
         /// <returns>The <see cref="INancyModule"/> instance</returns>
         public override INancyModule GetModule(Type moduleType, NancyContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override INancyEnvironment GetEnvironment()
         {
             throw new NotImplementedException();
         }

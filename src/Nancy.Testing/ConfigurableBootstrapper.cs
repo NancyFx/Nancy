@@ -148,6 +148,16 @@ namespace Nancy.Testing
         }
 
         /// <summary>
+        /// Get the <see cref="INancyEnvironment"/> instance.
+        /// </summary>
+        /// <returns>An configured <see cref="INancyEnvironment"/> instance.</returns>
+        /// <remarks>The boostrapper must be initialised (<see cref="INancyBootstrapper.Initialise"/>) prior to calling this.</remarks>
+        public override INancyEnvironment GetEnvironment()
+        {
+            return base.ApplicationContainer.Resolve<INancyEnvironment>();
+        }
+
+        /// <summary>
         /// Retrieve a specific module instance from the container
         /// </summary>
         /// <param name="container">Container to use</param>
