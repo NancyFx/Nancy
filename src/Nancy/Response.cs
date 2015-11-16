@@ -9,6 +9,7 @@ namespace Nancy
 
     using Nancy.Cookies;
     using Nancy.Helpers;
+    using Nancy.Responses;
 
     /// <summary>
     /// Encapsulates HTTP-response information from an Nancy operation.
@@ -118,7 +119,7 @@ namespace Nancy
         /// <returns>A <see cref="Response"/> instance.</returns>
         public static implicit operator Response(string contents)
         {
-            return new Response { Contents = GetStringContents(contents) };
+            return new TextResponse(contents);
         }
 
         /// <summary>

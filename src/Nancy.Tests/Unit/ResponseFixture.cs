@@ -144,14 +144,14 @@
         }
 
         [Fact]
-        public void Should_set_content_type_to_text_html_when_implicitly_cast_from_string()
+        public void Should_set_content_type_to_text_plain_when_implicitly_cast_from_string()
         {
             // Given, When
             const string value = "test value";
             Response response = value;
 
             // Then
-            response.ContentType.ShouldEqual("text/html");
+            response.ContentType.ShouldEqual("text/plain; charset=utf-8");
         }
 
         [Fact]
