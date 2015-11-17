@@ -99,7 +99,7 @@ namespace Nancy.Testing.Tests
         {
             // Given
             var environment = new DefaultNancyEnvironment();
-            environment.AddValue(XmlConfig.Default);
+            environment.AddValue(XmlConfiguration.Default);
             var response = new XmlResponse<Model>(new Model() { Dummy = "Data" }, new DefaultXmlSerializer(environment), environment);
             var context = new NancyContext() { Response = response };
 

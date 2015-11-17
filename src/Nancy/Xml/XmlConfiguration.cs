@@ -5,23 +5,23 @@
     /// <summary>
     /// Settings for XML serialization.
     /// </summary>
-    public class XmlConfig
+    public class XmlConfiguration
     {
         /// <summary>
-        /// A default instance of the <see cref="XmlConfig"/> class.
+        /// A default instance of the <see cref="XmlConfiguration"/> class.
         /// </summary>
-        public static readonly XmlConfig Default = new XmlConfig
+        public static readonly XmlConfiguration Default = new XmlConfiguration
         (
             encodingEnabled: false,
             defaultEncoding: Encoding.UTF8
         );
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="XmlConfig"/> class.
+        /// Initializes a new instance of the <see cref="XmlConfiguration"/> class.
         /// </summary>
         /// <param name="encodingEnabled"><see langword="true" /> if encoding should be enabled, otherwise <see langword="false" />.</param>
         /// <param name="defaultEncoding">The <see cref="Encoding"/> that should be used.</param>
-        public XmlConfig(bool encodingEnabled, Encoding defaultEncoding)
+        public XmlConfiguration(bool encodingEnabled, Encoding defaultEncoding)
         {
             this.EncodingEnabled = encodingEnabled;
             this.DefaultEncoding = defaultEncoding ?? Default.DefaultEncoding;

@@ -4,9 +4,9 @@
     using Nancy.Configuration;
 
     /// <summary>
-    /// Contains <see cref="XmlConfig"/> configuration extensions for <see cref="INancyEnvironment"/>.
+    /// Contains <see cref="XmlConfiguration"/> configuration extensions for <see cref="INancyEnvironment"/>.
     /// </summary>
-    public static class XmlConfigConfigurationExtensions
+    public static class XmlConfigurationExtensions
     {
         /// <summary>
         /// Configures <see cref="XmlConfig"/>.
@@ -16,7 +16,7 @@
         /// <param name="defaultEncoding">The default <see cref="Encoding"/>.</param>
         public static void XmlConfig(this INancyEnvironment environment, bool enableEncoding, Encoding defaultEncoding = null)
         {
-            environment.AddValue(new XmlConfig(
+            environment.AddValue(new XmlConfiguration(
                 enableEncoding,
                 defaultEncoding));
         }

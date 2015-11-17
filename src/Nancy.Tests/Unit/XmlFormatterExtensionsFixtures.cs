@@ -20,7 +20,7 @@ namespace Nancy.Tests.Unit
         {
             this.rootPathProvider = A.Fake<IRootPathProvider>();
             var environment = new DefaultNancyEnvironment();
-            environment.AddValue(XmlConfig.Default);
+            environment.AddValue(XmlConfiguration.Default);
 
             var serializerFactory =
                 new DefaultSerializerFactory(new ISerializer[] { new DefaultXmlSerializer(environment) });

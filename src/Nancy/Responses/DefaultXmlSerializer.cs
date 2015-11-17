@@ -14,7 +14,7 @@
     /// </summary>
     public class DefaultXmlSerializer : ISerializer
     {
-        private readonly XmlConfig config;
+        private readonly XmlConfiguration configuration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultXmlSerializer"/> class,
@@ -23,7 +23,7 @@
         /// <param name="environment">An <see cref="INancyEnvironment"/> instance.</param>
         public DefaultXmlSerializer(INancyEnvironment environment)
         {
-            this.config = environment.GetValue<XmlConfig>();
+            this.configuration = environment.GetValue<XmlConfiguration>();
         }
 
         /// <summary>
@@ -58,9 +58,9 @@
             {
                 var serializer = new XmlSerializer(typeof(TModel));
 
-                if (this.config.EncodingEnabled)
+                if (this.configuration.EncodingEnabled)
                 {
-                    serializer.Serialize(new StreamWriter(outputStream, this.config.DefaultEncoding), model);
+                    serializer.Serialize(new StreamWriter(outputStream, this.configuration.DefaultEncoding), model);
                 }
                 else
                 {
