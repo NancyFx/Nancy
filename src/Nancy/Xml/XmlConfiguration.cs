@@ -11,10 +11,14 @@
         /// A default instance of the <see cref="XmlConfiguration"/> class.
         /// </summary>
         public static readonly XmlConfiguration Default = new XmlConfiguration
-        (
-            encodingEnabled: false,
-            defaultEncoding: Encoding.UTF8
-        );
+        {
+            EncodingEnabled = false,
+            DefaultEncoding = Encoding.UTF8
+        };
+
+        private XmlConfiguration()
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="XmlConfiguration"/> class.
