@@ -4,19 +4,19 @@
     using Nancy.Configuration;
 
     /// <summary>
-    /// Contains <see cref="XmlSettings"/> configuration extensions for <see cref="INancyEnvironment"/>.
+    /// Contains <see cref="XmlConfig"/> configuration extensions for <see cref="INancyEnvironment"/>.
     /// </summary>
-    public static class XmlSettingConfigurationExtensions
+    public static class XmlConfigConfigurationExtensions
     {
         /// <summary>
-        /// Configures <see cref="XmlSettings"/>.
+        /// Configures <see cref="XmlConfig"/>.
         /// </summary>
         /// <param name="environment"><see cref="INancyEnvironment"/> that should be configured.</param>
         /// <param name="enableEncoding"><see langword="true"/> if encoding should be enabled, otherwise <see langword="false"/>.</param>
         /// <param name="defaultEncoding">The default <see cref="Encoding"/>.</param>
-        public static void XmlSettings(this INancyEnvironment environment, bool enableEncoding, Encoding defaultEncoding = null)
+        public static void XmlConfig(this INancyEnvironment environment, bool enableEncoding, Encoding defaultEncoding = null)
         {
-            environment.AddValue(new XmlSettings(
+            environment.AddValue(new XmlConfig(
                 enableEncoding,
                 defaultEncoding));
         }

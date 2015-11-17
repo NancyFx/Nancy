@@ -17,6 +17,7 @@
         /// Initializes a new instance of the <see cref="BrowserContext"/> class,
         /// with the provided <see cref="INancyEnvironment"/>.
         /// </summary>
+        /// <param name="environment">An <see cref="INancyEnvironment"/> instance.</param>
         public BrowserContext(INancyEnvironment environment)
         {
             this.Environment = environment;

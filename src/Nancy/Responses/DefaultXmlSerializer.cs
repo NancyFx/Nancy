@@ -14,7 +14,7 @@
     /// </summary>
     public class DefaultXmlSerializer : ISerializer
     {
-        private readonly XmlSettings settings;
+        private readonly XmlConfig config;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultXmlSerializer"/> class,
@@ -23,7 +23,7 @@
         /// <param name="environment">An <see cref="INancyEnvironment"/> instance.</param>
         public DefaultXmlSerializer(INancyEnvironment environment)
         {
-            this.settings = environment.GetValue<XmlSettings>();
+            this.config = environment.GetValue<XmlConfig>();
         }
 
         /// <summary>
@@ -58,9 +58,9 @@
             {
                 var serializer = new XmlSerializer(typeof(TModel));
 
-                if (this.settings.EncodingEnabled)
+                if (this.config.EncodingEnabled)
                 {
-                    serializer.Serialize(new StreamWriter(outputStream, this.settings.DefaultEncoding), model);
+                    serializer.Serialize(new StreamWriter(outputStream, this.config.DefaultEncoding), model);
                 }
                 else
                 {
@@ -77,14 +77,14 @@
             }
         }
 
-        private static bool IsXmlType(MediaRange mediaRange)
+        private static bool IsXmlType(string contentType)
         {
-            if (string.IsNullOrEmpty(mediaRange))
+            if (string.IsNullOrEmpty(contentType))
             {
                 return false;
             }
 
-            var contentMimeType = mediaRange.ToString();
+            var contentMimeType = contentType.Split(';')[0];
 
             return contentMimeType.Equals("application/xml", StringComparison.OrdinalIgnoreCase)
                 || contentMimeType.Equals("text/xml", StringComparison.OrdinalIgnoreCase)

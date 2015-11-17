@@ -7,7 +7,7 @@
 
     public class XmlResponse<TModel> : Response
     {
-        private readonly XmlSettings settings;
+        private readonly XmlConfig config;
 
         public XmlResponse(TModel model, ISerializer serializer, INancyEnvironment environment)
         {
@@ -16,7 +16,7 @@
                 throw new InvalidOperationException("XML Serializer not set");
             }
 
-            this.settings = environment.GetValue<XmlSettings>();
+            this.config = environment.GetValue<XmlConfig>();
 
             this.Contents = GetXmlContents(model, serializer);
             this.ContentType = DefaultContentType;
@@ -32,8 +32,8 @@
         {
             get
             {
-                return this.settings.EncodingEnabled
-                    ? string.Concat("; charset=", this.settings.DefaultEncoding.WebName)
+                return this.config.EncodingEnabled
+                    ? string.Concat("; charset=", this.config.DefaultEncoding.WebName)
                     : string.Empty;
             }
         }
