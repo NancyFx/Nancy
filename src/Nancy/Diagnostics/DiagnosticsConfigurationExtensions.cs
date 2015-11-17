@@ -4,7 +4,7 @@
     using Nancy.Cryptography;
 
     /// <summary>
-    /// Contains diagnostics configurtion extensions for <see cref="INancyEnvironment"/>.
+    /// Contains <see cref="DiagnosticsConfiguration"/> configuration extensions for <see cref="INancyEnvironment"/>.
     /// </summary>
     public static class DiagnosticsConfigurationExtensions
     {

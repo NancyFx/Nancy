@@ -3,7 +3,7 @@
     using Nancy.Cryptography;
 
     /// <summary>
-    /// Settings for the diagnostics dashboard.
+    /// Configuration for the diagnostics dashboard.
     /// </summary>
     public class DiagnosticsConfiguration
     {
