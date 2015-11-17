@@ -10,7 +10,7 @@
         /// <summary>
         /// A default instance of the <see cref="DiagnosticsConfiguration"/> class.
         /// </summary>
-        public static DiagnosticsConfiguration Default = new DiagnosticsConfiguration
+        public static readonly DiagnosticsConfiguration Default = new DiagnosticsConfiguration
         {
             CookieName = "__ncd",
             CryptographyConfiguration = CryptographyConfiguration.Default,
