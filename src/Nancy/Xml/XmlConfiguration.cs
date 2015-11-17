@@ -3,7 +3,7 @@
     using System.Text;
 
     /// <summary>
-    /// Settings for XML serialization.
+    /// Configuration for XML serialization.
     /// </summary>
     public class XmlConfiguration
     {
