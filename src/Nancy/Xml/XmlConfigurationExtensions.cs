@@ -9,12 +9,12 @@
     public static class XmlConfigurationExtensions
     {
         /// <summary>
-        /// Configures <see cref="XmlConfig"/>.
+        /// Configures <see cref="XmlConfiguration"/>.
         /// </summary>
         /// <param name="environment"><see cref="INancyEnvironment"/> that should be configured.</param>
         /// <param name="enableEncoding"><see langword="true"/> if encoding should be enabled, otherwise <see langword="false"/>.</param>
         /// <param name="defaultEncoding">The default <see cref="Encoding"/>.</param>
-        public static void XmlConfig(this INancyEnvironment environment, bool enableEncoding, Encoding defaultEncoding = null)
+        public static void Xml(this INancyEnvironment environment, bool enableEncoding, Encoding defaultEncoding = null)
         {
             environment.AddValue(new XmlConfiguration(
                 enableEncoding,
