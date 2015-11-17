@@ -3,9 +3,9 @@
     using Nancy.Configuration;
 
     /// <summary>
-    /// Provides the default configuration for diagnostics.
+    /// Provides the default configuration for <see cref="DiagnosticsConfiguration"/>.
     /// </summary>
-    public class DiagnosticsDefaultConfigurationProvider : NancyDefaultConfigurationProvider<DiagnosticsConfiguration>
+    public class DefaultDiagnosticsConfigurationProvider : NancyDefaultConfigurationProvider<DiagnosticsConfiguration>
     {
         /// <summary>
         /// Gets the default configuration instance to register in the <see cref="INancyEnvironment"/>.

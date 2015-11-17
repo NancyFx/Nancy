@@ -3,14 +3,14 @@
     using Nancy.Cryptography;
 
     /// <summary>
-    /// Settings for the diagnostics dashboard.
+    /// Configuration for the diagnostics dashboard.
     /// </summary>
     public class DiagnosticsConfiguration
     {
         /// <summary>
         /// A default instance of the <see cref="DiagnosticsConfiguration"/> class.
         /// </summary>
-        public static DiagnosticsConfiguration Default = new DiagnosticsConfiguration
+        public static readonly DiagnosticsConfiguration Default = new DiagnosticsConfiguration
         {
             CookieName = "__ncd",
             CryptographyConfiguration = CryptographyConfiguration.Default,
