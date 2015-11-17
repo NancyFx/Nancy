@@ -2,7 +2,6 @@ namespace Nancy
 {
     using System;
     using System.IO;
-    using System.Runtime.CompilerServices;
     using System.Text;
     using Extensions;
     using Responses;

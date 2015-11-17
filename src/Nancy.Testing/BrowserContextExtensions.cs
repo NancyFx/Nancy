@@ -8,10 +8,12 @@
     using System.Text;
 
     using Nancy.Authentication.Forms;
+    using Nancy.Configuration;
     using Nancy.Extensions;
     using Nancy.Helpers;
     using Nancy.Responses;
     using Nancy.Responses.Negotiation;
+    using Nancy.Xml;
 
     /// <summary>
     /// Defines extensions for the <see cref="BrowserContext"/> type.
@@ -75,7 +77,7 @@
         {
             if (serializer == null)
             {
-                serializer = new DefaultXmlSerializer(null);
+                serializer = new DefaultXmlSerializer(browserContext.Environment);
             }
 
             var contextValues =

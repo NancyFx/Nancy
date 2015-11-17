@@ -7,6 +7,7 @@ namespace Nancy.Testing
     using System.Text;
 
     using Nancy.Bootstrapper;
+    using Nancy.Configuration;
     using Nancy.Helpers;
     using Nancy.IO;
 
@@ -18,6 +19,7 @@ namespace Nancy.Testing
         private readonly Action<BrowserContext> defaultBrowserContext;
         private readonly INancyBootstrapper bootstrapper;
         private readonly INancyEngine engine;
+        private readonly INancyEnvironment environment;
 
         private readonly IDictionary<string, string> cookies = new Dictionary<string, string>();
 
@@ -42,6 +44,7 @@ namespace Nancy.Testing
             this.bootstrapper = bootstrapper;
             this.bootstrapper.Initialise();
             this.engine = this.bootstrapper.GetEngine();
+            this.environment = this.bootstrapper.GetEnvironment();
             this.defaultBrowserContext = defaults ?? DefaultBrowserContext;
         }
 
@@ -296,7 +299,7 @@ namespace Nancy.Testing
         private Request CreateRequest(string method, Url url, Action<BrowserContext> browserContext)
         {
             var context =
-                new BrowserContext();
+                new BrowserContext(this.environment);
 
             this.SetCookies(context);
 
