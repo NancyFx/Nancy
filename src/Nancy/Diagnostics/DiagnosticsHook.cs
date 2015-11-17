@@ -5,13 +5,11 @@ namespace Nancy.Diagnostics
     using System.IO;
     using System.Linq;
     using System.Threading;
-
     using Nancy.Bootstrapper;
     using Nancy.Configuration;
     using Nancy.Cookies;
     using Nancy.Cryptography;
     using Nancy.Culture;
-    using Nancy.Helpers;
     using Nancy.Localization;
     using Nancy.ModelBinding;
     using Nancy.Responses;
@@ -31,7 +29,7 @@ namespace Nancy.Diagnostics
         public static void Enable(IPipelines pipelines, IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration, IModelBinderLocator modelBinderLocator, IEnumerable<IResponseProcessor> responseProcessors, IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints, ICultureService cultureService, IRequestTraceFactory requestTraceFactory, IEnumerable<IRouteMetadataProvider> routeMetadataProviders, ITextResource textResource, INancyEnvironment environment)
         {
             var diagnosticsConfiguration =
-                environment.GetValueWithDefault(DiagnosticsConfiguration.Default);
+                environment.GetValue<DiagnosticsConfiguration>();
 
             var diagnosticsModuleCatalog = new DiagnosticsModuleCatalog(providers, rootPathProvider, requestTracing, configuration, diagnosticsConfiguration);
 
