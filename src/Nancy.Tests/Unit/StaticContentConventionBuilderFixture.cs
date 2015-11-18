@@ -29,17 +29,6 @@
         }
 
         [Fact]
-        public void Should_retrieve_static_content_when_file_name_contains_url_encoded_spaces()
-        {
-            // Given
-            // When
-            var result = GetStaticContent("css", "space%20in%20name.css");
-
-            // Then
-            result.ShouldEqual(StylesheetContents);
-        }
-
-        [Fact]
         public void Should_retrieve_static_content_when_path_has_same_name_as_extension()
         {
             // Given

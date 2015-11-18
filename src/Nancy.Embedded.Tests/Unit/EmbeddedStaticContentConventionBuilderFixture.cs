@@ -14,17 +14,6 @@
     public class EmbeddedStaticContentConventionBuilderFixture
     {
         [Fact]
-        public void Should_retrieve_static_content_with_urlencoded_dot()
-        {
-            // Given
-            // When
-            var result = GetEmbeddedStaticContent("Foo", "embedded%2etxt");
-
-            // Then
-            result.ShouldEqual("Embedded Text");
-        }
-
-        [Fact]
         public void Should_retrieve_static_content_in_subfolder()
         {
             // Given
