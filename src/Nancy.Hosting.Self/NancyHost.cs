@@ -255,7 +255,7 @@
                 HostName = request.Url.Host,
                 Port = request.Url.IsDefaultPort ? null : (int?)request.Url.Port,
                 BasePath = baseUri.AbsolutePath.TrimEnd('/'),
-                Path = relativeUrl,
+                Path = string.Concat(relativeUrl, request.Url.Fragment),
                 Query = request.Url.Query,
             };
 

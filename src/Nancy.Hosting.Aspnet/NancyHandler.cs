@@ -86,7 +86,7 @@ namespace Nancy.Hosting.Aspnet
                                    HostName = context.Request.Url.Host,
                                    Port = context.Request.Url.Port,
                                    BasePath = basePath,
-                                   Path = path,
+                                   Path = string.Concat(path, context.Request.Url.Fragment),
                                    Query = context.Request.Url.Query,
                                };
             byte[] certificate = null;
