@@ -251,6 +251,10 @@
                 }
             }
 
+            // From the OWIN spec:
+            // - The server MUST provide percent-decoded values for "owin.RequestPath" and "owin.RequestPathBase".
+            // - The server MUST provide a percent-encoded value for "owin.RequestQueryString"
+
             var url = new Url
             {
                 Scheme = owinRequestScheme,
