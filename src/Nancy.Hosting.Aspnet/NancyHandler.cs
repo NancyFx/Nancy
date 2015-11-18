@@ -45,8 +45,8 @@ namespace Nancy.Hosting.Aspnet
             }
 
             this.engine.HandleRequest(
-                request, 
-                ctx => tcs.SetResult(new Tuple<NancyContext, HttpContextBase>(ctx, context)), 
+                request,
+                ctx => tcs.SetResult(new Tuple<NancyContext, HttpContextBase>(ctx, context)),
                 tcs.SetException);
 
             return tcs.Task;
@@ -81,14 +81,15 @@ namespace Nancy.Hosting.Aspnet
             path = HttpUtility.UrlDecode(path);
 
             var nancyUrl = new Url
-                               {
-                                   Scheme = context.Request.Url.Scheme,
-                                   HostName = context.Request.Url.Host,
-                                   Port = context.Request.Url.Port,
-                                   BasePath = basePath,
-                                   Path = string.Concat(path, context.Request.Url.Fragment),
-                                   Query = context.Request.Url.Query,
-                               };
+            {
+                Scheme = context.Request.Url.Scheme,
+                HostName = context.Request.Url.Host,
+                Port = context.Request.Url.Port,
+                BasePath = basePath,
+                Path = string.Concat(path, context.Request.Url.Fragment),
+                Query = context.Request.Url.Query,
+            };
+
             byte[] certificate = null;
 
             if (context.Request.ClientCertificate != null &&
@@ -107,11 +108,11 @@ namespace Nancy.Hosting.Aspnet
 
             var protocolVersion = context.Request.ServerVariables["HTTP_VERSION"];
 
-            return new Request(context.Request.HttpMethod.ToUpperInvariant(), 
-                nancyUrl, 
-                body, 
-                incomingHeaders, 
-                context.Request.UserHostAddress, 
+            return new Request(context.Request.HttpMethod.ToUpperInvariant(),
+                nancyUrl,
+                body,
+                incomingHeaders,
+                context.Request.UserHostAddress,
                 certificate,
                 protocolVersion);
         }

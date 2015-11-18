@@ -68,7 +68,7 @@
                         var owinRequestProtocol = Get<string>(environment, "owin.RequestProtocol");
                         var owinCallCancelled = Get<CancellationToken>(environment, "owin.CallCancelled");
                         var owinRequestHost = GetHeader(owinRequestHeaders, "Host") ?? Dns.GetHostName();
-                        var owinUser = GetUser(environment); 
+                        var owinUser = GetUser(environment);
 
                         byte[] certificate = null;
                         if (options.EnableClientCertificates)
@@ -105,7 +105,7 @@
                     };
         }
 
-          
+
 
         /// <summary>
         /// Gets a delegate to handle converting a nancy response
@@ -115,7 +115,7 @@
         /// <param name="environment">OWIN environment.</param>
         /// <param name="next">The next stage in the OWIN pipeline.</param>
         /// <param name="tcs">The task completion source to signal.</param>
-        /// <param name="performPassThrough">A predicate that will allow the caller to determine if the request passes through to the 
+        /// <param name="performPassThrough">A predicate that will allow the caller to determine if the request passes through to the
         /// next stage in the owin pipeline.</param>
         /// <returns>Delegate</returns>
         private static Action<NancyContext> RequestComplete(
@@ -260,6 +260,7 @@
                 Path = owinRequestPath,
                 Query = owinRequestQueryString,
             };
+
             return url;
         }
 
