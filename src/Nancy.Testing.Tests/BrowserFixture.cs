@@ -15,6 +15,7 @@ namespace Nancy.Testing.Tests
     using FakeItEasy;
     using Nancy.Authentication.Forms;
     using System.Collections.ObjectModel;
+    using Nancy.Configuration;
     using Xunit.Extensions;
 
     public class BrowserFixture
@@ -186,7 +187,7 @@ namespace Nancy.Testing.Tests
         public void Should_add_basic_authentication_credentials_to_the_headers_of_the_request()
         {
             // Given
-            var context = new BrowserContext();
+            var context = new BrowserContext(A.Fake<INancyEnvironment>());
 
             // When
             context.BasicAuth("username", "password");
@@ -205,7 +206,7 @@ namespace Nancy.Testing.Tests
         public void Should_add_cookies_to_the_request()
         {
             // Given
-            var context = new BrowserContext();
+            var context = new BrowserContext(A.Fake<INancyEnvironment>());
 
             var cookies =
                 new Dictionary<string, string>
@@ -230,7 +231,7 @@ namespace Nancy.Testing.Tests
         public void Should_add_cookie_to_the_request()
         {
             // Given
-            var context = new BrowserContext();
+            var context = new BrowserContext(A.Fake<INancyEnvironment>());
 
             var cookies =
                 new Dictionary<string, string>

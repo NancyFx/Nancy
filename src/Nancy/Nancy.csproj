@@ -505,7 +505,9 @@
     <Compile Include="ViewEngines\ViewNotFoundException.cs" />
     <Compile Include="ViewEngines\ViewRenderException.cs" />
     <Compile Include="ViewRenderer.cs" />
-    <Compile Include="Xml\XmlSettings.cs" />
+    <Compile Include="Xml\XmlConfigurationExtensions.cs" />
+    <Compile Include="Xml\XmlConfiguration.cs" />
+    <Compile Include="Xml\DefaultXmlConfigurationProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Diagnostics\Views\Dashboard.sshtml" />

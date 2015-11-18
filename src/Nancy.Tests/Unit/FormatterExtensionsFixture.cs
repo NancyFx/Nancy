@@ -1,6 +1,7 @@
 ﻿namespace Nancy.Tests.Unit
 {
     using FakeItEasy;
+    using Nancy.Configuration;
     using Xunit;
 
     public class FormatterExtensionsFixture
@@ -11,7 +12,7 @@
         public FormatterExtensionsFixture()
         {
             this.context = new NancyContext();
-            this.formatter = new DefaultResponseFormatter(A.Fake<IRootPathProvider>(), context, new DefaultSerializerFactory(null));
+            this.formatter = new DefaultResponseFormatter(A.Fake<IRootPathProvider>(), context, new DefaultSerializerFactory(null), A.Fake<INancyEnvironment>());
         }
 
         [Fact]

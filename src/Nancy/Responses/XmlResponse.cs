@@ -2,41 +2,45 @@
 {
     using System;
     using System.IO;
-
+    using Nancy.Configuration;
     using Nancy.Xml;
 
     public class XmlResponse<TModel> : Response
     {
-        public XmlResponse(TModel model, ISerializer serializer)
+        private readonly XmlConfiguration configuration;
+
+        public XmlResponse(TModel model, ISerializer serializer, INancyEnvironment environment)
         {
             if (serializer == null)
             {
                 throw new InvalidOperationException("XML Serializer not set");
             }
 
+            this.configuration = environment.GetValue<XmlConfiguration>();
+
             this.Contents = GetXmlContents(model, serializer);
             this.ContentType = DefaultContentType;
             this.StatusCode = HttpStatusCode.OK;
         }
 
-        private static string DefaultContentType
+        private string DefaultContentType
         {
-            get { return string.Concat("application/xml", Encoding); }
+            get { return string.Concat("application/xml", this.Encoding); }
         }
 
-        private static string Encoding
+        private string Encoding
         {
             get
             {
-                return XmlSettings.EncodingEnabled
-                    ? string.Concat("; charset=", XmlSettings.DefaultEncoding.WebName)
+                return this.configuration.EncodingEnabled
+                    ? string.Concat("; charset=", this.configuration.DefaultEncoding.WebName)
                     : string.Empty;
             }
         }
 
-        private static Action<Stream> GetXmlContents(TModel model, ISerializer serializer)
+        private Action<Stream> GetXmlContents(TModel model, ISerializer serializer)
         {
-            return stream => serializer.Serialize(DefaultContentType, model, stream);
+            return stream => serializer.Serialize(this.DefaultContentType, model, stream);
         }
     }
 }

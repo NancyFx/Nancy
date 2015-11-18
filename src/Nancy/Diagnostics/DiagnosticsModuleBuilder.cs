@@ -1,5 +1,6 @@
 namespace Nancy.Diagnostics
 {
+    using Nancy.Configuration;
     using Nancy.ModelBinding;
     using Nancy.Routing;
 
@@ -8,12 +9,14 @@ namespace Nancy.Diagnostics
         private readonly IRootPathProvider rootPathProvider;
         private readonly ISerializerFactory serializerFactory;
         private readonly IModelBinderLocator modelBinderLocator;
+        private readonly INancyEnvironment environment;
 
-        public DiagnosticsModuleBuilder(IRootPathProvider rootPathProvider, IModelBinderLocator modelBinderLocator)
+        public DiagnosticsModuleBuilder(IRootPathProvider rootPathProvider, IModelBinderLocator modelBinderLocator, INancyEnvironment environment)
         {
             this.rootPathProvider = rootPathProvider;
             this.serializerFactory = new DiagnosticsSerializerFactory();
             this.modelBinderLocator = modelBinderLocator;
+            this.environment = environment;
         }
 
         /// <summary>
@@ -25,7 +28,7 @@ namespace Nancy.Diagnostics
         public INancyModule BuildModule(INancyModule module, NancyContext context)
         {
             module.Context = context;
-            module.Response = new DefaultResponseFormatter(rootPathProvider, context, this.serializerFactory);
+            module.Response = new DefaultResponseFormatter(rootPathProvider, context, this.serializerFactory, this.environment);
             module.ModelBinderLocator = this.modelBinderLocator;
 
             module.After = new AfterPipeline();

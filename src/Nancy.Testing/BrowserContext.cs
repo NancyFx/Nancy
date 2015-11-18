@@ -5,7 +5,7 @@
     using System.IO;
     using System.Reflection;
     using System.Security.Cryptography.X509Certificates;
-
+    using Configuration;
     using Nancy.Helpers;
 
     /// <summary>
@@ -14,10 +14,13 @@
     public class BrowserContext : IBrowserContextValues
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="BrowserContext"/> class.
+        /// Initializes a new instance of the <see cref="BrowserContext"/> class,
+        /// with the provided <see cref="INancyEnvironment"/>.
         /// </summary>
-        public BrowserContext()
+        /// <param name="environment">An <see cref="INancyEnvironment"/> instance.</param>
+        public BrowserContext(INancyEnvironment environment)
         {
+            this.Environment = environment;
             this.Values.Headers = new Dictionary<string, IEnumerable<string>>(StringComparer.OrdinalIgnoreCase);
             this.Values.Protocol = string.Empty;
             this.Values.QueryString = string.Empty;
@@ -25,6 +28,12 @@
             this.Values.FormValues = string.Empty;
             this.Values.HostName = string.Empty;
         }
+
+        /// <summary>
+        /// Gets the <see cref="INancyEnvironment"/> instance used by the <see cref="Browser"/>.
+        /// </summary>
+        /// <value>An <see cref="INancyEnvironment"/> instance.</value>
+        public INancyEnvironment Environment { get; private set; }
 
         /// <summary>
         /// Gets or sets the that should be sent with the HTTP request.
