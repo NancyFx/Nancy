@@ -43,8 +43,7 @@
         /// <returns>A <see cref="ResolveResult"/> containing the resolved route information.</returns>
         public ResolveResult Resolve(NancyContext context)
         {
-            var pathDecoded =
-                HttpUtility.UrlDecode(context.Request.Path);
+            var pathDecoded = context.Request.Path;
 
             var results = this.trie.GetMatches(GetMethod(context), pathDecoded, context);
 
