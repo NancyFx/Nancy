@@ -32,8 +32,8 @@ namespace Nancy.ModelBinding.DefaultBodyDeserializers
         /// <returns>Model instance</returns>
         public object Deserialize(MediaRange mediaRange, Stream bodyStream, BindingContext context)
         {
-            var serializer = new JavaScriptSerializer(null, false, JsonSettings.MaxJsonLength, JsonSettings.MaxRecursions, JsonSettings.RetainCasing, JsonSettings.ISO8601DateFormat);
-            serializer.RegisterConverters(JsonSettings.Converters, JsonSettings.PrimitiveConverters);
+            var serializer = new JavaScriptSerializer(null, false, JsonConfiguration.MaxJsonLength, JsonConfiguration.MaxRecursions, JsonConfiguration.RetainCasing, JsonConfiguration.ISO8601DateFormat);
+            serializer.RegisterConverters(JsonConfiguration.Converters, JsonConfiguration.PrimitiveConverters);
 
             bodyStream.Position = 0;
             string bodyText;

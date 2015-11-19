@@ -71,7 +71,7 @@
         [Fact]
         public void Should_not_change_casing_when_retain_casing_is_true()
         {
-            JsonSettings.RetainCasing = true;
+            JsonConfiguration.RetainCasing = true;
             try
             {
                 // Given
@@ -87,14 +87,14 @@
             }
             finally
             {
-                JsonSettings.RetainCasing = false;
+                JsonConfiguration.RetainCasing = false;
             }
         }
 
         [Fact]
         public void Should_camel_case_property_names_if_local_override_is_set()
         {
-            JsonSettings.RetainCasing = true;
+            JsonConfiguration.RetainCasing = true;
             try
             {
                 // Given
@@ -111,7 +111,7 @@
             }
             finally
             {
-                JsonSettings.RetainCasing = false;
+                JsonConfiguration.RetainCasing = false;
             }
         }
 
@@ -146,7 +146,7 @@
         [Fact]
         public void Should_use_wcf_datetimeformat_when_iso8601dateformat_is_false()
         {
-            JsonSettings.ISO8601DateFormat = false;
+            JsonConfiguration.ISO8601DateFormat = false;
             try
             {
                 // Given
@@ -170,7 +170,7 @@
             }
             finally
             {
-                JsonSettings.ISO8601DateFormat = true;
+                JsonConfiguration.ISO8601DateFormat = true;
             }
         }
 

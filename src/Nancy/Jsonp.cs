@@ -18,7 +18,7 @@
 
         private static string Encoding
         {
-            get { return string.Concat("; charset=", JsonSettings.DefaultEncoding.WebName); }
+            get { return string.Concat("; charset=", JsonConfiguration.DefaultEncoding.WebName); }
         }
 
         /// <summary>

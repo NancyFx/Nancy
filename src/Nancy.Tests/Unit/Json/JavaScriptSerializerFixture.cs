@@ -18,8 +18,8 @@
         public void Should_register_converters_when_asked()
         {
             // Given
-            JsonSettings.Converters.Add(new TestConverter());
-            JsonSettings.PrimitiveConverters.Add(new TestPrimitiveConverter());
+            JsonConfiguration.Converters.Add(new TestConverter());
+            JsonConfiguration.PrimitiveConverters.Add(new TestPrimitiveConverter());
 
             var defaultSerializer = new JavaScriptSerializer();
 
@@ -60,8 +60,8 @@
         public void Should_not_register_converters_when_not_asked()
         {
             // Given
-            JsonSettings.Converters.Add(new TestConverter());
-            JsonSettings.PrimitiveConverters.Add(new TestPrimitiveConverter());
+            JsonConfiguration.Converters.Add(new TestConverter());
+            JsonConfiguration.PrimitiveConverters.Add(new TestPrimitiveConverter());
 
             var defaultSerializer = new JavaScriptSerializer();
 

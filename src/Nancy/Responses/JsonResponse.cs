@@ -26,7 +26,7 @@
 
         private static string Encoding
         {
-            get { return string.Concat("; charset=", JsonSettings.DefaultEncoding.WebName); }
+            get { return string.Concat("; charset=", JsonConfiguration.DefaultEncoding.WebName); }
         }
 
         private static Action<Stream> GetJsonContents(TModel model, ISerializer serializer)

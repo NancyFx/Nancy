@@ -42,7 +42,7 @@
         /// </summary>
         public bool RetainCasing
         {
-            get { return retainCasing.HasValue ? retainCasing.Value : JsonSettings.RetainCasing; }
+            get { return retainCasing.HasValue ? retainCasing.Value : JsonConfiguration.RetainCasing; }
             set { retainCasing = value; }
         }
 
@@ -53,7 +53,7 @@
         /// </summary>
         public bool ISO8601DateFormat
         {
-            get { return iso8601DateFormat.HasValue ? iso8601DateFormat.Value : JsonSettings.ISO8601DateFormat; }
+            get { return iso8601DateFormat.HasValue ? iso8601DateFormat.Value : JsonConfiguration.ISO8601DateFormat; }
             set { iso8601DateFormat = value; }
         }
 
@@ -68,9 +68,9 @@
         {
             using (var writer = new StreamWriter(new UnclosableStreamWrapper(outputStream)))
             {
-                var serializer = new JavaScriptSerializer(null, false, JsonSettings.MaxJsonLength, JsonSettings.MaxRecursions, RetainCasing, ISO8601DateFormat);
+                var serializer = new JavaScriptSerializer(null, false, JsonConfiguration.MaxJsonLength, JsonConfiguration.MaxRecursions, RetainCasing, ISO8601DateFormat);
 
-                serializer.RegisterConverters(JsonSettings.Converters, JsonSettings.PrimitiveConverters);
+                serializer.RegisterConverters(JsonConfiguration.Converters, JsonConfiguration.PrimitiveConverters);
 
                 try
                 {

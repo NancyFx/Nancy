@@ -37,7 +37,7 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
                 };
 
             this.serializer = new JavaScriptSerializer();
-            this.serializer.RegisterConverters(JsonSettings.Converters);
+            this.serializer.RegisterConverters(JsonConfiguration.Converters);
             this.testModelJson = this.serializer.Serialize(this.testModel);
         }
 

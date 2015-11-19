@@ -1,19 +1,20 @@
 namespace Nancy.Json
 {
-    using System;
     using System.Collections.Generic;
     using System.Text;
-
     using Nancy.Json.Converters;
 
     /// <summary>
     /// JSON serializer settings
     /// </summary>
-    public static class JsonSettings
+    public class JsonConfiguration
     {
-        private static string _defaultCharset;
+        private string defaultCharset;
 
-        static JsonSettings()
+        /// <summary>
+        ///Initializes a new instance of the <see cref="JsonConfiguration"/> class.
+        /// </summary>
+        public JsonConfiguration()
         {
             ISO8601DateFormat = true;
             MaxJsonLength = 102400;
@@ -31,12 +32,12 @@ namespace Nancy.Json
         /// <summary>
         /// Max length of JSON output
         /// </summary>
-        public static int MaxJsonLength { get; set; }
+        public int MaxJsonLength { get; private set; }
 
         /// <summary>
         /// Maximum number of recursions
         /// </summary>
-        public static int MaxRecursions { get; set; }
+        public int MaxRecursions { get; private set; }
 
         /// <summary>
         /// Gets the default encoding for JSON responses.
@@ -44,22 +45,22 @@ namespace Nancy.Json
         /// <remarks>
         /// The default value is <see langword="Encoding.UTF8" />
         /// </remarks>
-        public static Encoding DefaultEncoding { get; set; }
+        public Encoding DefaultEncoding { get; private set; }
 
-        public static IList<JavaScriptConverter> Converters { get; set; }
+        public IList<JavaScriptConverter> Converters { get; private set; }
 
-        public static IList<JavaScriptPrimitiveConverter> PrimitiveConverters { get; set; }
+        public IList<JavaScriptPrimitiveConverter> PrimitiveConverters { get; private set; }
 
         /// <summary>
         /// Set to true to retain the casing used in the C# code in produced JSON.
         /// Set to false to use camelCasing in the produced JSON.
         /// False by default.
         /// </summary>
-        public static bool RetainCasing { get; set; }
+        public bool RetainCasing { get; set; }
 
         /// <summary>
         /// Serialized date format
         /// </summary>
-        public static bool ISO8601DateFormat { get; set; }
+        public bool ISO8601DateFormat { get; private set; }
     }
 }

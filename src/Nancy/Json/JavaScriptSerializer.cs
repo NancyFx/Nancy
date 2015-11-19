@@ -87,7 +87,7 @@ namespace Nancy.Json
             _iso8601DateFormat = iso8601DateFormat;
 
             if (registerConverters)
-                RegisterConverters(JsonSettings.Converters, JsonSettings.PrimitiveConverters);
+                RegisterConverters(JsonConfiguration.Converters, JsonConfiguration.PrimitiveConverters);
         }
 
 

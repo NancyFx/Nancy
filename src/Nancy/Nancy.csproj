@@ -250,7 +250,7 @@
     <Compile Include="IO\UnclosableStreamWrapper.cs" />
     <Compile Include="ISerializer.cs" />
     <Compile Include="Json\Converters\TimeSpanConverter.cs" />
-    <Compile Include="Json\JsonSettings.cs" />
+    <Compile Include="Json\JsonConfiguration.cs" />
     <Compile Include="Responses\DefaultJsonSerializer.cs" />
     <Compile Include="Responses\DefaultXmlSerializer.cs" />
     <Compile Include="Responses\TextResponse.cs" />
