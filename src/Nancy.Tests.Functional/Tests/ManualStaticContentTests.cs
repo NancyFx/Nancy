@@ -1,7 +1,7 @@
 ﻿namespace Nancy.Tests.Functional.Tests
 {
     using System;
-
+    using System.Threading.Tasks;
     using Nancy.Bootstrapper;
     using Nancy.Testing;
 
@@ -26,9 +26,9 @@
         }
 
         [Fact]
-        public void Should_serve_valid_static_content()
+        public async Task Should_serve_valid_static_content()
         {
-            var response = browser.Get(
+            var response = await browser.Get(
                 @"/Content/smiley.png", 
                 with =>
                     {
@@ -39,9 +39,9 @@
         }
 
         [Fact]
-        public void Should_return_404_if_content_not_found()
+        public async Task Should_return_404_if_content_not_found()
         {
-            var response = browser.Get(
+            var response = await browser.Get(
                 @"/Content/smiley2.png",
                 with =>
                 {
@@ -52,9 +52,9 @@
         }
 
         [Fact]
-        public void Should_be_case_insensitive()
+        public async Task Should_be_case_insensitive()
         {
-            var response = browser.Get(
+            var response = await browser.Get(
                 @"/cOntent/smiley.png",
                 with =>
                 {
@@ -65,9 +65,9 @@
         }
 
         [Fact]
-        public void Should_not_allow_escaping_from_the_site_root()
+        public async Task Should_not_allow_escaping_from_the_site_root()
         {
-            var response = browser.Get(
+            var response = await browser.Get(
                 @"/Content/../../../Tests/StaticContentTests.cs",
                 with =>
                 {
@@ -78,9 +78,9 @@
         }
 
         [Fact]
-        public void Should_not_allow_escaping_from_the_content_root()
+        public async Task Should_not_allow_escaping_from_the_content_root()
         {
-            var response = browser.Get(
+            var response = await browser.Get(
                 @"/Content/../hidden.txt",
                 with =>
                 {

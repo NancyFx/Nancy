@@ -2,6 +2,7 @@
 {
     using System;
     using System.Threading.Tasks;
+    using Xunit;
 
     public static class RecordAsync
     {
@@ -16,6 +17,23 @@
             {
                 return ex;
             }
+        }
+    }
+
+    public static class AssertAsync
+    {
+        public static async Task<T> Throws<T>(Func<Task> testCode) where T : Exception
+        {
+            try
+            {
+                await testCode();
+                Assert.Throws<T>(() => { }); // Use xUnit's default behavior.
+            }
+            catch(T exception)
+            {
+                return exception;
+            }
+            return null;
         }
     }
 }

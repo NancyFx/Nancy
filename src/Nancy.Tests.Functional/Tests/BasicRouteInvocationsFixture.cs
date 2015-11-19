@@ -1,5 +1,6 @@
 ﻿namespace Nancy.Tests.Functional.Tests
 {
+    using System.Threading.Tasks;
     using Nancy.Testing;
 
     using Xunit;
@@ -14,7 +15,7 @@
         }
 
         [Fact]
-        public void Should_set_default_response_values_for_basic_get_request()
+        public async Task Should_set_default_response_values_for_basic_get_request()
         {
             // Given
             // When
@@ -27,7 +28,7 @@
         }
 
         [Fact]
-        public void Should_set_response_status_code_to_not_found_when_get_request_did_not_match()
+        public async Task Should_set_response_status_code_to_not_found_when_get_request_did_not_match()
         {
             // Given
             // When
@@ -38,11 +39,11 @@
         }
 
         [Fact]
-        public void Should_set_default_response_values_for_basic_delete_request()
+        public async Task Should_set_default_response_values_for_basic_delete_request()
         {
             // Given
             // When
-            var response = this.browser.Delete("/");
+            var response = await this.browser.Delete("/");
 
             // Then
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -51,22 +52,22 @@
         }
 
         [Fact]
-        public void Should_set_response_status_code_to_not_found_when_delete_request_did_not_match()
+        public async Task Should_set_response_status_code_to_not_found_when_delete_request_did_not_match()
         {
             // Given
             // When
-            var response = this.browser.Delete("/invalid");
+            var response = await this.browser.Delete("/invalid");
 
             // Then
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
         [Fact]
-        public void Should_set_default_response_values_for_basic_post_request()
+        public async Task Should_set_default_response_values_for_basic_post_request()
         {
             // Given
             // When
-            var response = this.browser.Post("/");
+            var response = await this.browser.Post("/");
 
             // Then
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -75,22 +76,22 @@
         }
 
         [Fact]
-        public void Should_set_response_status_code_to_not_found_when_post_request_did_not_match()
+        public async Task Should_set_response_status_code_to_not_found_when_post_request_did_not_match()
         {
             // Given
             // When
-            var response = this.browser.Post("/invalid");
+            var response = await this.browser.Post("/invalid");
 
             // Then
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
         [Fact]
-        public void Should_set_default_response_values_for_basic_put_request()
+        public async Task Should_set_default_response_values_for_basic_put_request()
         {
             // Given
             // When
-            var response = this.browser.Put("/");
+            var response = await this.browser.Put("/");
 
             // Then
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -99,22 +100,22 @@
         }
 
         [Fact]
-        public void Should_set_response_status_code_to_not_found_when_put_request_did_not_match()
+        public async Task Should_set_response_status_code_to_not_found_when_put_request_did_not_match()
         {
             // Given
             // When
-            var response = this.browser.Put("/invalid");
+            var response = await this.browser.Put("/invalid");
 
             // Then
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
         [Fact]
-        public void Should_set_default_response_values_for_basic_head_request()
+        public async Task Should_set_default_response_values_for_basic_head_request()
         {
             // Given
             // When
-            var response = this.browser.Head("/");
+            var response = await this.browser.Head("/");
 
             // Then
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -123,11 +124,11 @@
         }
 
         [Fact]
-        public void Should_set_response_status_code_to_not_found_when_head_request_did_not_match()
+        public async Task Should_set_response_status_code_to_not_found_when_head_request_did_not_match()
         {
             // Given
             // When
-            var response = this.browser.Head("/invalid");
+            var response = await this.browser.Head("/invalid");
 
             // Then
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -180,14 +181,14 @@
         }
 
         [Fact]
-        public void Should_use_head_response_values_for_basic_head_request()
+        public async Task Should_use_head_response_values_for_basic_head_request()
         {
             // Given
             StaticConfiguration.EnableHeadRouting = true;
             var browser = new Browser(with => with.Module<BasicRouteInvocationsModuleWithHead>());
 
             // When
-            var response = browser.Head("/");
+            var response = await browser.Head("/");
 
             // Then
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);

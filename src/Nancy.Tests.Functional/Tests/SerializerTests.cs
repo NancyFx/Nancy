@@ -1,7 +1,7 @@
 ﻿namespace Nancy.Tests.Functional.Tests
 {
     using System;
-
+    using System.Threading.Tasks;
     using Nancy.Testing;
     using Nancy.Tests.Functional.Modules;
 
@@ -21,28 +21,28 @@
         }
 
         [Fact]
-        public void Should_Serialize_To_ISO8601()
+        public async Task Should_Serialize_To_ISO8601()
         {
-            // Given & When
-            var result = browser.Get("/serializer/20131225121030", with =>
-                {
-                    with.Accept("application/json");
-                });
+            //Given & When
+            var result = await browser.Get("/serializer/20131225121030", with =>
+            {
+                with.Accept("application/json");
+            });
 
-            // Then
+            //Then
             var model = result.Body.AsString();
-
-            Assert.Equal(String.Format("{{\"createdOn\":\"2013-12-25T12:10:30.0000000{0}\",\"name\":null}}", GetTimezoneSuffix(new DateTime(2013, 12, 25, 12, 10, 30))), model);
+            Assert.Equal(string.Format("{{\"createdOn\":\"2013-12-25T12:10:30.0000000{0}\"}}", GetTimezoneSuffix(new DateTime(2013, 12, 25, 12, 10, 30))), model);
         }
 
+
         [Fact]
-        public void Should_BindTo_Existing_Instance_Using_Body_Serializer()
+        public async Task Should_BindTo_Existing_Instance_Using_Body_Serializer()
         {
             // Given
             var model = new FakeSerializerModel { Name = "Marsellus Wallace" };
 
             // When
-            var result = browser.Post("/serializer", with =>
+            var result = await browser.Post("/serializer", with =>
                 {
                     with.JsonBody(model);
                     with.Accept("application/json");
@@ -56,10 +56,10 @@
         }
 
         [Fact]
-        public void Should_BindTo_Existing_Instance_Using_Form()
+        public async Task Should_BindTo_Existing_Instance_Using_Form()
         {
             // Given & When
-            var result = browser.Post("/serializer", with =>
+            var result = await browser.Post("/serializer", with =>
                 {
                     with.FormValue("Name", "Marsellus Wallace");
                     with.Accept("application/json");

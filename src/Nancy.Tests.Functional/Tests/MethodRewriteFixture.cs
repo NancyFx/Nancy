@@ -1,7 +1,9 @@
 namespace Nancy.Tests.Functional.Tests
 {
     using System;
-    using Testing;
+    using System.Threading.Tasks;
+    using Nancy.Testing;
+    using Nancy.Tests.xUnitExtensions;
     using Xunit;
     using Xunit.Extensions;
 
@@ -21,9 +23,9 @@ namespace Nancy.Tests.Functional.Tests
         [InlineData("delete")]
         [InlineData("dElEtE")]
         [InlineData("DELETE")]
-        public void Should_rewrite_method_when_method_form_input_is_provided(string method)
+        public async Task Should_rewrite_method_when_method_form_input_is_provided(string method)
         {
-            var response = this.browser.Post("/", with =>
+            var response = await this.browser.Post("/", with =>
             {
                 with.FormValue("_method", method);
             });
@@ -35,9 +37,9 @@ namespace Nancy.Tests.Functional.Tests
         [InlineData("delete")]
         [InlineData("dElEtE")]
         [InlineData("DELETE")]
-        public void Should_rewrite_method_when_x_http_method_override_form_input_is_provided(string method)
+        public async Task Should_rewrite_method_when_x_http_method_override_form_input_is_provided(string method)
         {
-            var response = this.browser.Post("/", with =>
+            var response = await this.browser.Post("/", with =>
             {
                 with.FormValue("X-HTTP-Method-Override", method);
             });
@@ -46,9 +48,9 @@ namespace Nancy.Tests.Functional.Tests
         }
 
         [Fact]
-        public void Should_rewrite_method_when_x_http_method_header_input_is_provided()
+        public async Task Should_rewrite_method_when_x_http_method_header_input_is_provided()
         {
-            var response = this.browser.Post("/", with =>
+            var response = await this.browser.Post("/", with =>
             {
                 with.Header("X-HTTP-Method-Override", "DELETE");
             });
@@ -57,9 +59,9 @@ namespace Nancy.Tests.Functional.Tests
         }
 
         [Fact]
-        public void Should_throw_invalidoperationexception_when_both_method_and_x_http_method_override_form_inputs_are_specified()
+        public async Task Should_throw_invalidoperationexception_when_both_method_and_x_http_method_override_form_inputs_are_specified()
         {
-            Assert.Throws<InvalidOperationException>(() => this.browser.Post("/", with =>
+            await AssertAsync.Throws<InvalidOperationException>(async () => await this.browser.Post("/", with =>
             {
                 with.FormValue("_method", "DELETE");
                 with.FormValue("X-HTTP-Method-Override", "DELETE");
@@ -67,9 +69,9 @@ namespace Nancy.Tests.Functional.Tests
         }
 
         [Fact]
-        public void Should_throw_invalidoperationexception_when_both_x_http_method_override_form_input_and_header_are_specified()
+        public async Task Should_throw_invalidoperationexception_when_both_x_http_method_override_form_input_and_header_are_specified()
         {
-            Assert.Throws<InvalidOperationException>(() => this.browser.Post("/", with =>
+            await AssertAsync.Throws<InvalidOperationException>(async () => await this.browser.Post("/", with =>
             {
                 with.FormValue("X-HTTP-Method-Override", "DELETE");
                 with.Header("X-HTTP-Method-Override", "DELETE");
@@ -77,9 +79,9 @@ namespace Nancy.Tests.Functional.Tests
         }
 
         [Fact]
-        public void Should_throw_invalidoperationexception_when_both_method_inputs_and_x_http_method_override_header_are_specified()
+        public async Task Should_throw_invalidoperationexception_when_both_method_inputs_and_x_http_method_override_header_are_specified()
         {
-            Assert.Throws<InvalidOperationException>(() => this.browser.Post("/", with =>
+            await AssertAsync.Throws<InvalidOperationException>(async () => await this.browser.Post("/", with =>
             {
                 with.FormValue("_method", "DELETE");
                 with.Header("X-HTTP-Method-Override", "DELETE");
@@ -87,9 +89,9 @@ namespace Nancy.Tests.Functional.Tests
         }
 
         [Fact]
-        public void Should_throw_invalidoperationexception_when_both_method_input_and_x_http_method_override_input_and_header_are_specified()
+        public async Task Should_throw_invalidoperationexception_when_both_method_input_and_x_http_method_override_input_and_header_are_specified()
         {
-            Assert.Throws<InvalidOperationException>(() => this.browser.Post("/", with =>
+            await AssertAsync.Throws<InvalidOperationException>(async () => await this.browser.Post("/", with =>
             {
                 with.FormValue("_method", "DELETE");
                 with.FormValue("X-HTTP-Method-Override", "DELETE");
