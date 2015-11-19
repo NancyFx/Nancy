@@ -18,7 +18,7 @@
         {
             // Given
             // When
-            var response = this.browser.Get("/");
+            var response = await this.browser.Get("/");
 
             // Then
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -31,7 +31,7 @@
         {
             // Given
             // When
-            var response = this.browser.Get("/invalid");
+            var response = await this.browser.Get("/invalid");
 
             // Then
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);

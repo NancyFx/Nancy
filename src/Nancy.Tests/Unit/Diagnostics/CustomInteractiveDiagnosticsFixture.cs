@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
+    using System.Threading.Tasks;
     using Nancy.Bootstrapper;
     using Nancy.Configuration;
     using Nancy.Cryptography;
@@ -114,7 +114,7 @@
         }
 
         [Fact]
-        public void Should_return_main_page_with_valid_auth_cookie()
+        public async Task Should_return_main_page_with_valid_auth_cookie()
         {
             // Given
             var bootstrapper = new ConfigurableBootstrapper(with =>
@@ -133,7 +133,7 @@
             var browser = new Browser(bootstrapper);
 
             // When
-            var result = browser.Get(DiagnosticsConfiguration.Default.Path + "/interactive/providers/", with =>
+            var result = await browser.Get(DiagnosticsConfiguration.Default.Path + "/interactive/providers/", with =>
                 {
                     with.Cookie(DiagsCookieName, this.GetSessionCookieValue("password"));
                 });

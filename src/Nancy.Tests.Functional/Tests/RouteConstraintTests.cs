@@ -33,7 +33,7 @@
             // Given
             const string url = @"/42...42";
             // When
-            var response = this.browser.Get(url, with => { with.HttpRequest(); });
+            var response = await this.browser.Get(url, with => { with.HttpRequest(); });
             // Then
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.True(Invoked);
@@ -45,7 +45,7 @@
             // Given
             const string url = @"/4.1.2...4.1.5";
             // When
-            var response = this.browser.Get(url, with => { with.HttpRequest(); with.Accept("application/json");});
+            var response = await this.browser.Get(url, with => { with.HttpRequest(); with.Accept("application/json");});
             // Then
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal(response.Body.AsString(), "{\"left\":\"4.1.2\",\"right\":\"4.1.5\"}");
@@ -57,7 +57,7 @@
             // Given
             const string url = @"/version/4.1.2";
             // When
-            var response = this.browser.Get(url, with => { with.HttpRequest(); with.Accept("application/json"); });
+            var response = await this.browser.Get(url, with => { with.HttpRequest(); with.Accept("application/json"); });
             // Then
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal(response.Body.AsString(), "{\"versionNumber\":\"4.1.2\"}");
@@ -69,7 +69,7 @@
             // Given
             const string url = @"/version/4.1.";
             // When
-            var response = this.browser.Get(url, with => { with.HttpRequest(); with.Accept("application/json"); });
+            var response = await this.browser.Get(url, with => { with.HttpRequest(); with.Accept("application/json"); });
             // Then
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal(response.Body.AsString(), "{\"invalidVersionNumber\":\"4.1.\"}");
