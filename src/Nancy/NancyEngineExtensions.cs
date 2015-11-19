@@ -18,34 +18,6 @@ namespace Nancy
             return nancyEngine.HandleRequest(request, context => context, CancellationToken.None);
         }
 
-        public static NancyContext HandleRequestSync(this INancyEngine nancyEngine, Request request)
-        {
-            return HandleRequest(nancyEngine, request, context => context);
-        }
-
-        /// <summary>
-        /// Handles an incoming <see cref="Request"/>.
-        /// </summary>
-        /// <param name="nancyEngine">The <see cref="INancyEngine"/> instance.</param>
-        /// <param name="request">An <see cref="Request"/> instance, containing the information about the current request.</param>
-        /// <param name="preRequest">Delegate to call before the request is processed</param>
-        /// <returns>A <see cref="NancyContext"/> instance containing the request/response context.</returns>
-        public static NancyContext HandleRequest(this INancyEngine nancyEngine, Request request, Func<NancyContext, NancyContext> preRequest)
-        {
-            var task = nancyEngine.HandleRequest(request, preRequest, CancellationToken.None);
-
-            try
-            {
-                task.Wait();
-            }
-            catch (Exception ex)
-            {
-                throw ex.FlattenInnerExceptions();
-            }
-
-            return task.Result;
-        }
-
         /// <summary>
         /// Handles an incoming <see cref="Request"/> async.
         /// </summary>

@@ -1,7 +1,7 @@
 ﻿namespace Nancy.Testing.Tests
 {
     using System;
-
+    using System.Threading.Tasks;
     using FakeItEasy;
 
     using Xunit;
@@ -26,7 +26,7 @@
         }
 
         [Fact]
-        public void should_be_able_to_configure_dependency_typeparam()
+        public async Task should_be_able_to_configure_dependency_typeparam()
         {
             // Given
             var browser = new Browser(with =>
@@ -36,14 +36,14 @@
             });
 
             // When
-            var response = browser.Get("/1dependency");
+            var response = await browser.Get("/1dependency");
 
             // Assert
             Assert.Contains("Implemented ITestDependency", response.Body.AsString());
         }
 
         [Fact]
-        public void should_be_able_to_configure_dependency_typeparam_and_instance()
+        public async Task should_be_able_to_configure_dependency_typeparam_and_instance()
         {
             // Given
             var browser = new Browser(with =>
@@ -53,14 +53,14 @@
                     });
 
             // When
-            var response = browser.Get("/1dependency");
+            var response = await browser.Get("/1dependency");
 
             // Assert
             Assert.Contains(_dataFromFake, response.Body.AsString());
         }
 
         [Fact]
-        public void should_be_able_to_configure_dependency_instance()
+        public async Task should_be_able_to_configure_dependency_instance()
         {
             // Given
             var browser = new Browser(with =>
@@ -70,14 +70,14 @@
             });
 
             // When
-            var response = browser.Get("/1dependency");
+            var response = await browser.Get("/1dependency");
 
             // Assert
             Assert.Contains(_dataFromFake, response.Body.AsString());
         }
 
         [Fact]
-        public void should_be_able_to_configure_dependency_type()
+        public async Task should_be_able_to_configure_dependency_type()
         {
             // Given
             var browser = new Browser(with =>
@@ -87,7 +87,7 @@
             });
 
             // When
-            var response = browser.Get("/1dependency");
+            var response = await browser.Get("/1dependency");
 
             // Assert
             Assert.Contains("Implemented ITestDependency", response.Body.AsString());
@@ -121,7 +121,7 @@
 
 
         [Fact]
-        public void should_be_able_to_configure_dependencies_by_instances()
+        public async Task should_be_able_to_configure_dependencies_by_instances()
         {
             // Given
             var browser = new Browser(with =>
@@ -131,7 +131,7 @@
             });
 
             // When
-            var response = browser.Get("/2dependencies");
+            var response = await browser.Get("/2dependencies");
 
             // Assert
             var bodyAsString = response.Body.AsString();
@@ -140,7 +140,7 @@
         }
 
         [Fact]
-        public void should_be_able_to_configure_dependencies_by_a_map_with_interface_and_instance()
+        public async Task should_be_able_to_configure_dependencies_by_a_map_with_interface_and_instance()
         {
             // Given
             var browser = new Browser(with =>
@@ -153,14 +153,13 @@
             });
 
             // When
-            var response = browser.Get("/2dependencies");
+            var response = await browser.Get("/2dependencies");
 
             // Assert
             var bodyAsString = response.Body.AsString();
             Assert.Contains(_dataFromFake, bodyAsString);
             Assert.Contains(_dataFromFake2, bodyAsString);
         }
-
 
         public class ModuleWithOneDependency : NancyModule
         {

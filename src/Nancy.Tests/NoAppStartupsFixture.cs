@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-
+    using System.Threading.Tasks;
     using Nancy.Bootstrapper;
     using Nancy.Testing;
 
@@ -74,7 +74,7 @@
         }
 
         [Fact]
-        public void When_AutoRegistration_Is_Disabled_Should_Not_Throw()
+        public async Task When_AutoRegistration_Is_Disabled_Should_Not_Throw()
         {
             // Given
             var bootstrapper = new ConfigurableBootstrapper(config =>
@@ -86,7 +86,7 @@
             var browser = new Browser(bootstrapper);
 
             // When
-            var result = browser.Get("/");
+            var result = await browser.Get("/");
 
             // Then
             result.Body.AsString().ShouldEqual("disabled auto registration works");
