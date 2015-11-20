@@ -4,6 +4,7 @@ namespace Nancy.Hosting.Aspnet.Tests
     using System.Collections.Specialized;
     using System.IO;
     using System.Threading;
+    using System.Threading.Tasks;
     using System.Web;
 
     using FakeItEasy;
@@ -43,10 +44,10 @@ namespace Nancy.Hosting.Aspnet.Tests
         }
 
         [Fact]
-        public void Should_invoke_engine_with_requested_method()
+        public async Task Should_invoke_engine_with_requested_method()
         {
             // Given
-            var nancyContext = new NancyContext() {Response = new Response()};
+            var nancyContext = new NancyContext {Response = new Response()};
             A.CallTo(() => this.request.HttpMethod).Returns("POST");
             A.CallTo(() => this.engine.HandleRequest(
                                         A<Request>.Ignored,
@@ -55,8 +56,7 @@ namespace Nancy.Hosting.Aspnet.Tests
                                       .Returns(TaskHelpers.GetCompletedTask(nancyContext));
 
             // When
-            var task = this.handler.ProcessRequest(this.context, ar => { }, new object());
-            NancyHandler.EndProcessRequest(task);
+            await this.handler.ProcessRequest(this.context);
 
             // Then
             A.CallTo(() => this.engine.HandleRequest(A<Request>
@@ -66,7 +66,7 @@ namespace Nancy.Hosting.Aspnet.Tests
         }
 
         [Fact]
-        public void Should_output_the_responses_cookies()
+        public async Task Should_output_the_responses_cookies()
         {
             // Given
             var cookie1 = A.Fake<INancyCookie>();
@@ -81,8 +81,7 @@ namespace Nancy.Hosting.Aspnet.Tests
             SetupRequestProcess(nancyContext);
 
             // When
-            var task = this.handler.ProcessRequest(context, ar => { }, new object());
-            NancyHandler.EndProcessRequest(task);
+            await this.handler.ProcessRequest(context);
 
             // Then
             A.CallTo(() => this.response.AddHeader("Set-Cookie", "the first cookie")).MustHaveHappened();
@@ -90,7 +89,7 @@ namespace Nancy.Hosting.Aspnet.Tests
         }
 
         [Fact]
-        public void Should_dispose_the_context()
+        public async Task Should_dispose_the_context()
         {
             // Given
             var disposable = A.Fake<IDisposable>();
@@ -104,8 +103,7 @@ namespace Nancy.Hosting.Aspnet.Tests
                                       .Returns(TaskHelpers.GetCompletedTask(nancyContext));
 
             // When
-            var task = this.handler.ProcessRequest(this.context, ar => { }, new object());
-            NancyHandler.EndProcessRequest(task);
+            await this.handler.ProcessRequest(this.context);
 
             // Then
             A.CallTo(() => disposable.Dispose()).MustHaveHappened(Repeated.Exactly.Once);
