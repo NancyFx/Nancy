@@ -414,18 +414,17 @@
 
             var container = this.ApplicationContainer as IDisposable;
 
-            if (container == null)
+            if (container != null)
             {
-                return;
+                try
+                {
+                    container.Dispose();
+                }
+                catch (ObjectDisposedException)
+                {
+                }
             }
 
-            try
-            {
-                container.Dispose();
-            }
-            catch (ObjectDisposedException)
-            {
-            }
 
             Dispose(true);
         }
