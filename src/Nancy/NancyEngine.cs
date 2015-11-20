@@ -99,65 +99,44 @@
         /// <param name="preRequest">Delegate to call before the request is processed</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The task object representing the asynchronous operation.</returns>
-        public Task<NancyContext> HandleRequest(Request request, Func<NancyContext, NancyContext> preRequest, CancellationToken cancellationToken)
+        public async Task<NancyContext> HandleRequest(Request request, Func<NancyContext, NancyContext> preRequest, CancellationToken cancellationToken)
         {
-	        var cts = CancellationTokenSource.CreateLinkedTokenSource(this.engineDisposedCts.Token, cancellationToken);
-            cts.Token.ThrowIfCancellationRequested();
-
-            var tcs = new TaskCompletionSource<NancyContext>();
-
-            if (request == null)
+            using (var cts = CancellationTokenSource.CreateLinkedTokenSource(this.engineDisposedCts.Token, cancellationToken))
             {
-                throw new ArgumentNullException("request", "The request parameter cannot be null.");
-            }
+                cts.Token.ThrowIfCancellationRequested();
 
-            var context = this.contextFactory.Create(request);
+                //var tcs = new TaskCompletionSource<NancyContext>();
 
-            if (preRequest != null)
-            {
-                context = preRequest(context);
-            }
-
-            var staticContentResponse = this.staticContentProvider.GetContent(context);
-            if (staticContentResponse != null)
-            {
-                context.Response = staticContentResponse;
-                tcs.SetResult(context);
-                return tcs.Task;
-            }
-
-            var pipelines = this.RequestPipelinesFactory.Invoke(context);
-
-            var lifeCycleTask = this.InvokeRequestLifeCycle(context, cts.Token, pipelines);
-
-            lifeCycleTask.WhenCompleted(
-                completeTask =>
+                if (request == null)
                 {
-	                try
-	                {
-		                this.CheckStatusCodeHandler(completeTask.Result);
+                    throw new ArgumentNullException("request", "The request parameter cannot be null.");
+                }
 
-		                this.SaveTraceInformation(completeTask.Result);
-	                }
-	                catch (Exception ex)
-	                {
-		                tcs.SetException(ex);
-		                return;
-	                }
-	                finally
-	                {
-		                cts.Dispose();
-	                }
+                var context = this.contextFactory.Create(request);
 
-                    tcs.SetResult(completeTask.Result);
-                },
-                errorTask =>
+                if (preRequest != null)
                 {
-		            tcs.SetException(errorTask.Exception);
-                },
-                true);
+                    context = preRequest(context);
+                }
 
-            return tcs.Task;
+                var staticContentResponse = this.staticContentProvider.GetContent(context);
+                if (staticContentResponse != null)
+                {
+                    context.Response = staticContentResponse;
+
+                    return context;
+                }
+
+                var pipelines = this.RequestPipelinesFactory.Invoke(context);
+
+                var nancyContext = await this.InvokeRequestLifeCycle(context, cts.Token, pipelines);
+
+                this.CheckStatusCodeHandler(nancyContext);
+
+                this.SaveTraceInformation(nancyContext);
+
+                return nancyContext;
+            }
         }
 
         /// <summary>
