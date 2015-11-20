@@ -414,18 +414,19 @@
 
             var container = this.ApplicationContainer as IDisposable;
 
-            if (container == null)
+            if (container != null)
             {
-                return;
+                try
+                {
+                    container.Dispose();
+                }
+                catch (ObjectDisposedException)
+                {
+                }
             }
 
-            try
-            {
-                container.Dispose();
-            }
-            catch (ObjectDisposedException)
-            {
-            }
+
+            Dispose(true);
         }
 
         /// <summary>
@@ -516,6 +517,14 @@
         /// </summary>
         /// <param name="nancyConventions">Convention object instance</param>
         protected virtual void ConfigureConventions(NancyConventions nancyConventions)
+        {
+        }
+        
+        /// <summary>
+        /// Releases unmanaged and - optionally - managed resources.
+        /// </summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        protected virtual void Dispose(bool disposing)
         {
         }
 
