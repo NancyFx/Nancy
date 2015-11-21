@@ -17,6 +17,7 @@ namespace Nancy.Tests.Unit
 
     using Xunit;
     using Nancy.Responses.Negotiation;
+    using Nancy.Tests.xUnitExtensions;
 
     public class NancyEngineFixture
     {
@@ -102,13 +103,13 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
-        public void HandleRequest_Should_Throw_ArgumentNullException_When_Given_A_Null_Request()
+        public async Task HandleRequest_Should_Throw_ArgumentNullException_When_Given_A_Null_Request()
         {
             // Given,
             Request request = null;
 
             // When
-            var exception = Record.Exception(() => engine.HandleRequest(request));
+            var exception = await RecordAsync.Exception(async () => await engine.HandleRequest(request));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -796,7 +797,7 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
-        public void Should_throw_operationcancelledexception_when_disposed_handling_request()
+        public async Task Should_throw_operationcancelledexception_when_disposed_handling_request()
         {
             // Given
             var request = new Request("GET", "/", "http");
@@ -806,7 +807,7 @@ namespace Nancy.Tests.Unit
             engine.Dispose();
 
             // When
-            var exception = Record.Exception(() => engine.HandleRequest(request));
+            var exception = RecordAsync.Exception(async () => await engine.HandleRequest(request));
 
             // Then
             exception.ShouldBeOfType<OperationCanceledException>();
