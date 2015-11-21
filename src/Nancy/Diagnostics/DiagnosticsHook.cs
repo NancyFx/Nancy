@@ -5,19 +5,23 @@ namespace Nancy.Diagnostics
     using System.IO;
     using System.Linq;
     using System.Threading;
-    using Bootstrapper;
-    using Configuration;
-    using Cookies;
-    using Cryptography;
-    using Culture;
-    using Localization;
-    using ModelBinding;
-    using Responses;
-    using Responses.Negotiation;
-    using Routing;
-    using Routing.Constraints;
-    using Routing.Trie;
+    using Nancy.Bootstrapper;
+    using Nancy.Configuration;
+    using Nancy.Cookies;
+    using Nancy.Cryptography;
+    using Nancy.Culture;
+    using Nancy.Json;
+    using Nancy.Localization;
+    using Nancy.ModelBinding;
+    using Nancy.Responses;
+    using Nancy.Responses.Negotiation;
+    using Nancy.Routing;
+    using Nancy.Routing.Constraints;
+    using Nancy.Routing.Trie;
 
+    /// <summary>
+    /// Pipeline hook to handle diagnostics dashboard requests.
+    /// </summary>
     public static class DiagnosticsHook
     {
         private static readonly CancellationToken CancellationToken = new CancellationToken();
@@ -26,12 +30,19 @@ namespace Nancy.Diagnostics
 
         internal const string ItemsKey = "DIAGS_REQUEST";
 
+        /// <summary>
+        /// Enables the diagnostics dashboard and will intercept all requests that are passed to
+        /// the condigured paths.
+        /// </summary>
         public static void Enable(IPipelines pipelines, IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration, IModelBinderLocator modelBinderLocator, IEnumerable<IResponseProcessor> responseProcessors, IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints, ICultureService cultureService, IRequestTraceFactory requestTraceFactory, IEnumerable<IRouteMetadataProvider> routeMetadataProviders, ITextResource textResource, INancyEnvironment environment)
         {
             var diagnosticsConfiguration =
                 environment.GetValue<DiagnosticsConfiguration>();
 
-            var diagnosticsModuleCatalog = new DiagnosticsModuleCatalog(providers, rootPathProvider, requestTracing, configuration, diagnosticsConfiguration);
+            var diagnosticsEnvironment =
+                GetDiagnosticsEnvironment();
+
+            var diagnosticsModuleCatalog = new DiagnosticsModuleCatalog(providers, rootPathProvider, requestTracing, configuration, diagnosticsEnvironment);
 
             var diagnosticsRouteCache = new RouteCache(
                 diagnosticsModuleCatalog,
@@ -43,7 +54,7 @@ namespace Nancy.Diagnostics
 
             var diagnosticsRouteResolver = new DefaultRouteResolver(
                 diagnosticsModuleCatalog,
-                new DiagnosticsModuleBuilder(rootPathProvider, modelBinderLocator, environment),
+                new DiagnosticsModuleBuilder(rootPathProvider, modelBinderLocator, diagnosticsEnvironment, environment),
                 diagnosticsRouteCache,
                 new RouteResolverTrie(new TrieNodeFactory(routeSegmentConstraints)));
 
@@ -91,6 +102,21 @@ namespace Nancy.Diagnostics
                                    ? ExecuteDiagnostics(ctx, diagnosticsRouteResolver, diagnosticsConfiguration, serializer)
                                    : GetDiagnosticsHelpView(ctx);
                     }));
+        }
+
+        /// <summary>
+        /// Gets a special <see cref="INancyEnvironment"/> instance that is separate from the
+        /// one used by the application.
+        /// </summary>
+        /// <returns></returns>
+        private static INancyEnvironment GetDiagnosticsEnvironment()
+        {
+            var diagnosticsEnvironment =
+                new DefaultNancyEnvironment();
+
+            diagnosticsEnvironment.Json(retainCasing: false);
+
+            return diagnosticsEnvironment;
         }
 
         private static bool ValidateConfiguration(DiagnosticsConfiguration configuration)

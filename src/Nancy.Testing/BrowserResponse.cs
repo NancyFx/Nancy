@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-
     using Nancy.Cookies;
 
     /// <summary>
@@ -11,7 +10,7 @@
     public class BrowserResponse
     {
         private readonly Browser hostBrowser;
-
+        private readonly BrowserContext browserContext;
         private BrowserResponseBodyWrapper body;
 
         /// <summary>
@@ -19,8 +18,9 @@
         /// </summary>
         /// <param name="context">The <see cref="NancyContext"/> that <see cref="Browser"/> was invoked with.</param>
         /// <param name="hostBrowser">Host browser object</param>
+        /// <param name="browserContext">An <see cref="BrowserContext"/> instance.</param>
         /// <exception cref="ArgumentNullException">The value of the <paramref name="context"/> parameter was <see langword="null"/>.</exception>
-        public BrowserResponse(NancyContext context, Browser hostBrowser)
+        public BrowserResponse(NancyContext context, Browser hostBrowser, BrowserContext browserContext)
         {
             if (context == null)
             {
@@ -33,6 +33,7 @@
             }
 
             this.hostBrowser = hostBrowser;
+            this.browserContext = browserContext;
 
             this.Context = context;
         }
@@ -45,7 +46,7 @@
         {
             get
             {
-                return this.body ?? (this.body = new BrowserResponseBodyWrapper(this.Context.Response));
+                return this.body ?? (this.body = new BrowserResponseBodyWrapper(this.Context.Response, this.browserContext));
             }
         }
 

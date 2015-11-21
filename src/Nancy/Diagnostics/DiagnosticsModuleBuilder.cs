@@ -11,10 +11,10 @@ namespace Nancy.Diagnostics
         private readonly IModelBinderLocator modelBinderLocator;
         private readonly INancyEnvironment environment;
 
-        public DiagnosticsModuleBuilder(IRootPathProvider rootPathProvider, IModelBinderLocator modelBinderLocator, INancyEnvironment environment)
+        public DiagnosticsModuleBuilder(IRootPathProvider rootPathProvider, IModelBinderLocator modelBinderLocator, INancyEnvironment diagnosticsEnvironment, INancyEnvironment environment)
         {
             this.rootPathProvider = rootPathProvider;
-            this.serializerFactory = new DiagnosticsSerializerFactory();
+            this.serializerFactory = new DiagnosticsSerializerFactory(diagnosticsEnvironment);
             this.modelBinderLocator = modelBinderLocator;
             this.environment = environment;
         }

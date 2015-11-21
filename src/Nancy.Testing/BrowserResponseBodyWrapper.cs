@@ -18,8 +18,10 @@ namespace Nancy.Testing
         /// Initializes a new instance of the <see cref="BrowserResponseBodyWrapper"/> class.
         /// </summary>
         /// <param name="response">The <see cref="Response"/> to wrap.</param>
-        public BrowserResponseBodyWrapper(Response response)
+        /// <param name="browserContext">The <see cref="BrowserContext"/> of the request that generated the response.</param>
+        public BrowserResponseBodyWrapper(Response response, BrowserContext browserContext)
         {
+            this.BrowserContext = browserContext;
             var contentStream = GetContentStream(response);
 
             this.responseBytes = contentStream.ToArray();
@@ -34,6 +36,12 @@ namespace Nancy.Testing
         {
             get { return this.contentType; }
         }
+
+        /// <summary>
+        /// Gets the <see cref="BrowserContext"/> of the request that generated the response.
+        /// </summary>
+        /// <value>A <see cref="BrowserContext"/> intance.</value>
+        public BrowserContext BrowserContext { get; private set; }
 
         private static MemoryStream GetContentStream(Response response)
         {

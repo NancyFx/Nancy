@@ -4,7 +4,8 @@ namespace Nancy.Tests.Unit
     using System.Text;
 
     using FakeItEasy;
-
+    using Nancy.Configuration;
+    using Nancy.Json;
     using Nancy.Responses;
     using Nancy.Tests.Fakes;
 
@@ -18,10 +19,12 @@ namespace Nancy.Tests.Unit
 
         public JsonFormatterExtensionsFixtures()
         {
+            var environment = GetTestingEnvironment();
             var serializerFactory =
-               new DefaultSerializerFactory(new ISerializer[] { new DefaultJsonSerializer() });
+               new DefaultSerializerFactory(new ISerializer[] { new DefaultJsonSerializer(environment) });
 
             this.formatter = A.Fake<IResponseFormatter>();
+            A.CallTo(() => this.formatter.Environment).Returns(environment);
             A.CallTo(() => this.formatter.SerializerFactory).Returns(serializerFactory);
             this.model = new Person { FirstName = "Andy", LastName = "Pike" };
             this.response = this.formatter.AsJson(model);
@@ -77,6 +80,16 @@ namespace Nancy.Tests.Unit
         {
             var response = formatter.AsJson(new { foo = "bar" }, HttpStatusCode.InternalServerError);
             Assert.Equal(response.StatusCode, HttpStatusCode.InternalServerError);
+        }
+
+        private static INancyEnvironment GetTestingEnvironment()
+        {
+            var envionment =
+                new DefaultNancyEnvironment();
+
+            envionment.AddValue(JsonConfiguration.Default);
+
+            return envionment;
         }
     }
 }

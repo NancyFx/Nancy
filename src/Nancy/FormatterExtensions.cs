@@ -100,7 +100,7 @@ namespace Nancy
         {
             var serializer = jsonSerializer ?? (jsonSerializer = formatter.SerializerFactory.GetSerializer("application/json"));
 
-            return new JsonResponse<TModel>(model, serializer)
+            return new JsonResponse<TModel>(model, serializer, formatter.Environment)
             {
                 StatusCode = statusCode
             };

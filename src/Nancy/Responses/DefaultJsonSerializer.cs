@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
-
+    using Nancy.Configuration;
     using Nancy.IO;
     using Nancy.Json;
     using Nancy.Responses.Negotiation;
@@ -15,6 +15,17 @@
     {
         private bool? retainCasing;
         private bool? iso8601DateFormat;
+        private readonly JsonConfiguration configuration;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultJsonSerializer"/> class,
+        /// with the provided <see cref="INancyEnvironment"/>.
+        /// </summary>
+        /// <param name="environment">An <see cref="INancyEnvironment"/> instance.</param>
+        public DefaultJsonSerializer(INancyEnvironment environment)
+        {
+            this.configuration = environment.GetValue<JsonConfiguration>();
+        }
 
         /// <summary>
         /// Whether the serializer can serialize the content type
@@ -42,7 +53,7 @@
         /// </summary>
         public bool RetainCasing
         {
-            get { return retainCasing.HasValue ? retainCasing.Value : JsonConfiguration.RetainCasing; }
+            get { return retainCasing.HasValue ? retainCasing.Value : this.configuration.RetainCasing; }
             set { retainCasing = value; }
         }
 
@@ -53,7 +64,7 @@
         /// </summary>
         public bool ISO8601DateFormat
         {
-            get { return iso8601DateFormat.HasValue ? iso8601DateFormat.Value : JsonConfiguration.ISO8601DateFormat; }
+            get { return iso8601DateFormat.HasValue ? iso8601DateFormat.Value : this.configuration.ISO8601DateFormat; }
             set { iso8601DateFormat = value; }
         }
 
@@ -68,9 +79,17 @@
         {
             using (var writer = new StreamWriter(new UnclosableStreamWrapper(outputStream)))
             {
-                var serializer = new JavaScriptSerializer(null, false, JsonConfiguration.MaxJsonLength, JsonConfiguration.MaxRecursions, RetainCasing, ISO8601DateFormat);
+                var serializer = new JavaScriptSerializer(
+                    null,
+                    false,
+                    this.configuration.MaxJsonLength,
+                    this.configuration.MaxRecursions,
+                    RetainCasing,
+                    ISO8601DateFormat,
+                    this.configuration.Converters,
+                    this.configuration.PrimitiveConverters);
 
-                serializer.RegisterConverters(JsonConfiguration.Converters, JsonConfiguration.PrimitiveConverters);
+                serializer.RegisterConverters(this.configuration.Converters, this.configuration.PrimitiveConverters);
 
                 try
                 {

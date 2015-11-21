@@ -55,7 +55,7 @@
         {
             if (serializer == null)
             {
-                serializer = new DefaultJsonSerializer();
+                serializer = new DefaultJsonSerializer(browserContext.Environment);
             }
 
             var contextValues =

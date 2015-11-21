@@ -55,7 +55,7 @@ namespace Nancy.Testing
         /// <value>A <typeparamref name="TModel"/> instance representation of the HTTP response body.</value>
         public static TModel DeserializeJson<TModel>(this BrowserResponseBodyWrapper bodyWrapper)
         {
-            var bodyDeserializer = new JsonBodyDeserializer();
+            var bodyDeserializer = new JsonBodyDeserializer(bodyWrapper.BrowserContext.Environment);
 
             return bodyWrapper.Deserialize<TModel>(bodyDeserializer);
         }

@@ -4,6 +4,8 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Threading;
+    using Nancy.Configuration;
+    using Nancy.Json;
     using Nancy.Responses;
     using Nancy.Responses.Negotiation;
     using Xunit;
@@ -100,7 +102,7 @@
             var serializers = new ISerializer[]
             {
                 new TestableSerializer("application/json"),
-                new DefaultJsonSerializer()
+                new DefaultJsonSerializer(GetTestingEnvironment())
             };
 
             this.serializerFactory = new DefaultSerializerFactory(serializers);
@@ -119,7 +121,7 @@
 
             var serializers = new ISerializer[]
             {
-                new DefaultJsonSerializer(),
+                new DefaultJsonSerializer(GetTestingEnvironment()),
                 expectedSerializer
             };
 
@@ -137,7 +139,7 @@
         {
             // Given
             var expectedSerializer =
-                new DefaultJsonSerializer();
+                new DefaultJsonSerializer(GetTestingEnvironment());
 
             var serializers = new ISerializer[]
             {
@@ -153,6 +155,16 @@
 
             // Then
             result.ShouldBeSameAs(expectedSerializer);
+        }
+
+        private static INancyEnvironment GetTestingEnvironment()
+        {
+            var envionment =
+                new DefaultNancyEnvironment();
+
+            envionment.AddValue(JsonConfiguration.Default);
+
+            return envionment;
         }
 
         internal class ExceptionThrowingSerializer : ISerializer
