@@ -105,8 +105,6 @@
             {
                 cts.Token.ThrowIfCancellationRequested();
 
-                //var tcs = new TaskCompletionSource<NancyContext>();
-
                 if (request == null)
                 {
                     throw new ArgumentNullException("request", "The request parameter cannot be null.");
@@ -233,71 +231,31 @@
             handler.Handle(context.Response.StatusCode, context);
         }
 
-        private Task<NancyContext> InvokeRequestLifeCycle(NancyContext context, CancellationToken cancellationToken, IPipelines pipelines)
+        private async Task<NancyContext> InvokeRequestLifeCycle(NancyContext context, CancellationToken cancellationToken, IPipelines pipelines)
         {
-            var tcs = new TaskCompletionSource<NancyContext>();
-
-            var preHookTask = InvokePreRequestHook(context, cancellationToken, pipelines.BeforeRequest);
-
-            preHookTask.WhenCompleted(t =>
-                {
-                    var dispatchTask = t.Result != null ? TaskHelpers.GetCompletedTask(t.Result) : this.dispatcher.Dispatch(context, cancellationToken);
-
-                    dispatchTask.WhenCompleted(
-                        completedTask =>
-                        {
-                            context.Response = completedTask.Result;
-
-                            var postHookTask = this.InvokePostRequestHook(context, cancellationToken, pipelines.AfterRequest);
-
-                            postHookTask.WhenCompleted(this.PreExecute(context, pipelines, tcs), this.HandleFaultedTask(context, pipelines, tcs));
-                        },
-                        this.HandleFaultedTask(context, pipelines, tcs));
-                },
-                this.HandleFaultedTask(context, pipelines, tcs));
-
-            return tcs.Task;
-        }
-
-        private Action<Task> PreExecute(NancyContext context, IPipelines pipelines, TaskCompletionSource<NancyContext> tcs)
-        {
-            return postHookTask =>
+            try
             {
-                var preExecuteTask = context.Response.PreExecute(context);
+                var response = await InvokePreRequestHook(context, cancellationToken, pipelines.BeforeRequest) ??
+                               await this.dispatcher.Dispatch(context, cancellationToken);
 
-                preExecuteTask.WhenCompleted(
-                    completedPostHookTask => tcs.SetResult(context),
-                    this.HandleFaultedTask(context, pipelines, tcs));
-            };
-        }
+                context.Response = response;
 
-        private Action<Task> HandleFaultedTask(NancyContext context, IPipelines pipelines, TaskCompletionSource<NancyContext> tcs)
-        {
-            return t =>
-                {
-                    try
-                    {
-                        var flattenedException = t.Exception.FlattenInnerExceptions();
+                await this.InvokePostRequestHook(context, cancellationToken, pipelines.AfterRequest);
 
-                        this.InvokeOnErrorHook(context, pipelines.OnError, flattenedException);
+                await response.PreExecute(context);
 
-                        tcs.SetResult(context);
-                    }
-                    catch (Exception e)
-                    {
-                        tcs.SetException(e);
-                    }
-                };
+            }
+            catch(Exception ex)
+            {
+                this.InvokeOnErrorHook(context, pipelines.OnError, ex);
+            }
+
+            return context;
         }
 
         private static Task<Response> InvokePreRequestHook(NancyContext context, CancellationToken cancellationToken, BeforePipeline pipeline)
         {
-            if (pipeline == null)
-            {
-                return TaskHelpers.GetCompletedTask<Response>(null);
-            }
-
-            return pipeline.Invoke(context, cancellationToken);
+            return pipeline == null ? TaskHelpers.GetCompletedTask<Response>(null) : pipeline.Invoke(context, cancellationToken);
         }
 
         private Task InvokePostRequestHook(NancyContext context, CancellationToken cancellationToken, AfterPipeline pipeline)
