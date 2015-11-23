@@ -106,6 +106,7 @@
     <Compile Include="Modules\SerializeTestModule.cs" />
     <Compile Include="Tests\ContentNegotiationFixture.cs" />
     <Compile Include="Tests\CookieFixture.cs" />
+    <Compile Include="Tests\MemoryLeakFixture.cs" />
     <Compile Include="Tests\MethodRewriteFixture.cs" />
     <Compile Include="Tests\PerRouteAuthFixture.cs" />
     <Compile Include="Tests\RouteConstraintTests.cs" />
