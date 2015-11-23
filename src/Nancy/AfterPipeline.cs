@@ -83,6 +83,11 @@
             {
                 var current = enumerator.Current.Invoke(context, cancellationToken);
 
+                if (current == null)
+                {
+                    throw new InvalidOperationException("An after-pipeline action must not return null, a Task was expected.");
+                }
+
                 if (current.Status == TaskStatus.Created)
                 {
                     current.Start();
