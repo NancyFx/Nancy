@@ -92,6 +92,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Modules\AbsoluteUrlTestModule.cs" />
     <Compile Include="Modules\CookieModule.cs" />
     <Compile Include="Modules\PerRouteAuthModule.cs" />
