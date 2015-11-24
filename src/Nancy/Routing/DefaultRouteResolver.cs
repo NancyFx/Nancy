@@ -3,9 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
-    using Nancy.Helpers;
-    using Nancy.Routing.Trie;
+    using Helpers;
+    using Trie;
 
     /// <summary>
     /// Default implementation of the <see cref="IRouteResolver"/> interface.

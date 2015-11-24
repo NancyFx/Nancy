@@ -8,10 +8,9 @@ namespace Nancy
     using System.Linq;
     using System.Security.Cryptography.X509Certificates;
     using System.Text.RegularExpressions;
-
-    using Nancy.Extensions;
-    using Nancy.Helpers;
-    using Nancy.IO;
+    using Extensions;
+    using Helpers;
+    using IO;
     using Session;
 
     /// <summary>
