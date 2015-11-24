@@ -69,7 +69,7 @@ namespace Nancy.Routing
                                     {
                                         context.Response = completedRouteTask.Result;
 
-                                        if (context.Request.Method.ToUpperInvariant() == "HEAD")
+                                        if (context.Request.Method.Equals("HEAD", StringComparison.OrdinalIgnoreCase))
                                         {
                                             context.Response = new HeadResponse(context.Response);
                                         }

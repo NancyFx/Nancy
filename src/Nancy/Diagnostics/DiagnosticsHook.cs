@@ -147,7 +147,7 @@ namespace Nancy.Diagnostics
                 ctx.Response = task.Result;
             }
 
-            if (ctx.Request.Method.ToUpperInvariant() == "HEAD")
+            if (ctx.Request.Method.Equals("HEAD", StringComparison.OrdinalIgnoreCase))
             {
                 ctx.Response = new HeadResponse(ctx.Response);
             }
@@ -253,7 +253,7 @@ namespace Nancy.Diagnostics
 
         private static bool IsLoginRequest(NancyContext context, DiagnosticsConfiguration diagnosticsConfiguration)
         {
-            return context.Request.Method == "POST" &&
+            return context.Request.Method.Equals("POST", StringComparison.OrdinalIgnoreCase) &&
                 context.Request.Url.BasePath.TrimEnd(new[] { '/' }).EndsWith(diagnosticsConfiguration.Path) &&
                 context.Request.Url.Path == "/";
         }

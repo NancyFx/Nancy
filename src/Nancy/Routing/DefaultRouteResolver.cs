@@ -93,7 +93,7 @@
 
         private static bool IsOptionsRequest(NancyContext context)
         {
-            return context.Request.Method.Equals("OPTIONS", StringComparison.Ordinal);
+            return context.Request.Method.Equals("OPTIONS", StringComparison.OrdinalIgnoreCase);
         }
 
         private void BuildTrie()
@@ -163,7 +163,7 @@
 
             if (!StaticConfiguration.EnableHeadRouting)
             {
-                return requestedMethod.Equals("HEAD", StringComparison.Ordinal) ?
+                return requestedMethod.Equals("HEAD", StringComparison.OrdinalIgnoreCase) ?
                     "GET" :
                     requestedMethod;
             }

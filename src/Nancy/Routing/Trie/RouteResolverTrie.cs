@@ -14,7 +14,7 @@ namespace Nancy.Routing.Trie
     {
         private readonly ITrieNodeFactory nodeFactory;
 
-        private readonly IDictionary<string, TrieNode> routeTries = new Dictionary<string, TrieNode>();
+        private readonly IDictionary<string, TrieNode> routeTries = new Dictionary<string, TrieNode>(StringComparer.OrdinalIgnoreCase);
 
         private static char[] splitSeparators = new[] {'/'};
 
