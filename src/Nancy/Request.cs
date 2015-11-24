@@ -299,14 +299,15 @@ namespace Nancy
                 };
 
             var providedOverride =
-                overrides.Where(x => !string.IsNullOrEmpty(x.Item2));
+                overrides.Where(x => !string.IsNullOrEmpty(x.Item2))
+                         .ToList();
 
             if (!providedOverride.Any())
             {
                 return;
             }
 
-            if (providedOverride.Count() > 1)
+            if (providedOverride.Count > 1)
             {
                 var overrideSources =
                     string.Join(", ", providedOverride);
