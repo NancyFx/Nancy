@@ -83,7 +83,13 @@
         {
             return new Response
             {
-                Contents = stream => serializer.Serialize("application/xml", model, stream),
+                Contents = stream =>
+                {
+                    if (model != null)
+                    {
+                        serializer.Serialize("application/xml", model, stream);
+                    }
+                },
                 ContentType = "application/xml",
                 StatusCode = HttpStatusCode.OK
             };
