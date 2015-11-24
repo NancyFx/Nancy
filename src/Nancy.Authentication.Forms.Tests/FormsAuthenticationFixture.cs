@@ -5,15 +5,11 @@ namespace Nancy.Authentication.Forms.Tests
     using System.Security.Claims;
     using System.Security.Principal;
     using System.Threading;
-
     using FakeItEasy;
-
-    using Nancy.Bootstrapper;
-    using Nancy.Cryptography;
-    using Nancy.Helpers;
+    using Bootstrapper;
+    using Cryptography;
     using Nancy.Tests;
     using Nancy.Tests.Fakes;
-
     using Xunit;
 
     public class FormsAuthenticationFixture
@@ -107,10 +103,10 @@ namespace Nancy.Authentication.Forms.Tests
         public void Should_throw_with_invalid_config_passed_to_enable()
         {
             var fakeConfig = A.Fake<FormsAuthenticationConfiguration>();
-            A.CallTo(() => fakeConfig.IsValid).Returns(false);
+            A.CallTo(() => fakeConfig.EnsureConfigurationIsValid()).Throws<InvalidOperationException>();
             var result = Record.Exception(() => FormsAuthentication.Enable(A.Fake<IPipelines>(), fakeConfig));
 
-            result.ShouldBeOfType(typeof(ArgumentException));
+            result.ShouldBeOfType(typeof(InvalidOperationException));
         }
 
         [Fact]
