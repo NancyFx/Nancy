@@ -5,18 +5,18 @@ namespace Nancy.Diagnostics
     using System.IO;
     using System.Linq;
     using System.Threading;
-    using Nancy.Bootstrapper;
-    using Nancy.Configuration;
-    using Nancy.Cookies;
-    using Nancy.Cryptography;
-    using Nancy.Culture;
-    using Nancy.Localization;
-    using Nancy.ModelBinding;
-    using Nancy.Responses;
-    using Nancy.Responses.Negotiation;
-    using Nancy.Routing;
-    using Nancy.Routing.Constraints;
-    using Nancy.Routing.Trie;
+    using Bootstrapper;
+    using Configuration;
+    using Cookies;
+    using Cryptography;
+    using Culture;
+    using Localization;
+    using ModelBinding;
+    using Responses;
+    using Responses.Negotiation;
+    using Routing;
+    using Routing.Constraints;
+    using Routing.Trie;
 
     public static class DiagnosticsHook
     {
@@ -147,7 +147,7 @@ namespace Nancy.Diagnostics
                 ctx.Response = task.Result;
             }
 
-            if (ctx.Request.Method.ToUpperInvariant() == "HEAD")
+            if (ctx.Request.Method.Equals("HEAD", StringComparison.OrdinalIgnoreCase))
             {
                 ctx.Response = new HeadResponse(ctx.Response);
             }
@@ -253,7 +253,7 @@ namespace Nancy.Diagnostics
 
         private static bool IsLoginRequest(NancyContext context, DiagnosticsConfiguration diagnosticsConfiguration)
         {
-            return context.Request.Method == "POST" &&
+            return context.Request.Method.Equals("POST", StringComparison.OrdinalIgnoreCase) &&
                 context.Request.Url.BasePath.TrimEnd(new[] { '/' }).EndsWith(diagnosticsConfiguration.Path) &&
                 context.Request.Url.Path == "/";
         }

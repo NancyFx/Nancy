@@ -6,9 +6,8 @@ namespace Nancy.Routing
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-
-    using Nancy.Helpers;
-    using Nancy.Responses.Negotiation;
+    using Helpers;
+    using Responses.Negotiation;
 
     /// <summary>
     /// Default implementation of a request dispatcher.
@@ -69,7 +68,7 @@ namespace Nancy.Routing
                                     {
                                         context.Response = completedRouteTask.Result;
 
-                                        if (context.Request.Method.ToUpperInvariant() == "HEAD")
+                                        if (context.Request.Method.Equals("HEAD", StringComparison.OrdinalIgnoreCase))
                                         {
                                             context.Response = new HeadResponse(context.Response);
                                         }

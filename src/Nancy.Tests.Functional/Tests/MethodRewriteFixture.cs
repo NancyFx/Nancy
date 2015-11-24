@@ -1,14 +1,13 @@
 namespace Nancy.Tests.Functional.Tests
 {
     using System;
-
-    using Nancy.Testing;
-
+    using Testing;
     using Xunit;
+    using Xunit.Extensions;
 
     public class MethodRewriteFixture
     {
-        private Browser browser;
+        private readonly Browser browser;
 
         public MethodRewriteFixture()
         {
@@ -18,23 +17,29 @@ namespace Nancy.Tests.Functional.Tests
             });
         }
 
-        [Fact]
-        public void Should_rewrite_method_when_method_form_input_is_provided()
+        [Theory]
+        [InlineData("delete")]
+        [InlineData("dElEtE")]
+        [InlineData("DELETE")]
+        public void Should_rewrite_method_when_method_form_input_is_provided(string method)
         {
             var response = this.browser.Post("/", with =>
             {
-                with.FormValue("_method", "DELETE");
+                with.FormValue("_method", method);
             });
 
             Assert.Equal("Delete route", response.Body.AsString());
         }
 
-        [Fact]
-        public void Should_rewrite_method_when_x_http_method_override_form_input_is_provided()
+        [Theory]
+        [InlineData("delete")]
+        [InlineData("dElEtE")]
+        [InlineData("DELETE")]
+        public void Should_rewrite_method_when_x_http_method_override_form_input_is_provided(string method)
         {
             var response = this.browser.Post("/", with =>
             {
-                with.FormValue("X-HTTP-Method-Override", "DELETE");
+                with.FormValue("X-HTTP-Method-Override", method);
             });
 
             Assert.Equal("Delete route", response.Body.AsString());
