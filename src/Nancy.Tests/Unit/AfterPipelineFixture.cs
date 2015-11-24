@@ -1,4 +1,4 @@
-﻿namespace Nancy.Tests.Unit
+namespace Nancy.Tests.Unit
 {
     using System;
     using System.Linq;
@@ -114,7 +114,7 @@
                 pipeline.Invoke(CreateContext(), new CancellationToken());
             });
 
-            Assert.Equal("An after-pipeline action must not return null, a Task was expected.", exception.Message);
+            Assert.Equal("The after-pipeline action ReturnNull returned null; a Task was expected.", exception.Message);
         }
 
         [Fact]
@@ -127,7 +127,7 @@
                 pipeline.Invoke(CreateContext(), new CancellationToken());
             });
 
-            Assert.Equal("An after-pipeline action must not return null, a Task was expected.", exception.Message);
+            Assert.Equal("An after-pipeline action must not return null; a Task was expected.", exception.Message);
         }
         
         private static Task ReturnNull(NancyContext context, CancellationToken ct)
