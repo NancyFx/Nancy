@@ -1,7 +1,7 @@
 namespace Nancy.Testing.Tests
 {
     using System.IO;
-
+    using FakeItEasy;
     using Nancy.Tests;
 
     using Xunit;
@@ -20,7 +20,7 @@ namespace Nancy.Testing.Tests
                     writer.Write("This is the content");
                     writer.Flush();
                 }
-            });
+            }, A.Dummy<BrowserContext>());
 
             // When
             var result = body.AsString();

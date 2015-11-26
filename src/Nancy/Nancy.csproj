@@ -195,7 +195,9 @@
     <Compile Include="ISerializerFactory.cs" />
     <Compile Include="IStaticContentProvider.cs" />
     <Compile Include="Json\Converters\TupleConverter.cs" />
+    <Compile Include="Json\DefaultJsonConfigurationProvider.cs" />
     <Compile Include="Json\JavaScriptPrimitiveConverter.cs" />
+    <Compile Include="Json\JsonConfigurationExtensions.cs" />
     <Compile Include="Localization\TextResourceFinder.cs" />
     <Compile Include="Helpers\TaskHelpers.cs" />
     <Compile Include="ModelBinding\BindingConfig.cs" />
@@ -250,7 +252,7 @@
     <Compile Include="IO\UnclosableStreamWrapper.cs" />
     <Compile Include="ISerializer.cs" />
     <Compile Include="Json\Converters\TimeSpanConverter.cs" />
-    <Compile Include="Json\JsonSettings.cs" />
+    <Compile Include="Json\JsonConfiguration.cs" />
     <Compile Include="Responses\DefaultJsonSerializer.cs" />
     <Compile Include="Responses\DefaultXmlSerializer.cs" />
     <Compile Include="Responses\TextResponse.cs" />

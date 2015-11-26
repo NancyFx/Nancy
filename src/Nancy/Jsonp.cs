@@ -3,13 +3,18 @@
     using System;
     using System.IO;
     using System.Linq;
-
+    using System.Text;
     using Nancy.Bootstrapper;
+    using Nancy.Configuration;
     using Nancy.Json;
 
+    /// <summary>
+    /// Handles JSONP requests.
+    /// </summary>
     public static class Jsonp
     {
         private static readonly PipelineItem<Action<NancyContext>> JsonpItem;
+        private static Encoding encoding;
 
         static Jsonp()
         {
@@ -18,19 +23,21 @@
 
         private static string Encoding
         {
-            get { return string.Concat("; charset=", JsonSettings.DefaultEncoding.WebName); }
+            get { return string.Concat("; charset=", encoding.WebName); }
         }
 
         /// <summary>
         /// Enable JSONP support in the application
         /// </summary>
         /// <param name="pipelines">Application Pipeline to Hook into</param>
-        public static void Enable(IPipelines pipelines)
+        /// <param name="environment">An <see cref="INancyEnvironment"/> instance.</param>
+        public static void Enable(IPipelines pipelines, INancyEnvironment environment)
         {
             var jsonpEnabled = pipelines.AfterRequest.PipelineItems.Any(ctx => ctx.Name == "JSONP");
 
             if (!jsonpEnabled)
             {
+                encoding = environment.GetValue<JsonConfiguration>().DefaultEncoding;
                 pipelines.AfterRequest.AddItemToEndOfPipeline(JsonpItem);
             }
         }

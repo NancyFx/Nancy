@@ -7,13 +7,11 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
     using System.Linq;
     using System.Text;
     using System.Threading;
-
     using FakeItEasy;
-
+    using Nancy.Configuration;
     using Nancy.Json;
     using Nancy.ModelBinding;
     using Nancy.ModelBinding.DefaultBodyDeserializers;
-
     using Xunit;
     using Xunit.Extensions;
 
@@ -22,11 +20,13 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
         private readonly JavaScriptSerializer serializer;
         private readonly JsonBodyDeserializer deserialize;
         private readonly TestModel testModel;
-        private readonly string testModelJson;
 
         public JsonBodyDeserializerFixture()
         {
-            this.deserialize = new JsonBodyDeserializer();
+            var environment = new DefaultNancyEnvironment();
+            environment.AddValue(JsonConfiguration.Default);
+
+            this.deserialize = new JsonBodyDeserializer(environment);
 
             this.testModel = new TestModel()
                 {
@@ -37,8 +37,7 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
                 };
 
             this.serializer = new JavaScriptSerializer();
-            this.serializer.RegisterConverters(JsonSettings.Converters);
-            this.testModelJson = this.serializer.Serialize(this.testModel);
+            this.serializer.RegisterConverters(JsonConfiguration.Default.Converters);
         }
 
         [Fact]
@@ -444,7 +443,7 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
         public double Longitude;
     }
 
-    public class ModelWithNullables 
+    public class ModelWithNullables
     {
         public int? P1 { get; set; }
         public uint P2 { get; set; }
@@ -454,5 +453,4 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
         public uint F2;
         public uint? F3;
     }
-
 }

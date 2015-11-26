@@ -1,5 +1,6 @@
 namespace Nancy.Diagnostics
 {
+    using Nancy.Configuration;
     using Nancy.Responses;
     using Nancy.Responses.Negotiation;
 
@@ -7,9 +8,9 @@ namespace Nancy.Diagnostics
     {
         private readonly ISerializer serializer;
 
-        public DiagnosticsSerializerFactory()
+        public DiagnosticsSerializerFactory(INancyEnvironment diagnosticsEnvironment)
         {
-            this.serializer = new DefaultJsonSerializer { RetainCasing = false };
+            this.serializer = new DefaultJsonSerializer(diagnosticsEnvironment);
         }
 
         /// <summary>

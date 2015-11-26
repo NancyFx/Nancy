@@ -4,6 +4,7 @@ namespace Nancy.Testing.Tests
     using System.IO;
     using System.Text;
     using Nancy.Configuration;
+    using Nancy.Json;
     using Nancy.Responses;
     using Nancy.Tests;
     using Nancy.Xml;
@@ -70,7 +71,8 @@ namespace Nancy.Testing.Tests
         public void Should_create_new_wrapper_from_json_response_if_not_already_present()
         {
             // Given
-            var response = new JsonResponse<Model>(new Model() { Dummy = "Data" }, new DefaultJsonSerializer());
+            var environment = GetTestingEnvironment();
+            var response = new JsonResponse<Model>(new Model() { Dummy = "Data" }, new DefaultJsonSerializer(environment), environment);
             var context = new NancyContext() { Response = response };
 
             // When
@@ -114,7 +116,8 @@ namespace Nancy.Testing.Tests
         public void Should_fail_to_return_xml_body_on_non_xml_response()
         {
             // Given
-            var response = new JsonResponse<Model>(new Model() { Dummy = "Data" }, new DefaultJsonSerializer());
+            var environment = GetTestingEnvironment();
+            var response = new JsonResponse<Model>(new Model() { Dummy = "Data" }, new DefaultJsonSerializer(environment), environment);
             var context = new NancyContext() { Response = response };
 
             // When
@@ -122,6 +125,16 @@ namespace Nancy.Testing.Tests
 
             // Then
             result.ShouldNotBeNull();
+        }
+
+        private static INancyEnvironment GetTestingEnvironment()
+        {
+            var envionment =
+                new DefaultNancyEnvironment();
+
+            envionment.AddValue(JsonConfiguration.Default);
+
+            return envionment;
         }
 
         public class Model

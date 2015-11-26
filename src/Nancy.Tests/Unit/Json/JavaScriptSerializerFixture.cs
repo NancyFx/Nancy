@@ -1,15 +1,10 @@
 ﻿namespace Nancy.Tests.Unit.Json
 {
     using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using FakeItEasy;
-    using Nancy.IO;
+    using Nancy.Configuration;
     using Nancy.Json;
     using Nancy.Json.Converters;
-
     using Xunit;
-    using Xunit.Extensions;
     using Xunit.Sdk;
 
     public class JavaScriptSerializerFixture
@@ -18,9 +13,6 @@
         public void Should_register_converters_when_asked()
         {
             // Given
-            JsonSettings.Converters.Add(new TestConverter());
-            JsonSettings.PrimitiveConverters.Add(new TestPrimitiveConverter());
-
             var defaultSerializer = new JavaScriptSerializer();
 
             // When
@@ -30,7 +22,9 @@
                 maxJsonLength: defaultSerializer.MaxJsonLength,
                 recursionLimit: defaultSerializer.RecursionLimit,
                 retainCasing: defaultSerializer.RetainCasing,
-                iso8601DateFormat: defaultSerializer.ISO8601DateFormat);
+                iso8601DateFormat: defaultSerializer.ISO8601DateFormat,
+                converters: new[] { new TestConverter() },
+                primitiveConverters: new[] { new TestPrimitiveConverter() });
 
             var data =
                 new TestData()
@@ -60,9 +54,6 @@
         public void Should_not_register_converters_when_not_asked()
         {
             // Given
-            JsonSettings.Converters.Add(new TestConverter());
-            JsonSettings.PrimitiveConverters.Add(new TestPrimitiveConverter());
-
             var defaultSerializer = new JavaScriptSerializer();
 
             // When
@@ -72,7 +63,9 @@
                 maxJsonLength: defaultSerializer.MaxJsonLength,
                 recursionLimit: defaultSerializer.RecursionLimit,
                 retainCasing: defaultSerializer.RetainCasing,
-                iso8601DateFormat: defaultSerializer.ISO8601DateFormat);
+                iso8601DateFormat: defaultSerializer.ISO8601DateFormat,
+                converters: new[] { new TestConverter() },
+                primitiveConverters: new[] { new TestPrimitiveConverter() });
 
             var data =
                 new TestData()
@@ -176,6 +169,16 @@
             var typeWithTuple = serializer.Deserialize<TypeWithTuple>(@"{""value"":{""item1"":10,""item2"":11}}");
             typeWithTuple.Value.Item1.ShouldEqual(10);
             typeWithTuple.Value.Item2.ShouldEqual(11);
+        }
+
+        private INancyEnvironment GetTestingEnvironment(JsonConfiguration configuration)
+        {
+            var environment =
+                new DefaultNancyEnvironment();
+
+            environment.AddValue(configuration);
+
+            return environment;
         }
     }
 }

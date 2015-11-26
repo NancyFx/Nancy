@@ -213,10 +213,13 @@ namespace Nancy.Testing
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
         public BrowserResponse HandleRequest(string method, Url url, Action<BrowserContext> browserContext)
         {
-            var request =
-                this.CreateRequest(method, url, browserContext ?? (with => {}));
+            var browserContextValues =
+                BuildBrowserContextValues(browserContext ?? (with => { }));
 
-            var response = new BrowserResponse(this.engine.HandleRequest(request), this);
+            var request =
+                CreateRequest(method, url, browserContextValues);
+
+            var response = new BrowserResponse(this.engine.HandleRequest(request), this, (BrowserContext)browserContextValues);
 
             this.CaptureCookies(response);
 
@@ -296,7 +299,7 @@ namespace Nancy.Testing
             contextValues.Body = new MemoryStream(bodyBytes);
         }
 
-        private Request CreateRequest(string method, Url url, Action<BrowserContext> browserContext)
+        private IBrowserContextValues BuildBrowserContextValues(Action<BrowserContext> browserContext)
         {
             var context =
                 new BrowserContext(this.environment);
@@ -314,14 +317,19 @@ namespace Nancy.Testing
                 contextValues.Headers.Add("user-agent", new[] { "Nancy.Testing.Browser" });
             }
 
+            return contextValues;
+        }
+
+        private static Request CreateRequest(string method, Url url, IBrowserContextValues contextValues)
+        {
             BuildRequestBody(contextValues);
 
             var requestStream =
                 RequestStream.FromStream(contextValues.Body, 0, true);
 
-            var certBytes = (contextValues.ClientCertificate == null) ?
-                new byte[] { } :
-                contextValues.ClientCertificate.GetRawCertData();
+            var certBytes = (contextValues.ClientCertificate == null)
+                ? new byte[] { }
+                : contextValues.ClientCertificate.GetRawCertData();
 
             var requestUrl = url;
             requestUrl.Scheme = string.IsNullOrWhiteSpace(contextValues.Protocol) ? requestUrl.Scheme : contextValues.Protocol;

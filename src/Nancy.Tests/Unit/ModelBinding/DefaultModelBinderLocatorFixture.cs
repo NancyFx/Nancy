@@ -3,7 +3,8 @@ namespace Nancy.Tests.Unit.ModelBinding
     using System;
 
     using FakeItEasy;
-
+    using Nancy.Configuration;
+    using Nancy.Json;
     using Nancy.ModelBinding;
     using Nancy.Tests.Fakes;
 
@@ -18,7 +19,13 @@ namespace Nancy.Tests.Unit.ModelBinding
         /// </summary>
         public DefaultModelBinderLocatorFixture()
         {
-            this.defaultBinder = new DefaultBinder(new ITypeConverter[] { }, new IBodyDeserializer[] { }, A.Fake<IFieldNameConverter>(), new BindingDefaults());
+            var environment = new DefaultNancyEnvironment();
+            environment.AddValue(JsonConfiguration.Default);
+
+            var bindingDefaults =
+                new BindingDefaults(environment);
+
+            this.defaultBinder = new DefaultBinder(new ITypeConverter[] { }, new IBodyDeserializer[] { }, A.Fake<IFieldNameConverter>(), bindingDefaults);
         }
 
         [Fact]
@@ -80,12 +87,12 @@ namespace Nancy.Tests.Unit.ModelBinding
         [Fact]
         public void Should_be_able_to_bind_interfaces_using_module_extensions()
         {
-            var binder = 
+            var binder =
                 new InterfaceModelBinder();
-            
-            var locator = 
+
+            var locator =
                 new DefaultModelBinderLocator(new IModelBinder[] { binder }, this.defaultBinder);
-            
+
             var module = new TestBindingModule
             {
                 Context = new NancyContext() { Request = new FakeRequest("GET", "/") },

@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Nancy.Configuration;
 
     /// <summary>
     /// Processes the model for json media types and extension.
@@ -10,6 +11,7 @@
     public class JsonProcessor : IResponseProcessor
     {
         private readonly ISerializer serializer;
+        private readonly INancyEnvironment environment;
 
         private static readonly IEnumerable<Tuple<string, MediaRange>> extensionMappings =
             new[] { new Tuple<string, MediaRange>("json", new MediaRange("application/json")) };
@@ -19,9 +21,11 @@
         /// with the provided <paramref name="serializers"/>.
         /// </summary>
         /// <param name="serializers">The serializes that the processor will use to process the request.</param>
-        public JsonProcessor(IEnumerable<ISerializer> serializers)
+        /// <param name="environment">An <see cref="INancyEnvironment"/> instance.</param>
+        public JsonProcessor(IEnumerable<ISerializer> serializers, INancyEnvironment environment)
         {
             this.serializer = serializers.FirstOrDefault(x => x.CanSerialize("application/json"));
+            this.environment = environment;
         }
 
         /// <summary>
@@ -76,7 +80,7 @@
         /// <returns>A response</returns>
         public Response Process(MediaRange requestedMediaRange, dynamic model, NancyContext context)
         {
-            return new JsonResponse(model, this.serializer);
+            return new JsonResponse(model, this.serializer, this.environment);
         }
 
         private static bool IsExactJsonContentType(MediaRange requestedContentType)

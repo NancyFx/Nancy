@@ -14,10 +14,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -45,6 +45,7 @@ namespace Nancy.Json
 
         List<IEnumerable<JavaScriptConverter>> _converterList;
         List<IEnumerable<JavaScriptPrimitiveConverter>> _primitiveConverterList;
+
         int _maxJsonLength;
         int _recursionLimit;
         bool _retainCasing;
@@ -64,19 +65,19 @@ namespace Nancy.Json
         {
         }
 #else
-        internal static readonly JavaScriptSerializer DefaultSerializer = new JavaScriptSerializer(null, false, 102400, 100, false, true);
+        internal static readonly JavaScriptSerializer DefaultSerializer = new JavaScriptSerializer(null, false, 102400, 100, false, true, null, null);
 
         public JavaScriptSerializer()
-            : this(null, false, 102400, 100, false, true)
+            : this(null, false, 102400, 100, false, true, null, null)
         {
         }
 
         public JavaScriptSerializer(JavaScriptTypeResolver resolver)
-            : this(resolver, false, 102400, 100, false, true)
+            : this(resolver, false, 102400, 100, false, true, null, null)
         {
         }
 #endif
-        public JavaScriptSerializer(JavaScriptTypeResolver resolver, bool registerConverters, int maxJsonLength, int recursionLimit, bool retainCasing, bool iso8601DateFormat)
+        public JavaScriptSerializer(JavaScriptTypeResolver resolver, bool registerConverters, int maxJsonLength, int recursionLimit, bool retainCasing, bool iso8601DateFormat, IEnumerable<JavaScriptConverter> converters, IEnumerable<JavaScriptPrimitiveConverter> primitiveConverters)
         {
             _typeResolver = resolver;
             _maxJsonLength = maxJsonLength;
@@ -87,7 +88,7 @@ namespace Nancy.Json
             _iso8601DateFormat = iso8601DateFormat;
 
             if (registerConverters)
-                RegisterConverters(JsonSettings.Converters, JsonSettings.PrimitiveConverters);
+                RegisterConverters(converters, primitiveConverters);
         }
 
 
@@ -196,8 +197,8 @@ namespace Nancy.Json
             if ((type.IsGenericType) && (type.GetGenericTypeDefinition() == typeof(Nullable<>)))
             {
                 /*
-                 * Take care of the special case whereas in JSON an empty string ("") really means 
-                 * an empty value 
+                 * Take care of the special case whereas in JSON an empty string ("") really means
+                 * an empty value
                  * (see: https://bugzilla.novell.com/show_bug.cgi?id=328836)
                  */
                 string s = obj as String;

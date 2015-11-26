@@ -2,6 +2,7 @@ namespace Nancy.ModelBinding.DefaultBodyDeserializers
 {
     using System.IO;
     using System.Reflection;
+    using Nancy.Configuration;
     using Nancy.Json;
     using Nancy.Responses.Negotiation;
 
@@ -11,6 +12,17 @@ namespace Nancy.ModelBinding.DefaultBodyDeserializers
     public class JsonBodyDeserializer : IBodyDeserializer
     {
         private readonly MethodInfo deserializeMethod = typeof(JavaScriptSerializer).GetMethod("Deserialize", BindingFlags.Instance | BindingFlags.Public);
+        private readonly JsonConfiguration configuration;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="JsonBodyDeserializer"/>,
+        /// with the provided <paramref name="environment"/>.
+        /// </summary>
+        /// <param name="environment">An <see cref="INancyEnvironment"/> instance.</param>
+        public JsonBodyDeserializer(INancyEnvironment environment)
+        {
+            this.configuration = environment.GetValue<JsonConfiguration>();
+        }
 
         /// <summary>
         /// Whether the deserializer can deserialize the content type
@@ -32,8 +44,17 @@ namespace Nancy.ModelBinding.DefaultBodyDeserializers
         /// <returns>Model instance</returns>
         public object Deserialize(MediaRange mediaRange, Stream bodyStream, BindingContext context)
         {
-            var serializer = new JavaScriptSerializer(null, false, JsonSettings.MaxJsonLength, JsonSettings.MaxRecursions, JsonSettings.RetainCasing, JsonSettings.ISO8601DateFormat);
-            serializer.RegisterConverters(JsonSettings.Converters, JsonSettings.PrimitiveConverters);
+            var serializer = new JavaScriptSerializer(
+                null,
+                false,
+                this.configuration.MaxJsonLength,
+                this.configuration.MaxRecursions,
+                this.configuration.RetainCasing,
+                this.configuration.UseISO8601DateFormat,
+                this.configuration.Converters,
+                this.configuration.PrimitiveConverters);
+
+            serializer.RegisterConverters(this.configuration.Converters, this.configuration.PrimitiveConverters);
 
             bodyStream.Position = 0;
             string bodyText;
@@ -42,9 +63,9 @@ namespace Nancy.ModelBinding.DefaultBodyDeserializers
                 bodyText = bodyReader.ReadToEnd();
             }
 
-            var genericDeserializeMethod = this.deserializeMethod.MakeGenericMethod(new[] { context.DestinationType });
+            var genericDeserializeMethod = this.deserializeMethod.MakeGenericMethod(context.DestinationType);
 
-            var deserializedObject = genericDeserializeMethod.Invoke(serializer, new[] { bodyText });
+            var deserializedObject = genericDeserializeMethod.Invoke(serializer, new object[] { bodyText });
 
             return deserializedObject;
         }

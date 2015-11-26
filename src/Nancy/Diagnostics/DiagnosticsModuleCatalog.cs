@@ -3,8 +3,9 @@ namespace Nancy.Diagnostics
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
     using Nancy.Bootstrapper;
+    using Nancy.Configuration;
+    using Nancy.Json;
     using Nancy.ModelBinding;
     using Nancy.Responses;
     using Nancy.TinyIoc;
@@ -13,9 +14,9 @@ namespace Nancy.Diagnostics
     {
         private readonly TinyIoCContainer container;
 
-        public DiagnosticsModuleCatalog(IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration, DiagnosticsConfiguration diagnosticsConfiguration)
+        public DiagnosticsModuleCatalog(IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration, INancyEnvironment diagnosticsEnvironment)
         {
-            this.container = ConfigureContainer(providers, rootPathProvider, requestTracing, configuration, diagnosticsConfiguration);
+            this.container = ConfigureContainer(providers, rootPathProvider, requestTracing, configuration, diagnosticsEnvironment);
         }
 
         /// <summary>
@@ -39,7 +40,7 @@ namespace Nancy.Diagnostics
             return this.container.Resolve<INancyModule>(moduleType.FullName);
         }
 
-        private static TinyIoCContainer ConfigureContainer(IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration, DiagnosticsConfiguration diagnosticsConfiguration)
+        private static TinyIoCContainer ConfigureContainer(IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration, INancyEnvironment diagnosticsEnvironment)
         {
             var diagContainer = new TinyIoCContainer();
 
@@ -51,7 +52,8 @@ namespace Nancy.Diagnostics
             diagContainer.Register<IBinder, DefaultBinder>();
             diagContainer.Register<IFieldNameConverter, DefaultFieldNameConverter>();
             diagContainer.Register<BindingDefaults, BindingDefaults>();
-            diagContainer.Register<ISerializer>(new DefaultJsonSerializer { RetainCasing = false });
+
+            diagContainer.Register<ISerializer>(new DefaultJsonSerializer(diagnosticsEnvironment));
 
             foreach (var diagnosticsProvider in providers)
             {
@@ -59,7 +61,7 @@ namespace Nancy.Diagnostics
                     diagnosticsProvider.GetType().FullName,
                     "_",
                     diagnosticsProvider.DiagnosticObject.GetType().FullName);
-                
+
                 diagContainer.Register<IDiagnosticsProvider>(diagnosticsProvider, key);
             }
 
