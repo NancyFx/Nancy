@@ -131,7 +131,7 @@
         public void Should_use_wcf_datetimeformat_when_iso8601dateformat_is_false()
         {
             // Given
-            var environment = GetTestableEnvironment(x => x.Json(iso8601DateFormat: false));
+            var environment = GetTestableEnvironment(x => x.Json(useIso8601DateFormat: false));
             var serializer = new DefaultJsonSerializer(environment);
             var input = new
             {

@@ -64,7 +64,7 @@
         /// </summary>
         public bool ISO8601DateFormat
         {
-            get { return iso8601DateFormat.HasValue ? iso8601DateFormat.Value : this.configuration.ISO8601DateFormat; }
+            get { return iso8601DateFormat.HasValue ? iso8601DateFormat.Value : this.configuration.UseISO8601DateFormat; }
             set { iso8601DateFormat = value; }
         }
 

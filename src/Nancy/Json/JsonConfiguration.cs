@@ -17,7 +17,7 @@ namespace Nancy.Json
         {
             Converters = new List<JavaScriptConverter> { new TimeSpanConverter(), new TupleConverter() },
             DefaultEncoding = Encoding.UTF8,
-            ISO8601DateFormat = true,
+            UseISO8601DateFormat = true,
             MaxJsonLength = 102400,
             MaxRecursions = 100,
             PrimitiveConverters = new List<JavaScriptPrimitiveConverter>(),
@@ -31,9 +31,16 @@ namespace Nancy.Json
         /// <summary>
         /// Initializes a new instance of the <see cref="JsonConfiguration"/> class.
         /// </summary>
-        public JsonConfiguration(bool? iso8601DateFormat, int? maxJsonLength, int? maxRecursions, Encoding defaultEncoding, IList<JavaScriptConverter> converters, IList<JavaScriptPrimitiveConverter> primitiveConverters, bool? retainCasing)
+        /// <param name="useIso8601DateFormat"><see langword="true"/> if ISO-8601 date formats should be used, otherwise <see langword="false"/>.</param>
+        /// <param name="maxJsonLength">The maximum allowed lenght for the JSON output.</param>
+        /// <param name="maxRecursions">The maximum number of recrusions allowed by the serializer.</param>
+        /// <param name="defaultEncoding">The default <see cref="Encoding"/> that should be used by the serializer.</param>
+        /// <param name="converters">List of <see cref="JavaScriptConverter"/> instances.</param>
+        /// <param name="primitiveConverters">List of <see cref="JavaScriptPrimitiveConverter"/> instances.</param>
+        /// <param name="retainCasing"><see langword="true"/> if the name casing should be retained during serialization, otherwise <see langword="false"/>.</param>
+        public JsonConfiguration(bool? useIso8601DateFormat, int? maxJsonLength, int? maxRecursions, Encoding defaultEncoding, IList<JavaScriptConverter> converters, IList<JavaScriptPrimitiveConverter> primitiveConverters, bool? retainCasing)
         {
-            this.ISO8601DateFormat = iso8601DateFormat ?? Default.ISO8601DateFormat;
+            this.UseISO8601DateFormat = useIso8601DateFormat ?? Default.UseISO8601DateFormat;
             this.MaxJsonLength = maxJsonLength ?? Default.MaxJsonLength;
             this.MaxRecursions = maxRecursions ?? Default.MaxRecursions;
             this.DefaultEncoding = defaultEncoding ?? Default.DefaultEncoding;
@@ -82,6 +89,6 @@ namespace Nancy.Json
         /// Gets or sets if ISO-860 date formats should be used or not.
         /// </summary>
         /// <remarks>The default is <see langword="false"/>.</remarks>
-        public bool ISO8601DateFormat { get; private set; }
+        public bool UseISO8601DateFormat { get; private set; }
     }
 }
