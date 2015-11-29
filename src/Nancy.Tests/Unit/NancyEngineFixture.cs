@@ -807,7 +807,7 @@ namespace Nancy.Tests.Unit
             engine.Dispose();
 
             // When
-            var exception = RecordAsync.Exception(async () => await engine.HandleRequest(request));
+            var exception = await RecordAsync.Exception(async () => await engine.HandleRequest(request));
 
             // Then
             exception.ShouldBeOfType<OperationCanceledException>();
