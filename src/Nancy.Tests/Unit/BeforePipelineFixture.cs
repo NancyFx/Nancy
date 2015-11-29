@@ -4,7 +4,7 @@
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-
+    using Nancy.Tests.xUnitExtensions;
     using Xunit;
 
     public class BeforePipelineFixture
@@ -158,25 +158,24 @@
 
 
         [Fact]
-        public void Should_be_able_to_throw_exception_from_async_pipeline_item()
+        public async Task Should_be_able_to_throw_exception_from_async_pipeline_item()
         {
             // Given
-            Func<NancyContext, CancellationToken, Task<Response>> pipeLineItem = (ctx, token) => new Task<Response>(() =>
+            Func<NancyContext, CancellationToken, Task<Response>> pipeLineItem = (ctx, token) =>
             {
-                Thread.Sleep(1000);
                 throw new Exception("aaarg");
-            });
+            };
 
             // When
             pipeline.AddItemToStartOfPipeline(pipeLineItem);
 
             // Then
-            Assert.Throws<AggregateException>(() => pipeline.Invoke(CreateContext(), new CancellationToken()).Result);
+            await AssertAsync.Throws<Exception>(async () => await pipeline.Invoke(CreateContext(), new CancellationToken()));
         }
 
 
         [Fact]
-        public void Pipeline_containing_another_pipeline_will_invoke_items_in_both_pipelines()
+        public async Task Pipeline_containing_another_pipeline_will_invoke_items_in_both_pipelines()
         {
             // Given
             var item1Called = false;
@@ -195,7 +194,7 @@
 
             // When
             pipeline.AddItemToEndOfPipeline(subPipeline);
-            pipeline.Invoke(CreateContext(), new CancellationToken());
+            await pipeline.Invoke(CreateContext(), new CancellationToken());
 
             // Then
             Assert.True(item1Called);
