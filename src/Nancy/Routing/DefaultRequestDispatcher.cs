@@ -42,6 +42,7 @@ namespace Nancy.Routing
         /// Dispatches a requests.
         /// </summary>
         /// <param name="context">The <see cref="NancyContext"/> for the current request.</param>
+        /// <param name="cancellationToken">A cancellation token.</param>
         public Task<Response> Dispatch(NancyContext context, CancellationToken cancellationToken)
         {
             // TODO - May need to make this run off context rather than response .. seems a bit icky currently
