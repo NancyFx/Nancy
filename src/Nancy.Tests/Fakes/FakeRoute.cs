@@ -21,23 +21,13 @@ namespace Nancy.Tests.Fakes
         public FakeRoute(dynamic response)
             : base("GET", "/", null, (parametes, token) => null)
         {
-            this.Action = Wrap(this, (parameters, token) => CreateTaskFromResponse(response));
+            this.Action = Wrap(this, (parameters, token) => Task.FromResult(response));
         }
 
         public FakeRoute(Func<dynamic, CancellationToken, Task<dynamic>> action)
             : base("GET", "/", null, (parametes, token) => null)
         {
             this.Action = Wrap(this, action);
-        }
-
-        private static Task<dynamic> CreateTaskFromResponse(dynamic response)
-        {
-            var tcs =
-                new TaskCompletionSource<dynamic>();
-
-            tcs.SetResult(response);
-
-            return tcs.Task;
         }
 
         private static Func<dynamic, CancellationToken, Task<dynamic>> Wrap(
