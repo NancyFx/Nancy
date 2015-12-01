@@ -21,7 +21,7 @@ namespace Nancy.Tests.Fakes
         public FakeRoute(dynamic response)
             : base("GET", "/", null, (parametes, token) => null)
         {
-            this.Action = Wrap(this, (parameters, token) => Task.FromResult(response));
+            this.Action = Wrap(this, (parameters, token) => Task.FromResult<dynamic>(response));
         }
 
         public FakeRoute(Func<dynamic, CancellationToken, Task<dynamic>> action)
