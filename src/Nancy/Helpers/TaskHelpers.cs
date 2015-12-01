@@ -54,34 +54,5 @@
                     TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.OnlyOnFaulted :
                     TaskContinuationOptions.OnlyOnFaulted);
         }
-
-        public static void WhenCompleted(this Task task, Action<Task> onComplete, Action<Task> onFaulted, bool execSync = false)
-        {
-            // If we've already completed, just run the correct delegate
-            if (task.IsCompleted)
-            {
-                if (task.IsFaulted)
-                {
-                    onFaulted.Invoke(task);
-                    return;
-                }
-
-                onComplete.Invoke(task);
-                return;
-            }
-
-            // Not complete yet, so set normal continuation
-            task.ContinueWith(
-                onComplete,
-                execSync ?
-                    TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.OnlyOnRanToCompletion :
-                    TaskContinuationOptions.OnlyOnRanToCompletion);
-
-            task.ContinueWith(
-                onFaulted,
-                execSync ?
-                    TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.OnlyOnFaulted :
-                    TaskContinuationOptions.OnlyOnFaulted);
-        }
     }
 }
