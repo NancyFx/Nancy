@@ -260,7 +260,7 @@
 
         private Task InvokePostRequestHook(NancyContext context, CancellationToken cancellationToken, AfterPipeline pipeline)
         {
-            return pipeline == null ? TaskHelpers.GetCompletedTask() : pipeline.Invoke(context, cancellationToken);
+            return pipeline == null ? TaskHelpers.CompletedTask : pipeline.Invoke(context, cancellationToken);
         }
 
         private void InvokeOnErrorHook(NancyContext context, ErrorPipeline pipeline, Exception ex)

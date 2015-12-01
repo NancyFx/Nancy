@@ -160,7 +160,7 @@
 
             context.Dispose();
 
-            return TaskHelpers.GetCompletedTask();
+            return TaskHelpers.CompletedTask;
         }
 
         private static T Get<T>(IDictionary<string, object> env, string key)
