@@ -19,20 +19,13 @@
 
         public override Task PreExecute(NancyContext context)
         {
-            try
+            using (var memoryStream = new MemoryStream())
             {
-                using (var memoryStream = new MemoryStream())
-                {
-                    this.sourceResponse.Contents.Invoke(memoryStream);
-                    this.oldResponseOutput = memoryStream.ToArray();
-                }
+                this.sourceResponse.Contents.Invoke(memoryStream);
+                this.oldResponseOutput = memoryStream.ToArray();
+            }
 
-                return base.PreExecute(context);
-            }
-            catch (Exception e)
-            {
-                return TaskHelpers.GetFaultedTask<object>(e);
-            }
+            return base.PreExecute(context);
         }
 
         public MaterialisingResponse(Response sourceResponse)
