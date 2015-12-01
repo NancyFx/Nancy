@@ -86,26 +86,12 @@
             this.stream.Position = 0;
         }
 
-        private Task<object> MoveToWritableStream()
+        private Task MoveToWritableStream()
         {
-            var tcs = new TaskCompletionSource<object>();
-
             var sourceStream = this.stream;
             this.stream = new MemoryStream(StreamExtensions.BufferSize);
 
-            sourceStream.CopyTo(this, (source, destination, ex) =>
-            {
-                if (ex != null)
-                {
-                    tcs.SetException(ex);
-                }
-                else
-                {
-                    tcs.SetResult(null);
-                }
-            });
-
-            return tcs.Task;
+            return sourceStream.CopyToAsync(this);
         }
 
         /// <summary>
