@@ -25,34 +25,5 @@
             tcs.SetException(exception);
             return tcs.Task;
         }
-
-        public static void WhenCompleted<T>(this Task<T> task, Action<Task<T>> onComplete, Action<Task<T>> onFaulted, bool execSync = false)
-        {
-            // If we've already completed, just run the correct delegate
-            if (task.IsCompleted)
-            {
-                if (task.IsFaulted)
-                {
-                    onFaulted.Invoke(task);
-                    return;
-                }
-
-                onComplete.Invoke(task);
-                return;
-            }
-
-            // Not complete yet, so set normal continuation
-            task.ContinueWith(
-                onComplete,
-                execSync ?
-                    TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.OnlyOnRanToCompletion :
-                    TaskContinuationOptions.OnlyOnRanToCompletion);
-
-            task.ContinueWith(
-                onFaulted,
-                execSync ?
-                    TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.OnlyOnFaulted :
-                    TaskContinuationOptions.OnlyOnFaulted);
-        }
     }
 }
