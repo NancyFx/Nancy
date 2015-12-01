@@ -1,8 +1,6 @@
 namespace Nancy
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -60,92 +58,14 @@ namespace Nancy
             return pipelineToAddTo;
         }
 
-        public Task Invoke(NancyContext context, CancellationToken cancellationToken)
+        public async Task Invoke(NancyContext context, CancellationToken cancellationToken)
         {
-            var tcs = new TaskCompletionSource<object>();
-
             var enumerator = this.PipelineDelegates.GetEnumerator();
 
-            if (enumerator.MoveNext())
+            while (enumerator.MoveNext())
             {
-                ExecuteTasksInternal(context, cancellationToken, enumerator, tcs);
+                await enumerator.Current.Invoke(context, cancellationToken);
             }
-            else
-            {
-                tcs.SetResult(null);
-            }
-
-            return tcs.Task;
-        }
-
-        private static void ExecuteTasksInternal(NancyContext context, CancellationToken cancellationToken, IEnumerator<Func<NancyContext, CancellationToken, Task>> enumerator, TaskCompletionSource<object> tcs)
-        {
-            while (true)
-            {
-                var current = enumerator.Current.Invoke(context, cancellationToken);
-
-                if (current == null)
-                {
-                    if (enumerator.Current.Method != null && !new[] { '<', '>' }.Any(enumerator.Current.Method.Name.Contains))
-                    {
-                        throw new InvalidOperationException(
-                            string.Format("The after-pipeline action {0} returned null; a Task was expected.",
-                                          enumerator.Current.Method.Name));
-                    }
-
-                    throw new InvalidOperationException("An after-pipeline action must not return null; a Task was expected.");
-                }
-
-                if (current.Status == TaskStatus.Created)
-                {
-                    current.Start();
-                }
-
-                if (current.IsCompleted || current.IsFaulted)
-                {
-                    // Observe the exception, even though we ignore it, otherwise
-                    // we will blow up later
-                    var exception = current.Exception;
-
-                    if (enumerator.MoveNext())
-                    {
-                        continue;
-                    }
-
-                    if (current.IsFaulted)
-                    {
-                        tcs.SetException(current.Exception);
-                    }
-                    else
-                    {
-                        tcs.SetResult(null);
-                    }
-
-                    break;
-                }
-
-                current.ContinueWith(ExecuteTasksContinuation(context, cancellationToken, enumerator, tcs), TaskContinuationOptions.ExecuteSynchronously);
-                break;
-            }
-        }
-
-        private static Action<Task> ExecuteTasksContinuation(NancyContext context, CancellationToken cancellationToken, IEnumerator<Func<NancyContext, CancellationToken, Task>> enumerator, TaskCompletionSource<object> tcs)
-        {
-            return current =>
-            {
-                // Observe the exception, even though we ignore it, otherwise
-                // we will blow up later
-                var exception = current.Exception;
-
-                if (enumerator.MoveNext())
-                {
-                    ExecuteTasksInternal(context, cancellationToken, enumerator, tcs);
-                }
-                else
-                {
-                    tcs.SetResult(null);
-                }
-            };
         }
 
         /// <summary>

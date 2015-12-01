@@ -4,7 +4,7 @@ namespace Nancy.Tests.Unit
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-
+    using Nancy.Tests.xUnitExtensions;
     using Xunit;
 
     public class AfterPipelineFixture
@@ -47,7 +47,7 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
-        public void When_cast_to_func_and_invoked_members_are_invoked()
+        public async Task When_cast_to_func_and_invoked_members_are_invoked()
         {
             var item1Called = false;
             Action<NancyContext> item1 = (r) => { item1Called = true; };
@@ -62,7 +62,7 @@ namespace Nancy.Tests.Unit
             Action<NancyContext> action = context => { };
             pipeline += action;
 
-            pipeline.Invoke(CreateContext(), CancellationToken.None);
+            await pipeline.Invoke(CreateContext(), CancellationToken.None);
 
             Assert.True(item1Called);
             Assert.True(item2Called);
@@ -79,7 +79,7 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
-        public void Pipeline_containing_another_pipeline_will_invoke_items_in_both_pipelines()
+        public async Task Pipeline_containing_another_pipeline_will_invoke_items_in_both_pipelines()
         {
             var item1Called = false;
             Action<NancyContext> item1 = (r) => { item1Called = true; };
@@ -96,7 +96,7 @@ namespace Nancy.Tests.Unit
             subPipeline += item4;
 
             pipeline.AddItemToEndOfPipeline(subPipeline);
-            pipeline.Invoke(CreateContext(), new CancellationToken());
+            await pipeline.Invoke(CreateContext(), new CancellationToken());
 
             Assert.True(item1Called);
             Assert.True(item2Called);
@@ -105,27 +105,23 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
-        public void Pipeline_containing_method_returning_null_throws_InvalidOperationException()
+        public async Task Pipeline_containing_method_returning_null_throws_InvalidOperationException()
         {
             pipeline.AddItemToEndOfPipeline(ReturnNull);
 
-            var exception = Assert.Throws<InvalidOperationException>(() =>
-            {
-                pipeline.Invoke(CreateContext(), new CancellationToken());
-            });
+            var exception = await AssertAsync.Throws<InvalidOperationException>(
+                () => this.pipeline.Invoke(CreateContext(), new CancellationToken()));
 
             Assert.Equal("The after-pipeline action ReturnNull returned null; a Task was expected.", exception.Message);
         }
 
         [Fact]
-        public void Pipeline_containing_lambda_returning_null_throws_InvalidOperationException()
+        public async Task Pipeline_containing_lambda_returning_null_throws_InvalidOperationException()
         {
             pipeline.AddItemToEndOfPipeline((context, ct) => null);
 
-            var exception = Assert.Throws<InvalidOperationException>(() =>
-            {
-                pipeline.Invoke(CreateContext(), new CancellationToken());
-            });
+            var exception = await AssertAsync.Throws<InvalidOperationException>(
+                 () => this.pipeline.Invoke(CreateContext(), new CancellationToken()));
 
             Assert.Equal("An after-pipeline action must not return null; a Task was expected.", exception.Message);
         }
