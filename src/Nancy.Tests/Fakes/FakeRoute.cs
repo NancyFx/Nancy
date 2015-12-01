@@ -39,20 +39,7 @@ namespace Nancy.Tests.Fakes
                 route.ParametersUsedToInvokeAction = parameters;
                 route.ActionWasInvoked = true;
 
-                var tcs = 
-                    new TaskCompletionSource<dynamic>();
-
-                try
-                {
-                    var result = action.Invoke(parameters, token);
-                    tcs.SetResult(result.Result);
-                }
-                catch (Exception e)
-                {
-                    tcs.SetException(e);
-                }
-
-                return tcs.Task;
+                return action.Invoke(parameters, token);
             };
         }
     }
