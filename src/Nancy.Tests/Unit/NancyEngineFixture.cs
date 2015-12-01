@@ -43,7 +43,7 @@ namespace Nancy.Tests.Unit
             this.negotiator = A.Fake<IResponseNegotiator>();
 
             A.CallTo(() => this.requestDispatcher.Dispatch(A<NancyContext>._, A<CancellationToken>._))
-                .Returns(CreateResponseTask(new Response()));
+                .Returns(Task.FromResult(new Response()));
 
             A.CallTo(() => this.statusCodeHandler.HandlesStatusCode(A<HttpStatusCode>.Ignored, A<NancyContext>.Ignored)).Returns(false);
 
@@ -135,7 +135,7 @@ namespace Nancy.Tests.Unit
             var request = new Request("GET", "/", "http");
 
             A.CallTo(() => this.requestDispatcher.Dispatch(this.context, A<CancellationToken>._))
-                .Returns(CreateResponseTask(this.response));
+                .Returns(Task.FromResult(this.response));
 
             // When
             var result = await this.engine.HandleRequest(request);
@@ -811,16 +811,6 @@ namespace Nancy.Tests.Unit
 
             // Then
             exception.ShouldBeOfType<OperationCanceledException>();
-        }
-
-        private static Task<Response> CreateResponseTask(Response response)
-        {
-            var tcs =
-                new TaskCompletionSource<Response>();
-
-            tcs.SetResult(response);
-
-            return tcs.Task;
         }
     }
 
