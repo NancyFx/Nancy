@@ -255,7 +255,7 @@
 
         private static Task<Response> InvokePreRequestHook(NancyContext context, CancellationToken cancellationToken, BeforePipeline pipeline)
         {
-            return pipeline == null ? TaskHelpers.GetCompletedTask<Response>(null) : pipeline.Invoke(context, cancellationToken);
+            return pipeline == null ? Task.FromResult<Response>(null) : pipeline.Invoke(context, cancellationToken);
         }
 
         private Task InvokePostRequestHook(NancyContext context, CancellationToken cancellationToken, AfterPipeline pipeline)

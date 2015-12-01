@@ -107,7 +107,7 @@ namespace Nancy.Routing
         {
             if (resolveResultPreReq == null)
             {
-                return TaskHelpers.GetCompletedTask<Response>(null);
+                return Task.FromResult<Response>(null);
             }
 
             return resolveResultPreReq.Invoke(context, cancellationToken);

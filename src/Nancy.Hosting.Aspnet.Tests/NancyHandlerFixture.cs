@@ -53,7 +53,7 @@ namespace Nancy.Hosting.Aspnet.Tests
                                         A<Request>.Ignored,
                                         A<Func<NancyContext, NancyContext>>.Ignored,
                                         A<CancellationToken>.Ignored))
-                                      .Returns(TaskHelpers.GetCompletedTask(nancyContext));
+                                      .Returns(Task.FromResult(nancyContext));
 
             // When
             await this.handler.ProcessRequest(this.context);
@@ -100,7 +100,7 @@ namespace Nancy.Hosting.Aspnet.Tests
                                         A<Request>.Ignored,
                                         A<Func<NancyContext, NancyContext>>.Ignored,
                                         A<CancellationToken>.Ignored))
-                                      .Returns(TaskHelpers.GetCompletedTask(nancyContext));
+                                      .Returns(Task.FromResult(nancyContext));
 
             // When
             await this.handler.ProcessRequest(this.context);
@@ -118,7 +118,7 @@ namespace Nancy.Hosting.Aspnet.Tests
                                         A<Request>.Ignored,
                                         A<Func<NancyContext, NancyContext>>.Ignored,
                                         A<CancellationToken>.Ignored))
-                                      .Returns(TaskHelpers.GetCompletedTask(nancyContext));
+                                      .Returns(Task.FromResult(nancyContext));
         }
     }
 }

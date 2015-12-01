@@ -785,7 +785,7 @@ namespace Nancy.Tests.Unit
             A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored)).Returns(resolvedRoute);
 
             A.CallTo(() => this.requestDispatcher.Dispatch(context, A<CancellationToken>._))
-                .Returns(TaskHelpers.GetCompletedTask<Response>(new PreExecuteFailureResponse()));
+                .Returns(Task.FromResult<Response>(new PreExecuteFailureResponse()));
 
             var request = new Request("GET", "/", "http");
 

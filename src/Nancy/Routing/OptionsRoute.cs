@@ -21,7 +21,7 @@
             response.Headers["Allow"] = string.Join(", ", allowedMethods);
             response.StatusCode = HttpStatusCode.OK;
 
-            return TaskHelpers.GetCompletedTask<dynamic>(response);
+            return Task.FromResult<dynamic>(response);
         }
     }
 }
