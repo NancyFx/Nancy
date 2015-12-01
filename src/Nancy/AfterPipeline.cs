@@ -3,16 +3,14 @@ namespace Nancy
     using System;
     using System.Threading;
     using System.Threading.Tasks;
+    using Nancy.Helpers;
 
     public class AfterPipeline : AsyncNamedPipelineBase<Func<NancyContext, CancellationToken, Task>, Action<NancyContext>>
     {
-        private static readonly Task completeTask;
+        private static readonly Task completeTask = TaskHelpers.CompletedTask;
 
         static AfterPipeline()
         {
-            var tcs = new TaskCompletionSource<object>();
-            tcs.SetResult(new object());
-            completeTask = tcs.Task;
         }
 
         public AfterPipeline()
