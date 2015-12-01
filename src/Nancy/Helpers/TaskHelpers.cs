@@ -5,12 +5,7 @@
 
     public static class TaskHelpers
     {
-        private static readonly Lazy<Task> LazyCompletedTask = new Lazy<Task>(() => Task.FromResult<object>(null));
-
-        public static Task CompletedTask
-        {
-            get { return LazyCompletedTask.Value; }
-        }
+        public static readonly Task CompletedTask = Task.FromResult<object>(null);
 
         public static Task<T> GetFaultedTask<T>(Exception exception)
         {
