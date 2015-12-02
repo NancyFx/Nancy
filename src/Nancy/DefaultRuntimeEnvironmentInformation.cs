@@ -10,7 +10,7 @@ namespace Nancy
     /// </summary>
     public class DefaultRuntimeEnvironmentInformation : IRuntimeEnvironmentInformation
     {
-        private readonly Lazy<bool> isDebug = GetDebugMode();
+        private readonly Lazy<bool> isDebug = new Lazy<bool>(GetDebugMode);
 
         /// <summary>
         /// Gets a value indicating if the application is running in debug mode.
@@ -21,24 +21,21 @@ namespace Nancy
             get { return this.isDebug.Value; }
         }
 
-        private static Lazy<bool> GetDebugMode()
+        private static bool GetDebugMode()
         {
-            return new Lazy<bool>(() =>
+            try
             {
-                try
-                {
-                    var assembliesInDebug = AppDomainAssemblyTypeScanner
-                        .TypesOf<INancyModule>(ScanMode.ExcludeNancy)
-                        .Select(x => x.Assembly.GetCustomAttributes(typeof(DebuggableAttribute), true))
-                        .Where(x => x.Length != 0);
+                var assembliesInDebug = AppDomainAssemblyTypeScanner
+                    .TypesOf<INancyModule>(ScanMode.ExcludeNancy)
+                    .Select(x => x.Assembly.GetCustomAttributes(typeof(DebuggableAttribute), true))
+                    .Where(x => x.Length != 0);
 
-                    return assembliesInDebug.Any(d => ((DebuggableAttribute)d[0]).IsJITTrackingEnabled);
-                }
-                catch
-                {
-                    return false;
-                }
-            });
+                return assembliesInDebug.Any(d => ((DebuggableAttribute)d[0]).IsJITTrackingEnabled);
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }
