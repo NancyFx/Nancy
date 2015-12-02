@@ -1555,6 +1555,30 @@ namespace Nancy.Testing
             }
 
             /// <summary>
+            /// Configures the bootstrapper to use the provided instance of <see cref="IRuntimeEnvironmentInformation"/>.
+            /// </summary>
+            /// <param name="runtimeEnvironmentInformation">The <see cref="IRuntimeEnvironmentInformation"/> instance that should be used by the bootstrapper.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator RuntimeEnvironmentInformation(IRuntimeEnvironmentInformation runtimeEnvironmentInformation)
+            {
+                this.bootstrapper.registeredInstances.Add(
+                    new InstanceRegistration(typeof(IRuntimeEnvironmentInformation), runtimeEnvironmentInformation));
+
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to create an <see cref="IRuntimeEnvironmentInformation"/> instance of the specified type.
+            /// </summary>
+            /// <typeparam name="T">The type of the <see cref="IRuntimeEnvironmentInformation"/> that the bootstrapper should use.</typeparam>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator RuntimeEnvironmentInformation<T>() where T : IRuntimeEnvironmentInformation
+            {
+                this.bootstrapper.configuration.RuntimeEnvironmentInformation = typeof(T);
+                return this;
+            }
+
+            /// <summary>
             /// Configures the bootstrapper to use the provided instance of <see cref="ITextResource"/>.
             /// </summary>
             /// <param name="textResource">The <see cref="ITextResource"/> instance that should be used by the bootstrapper.</param>

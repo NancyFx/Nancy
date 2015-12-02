@@ -157,6 +157,7 @@
     <Compile Include="Culture\ICultureService.cs" />
     <Compile Include="DefaultResponseFormatterFactory.cs" />
     <Compile Include="DefaultRootPathProvider.cs" />
+    <Compile Include="DefaultRuntimeEnvironmentInformation.cs" />
     <Compile Include="DefaultSerializerFactory.cs" />
     <Compile Include="DefaultStaticContentProvider.cs" />
     <Compile Include="Diagnostics\DefaultRequestTraceFactory.cs" />
@@ -192,6 +193,7 @@
     <Compile Include="Helpers\CacheHelpers.cs" />
     <Compile Include="Helpers\ExceptionExtensions.cs" />
     <Compile Include="IncludeInNancyAssemblyScanningAttribute.cs" />
+    <Compile Include="IRuntimeEnvironmentInformation.cs" />
     <Compile Include="ISerializerFactory.cs" />
     <Compile Include="IStaticContentProvider.cs" />
     <Compile Include="Json\Converters\TupleConverter.cs" />
