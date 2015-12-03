@@ -189,5 +189,20 @@ namespace Nancy.Tests.Unit.ErrorHandling
             // Then
             Assert.Equal("text/html", context.Response.ContentType);
         }
+
+        [Fact]
+        public void Should_reset_negotiation_context()
+        {
+            // Given
+            var context = new NancyContext();
+            var negotiationContext = new NegotiationContext { ViewName = "Index" };
+            context.NegotiationContext = negotiationContext;
+
+            // When
+            this.statusCodeHandler.Handle(HttpStatusCode.InternalServerError, context);
+
+            // Then
+            Assert.Equal(context.NegotiationContext.ViewName, null);
+        }
     }
 }

@@ -71,6 +71,10 @@ namespace Nancy.ErrorHandling
                 return;
             }
 
+            // Reset negotiation context to avoid any downstream cast exceptions 
+            // from swapping a view model with a `DefaultStatusCodeHandlerResult`
+            context.NegotiationContext = new NegotiationContext();
+
             var result = new DefaultStatusCodeHandlerResult(statusCode, this.errorMessages[statusCode], StaticConfiguration.DisableErrorTraces ? DisableErrorTracesTrueMessage : context.GetExceptionDetails());
             try
             {
