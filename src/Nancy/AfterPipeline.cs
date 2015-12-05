@@ -62,7 +62,7 @@ namespace Nancy
 
             while (enumerator.MoveNext())
             {
-                await enumerator.Current.Invoke(context, cancellationToken);
+                await enumerator.Current(context, cancellationToken);
             }
         }
 
@@ -78,7 +78,7 @@ namespace Nancy
             {
                 try
                 {
-                    syncDelegate.Invoke(ctx);
+                    syncDelegate(ctx);
                     return completeTask;
                 }
                 catch (Exception e)
