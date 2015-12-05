@@ -9,10 +9,6 @@ namespace Nancy
     {
         private static readonly Task completeTask = TaskHelpers.CompletedTask;
 
-        static AfterPipeline()
-        {
-        }
-
         public AfterPipeline()
         {
         }
