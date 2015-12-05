@@ -95,8 +95,9 @@
                         var nancyContext = await engine.HandleRequest(
                             nancyRequest,
                             StoreEnvironment(environment, owinUser),
-                            owinCallCancelled);
-                        await RequestComplete(nancyContext, environment, options.PerformPassThrough, next);
+                            owinCallCancelled).ConfigureAwait(false);
+
+                        await RequestComplete(nancyContext, environment, options.PerformPassThrough, next).ConfigureAwait(false);
                     };
         }
 

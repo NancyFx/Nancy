@@ -412,11 +412,11 @@
             try
             {
                 var nancyRequest = this.ConvertRequestToNancyRequest(ctx.Request);
-                using (var nancyContext = await this.engine.HandleRequest(nancyRequest))
+                using (var nancyContext = await this.engine.HandleRequest(nancyRequest).ConfigureAwait(false))
                 {
                     try
                     {
-                        ConvertNancyResponseToResponse(nancyContext.Response, ctx.Response);
+                        this.ConvertNancyResponseToResponse(nancyContext.Response, ctx.Response);
                     }
                     catch (Exception e)
                     {

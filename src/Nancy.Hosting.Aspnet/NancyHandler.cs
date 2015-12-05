@@ -34,7 +34,7 @@ namespace Nancy.Hosting.Aspnet
         {
             var request = CreateNancyRequest(httpContext);
 
-            using(var nancyContext = await this.engine.HandleRequest(request))
+            using(var nancyContext = await this.engine.HandleRequest(request).ConfigureAwait(false))
             {
                 SetNancyResponseToHttpResponse(httpContext, nancyContext.Response);
             }

@@ -58,7 +58,7 @@ namespace Nancy
 
             while (enumerator.MoveNext())
             {
-                await enumerator.Current(context, cancellationToken);
+                await enumerator.Current(context, cancellationToken).ConfigureAwait(false);
             }
         }
 

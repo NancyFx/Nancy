@@ -55,7 +55,7 @@
 
             while (enumerator.MoveNext())
             {
-                var response = await enumerator.Current(context, cancellationToken);
+                var response = await enumerator.Current(context, cancellationToken).ConfigureAwait(false);
                 if(response != null)
                 {
                     return response;

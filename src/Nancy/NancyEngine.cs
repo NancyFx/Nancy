@@ -127,7 +127,8 @@
 
                 var pipelines = this.RequestPipelinesFactory.Invoke(context);
 
-                var nancyContext = await this.InvokeRequestLifeCycle(context, cts.Token, pipelines);
+                var nancyContext = await this.InvokeRequestLifeCycle(context, cts.Token, pipelines)
+                    .ConfigureAwait(false);
 
                 this.CheckStatusCodeHandler(nancyContext);
 
@@ -235,15 +236,14 @@
         {
             try
             {
-                var response = await InvokePreRequestHook(context, cancellationToken, pipelines.BeforeRequest) ??
-                               await this.dispatcher.Dispatch(context, cancellationToken);
+                var response = await InvokePreRequestHook(context, cancellationToken, pipelines.BeforeRequest).ConfigureAwait(false) ??
+                               await this.dispatcher.Dispatch(context, cancellationToken).ConfigureAwait(false);
 
                 context.Response = response;
 
-                await this.InvokePostRequestHook(context, cancellationToken, pipelines.AfterRequest);
+                await this.InvokePostRequestHook(context, cancellationToken, pipelines.AfterRequest).ConfigureAwait(false);
 
-                await response.PreExecute(context);
-
+                await response.PreExecute(context).ConfigureAwait(false);
             }
             catch(Exception ex)
             {

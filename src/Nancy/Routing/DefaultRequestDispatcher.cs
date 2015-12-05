@@ -53,12 +53,14 @@ namespace Nancy.Routing
 
             try
             {
-                context.Response = await ExecuteRoutePreReq(context, cancellationToken, resolveResult.Before);
+                context.Response = await ExecuteRoutePreReq(context, cancellationToken, resolveResult.Before)
+                    .ConfigureAwait(false);
 
                 if(context.Response == null)
                 {
                     context.Response = await this.routeInvoker.Invoke(resolveResult.Route, cancellationToken,
-                        resolveResult.Parameters, context);
+                        resolveResult.Parameters, context)
+                        .ConfigureAwait(false);
 
                     if (context.Request.Method.Equals("HEAD", StringComparison.OrdinalIgnoreCase))
                     {
@@ -66,7 +68,8 @@ namespace Nancy.Routing
                     }
                 }
 
-                await this.ExecutePost(context, cancellationToken, resolveResult.After, resolveResult.OnError);
+                await this.ExecutePost(context, cancellationToken, resolveResult.After, resolveResult.OnError)
+                    .ConfigureAwait(false);
             }
             catch(Exception ex)
             {
@@ -90,7 +93,8 @@ namespace Nancy.Routing
 
             try
             {
-                await postHook.Invoke(context, cancellationToken);
+                await postHook.Invoke(context, cancellationToken)
+                    .ConfigureAwait(false);
             }
             catch(Exception ex)
             {

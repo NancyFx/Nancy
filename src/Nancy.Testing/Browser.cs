@@ -219,7 +219,7 @@ namespace Nancy.Testing
             var request =
                 CreateRequest(method, url, browserContextValues);
 
-            var context = await this.engine.HandleRequest(request);
+            var context = await this.engine.HandleRequest(request).ConfigureAwait(false);
 
             var response = new BrowserResponse(context, this, (BrowserContext)browserContextValues);
 

@@ -39,7 +39,7 @@ namespace Nancy.Routing
 
             try
             {
-                result = await route.Invoke(parameters, cancellationToken);
+                result = await route.Invoke(parameters, cancellationToken).ConfigureAwait(false);
             }
             catch(RouteExecutionEarlyExitException earlyExitException)
             {
