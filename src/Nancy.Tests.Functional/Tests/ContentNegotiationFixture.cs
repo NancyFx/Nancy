@@ -159,7 +159,7 @@ namespace Nancy.Tests.Functional.Tests
 
                     var negotiator =
                         new Negotiator(context);
-                    negotiator.WithReasonPhrase("The test is passing!");
+                    negotiator.WithReasonPhrase("The test is passing!").WithStatusCode(404);
 
                     return negotiator;
                 });
@@ -167,13 +167,13 @@ namespace Nancy.Tests.Functional.Tests
 
             var brower = new Browser(with =>
             {
+                with.StatusCodeHandler<DefaultStatusCodeHandler>();
                 with.ResponseProcessor<TestProcessor>();
-
                 with.Module(module);
             });
 
             // When
-            var response = brower.Get("/customPhrase");
+            var response = brower.Get("/customPhrase", with => with.Accept("application/json"));
 
             // Then
             Assert.Equal("The test is passing!", response.ReasonPhrase);
