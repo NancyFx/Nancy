@@ -95,61 +95,63 @@
 
         public Task<NancyContext> HandleRequest(Request request, Func<NancyContext, NancyContext> preRequest, CancellationToken cancellationToken)
         {
-            using (var cts = CancellationTokenSource.CreateLinkedTokenSource(this.engineDisposedCts.Token, cancellationToken))
+	        var cts = CancellationTokenSource.CreateLinkedTokenSource(this.engineDisposedCts.Token, cancellationToken);
+            cts.Token.ThrowIfCancellationRequested();
+
+            var tcs = new TaskCompletionSource<NancyContext>();
+
+            if (request == null)
             {
-                cts.Token.ThrowIfCancellationRequested();
+                throw new ArgumentNullException("request", "The request parameter cannot be null.");
+            }
 
-                var tcs = new TaskCompletionSource<NancyContext>();
+            var context = this.contextFactory.Create(request);
 
-                if (request == null)
-                {
-                    throw new ArgumentNullException("request", "The request parameter cannot be null.");
-                }
+            if (preRequest != null)
+            {
+                context = preRequest(context);
+            }
 
-                var context = this.contextFactory.Create(request);
-
-                if (preRequest != null)
-                {
-                    context = preRequest(context);
-                }
-
-                var staticContentResponse = this.staticContentProvider.GetContent(context);
-                if (staticContentResponse != null)
-                {
-                    context.Response = staticContentResponse;
-                    tcs.SetResult(context);
-                    return tcs.Task;
-                }
-
-                var pipelines = this.RequestPipelinesFactory.Invoke(context);
-
-                var lifeCycleTask = this.InvokeRequestLifeCycle(context, cts.Token, pipelines);
-
-                lifeCycleTask.WhenCompleted(
-                    completeTask =>
-                    {
-                        try
-                        {
-                            this.CheckStatusCodeHandler(completeTask.Result);
-
-                            this.SaveTraceInformation(completeTask.Result);
-                        }
-                        catch (Exception ex)
-                        {
-                            tcs.SetException(ex);
-                            return;
-                        }
-
-                        tcs.SetResult(completeTask.Result);
-                    },
-                    errorTask =>
-                    {
-                        tcs.SetException(errorTask.Exception);
-                    },
-                    true);
-
+            var staticContentResponse = this.staticContentProvider.GetContent(context);
+            if (staticContentResponse != null)
+            {
+                context.Response = staticContentResponse;
+                tcs.SetResult(context);
                 return tcs.Task;
             }
+
+            var pipelines = this.RequestPipelinesFactory.Invoke(context);
+
+            var lifeCycleTask = this.InvokeRequestLifeCycle(context, cts.Token, pipelines);
+
+            lifeCycleTask.WhenCompleted(
+                completeTask =>
+                {
+	                try
+	                {
+		                this.CheckStatusCodeHandler(completeTask.Result);
+
+		                this.SaveTraceInformation(completeTask.Result);
+	                }
+	                catch (Exception ex)
+	                {
+		                tcs.SetException(ex);
+		                return;
+	                }
+	                finally
+	                {
+		                cts.Dispose();
+	                }
+
+                    tcs.SetResult(completeTask.Result);
+                },
+                errorTask =>
+                {
+		            tcs.SetException(errorTask.Exception);
+                },
+                true);
+
+            return tcs.Task;
         }
 
         /// <summary>
