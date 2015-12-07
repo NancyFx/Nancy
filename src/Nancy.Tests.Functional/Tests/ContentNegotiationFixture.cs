@@ -131,7 +131,7 @@ namespace Nancy.Tests.Functional.Tests
                 });
             });
 
-            var brower = new Browser(with =>
+            var browser = new Browser(with =>
             {
                 with.ResponseProcessor<TestProcessor>();
 
@@ -139,7 +139,7 @@ namespace Nancy.Tests.Functional.Tests
             });
 
             // When
-            var response = brower.Get("/headers");
+            var response = browser.Get("/headers");
 
             // Then
             Assert.True(response.Headers.ContainsKey("foo"));
@@ -165,7 +165,7 @@ namespace Nancy.Tests.Functional.Tests
                 });
             });
 
-            var brower = new Browser(with =>
+            var browser = new Browser(with =>
             {
                 with.StatusCodeHandler<DefaultStatusCodeHandler>();
                 with.ResponseProcessor<TestProcessor>();
@@ -173,7 +173,7 @@ namespace Nancy.Tests.Functional.Tests
             });
 
             // When
-            var response = brower.Get("/customPhrase", with => with.Accept("application/json"));
+            var response = browser.Get("/customPhrase", with => with.Accept("application/json"));
 
             // Then
             Assert.Equal("The test is passing!", response.ReasonPhrase);
@@ -199,7 +199,7 @@ namespace Nancy.Tests.Functional.Tests
             });
           });
 
-          var brower = new Browser(with =>
+          var browser = new Browser(with =>
           {
             with.ResponseProcessor<TestProcessor>();
 
@@ -207,7 +207,7 @@ namespace Nancy.Tests.Functional.Tests
           });
 
           // When
-          var response = brower.Get("/headers");
+          var response = browser.Get("/headers");
 
           // Then
           Assert.Equal("text/xml", response.Context.Response.ContentType);
