@@ -71,7 +71,14 @@ namespace Nancy.ErrorHandling
                 return;
             }
 
-            // Reset negotiation context to avoid any downstream cast exceptions 
+            Response existingResponse = null;
+
+            if (context.Response != null)
+            {
+                existingResponse = context.Response;
+            }
+
+            // Reset negotiation context to avoid any downstream cast exceptions
             // from swapping a view model with a `DefaultStatusCodeHandlerResult`
             context.NegotiationContext = new NegotiationContext();
 
@@ -80,6 +87,11 @@ namespace Nancy.ErrorHandling
             {
                 context.Response = this.responseNegotiator.NegotiateResponse(result, context);
                 context.Response.StatusCode = statusCode;
+
+                if (existingResponse != null)
+                {
+                    context.Response.ReasonPhrase = existingResponse.ReasonPhrase;
+                }
                 return;
             }
             catch (ViewNotFoundException)
