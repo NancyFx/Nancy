@@ -262,12 +262,13 @@
 
             this.RegisterTypes(this.ApplicationContainer, typeRegistrations);
             this.RegisterCollectionTypes(this.ApplicationContainer, collectionTypeRegistrations);
-            this.RegisterModules(this.ApplicationContainer, this.Modules);
             this.RegisterInstances(this.ApplicationContainer, instanceRegistrations);
             this.RegisterRegistrationTasks(this.GetRegistrationTasks());
 
             var environment = this.GetEnvironmentConfigurator().ConfigureEnvironment(this.Configure);
             this.RegisterNancyEnvironment(this.ApplicationContainer, environment);
+
+            this.RegisterModules(this.ApplicationContainer, this.Modules);
 
             foreach (var applicationStartupTask in this.GetApplicationStartupTasks().ToList())
             {
