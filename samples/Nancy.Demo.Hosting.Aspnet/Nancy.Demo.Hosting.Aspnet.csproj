@@ -138,7 +138,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\SharedAssemblyInfo.cs">
+    <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="ApplicationDependencyClass.cs" />
@@ -172,31 +172,31 @@
     <Content Include="Views\razor.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nancy.Hosting.Aspnet\Nancy.Hosting.Aspnet.csproj">
+    <ProjectReference Include="..\..\src\Nancy.Hosting.Aspnet\Nancy.Hosting.Aspnet.csproj">
       <Project>{15B7F794-0BB2-4B66-AD78-4A951F1209B2}</Project>
       <Name>Nancy.Hosting.Aspnet</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Nancy.Metadata.Modules\Nancy.Metadata.Modules.csproj">
+    <ProjectReference Include="..\..\src\Nancy.Metadata.Modules\Nancy.Metadata.Modules.csproj">
       <Project>{DC8AAA8B-7FD0-47C4-9413-3CC94088BCC4}</Project>
       <Name>Nancy.Metadata.Modules</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Nancy.ViewEngines.DotLiquid\Nancy.ViewEngines.DotLiquid.csproj">
+    <ProjectReference Include="..\..\src\Nancy.ViewEngines.DotLiquid\Nancy.ViewEngines.DotLiquid.csproj">
       <Project>{B795886D-9D70-45B1-BFB5-AD54CBC9A447}</Project>
       <Name>Nancy.ViewEngines.DotLiquid</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Nancy.ViewEngines.Nustache\Nancy.ViewEngines.Nustache.csproj">
+    <ProjectReference Include="..\..\src\Nancy.ViewEngines.Nustache\Nancy.ViewEngines.Nustache.csproj">
       <Project>{A1A9E636-A37C-4170-B2E4-99D4F69B415D}</Project>
       <Name>Nancy.ViewEngines.Nustache</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Nancy.ViewEngines.Razor\Nancy.ViewEngines.Razor.csproj">
+    <ProjectReference Include="..\..\src\Nancy.ViewEngines.Razor\Nancy.ViewEngines.Razor.csproj">
       <Project>{2c6f51df-015c-4db6-b44c-0e5e4f25e2a9}</Project>
       <Name>Nancy.ViewEngines.Razor</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Nancy.ViewEngines.Spark\Nancy.ViewEngines.Spark.csproj">
+    <ProjectReference Include="..\..\src\Nancy.ViewEngines.Spark\Nancy.ViewEngines.Spark.csproj">
       <Project>{4B7E35DF-1569-4346-B180-A09615723095}</Project>
       <Name>Nancy.ViewEngines.Spark</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Nancy\Nancy.csproj">
+    <ProjectReference Include="..\..\src\Nancy\Nancy.csproj">
       <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
       <Name>Nancy</Name>
     </ProjectReference>
