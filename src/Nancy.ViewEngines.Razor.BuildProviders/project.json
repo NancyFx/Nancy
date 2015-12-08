@@ -1,0 +1,16 @@
+﻿{
+    "version": "2.0.0-*",
+
+    "dependencies": {
+        "Nancy": { "target": "project" },
+        "Nancy.ViewEngines.Razor": { "target": "project" }
+    },
+
+    "frameworks": {
+        "net451": {
+            "frameworkAssemblies": {
+                "System.Web": "4.0.0.0"
+            }
+        }
+    }
+}

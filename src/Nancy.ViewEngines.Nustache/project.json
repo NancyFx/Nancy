@@ -1,0 +1,19 @@
+﻿{
+    "version": "2.0.0-*",
+
+    "description": "Enables using the Nustache view engine with Nancy.",
+    "authors": [ "Andreas Håkansson, Steven Robbins and contributors" ],
+    "tags": [ "Nancy", "View Engine", "Nustache" ],
+    "projectUrl": "http://nancyfx.org",
+    "licenseUrl": "https://github.com/NancyFx/Nancy/blob/master/license.txt",
+    "iconUrl": "http://nancyfx.org/nancy-nuget.png",
+
+    "dependencies": {
+        "Nancy": { "target": "project" },
+        "Nustache": "1.13.8.22"
+    },
+
+    "frameworks": {
+        "net451": { }
+    }
+}
