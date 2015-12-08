@@ -125,6 +125,7 @@
     <Compile Include="BrowserResponseExtensions.cs" />
     <Compile Include="StaticConfigurationContext.cs" />
     <Compile Include="TestingViewBrowserResponseExtensions.cs" />
+    <Compile Include="TestingViewContextKeys.cs" />
     <Compile Include="TestingViewFactory.cs" />
     <Compile Include="ConfigurableBootstrapper.cs" />
     <Compile Include="DocumentWrapper.cs" />
