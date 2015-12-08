@@ -269,12 +269,10 @@
             var environment = this.GetEnvironmentConfigurator().ConfigureEnvironment(this.Configure);
             this.RegisterNancyEnvironment(this.ApplicationContainer, environment);
 
-        foreach (var applicationStartupTask in this.GetApplicationStartupTasks().ToList())
-        {
-            applicationStartupTask.Initialize(this.ApplicationPipelines);
-        }
-
-        this.RegisterModules(this.ApplicationContainer, this.Modules);
+            foreach (var applicationStartupTask in this.GetApplicationStartupTasks().ToList())
+            {
+                applicationStartupTask.Initialize(this.ApplicationPipelines);
+            }
 
             this.ApplicationStartup(this.ApplicationContainer, this.ApplicationPipelines);
 
@@ -519,7 +517,7 @@
         protected virtual void ConfigureConventions(NancyConventions nancyConventions)
         {
         }
-        
+
         /// <summary>
         /// Releases unmanaged and - optionally - managed resources.
         /// </summary>
