@@ -4,6 +4,7 @@ namespace Nancy.Authentication.Forms.Tests
     using FakeItEasy;
     using Cryptography;
     using Nancy.Tests;
+
     using Xunit;
 
     public class FormsAuthenticationConfigurationFixture

@@ -16,12 +16,14 @@
                 Console.WriteLine("Nancy now listening - navigating to http://localhost:8888/nancy/. Press enter to stop");
                 try
                 {
+#if DNX451
                     Process.Start("http://localhost:8888/nancy/");
+#endif
                 }
                 catch (Exception)
                 {
                 }
-                Console.ReadKey();
+                Console.ReadLine();
             }
 
             Console.WriteLine("Stopped. Good bye!");

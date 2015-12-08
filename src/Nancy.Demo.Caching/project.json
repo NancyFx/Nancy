@@ -1,0 +1,22 @@
+{
+    "version": "1.0.0-*",
+    "description": "",
+    "authors": [ "" ],
+    "tags": [ "" ],
+    "projectUrl": "",
+    "licenseUrl": "",
+
+    "dependencies": {
+        "Nancy": "1.0.0-*",
+        "Nancy.ViewEngines.Razor": "1.0.0-*",
+        "Nancy.Hosting.Aspnet": "1.0.0-*",
+
+
+    },
+    "compileFiles": [ ],
+    "frameworks": {
+        "dnx451": {
+            "frameworkAssemblies": { }
+        }
+    }
+}

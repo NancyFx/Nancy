@@ -1,16 +1,14 @@
 namespace Nancy
 {
+    using Nancy.Cookies;
+    using Nancy.Helpers;
+    using Nancy.Responses;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
-
-    using Nancy.Cookies;
-    using Nancy.Helpers;
-    using Nancy.Responses;
-
     /// <summary>
     /// Encapsulates HTTP-response information from an Nancy operation.
     /// </summary>

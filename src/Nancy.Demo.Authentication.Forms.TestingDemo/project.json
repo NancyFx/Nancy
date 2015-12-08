@@ -1,0 +1,23 @@
+{
+  "version": "1.0.0-*",
+  "description": "",
+  "authors": [ "" ],
+  "tags": [ "" ],
+  "projectUrl": "",
+  "licenseUrl": "",
+
+  "dependencies": {
+    "Nancy": "1.0.0-*",
+    "xunit.extensions": "1.9.1",
+    "xunit": "1.9.1",
+    "Nancy.Testing": "1.0.0-*",
+    "Nancy.Demo.Authentication.Forms": "1.0.0-*"
+
+  },
+  "compileFiles": [ "../Nancy.Tests/ShouldExtensions.cs", "../SharedAssemblyInfo.cs" ],
+  "frameworks": {
+    "dnx451": {
+      "frameworkAssemblies": { }
+    }
+  }
+}

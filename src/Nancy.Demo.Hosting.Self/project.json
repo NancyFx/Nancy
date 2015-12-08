@@ -1,0 +1,32 @@
+{
+    "version": "1.0.0-*",
+    "description": "",
+    "authors": [
+        ""
+    ],
+    "tags": [
+        ""
+    ],
+    "projectUrl": "",
+    "licenseUrl": "",
+    "dependencies": {
+        "Nancy": "1.0.0-*",
+        "Nancy.Hosting.Self": "1.0.0-*"
+    },
+    "commands": {
+        "web": "Nancy.Demo.Hosting.Self"
+    },
+    "frameworks": {
+        "dnx451": {
+            "frameworkAssemblies": {
+                "System.Diagnostics.Debug": ""
+            }
+        },
+        "dnxcore50": {
+            "dependencies": {
+                "System.Console": "4.0.0-beta-23029",
+                "System.IO" :  "4.0.10-beta-23029"
+            }
+        }
+    }
+}

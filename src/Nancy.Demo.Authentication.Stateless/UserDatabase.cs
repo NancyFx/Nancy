@@ -6,6 +6,8 @@ namespace Nancy.Demo.Authentication.Stateless
     using System.Security.Claims;
     using System.Security.Principal;
 
+    using Nancy.Security;
+
     public class UserDatabase
     {
         static readonly List<Tuple<string, string>> ActiveApiKeys = new List<Tuple<string, string>>();

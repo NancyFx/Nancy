@@ -1,0 +1,20 @@
+{
+    "version": "1.0.0-*",
+    "description": "",
+    "authors": [ "" ],
+    "tags": [ "" ],
+    "projectUrl": "",
+    "licenseUrl": "",
+
+    "dependencies": {
+        "Nancy": "1.0.0-*",
+        "Owin": "1.0.0"
+
+    },
+
+    "frameworks": {
+        "dnx451": {
+            "frameworkAssemblies": { "System.Xml": "" }
+        }
+    }
+}

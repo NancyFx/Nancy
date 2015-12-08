@@ -1,0 +1,23 @@
+{
+  "version": "1.0.0-*",
+  "description": "",
+  "authors": [ "" ],
+  "tags": [ "" ],
+  "projectUrl": "",
+  "licenseUrl": "",
+
+  "dependencies": {
+    "Nancy": "1.0.0-*",
+    "Nancy.ViewEngines.Markdown": "1.0.0-*",
+    "xunit": "1.9.1",
+    "FakeItEasy": "1.19.0",
+    "MarkdownSharp": "1.13.0"
+
+  },
+ "compileFiles": [ "../Nancy.Tests/ShouldExtensions.cs", "../SharedAssemblyInfo.cs" ],
+  "frameworks": {
+    "dnx451": {
+      "frameworkAssemblies": { "System.Xml": "" }
+    }
+  }
+}

@@ -1,0 +1,47 @@
+﻿{
+  "version": "1.0.0-*",
+  "description": "",
+  "authors": [ "" ],
+  "tags": [ "" ],
+  "projectUrl": "",
+  "licenseUrl": "",
+
+  "dependencies": {
+    "Microsoft.Framework.Runtime.Abstractions": "1.0.0-beta5-*"
+  },
+  "compileFiles": [ "../SharedAssemblyInfo.cs" ],
+  "frameworks": {
+    "dnx451": {
+      "frameworkAssemblies": {
+        "System.Reflection": "",
+        "System.Xml": ""
+      }
+    },
+    "dnxcore50": {
+      "dependencies": {
+        "Microsoft.CSharp": "4.0.0-beta-*",
+        "System.Linq": "4.0.0-beta-*",
+        "System.Diagnostics.Tools": "4.0.0-beta-*",
+        "System.Collections.Concurrent": "4.0.10-beta-*",
+        "System.Text.RegularExpressions": "4.0.0-beta-*",
+        "System.Dynamic.Runtime": "4.0.0-beta-*",
+        "System.Threading": "4.0.10-beta-*",
+        "System.Reflection.Emit": "4.0.0-beta-*",
+        "System.Reflection.TypeExtensions": "4.0.0-beta-*",
+        "System.Collections.Specialized": "4.0.0-beta-*",
+        "System.Xml.XmlSerializer": "4.0.10-beta-*",
+        "System.IO.UnmanagedMemoryStream": "4.0.0-beta-*",
+        "System.Reflection": "4.0.10-beta-*",
+        "System.Security.Claims": "4.0.0-beta-*",
+        "System.Runtime.Serialization.Xml": "4.0.10-beta-*",
+        "System.Runtime": "4.0.20-beta-*",
+        "System.Security.Cryptography.Hashing": "4.0.0-beta-*",
+        "System.Security.Cryptography.Encoding": "4.0.0-beta-*",
+        "System.Console": "4.0.0-beta-*",
+        "System.IO": "4.0.10-beta-*",
+        "System.Security.Cryptography.DeriveBytes": "4.0.0-beta-*",
+        "System.Security.Cryptography.X509Certificates": "4.0.0-beta-*"
+      }
+    }
+  }
+}

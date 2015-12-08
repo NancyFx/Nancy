@@ -1,0 +1,7 @@
+﻿{
+    "projects": [ "src" ],
+  "sdk": {
+    "sources": "src",
+    "version": "1.0.0-RC1-update1"
+  }
+}

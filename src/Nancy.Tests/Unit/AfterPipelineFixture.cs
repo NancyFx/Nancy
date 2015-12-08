@@ -1,4 +1,4 @@
-namespace Nancy.Tests.Unit
+﻿namespace Nancy.Tests.Unit
 {
     using System;
     using System.Linq;

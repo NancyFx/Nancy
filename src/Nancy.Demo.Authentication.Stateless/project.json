@@ -1,0 +1,21 @@
+{
+    "version": "1.0.0-*",
+    "description": "",
+    "authors": [ "" ],
+    "tags": [ "" ],
+    "projectUrl": "",
+    "licenseUrl": "",
+
+    "dependencies": {
+        "Nancy": "1.0.0-*",
+        "Nancy.Authentication.Stateless": "1.0.0-*",
+
+
+    },
+    "compileFiles": [ ],
+    "frameworks": {
+        "dnx451": {
+            "frameworkAssemblies": { }
+        }
+    }
+}

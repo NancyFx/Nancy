@@ -1,0 +1,23 @@
+{
+    "version": "1.0.0-*",
+    "description": "",
+    "authors": [ "" ],
+    "tags": [ "" ],
+    "projectUrl": "",
+    "licenseUrl": "",
+
+    "dependencies": {
+        "Nancy": "1.0.0-*"
+
+    },
+
+    "frameworks": {
+        "dnx451": {
+            "frameworkAssemblies": {
+                "System.Xml": "",
+                "System.Web": "4.0.0.0",
+                "System.Configuration": "4.0.0.0"
+            }
+        }
+    }
+}
