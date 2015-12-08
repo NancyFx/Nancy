@@ -25,6 +25,7 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <TargetFrameworkProfile />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -83,7 +84,7 @@
   <ItemGroup>
     <Reference Include="FluentValidation, Version=3.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\FluentValidation.3.4.0.0\lib\Net40\FluentValidation.dll</HintPath>
+      <HintPath>..\..\packages\FluentValidation.3.4.0.0\lib\Net40\FluentValidation.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -112,7 +113,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\SharedAssemblyInfo.cs">
+    <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="CustomersModule.cs" />
@@ -126,23 +127,23 @@
     <Compile Include="ValidationBootstrapper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nancy.Hosting.Aspnet\Nancy.Hosting.Aspnet.csproj">
+    <ProjectReference Include="..\..\src\Nancy.Hosting.Aspnet\Nancy.Hosting.Aspnet.csproj">
       <Project>{15B7F794-0BB2-4B66-AD78-4A951F1209B2}</Project>
       <Name>Nancy.Hosting.Aspnet</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Nancy.Validation.DataAnnotations\Nancy.Validation.DataAnnotations.csproj">
+    <ProjectReference Include="..\..\src\Nancy.Validation.DataAnnotations\Nancy.Validation.DataAnnotations.csproj">
       <Project>{701765DC-F4F2-4943-A37F-6ED253198158}</Project>
       <Name>Nancy.Validation.DataAnnotations</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Nancy.Validation.FluentValidation\Nancy.Validation.FluentValidation.csproj">
+    <ProjectReference Include="..\..\src\Nancy.Validation.FluentValidation\Nancy.Validation.FluentValidation.csproj">
       <Project>{01230F2A-D108-480C-B834-8CE0569FD3B3}</Project>
       <Name>Nancy.Validation.FluentValidation</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Nancy.ViewEngines.Spark\Nancy.ViewEngines.Spark.csproj">
+    <ProjectReference Include="..\..\src\Nancy.ViewEngines.Spark\Nancy.ViewEngines.Spark.csproj">
       <Project>{4B7E35DF-1569-4346-B180-A09615723095}</Project>
       <Name>Nancy.ViewEngines.Spark</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Nancy\Nancy.csproj">
+    <ProjectReference Include="..\..\src\Nancy\Nancy.csproj">
       <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
       <Name>Nancy</Name>
     </ProjectReference>
