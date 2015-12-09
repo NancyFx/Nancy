@@ -7,7 +7,7 @@ namespace Nancy.ViewEngines.Spark
     using System.Linq;
     using System.Text;
     using System.Threading;
-
+    using Configuration;
     using global::Spark.FileSystem;
 
     using Nancy.Responses.Negotiation;
@@ -18,21 +18,20 @@ namespace Nancy.ViewEngines.Spark
     public class NancyViewFolder : IViewFolder
     {
         private readonly ViewEngineStartupContext viewEngineStartupContext;
-
-        private List<ViewLocationResult> currentlyLocatedViews;
-
-        private ReaderWriterLockSlim padlock = new ReaderWriterLockSlim();
-
+        private readonly List<ViewLocationResult> currentlyLocatedViews;
+        private readonly ReaderWriterLockSlim padlock = new ReaderWriterLockSlim();
         private readonly ConcurrentDictionary<string, IViewFile> cachedFiles = new ConcurrentDictionary<string, IViewFile>();
+        private readonly ViewConfiguration configuration;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NancyViewFolder"/> class, using the provided
-        /// <see cref="viewEngineStartupContext"/> instance.
+        /// Initializes a new instance of the <see cref="NancyViewFolder"/> class, using the provided <see cref="viewEngineStartupContext"/> instance.
         /// </summary>
-        /// <param name="viewEngineStartupContext"></param>
-        public NancyViewFolder(ViewEngineStartupContext viewEngineStartupContext)
+        /// <param name="viewEngineStartupContext">A <see cref="ViewEngineStartupContext"/> instance.</param>
+        /// <param name="environment">An <see cref="INancyEnvironment"/> instance.</param>
+        public NancyViewFolder(ViewEngineStartupContext viewEngineStartupContext, INancyEnvironment environment)
         {
             this.viewEngineStartupContext = viewEngineStartupContext;
+            this.configuration = environment.GetValue<ViewConfiguration>();
 
             // No need to lock here
             this.currentlyLocatedViews =
@@ -62,7 +61,7 @@ namespace Nancy.ViewEngines.Spark
                 result = this.currentlyLocatedViews
                              .FirstOrDefault(v => CompareViewPaths(GetSafeViewPath(v), searchPath));
 
-                if (result == null && StaticConfiguration.Caching.EnableRuntimeViewDiscovery)
+                if (result == null && this.configuration.RuntimeViewDiscovery)
                 {
                     result = this.viewEngineStartupContext.ViewLocator.LocateView(searchPath, GetFakeContext());
 
@@ -88,7 +87,7 @@ namespace Nancy.ViewEngines.Spark
                 throw new FileNotFoundException(string.Format("Template {0} not found", path), path);
             }
 
-            fileResult = new NancyViewFile(result);
+            fileResult = new NancyViewFile(result, this.configuration);
             this.cachedFiles.AddOrUpdate(searchPath, s => fileResult, (s, o) => fileResult);
 
             return fileResult;
@@ -135,7 +134,7 @@ namespace Nancy.ViewEngines.Spark
             {
                 var hasCached = this.currentlyLocatedViews.Any(v => CompareViewPaths(GetSafeViewPath(v), searchPath));
 
-                if (hasCached || !StaticConfiguration.Caching.EnableRuntimeViewDiscovery)
+                if (hasCached || !this.configuration.RuntimeViewDiscovery)
                 {
                     return hasCached;
                 }
@@ -177,8 +176,8 @@ namespace Nancy.ViewEngines.Spark
 
         private static string GetSafeViewPath(ViewLocationResult result)
         {
-            return string.IsNullOrEmpty(result.Location) ? 
-                string.Concat(result.Name, ".", result.Extension) : 
+            return string.IsNullOrEmpty(result.Location) ?
+                string.Concat(result.Name, ".", result.Extension) :
                 string.Concat(result.Location, "/", result.Name, ".", result.Extension);
         }
 
@@ -194,13 +193,16 @@ namespace Nancy.ViewEngines.Spark
 
             private readonly ViewLocationResult viewLocationResult;
 
+            private readonly ViewConfiguration viewConfiguration;
+
             private string contents;
 
             private long lastUpdated;
 
-            public NancyViewFile(ViewLocationResult viewLocationResult)
+            public NancyViewFile(ViewLocationResult viewLocationResult, ViewConfiguration viewConfiguration)
             {
                 this.viewLocationResult = viewLocationResult;
+                this.viewConfiguration = viewConfiguration;
 
                 this.UpdateContents();
             }
@@ -209,7 +211,7 @@ namespace Nancy.ViewEngines.Spark
             {
                 get
                 {
-                    if (StaticConfiguration.Caching.EnableRuntimeViewUpdates && this.viewLocationResult.IsStale())
+                    if (this.viewConfiguration.RuntimeViewUpdates && this.viewLocationResult.IsStale())
                     {
                         this.UpdateContents();
                     }
@@ -220,7 +222,7 @@ namespace Nancy.ViewEngines.Spark
 
             public Stream OpenViewStream()
             {
-                if (StaticConfiguration.Caching.EnableRuntimeViewUpdates && this.viewLocationResult.IsStale())
+                if (this.viewConfiguration.RuntimeViewUpdates && this.viewLocationResult.IsStale())
                 {
                     this.UpdateContents();
                 }

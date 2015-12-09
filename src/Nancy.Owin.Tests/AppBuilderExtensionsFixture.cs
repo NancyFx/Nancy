@@ -23,7 +23,6 @@
 
             using(var server = TestServer.Create(app => app.UseNancy(opts => opts.Bootstrapper = bootstrapper)))
             {
-
                 // When
                 var response = server.HttpClient.GetAsync(new Uri("http://localhost/")).Result;
 
