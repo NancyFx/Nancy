@@ -20,7 +20,15 @@
         {
             using (var reader = new StreamReader(stream, encoding ?? Encoding.UTF8))
             {
-                return reader.ReadToEnd();
+                long initialPosition = stream.Position;
+
+                stream.Position = 0;
+
+                string request = reader.ReadToEnd();
+
+                stream.Position = initialPosition;
+
+                return request;
             }
         }
     }
