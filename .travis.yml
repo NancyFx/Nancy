@@ -4,6 +4,7 @@ sudo: false
 install:
   - gem install bundle
   - bundle
+  - mono tools/nuget/NuGet.exe restore Nancy.sln
   - echo \#\!/bin/bash >> ./travis.sh
   - echo set -e >> ./travis.sh
   - echo set -x >> ./travis.sh
