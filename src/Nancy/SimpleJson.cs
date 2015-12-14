@@ -483,6 +483,8 @@ namespace Nancy
 
 namespace Nancy
 {
+    using Nancy.Extensions;
+
     /// <summary>
     /// This class encodes and decodes JSON strings.
     /// Spec. details, see http://www.json.org/
@@ -1059,7 +1061,7 @@ namespace Nancy
                     builder.Append(",");
                 string stringKey = key as string;
                 if (stringKey != null)
-                    SerializeString(stringKey, builder);
+                    SerializeString(jsonSerializerStrategy.MapDictionaryKeyToFieldName(stringKey), builder);
                 else
                     if (!SerializeValue(jsonSerializerStrategy, value, builder)) return false;
                 builder.Append(":");
@@ -1231,6 +1233,8 @@ namespace Nancy
         [SuppressMessage("Microsoft.Design", "CA1007:UseGenericsWhereAppropriate", Justification="Need to support .NET 2")]
         bool TrySerializeNonPrimitiveObject(object input, out object output);
         object DeserializeObject(object value, Type type);
+
+        string MapDictionaryKeyToFieldName(string stringKey);
     }
 
     [GeneratedCode("simple-json", "1.0.0")]
@@ -1247,19 +1251,29 @@ namespace Nancy
 
         internal static readonly Type[] EmptyTypes = new Type[0];
         internal static readonly Type[] ArrayConstructorParameterTypes = new Type[] { typeof(int) };
+        protected static string FullDateTimeWithOffset = @"yyyy-MM-dd\THH:mm:ss.fffffffzzz";
+        protected static string FullDateTimeUtc = @"yyyy-MM-dd\THH:mm:ss.fffffff\Z";
 
         private static readonly string[] Iso8601Format = new string[]
                                                              {
+                                                                 FullDateTimeWithOffset,
                                                                  @"yyyy-MM-dd\THH:mm:ss.FFFFFFFK",
+                                                                 FullDateTimeUtc,
                                                                  @"yyyy-MM-dd\THH:mm:ss\Z",
                                                                  @"yyyy-MM-dd\THH:mm:ssK"
                                                              };
+
 
         public PocoJsonSerializerStrategy()
         {
             ConstructorCache = new ReflectionUtils.ThreadSafeDictionary<Type, ReflectionUtils.ConstructorDelegate>(ContructorDelegateFactory);
             GetCache = new ReflectionUtils.ThreadSafeDictionary<Type, IDictionary<string, ReflectionUtils.GetDelegate>>(GetterValueFactory);
             SetCache = new ReflectionUtils.ThreadSafeDictionary<Type, IDictionary<string, KeyValuePair<Type, ReflectionUtils.SetDelegate>>>(SetterValueFactory);
+        }
+
+        public string MapDictionaryKeyToFieldName(string stringKey)
+        {
+            return this.MapClrMemberNameToJsonFieldName(stringKey);
         }
 
         protected virtual string MapClrMemberNameToJsonFieldName(string clrPropertyName)
@@ -1460,6 +1474,7 @@ namespace Nancy
                 return ReflectionUtils.ToNullableType(obj, type);
             return obj;
         }
+
 
         protected virtual object SerializeEnum(Enum p)
         {

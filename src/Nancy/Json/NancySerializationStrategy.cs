@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using Nancy.Extensions;
     using Nancy.Reflection;
@@ -9,8 +10,13 @@
     internal class NancySerializationStrategy : PocoJsonSerializerStrategy
     {
         private readonly bool retainCasing;
+
+        private readonly bool useIso8601;
+
         private readonly List<JavaScriptConverter> _converters = new List<JavaScriptConverter>();
         private readonly List<JavaScriptPrimitiveConverter> _primitiveConverters = new List<JavaScriptPrimitiveConverter>();
+        internal static readonly long InitialJavaScriptDateTicks = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).Ticks;
+        static readonly DateTime MinimumJavaScriptDate = new DateTime(100, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
 
         public NancySerializationStrategy() : this(false) { }
@@ -18,10 +24,12 @@
         public NancySerializationStrategy(
             bool retainCasing, 
             bool registerConverters = true,
+            bool useIso8601 = true,
             IEnumerable<JavaScriptConverter> converters = null,
             IEnumerable<JavaScriptPrimitiveConverter> primitiveConverters = null)
         {
             this.retainCasing = retainCasing;
+            this.useIso8601 = useIso8601;
             if (registerConverters)
             {
                 this.RegisterConverters(converters, primitiveConverters);
@@ -117,6 +125,18 @@
 
         protected override bool TrySerializeKnownTypes(object input, out object output)
         {
+            if (input is DateTime)
+            {
+                return SerializeDateTime((DateTime)input, out output);
+            }
+
+            if (input is DateTimeOffset)
+            {
+                var dto = (DateTimeOffset)input;
+                output = dto.ToString("o", CultureInfo.InvariantCulture);
+                return true;
+            }
+
             var dynamicValue = input as DynamicDictionaryValue;
             if (!ReferenceEquals(dynamicValue, null) && dynamicValue.HasValue)
             {
@@ -128,6 +148,47 @@
 
             if (this.TrySerializePrimitiveConverter(input, ref output, inputType)) return true;
             return base.TrySerializeKnownTypes(input, out output);
+        }
+
+        private bool SerializeDateTime(DateTime input, out object output)
+        {
+            if (useIso8601)
+            {
+                var dateTime = input;
+                if (dateTime.Kind == DateTimeKind.Unspecified)
+                {
+                    dateTime = new DateTime(dateTime.Ticks, DateTimeKind.Local);
+                }
+                output = dateTime.ToString("o", CultureInfo.InvariantCulture);
+            }
+            else
+            {
+                DateTime time = input.ToUniversalTime();
+
+                string suffix = "";
+                if (input.Kind != DateTimeKind.Utc)
+                {
+                    TimeSpan localTzOffset;
+                    if (input >= time)
+                    {
+                        localTzOffset = input - time;
+                        suffix = "+";
+                    }
+                    else
+                    {
+                        localTzOffset = time - input;
+                        suffix = "-";
+                    }
+                    suffix += localTzOffset.ToString("hhmm");
+                }
+
+                if (time < MinimumJavaScriptDate)
+                    time = MinimumJavaScriptDate;
+
+                var ticks = (time.Ticks - InitialJavaScriptDateTicks) / 10000;
+                output = "\\/Date(" + ticks + suffix + ")\\/";
+            }
+            return true;
         }
 
         private bool TrySerializePrimitiveConverter(object input, ref object output, Type inputType)

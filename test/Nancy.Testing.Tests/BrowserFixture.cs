@@ -562,7 +562,8 @@ namespace Nancy.Testing.Tests
             var result = await browser.Get("/cyclical", with => with.Accept(accept));
 
             //Then
-            result.Body.AsString().ShouldNotBeEmpty();
+                var resultBody = result.Body.AsString();
+                resultBody.ShouldNotBeEmpty();
         }
 
         [Theory]

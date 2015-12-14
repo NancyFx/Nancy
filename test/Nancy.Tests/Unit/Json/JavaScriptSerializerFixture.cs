@@ -18,7 +18,6 @@
             // When
             var serializer = new JavaScriptSerializer(
                 registerConverters: true,
-                resolver: null,
                 maxJsonLength: defaultSerializer.MaxJsonLength,
                 recursionLimit: defaultSerializer.RecursionLimit,
                 retainCasing: defaultSerializer.RetainCasing,
@@ -59,7 +58,6 @@
             // When
             var serializer = new JavaScriptSerializer(
                 registerConverters: false,
-                resolver: null,
                 maxJsonLength: defaultSerializer.MaxJsonLength,
                 recursionLimit: defaultSerializer.RecursionLimit,
                 retainCasing: defaultSerializer.RetainCasing,

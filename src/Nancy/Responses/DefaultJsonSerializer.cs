@@ -82,7 +82,6 @@
             using (var writer = new StreamWriter(new UnclosableStreamWrapper(outputStream)))
             {
                 var serializer = new JavaScriptSerializer(
-                    null,
                     false,
                     this.jsonConfiguration.MaxJsonLength,
                     this.jsonConfiguration.MaxRecursions,

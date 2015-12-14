@@ -29,46 +29,9 @@
 namespace Nancy.Json
 {
     using System;
-    using System.Globalization;
-    using System.IO;
-    using System.Text;
 
     internal static class Json
     {
-
-        public static void Serialize(object obj, StringBuilder output)
-        {
-            Serialize(obj, JavaScriptSerializer.DefaultSerializer, output);
-        }
-
-        public static void Serialize(object obj, JavaScriptSerializer jss, StringBuilder output)
-        {
-            JsonSerializer js = new JsonSerializer(jss);
-            js.Serialize(obj, output);
-            js = null;
-        }
-
-        public static void Serialize(object obj, TextWriter output)
-        {
-            Serialize(obj, JavaScriptSerializer.DefaultSerializer, output);
-        }
-
-        public static void Serialize(object obj, JavaScriptSerializer jss, TextWriter output)
-        {
-            JsonSerializer js = new JsonSerializer(jss);
-            js.Serialize(obj, output);
-            js = null;
-        }
-
-        public static IFormatProvider DefaultNumberFormatInfo
-        {
-            get
-            {
-                return new NumberFormatInfo(){ NumberDecimalSeparator = ".", NumberGroupSeparator = string.Empty };
-            }
-
-        }
-
         /// <summary>
         /// Attempts to detect if the content type is JSON.
         /// Supports:
