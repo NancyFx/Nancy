@@ -674,48 +674,6 @@ namespace Nancy.Tests.Unit
             result.Items["ERROR_EXCEPTION"].ShouldBeOfType<RequestExecutionException>();
         }
 
-	    [Fact]
-	    public void Should_Not_Dispose_Cancellation_Token_Before_Task_is_complete()
-	    {
-			// Given
-			var resolvedRoute = new ResolveResult(
-			   new FakeRoute(),
-			   DynamicDictionary.Empty,
-			   null,
-			   null,
-			   null);
-
-			A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored)).Returns(resolvedRoute);
-
-			CancellationToken? cancellationToken = null;
-			
-			A.CallTo(() => this.requestDispatcher.Dispatch(context, A<CancellationToken>._))
-			    .ReturnsLazily<Task<Response>, NancyContext, CancellationToken>((x, y) => Task.Run(async () =>
-			    {
-				    for (int i = 0; i < 2; i++)
-					    await Task.Delay(1, y);
-
-				    cancellationToken = y;
-
-				    return response;
-			    }));
-
-
-			var pipelines = new Pipelines { OnError = null };
-			engine.RequestPipelinesFactory = (ctx) => pipelines;
-
-			var request = new Request("GET", "/", "http");
-
-			// When
-			var result = this.engine.HandleRequest(request);
-
-			// Then
-			result.Items.Keys.Contains("ERROR_EXCEPTION").ShouldBeFalse();
-
-		    var exception = Record.Exception(() => !cancellationToken.HasValue || cancellationToken.Value.WaitHandle != null);
-			exception.ShouldBeOfType<ObjectDisposedException>();
-	    }
-
         [Fact]
         public void Should_persist_original_exception_in_requestexecutionexception_when_pipeline_is_null()
         {
