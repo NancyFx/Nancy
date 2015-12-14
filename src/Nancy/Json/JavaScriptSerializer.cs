@@ -51,6 +51,7 @@ namespace Nancy.Json
         bool _retainCasing;
         JavaScriptTypeResolver _typeResolver;
         bool _iso8601DateFormat;
+        NancySerializationStrategy _serializerStrategy;
 
 #if NET_3_5
         internal static readonly JavaScriptSerializer DefaultSerializer = new JavaScriptSerializer(null, false, 2097152, 100);
@@ -79,6 +80,7 @@ namespace Nancy.Json
 #endif
         public JavaScriptSerializer(JavaScriptTypeResolver resolver, bool registerConverters, int maxJsonLength, int recursionLimit, bool retainCasing, bool iso8601DateFormat, IEnumerable<JavaScriptConverter> converters, IEnumerable<JavaScriptPrimitiveConverter> primitiveConverters)
         {
+            _serializerStrategy = new NancySerializationStrategy(retainCasing, registerConverters, converters, primitiveConverters);
             _typeResolver = resolver;
             _maxJsonLength = maxJsonLength;
             _recursionLimit = recursionLimit;
@@ -89,6 +91,7 @@ namespace Nancy.Json
 
             if (registerConverters)
                 RegisterConverters(converters, primitiveConverters);
+
         }
 
 
@@ -221,7 +224,7 @@ namespace Nancy.Json
 
         public T Deserialize<T>(string input)
         {
-            return ConvertToType<T>(DeserializeObjectInternal(input));
+            return SimpleJson.DeserializeObject<T>(input, _serializerStrategy);
         }
 
         static object Evaluate(object value)
@@ -492,6 +495,7 @@ namespace Nancy.Json
             if (_converterList == null)
                 _converterList = new List<IEnumerable<JavaScriptConverter>>();
             _converterList.Add(converters);
+            _serializerStrategy.RegisterConverters(converters);
         }
 
         public void RegisterConverters(IEnumerable<JavaScriptPrimitiveConverter> primitiveConverters)
@@ -502,6 +506,7 @@ namespace Nancy.Json
             if (_primitiveConverterList == null)
                 _primitiveConverterList = new List<IEnumerable<JavaScriptPrimitiveConverter>>();
             _primitiveConverterList.Add(primitiveConverters);
+            _serializerStrategy.RegisterConverters(primitiveConverters);
         }
 
         public void RegisterConverters(IEnumerable<JavaScriptConverter> converters, IEnumerable<JavaScriptPrimitiveConverter> primitiveConverters)
@@ -543,9 +548,10 @@ namespace Nancy.Json
 
         public string Serialize(object obj)
         {
-            StringBuilder b = new StringBuilder();
-            Serialize(obj, b);
-            return b.ToString();
+            return SimpleJson.SerializeObject(obj, _serializerStrategy);
+//            StringBuilder b = new StringBuilder();
+//            Serialize(obj, b);
+//            return b.ToString();
         }
 
         public void Serialize(object obj, StringBuilder output)

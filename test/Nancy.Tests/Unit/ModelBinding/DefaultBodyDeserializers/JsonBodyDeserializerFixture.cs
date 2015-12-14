@@ -267,7 +267,7 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
         public void Should_Deserialize_Signed_And_Unsigned_Nullable_Numeric_Types()
         {
             //Given
-            const string json = "{P1: 1, P2: 2, P3: 3, F1: 4, F2: 5, F3: 6}";
+            const string json = "{\"P1\": 1, \"P2\": 2, \"P3\": 3, \"F1\": 4, \"F2\": 5, \"F3\": 6}";
 
             //When
             var model = this.serializer.Deserialize<ModelWithNullables> (json);

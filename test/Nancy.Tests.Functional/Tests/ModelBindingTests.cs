@@ -25,7 +25,7 @@
         public async Task Should_be_able_to_modelbind_json_content_to_list()
         {
             // Given
-            const string body = "[{ 'key1': 'value1' , 'key2': 'value2'},{ 'key1': 'value1' , 'key2': 'value2'}, { 'key1': 'value1' , 'key2': 'value2'}]";
+            const string body = "[{ \"key1\": \"value1\" , \"key2\": \"value2\"},{ \"key1\": \"value1\" , \"key2\": \"value2\"}, { \"key1\": \"value1\" , \"key2\": \"value2\"}]";
 
             // When
             var result = await this.browser.Post("/jsonlist", with => with.Body(body, "application/json"));
@@ -38,7 +38,7 @@
         public async Task Should_be_able_to_bind_body_and_other_sources_separately()
         {
             // Given
-            const string body = "{ 'key1': 'body' , 'key2': 'value2'}";
+            const string body = "{ \"key1\": \"body\" , \"key2\": \"value2\"}";
 
             // When
             var result = await this.browser.Put("/foo/param", with => with.Body(body, "application/json"));
