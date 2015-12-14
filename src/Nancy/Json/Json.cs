@@ -60,35 +60,6 @@ namespace Nancy.Json
             js = null;
         }
 
-        public static object Deserialize(string input)
-        {
-            return Deserialize(input, JavaScriptSerializer.DefaultSerializer);
-        }
-
-        public static object Deserialize(string input, JavaScriptSerializer jss)
-        {
-            if (jss == null)
-            {
-                throw new ArgumentNullException("jss");
-            }
-            return Deserialize(new StringReader(input), jss);
-        }
-
-        public static object Deserialize(TextReader input)
-        {
-            return Deserialize(input, JavaScriptSerializer.DefaultSerializer);
-        }
-
-        public static object Deserialize(TextReader input, JavaScriptSerializer jss)
-        {
-            if (jss == null)
-            {
-                throw new ArgumentNullException("jss");
-            }
-            JsonDeserializer ser = new JsonDeserializer(jss);
-            return ser.Deserialize(input);
-        }
-
         public static IFormatProvider DefaultNumberFormatInfo
         {
             get

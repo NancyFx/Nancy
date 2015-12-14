@@ -463,28 +463,7 @@ namespace Nancy.Json
 
         public object DeserializeObject(string input)
         {
-            object obj = Evaluate(DeserializeObjectInternal(input), true);
-            IDictionary dictObj = obj as IDictionary;
-            if (dictObj != null && dictObj.Contains(SerializedTypeNameKey))
-            {
-                if (_typeResolver == null)
-                {
-                    throw new ArgumentNullException("resolver", "Must have a type resolver to deserialize an object that has an '__type' member");
-                }
-
-                obj = ConvertToType(null, obj);
-            }
-            return obj;
-        }
-
-        internal object DeserializeObjectInternal(string input)
-        {
-            return Json.Deserialize(input, this);
-        }
-
-        internal object DeserializeObjectInternal(TextReader input)
-        {
-            return Json.Deserialize(input, this);
+            return SimpleJson.DeserializeObject(input, null, _serializerStrategy);
         }
 
         public void RegisterConverters(IEnumerable<JavaScriptConverter> converters)
