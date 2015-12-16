@@ -173,6 +173,7 @@
     <Compile Include="Unit\Diagnostics\DiagnosticsHookFixture.cs" />
     <Compile Include="Unit\Diagnostics\InteractiveDiagnosticsFixture.cs" />
     <Compile Include="Unit\ErrorHandling\DefaultStatusCodeHandlerFixture.cs" />
+    <Compile Include="Unit\Extensions\RequestStreamExtensionsFixture.cs" />
     <Compile Include="Unit\Extensions\TypeExtensionsFixture.cs" />
     <Compile Include="Unit\FormatterExtensionsFixture.cs" />
     <Compile Include="Unit\Helpers\HttpUtilityFixture.cs" />
