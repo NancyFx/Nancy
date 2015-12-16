@@ -331,7 +331,8 @@ namespace Nancy.Testing.Tests
             var result = await this.browser.GetAsync(
                              "/session",
                              with => with.HttpRequest());
-
+            
+            //Then
             result.Body.AsString().ShouldEqual("Current session value is: I've created a session!");
         }
 
