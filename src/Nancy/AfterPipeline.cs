@@ -74,7 +74,7 @@ namespace Nancy
             {
                 try
                 {
-                    syncDelegate(ctx);
+                    syncDelegate.Invoke(ctx);
                     return completeTask;
                 }
                 catch (Exception e)
