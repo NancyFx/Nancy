@@ -2,6 +2,7 @@
 {
     using System;
     using System.IO;
+    using System.Linq;
     using System.Security.Claims;
 
     /// <summary>
@@ -75,6 +76,10 @@
         public IHtmlString Partial(string viewName, dynamic modelForPartial)
         {
             var view = this.RenderContext.LocateView(viewName, modelForPartial);
+
+            if (view == null) {
+                throw new ViewNotFoundException(viewName, Engine.Extensions.ToArray());
+            }
 
             var response = this.Engine.RenderView(view, modelForPartial, this.RenderContext, true);
             Action<Stream> action = response.Contents;

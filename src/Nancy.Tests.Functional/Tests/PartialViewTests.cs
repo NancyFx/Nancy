@@ -5,7 +5,7 @@
     using Nancy.Bootstrapper;
     using Nancy.Testing;
     using Nancy.Tests.Functional.Modules;
-
+    using Nancy.ViewEngines;
     using Xunit;
 
     public class PartialViewTests
@@ -42,6 +42,17 @@
             
             // If the index is not the same then the string occurs twice...
             Assert.Equal(firstIndex, lastIndex);
+        }
+
+        [Fact]
+        public void When_Partial_View_Could_Not_Be_Found_An_Meaningful_Exception_Should_Be_Thrown()
+        {
+            Assert.Throws<ViewNotFoundException>(() =>
+            {
+                var response = this.browser.Get(@"/razor-partialnotfound");
+
+                response.Body.AsString();
+            });
         }
     }
 }

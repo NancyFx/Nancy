@@ -160,6 +160,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Views\RazorPageWithUnknownPartial.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Views\_PartialTest.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
