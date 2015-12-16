@@ -7,7 +7,7 @@
     using System.Threading.Tasks;
     using Nancy.Bootstrapper;
     using Nancy.Testing;
-
+    using Nancy.Tests.xUnitExtensions;
     using Xunit;
 
     public class AutoThingsRegistrations : IRegistrations
@@ -56,9 +56,9 @@
     public class NoAppStartupsFixture
     {
         [Fact]
-        public void When_AutoRegistration_Is_Enabled_Should_Throw()
+        public async Task When_AutoRegistration_Is_Enabled_Should_Throw()
         {
-            Assert.Throws<Exception>(() =>
+            var ex = await RecordAsync.Exception(async () =>
             {
                 // Given
                 var bootstrapper = new ConfigurableBootstrapper(config =>
@@ -69,8 +69,11 @@
                 var browser = new Browser(bootstrapper);
 
                 // When
-                browser.GetAsync("/");
+                await browser.GetAsync("/");
             });
+
+            //Then
+            ex.ShouldBeNull();
         }
 
         [Fact]
