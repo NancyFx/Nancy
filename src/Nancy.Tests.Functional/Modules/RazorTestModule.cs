@@ -24,6 +24,13 @@ namespace Nancy.Tests.Functional.Modules
 
                 return serialized;
             };
+
+            Get["/razor-partialnotfound"] = _ =>
+            {
+                this.ViewBag.Name = "Bob";
+
+                return View["RazorPageWithUnknownPartial"];
+            };
         }
     }
 }

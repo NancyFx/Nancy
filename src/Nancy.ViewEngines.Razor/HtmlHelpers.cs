@@ -2,7 +2,8 @@
 {
     using System;
     using System.IO;
-    using Nancy.Security;
+    using System.Linq;
+    using System.Security.Claims;
 
     /// <summary>
     /// Helpers to generate html content.
@@ -75,6 +76,10 @@
         public IHtmlString Partial(string viewName, dynamic modelForPartial)
         {
             var view = this.RenderContext.LocateView(viewName, modelForPartial);
+
+            if (view == null) {
+                throw new ViewNotFoundException(viewName, Engine.Extensions.ToArray());
+            }
 
             var response = this.Engine.RenderView(view, modelForPartial, this.RenderContext, true);
             Action<Stream> action = response.Contents;
