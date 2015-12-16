@@ -76,9 +76,9 @@
         public IHtmlString Partial(string viewName, dynamic modelForPartial)
         {
             var view = this.RenderContext.LocateView(viewName, modelForPartial);
-
-            if (view == null) {
-                throw new ViewNotFoundException(viewName, Engine.Extensions.ToArray());
+            if (view == null)
+            {
+                throw new ViewNotFoundException(viewName, this.Engine.Extensions.ToArray());
             }
 
             var response = this.Engine.RenderView(view, modelForPartial, this.RenderContext, true);
