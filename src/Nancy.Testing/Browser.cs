@@ -181,7 +181,6 @@ namespace Nancy.Testing
         public Task<BrowserResponse> HeadAsync(Url url, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("HEAD", url, browserContext);
-
         }
 
         /// <summary>
