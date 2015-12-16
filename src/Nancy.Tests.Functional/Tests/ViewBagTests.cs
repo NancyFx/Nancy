@@ -27,7 +27,7 @@
         {
             // Given
             // When
-            var response = await browser.Get(
+            var response = await browser.GetAsync(
                 @"/razor-viewbag",
                 with =>
                 {
@@ -43,7 +43,7 @@
         {
             // Given
             // When
-            var response = await this.browser.Get(
+            var response = await this.browser.GetAsync(
                 @"/razor-viewbag",
                 with =>
                 {
@@ -58,7 +58,7 @@
         public async Task Should_serialize_ViewBag()
         {
             // Given
-            var response = await this.browser.Get(
+            var response = await this.browser.GetAsync(
                 @"/razor-viewbag-serialized",
                 with =>
                 {
@@ -78,7 +78,7 @@
         {
             // Given
             // When
-            var response = await this.browser.Head(@"/razor-viewbag");
+            var response = await this.browser.HeadAsync(@"/razor-viewbag");
 
             // Then
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);

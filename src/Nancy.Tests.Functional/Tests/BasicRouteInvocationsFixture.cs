@@ -19,7 +19,7 @@
         {
             // Given
             // When
-            var response = await this.browser.Get("/");
+            var response = await this.browser.GetAsync("/");
 
             // Then
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -32,7 +32,7 @@
         {
             // Given
             // When
-            var response = await this.browser.Get("/invalid");
+            var response = await this.browser.GetAsync("/invalid");
 
             // Then
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -43,7 +43,7 @@
         {
             // Given
             // When
-            var response = await this.browser.Delete("/");
+            var response = await this.browser.DeleteAsync("/");
 
             // Then
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -56,7 +56,7 @@
         {
             // Given
             // When
-            var response = await this.browser.Delete("/invalid");
+            var response = await this.browser.DeleteAsync("/invalid");
 
             // Then
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -67,7 +67,7 @@
         {
             // Given
             // When
-            var response = await this.browser.Post("/");
+            var response = await this.browser.PostAsync("/");
 
             // Then
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -80,7 +80,7 @@
         {
             // Given
             // When
-            var response = await this.browser.Post("/invalid");
+            var response = await this.browser.PostAsync("/invalid");
 
             // Then
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -91,7 +91,7 @@
         {
             // Given
             // When
-            var response = await this.browser.Put("/");
+            var response = await this.browser.PutAsync("/");
 
             // Then
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -104,7 +104,7 @@
         {
             // Given
             // When
-            var response = await this.browser.Put("/invalid");
+            var response = await this.browser.PutAsync("/invalid");
 
             // Then
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -115,7 +115,7 @@
         {
             // Given
             // When
-            var response = await this.browser.Head("/");
+            var response = await this.browser.HeadAsync("/");
 
             // Then
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -128,7 +128,7 @@
         {
             // Given
             // When
-            var response = await this.browser.Head("/invalid");
+            var response = await this.browser.HeadAsync("/invalid");
 
             // Then
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -188,7 +188,7 @@
             var browser = new Browser(with => with.Module<BasicRouteInvocationsModuleWithHead>());
 
             // When
-            var response = await browser.Head("/");
+            var response = await browser.HeadAsync("/");
 
             // Then
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);

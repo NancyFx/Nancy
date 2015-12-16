@@ -16,7 +16,7 @@ namespace Nancy.Testing.Tests.TestingViewExtensions
             });
 
             // Act
-            var response = await browser.Get("/a/long/path/getModulePath");
+            var response = await browser.GetAsync("/a/long/path/getModulePath");
 
             // Assert
             Assert.Equal("/a/long/path", response.GetModulePath());
@@ -33,7 +33,7 @@ namespace Nancy.Testing.Tests.TestingViewExtensions
             });
 
             // Act
-            var response = await browser.Get("/getModulePath");
+            var response = await browser.GetAsync("/getModulePath");
 
             // Assert
             Assert.Equal("", response.GetModulePath());

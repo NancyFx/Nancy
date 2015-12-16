@@ -19,28 +19,28 @@ namespace Nancy.Testing.Tests.TestingViewExtensions
         [Fact]
         public async Task should_return_null_when_model_is_not_set()
         {
-            var response = await this._browser.Get("/testingViewFactoryNoModel");
+            var response = await this._browser.GetAsync("/testingViewFactoryNoModel");
             Assert.Null(response.GetModel<ViewFactoryTestModel>());
         }
         
         [Fact]
         public async Task should_not_return_null_when_model_is_set()
         {
-            var response = await this._browser.Get("/testingViewFactory");
+            var response = await this._browser.GetAsync("/testingViewFactory");
             Assert.NotNull(response.GetModel<ViewFactoryTestModel>());
         }
         
         [Fact]
         public async Task should_return_model_of_correct_type()
         {
-            var response = await this._browser.Get("/testingViewFactory");            
+            var response = await this._browser.GetAsync("/testingViewFactory");            
             Assert.IsType<ViewFactoryTestModel>(response.GetModel<ViewFactoryTestModel>());
         }
 
         [Fact]
         public async Task should_set_values_correct_on_the_model()
         {
-            var response = await this._browser.Get("/testingViewFactory");
+            var response = await this._browser.GetAsync("/testingViewFactory");
             var model = response.GetModel<ViewFactoryTestModel>();
             Assert.Equal("A value", model.AString);
         }
@@ -48,7 +48,7 @@ namespace Nancy.Testing.Tests.TestingViewExtensions
         [Fact]
         public async Task should_set_values_correct_on_a_complex_model()
         {
-            var response = await this._browser.Get("/testingViewFactory");
+            var response = await this._browser.GetAsync("/testingViewFactory");
             var model = response.GetModel<ViewFactoryTestModel>();
             Assert.Equal("Another value", model.ComplexModel.AnotherString);
         }

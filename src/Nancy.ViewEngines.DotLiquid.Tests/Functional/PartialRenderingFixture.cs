@@ -25,7 +25,7 @@ namespace Nancy.ViewEngines.DotLiquid.Tests.Functional
         {
             // Given
             // When
-            var result = await this.browser.Get("/unquotedpartial");
+            var result = await this.browser.GetAsync("/unquotedpartial");
 
             // Then
             Assert.Equal(result.StatusCode, HttpStatusCode.OK);
@@ -37,7 +37,7 @@ namespace Nancy.ViewEngines.DotLiquid.Tests.Functional
         {
             // Given
             // When
-            var result = await this.browser.Get("/singlequotedpartial");
+            var result = await this.browser.GetAsync("/singlequotedpartial");
 
             // Then
             Assert.Equal(result.StatusCode, HttpStatusCode.OK);
@@ -49,7 +49,7 @@ namespace Nancy.ViewEngines.DotLiquid.Tests.Functional
         {
             // Given
             // When
-            var result = await this.browser.Get("/doublequotedpartial");
+            var result = await this.browser.GetAsync("/doublequotedpartial");
 
             // Then
             Assert.Equal(result.StatusCode, HttpStatusCode.OK);

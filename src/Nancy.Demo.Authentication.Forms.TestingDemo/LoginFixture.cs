@@ -20,7 +20,7 @@ namespace Nancy.Demo.Authentication.Forms.TestingDemo
         public async Task Should_redirect_to_login_with_error_querystring_if_username_or_password_incorrect()
         {
             // Given, When
-            var response = await browser.Post("/login/", (with) =>
+            var response = await browser.PostAsync("/login/", (with) =>
             {
                 with.HttpRequest();
                 with.FormValue("Username", "username");
@@ -34,7 +34,7 @@ namespace Nancy.Demo.Authentication.Forms.TestingDemo
         public async Task Should_display_error_message_when_error_passed()
         {
             // Given, When
-            var response = await browser.Get("/login", (with) =>
+            var response = await browser.GetAsync("/login", (with) =>
                 {
                     with.HttpRequest();
                     with.Query("error", "true");

@@ -13,7 +13,7 @@
         {
             //Given, When
             var browser = InitBrowser(caseSensitive: false);
-            var result = await browser.Get("/");
+            var result = await browser.GetAsync("/");
 
             //Then
             result.Body.AsString().ShouldEqual("Root");
@@ -24,7 +24,7 @@
         {
             //Given, When
             var browser = InitBrowser(caseSensitive: false);
-            var result = await browser.Post("/");
+            var result = await browser.PostAsync("/");
 
             //Then
             result.Body.AsString().ShouldEqual("PostRoot");
@@ -39,7 +39,7 @@
         {
             //Given, When
             var browser = InitBrowser(caseSensitive);
-            var result = await browser.Get(path);
+            var result = await browser.GetAsync(path);
 
             //Then
             if (ShouldBeFound(path, caseSensitive))
@@ -61,7 +61,7 @@
         {
             //Given, When
             var browser = InitBrowser(caseSensitive);
-            var result = await browser.Get(path);
+            var result = await browser.GetAsync(path);
 
             //Then
             if (ShouldBeFound(path, caseSensitive))
@@ -83,7 +83,7 @@
         {
             //Given, When
             var browser = InitBrowser(caseSensitive);
-            var result = await browser.Get(path);
+            var result = await browser.GetAsync(path);
 
             //Then
             if (ShouldBeFound(path, caseSensitive))
@@ -105,7 +105,7 @@
         {
             //Given, When
             var browser = InitBrowser(caseSensitive);
-            var result = await browser.Get(path);
+            var result = await browser.GetAsync(path);
 
             //Then
             if (ShouldBeFound(path, caseSensitive))
@@ -127,7 +127,7 @@
         {
             //Given, When
             var browser = InitBrowser(caseSensitive);
-            var result = await browser.Get(path);
+            var result = await browser.GetAsync(path);
 
             //Then
             if (ShouldBeFound(path, caseSensitive))
@@ -149,7 +149,7 @@
         {
             //Given, When
             var browser = InitBrowser(caseSensitive);
-            var result = await browser.Get(path);
+            var result = await browser.GetAsync(path);
 
             //Then
             if (ShouldBeFound(path, caseSensitive))
@@ -171,7 +171,7 @@
         {
             //Given, When
             var browser = InitBrowser(caseSensitive);
-            var result = await browser.Get(path);
+            var result = await browser.GetAsync(path);
 
             //Then
             if (ShouldBeFound(path, caseSensitive))
@@ -193,7 +193,7 @@
         {
             //Given, When
             var browser = InitBrowser(caseSensitive);
-            var result = await browser.Get(path);
+            var result = await browser.GetAsync(path);
 
             //Then
             if (ShouldBeFound(path, caseSensitive))
@@ -215,7 +215,7 @@
         {
             //Given, When
             var browser = InitBrowser(caseSensitive);
-            var result = await browser.Get(path);
+            var result = await browser.GetAsync(path);
 
             //Then
             if (ShouldBeFound(path, caseSensitive))
@@ -237,7 +237,7 @@
         {
             //Given, When
             var browser = InitBrowser(caseSensitive);
-            var result = await browser.Get(path);
+            var result = await browser.GetAsync(path);
 
             //Then
             if (ShouldBeFound(path, caseSensitive))
@@ -259,7 +259,7 @@
         {
             //Given, When
             var browser = InitBrowser(caseSensitive);
-            var result = await browser.Get(path);
+            var result = await browser.GetAsync(path);
 
             //Then
             if (ShouldBeFound(path, caseSensitive))
@@ -281,7 +281,7 @@
         {
             //Given, When
             var browser = InitBrowser(caseSensitive);
-            var result = await browser.Get(path);
+            var result = await browser.GetAsync(path);
 
             //Then
             if (ShouldBeFound(path, caseSensitive))
@@ -303,7 +303,7 @@
         {
             //Given, When
             var browser = InitBrowser(caseSensitive);
-            var result = await browser.Get(path);
+            var result = await browser.GetAsync(path);
 
             //Then
             if (ShouldBeFound(path, caseSensitive))
@@ -321,7 +321,7 @@
         {
             //Given, When
             var browser = InitBrowser(caseSensitive: false);
-            var result = await browser.Head("/");
+            var result = await browser.HeadAsync("/");
 
             //Then
             result.StatusCode.ShouldEqual(HttpStatusCode.OK);
@@ -333,7 +333,7 @@
         {
             //Given, When
             var browser = InitBrowser(caseSensitive: false);
-            var result = await browser.Options("/");
+            var result = await browser.OptionsAsync("/");
 
             //Then
             result.StatusCode.ShouldEqual(HttpStatusCode.OK);
@@ -348,7 +348,7 @@
             var browser = new Browser(with => with.Module<NoRootModule>());
 
             //When
-            var result = await browser.Get("/");
+            var result = await browser.GetAsync("/");
 
             //Then
             result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
@@ -362,7 +362,7 @@
             var browser = new Browser(with => with.Module<MethodNotAllowedModule>());
 
             // When
-            var result = await browser.Get("/");
+            var result = await browser.GetAsync("/");
 
             // Then
             result.StatusCode.ShouldEqual(HttpStatusCode.MethodNotAllowed);
@@ -376,7 +376,7 @@
             var browser = new Browser(with => with.Module<MethodNotAllowedModule>());
 
             // When
-            var result = await browser.Get("/");
+            var result = await browser.GetAsync("/");
 
             // Then
             result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
@@ -390,7 +390,7 @@
             var browser = new Browser(with => with.Module<MethodNotAllowedModule>());
 
             // When
-            var result = await browser.Get("/");
+            var result = await browser.GetAsync("/");
 
             // Then
             result.Headers["Allow"].ShouldEqual("DELETE, POST");

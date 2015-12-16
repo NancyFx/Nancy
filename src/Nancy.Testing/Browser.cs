@@ -17,7 +17,6 @@ namespace Nancy.Testing
     public class Browser : IHideObjectMembers
     {
         private readonly Action<BrowserContext> defaultBrowserContext;
-        private readonly INancyBootstrapper bootstrapper;
         private readonly INancyEngine engine;
         private readonly INancyEnvironment environment;
 
@@ -41,10 +40,9 @@ namespace Nancy.Testing
         /// <param name="defaults">The default <see cref="BrowserContext"/> that should be used in a all requests through this browser object.</param>
         public Browser(INancyBootstrapper bootstrapper, Action<BrowserContext> defaults = null)
         {
-            this.bootstrapper = bootstrapper;
-            this.bootstrapper.Initialise();
-            this.engine = this.bootstrapper.GetEngine();
-            this.environment = this.bootstrapper.GetEnvironment();
+            bootstrapper.Initialise();
+            this.engine = bootstrapper.GetEngine();
+            this.environment = bootstrapper.GetEnvironment();
             this.defaultBrowserContext = defaults ?? DefaultBrowserContext;
         }
 
@@ -54,7 +52,7 @@ namespace Nancy.Testing
         /// <param name="path">The path that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public Task<BrowserResponse> Delete(string path, Action<BrowserContext> browserContext = null)
+        public Task<BrowserResponse> DeleteAsync(string path, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("DELETE", path, browserContext);
         }
@@ -65,7 +63,7 @@ namespace Nancy.Testing
         /// <param name="url">The url that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public Task<BrowserResponse> Delete(Url url, Action<BrowserContext> browserContext = null)
+        public Task<BrowserResponse> DeleteAsync(Url url, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("DELETE", url, browserContext);
         }
@@ -76,7 +74,7 @@ namespace Nancy.Testing
         /// <param name="path">The path that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public Task<BrowserResponse> Get(string path, Action<BrowserContext> browserContext = null)
+        public Task<BrowserResponse> GetAsync(string path, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("GET", path, browserContext);
         }
@@ -87,7 +85,7 @@ namespace Nancy.Testing
         /// <param name="url">The url that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public Task<BrowserResponse> Get(Url url, Action<BrowserContext> browserContext = null)
+        public Task<BrowserResponse> GetAsync(Url url, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("GET", url, browserContext);
         }
@@ -98,7 +96,7 @@ namespace Nancy.Testing
         /// <param name="path">The path that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public Task<BrowserResponse> Head(string path, Action<BrowserContext> browserContext = null)
+        public Task<BrowserResponse> HeadAsync(string path, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("HEAD", path, browserContext);
         }
@@ -109,9 +107,10 @@ namespace Nancy.Testing
         /// <param name="url">The url that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public Task<BrowserResponse> Head(Url url, Action<BrowserContext> browserContext = null)
+        public Task<BrowserResponse> HeadAsync(Url url, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("HEAD", url, browserContext);
+
         }
 
         /// <summary>
@@ -120,7 +119,7 @@ namespace Nancy.Testing
         /// <param name="path">The path that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public Task<BrowserResponse> Options(string path, Action<BrowserContext> browserContext = null)
+        public Task<BrowserResponse> OptionsAsync(string path, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("OPTIONS", path, browserContext);
         }
@@ -131,7 +130,7 @@ namespace Nancy.Testing
         /// <param name="url">The url that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public Task<BrowserResponse> Options(Url url, Action<BrowserContext> browserContext = null)
+        public Task<BrowserResponse> OptionsAsync(Url url, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("OPTIONS", url, browserContext);
         }
@@ -142,7 +141,7 @@ namespace Nancy.Testing
         /// <param name="path">The path that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public Task<BrowserResponse> Patch(string path, Action<BrowserContext> browserContext = null)
+        public Task<BrowserResponse> PatchAsync(string path, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("PATCH", path, browserContext);
         }
@@ -153,7 +152,7 @@ namespace Nancy.Testing
         /// <param name="url">The url that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public Task<BrowserResponse> Patch(Url url, Action<BrowserContext> browserContext = null)
+        public Task<BrowserResponse> PatchAsync(Url url, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("PATCH", url, browserContext);
         }
@@ -164,7 +163,7 @@ namespace Nancy.Testing
         /// <param name="path">The path that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public Task<BrowserResponse> Post(string path, Action<BrowserContext> browserContext = null)
+        public Task<BrowserResponse> PostAsync(string path, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("POST", path, browserContext);
         }
@@ -175,7 +174,7 @@ namespace Nancy.Testing
         /// <param name="url">The url that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public Task<BrowserResponse> Post(Url url, Action<BrowserContext> browserContext = null)
+        public Task<BrowserResponse> PostAsync(Url url, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("POST", url, browserContext);
         }
@@ -186,7 +185,7 @@ namespace Nancy.Testing
         /// <param name="path">The path that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public Task<BrowserResponse> Put(string path, Action<BrowserContext> browserContext = null)
+        public Task<BrowserResponse> PutAsync(string path, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("PUT", path, browserContext);
         }
@@ -198,7 +197,7 @@ namespace Nancy.Testing
         /// <param name="url">The url that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public Task<BrowserResponse> Put(Url url, Action<BrowserContext> browserContext = null)
+        public Task<BrowserResponse> PutAsync(Url url, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("PUT", url, browserContext);
         }

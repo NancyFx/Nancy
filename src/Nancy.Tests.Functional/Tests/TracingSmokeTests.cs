@@ -27,7 +27,7 @@
         {
             // Given
             // When
-            var response = await browser.Get(
+            var response = await browser.GetAsync(
                 @"/tracing/razor-viewbag",
                 with =>
                 {

@@ -15,9 +15,9 @@
             var browser = new Browser(with => with.Module<CookieModule>());
 
             // When
-            await browser.Get("/setcookie");
+            await browser.GetAsync("/setcookie");
                 
-            var result = await browser.Get("/getcookie");
+            var result = await browser.GetAsync("/getcookie");
 
             // Then
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);

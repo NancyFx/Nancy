@@ -25,7 +25,7 @@
         [Fact]
         public async Task When_get_sync_then_should_throw()
         {
-            var ex = await RecordAsync.Exception(async () => await this.browser.Get("/sync"));
+            var ex = await RecordAsync.Exception(async () => await this.browser.GetAsync("/sync"));
 
             Assert.NotNull(ex);
         }
@@ -33,7 +33,7 @@
         [Fact]
         public async Task When_get_async_then_should_throw()
         {
-            var ex = await RecordAsync.Exception(async () => await this.browser.Get("/sync"));
+            var ex = await RecordAsync.Exception(async () => await this.browser.GetAsync("/sync"));
 
             Assert.NotNull(ex);
         }

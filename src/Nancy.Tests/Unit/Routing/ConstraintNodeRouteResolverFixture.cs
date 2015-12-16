@@ -22,7 +22,7 @@
         public async Task Should_resolve_int_constraint()
         {
             // When
-            var result = await this.browser.Get("/intConstraint/1");
+            var result = await this.browser.GetAsync("/intConstraint/1");
 
             // Then
             result.Body.AsString().ShouldEqual("IntConstraint");
@@ -32,7 +32,7 @@
         public async Task When_int_is_larger_than_max_int_should_has_no_match()
         {
             // When
-            var result = await this.browser.Get("/intConstraint/" + long.MaxValue);
+            var result = await this.browser.GetAsync("/intConstraint/" + long.MaxValue);
 
             // Then
             result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
@@ -43,7 +43,7 @@
         public async Task Should_resolve_long_constraint()
         {
             // When
-            var result = await this.browser.Get("/longConstraint/" + long.MaxValue);
+            var result = await this.browser.GetAsync("/longConstraint/" + long.MaxValue);
 
             // Then
             result.Body.AsString().ShouldEqual("LongConstraint");
@@ -53,7 +53,7 @@
         public async Task Should_not_resolve_int_constraint()
         {
             // When
-            var result = await this.browser.Get("/intConstraint/foo");
+            var result = await this.browser.GetAsync("/intConstraint/foo");
 
             // Then
             result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
@@ -63,7 +63,7 @@
         public async Task Should_resolve_decimal_constraint()
         {
             // When
-            var result = await this.browser.Get("/decimalConstraint/1.1");
+            var result = await this.browser.GetAsync("/decimalConstraint/1.1");
 
             // Then
             result.Body.AsString().ShouldEqual("DecimalConstraint");
@@ -73,7 +73,7 @@
         public async Task Should_not_resolve_decimal_constraint()
         {
             // When
-            var result = await this.browser.Get("/decimalConstraint/foo");
+            var result = await this.browser.GetAsync("/decimalConstraint/foo");
 
             // Then
             result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
@@ -83,7 +83,7 @@
         public async Task Should_resolve_guid_constraint()
         {
             // When
-            var result = await this.browser.Get("/guidConstraint/87f8df5d-3c08-49fd-8961-d85b0984e006");
+            var result = await this.browser.GetAsync("/guidConstraint/87f8df5d-3c08-49fd-8961-d85b0984e006");
 
             // Then
             result.Body.AsString().ShouldEqual("GuidConstraint");
@@ -93,7 +93,7 @@
         public async Task Should_not_resolve_guid_constraint()
         {
             // When
-            var result = await this.browser.Get("/guidConstraint/87f8df5d-3c08-49fd-8961-d85b0984e006d");
+            var result = await this.browser.GetAsync("/guidConstraint/87f8df5d-3c08-49fd-8961-d85b0984e006d");
 
             // Then
             result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
@@ -103,7 +103,7 @@
         public async Task Should_resolve_bool_constraint()
         {
             // When
-            var result = await this.browser.Get("/boolConstraint/true");
+            var result = await this.browser.GetAsync("/boolConstraint/true");
 
             // Then
             result.Body.AsString().ShouldEqual("BoolConstraint");
@@ -113,7 +113,7 @@
         public async Task Should_not_resolve_bool_constraint()
         {
             // When
-            var result = await this.browser.Get("/boolConstraint/foo");
+            var result = await this.browser.GetAsync("/boolConstraint/foo");
 
             // Then
             result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
@@ -123,7 +123,7 @@
         public async Task Should_resolve_alpha_constraint()
         {
             // When
-            var result = await this.browser.Get("/alphaConstraint/foo");
+            var result = await this.browser.GetAsync("/alphaConstraint/foo");
 
             // Then
             result.Body.AsString().ShouldEqual("AlphaConstraint");
@@ -133,7 +133,7 @@
         public async Task Should_not_resolve_alpha_constraint()
         {
             // When
-            var result = await this.browser.Get("/alphaConstraint/1");
+            var result = await this.browser.GetAsync("/alphaConstraint/1");
 
             // Then
             result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
@@ -145,7 +145,7 @@
             // When
             var dateTime = new DateTime(2010, 1, 2, 3, 4, 5, 6);
             var urlEncodeDateTime = HttpUtility.UrlEncode(dateTime.ToString("yyyy-MM-dd hh:mm:ss", CultureInfo.InvariantCulture));
-            var result = await this.browser.Get("/datetimeConstraint/" + urlEncodeDateTime);
+            var result = await this.browser.GetAsync("/datetimeConstraint/" + urlEncodeDateTime);
 
             // Then
             result.Body.AsString().ShouldEqual("2010-01-02 03:04:05");
@@ -155,7 +155,7 @@
         public async Task Should_not_resolve_datetime_constraint()
         {
             // When
-            var result = await this.browser.Get("/DateTimeConstraint/1");
+            var result = await this.browser.GetAsync("/DateTimeConstraint/1");
 
             // Then
             result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
@@ -165,7 +165,7 @@
         public async Task Should_resolve_min_constraint()
         {
             // When
-            var result = await this.browser.Get("/minConstraint/5");
+            var result = await this.browser.GetAsync("/minConstraint/5");
 
             // Then
             result.Body.AsString().ShouldEqual("MinConstraint");
@@ -175,7 +175,7 @@
         public async Task Should_not_resolve_min_constraint()
         {
             // When
-            var result = await this.browser.Get("/minConstraint/1");
+            var result = await this.browser.GetAsync("/minConstraint/1");
 
             // Then
             result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
@@ -185,7 +185,7 @@
         public async Task Should_resolve_custom_datetime_constraint()
         {
             // When
-            var result = await this.browser.Get("/customDatetimeConstraint/2013-10-02");
+            var result = await this.browser.GetAsync("/customDatetimeConstraint/2013-10-02");
 
             // Then
             result.Body.AsString().ShouldEqual("CustomDateTimeConstraint");
@@ -195,7 +195,7 @@
         public async Task Should_not_resolve_custom_datetime_constraint()
         {
             // When
-            var result = await this.browser.Get("/customDatetimeConstraint/2013-20-02");
+            var result = await this.browser.GetAsync("/customDatetimeConstraint/2013-20-02");
 
             // Then
             result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
@@ -205,7 +205,7 @@
         public async Task Should_not_resolve_min_constraint_as_string()
         {
             // When
-            var result = await this.browser.Get("/minConstraint/foo");
+            var result = await this.browser.GetAsync("/minConstraint/foo");
 
             // Then
             result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
@@ -215,7 +215,7 @@
         public async Task Should_resolve_max_constraint()
         {
             // When
-            var result = await this.browser.Get("/maxConstraint/4");
+            var result = await this.browser.GetAsync("/maxConstraint/4");
 
             // Then
             result.Body.AsString().ShouldEqual("MaxConstraint");
@@ -225,7 +225,7 @@
         public async Task Should_not_resolve_max_constraint()
         {
             // When
-            var result = await this.browser.Get("/maxConstraint/7");
+            var result = await this.browser.GetAsync("/maxConstraint/7");
 
             // Then
             result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
@@ -235,7 +235,7 @@
         public async Task Should_not_resolve_max_constraint_as_string()
         {
             // When
-            var result = await this.browser.Get("/maxConstraint/foo");
+            var result = await this.browser.GetAsync("/maxConstraint/foo");
 
             // Then
             result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
@@ -245,7 +245,7 @@
         public async Task Should_resolve_range_constraint()
         {
             // When
-            var result = await this.browser.Get("/rangeConstraint/15");
+            var result = await this.browser.GetAsync("/rangeConstraint/15");
 
             // Then
             result.Body.AsString().ShouldEqual("RangeConstraint");
@@ -255,7 +255,7 @@
         public async Task Should_not_resolve_range_constraint_as_too_low()
         {
             // When
-            var result = await this.browser.Get("/rangeConstraint/1");
+            var result = await this.browser.GetAsync("/rangeConstraint/1");
 
             // Then
             result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
@@ -265,7 +265,7 @@
         public async Task Should_not_resolve_range_constraint_as_too_high()
         {
             // When
-            var result = await this.browser.Get("/rangeConstraint/30");
+            var result = await this.browser.GetAsync("/rangeConstraint/30");
 
             // Then
             result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
@@ -275,7 +275,7 @@
         public async Task Should_not_resolve_range_constraint_as_string()
         {
             // When
-            var result = await this.browser.Get("/rangeConstraint/foo");
+            var result = await this.browser.GetAsync("/rangeConstraint/foo");
 
             // Then
             result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
@@ -285,7 +285,7 @@
         public async Task Should_resolve_minlength_constraint()
         {
             // When
-            var result = await this.browser.Get("/minlengthConstraint/foobar");
+            var result = await this.browser.GetAsync("/minlengthConstraint/foobar");
 
             // Then
             result.Body.AsString().ShouldEqual("MinLengthConstraint");
@@ -295,7 +295,7 @@
         public async Task Should_not_resolve_minlength_constraint()
         {
             // When
-            var result = await this.browser.Get("/minLengthConstraint/foo");
+            var result = await this.browser.GetAsync("/minLengthConstraint/foo");
 
             // Then
             result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
@@ -305,7 +305,7 @@
         public async Task Should_resolve_maxlength_constraint()
         {
             // When
-            var result = await this.browser.Get("/maxlengthConstraint/foobar");
+            var result = await this.browser.GetAsync("/maxlengthConstraint/foobar");
 
             // Then
             result.Body.AsString().ShouldEqual("MaxLengthConstraint");
@@ -315,7 +315,7 @@
         public async Task Should_not_resolve_maxlength_constraint()
         {
             // When
-            var result = await this.browser.Get("/maxlengthConstraint/foobarfoobar");
+            var result = await this.browser.GetAsync("/maxlengthConstraint/foobarfoobar");
 
             // Then
             result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
@@ -325,7 +325,7 @@
         public async Task Should_resolve_length_constraint_max_only()
         {
             // When
-            var result = await this.browser.Get("/lengthMaxOnlyConstraint/foobarfoobar");
+            var result = await this.browser.GetAsync("/lengthMaxOnlyConstraint/foobarfoobar");
 
             // Then
             result.Body.AsString().ShouldEqual("LengthMaxOnlyConstraint");
@@ -335,7 +335,7 @@
         public async Task Should_not_resolve_range_constraint_max_only_as_too_high()
         {
             // When
-            var result = await this.browser.Get("/lengthMaxOnlyConstraint/foobarfoobarfoobarfoobar");
+            var result = await this.browser.GetAsync("/lengthMaxOnlyConstraint/foobarfoobarfoobarfoobar");
 
             // Then
             result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
@@ -345,7 +345,7 @@
         public async Task Should_resolve_length_constraint()
         {
             // When
-            var result = await this.browser.Get("/lengthConstraint/foobar");
+            var result = await this.browser.GetAsync("/lengthConstraint/foobar");
 
             // Then
             result.Body.AsString().ShouldEqual("LengthConstraint");
@@ -355,7 +355,7 @@
         public async Task Should_not_resolve_length_constraint_as_too_low()
         {
             // When
-            var result = await this.browser.Get("/lengthConstraint/foo");
+            var result = await this.browser.GetAsync("/lengthConstraint/foo");
 
             // Then
             result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
@@ -365,7 +365,7 @@
         public async Task Should_not_resolve_length_constraint_as_too_high()
         {
             // When
-            var result = await this.browser.Get("/lengthConstraint/foobarfoobarfoobarfoobar");
+            var result = await this.browser.GetAsync("/lengthConstraint/foobarfoobarfoobarfoobar");
 
             // Then
             result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
@@ -375,7 +375,7 @@
         public async Task Should_be_case_insensitive()
         {
             // When
-            var result = await this.browser.Get("/caseInsensitive/foobarfoobar");
+            var result = await this.browser.GetAsync("/caseInsensitive/foobarfoobar");
 
             // Then
             result.Body.AsString().ShouldEqual("CaseInsensitive");

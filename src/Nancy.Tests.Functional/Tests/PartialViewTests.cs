@@ -5,6 +5,7 @@
     using Nancy.Bootstrapper;
     using Nancy.Testing;
     using Nancy.Tests.Functional.Modules;
+    using Nancy.Tests.xUnitExtensions;
     using Nancy.ViewEngines;
     using Xunit;
 
@@ -27,7 +28,7 @@
         {
             // Given
             // When
-            var response = await browser.Get(
+            var response = await browser.GetAsync(
                 @"/razor-viewbag",
                 with =>
                 {
@@ -45,14 +46,16 @@
         }
 
         [Fact]
-        public void When_Partial_View_Could_Not_Be_Found_An_Meaningful_Exception_Should_Be_Thrown()
+        public async Task When_Partial_View_Could_Not_Be_Found_An_Meaningful_Exception_Should_Be_Thrown()
         {
-            Assert.Throws<ViewNotFoundException>(() =>
+            var ex = await RecordAsync.Exception(async () =>
             {
-                var response = this.browser.Get(@"/razor-partialnotfound");
+                var response = await this.browser.GetAsync(@"/razor-partialnotfound");
 
                 response.Body.AsString();
             });
+
+            Assert.IsType<ViewNotFoundException>(ex);
         }
     }
 }
