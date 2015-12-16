@@ -55,7 +55,7 @@ namespace Nancy.Testing
         [Obsolete("Use async overload instead.", false)]
         public BrowserResponse Delete(string path, Action<BrowserContext> browserContext = null)
         {
-            return this.DeleteAsync(path, browserContext).Result;
+            return this.DeleteAsync(path, browserContext).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace Nancy.Testing
         [Obsolete("Use async overload instead.", false)]
         public BrowserResponse Delete(Url url, Action<BrowserContext> browserContext = null)
         {
-            return this.DeleteAsync(url, browserContext).Result;
+            return this.DeleteAsync(url, browserContext).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace Nancy.Testing
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
         public BrowserResponse Get(string path, Action<BrowserContext> browserContext = null)
         {
-            return this.GetAsync(path, browserContext).Result;
+            return this.GetAsync(path, browserContext).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace Nancy.Testing
         [Obsolete("Use async overload instead.", false)]
         public BrowserResponse Get(Url url, Action<BrowserContext> browserContext = null)
         {
-            return this.GetAsync(url, browserContext).Result;
+            return this.GetAsync(url, browserContext).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -146,7 +146,7 @@ namespace Nancy.Testing
         [Obsolete("Use async overload instead.", false)]
         public BrowserResponse Head(string path, Action<BrowserContext> browserContext = null)
         {
-            return this.HeadAsync(path, browserContext).Result;
+            return this.HeadAsync(path, browserContext).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -158,7 +158,7 @@ namespace Nancy.Testing
         [Obsolete("Use async overload instead.", false)]
         public BrowserResponse Head(Url url, Action<BrowserContext> browserContext = null)
         {
-            return this.HeadAsync(url, browserContext).Result;
+            return this.HeadAsync(url, browserContext).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -192,7 +192,7 @@ namespace Nancy.Testing
         [Obsolete("Use async overload instead.", false)]
         public BrowserResponse Options(string path, Action<BrowserContext> browserContext = null)
         {
-            return this.OptionsAsync(path, browserContext).Result;
+            return this.OptionsAsync(path, browserContext).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -204,7 +204,7 @@ namespace Nancy.Testing
         [Obsolete("Use async overload instead.", false)]
         public BrowserResponse Options(Url url, Action<BrowserContext> browserContext = null)
         {
-            return this.OptionsAsync(url, browserContext).Result;
+            return this.OptionsAsync(url, browserContext).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -238,7 +238,7 @@ namespace Nancy.Testing
         [Obsolete("Use async overload instead.", false)]
         public BrowserResponse Patch(string path, Action<BrowserContext> browserContext = null)
         {
-            return this.PatchAsync(path, browserContext).Result;
+            return this.PatchAsync(path, browserContext).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -250,7 +250,7 @@ namespace Nancy.Testing
         [Obsolete("Use async overload instead.", false)]
         public BrowserResponse Patch(Url url, Action<BrowserContext> browserContext = null)
         {
-            return this.PatchAsync(url, browserContext).Result;
+            return this.PatchAsync(url, browserContext).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -284,7 +284,7 @@ namespace Nancy.Testing
         [Obsolete("Use async overload instead.", false)]
         public BrowserResponse Post(string path, Action<BrowserContext> browserContext = null)
         {
-            return this.PostAsync(path, browserContext).Result;
+            return this.PostAsync(path, browserContext).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -296,7 +296,7 @@ namespace Nancy.Testing
         [Obsolete("Use async overload instead.", false)]
         public BrowserResponse Post(Url url, Action<BrowserContext> browserContext = null)
         {
-            return this.PostAsync(url, browserContext).Result;
+            return this.PostAsync(url, browserContext).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -330,7 +330,7 @@ namespace Nancy.Testing
         [Obsolete("Use async overload instead.", false)]
         public BrowserResponse Put(string path, Action<BrowserContext> browserContext = null)
         {
-            return this.PutAsync(path, browserContext).Result;
+            return this.PutAsync(path, browserContext).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -342,7 +342,7 @@ namespace Nancy.Testing
         [Obsolete("Use async overload instead.", false)]
         public BrowserResponse Put(Url url, Action<BrowserContext> browserContext = null)
         {
-            return this.PutAsync(url, browserContext).Result;
+            return this.PutAsync(url, browserContext).GetAwaiter().GetResult();
         }
 
         /// <summary>
