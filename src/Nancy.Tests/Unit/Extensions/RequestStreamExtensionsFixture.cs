@@ -1,10 +1,9 @@
 ﻿namespace Nancy.Tests.Unit.Extensions
 {
-    using System.Collections.Generic;
-
+    using System.IO;
+    using System.Text;
     using Nancy.Extensions;
-    using Nancy.Tests.Fakes;
-
+    using Nancy.IO;
     using Xunit;
 
     public class RequestStreamExtensionsFixture
@@ -12,24 +11,23 @@
         [Fact]
         public void AsString_should_always_start_from_position_0_and_reset_it_afterwards()
         {
-            // Given 
-            var innerStream = new System.IO.MemoryStream();
-            var streamWriter = new System.IO.StreamWriter(innerStream, System.Text.Encoding.UTF8);
+            // Given
+            using (var innerStream = new MemoryStream())
+            using (var streamWriter = new StreamWriter(innerStream, Encoding.UTF8) { AutoFlush = true })
+            {
+                streamWriter.Write("fake request body");
 
-            streamWriter.Write("fake request body");
-            streamWriter.Flush();
+                var requestStream = RequestStream.FromStream(innerStream);
 
-            var requestStream = Nancy.IO.RequestStream.FromStream(innerStream);
+                var initialPosition = requestStream.Position = 3;
 
-            long initialPosition = 3;
-            requestStream.Position = initialPosition;
+                // When
+                var result = requestStream.AsString(Encoding.UTF8);
 
-            // When
-            string result = requestStream.AsString(System.Text.Encoding.UTF8);
-
-            // Then
-            Assert.Equal("fake request body", result);
-            Assert.Equal(initialPosition, requestStream.Position);
+                // Then
+                Assert.Equal("fake request body", result);
+                Assert.Equal(initialPosition, requestStream.Position);
+            }
         }
     }
 }
