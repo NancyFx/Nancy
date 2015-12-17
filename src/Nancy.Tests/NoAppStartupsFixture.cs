@@ -73,7 +73,7 @@
             });
 
             //Then
-            ex.ShouldBeNull();
+            ex.ShouldNotBeNull();
         }
 
         [Fact]
