@@ -54,11 +54,9 @@ namespace Nancy
 
         public async Task Invoke(NancyContext context, CancellationToken cancellationToken)
         {
-            var enumerator = this.PipelineDelegates.GetEnumerator();
-
-            while (enumerator.MoveNext())
+            foreach (var pipelineDelegate in this.PipelineDelegates)
             {
-                await enumerator.Current(context, cancellationToken).ConfigureAwait(false);
+                await pipelineDelegate.Invoke(context, cancellationToken).ConfigureAwait(false);
             }
         }
 
