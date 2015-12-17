@@ -69,7 +69,7 @@
                 var browser = new Browser(bootstrapper);
 
                 // When
-                await browser.GetAsync("/");
+                await browser.Get("/");
             });
 
             //Then
@@ -89,7 +89,7 @@
             var browser = new Browser(bootstrapper);
 
             // When
-            var result = await browser.GetAsync("/");
+            var result = await browser.Get("/");
 
             // Then
             result.Body.AsString().ShouldEqual("disabled auto registration works");

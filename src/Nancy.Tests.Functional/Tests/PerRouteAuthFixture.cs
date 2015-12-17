@@ -15,7 +15,7 @@
         {
             var browser = new Browser(with => with.Module<PerRouteAuthModule>());
 
-            var result = await browser.GetAsync("/nonsecured");
+            var result = await browser.Get("/nonsecured");
 
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
         }
@@ -25,7 +25,7 @@
         {
             var browser = new Browser(with => with.Module<PerRouteAuthModule>());
 
-            var result = await browser.GetAsync("/secured");
+            var result = await browser.Get("/secured");
 
             Assert.Equal(HttpStatusCode.Unauthorized, result.StatusCode);
         }
@@ -39,7 +39,7 @@
                 with.Module<PerRouteAuthModule>();
             });
 
-            var result = await browser.GetAsync("/requiresclaims");
+            var result = await browser.Get("/requiresclaims");
 
             Assert.Equal(HttpStatusCode.Forbidden, result.StatusCode);
         }
@@ -53,7 +53,7 @@
                 with.Module<PerRouteAuthModule>();
             });
 
-            var result = await browser.GetAsync("/requiresclaims");
+            var result = await browser.Get("/requiresclaims");
 
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
         }
@@ -67,7 +67,7 @@
                 with.Module<PerRouteAuthModule>();
             });
 
-            var result = await browser.GetAsync("/requiresanyclaims");
+            var result = await browser.Get("/requiresanyclaims");
 
             Assert.Equal(HttpStatusCode.Forbidden, result.StatusCode);
         }
@@ -81,7 +81,7 @@
                 with.Module<PerRouteAuthModule>();
             });
 
-            var result = await browser.GetAsync("/requiresanyclaims");
+            var result = await browser.Get("/requiresanyclaims");
 
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
         }

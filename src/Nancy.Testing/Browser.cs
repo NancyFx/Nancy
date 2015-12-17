@@ -52,31 +52,7 @@ namespace Nancy.Testing
         /// <param name="path">The path that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        [Obsolete("Use async overload instead.", error: false)]
-        public BrowserResponse Delete(string path, Action<BrowserContext> browserContext = null)
-        {
-            return this.DeleteAsync(path, browserContext).GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// Performs a DELETE request against Nancy.
-        /// </summary>
-        /// <param name="url">The url that is being requested.</param>
-        /// <param name="browserContext">An closure for providing browser context for the request.</param>
-        /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        [Obsolete("Use async overload instead.", error: false)]
-        public BrowserResponse Delete(Url url, Action<BrowserContext> browserContext = null)
-        {
-            return this.DeleteAsync(url, browserContext).GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// Performs a DELETE request against Nancy.
-        /// </summary>
-        /// <param name="path">The path that is being requested.</param>
-        /// <param name="browserContext">An closure for providing browser context for the request.</param>
-        /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public Task<BrowserResponse> DeleteAsync(string path, Action<BrowserContext> browserContext = null)
+        public Task<BrowserResponse> Delete(string path, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("DELETE", path, browserContext);
         }
@@ -87,7 +63,7 @@ namespace Nancy.Testing
         /// <param name="url">The url that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public Task<BrowserResponse> DeleteAsync(Url url, Action<BrowserContext> browserContext = null)
+        public Task<BrowserResponse> Delete(Url url, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("DELETE", url, browserContext);
         }
@@ -98,30 +74,7 @@ namespace Nancy.Testing
         /// <param name="path">The path that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public BrowserResponse Get(string path, Action<BrowserContext> browserContext = null)
-        {
-            return this.GetAsync(path, browserContext).GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// Performs a GET request against Nancy.
-        /// </summary>
-        /// <param name="url">The url that is being requested.</param>
-        /// <param name="browserContext">An closure for providing browser context for the request.</param>
-        /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        [Obsolete("Use async overload instead.", error: false)]
-        public BrowserResponse Get(Url url, Action<BrowserContext> browserContext = null)
-        {
-            return this.GetAsync(url, browserContext).GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// Performs a GET request against Nancy.
-        /// </summary>
-        /// <param name="path">The path that is being requested.</param>
-        /// <param name="browserContext">An closure for providing browser context for the request.</param>
-        /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public Task<BrowserResponse> GetAsync(string path, Action<BrowserContext> browserContext = null)
+        public Task<BrowserResponse> Get(string path, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("GET", path, browserContext);
         }
@@ -132,7 +85,7 @@ namespace Nancy.Testing
         /// <param name="url">The url that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public Task<BrowserResponse> GetAsync(Url url, Action<BrowserContext> browserContext = null)
+        public Task<BrowserResponse> Get(Url url, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("GET", url, browserContext);
         }
@@ -143,31 +96,7 @@ namespace Nancy.Testing
         /// <param name="path">The path that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        [Obsolete("Use async overload instead.", error: false)]
-        public BrowserResponse Head(string path, Action<BrowserContext> browserContext = null)
-        {
-            return this.HeadAsync(path, browserContext).GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// Performs a HEAD request against Nancy.
-        /// </summary>
-        /// <param name="url">The url that is being requested.</param>
-        /// <param name="browserContext">An closure for providing browser context for the request.</param>
-        /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        [Obsolete("Use async overload instead.", error: false)]
-        public BrowserResponse Head(Url url, Action<BrowserContext> browserContext = null)
-        {
-            return this.HeadAsync(url, browserContext).GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// Performs a HEAD request against Nancy.
-        /// </summary>
-        /// <param name="path">The path that is being requested.</param>
-        /// <param name="browserContext">An closure for providing browser context for the request.</param>
-        /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public Task<BrowserResponse> HeadAsync(string path, Action<BrowserContext> browserContext = null)
+        public Task<BrowserResponse> Head(string path, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("HEAD", path, browserContext);
         }
@@ -178,7 +107,7 @@ namespace Nancy.Testing
         /// <param name="url">The url that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public Task<BrowserResponse> HeadAsync(Url url, Action<BrowserContext> browserContext = null)
+        public Task<BrowserResponse> Head(Url url, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("HEAD", url, browserContext);
         }
@@ -189,31 +118,7 @@ namespace Nancy.Testing
         /// <param name="path">The path that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        [Obsolete("Use async overload instead.", error: false)]
-        public BrowserResponse Options(string path, Action<BrowserContext> browserContext = null)
-        {
-            return this.OptionsAsync(path, browserContext).GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// Performs a OPTIONS request against Nancy.
-        /// </summary>
-        /// <param name="url">The url that is being requested.</param>
-        /// <param name="browserContext">An closure for providing browser context for the request.</param>
-        /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        [Obsolete("Use async overload instead.", error: false)]
-        public BrowserResponse Options(Url url, Action<BrowserContext> browserContext = null)
-        {
-            return this.OptionsAsync(url, browserContext).GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// Performs a OPTIONS request against Nancy.
-        /// </summary>
-        /// <param name="path">The path that is being requested.</param>
-        /// <param name="browserContext">An closure for providing browser context for the request.</param>
-        /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public Task<BrowserResponse> OptionsAsync(string path, Action<BrowserContext> browserContext = null)
+        public Task<BrowserResponse> Options(string path, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("OPTIONS", path, browserContext);
         }
@@ -224,7 +129,7 @@ namespace Nancy.Testing
         /// <param name="url">The url that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public Task<BrowserResponse> OptionsAsync(Url url, Action<BrowserContext> browserContext = null)
+        public Task<BrowserResponse> Options(Url url, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("OPTIONS", url, browserContext);
         }
@@ -235,31 +140,7 @@ namespace Nancy.Testing
         /// <param name="path">The path that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        [Obsolete("Use async overload instead.", error: false)]
-        public BrowserResponse Patch(string path, Action<BrowserContext> browserContext = null)
-        {
-            return this.PatchAsync(path, browserContext).GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// Performs a PATCH request against Nancy.
-        /// </summary>
-        /// <param name="url">The url that is being requested.</param>
-        /// <param name="browserContext">An closure for providing browser context for the request.</param>
-        /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        [Obsolete("Use async overload instead.", error: false)]
-        public BrowserResponse Patch(Url url, Action<BrowserContext> browserContext = null)
-        {
-            return this.PatchAsync(url, browserContext).GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// Performs a PATCH request against Nancy.
-        /// </summary>
-        /// <param name="path">The path that is being requested.</param>
-        /// <param name="browserContext">An closure for providing browser context for the request.</param>
-        /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public Task<BrowserResponse> PatchAsync(string path, Action<BrowserContext> browserContext = null)
+        public Task<BrowserResponse> Patch(string path, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("PATCH", path, browserContext);
         }
@@ -270,7 +151,7 @@ namespace Nancy.Testing
         /// <param name="url">The url that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public Task<BrowserResponse> PatchAsync(Url url, Action<BrowserContext> browserContext = null)
+        public Task<BrowserResponse> Patch(Url url, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("PATCH", url, browserContext);
         }
@@ -281,31 +162,7 @@ namespace Nancy.Testing
         /// <param name="path">The path that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        [Obsolete("Use async overload instead.", error: false)]
-        public BrowserResponse Post(string path, Action<BrowserContext> browserContext = null)
-        {
-            return this.PostAsync(path, browserContext).GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// Performs a POST request against Nancy.
-        /// </summary>
-        /// <param name="url">The url that is being requested.</param>
-        /// <param name="browserContext">An closure for providing browser context for the request.</param>
-        /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        [Obsolete("Use async overload instead.", error: false)]
-        public BrowserResponse Post(Url url, Action<BrowserContext> browserContext = null)
-        {
-            return this.PostAsync(url, browserContext).GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// Performs a POST request against Nancy.
-        /// </summary>
-        /// <param name="path">The path that is being requested.</param>
-        /// <param name="browserContext">An closure for providing browser context for the request.</param>
-        /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public Task<BrowserResponse> PostAsync(string path, Action<BrowserContext> browserContext = null)
+        public Task<BrowserResponse> Post(string path, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("POST", path, browserContext);
         }
@@ -316,7 +173,7 @@ namespace Nancy.Testing
         /// <param name="url">The url that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public Task<BrowserResponse> PostAsync(Url url, Action<BrowserContext> browserContext = null)
+        public Task<BrowserResponse> Post(Url url, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("POST", url, browserContext);
         }
@@ -327,31 +184,7 @@ namespace Nancy.Testing
         /// <param name="path">The path that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        [Obsolete("Use async overload instead.", error: false)]
-        public BrowserResponse Put(string path, Action<BrowserContext> browserContext = null)
-        {
-            return this.PutAsync(path, browserContext).GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// Performs a PUT request against Nancy.
-        /// </summary>
-        /// <param name="url">The url that is being requested.</param>
-        /// <param name="browserContext">An closure for providing browser context for the request.</param>
-        /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        [Obsolete("Use async overload instead.", error: false)]
-        public BrowserResponse Put(Url url, Action<BrowserContext> browserContext = null)
-        {
-            return this.PutAsync(url, browserContext).GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// Performs a PUT request against Nancy.
-        /// </summary>
-        /// <param name="path">The path that is being requested.</param>
-        /// <param name="browserContext">An closure for providing browser context for the request.</param>
-        /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public Task<BrowserResponse> PutAsync(string path, Action<BrowserContext> browserContext = null)
+        public Task<BrowserResponse> Put(string path, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("PUT", path, browserContext);
         }
@@ -362,7 +195,7 @@ namespace Nancy.Testing
         /// <param name="url">The url that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public Task<BrowserResponse> PutAsync(Url url, Action<BrowserContext> browserContext = null)
+        public Task<BrowserResponse> Put(Url url, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("PUT", url, browserContext);
         }

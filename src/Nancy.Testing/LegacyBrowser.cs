@@ -43,7 +43,7 @@ namespace Nancy.Testing
         [Obsolete("Use Browser instead.", error: false)]
         public BrowserResponse Delete(string path, Action<BrowserContext> browserContext = null)
         {
-            return this.browser.DeleteAsync(path, browserContext).GetAwaiter().GetResult();
+            return this.browser.Delete(path, browserContext).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace Nancy.Testing
         [Obsolete("Use Browser instead.", error: false)]
         public BrowserResponse Delete(Url url, Action<BrowserContext> browserContext = null)
         {
-            return this.browser.DeleteAsync(url, browserContext).GetAwaiter().GetResult();
+            return this.browser.Delete(url, browserContext).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace Nancy.Testing
         [Obsolete("Use Browser instead.", error: false)]
         public BrowserResponse Get(string path, Action<BrowserContext> browserContext = null)
         {
-            return this.browser.GetAsync(path, browserContext).GetAwaiter().GetResult();
+            return this.browser.Get(path, browserContext).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace Nancy.Testing
         [Obsolete("Use Browser instead.", error: false)]
         public BrowserResponse Get(Url url, Action<BrowserContext> browserContext = null)
         {
-            return this.browser.GetAsync(url, browserContext).GetAwaiter().GetResult();
+            return this.browser.Get(url, browserContext).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace Nancy.Testing
         [Obsolete("Use Browser instead.", error: false)]
         public BrowserResponse Head(string path, Action<BrowserContext> browserContext = null)
         {
-            return this.browser.HeadAsync(path, browserContext).GetAwaiter().GetResult();
+            return this.browser.Head(path, browserContext).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace Nancy.Testing
         [Obsolete("Use Browser instead.", error: false)]
         public BrowserResponse Head(Url url, Action<BrowserContext> browserContext = null)
         {
-            return this.browser.HeadAsync(url, browserContext).GetAwaiter().GetResult();
+            return this.browser.Head(url, browserContext).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace Nancy.Testing
         [Obsolete("Use Browser instead.", error: false)]
         public BrowserResponse Options(string path, Action<BrowserContext> browserContext = null)
         {
-            return this.browser.OptionsAsync(path, browserContext).GetAwaiter().GetResult();
+            return this.browser.Options(path, browserContext).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace Nancy.Testing
         [Obsolete("Use Browser instead.", error: false)]
         public BrowserResponse Options(Url url, Action<BrowserContext> browserContext = null)
         {
-            return this.browser.OptionsAsync(url, browserContext).GetAwaiter().GetResult();
+            return this.browser.Options(url, browserContext).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace Nancy.Testing
         [Obsolete("Use Browser instead.", error: false)]
         public BrowserResponse Patch(string path, Action<BrowserContext> browserContext = null)
         {
-            return this.browser.PatchAsync(path, browserContext).GetAwaiter().GetResult();
+            return this.browser.Patch(path, browserContext).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -151,7 +151,7 @@ namespace Nancy.Testing
         [Obsolete("Use Browser instead.", error: false)]
         public BrowserResponse Patch(Url url, Action<BrowserContext> browserContext = null)
         {
-            return this.browser.PatchAsync(url, browserContext).GetAwaiter().GetResult();
+            return this.browser.Patch(url, browserContext).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -163,7 +163,7 @@ namespace Nancy.Testing
         [Obsolete("Use Browser instead.", error: false)]
         public BrowserResponse Post(string path, Action<BrowserContext> browserContext = null)
         {
-            return this.browser.PostAsync(path, browserContext).GetAwaiter().GetResult();
+            return this.browser.Post(path, browserContext).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -175,7 +175,7 @@ namespace Nancy.Testing
         [Obsolete("Use Browser instead.", error: false)]
         public BrowserResponse Post(Url url, Action<BrowserContext> browserContext = null)
         {
-            return this.browser.PostAsync(url, browserContext).GetAwaiter().GetResult();
+            return this.browser.Post(url, browserContext).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -187,7 +187,7 @@ namespace Nancy.Testing
         [Obsolete("Use Browser instead.", error: false)]
         public BrowserResponse Put(string path, Action<BrowserContext> browserContext = null)
         {
-            return this.browser.PutAsync(path, browserContext).GetAwaiter().GetResult();
+            return this.browser.Put(path, browserContext).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -199,7 +199,7 @@ namespace Nancy.Testing
         [Obsolete("Use Browser instead.", error: false)]
         public BrowserResponse Put(Url url, Action<BrowserContext> browserContext = null)
         {
-            return this.browser.PutAsync(url, browserContext).GetAwaiter().GetResult();
+            return this.browser.Put(url, browserContext).GetAwaiter().GetResult();
         }
 
         /// <summary>

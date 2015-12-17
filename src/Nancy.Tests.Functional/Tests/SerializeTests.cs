@@ -26,7 +26,7 @@
         public async Task Should_return_JSON_serialized_form()
         {
             //Given
-            var response = await browser.PostAsync("/serializedform", (with) =>
+            var response = await browser.Post("/serializedform", (with) =>
             {
                 with.HttpRequest();
                 with.Accept("application/json");
@@ -48,7 +48,7 @@
         public async Task Should_return_JSON_serialized_querystring()
         {
             //Given
-            var response = await browser.GetAsync("/serializedquerystring", (with) =>
+            var response = await browser.Get("/serializedquerystring", (with) =>
             {
                 with.HttpRequest();
                 with.Accept("application/json");

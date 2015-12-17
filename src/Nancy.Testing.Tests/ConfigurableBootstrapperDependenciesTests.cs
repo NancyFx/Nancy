@@ -36,7 +36,7 @@
             });
 
             // When
-            var response = await browser.GetAsync("/1dependency");
+            var response = await browser.Get("/1dependency");
 
             // Assert
             Assert.Contains("Implemented ITestDependency", response.Body.AsString());
@@ -53,7 +53,7 @@
                     });
 
             // When
-            var response = await browser.GetAsync("/1dependency");
+            var response = await browser.Get("/1dependency");
 
             // Assert
             Assert.Contains(_dataFromFake, response.Body.AsString());
@@ -70,7 +70,7 @@
             });
 
             // When
-            var response = await browser.GetAsync("/1dependency");
+            var response = await browser.Get("/1dependency");
 
             // Assert
             Assert.Contains(_dataFromFake, response.Body.AsString());
@@ -87,7 +87,7 @@
             });
 
             // When
-            var response = await browser.GetAsync("/1dependency");
+            var response = await browser.Get("/1dependency");
 
             // Assert
             Assert.Contains("Implemented ITestDependency", response.Body.AsString());
@@ -131,7 +131,7 @@
             });
 
             // When
-            var response = await browser.GetAsync("/2dependencies");
+            var response = await browser.Get("/2dependencies");
 
             // Assert
             var bodyAsString = response.Body.AsString();
@@ -153,7 +153,7 @@
             });
 
             // When
-            var response = await browser.GetAsync("/2dependencies");
+            var response = await browser.Get("/2dependencies");
 
             // Assert
             var bodyAsString = response.Body.AsString();

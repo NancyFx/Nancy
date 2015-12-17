@@ -133,7 +133,7 @@
             var browser = new Browser(bootstrapper);
 
             // When
-            var result = await browser.GetAsync(DiagnosticsConfiguration.Default.Path + "/interactive/providers/", with =>
+            var result = await browser.Get(DiagnosticsConfiguration.Default.Path + "/interactive/providers/", with =>
                 {
                     with.Cookie(DiagsCookieName, this.GetSessionCookieValue("password"));
                 });

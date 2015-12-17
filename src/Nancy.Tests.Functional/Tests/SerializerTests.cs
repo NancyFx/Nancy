@@ -24,7 +24,7 @@
         public async Task Should_Serialize_To_ISO8601()
         {
             //Given & When
-            var result = await browser.GetAsync("/serializer/20131225121030", with =>
+            var result = await browser.Get("/serializer/20131225121030", with =>
             {
                 with.Accept("application/json");
             });
@@ -43,7 +43,7 @@
             var model = new FakeSerializerModel { Name = "Marsellus Wallace" };
 
             // When
-            var result = await browser.PostAsync("/serializer", with =>
+            var result = await browser.Post("/serializer", with =>
                 {
                     with.JsonBody(model);
                     with.Accept("application/json");
@@ -60,7 +60,7 @@
         public async Task Should_BindTo_Existing_Instance_Using_Form()
         {
             // Given & When
-            var result = await browser.PostAsync("/serializer", with =>
+            var result = await browser.Post("/serializer", with =>
                 {
                     with.FormValue("Name", "Marsellus Wallace");
                     with.Accept("application/json");

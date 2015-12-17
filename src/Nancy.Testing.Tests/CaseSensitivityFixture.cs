@@ -28,7 +28,7 @@
             using (new StaticConfigurationContext(x => x.CaseSensitive = false))
             {
                 // When
-                var response = await browser.GetAsync("/", with =>
+                var response = await browser.Get("/", with =>
                 {
                     with.Query("ANIMAL", animal);
                 });
@@ -48,7 +48,7 @@
             {
 
                 // When
-                var response = await browser.GetAsync("/", with =>
+                var response = await browser.Get("/", with =>
                 {
                     with.Query("ANIMAL", animal);
                 });
@@ -67,7 +67,7 @@
             using (new StaticConfigurationContext(x => x.CaseSensitive = false))
             {
                 // When
-                var response = await browser.GetAsync("/dog", with =>
+                var response = await browser.Get("/dog", with =>
                 {
                 });
 
@@ -83,7 +83,7 @@
             using (new StaticConfigurationContext(x => x.CaseSensitive = true))
             {
                 // When
-                var response = await browser.GetAsync("/dog");
+                var response = await browser.Get("/dog");
 
                 // Then
                 response.Body.AsString().ShouldEqual(string.Empty);
@@ -99,7 +99,7 @@
             using (new StaticConfigurationContext(x => x.CaseSensitive = false))
             {
                 // When
-                var response = await browser.GetAsync("/animal", with =>
+                var response = await browser.Get("/animal", with =>
                 {
                     with.Query("TYPE", animal);
                 });
@@ -118,7 +118,7 @@
             using (new StaticConfigurationContext(x => x.CaseSensitive = true))
             {
                 // When
-                var response = await browser.GetAsync("/animal", with =>
+                var response = await browser.Get("/animal", with =>
                 {
                     with.Query("TYPE", animal);
                 });

@@ -41,7 +41,7 @@ namespace Nancy.Testing.Tests
             const string thisIsMyRequestBody = "This is my request body";
 
             // When
-            var result = await browser.PostAsync("/", with =>
+            var result = await browser.Post("/", with =>
                 {
                     with.HttpRequest();
                     with.Body(thisIsMyRequestBody);
@@ -58,7 +58,7 @@ namespace Nancy.Testing.Tests
             const string userHostAddress = "127.0.0.1";
 
             // When
-            var result = await browser.GetAsync("/userHostAddress", with =>
+            var result = await browser.Get("/userHostAddress", with =>
                 {
                     with.HttpRequest();
                     with.UserHostAddress(userHostAddress);
@@ -75,7 +75,7 @@ namespace Nancy.Testing.Tests
             const string userHostAddress = "127.0.0.1";
 
             // When
-            var result = await browser.GetAsync("/isLocal", with =>
+            var result = await browser.Get("/isLocal", with =>
                 {
                     with.HttpRequest();
                     with.HostName("localhost");
@@ -93,7 +93,7 @@ namespace Nancy.Testing.Tests
             const string userHostAddress = "::1";
 
             // When
-            var result = await browser.GetAsync("/isLocal", with =>
+            var result = await browser.Get("/isLocal", with =>
                 {
                     with.HttpRequest();
                     with.HostName("localhost");
@@ -111,7 +111,7 @@ namespace Nancy.Testing.Tests
             const string userHostAddress = "84.12.65.72";
 
             // When
-            var result = await browser.GetAsync("/isLocal", with =>
+            var result = await browser.Get("/isLocal", with =>
                 {
                     with.HttpRequest();
                     with.HostName("anotherhost");
@@ -133,7 +133,7 @@ namespace Nancy.Testing.Tests
             writer.Flush();
 
             // When
-            var result = await browser.PostAsync("/", with =>
+            var result = await browser.Post("/", with =>
                 {
                     with.HttpRequest();
                     with.Body(stream, "text/plain");
@@ -150,7 +150,7 @@ namespace Nancy.Testing.Tests
             var model = new EchoModel { SomeString = "Some String", SomeInt = 29, SomeBoolean = true };
 
             // When
-            var result = await browser.PostAsync("/", with =>
+            var result = await browser.Post("/", with =>
                 {
                     with.JsonBody(model);
                 });
@@ -171,7 +171,7 @@ namespace Nancy.Testing.Tests
             var model = new EchoModel { SomeString = "Some String", SomeInt = 29, SomeBoolean = true };
 
             // When
-            var result = await browser.PostAsync("/", with =>
+            var result = await browser.Post("/", with =>
                 {
                     with.XMLBody(model);
                 });
@@ -269,7 +269,7 @@ namespace Nancy.Testing.Tests
                 };
 
             // When
-            var result = await browser.GetAsync("/cookie", with =>
+            var result = await browser.Get("/cookie", with =>
                 {
                     with.Cookie(cookies);
                 });
@@ -283,7 +283,7 @@ namespace Nancy.Testing.Tests
         public async Task Should_add_a_cookie_to_the_request_and_get_a_cookie_in_response()
         {
             // Given, When
-            var result = await browser.GetAsync("/cookie", with => with.Cookie("CookieName", "CookieValue"));
+            var result = await browser.Get("/cookie", with => with.Cookie("CookieName", "CookieValue"));
 
             // Then
             result.Cookies.Single(x => x.Name == "CookieName").Value.ShouldEqual("CookieValue");
@@ -305,13 +305,13 @@ namespace Nancy.Testing.Tests
             secondRequestWriter.Flush();
 
             // When
-            await browser.PostAsync("/", with =>
+            await browser.Post("/", with =>
                 {
                     with.HttpRequest();
                     with.Body(firstRequestStream, "text/plain");
                 });
 
-            var result = await browser.PostAsync("/", with =>
+            var result = await browser.Post("/", with =>
                 {
                     with.HttpRequest();
                     with.Body(secondRequestStream, "text/plain");
@@ -326,9 +326,9 @@ namespace Nancy.Testing.Tests
         {
             // Given
             // When
-            await browser.GetAsync("/session", with => with.HttpRequest());
+            await browser.Get("/session", with => with.HttpRequest());
 
-            var result = await this.browser.GetAsync(
+            var result = await this.browser.Get(
                              "/session",
                              with => with.HttpRequest());
             
@@ -341,11 +341,11 @@ namespace Nancy.Testing.Tests
         {
             // Given
             // When
-            await browser.GetAsync("/session", with => with.HttpRequest());
+            await browser.Get("/session", with => with.HttpRequest());
 
-            await browser.GetAsync("/nothing", with => with.HttpRequest());
+            await browser.Get("/nothing", with => with.HttpRequest());
             
-            var result = await browser.GetAsync("/session", with => with.HttpRequest());
+            var result = await browser.Get("/session", with => with.HttpRequest());
 
             //Then
             result.Body.AsString().ShouldEqual("Current session value is: I've created a session!");
@@ -355,7 +355,7 @@ namespace Nancy.Testing.Tests
         public async Task Should_be_able_to_not_specify_delegate_for_basic_http_request()
         {
             //Given, When
-            var result = await browser.GetAsync("/type");
+            var result = await browser.Get("/type");
 
             //Then
             result.Body.AsString().ShouldEqual("http");
@@ -365,7 +365,7 @@ namespace Nancy.Testing.Tests
         public async Task Should_add_ajax_header()
         {
             //Given, When
-            var result = await browser.GetAsync("/ajax", with => with.AjaxRequest());
+            var result = await browser.Get("/ajax", with => with.AjaxRequest());
 
             //Then
             result.Body.AsString().ShouldEqual("ajax");
@@ -377,7 +377,7 @@ namespace Nancy.Testing.Tests
             //Given, When
             var exception = await RecordAsync.Exception(() =>
                 {
-                    return browser.GetAsync("/ajax", with => 
+                    return browser.Get("/ajax", with => 
                                          with.Certificate(
                                              StoreLocation.CurrentUser,
                                              StoreName.My,
@@ -393,7 +393,7 @@ namespace Nancy.Testing.Tests
         public async Task Should_add_certificate()
         {
             //Given, When
-            var result = await browser.GetAsync("/cert", with => with.Certificate());
+            var result = await browser.Get("/cert", with => with.Certificate());
 
             //Then
             result.Context.Request.ClientCertificate.ShouldNotBeNull();
@@ -403,7 +403,7 @@ namespace Nancy.Testing.Tests
         public async Task Should_change_scheme_to_https_when_HttpsRequest_is_called_on_the_context()
         {
             //Given, When
-            var result = await browser.GetAsync("/", with => with.HttpsRequest());
+            var result = await browser.Get("/", with => with.HttpsRequest());
 
             //Then
             result.Context.Request.Url.Scheme.ShouldEqual("https");
@@ -427,7 +427,7 @@ namespace Nancy.Testing.Tests
             var cookieContents = String.Format("{1}{0}", encryptedId, hmacString);
 
             //When
-            var response = await browser.GetAsync("/cookie", (with) =>
+            var response = await browser.Get("/cookie", (with) =>
                 {
                     with.HttpRequest();
                     with.FormsAuth(userId, formsAuthConfig);
@@ -444,7 +444,7 @@ namespace Nancy.Testing.Tests
         public async Task Should_return_JSON_serialized_form()
         {
             // Given
-            var response = await browser.PostAsync("/serializedform", (with) =>
+            var response = await browser.Post("/serializedform", (with) =>
                 {
                     with.HttpRequest();
                     with.Accept("application/json");
@@ -466,7 +466,7 @@ namespace Nancy.Testing.Tests
         public async Task Should_return_JSON_serialized_querystring()
         {
             // Given
-            var response = await browser.GetAsync("/serializedquerystring", (with) =>
+            var response = await browser.Get("/serializedquerystring", (with) =>
                 {
                     with.HttpRequest();
                     with.Accept("application/json");
@@ -488,7 +488,7 @@ namespace Nancy.Testing.Tests
         public async Task Should_encode_form()
         {
             //Given, When
-            var result = await browser.PostAsync("/encoded", with =>
+            var result = await browser.Post("/encoded", with =>
                 {
                     with.HttpRequest();
                     with.FormValue("name", "john++");
@@ -502,7 +502,7 @@ namespace Nancy.Testing.Tests
         public async Task Should_encode_querystring()
         {
             //Given, When
-            var result = await browser.PostAsync("/encodedquerystring", with =>
+            var result = await browser.Post("/encodedquerystring", with =>
                 {
                     with.HttpRequest();
                     with.Query("name", "john++");
@@ -519,7 +519,7 @@ namespace Nancy.Testing.Tests
             const string expectedHeaderValue = "Nancy.Testing.Browser";
 
             // When
-            var result = (await browser.GetAsync("/useragent")).Body.AsString();
+            var result = (await browser.Get("/useragent")).Body.AsString();
 
             // Then
             result.ShouldEqual(expectedHeaderValue);
@@ -532,7 +532,7 @@ namespace Nancy.Testing.Tests
             const string expectedHeaderValue = "Custom.User.Agent";
 
             // When
-            var result = await browser.GetAsync("/useragent", with =>
+            var result = await browser.Get("/useragent", with =>
                 {
                     with.Header("User-Agent", expectedHeaderValue);
                 });
@@ -551,7 +551,7 @@ namespace Nancy.Testing.Tests
             //Given/When
             using (new StaticConfigurationContext(x => x.DisableErrorTraces = false))
             {
-                var result = await browser.GetAsync("/cyclical", with => with.Accept(accept));
+                var result = await browser.Get("/cyclical", with => with.Accept(accept));
 
                 //Then
                 result.Body.AsString().ShouldNotBeEmpty();
@@ -566,7 +566,7 @@ namespace Nancy.Testing.Tests
             //Given/When
             using (new StaticConfigurationContext(x => x.DisableErrorTraces = true))
             {
-                var result = await browser.GetAsync("/cyclical", with => with.Accept(accept));
+                var result = await browser.Get("/cyclical", with => with.Accept(accept));
 
                 //Then
                 result.Body.AsString().ShouldBeEmpty();

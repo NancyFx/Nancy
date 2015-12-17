@@ -32,7 +32,7 @@ namespace Nancy.Tests.Functional.Tests
             });
 
             // When
-            var response = await browser.GetAsync("/int");
+            var response = await browser.Get("/int");
 
             // Then
             Assert.Equal((HttpStatusCode)200, response.StatusCode);
@@ -53,7 +53,7 @@ namespace Nancy.Tests.Functional.Tests
             });
 
             // When
-            var response = await browser.GetAsync("/string");
+            var response = await browser.Get("/string");
 
             // Then
             Assert.Equal("hello", response.Body.AsString());
@@ -74,7 +74,7 @@ namespace Nancy.Tests.Functional.Tests
             });
 
             // When
-            var response = await browser.GetAsync("/httpstatuscode");
+            var response = await browser.Get("/httpstatuscode");
 
             // Then
             Assert.Equal(HttpStatusCode.Accepted, response.StatusCode);
@@ -107,7 +107,7 @@ namespace Nancy.Tests.Functional.Tests
             });
 
             // When
-            var response = await browser.GetAsync("/action");
+            var response = await browser.Get("/action");
 
             // Then
             Assert.Equal("Hiya Nancy!", response.Body.AsString());
@@ -141,7 +141,7 @@ namespace Nancy.Tests.Functional.Tests
             });
 
             // When
-            var response = await browser.GetAsync("/headers");
+            var response = await browser.Get("/headers");
 
             // Then
             Assert.True(response.Headers.ContainsKey("foo"));
@@ -175,7 +175,7 @@ namespace Nancy.Tests.Functional.Tests
             });
 
             // When
-            var response = await browser.GetAsync("/customPhrase");
+            var response = await browser.Get("/customPhrase");
 
             // Then
             Assert.Equal("The test is passing!", response.ReasonPhrase);
@@ -209,7 +209,7 @@ namespace Nancy.Tests.Functional.Tests
           });
 
           // When
-          var response = await browser.GetAsync("/headers");
+          var response = await browser.Get("/headers");
 
           // Then
           Assert.Equal("text/xml", response.Context.Response.ContentType);
@@ -239,7 +239,7 @@ namespace Nancy.Tests.Functional.Tests
             });
 
             // When
-            var response = await browser.GetAsync("/");
+            var response = await browser.Get("/");
 
             // Then
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -272,7 +272,7 @@ namespace Nancy.Tests.Functional.Tests
             });
 
             // When
-            var response = await browser.GetAsync("/", with =>
+            var response = await browser.Get("/", with =>
             {
                 with.Header("User-Agent", "Mozilla/5.0 (Windows; U; Windows NT 5.1; ru-RU) AppleWebKit/533.19.4 (KHTML, like Gecko) Version/5.0.3 Safari/533.19.4");
                 with.Accept("application/xml", 0.9m);
@@ -308,7 +308,7 @@ namespace Nancy.Tests.Functional.Tests
             });
 
             // When
-            var response = await browser.GetAsync("/test.foo", with =>
+            var response = await browser.Get("/test.foo", with =>
             {
                 with.Header("User-Agent", "Mozilla/5.0 (Windows; U; Windows NT 5.1; ru-RU) AppleWebKit/533.19.4 (KHTML, like Gecko) Version/5.0.3 Safari/533.19.4");
                 with.Accept("application/xml", 0.9m);
@@ -338,7 +338,7 @@ namespace Nancy.Tests.Functional.Tests
             });
 
             // When
-            var response = await browser.GetAsync("/test", with =>
+            var response = await browser.Get("/test", with =>
             {
                 with.Accept("foo/bar", 0.9m);
             });
@@ -358,7 +358,7 @@ namespace Nancy.Tests.Functional.Tests
             });
 
             // When
-            var response = await browser.GetAsync("/invalid-view-name", with => with.Accept("foo/bar"));
+            var response = await browser.Get("/invalid-view-name", with => with.Accept("foo/bar"));
 
             // Then
             Assert.Equal(HttpStatusCode.NotAcceptable, response.StatusCode);
@@ -383,7 +383,7 @@ namespace Nancy.Tests.Functional.Tests
             });
 
             // When
-            var response = await browser.GetAsync("/", with =>
+            var response = await browser.Get("/", with =>
             {
                 with.Accept("test/test", 0.9m);
             });
@@ -412,7 +412,7 @@ namespace Nancy.Tests.Functional.Tests
             });
 
             // When
-            var response = await browser.GetAsync("/", with =>
+            var response = await browser.Get("/", with =>
             {
                 with.Accept("test/test", 0.9m);
             });
@@ -436,7 +436,7 @@ namespace Nancy.Tests.Functional.Tests
             });
 
             // When
-            var response = await browser.GetAsync("/", with => with.Header("Accept", "application/json"));
+            var response = await browser.Get("/", with => with.Header("Accept", "application/json"));
 
             // Then
             Assert.True(response.Headers.ContainsKey("Vary"));
@@ -458,7 +458,7 @@ namespace Nancy.Tests.Functional.Tests
             });
 
             // When
-            var response = await browser.GetAsync("/");
+            var response = await browser.Get("/");
 
             // Then
             Assert.True(response.Headers["Link"].Contains(@"</.foo>; rel=""foo/bar"""));
@@ -484,7 +484,7 @@ namespace Nancy.Tests.Functional.Tests
             });
 
             // When
-            var response = await browser.GetAsync("/", with =>
+            var response = await browser.Get("/", with =>
             {
                 with.Accept("test/test", 0.9m);
             });
@@ -511,7 +511,7 @@ namespace Nancy.Tests.Functional.Tests
             });
 
             // When
-            var response = await browser.GetAsync("/", with =>
+            var response = await browser.Get("/", with =>
             {
                 with.Accept("test/test", 0.9m);
             });
@@ -541,7 +541,7 @@ namespace Nancy.Tests.Functional.Tests
             });
 
             // When
-            var response = await browser.GetAsync("/", with =>
+            var response = await browser.Get("/", with =>
             {
                 with.Accept("test/test", 0.9m);
             });
@@ -561,7 +561,7 @@ namespace Nancy.Tests.Functional.Tests
             });
 
             // When
-            var result = await RecordAsync.Exception(() => browser.GetAsync(
+            var result = await RecordAsync.Exception(() => browser.Get(
                         "/FakeModuleInvalidViewName", with =>
                             { with.Accept("text/html", 1.0m); })
                 );
@@ -589,7 +589,7 @@ namespace Nancy.Tests.Functional.Tests
             });
 
             // When
-            var response = await browser.GetAsync("/test", with =>
+            var response = await browser.Get("/test", with =>
             {
                 with.Accept("application/xml", 0.9m);
             });
@@ -616,7 +616,7 @@ namespace Nancy.Tests.Functional.Tests
             });
 
             // When
-            var response = await browser.GetAsync("/", with =>
+            var response = await browser.Get("/", with =>
             {
                 with.Header("Accept", header);
             });
@@ -632,7 +632,7 @@ namespace Nancy.Tests.Functional.Tests
             var browser = new Browser(with => with.Module<NegotiationModule>());
 
             // When
-            var result = await RecordAsync.Exception(() => browser.GetAsync("/invalid-view-name"));
+            var result = await RecordAsync.Exception(() => browser.Get("/invalid-view-name"));
 
             // Then
             Assert.True(result.ToString().Contains("Unable to locate view"));
@@ -645,7 +645,7 @@ namespace Nancy.Tests.Functional.Tests
             var browser = new Browser(with => with.Module<NegotiationModule>());
 
             // When
-            var result = await browser.GetAsync("/negotiate", with =>
+            var result = await browser.Get("/negotiate", with =>
             {
                 with.Accept("text/html");
             });
@@ -661,7 +661,7 @@ namespace Nancy.Tests.Functional.Tests
             var browser = new Browser(with => with.StatusCodeHandler<NotFoundStatusCodeHandler>());
 
             // When
-            var result = await browser.GetAsync("/not-found", with => with.Accept("application/json"));
+            var result = await browser.Get("/not-found", with => with.Accept("application/json"));
 
             var response = result.Body.DeserializeJson<NotFoundStatusCodeHandlerResult>();
 
@@ -678,8 +678,8 @@ namespace Nancy.Tests.Functional.Tests
             var browser = new Browser(with => with.Module<ThrowingModule>());
 
             // When
-            var jsonResult = await browser.GetAsync("/", with => with.Accept("application/json"));
-            var xmlResult = await browser.GetAsync("/", with => with.Accept("application/xml"));
+            var jsonResult = await browser.Get("/", with => with.Accept("application/json"));
+            var xmlResult = await browser.Get("/", with => with.Accept("application/xml"));
 
             var jsonResponse = jsonResult.Body.DeserializeJson<ThrowingModule.Error>();
             var xmlResponse = xmlResult.Body.DeserializeXml<ThrowingModule.Error>();
@@ -697,7 +697,7 @@ namespace Nancy.Tests.Functional.Tests
             var contentType = "text/html";
 
             // When
-            var result = await browser.GetAsync("/not-found", with => with.Accept(contentType));
+            var result = await browser.Get("/not-found", with => with.Accept(contentType));
 
             // Then
             Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
@@ -712,7 +712,7 @@ namespace Nancy.Tests.Functional.Tests
             var contentType = "application/json";
 
             // When
-            var result = await browser.GetAsync("/not-found", with => with.Accept(contentType));
+            var result = await browser.Get("/not-found", with => with.Accept(contentType));
 
             // Then
             Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
@@ -727,7 +727,7 @@ namespace Nancy.Tests.Functional.Tests
             var contentType = "application/xml";
 
             // When
-            var result = await browser.GetAsync("/not-found", with => with.Accept(contentType));
+            var result = await browser.Get("/not-found", with => with.Accept(contentType));
 
             // Then
             Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);

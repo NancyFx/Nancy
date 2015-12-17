@@ -25,7 +25,7 @@
             var sut = new Browser(with => with.Module(this.captureRequestModule), defaults: to => to.Accept(this.expected));
             
             // When
-            await sut.GetAsync("/");
+            await sut.Get("/");
             
             // Then
             this.captureRequestModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(this.expected);
@@ -38,7 +38,7 @@
             var sut = new Browser(with => with.Module(this.captureRequestModule), defaults: to => to.Accept(this.expected));
             
             // When
-            await sut.PostAsync("/");
+            await sut.Post("/");
             
             // Then
             this.captureRequestModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(this.expected);
@@ -51,7 +51,7 @@
             var sut = new Browser(with => with.Module(this.captureRequestModule), defaults: to => to.Accept(this.expected));
             
             // When
-            await sut.PutAsync("/");
+            await sut.Put("/");
             
             // Then
             this.captureRequestModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(this.expected);
@@ -64,7 +64,7 @@
             var sut = new Browser(with => with.Module(this.captureRequestModule), defaults: to => to.Accept(this.expected));
             
             // When
-            await sut.PatchAsync("/");
+            await sut.Patch("/");
             
             // Then
             this.captureRequestModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(this.expected);
@@ -77,7 +77,7 @@
             var sut = new Browser(with => with.Module(this.captureRequestModule), defaults: to => to.Accept(this.expected));
             
             // When
-            await sut.DeleteAsync("/");
+            await sut.Delete("/");
             
             // Then
             this.captureRequestModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(this.expected);
@@ -91,7 +91,7 @@
             var sut = new Browser(bootstrapper, defaults: to => to.Accept(this.expected));
             
             // When
-            await sut.GetAsync("/");
+            await sut.Get("/");
             
             // Then
             this.captureRequestModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(this.expected);
@@ -105,7 +105,7 @@
             var sut = new Browser(bootstrapper, defaults: to => to.Accept(this.expected));
             
             // When
-            await sut.PostAsync("/");
+            await sut.Post("/");
             
             // Then
             this.captureRequestModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(this.expected);
@@ -119,7 +119,7 @@
             var sut = new Browser(bootstrapper, defaults: to => to.Accept(this.expected));
             
             // When
-            await sut.PutAsync("/");
+            await sut.Put("/");
             
             // Then
             this.captureRequestModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(this.expected);
@@ -133,7 +133,7 @@
             var sut = new Browser(bootstrapper, defaults: to => to.Accept(this.expected));
             
             // When
-            await sut.PatchAsync("/");
+            await sut.Patch("/");
             
             // Then
             this.captureRequestModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(this.expected);
@@ -147,7 +147,7 @@
             var sut = new Browser(bootstrapper, defaults: to => to.Accept(this.expected));
             
             // When
-            await sut.DeleteAsync("/");
+            await sut.Delete("/");
             
             // Then
             this.captureRequestModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(this.expected);
@@ -160,7 +160,7 @@
             var sut = new Browser(with => with.Module(this.captureRequestModule), defaults: to => to.Accept(this.expected));
             
             // When
-            await sut.GetAsync("/", with => with.Query("testKey", "testValue"));
+            await sut.Get("/", with => with.Query("testKey", "testValue"));
             
             // Then
             this.captureRequestModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(this.expected);            

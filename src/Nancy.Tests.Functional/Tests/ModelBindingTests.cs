@@ -28,7 +28,7 @@
             const string body = "[{ 'key1': 'value1' , 'key2': 'value2'},{ 'key1': 'value1' , 'key2': 'value2'}, { 'key1': 'value1' , 'key2': 'value2'}]";
 
             // When
-            var result = await this.browser.PostAsync("/jsonlist", with => with.Body(body, "application/json"));
+            var result = await this.browser.Post("/jsonlist", with => with.Body(body, "application/json"));
 
             // Then
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
@@ -41,7 +41,7 @@
             const string body = "{ 'key1': 'body' , 'key2': 'value2'}";
 
             // When
-            var result = await this.browser.PutAsync("/foo/param", with => with.Body(body, "application/json"));
+            var result = await this.browser.Put("/foo/param", with => with.Body(body, "application/json"));
 
             // Then
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);

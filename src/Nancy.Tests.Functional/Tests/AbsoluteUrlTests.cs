@@ -24,7 +24,7 @@
         public async Task Should_Return_Response_From_Full_Url_String()
         {
             //Given, When
-            var result = await browser.GetAsync("http://mydomain.com/");
+            var result = await browser.Get("http://mydomain.com/");
 
             //Then
             Assert.Equal("hi", result.Body.AsString());
@@ -37,7 +37,7 @@
             var url = new Url {Path = "/", Scheme = "http", HostName = "mydomain.com"};
 
             //When
-            var result = await browser.GetAsync(url);
+            var result = await browser.Get(url);
 
             //Then
             Assert.Equal("hi", result.Body.AsString());
@@ -47,7 +47,7 @@
         public async Task Should_Return_QueryString_Values_From_Full_Url_String()
         {
             //Given, When
-            var result = await browser.GetAsync("http://mydomain.com/querystring?myKey=myvalue");
+            var result = await browser.Get("http://mydomain.com/querystring?myKey=myvalue");
 
             //Then
             Assert.Equal("myvalue", result.Body.AsString());
@@ -60,7 +60,7 @@
             var url = new Url { Path = "/querystring", Scheme = "http", HostName = "mydomain.com", Query = "?myKey=myvalue" };
 
             //When
-            var result = await browser.GetAsync(url);
+            var result = await browser.Get(url);
 
             //Then
             Assert.Equal("myvalue", result.Body.AsString());

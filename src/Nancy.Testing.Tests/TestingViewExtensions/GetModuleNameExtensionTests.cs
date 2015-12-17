@@ -19,7 +19,7 @@
         [Fact]
         public async Task should_return_name_of_the_module()
         {
-            var response = await this.browser.GetAsync("/testingViewFactory");
+            var response = await this.browser.Get("/testingViewFactory");
             Assert.Equal("TestingViewFactoryTest", response.GetModuleName());
         }
     }

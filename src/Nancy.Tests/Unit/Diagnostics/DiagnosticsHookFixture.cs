@@ -48,7 +48,7 @@
             var browser = new Browser(bootstrapper);
 
             // When
-            var result = await browser.GetAsync(DiagnosticsConfiguration.Default.Path);
+            var result = await browser.Get(DiagnosticsConfiguration.Default.Path);
 
             // Then
             Assert.True(result.Body.AsString().Contains("Diagnostics Disabled"));
@@ -74,7 +74,7 @@
             var browser = new Browser(bootstrapper);
 
             // When
-            var result = await browser.GetAsync(DiagnosticsConfiguration.Default.Path);
+            var result = await browser.Get(DiagnosticsConfiguration.Default.Path);
 
             // Then
             Assert.True(result.Body.AsString().Contains("Diagnostics Disabled"));
@@ -101,7 +101,7 @@
             var browser = new Browser(bootstrapper);
 
             // When
-            var result = await browser.GetAsync(DiagnosticsConfiguration.Default.Path);
+            var result = await browser.Get(DiagnosticsConfiguration.Default.Path);
 
             // Then
             result.Body["#login"].ShouldExistOnce();
@@ -127,7 +127,7 @@
             var browser = new Browser(bootstrapper);
 
             // When
-            var result = await browser.GetAsync(DiagnosticsConfiguration.Default.Path, with =>
+            var result = await browser.Get(DiagnosticsConfiguration.Default.Path, with =>
                 {
                     with.Cookie(DiagsCookieName, this.GetSessionCookieValue("password"));
                 });
@@ -156,7 +156,7 @@
             var browser = new Browser(bootstrapper);
 
             // When
-            var result = await browser.GetAsync(DiagnosticsConfiguration.Default.Path, with =>
+            var result = await browser.Get(DiagnosticsConfiguration.Default.Path, with =>
             {
                 with.Cookie(DiagsCookieName, this.GetSessionCookieValue("password", DateTime.Now.AddMinutes(-10)));
             });
@@ -185,7 +185,7 @@
             var browser = new Browser(bootstrapper);
 
             // When
-            var result = await browser.GetAsync(DiagnosticsConfiguration.Default.Path, with =>
+            var result = await browser.Get(DiagnosticsConfiguration.Default.Path, with =>
             {
                 with.Cookie(DiagsCookieName, this.GetSessionCookieValue("wrongPassword"));
             });
@@ -214,7 +214,7 @@
             var browser = new Browser(bootstrapper);
 
             // When
-            var result = await browser.PostAsync(DiagnosticsConfiguration.Default.Path, with =>
+            var result = await browser.Post(DiagnosticsConfiguration.Default.Path, with =>
             {
                 with.FormValue("Password", "wrongpassword");
             });
@@ -244,7 +244,7 @@
             var browser = new Browser(bootstrapper);
 
             // When
-            var result = await browser.PostAsync(DiagnosticsConfiguration.Default.Path, with =>
+            var result = await browser.Post(DiagnosticsConfiguration.Default.Path, with =>
             {
                 with.FormValue("Password", "password");
             });
@@ -275,7 +275,7 @@
             var expiryDate = DateTime.Now.AddMinutes(5);
 
             // When
-            var result = await browser.GetAsync(DiagnosticsConfiguration.Default.Path, with =>
+            var result = await browser.Get(DiagnosticsConfiguration.Default.Path, with =>
             {
                 with.Cookie(DiagsCookieName, this.GetSessionCookieValue("password", expiryDate));
             });
@@ -306,7 +306,7 @@
             var browser = new Browser(bootstrapper);
 
             // When querying the list of interactive providers
-            var result = await browser.GetAsync(DiagnosticsConfiguration.Default.Path + "/interactive/providers/", with =>
+            var result = await browser.Get(DiagnosticsConfiguration.Default.Path + "/interactive/providers/", with =>
                 {
                     with.Cookie(DiagsCookieName, this.GetSessionCookieValue("password"));
                 });

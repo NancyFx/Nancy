@@ -28,7 +28,7 @@
         {
             // Given
             // When
-            var response = await browser.GetAsync(
+            var response = await browser.Get(
                 @"/razor-viewbag",
                 with =>
                 {
@@ -50,7 +50,7 @@
         {
             var ex = await RecordAsync.Exception(async () =>
             {
-                var response = await this.browser.GetAsync(@"/razor-partialnotfound");
+                var response = await this.browser.Get(@"/razor-partialnotfound");
 
                 response.Body.AsString();
             });
