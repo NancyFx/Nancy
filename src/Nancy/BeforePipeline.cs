@@ -51,16 +51,15 @@
 
         public async Task<Response> Invoke(NancyContext context, CancellationToken cancellationToken)
         {
-            var enumerator = this.PipelineDelegates.GetEnumerator();
-
-            while (enumerator.MoveNext())
+            foreach (var pipelineDelegate in this.PipelineDelegates)
             {
-                var response = await enumerator.Current(context, cancellationToken).ConfigureAwait(false);
-                if(response != null)
+                var response = await pipelineDelegate.Invoke(context, cancellationToken).ConfigureAwait(false);
+                if (response != null)
                 {
                     return response;
                 }
             }
+
             return null;
         }
 
