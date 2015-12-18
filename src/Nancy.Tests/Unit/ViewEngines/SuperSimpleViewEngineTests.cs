@@ -193,6 +193,48 @@
         }
 
         [Fact]
+        public void Should_evaluate_nested_conditionals()
+        {
+            // Given
+            const string input =
+                @"<html><head></head><body>@If.SayHello;Hey @If.ShowName;@Model.Name@If.Zalgo;HE COMES@EndIf;!@EndIf; Bye!@EndIf</body></html>";
+            var model = new
+            {
+                Name = "Bob",
+                SayHello = true,
+                ShowName = true,
+                Zalgo = false
+            };
+
+            // When
+            var output = viewEngine.Render(input, model, this.fakeHost);
+
+            // Then
+            Assert.Equal(@"<html><head></head><body>Hey Bob! Bye!</body></html>", output);
+        }
+
+        [Fact]
+        public void Should_evaluate_multiple_nested_conditionals()
+        {
+            // Given
+            const string input =
+                @"<html><head></head><body>@If.SayHello;Hey @If.ShowName;@Model.Name@If.Zalgo; HE COMES@EndIf;!@EndIf; Bye!@EndIf</body></html>";
+            var model = new
+            {
+                Name = "Bob",
+                SayHello = true,
+                ShowName = true,
+                Zalgo = true
+            };
+
+            // When
+            var output = viewEngine.Render(input, model, this.fakeHost);
+
+            // Then
+            Assert.Equal(@"<html><head></head><body>Hey Bob HE COMES! Bye!</body></html>", output);
+        }
+
+        [Fact]
         public void Should_evaluate_current_conditional_inside_each()
         {
             // Given
@@ -221,7 +263,6 @@
             // Then
             Assert.Equal(@"<html><head></head><body>Yay Users!<ul><li>Bob:<b>Yay Greece!</b></li><li>Malin:</li></ul></body></html>", output);
         }
-
 
         [Fact]
         public void Should_evaluate_viewbag_as_dynamic_dictionary_conditional()
@@ -1117,7 +1158,6 @@
 
             Assert.Equal("Hello Frank!<div id='header'>\r\nHeader\r\n</div><div id='footer'>\r\nFooter\r\n</div>", result);
         }
-
 
         [Fact]
         public void Should_stuffrender_block_when_ifnot_statement_returns_false()
