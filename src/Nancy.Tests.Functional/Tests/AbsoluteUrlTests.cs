@@ -1,7 +1,7 @@
 ﻿namespace Nancy.Tests.Functional.Tests
 {
     using System;
-
+    using System.Threading.Tasks;
     using Nancy.Testing;
     using Nancy.Tests.Functional.Modules;
 
@@ -9,8 +9,8 @@
 
     public class AbsoluteUrlTests
     {
-        private ConfigurableBootstrapper bootstrapper;
-        private Browser browser;
+        private readonly ConfigurableBootstrapper bootstrapper;
+        private readonly Browser browser;
 
         public AbsoluteUrlTests()
         {
@@ -21,46 +21,46 @@
         }
 
         [Fact]
-        public void Should_Return_Response_From_Full_Url_String()
+        public async Task Should_Return_Response_From_Full_Url_String()
         {
             //Given, When
-            var result = browser.Get("http://mydomain.com/");
+            var result = await browser.Get("http://mydomain.com/");
 
             //Then
             Assert.Equal("hi", result.Body.AsString());
         }
 
         [Fact]
-        public void Should_Return_Response_From_Full_Url()
+        public async Task Should_Return_Response_From_Full_Url()
         {
             //Given
             var url = new Url {Path = "/", Scheme = "http", HostName = "mydomain.com"};
 
             //When
-            var result = browser.Get(url);
+            var result = await browser.Get(url);
 
             //Then
             Assert.Equal("hi", result.Body.AsString());
         }
 
         [Fact]
-        public void Should_Return_QueryString_Values_From_Full_Url_String()
+        public async Task Should_Return_QueryString_Values_From_Full_Url_String()
         {
             //Given, When
-            var result = browser.Get("http://mydomain.com/querystring?myKey=myvalue");
+            var result = await browser.Get("http://mydomain.com/querystring?myKey=myvalue");
 
             //Then
             Assert.Equal("myvalue", result.Body.AsString());
         }
 
         [Fact]
-        public void Should_Return_QueryString_Values_From_Full_Url()
+        public async Task Should_Return_QueryString_Values_From_Full_Url()
         {
             //Given
             var url = new Url { Path = "/querystring", Scheme = "http", HostName = "mydomain.com", Query = "?myKey=myvalue" };
 
             //When
-            var result = browser.Get(url);
+            var result = await browser.Get(url);
 
             //Then
             Assert.Equal("myvalue", result.Body.AsString());

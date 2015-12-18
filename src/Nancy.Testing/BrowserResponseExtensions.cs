@@ -3,6 +3,7 @@ namespace Nancy.Testing
     using System;
     using System.IO;
     using System.Linq;
+    using System.Threading.Tasks;
     using System.Xml.Linq;
 
     /// <summary>
@@ -28,12 +29,12 @@ namespace Nancy.Testing
             if (!validRedirectStatuses.Any(x => x == response.StatusCode))
             {
                 throw new AssertException(
-                    String.Format("Status code should be one of 'MovedPermanently, SeeOther, TemporaryRedirect', but was {0}.", response.StatusCode));
+                    string.Format("Status code should be one of 'MovedPermanently, SeeOther, TemporaryRedirect', but was {0}.", response.StatusCode));
             }
 
             if (!response.Headers["Location"].Equals(location, stringComparer))
             {
-                throw new AssertException(String.Format("Location should have been: {0}, but was {1}", location, response.Headers["Location"]));
+                throw new AssertException(string.Format("Location should have been: {0}, but was {1}", location, response.Headers["Location"]));
             }
         }
 

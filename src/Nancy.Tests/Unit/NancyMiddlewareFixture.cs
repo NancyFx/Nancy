@@ -249,7 +249,7 @@ namespace Nancy.Tests.Unit
                 A<Func<NancyContext, NancyContext>>.Ignored,
                 A<CancellationToken>.Ignored))
              .Invokes((Request _, Func<NancyContext, NancyContext> preRequest, CancellationToken __) => preRequest(context))
-             .Returns(TaskHelpers.GetCompletedTask(context));
+             .Returns(Task.FromResult(context));
         }
 
         private static T Get<T>(IDictionary<string, object> env, string key)

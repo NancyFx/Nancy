@@ -15,7 +15,9 @@ namespace Nancy.Testing.Tests
     using FakeItEasy;
     using Nancy.Authentication.Forms;
     using System.Collections.ObjectModel;
+    using System.Threading.Tasks;
     using Nancy.Configuration;
+    using Nancy.Tests.xUnitExtensions;
     using Xunit.Extensions;
 
     public class BrowserFixture
@@ -33,13 +35,13 @@ namespace Nancy.Testing.Tests
         }
 
         [Fact]
-        public void Should_be_able_to_send_string_in_body()
+        public async Task Should_be_able_to_send_string_in_body()
         {
             // Given
             const string thisIsMyRequestBody = "This is my request body";
 
             // When
-            var result = browser.Post("/", with =>
+            var result = await browser.Post("/", with =>
                 {
                     with.HttpRequest();
                     with.Body(thisIsMyRequestBody);
@@ -50,13 +52,13 @@ namespace Nancy.Testing.Tests
         }
 
         [Fact]
-        public void Should_be_able_to_set_user_host_address()
+        public async Task Should_be_able_to_set_user_host_address()
         {
             // Given
             const string userHostAddress = "127.0.0.1";
 
             // When
-            var result = browser.Get("/userHostAddress", with =>
+            var result = await browser.Get("/userHostAddress", with =>
                 {
                     with.HttpRequest();
                     with.UserHostAddress(userHostAddress);
@@ -67,13 +69,13 @@ namespace Nancy.Testing.Tests
         }
 
         [Fact]
-        public void Should_be_able_check_is_local_ipV4()
+        public async Task Should_be_able_check_is_local_ipV4()
         {
             // Given
             const string userHostAddress = "127.0.0.1";
 
             // When
-            var result = browser.Get("/isLocal", with =>
+            var result = await browser.Get("/isLocal", with =>
                 {
                     with.HttpRequest();
                     with.HostName("localhost");
@@ -85,13 +87,13 @@ namespace Nancy.Testing.Tests
         }
 
         [Fact]
-        public void Should_be_able_check_is_local_ipV6()
+        public async Task Should_be_able_check_is_local_ipV6()
         {
             // Given
             const string userHostAddress = "::1";
 
             // When
-            var result = browser.Get("/isLocal", with =>
+            var result = await browser.Get("/isLocal", with =>
                 {
                     with.HttpRequest();
                     with.HostName("localhost");
@@ -103,13 +105,13 @@ namespace Nancy.Testing.Tests
         }
 
         [Fact]
-        public void Should_be_able_check_is_not_local()
+        public async Task Should_be_able_check_is_not_local()
         {
             // Given
             const string userHostAddress = "84.12.65.72";
 
             // When
-            var result = browser.Get("/isLocal", with =>
+            var result = await browser.Get("/isLocal", with =>
                 {
                     with.HttpRequest();
                     with.HostName("anotherhost");
@@ -121,7 +123,7 @@ namespace Nancy.Testing.Tests
         }
 
         [Fact]
-        public void Should_be_able_to_send_stream_in_body()
+        public async Task Should_be_able_to_send_stream_in_body()
         {
             // Given
             const string thisIsMyRequestBody = "This is my request body";
@@ -131,7 +133,7 @@ namespace Nancy.Testing.Tests
             writer.Flush();
 
             // When
-            var result = browser.Post("/", with =>
+            var result = await browser.Post("/", with =>
                 {
                     with.HttpRequest();
                     with.Body(stream, "text/plain");
@@ -142,13 +144,13 @@ namespace Nancy.Testing.Tests
         }
 
         [Fact]
-        public void Should_be_able_to_send_json_in_body()
+        public async Task Should_be_able_to_send_json_in_body()
         {
             // Given
             var model = new EchoModel { SomeString = "Some String", SomeInt = 29, SomeBoolean = true };
 
             // When
-            var result = browser.Post("/", with =>
+            var result = await browser.Post("/", with =>
                 {
                     with.JsonBody(model);
                 });
@@ -163,13 +165,13 @@ namespace Nancy.Testing.Tests
         }
 
         [Fact]
-        public void Should_be_able_to_send_xml_in_body()
+        public async Task Should_be_able_to_send_xml_in_body()
         {
             // Given
             var model = new EchoModel { SomeString = "Some String", SomeInt = 29, SomeBoolean = true };
 
             // When
-            var result = browser.Post("/", with =>
+            var result = await browser.Post("/", with =>
                 {
                     with.XMLBody(model);
                 });
@@ -184,7 +186,7 @@ namespace Nancy.Testing.Tests
         }
 
         [Fact]
-        public void Should_add_basic_authentication_credentials_to_the_headers_of_the_request()
+        public async Task Should_add_basic_authentication_credentials_to_the_headers_of_the_request()
         {
             // Given
             var context = new BrowserContext(A.Fake<INancyEnvironment>());
@@ -256,7 +258,7 @@ namespace Nancy.Testing.Tests
         }
 
         [Fact]
-        public void Should_add_cookies_to_the_request_and_get_cookies_in_response()
+        public async Task Should_add_cookies_to_the_request_and_get_cookies_in_response()
         {
             // Given
             var cookies =
@@ -267,7 +269,7 @@ namespace Nancy.Testing.Tests
                 };
 
             // When
-            var result = browser.Get("/cookie", with =>
+            var result = await browser.Get("/cookie", with =>
                 {
                     with.Cookie(cookies);
                 });
@@ -278,17 +280,17 @@ namespace Nancy.Testing.Tests
         }
 
         [Fact]
-        public void Should_add_a_cookie_to_the_request_and_get_a_cookie_in_response()
+        public async Task Should_add_a_cookie_to_the_request_and_get_a_cookie_in_response()
         {
             // Given, When
-            var result = browser.Get("/cookie", with => with.Cookie("CookieName", "CookieValue"));
+            var result = await browser.Get("/cookie", with => with.Cookie("CookieName", "CookieValue"));
 
             // Then
             result.Cookies.Single(x => x.Name == "CookieName").Value.ShouldEqual("CookieValue");
         }
 
         [Fact]
-        public void Should_be_able_to_continue_with_another_request()
+        public async Task Should_be_able_to_continue_with_another_request()
         {
             // Given
             const string FirstRequestBody = "This is my first request body";
@@ -303,11 +305,13 @@ namespace Nancy.Testing.Tests
             secondRequestWriter.Flush();
 
             // When
-            var result = browser.Post("/", with =>
+            await browser.Post("/", with =>
                 {
                     with.HttpRequest();
                     with.Body(firstRequestStream, "text/plain");
-                }).Then.Post("/", with =>
+                });
+
+            var result = await browser.Post("/", with =>
                 {
                     with.HttpRequest();
                     with.Body(secondRequestStream, "text/plain");
@@ -318,71 +322,67 @@ namespace Nancy.Testing.Tests
         }
 
         [Fact]
-        public void Should_maintain_cookies_when_chaining_requests()
+        public async Task Should_maintain_cookies_when_chaining_requests()
         {
             // Given
             // When
-            var result = browser.Get(
-                             "/session",
-                             with => with.HttpRequest())
-                .Then
-                .Get(
+            await browser.Get("/session", with => with.HttpRequest());
+
+            var result = await this.browser.Get(
                              "/session",
                              with => with.HttpRequest());
-
+            
+            //Then
             result.Body.AsString().ShouldEqual("Current session value is: I've created a session!");
         }
 
         [Fact]
-        public void Should_maintain_cookies_even_if_not_set_on_directly_preceding_request()
+        public async Task Should_maintain_cookies_even_if_not_set_on_directly_preceding_request()
         {
             // Given
             // When
-            var result = browser.Get(
-                             "/session",
-                             with => with.HttpRequest())
-                .Then
-                .Get(
-                             "/nothing",
-                             with => with.HttpRequest())
-                .Then
-                .Get(
-                             "/session",
-                             with => with.HttpRequest());
+            await browser.Get("/session", with => with.HttpRequest());
+
+            await browser.Get("/nothing", with => with.HttpRequest());
+            
+            var result = await browser.Get("/session", with => with.HttpRequest());
 
             //Then
             result.Body.AsString().ShouldEqual("Current session value is: I've created a session!");
         }
 
         [Fact]
-        public void Should_be_able_to_not_specify_delegate_for_basic_http_request()
+        public async Task Should_be_able_to_not_specify_delegate_for_basic_http_request()
         {
             //Given, When
-            var result = browser.Get("/type");
+            var result = await browser.Get("/type");
 
             //Then
             result.Body.AsString().ShouldEqual("http");
         }
 
         [Fact]
-        public void Should_add_ajax_header()
+        public async Task Should_add_ajax_header()
         {
             //Given, When
-            var result = browser.Get("/ajax", with => with.AjaxRequest());
+            var result = await browser.Get("/ajax", with => with.AjaxRequest());
 
             //Then
             result.Body.AsString().ShouldEqual("ajax");
         }
 
         [Fact]
-        public void Should_throw_an_exception_when_the_cert_couldnt_be_found()
+        public async Task Should_throw_an_exception_when_the_cert_couldnt_be_found()
         {
             //Given, When
-            var exception = Record.Exception(() =>
+            var exception = await RecordAsync.Exception(() =>
                 {
-                    var result = browser.Get("/ajax",
-                                     with =>
-                                         with.Certificate(StoreLocation.CurrentUser, StoreName.My, X509FindType.FindByThumbprint, "aa aa aa"));
+                    return browser.Get("/ajax", with => 
+                                         with.Certificate(
+                                             StoreLocation.CurrentUser,
+                                             StoreName.My,
+                                             X509FindType.FindByThumbprint,
+                                             "aa aa aa"));
                 });
 
             //Then
@@ -390,27 +390,27 @@ namespace Nancy.Testing.Tests
         }
 
         [Fact]
-        public void Should_add_certificate()
+        public async Task Should_add_certificate()
         {
             //Given, When
-            var result = browser.Get("/cert", with => with.Certificate());
+            var result = await browser.Get("/cert", with => with.Certificate());
 
             //Then
             result.Context.Request.ClientCertificate.ShouldNotBeNull();
         }
 
         [Fact]
-        public void Should_change_scheme_to_https_when_HttpsRequest_is_called_on_the_context()
+        public async Task Should_change_scheme_to_https_when_HttpsRequest_is_called_on_the_context()
         {
             //Given, When
-            var result = browser.Get("/", with => with.HttpsRequest());
+            var result = await browser.Get("/", with => with.HttpsRequest());
 
             //Then
             result.Context.Request.Url.Scheme.ShouldEqual("https");
         }
 
         [Fact]
-        public void Should_add_forms_authentication_cookie_to_the_request()
+        public async Task Should_add_forms_authentication_cookie_to_the_request()
         {
             //Given
             var userId = A.Dummy<Guid>();
@@ -427,7 +427,7 @@ namespace Nancy.Testing.Tests
             var cookieContents = String.Format("{1}{0}", encryptedId, hmacString);
 
             //When
-            var response = browser.Get("/cookie", (with) =>
+            var response = await browser.Get("/cookie", (with) =>
                 {
                     with.HttpRequest();
                     with.FormsAuth(userId, formsAuthConfig);
@@ -441,10 +441,10 @@ namespace Nancy.Testing.Tests
         }
 
         [Fact]
-        public void Should_return_JSON_serialized_form()
+        public async Task Should_return_JSON_serialized_form()
         {
             // Given
-            var response = browser.Post("/serializedform", (with) =>
+            var response = await browser.Post("/serializedform", (with) =>
                 {
                     with.HttpRequest();
                     with.Accept("application/json");
@@ -463,10 +463,10 @@ namespace Nancy.Testing.Tests
         }
 
         [Fact]
-        public void Should_return_JSON_serialized_querystring()
+        public async Task Should_return_JSON_serialized_querystring()
         {
             // Given
-            var response = browser.Get("/serializedquerystring", (with) =>
+            var response = await browser.Get("/serializedquerystring", (with) =>
                 {
                     with.HttpRequest();
                     with.Accept("application/json");
@@ -485,10 +485,10 @@ namespace Nancy.Testing.Tests
         }
 
         [Fact]
-        public void Should_encode_form()
+        public async Task Should_encode_form()
         {
             //Given, When
-            var result = browser.Post("/encoded", with =>
+            var result = await browser.Post("/encoded", with =>
                 {
                     with.HttpRequest();
                     with.FormValue("name", "john++");
@@ -499,10 +499,10 @@ namespace Nancy.Testing.Tests
         }
 
         [Fact]
-        public void Should_encode_querystring()
+        public async Task Should_encode_querystring()
         {
             //Given, When
-            var result = browser.Post("/encodedquerystring", with =>
+            var result = await browser.Post("/encodedquerystring", with =>
                 {
                     with.HttpRequest();
                     with.Query("name", "john++");
@@ -513,26 +513,26 @@ namespace Nancy.Testing.Tests
         }
 
         [Fact]
-        public void Should_add_nancy_testing_browser_header_as_default_user_agent()
+        public async Task Should_add_nancy_testing_browser_header_as_default_user_agent()
         {
             // Given
             const string expectedHeaderValue = "Nancy.Testing.Browser";
 
             // When
-            var result = browser.Get("/useragent").Body.AsString();
+            var result = (await browser.Get("/useragent")).Body.AsString();
 
             // Then
             result.ShouldEqual(expectedHeaderValue);
         }
 
         [Fact]
-        public void Should_override_default_user_agent_when_explicitly_defined()
+        public async Task Should_override_default_user_agent_when_explicitly_defined()
         {
             // Given
             const string expectedHeaderValue = "Custom.User.Agent";
 
             // When
-            var result = browser.Get("/useragent", with =>
+            var result = await browser.Get("/useragent", with =>
                 {
                     with.Header("User-Agent", expectedHeaderValue);
                 });
@@ -546,12 +546,12 @@ namespace Nancy.Testing.Tests
         [Theory]
         [InlineData("application/json")]
         [InlineData("application/xml")]
-        public void Should_return_error_message_on_cyclical_exception(string accept)
+        public async Task Should_return_error_message_on_cyclical_exception(string accept)
         {
             //Given/When
             using (new StaticConfigurationContext(x => x.DisableErrorTraces = false))
             {
-                var result = browser.Get("/cyclical", with => with.Accept(accept));
+                var result = await browser.Get("/cyclical", with => with.Accept(accept));
 
                 //Then
                 result.Body.AsString().ShouldNotBeEmpty();
@@ -561,12 +561,12 @@ namespace Nancy.Testing.Tests
         [Theory]
         [InlineData("application/json")]
         [InlineData("application/xml")]
-        public void Should_return_no_error_message_on_cyclical_exception_when_disabled_error_trace(string accept)
+        public async Task Should_return_no_error_message_on_cyclical_exception_when_disabled_error_trace(string accept)
         {
             //Given/When
             using (new StaticConfigurationContext(x => x.DisableErrorTraces = true))
             {
-                var result = browser.Get("/cyclical", with => with.Accept(accept));
+                var result = await browser.Get("/cyclical", with => with.Accept(accept));
 
                 //Then
                 result.Body.AsString().ShouldBeEmpty();

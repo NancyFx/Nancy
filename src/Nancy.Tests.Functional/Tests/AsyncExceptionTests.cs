@@ -4,7 +4,7 @@
     using System.Threading.Tasks;
 
     using Nancy.Testing;
-
+    using Nancy.Tests.xUnitExtensions;
     using Xunit;
 
     public class AsyncExceptionTests
@@ -23,15 +23,19 @@
         }
 
         [Fact]
-        public void When_get_sync_then_should_throw()
+        public async Task When_get_sync_then_should_throw()
         {
-            Assert.Throws<Exception>(() => this.browser.Get("/sync"));
+            var ex = await RecordAsync.Exception(async () => await this.browser.Get("/sync"));
+
+            Assert.NotNull(ex);
         }
 
         [Fact]
-        public void When_get_async_then_should_throw()
+        public async Task When_get_async_then_should_throw()
         {
-            Assert.Throws<Exception>(() => this.browser.Get("/async"));
+            var ex = await RecordAsync.Exception(async () => await this.browser.Get("/sync"));
+
+            Assert.NotNull(ex);
         }
     }
 

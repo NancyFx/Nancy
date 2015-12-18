@@ -33,72 +33,32 @@ namespace Nancy.Routing
         /// <param name="parameters">The parameters that the route should be invoked with.</param>
         /// <param name="context">The context of the route that is being invoked.</param>
         /// <returns>A <see cref="Response"/> instance that represents the result of the invoked route.</returns>
-        public Task<Response> Invoke(Route route, CancellationToken cancellationToken, DynamicDictionary parameters, NancyContext context)
+        public async Task<Response> Invoke(Route route, CancellationToken cancellationToken, DynamicDictionary parameters, NancyContext context)
         {
-            var tcs = new TaskCompletionSource<Response>();
+            dynamic result;
 
-            var result = route.Invoke(parameters, cancellationToken);
-
-            result.WhenCompleted(
-                completedTask =>
-                {
-                    var returnResult = completedTask.Result;
-                    if (!(returnResult is ValueType) && returnResult == null)
-                    {
-                        context.WriteTraceLog(
-                            sb => sb.AppendLine("[DefaultRouteInvoker] Invocation of route returned null"));
-
-                        returnResult = new Response();
-                    }
-
-                    try
-                    {
-                        var response = this.negotiator.NegotiateResponse(returnResult, context);
-
-                        tcs.SetResult(response);
-                    }
-                    catch (Exception e)
-                    {
-                        tcs.SetException(e);
-                    }
-                },
-                faultedTask =>
-                {
-                    var earlyExitException = GetEarlyExitException(faultedTask);
-
-                    if (earlyExitException != null)
-                    {
-                        context.WriteTraceLog(
-                            sb =>
-                            sb.AppendFormat(
-                                "[DefaultRouteInvoker] Caught RouteExecutionEarlyExitException - reason {0}",
-                                earlyExitException.Reason));
-                        tcs.SetResult(earlyExitException.Response);
-                    }
-                    else
-                    {
-                        tcs.SetException(faultedTask.Exception);
-                    }
-                });
-
-            return tcs.Task;
-        }
-
-        private static RouteExecutionEarlyExitException GetEarlyExitException(Task<dynamic> faultedTask)
-        {
-            var taskExceptions = faultedTask.Exception;
-
-            if (taskExceptions == null)
+            try
             {
-                return null;
+                result = await route.Invoke(parameters, cancellationToken).ConfigureAwait(false);
+            }
+            catch(RouteExecutionEarlyExitException earlyExitException)
+            {
+                context.WriteTraceLog(
+                    sb => sb.AppendFormat(
+                            "[DefaultRouteInvoker] Caught RouteExecutionEarlyExitException - reason {0}",
+                            earlyExitException.Reason));
+                return earlyExitException.Response;
             }
 
-            if (taskExceptions.InnerExceptions.Count > 1)
+            if (!(result is ValueType) && result == null)
             {
-                return null;
+                context.WriteTraceLog(
+                    sb => sb.AppendLine("[DefaultRouteInvoker] Invocation of route returned null"));
+
+                result = new Response();
             }
 
-            return taskExceptions.InnerException as RouteExecutionEarlyExitException;
+            return this.negotiator.NegotiateResponse(result, context);
         }
     }
 }

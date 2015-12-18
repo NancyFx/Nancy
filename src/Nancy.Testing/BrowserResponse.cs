@@ -99,16 +99,5 @@
         {
             get { return this.Context.Response.Cookies; }
         }
-
-        /// <summary>
-        /// Continues with another request.
-        /// </summary>
-        public Browser Then
-        {
-            get
-            {
-                return this.hostBrowser;
-            }
-        }
     }
 }

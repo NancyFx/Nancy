@@ -32,7 +32,7 @@ __Easier Testing__ - Nancy provides a testing library that allows you to test th
     public void GetData_WhenRequested_ShouldReturnOKStatusCode()
     {
         var browser = new Browser();
-        var response = browser.Get("/GetData", (with) =>
+        var response = await browser.Get("/GetData", (with) =>
         {
             with.Header("Authorization", "Bearer johnsmith");
             with.Header("Accept", "application/json");

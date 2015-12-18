@@ -1,6 +1,6 @@
 ﻿namespace Nancy.Routing
 {
-    using Nancy.Helpers;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Route that is returned when the path could not be matched.
@@ -15,7 +15,7 @@
         /// <param name="method">The HTTP method of the route.</param>
         /// <param name="path">The path of the route.</param>
         public NotFoundRoute(string method, string path)
-            : base(method, path, null, (x,c) => TaskHelpers.GetCompletedTask<dynamic>(new NotFoundResponse()))
+            : base(method, path, null, (x,c) => Task.FromResult<dynamic>(new NotFoundResponse()))
         {
         }
     }

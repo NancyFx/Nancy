@@ -1,5 +1,6 @@
 ﻿namespace Nancy.Testing.Tests
 {
+    using System.Threading.Tasks;
     using Nancy.ModelBinding;
     using Nancy.Tests;
     using Xunit;
@@ -19,7 +20,7 @@
         }
 
         [Fact]
-        public void Should_pull_query_parameter_with_different_case()
+        public async Task Should_pull_query_parameter_with_different_case()
         {
             // Given
             const string animal = "dog";
@@ -27,7 +28,7 @@
             using (new StaticConfigurationContext(x => x.CaseSensitive = false))
             {
                 // When
-                var response = browser.Get("/", with =>
+                var response = await browser.Get("/", with =>
                 {
                     with.Query("ANIMAL", animal);
                 });
@@ -38,7 +39,7 @@
         }
 
         [Fact]
-        public void Should_not_pull_query_parameter_with_different_case_when_sensitivity_is_on()
+        public async Task Should_not_pull_query_parameter_with_different_case_when_sensitivity_is_on()
         {
             // Given
             const string animal = "dog";
@@ -47,7 +48,7 @@
             {
 
                 // When
-                var response = browser.Get("/", with =>
+                var response = await browser.Get("/", with =>
                 {
                     with.Query("ANIMAL", animal);
                 });
@@ -58,7 +59,7 @@
         }
 
         [Fact]
-        public void Should_pull_parameter_with_different_case()
+        public async Task Should_pull_parameter_with_different_case()
         {
             // Given
             const string animal = "dog";
@@ -66,7 +67,7 @@
             using (new StaticConfigurationContext(x => x.CaseSensitive = false))
             {
                 // When
-                var response = browser.Get("/dog", with =>
+                var response = await browser.Get("/dog", with =>
                 {
                 });
 
@@ -76,13 +77,13 @@
         }
 
         [Fact]
-        public void Should_not_pull_parameter_with_different_case_when_sensitivity_is_on()
+        public async Task Should_not_pull_parameter_with_different_case_when_sensitivity_is_on()
         {
             // Given
             using (new StaticConfigurationContext(x => x.CaseSensitive = true))
             {
                 // When
-                var response = browser.Get("/dog");
+                var response = await browser.Get("/dog");
 
                 // Then
                 response.Body.AsString().ShouldEqual(string.Empty);
@@ -90,7 +91,7 @@
         }
 
         [Fact]
-        public void Should_bind_query_with_different_case_when_sensitivity_is_off()
+        public async Task Should_bind_query_with_different_case_when_sensitivity_is_off()
         {
             // Given
             const string animal = "dog";
@@ -98,7 +99,7 @@
             using (new StaticConfigurationContext(x => x.CaseSensitive = false))
             {
                 // When
-                var response = browser.Get("/animal", with =>
+                var response = await browser.Get("/animal", with =>
                 {
                     with.Query("TYPE", animal);
                 });
@@ -109,7 +110,7 @@
         }
 
         [Fact]
-        public void Should_not_bind_query_with_different_case_when_sensitivity_is_on()
+        public async Task Should_not_bind_query_with_different_case_when_sensitivity_is_on()
         {
             // Given
             const string animal = "dog";
@@ -117,7 +118,7 @@
             using (new StaticConfigurationContext(x => x.CaseSensitive = true))
             {
                 // When
-                var response = browser.Get("/animal", with =>
+                var response = await browser.Get("/animal", with =>
                 {
                     with.Query("TYPE", animal);
                 });

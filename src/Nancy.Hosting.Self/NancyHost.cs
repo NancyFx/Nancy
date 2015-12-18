@@ -7,7 +7,7 @@
     using System.Linq;
     using System.Net;
     using System.Security.Principal;
-
+    using System.Threading.Tasks;
     using Nancy.Bootstrapper;
     using Nancy.Extensions;
     using Nancy.Helpers;
@@ -32,6 +32,7 @@
         private readonly INancyEngine engine;
         private readonly HostConfiguration configuration;
         private readonly INancyBootstrapper bootstrapper;
+        private bool stop = false;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyHost"/> class for the specified <paramref name="baseUris"/>.
@@ -122,16 +123,22 @@
         {
             this.StartListener();
 
-            try
+            Task.Factory.StartNew(async () =>
             {
-                this.listener.BeginGetContext(this.GotCallback, null);
-            }
-            catch (Exception e)
-            {
-                this.configuration.UnhandledExceptionCallback.Invoke(e);
-
-                throw;
-            }
+                try
+                {
+                    while(!this.stop)
+                    {
+                        HttpListenerContext context = await listener.GetContextAsync();
+                        Process(context);
+                    }
+                }
+                catch(Exception ex)
+                {
+                    this.configuration.UnhandledExceptionCallback.Invoke(ex);
+                    throw;
+                }
+            });
         }
 
         private void StartListener()
@@ -201,12 +208,9 @@
 
         private string GetUser()
         {
-            if (!string.IsNullOrWhiteSpace(this.configuration.UrlReservations.User))
-            {
-                return this.configuration.UrlReservations.User;
-            }
-
-            return WindowsIdentity.GetCurrent().Name;
+            return !string.IsNullOrWhiteSpace(this.configuration.UrlReservations.User) 
+                ? this.configuration.UrlReservations.User 
+                : WindowsIdentity.GetCurrent().Name;
         }
 
         /// <summary>
@@ -216,6 +220,7 @@
         {
             if (this.listener.IsListening)
             {
+                this.stop = true;
                 listener.Stop();
             }
         }
@@ -241,7 +246,7 @@
 
             if (baseUri == null)
             {
-                throw new InvalidOperationException(String.Format("Unable to locate base URI for request: {0}",request.Url));
+                throw new InvalidOperationException(string.Format("Unable to locate base URI for request: {0}",request.Url));
             }
 
             var expectedRequestLength =
@@ -402,39 +407,16 @@
                 contentLength;
         }
 
-        private void GotCallback(IAsyncResult ar)
-        {
-            try
-            {
-                var ctx = this.listener.EndGetContext(ar);
-                this.listener.BeginGetContext(this.GotCallback, null);
-                this.Process(ctx);
-            }
-            catch (Exception e)
-            {
-                this.configuration.UnhandledExceptionCallback.Invoke(e);
-
-                try
-                {
-                    this.listener.BeginGetContext(this.GotCallback, null);
-                }
-                catch
-                {
-                    this.configuration.UnhandledExceptionCallback.Invoke(e);
-                }
-            }
-        }
-
-        private void Process(HttpListenerContext ctx)
+        private async Task Process(HttpListenerContext ctx)
         {
             try
             {
                 var nancyRequest = this.ConvertRequestToNancyRequest(ctx.Request);
-                using (var nancyContext = this.engine.HandleRequest(nancyRequest))
+                using (var nancyContext = await this.engine.HandleRequest(nancyRequest).ConfigureAwait(false))
                 {
                     try
                     {
-                        ConvertNancyResponseToResponse(nancyContext.Response, ctx.Response);
+                        this.ConvertNancyResponseToResponse(nancyContext.Response, ctx.Response);
                     }
                     catch (Exception e)
                     {

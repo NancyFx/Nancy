@@ -1,7 +1,7 @@
 ﻿namespace Nancy.Tests.Functional.Tests
 {
     using System;
-
+    using System.Threading.Tasks;
     using Nancy.Bootstrapper;
     using Nancy.Testing;
     using Nancy.Tests.Functional.Modules;
@@ -23,10 +23,10 @@
         }
 
         [Fact]
-        public void Should_return_JSON_serialized_form()
+        public async Task Should_return_JSON_serialized_form()
         {
             //Given
-            var response = browser.Post("/serializedform", (with) =>
+            var response = await browser.Post("/serializedform", (with) =>
             {
                 with.HttpRequest();
                 with.Accept("application/json");
@@ -45,10 +45,10 @@
         }
 
         [Fact]
-        public void Should_return_JSON_serialized_querystring()
+        public async Task Should_return_JSON_serialized_querystring()
         {
             //Given
-            var response = browser.Get("/serializedquerystring", (with) =>
+            var response = await browser.Get("/serializedquerystring", (with) =>
             {
                 with.HttpRequest();
                 with.Accept("application/json");

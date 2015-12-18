@@ -2,7 +2,7 @@
 {
     using System;
     using System.Runtime.Remoting.Messaging;
-
+    using System.Threading.Tasks;
     using Nancy.Bootstrapper;
     using Nancy.Routing.Constraints;
     using Nancy.Testing;
@@ -28,48 +28,48 @@
         }
 
         [Fact]
-        public void multiple_parameters_per_segment_should_support_constraints()
+        public async Task multiple_parameters_per_segment_should_support_constraints()
         {
             // Given
             const string url = @"/42...42";
             // When
-            var response = this.browser.Get(url, with => { with.HttpRequest(); });
+            var response = await this.browser.Get(url, with => { with.HttpRequest(); });
             // Then
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.True(Invoked);
         }
 
         [Fact]
-        public void versionsegmentrouteconstraint_should_match_on_version_numbers_on_segment_with_multiple_parameters()
+        public async Task versionsegmentrouteconstraint_should_match_on_version_numbers_on_segment_with_multiple_parameters()
         {
             // Given
             const string url = @"/4.1.2...4.1.5";
             // When
-            var response = this.browser.Get(url, with => { with.HttpRequest(); with.Accept("application/json");});
+            var response = await this.browser.Get(url, with => { with.HttpRequest(); with.Accept("application/json");});
             // Then
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal(response.Body.AsString(), "{\"left\":\"4.1.2\",\"right\":\"4.1.5\"}");
         }
 
         [Fact]
-        public void versionsegmentrouteconstraint_should_match_on_valid_version_number()
+        public async Task versionsegmentrouteconstraint_should_match_on_valid_version_number()
         {
             // Given
             const string url = @"/version/4.1.2";
             // When
-            var response = this.browser.Get(url, with => { with.HttpRequest(); with.Accept("application/json"); });
+            var response = await this.browser.Get(url, with => { with.HttpRequest(); with.Accept("application/json"); });
             // Then
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal(response.Body.AsString(), "{\"versionNumber\":\"4.1.2\"}");
         }
 
         [Fact]
-        public void versionsegmentrouteconstraint_should_not_match_on_invalid_version_number()
+        public async Task versionsegmentrouteconstraint_should_not_match_on_invalid_version_number()
         {
             // Given
             const string url = @"/version/4.1.";
             // When
-            var response = this.browser.Get(url, with => { with.HttpRequest(); with.Accept("application/json"); });
+            var response = await this.browser.Get(url, with => { with.HttpRequest(); with.Accept("application/json"); });
             // Then
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal(response.Body.AsString(), "{\"invalidVersionNumber\":\"4.1.\"}");

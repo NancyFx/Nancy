@@ -295,6 +295,7 @@
     <Compile Include="Unit\ViewEngines\SuperSimpleViewEngineTests.cs" />
     <Compile Include="Unit\ViewEngines\ViewNotFoundExceptionFixture.cs" />
     <Compile Include="Unit\XmlFormatterExtensionsFixtures.cs" />
+    <Compile Include="xUnitExtensions\RecordAsync.cs" />
     <Compile Include="xUnitExtensions\SkipException.cs" />
     <Compile Include="xUnitExtensions\SkippableFactAttribute.cs" />
     <Compile Include="Unit\Responses\GenericFileResponseFixture.cs" />

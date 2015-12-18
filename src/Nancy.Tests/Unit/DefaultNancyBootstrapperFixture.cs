@@ -3,7 +3,7 @@
     using System.CodeDom.Compiler;
     using System.Collections.Generic;
     using System.Linq;
-
+    using System.Threading.Tasks;
     using Microsoft.CSharp;
 
     using Nancy.Bootstrapper;
@@ -22,7 +22,7 @@
         }
 
         [Fact]
-        public void Should_only_initialise_request_container_once_per_request()
+        public async Task Should_only_initialise_request_container_once_per_request()
         {
             // Given
             this.bootstrapper.Initialise();
@@ -31,8 +31,8 @@
             var request2 = new FakeRequest("GET", "/");
 
             // When
-            engine.HandleRequest(request);
-            engine.HandleRequest(request2);
+            await engine.HandleRequest(request);
+            await engine.HandleRequest(request2);
 
             // Then
             bootstrapper.RequestContainerInitialisations.Any(kvp => kvp.Value > 1).ShouldBeFalse();

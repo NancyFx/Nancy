@@ -1,6 +1,5 @@
 namespace Nancy.Hosting.Aspnet
 {
-    using System;
     using System.Collections.Generic;
     using System.Configuration;
     using System.Globalization;
@@ -30,41 +29,15 @@ namespace Nancy.Hosting.Aspnet
         /// <summary>
         /// Processes the ASP.NET request with Nancy.
         /// </summary>
-        /// <param name="context">The <see cref="HttpContextBase"/> of the request.</param>
-        /// <param name="cb"></param>
-        /// <param name="state"></param>
-        public Task<Tuple<NancyContext, HttpContextBase>> ProcessRequest(HttpContextBase context, AsyncCallback cb, object state)
+        /// <param name="httpContext">The <see cref="HttpContextBase"/> of the request.</param>
+        public async Task ProcessRequest(HttpContextBase httpContext)
         {
-            var request = CreateNancyRequest(context);
+            var request = CreateNancyRequest(httpContext);
 
-            var tcs = new TaskCompletionSource<Tuple<NancyContext, HttpContextBase>>(state);
-
-            if (cb != null)
+            using(var nancyContext = await this.engine.HandleRequest(request).ConfigureAwait(false))
             {
-                tcs.Task.ContinueWith(task => cb(task), TaskContinuationOptions.ExecuteSynchronously);
+                SetNancyResponseToHttpResponse(httpContext, nancyContext.Response);
             }
-
-            this.engine.HandleRequest(
-                request, 
-                ctx => tcs.SetResult(new Tuple<NancyContext, HttpContextBase>(ctx, context)), 
-                tcs.SetException);
-
-            return tcs.Task;
-        }
-
-        public static void EndProcessRequest(Task<Tuple<NancyContext, HttpContextBase>> task)
-        {
-            if (task.IsFaulted)
-            {
-                var exception = task.Exception;
-                exception.Handle(ex => ex is HttpException);
-            }
-
-            var nancyContext = task.Result.Item1;
-            var httpContext = task.Result.Item2;
-
-            SetNancyResponseToHttpResponse(httpContext, nancyContext.Response);
-            nancyContext.Dispose();
         }
 
         private static Request CreateNancyRequest(HttpContextBase context)

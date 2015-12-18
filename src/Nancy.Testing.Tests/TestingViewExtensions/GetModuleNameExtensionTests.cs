@@ -1,14 +1,15 @@
 ﻿namespace Nancy.Testing.Tests.TestingViewExtensions
 {
+    using System.Threading.Tasks;
     using Xunit;
 
     public class GetModuleNameExtensionTests
     {
-        private readonly Browser _browser;
+        private readonly Browser browser;
 
         public GetModuleNameExtensionTests()
         {
-            this._browser = new Browser(with =>
+            this.browser = new Browser(with =>
             {
                 with.Module<TestingViewFactoryTestModule>();
                 with.ViewFactory<TestingViewFactory>();
@@ -16,9 +17,9 @@
         }
 
         [Fact]
-        public void should_return_name_of_the_module()
+        public async Task should_return_name_of_the_module()
         {
-            var response = this._browser.Get("/testingViewFactory");
+            var response = await this.browser.Get("/testingViewFactory");
             Assert.Equal("TestingViewFactoryTest", response.GetModuleName());
         }
     }

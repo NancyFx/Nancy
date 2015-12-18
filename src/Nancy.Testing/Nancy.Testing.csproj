@@ -114,6 +114,7 @@
     <Compile Include="AssertEqualityComparer.cs" />
     <Compile Include="AssertException.cs" />
     <Compile Include="Asserts.cs" />
+    <Compile Include="LegacyBrowser.cs" />
     <Compile Include="Browser.cs" />
     <Compile Include="BrowserContext.cs" />
     <Compile Include="BrowserContextExtensions.cs" />

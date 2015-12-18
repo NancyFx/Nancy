@@ -1,5 +1,6 @@
 ﻿namespace Nancy.Tests.Unit.Routing
 {
+    using System.Threading.Tasks;
     using Nancy.Testing;
 
     using Xunit;
@@ -8,22 +9,22 @@
     public class DefaultRouteResolverFixture
     {
         [Fact]
-        public void Should_resolve_root()
+        public async Task Should_resolve_root()
         {
             //Given, When
             var browser = InitBrowser(caseSensitive: false);
-            var result = browser.Get("/");
+            var result = await browser.Get("/");
 
             //Then
             result.Body.AsString().ShouldEqual("Root");
         }
 
         [Fact]
-        public void Should_resolve_correct_route_based_on_method()
+        public async Task Should_resolve_correct_route_based_on_method()
         {
             //Given, When
             var browser = InitBrowser(caseSensitive: false);
-            var result = browser.Post("/");
+            var result = await browser.Post("/");
 
             //Then
             result.Body.AsString().ShouldEqual("PostRoot");
@@ -34,11 +35,11 @@
         [InlineData("/foo", false)]
         [InlineData("/FOO", true)]
         [InlineData("/FOO", false)]
-        public void Should_resolve_single_literal(string path, bool caseSensitive)
+        public async Task Should_resolve_single_literal(string path, bool caseSensitive)
         {
             //Given, When
             var browser = InitBrowser(caseSensitive);
-            var result = browser.Get(path);
+            var result = await browser.Get(path);
 
             //Then
             if (ShouldBeFound(path, caseSensitive))
@@ -56,11 +57,11 @@
         [InlineData("/foo/bar/baz", false)]
         [InlineData("/FOO/BAR/BAZ", true)]
         [InlineData("/FOO/BAR/BAZ", false)]
-        public void Should_resolve_multi_literal(string path, bool caseSensitive)
+        public async Task Should_resolve_multi_literal(string path, bool caseSensitive)
         {
             //Given, When
             var browser = InitBrowser(caseSensitive);
-            var result = browser.Get(path);
+            var result = await browser.Get(path);
 
             //Then
             if (ShouldBeFound(path, caseSensitive))
@@ -78,11 +79,11 @@
         [InlineData("/foo/testing/plop", false, "testing")]
         [InlineData("/FOO/TESTING/PLOP", true, "NA")]
         [InlineData("/FOO/TESTING/PLOP", false, "TESTING")]
-        public void Should_resolve_single_capture(string path, bool caseSensitive, string expected)
+        public async Task Should_resolve_single_capture(string path, bool caseSensitive, string expected)
         {
             //Given, When
             var browser = InitBrowser(caseSensitive);
-            var result = browser.Get(path);
+            var result = await browser.Get(path);
 
             //Then
             if (ShouldBeFound(path, caseSensitive))
@@ -100,11 +101,11 @@
         [InlineData("/moo/hoo/moo", false, "hoo")]
         [InlineData("/MOO/HOO/MOO", true, "NA")]
         [InlineData("/MOO/HOO/MOO", false, "HOO")]
-        public void Should_resolve_optional_capture_with_optional_specified(string path, bool caseSensitive, string expected)
+        public async Task Should_resolve_optional_capture_with_optional_specified(string path, bool caseSensitive, string expected)
         {
             //Given, When
             var browser = InitBrowser(caseSensitive);
-            var result = browser.Get(path);
+            var result = await browser.Get(path);
 
             //Then
             if (ShouldBeFound(path, caseSensitive))
@@ -122,11 +123,11 @@
         [InlineData("/moo/moo", false)]
         [InlineData("/MOO/MOO", true)]
         [InlineData("/MOO/MOO", false)]
-        public void Should_resolve_optional_capture_with_optional_not_specified(string path, bool caseSensitive)
+        public async Task Should_resolve_optional_capture_with_optional_not_specified(string path, bool caseSensitive)
         {
             //Given, When
             var browser = InitBrowser(caseSensitive);
-            var result = browser.Get(path);
+            var result = await browser.Get(path);
 
             //Then
             if (ShouldBeFound(path, caseSensitive))
@@ -144,11 +145,11 @@
         [InlineData("/boo/badger/laa", false, "badger")]
         [InlineData("/BOO/BADGER/LAA", true, "NA")]
         [InlineData("/BOO/BADGER/LAA", false, "BADGER")]
-        public void Should_resolve_optional_capture_with_default_with_optional_specified(string path, bool caseSensitive, string expected)
+        public async Task Should_resolve_optional_capture_with_default_with_optional_specified(string path, bool caseSensitive, string expected)
         {
             //Given, When
             var browser = InitBrowser(caseSensitive);
-            var result = browser.Get(path);
+            var result = await browser.Get(path);
 
             //Then
             if (ShouldBeFound(path, caseSensitive))
@@ -166,11 +167,11 @@
         [InlineData("/boo/laa", false)]
         [InlineData("/BOO/LAA", true)]
         [InlineData("/BOO/LAA", false)]
-        public void Should_resolve_optional_capture_with_default_with_optional_not_specified(string path, bool caseSensitive)
+        public async Task Should_resolve_optional_capture_with_default_with_optional_not_specified(string path, bool caseSensitive)
         {
             //Given, When
             var browser = InitBrowser(caseSensitive);
-            var result = browser.Get(path);
+            var result = await browser.Get(path);
 
             //Then
             if (ShouldBeFound(path, caseSensitive))
@@ -188,11 +189,11 @@
         [InlineData("/bleh/this/is/some/stuff", false, "this/is/some/stuff")]
         [InlineData("/BLEH/THIS/IS/SOME/STUFF", true, "NA")]
         [InlineData("/BLEH/THIS/IS/SOME/STUFF", false, "THIS/IS/SOME/STUFF")]
-        public void Should_capture_greedy_on_end(string path, bool caseSensitive, string expected)
+        public async Task Should_capture_greedy_on_end(string path, bool caseSensitive, string expected)
         {
             //Given, When
             var browser = InitBrowser(caseSensitive);
-            var result = browser.Get(path);
+            var result = await browser.Get(path);
 
             //Then
             if (ShouldBeFound(path, caseSensitive))
@@ -210,11 +211,11 @@
         [InlineData("/bleh/this/is/some/stuff/bar", false, "this/is/some/stuff")]
         [InlineData("/BLEH/THIS/IS/SOME/STUFF/BAR", true, "NA")]
         [InlineData("/BLEH/THIS/IS/SOME/STUFF/BAR", false, "THIS/IS/SOME/STUFF")]
-        public void Should_capture_greedy_in_middle(string path, bool caseSensitive, string expected)
+        public async Task Should_capture_greedy_in_middle(string path, bool caseSensitive, string expected)
         {
             //Given, When
             var browser = InitBrowser(caseSensitive);
-            var result = browser.Get(path);
+            var result = await browser.Get(path);
 
             //Then
             if (ShouldBeFound(path, caseSensitive))
@@ -232,11 +233,11 @@
         [InlineData("/greedy/this/is/some/stuff/badger/blah", false, "this/is/some/stuff blah")]
         [InlineData("/GREEDY/THIS/IS/SOME/STUFF/BADGER/BLAH", true, "NA")]
         [InlineData("/GREEDY/THIS/IS/SOME/STUFF/BADGER/BLAH", false, "THIS/IS/SOME/STUFF BLAH")]
-        public void Should_capture_greedy_and_normal_capture(string path, bool caseSensitive, string expected)
+        public async Task Should_capture_greedy_and_normal_capture(string path, bool caseSensitive, string expected)
         {
             //Given, When
             var browser = InitBrowser(caseSensitive);
-            var result = browser.Get(path);
+            var result = await browser.Get(path);
 
             //Then
             if (ShouldBeFound(path, caseSensitive))
@@ -254,11 +255,11 @@
         [InlineData("/multipleparameters/file.extension", false, "file.extension")]
         [InlineData("/MULTIPLEPARAMETERS/FILE.EXTENSION", true, "NA")]
         [InlineData("/MULTIPLEPARAMETERS/FILE.EXTENSION", false, "FILE.EXTENSION")]
-        public void Should_capture_node_with_multiple_parameters(string path, bool caseSensitive, string expected)
+        public async Task Should_capture_node_with_multiple_parameters(string path, bool caseSensitive, string expected)
         {
             //Given, When
             var browser = InitBrowser(caseSensitive);
-            var result = browser.Get(path);
+            var result = await browser.Get(path);
 
             //Then
             if (ShouldBeFound(path, caseSensitive))
@@ -276,11 +277,11 @@
         [InlineData("/capturenodewithliteral/testing.html", false, "testing")]
         [InlineData("/CAPTURENODEWITHLITERAL/TESTING.HTML", true, "NA")]
         [InlineData("/CAPTURENODEWITHLITERAL/TESTING.HTML", false, "TESTING")]
-        public void Should_capture_node_with_literal(string path, bool caseSensitive, string expected)
+        public async Task Should_capture_node_with_literal(string path, bool caseSensitive, string expected)
         {
             //Given, When
             var browser = InitBrowser(caseSensitive);
-            var result = browser.Get(path);
+            var result = await browser.Get(path);
 
             //Then
             if (ShouldBeFound(path, caseSensitive))
@@ -298,11 +299,11 @@
         [InlineData("/regex/123/moo", false, "123 moo")]
         [InlineData("/REGEX/123/MOO", true, "NA")]
         [InlineData("/REGEX/123/MOO", false, "123 MOO")]
-        public void Should_capture_regex(string path, bool caseSensitive, string expected)
+        public async Task Should_capture_regex(string path, bool caseSensitive, string expected)
         {
             //Given, When
             var browser = InitBrowser(caseSensitive);
-            var result = browser.Get(path);
+            var result = await browser.Get(path);
 
             //Then
             if (ShouldBeFound(path, caseSensitive))
@@ -316,11 +317,11 @@
         }
 
         [Fact]
-        public void Should_handle_head_requests()
+        public async Task Should_handle_head_requests()
         {
             //Given, When
             var browser = InitBrowser(caseSensitive: false);
-            var result = browser.Head("/");
+            var result = await browser.Head("/");
 
             //Then
             result.StatusCode.ShouldEqual(HttpStatusCode.OK);
@@ -328,11 +329,11 @@
         }
 
         [Fact]
-        public void Should_handle_options_requests()
+        public async Task Should_handle_options_requests()
         {
             //Given, When
             var browser = InitBrowser(caseSensitive: false);
-            var result = browser.Options("/");
+            var result = await browser.Options("/");
 
             //Then
             result.StatusCode.ShouldEqual(HttpStatusCode.OK);
@@ -341,55 +342,55 @@
         }
 
         [Fact]
-        public void Should_return_404_if_no_root_found_when_requesting_it()
+        public async Task Should_return_404_if_no_root_found_when_requesting_it()
         {
             //Given
-            var localBrowser = new Browser(with => with.Module<NoRootModule>());
+            var browser = new Browser(with => with.Module<NoRootModule>());
 
             //When
-            var result = localBrowser.Get("/");
+            var result = await browser.Get("/");
 
             //Then
             result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
         }
 
         [Fact]
-        public void Should_return_405_if_requested_method_is_not_permitted_but_others_are_available_and_not_disabled()
+        public async Task Should_return_405_if_requested_method_is_not_permitted_but_others_are_available_and_not_disabled()
         {
             // Given
             StaticConfiguration.DisableMethodNotAllowedResponses = false;
-            var localBrowser = new Browser(with => with.Module<MethodNotAllowedModule>());
+            var browser = new Browser(with => with.Module<MethodNotAllowedModule>());
 
             // When
-            var result = localBrowser.Get("/");
+            var result = await browser.Get("/");
 
             // Then
             result.StatusCode.ShouldEqual(HttpStatusCode.MethodNotAllowed);
         }
 
         [Fact]
-        public void Should_not_return_405_if_requested_method_is_not_permitted_but_others_are_available_and_disabled()
+        public async Task Should_not_return_405_if_requested_method_is_not_permitted_but_others_are_available_and_disabled()
         {
             // Given
             StaticConfiguration.DisableMethodNotAllowedResponses = true;
-            var localBrowser = new Browser(with => with.Module<MethodNotAllowedModule>());
+            var browser = new Browser(with => with.Module<MethodNotAllowedModule>());
 
             // When
-            var result = localBrowser.Get("/");
+            var result = await browser.Get("/");
 
             // Then
             result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
         }
 
         [Fact]
-        public void Should_set_allowed_method_on_response_when_returning_405()
+        public async Task Should_set_allowed_method_on_response_when_returning_405()
         {
             // Given
             StaticConfiguration.DisableMethodNotAllowedResponses = false;
-            var localBrowser = new Browser(with => with.Module<MethodNotAllowedModule>());
+            var browser = new Browser(with => with.Module<MethodNotAllowedModule>());
 
             // When
-            var result = localBrowser.Get("/");
+            var result = await browser.Get("/");
 
             // Then
             result.Headers["Allow"].ShouldEqual("DELETE, POST");

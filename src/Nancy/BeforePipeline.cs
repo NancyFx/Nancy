@@ -1,7 +1,6 @@
 ﻿namespace Nancy
 {
     using System;
-    using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -50,113 +49,18 @@
             return pipelineToAddTo;
         }
 
-        public Task<Response> Invoke(NancyContext context, CancellationToken cancellationToken)
+        public async Task<Response> Invoke(NancyContext context, CancellationToken cancellationToken)
         {
-            var tcs = new TaskCompletionSource<Response>();
-
-            var enumerator = this.PipelineDelegates.GetEnumerator();
-
-            if (enumerator.MoveNext())
+            foreach (var pipelineDelegate in this.PipelineDelegates)
             {
-                ExecuteTasksWithSingleResultInternal(context, cancellationToken, enumerator, tcs);
-            }
-            else
-            {
-                tcs.SetResult(null);
-            }
-
-            return tcs.Task;
-        }
-
-        private static void ExecuteTasksWithSingleResultInternal(NancyContext context, CancellationToken cancellationToken, IEnumerator<Func<NancyContext, CancellationToken, Task<Response>>> enumerator, TaskCompletionSource<Response> tcs)
-        {
-            // Endless loop to try and optimise the "main" use case of
-            // our tasks just being delegates wrapped in a task.
-            //
-            // If they finish executing before returning them we will
-            // just loop around this while loop running them one by one,
-            // as soon as we have to return, or a task is actually async,
-            // then we will bale out and set a continuation.
-            while (true)
-            {
-                var current = enumerator.Current.Invoke(context, cancellationToken);
-
-                if (current.Status == TaskStatus.Created)
+                var response = await pipelineDelegate.Invoke(context, cancellationToken).ConfigureAwait(false);
+                if (response != null)
                 {
-                    current.Start();
+                    return response;
                 }
-
-                if (current.IsCompleted || current.IsFaulted)
-                {
-                    var resultTask = current;
-                    if (!current.IsFaulted)
-                    {
-                        // Task has already completed, so don't bother with continuations
-                        if (ContinueExecution(current.IsFaulted, current.Result, current.Exception))
-                        {
-                            if (enumerator.MoveNext())
-                            {
-                                continue;
-                            }
-
-                            resultTask = null;
-                        }
-                    }
-
-                    ExecuteTasksSingleResultFinished(resultTask, tcs);
-
-                    break;
-                }
-
-                // Task hasn't finished - set a continuation and bail out of the loop
-                current.ContinueWith(ExecuteTasksWithSingleResultContinuation(context, cancellationToken, enumerator, tcs), TaskContinuationOptions.ExecuteSynchronously);
-                break;
-            }
-        }
-
-        private static Action<Task<Response>> ExecuteTasksWithSingleResultContinuation(NancyContext context, CancellationToken cancellationToken, IEnumerator<Func<NancyContext, CancellationToken, Task<Response>>> enumerator, TaskCompletionSource<Response> tcs)
-        {
-            return t =>
-            {
-                if (ContinueExecution(t.IsFaulted, t.IsFaulted ? null : t.Result, t.Exception))
-                {
-                    if (enumerator.MoveNext())
-                    {
-                        ExecuteTasksWithSingleResultInternal(context, cancellationToken, enumerator, tcs);
-                    }
-                    else
-                    {
-                        ExecuteTasksSingleResultFinished(null, tcs);
-                    }
-                }
-                else
-                {
-                    ExecuteTasksSingleResultFinished(t, tcs);
-                }
-            };
-        }
-
-        private static void ExecuteTasksSingleResultFinished(Task<Response> task, TaskCompletionSource<Response> tcs)
-        {
-            if (task == null)
-            {
-                tcs.SetResult(default(Response));
-                return;
             }
 
-            if (task.IsFaulted)
-            {
-                tcs.SetException(task.Exception);
-            }
-            else
-            {
-                tcs.SetResult(task.Result);
-            }
-        }
-
-        private static bool ContinueExecution(bool isFaulted, Response result, AggregateException exception)
-        {
-            return !isFaulted && result == null;
+            return null;
         }
 
         /// <summary>
