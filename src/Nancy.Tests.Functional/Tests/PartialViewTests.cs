@@ -55,7 +55,7 @@
                 response.Body.AsString();
             });
 
-            Assert.IsType<ViewNotFoundException>(ex);
+            Assert.IsType<ViewNotFoundException>(ex.GetBaseException());
         }
     }
 }
