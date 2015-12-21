@@ -68,6 +68,10 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="dotMemory.Unit, Version=103.0.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.dotMemoryUnit.2.1.20150828.125449\Lib\dotMemory.Unit.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -91,6 +95,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Modules\AbsoluteUrlTestModule.cs" />
     <Compile Include="Modules\CookieModule.cs" />
     <Compile Include="Modules\PerRouteAuthModule.cs" />
@@ -105,6 +110,7 @@
     <Compile Include="Modules\SerializeTestModule.cs" />
     <Compile Include="Tests\ContentNegotiationFixture.cs" />
     <Compile Include="Tests\CookieFixture.cs" />
+    <Compile Include="Tests\MemoryLeakFixture.cs" />
     <Compile Include="Tests\MethodRewriteFixture.cs" />
     <Compile Include="Tests\PerRouteAuthFixture.cs" />
     <Compile Include="Tests\RouteConstraintTests.cs" />
