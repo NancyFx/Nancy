@@ -8,7 +8,7 @@ using System.Reflection;
 [assembly: AssemblyProduct("Nancy")]
 [assembly: AssemblyCopyright("Copyright (C) Andreas Hakansson, Steven Robbins and contributors")]
 [assembly: AssemblyVersion("1.4.2")]
-[assembly: AssemblyInformationalVersion("1.4.2")]
+[assembly: AssemblyInformationalVersion("1.4.3")]
 
 [assembly: InternalsVisibleTo("Nancy.Tests")]
 [assembly: InternalsVisibleTo("Nancy.Hosting.Self.Tests")]
