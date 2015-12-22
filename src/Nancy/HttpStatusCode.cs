@@ -211,6 +211,10 @@ namespace Nancy
         /// </summary>
         BlockedByWindowsParentalControls = 450,
         /// <summary>
+        /// 451 UnavailableForLegalReasons
+        /// </summary>
+        UnavailableForLegalReasons = 451,
+        /// <summary>
         /// 499 ClientClosedRequest
         /// </summary>
         ClientClosedRequest = 499,
