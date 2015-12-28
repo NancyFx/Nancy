@@ -98,7 +98,7 @@
                 this.DefaultModel;
         }
 
-        internal void SetModule(INancyModule module)
+        public void SetModule(INancyModule module)
         {
             if (module == null)
             {
