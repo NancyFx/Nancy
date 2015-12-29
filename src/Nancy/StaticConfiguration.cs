@@ -7,14 +7,14 @@ namespace Nancy
     using Nancy.Bootstrapper;
     using Nancy.Diagnostics;
 
-    public static class StaticConfiguration
+    public class StaticConfiguration
     {
-        private static bool? isRunningDebug;
-        private static bool? disableCaches;
+        private bool? isRunningDebug;
+        private bool? disableCaches;
 
-        private static bool? disableErrorTraces;
+        private bool? disableErrorTraces;
 
-        static StaticConfiguration()
+        public StaticConfiguration()
         {
             disableErrorTraces = !(disableCaches = IsRunningDebug);
             CaseSensitive = false;
@@ -26,7 +26,7 @@ namespace Nancy
         /// Gets or sets a value indicating whether or not to disable traces in error messages
         /// </summary>
         [Description("Disables trace output in the default 500 error pages.")]
-        public static bool DisableErrorTraces
+        public bool DisableErrorTraces
         {
             get
             {
@@ -42,26 +42,26 @@ namespace Nancy
         /// Gets or sets a value indicating whether or not to respond with 405 responses
         /// </summary>
         [Description("Disables 405 responses from being sent to the client.")]
-        public static bool DisableMethodNotAllowedResponses { get; set; }
+        public bool DisableMethodNotAllowedResponses { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether or not to enable case sensitivity in query, parameters (DynamicDictionary) and model binding. Enable this to conform with RFC3986.
         /// </summary>
         [Description("Enable case sensitivity in query, parameters (DynamicDictionary) and model binding. Enable this to conform with RFC3986.")]
-        public static bool CaseSensitive { get; set; }
+        public bool CaseSensitive { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether or not to route HEAD requests explicitly.
         /// </summary>
         [Description("Enables explicit HEAD routing and disables the usage of GET routes for HEAD requests.")]
-        public static bool EnableHeadRouting { get; set; }
+        public bool EnableHeadRouting { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether we are running in debug mode or not.
         /// Checks the entry assembly to see whether it has been built in debug mode.
         /// If anything goes wrong it returns false.
         /// </summary>
-        public static bool IsRunningDebug
+        public bool IsRunningDebug
         {
             get
             {
@@ -73,9 +73,9 @@ namespace Nancy
         /// Gets or sets the limit on the number of query string variables, form fields,
         /// or multipart sections in a request.
         /// </summary>
-        public static int RequestQueryFormMultipartLimit { get; set; }
+        public int RequestQueryFormMultipartLimit { get; set; }
 
-        private static bool GetDebugMode()
+        private bool GetDebugMode()
         {
             try
             {
@@ -100,32 +100,32 @@ namespace Nancy
         /// Gets or sets a value indicating whether or not to enable request tracing
         /// </summary>
         [Description("Enable request tracing.")]
-        public static bool EnableRequestTracing { get; set; }
+        public bool EnableRequestTracing { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether or not to disable request stream switching
         /// </summary>
-        public static bool? DisableRequestStreamSwitching { get; set; }
+        public bool? DisableRequestStreamSwitching { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="Nancy.StaticConfiguration"/> allow file stream
         /// upload async due to mono issues before v4.  Uploads of over 80mb would result in extra padded chars to the filestream corrupting the file.
         /// </summary>
         /// <value><c>true</c> if allow file stream upload async; otherwise, <c>false</c>.</value>
-        public static bool AllowFileStreamUploadAsync { get; set; }
+        public bool AllowFileStreamUploadAsync { get; set; }
 
-        public static class Caching
+        public class Caching
         {
-            private static bool? enableRuntimeViewDiscovery;
+            private bool? enableRuntimeViewDiscovery;
 
-            private static bool? enableRuntimeViewUpdates;
+            private bool? enableRuntimeViewUpdates;
 
             /// <summary>
             /// Gets or sets a value indicating whether or not to enable runtime view discovery
             /// Defaults to True in debug mode and False in release mode
             /// </summary>
             [Description("Enable runtime discovery of new views.")]
-            public static bool EnableRuntimeViewDiscovery
+            public bool EnableRuntimeViewDiscovery
             {
                 get
                 {
@@ -142,7 +142,7 @@ namespace Nancy
             /// Defaults to True in debug mode and False in release mode
             /// </summary>
             [Description("Enable runtime updating of view templates.")]
-            public static bool EnableRuntimeViewUpdates
+            public bool EnableRuntimeViewUpdates
             {
                 get
                 {
