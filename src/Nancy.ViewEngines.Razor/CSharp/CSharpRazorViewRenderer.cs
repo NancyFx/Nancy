@@ -55,7 +55,7 @@
 
             this.ModelCodeGenerator = typeof(ModelCodeGenerator);
 
-            this.Provider = new CSharpCodeProvider();
+            this.Provider = new Microsoft.CodeDom.Providers.DotNetCompilerPlatform.CSharpCodeProvider();
 
             this.Host = new NancyRazorEngineHost(new CSharpRazorCodeLanguage(), assemblyCatalog);
 
