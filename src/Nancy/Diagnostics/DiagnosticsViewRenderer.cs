@@ -2,7 +2,7 @@ namespace Nancy.Diagnostics
 {
     using System.IO;
     using System.Linq;
-
+    using Configuration;
     using Nancy.Localization;
     using Nancy.Responses;
     using Nancy.Security;
@@ -15,17 +15,19 @@ namespace Nancy.Diagnostics
     public class DiagnosticsViewRenderer
     {
         private readonly NancyContext context;
+        private readonly INancyEnvironment environment;
         private static readonly IViewResolver ViewResolver = new DiagnosticsViewResolver();
-
         private static readonly IViewEngine Engine = new SuperSimpleViewEngineWrapper(Enumerable.Empty<ISuperSimpleViewEngineMatcher>());
 
         /// <summary>
         /// Creates a new instance of the <see cref="DiagnosticsViewRenderer"/> class.
         /// </summary>
         /// <param name="context">A <see cref="NancyContext"/> instance.</param>
-        public DiagnosticsViewRenderer(NancyContext context)
+        /// <param name="environment">An <see cref="INancyEnvironment"/> instance.</param>
+        public DiagnosticsViewRenderer(NancyContext context, INancyEnvironment environment)
         {
             this.context = context;
+            this.environment = environment;
         }
 
         /// <summary>
@@ -35,7 +37,7 @@ namespace Nancy.Diagnostics
         /// <returns>A <see cref="Response"/> of the rendered view.</returns>
         public Response this[string name]
         {
-            get { return RenderView(name, null, this.context); }
+            get { return this.RenderView(name, null, this.context); }
         }
 
         /// <summary>
@@ -49,15 +51,12 @@ namespace Nancy.Diagnostics
             get { return RenderView(name, model, this.context); }
         }
 
-        private static Response RenderView(string name, dynamic model, NancyContext context)
+        private Response RenderView(string name, dynamic model, NancyContext context)
         {
             var fullName = string.Concat(name, ".sshtml");
-
             var stream = GetBodyStream(fullName);
-
             var location = GetViewLocationResult(fullName, stream);
-
-            var cache = new DefaultViewCache();
+            var cache = new DefaultViewCache(this.environment);
 
             context.Items.Add(CsrfToken.DEFAULT_CSRF_KEY, "DIAGNOSTICSTOKEN");
 
@@ -110,10 +109,7 @@ namespace Nancy.Diagnostics
         {
             public string this[string key, NancyContext context]
             {
-                get
-                {
-                    return string.Empty;
-                }
+                get { return string.Empty; }
             }
         }
     }

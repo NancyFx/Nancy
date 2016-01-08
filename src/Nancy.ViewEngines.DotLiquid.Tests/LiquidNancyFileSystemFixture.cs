@@ -2,7 +2,7 @@ namespace Nancy.ViewEngines.DotLiquid.Tests
 {
     using System.Collections.Generic;
     using System.IO;
-
+    using Configuration;
     using FakeItEasy;
 
     using global::DotLiquid;
@@ -15,12 +15,20 @@ namespace Nancy.ViewEngines.DotLiquid.Tests
 
     public class LiquidNancyFileSystemFixture
     {
+        private readonly INancyEnvironment environment;
+
+        public LiquidNancyFileSystemFixture()
+        {
+            this.environment = new DefaultNancyEnvironment();
+            this.environment.AddValue(ViewConfiguration.Default);
+        }
+
         [Fact]
         public void Should_locate_template_with_single_quoted_name()
         {
             // Given
             Context context;
-            var fileSystem = CreateFileSystem(out context,
+            var fileSystem = this.CreateFileSystem(out context,
                 new ViewLocationResult("views", "partial", "liquid", () => new StringReader("The correct view")));
 
             // When
@@ -35,7 +43,7 @@ namespace Nancy.ViewEngines.DotLiquid.Tests
         {
             // Given
             Context context;
-            var fileSystem = CreateFileSystem(out context,
+            var fileSystem = this.CreateFileSystem(out context,
                 new ViewLocationResult("views", "partial", "liquid", () => new StringReader("The correct view")));
 
             // When
@@ -50,7 +58,7 @@ namespace Nancy.ViewEngines.DotLiquid.Tests
         {
             // Given
             Context context;
-            var fileSystem = CreateFileSystem(out context,
+            var fileSystem = this.CreateFileSystem(out context,
                 new ViewLocationResult("views", "partial", "liquid", () => new StringReader("The correct view")));
 
             // When
@@ -65,7 +73,7 @@ namespace Nancy.ViewEngines.DotLiquid.Tests
         {
             // Given
             Context context;
-            var fileSystem = CreateFileSystem(out context,
+            var fileSystem = this.CreateFileSystem(out context,
                 new ViewLocationResult("views", "partial", "cshtml", () => null));
 
             // When
@@ -83,7 +91,7 @@ namespace Nancy.ViewEngines.DotLiquid.Tests
         {
             // Given
             Context context;
-            var fileSystem = CreateFileSystem(out context,
+            var fileSystem = this.CreateFileSystem(out context,
                 new ViewLocationResult("views", "partial", "liquid", () => new StringReader("The correct view")));
 
             // When
@@ -98,7 +106,7 @@ namespace Nancy.ViewEngines.DotLiquid.Tests
         {
             // Given
             Context context;
-            var fileSystem = CreateFileSystem(out context,
+            var fileSystem = this.CreateFileSystem(out context,
                 new ViewLocationResult("views", "partial", "liquid", () => new StringReader("The correct view")));
 
             // When
@@ -113,7 +121,7 @@ namespace Nancy.ViewEngines.DotLiquid.Tests
         {
             // Given
             Context context;
-            var fileSystem = CreateFileSystem(out context,
+            var fileSystem = this.CreateFileSystem(out context,
                 new ViewLocationResult("views", "partial", "liquid", () => new StringReader("The correct view")));
 
             // When
@@ -131,7 +139,7 @@ namespace Nancy.ViewEngines.DotLiquid.Tests
         {
             // Given
             Context context;
-            var fileSystem = CreateFileSystem(out context,
+            var fileSystem = this.CreateFileSystem(out context,
                 new ViewLocationResult("views", "partial", "liquid", () => new StringReader("The correct view")));
 
             // When
@@ -146,7 +154,7 @@ namespace Nancy.ViewEngines.DotLiquid.Tests
         {
             // Given
             Context context;
-            var fileSystem = CreateFileSystem(out context,
+            var fileSystem = this.CreateFileSystem(out context,
                 new ViewLocationResult("views", "partial", "liquid", () => null));
 
             // When
@@ -163,7 +171,7 @@ namespace Nancy.ViewEngines.DotLiquid.Tests
         {
             // Given
             Context context;
-            var fileSystem = CreateFileSystem(out context,
+            var fileSystem = this.CreateFileSystem(out context,
                 new ViewLocationResult(location, "partial", "liquid", () => new StringReader(expectedResult)));
 
             // When
@@ -181,7 +189,7 @@ namespace Nancy.ViewEngines.DotLiquid.Tests
         {
             // Given
             Context context;
-            var fileSystem = CreateFileSystem(out context,
+            var fileSystem = this.CreateFileSystem(out context,
                 new ViewLocationResult(location, "partial", "liquid", () => new StringReader("The correct view")));
 
             // When
@@ -196,7 +204,7 @@ namespace Nancy.ViewEngines.DotLiquid.Tests
         {
             // Given
             Context context;
-            var fileSystem = CreateFileSystem(out context,
+            var fileSystem = this.CreateFileSystem(out context,
                 new ViewLocationResult(@"views/shared", "partial", "liquid", () => new StringReader("The correct view")));
 
             // When
@@ -211,7 +219,7 @@ namespace Nancy.ViewEngines.DotLiquid.Tests
         {
             // Given
             Context context;
-            var fileSystem = CreateFileSystem(out context,
+            var fileSystem = this.CreateFileSystem(out context,
                 new ViewLocationResult(@"views/shared", "partial", "liquid", () => new StringReader("The correct view")));
 
             // When
@@ -230,12 +238,12 @@ namespace Nancy.ViewEngines.DotLiquid.Tests
             var viewEngine = A.Fake<IViewEngine>();
             A.CallTo(() => viewEngine.Extensions).Returns(new[] { "liquid" });
 
-            var viewLocator = new DefaultViewLocator(viewLocationProvider, new[] { viewEngine });
+            var viewLocator = new DefaultViewLocator(viewLocationProvider, new[] { viewEngine }, this.environment);
 
             var startupContext = new ViewEngineStartupContext(
                 null,
                 viewLocator);
-            
+
             var renderContext = A.Fake<IRenderContext>();
             A.CallTo(() => renderContext.LocateView(A<string>.Ignored, A<object>.Ignored))
                 .ReturnsLazily(x => viewLocator.LocateView(x.Arguments.Get<string>(0), null));

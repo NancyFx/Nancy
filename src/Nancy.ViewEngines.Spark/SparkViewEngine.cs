@@ -4,7 +4,7 @@
     using System.Configuration;
     using System.Dynamic;
     using System.IO;
-
+    using Configuration;
     using global::Spark;
     using global::Spark.FileSystem;
 
@@ -16,24 +16,21 @@
     /// </summary>
     public class SparkViewEngine : IViewEngine
     {
+        private readonly INancyEnvironment environment;
         private readonly IDescriptorBuilder descriptorBuilder;
         private readonly global::Spark.SparkViewEngine engine;
         private readonly ISparkSettings settings;
         private readonly string[] extensions = new[] { "spark", "shade" };
 
-        public SparkViewEngine()
-            : this(new DefaultRootPathProvider())
-        {
-        }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="SparkViewEngine"/> class.
         /// </summary>
-        public SparkViewEngine(IRootPathProvider rootPathProvider)
+        public SparkViewEngine(IRootPathProvider rootPathProvider, INancyEnvironment environment)
         {
+            this.environment = environment;
             this.settings = (ISparkSettings) ConfigurationManager.GetSection("spark") ?? new SparkSettings();
-            
-            this.engine = 
+
+            this.engine =
                 new global::Spark.SparkViewEngine(this.settings)
                 {
                     DefaultPageBaseType = typeof (NancySparkView).FullName,
@@ -56,7 +53,7 @@
         private SparkViewEngineResult CreateView<TModel>(ViewLocationResult viewLocationResult, TModel model, IRenderContext renderContext)
         {
             var result = this.LocateView(
-                viewLocationResult.Location, 
+                viewLocationResult.Location,
                 viewLocationResult.Name,
                 viewLocationResult,
                 renderContext);
@@ -71,9 +68,9 @@
             return result;
         }
 
-        private static IViewFolder GetViewFolder(ViewEngineStartupContext viewLocationResults)
+        private static IViewFolder GetViewFolder(ViewEngineStartupContext viewLocationResults, INancyEnvironment environment)
         {
-            return new NancyViewFolder(viewLocationResults);
+            return new NancyViewFolder(viewLocationResults, environment);
         }
 
         private SparkViewEngineResult LocateView(string viewPath, string viewName, ViewLocationResult viewLocationResult, IRenderContext renderContext)
@@ -97,7 +94,7 @@
             }
 
             var entry = renderContext.ViewCache.GetOrAdd(
-                viewLocationResult, 
+                viewLocationResult,
                 x => this.engine.CreateEntry(descriptor));
 
             var nancySparkView = entry.CreateInstance() as NancySparkView;
@@ -109,11 +106,22 @@
             return new SparkViewEngineResult(nancySparkView);
         }
 
+        /// <summary>
+        /// Initialise the view engine (if necessary)
+        /// </summary>
+        /// <param name="viewEngineStartupContext">Startup context</param>
         public void Initialize(ViewEngineStartupContext viewEngineStartupContext)
         {
-            this.engine.ViewFolder = GetViewFolder(viewEngineStartupContext);
+            this.engine.ViewFolder = GetViewFolder(viewEngineStartupContext, this.environment);
         }
 
+        /// <summary>
+        /// Renders the view.
+        /// </summary>
+        /// <param name="viewLocationResult">A <see cref="ViewLocationResult"/> instance, containing information on how to get the view template.</param>
+        /// <param name="model">The model that should be passed into the view</param>
+        /// <param name="renderContext"></param>
+        /// <returns>A response</returns>
         public Response RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext)
         {
             return new HtmlResponse(contents: stream =>

@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
-
+    using Configuration;
     using FakeItEasy;
 
     using global::DotLiquid;
@@ -20,8 +20,13 @@
         private readonly DotLiquidViewEngine engine;
         private readonly DotLiquidViewEngine engineCSharp;
 
+        private readonly INancyEnvironment environment;
+
         public DotLiquidViewEngineFixture()
         {
+            this.environment = new DefaultNancyEnvironment();
+            this.environment.AddValue(ViewConfiguration.Default);
+
             this.factory = A.Fake<IFileSystemFactory>();
             this.engine = new DotLiquidViewEngine(this.factory, new RubyNamingConvention());
             this.engineCSharp = new DotLiquidViewEngine(this.factory, new CSharpNamingConvention());
@@ -44,13 +49,13 @@
         public void Should_retrieve_filesystem_from_factory_when_engine_is_initialized()
         {
             // Given
-            var context = CreateContext();
+            var context = this.CreateContext();
 
             // When
             this.engine.Initialize(context);
 
             // Then
-            A.CallTo(() => factory.GetFileSystem(context, A<IEnumerable<string>>._)).MustHaveHappened();
+            A.CallTo(() => this.factory.GetFileSystem(context, A<IEnumerable<string>>._)).MustHaveHappened();
         }
 
         [Fact]
@@ -58,7 +63,7 @@
         {
             // Given
             // When
-            var extensions = engine.Extensions;
+            var extensions = this.engine.Extensions;
 
             // Then
             extensions.ShouldHaveCount(1);
@@ -77,7 +82,7 @@
             );
 
             var currentStartupContext =
-                CreateContext(new[] { location });
+                this.CreateContext(location);
 
             this.engine.Initialize(currentStartupContext);
 
@@ -103,7 +108,7 @@
             );
 
             var currentStartupContext =
-                CreateContext(new[] { location });
+                this.CreateContext(location);
 
             this.engine.Initialize(currentStartupContext);
 
@@ -129,7 +134,7 @@
             );
 
             var currentStartupContext =
-                CreateContext(new[] { location });
+                this.CreateContext(location);
 
             this.engine.Initialize(currentStartupContext);
 
@@ -155,7 +160,7 @@
             );
 
             var currentStartupContext =
-                CreateContext(new[] { location });
+                this.CreateContext(location);
 
             this.engineCSharp.Initialize(currentStartupContext);
 
@@ -181,7 +186,7 @@
             );
 
             var currentStartupContext =
-                CreateContext(new[] { location });
+                this.CreateContext(location);
 
             this.engineCSharp.Initialize(currentStartupContext);
 
@@ -207,14 +212,14 @@
             );
 
             var currentStartupContext =
-                CreateContext(new[] { location });
+                this.CreateContext(location);
 
             this.engine.Initialize(currentStartupContext);
 
             var stream = new MemoryStream();
 
             // When
-            var response = engine.RenderView(location, null, this.renderContext);
+            var response = this.engine.RenderView(location, null, this.renderContext);
             response.Contents.Invoke(stream);
 
             // Then
@@ -233,7 +238,7 @@
             );
 
             var currentStartupContext =
-                CreateContext(new[] { location });
+                this.CreateContext(location);
 
             this.engine.Initialize(currentStartupContext);
             var stream = new MemoryStream();
@@ -258,7 +263,7 @@
             );
 
             var currentStartupContext =
-                CreateContext(new[] { location });
+                this.CreateContext(location);
 
             this.engine.Initialize(currentStartupContext);
             var stream = new MemoryStream();
@@ -284,7 +289,7 @@
             );
 
             var currentStartupContext =
-                CreateContext(new[] { location });
+                this.CreateContext(location);
 
             this.engine.Initialize(currentStartupContext);
             var stream = new MemoryStream();
@@ -309,7 +314,7 @@
             );
 
             var currentStartupContext =
-                CreateContext(new[] { location });
+                this.CreateContext(location);
 
             this.engine.Initialize(currentStartupContext);
             var stream = new MemoryStream();
@@ -336,7 +341,7 @@
             );
 
             var currentStartupContext =
-                CreateContext(new[] { location });
+                this.CreateContext(location);
 
             this.engine.Initialize(currentStartupContext);
             var stream = new MemoryStream();
@@ -362,19 +367,18 @@
             );
 
             var currentStartupContext =
-                CreateContext(new[] { location });
+                this.CreateContext(location);
 
             this.engine.Initialize(currentStartupContext);
             var stream = new MemoryStream();
 
-            // Construct the model for the View
             IList<Article> articles = new List<Article>() {
-                new Article() {Name = "Hello"},
-                new Article() {Name = "Jamie!"},
-                new Article() {Name = "You're fun!"}
+                new Article {Name = "Hello"},
+                new Article {Name = "Jamie!"},
+                new Article {Name = "You're fun!"}
             };
 
-            Magazine menu = new Magazine() { Items = articles };
+            var menu = new Magazine() { Items = articles };
 
             // When
             var response = this.engine.RenderView(location, menu, this.renderContext);
@@ -393,7 +397,7 @@
             var viewEngine = A.Fake<IViewEngine>();
             A.CallTo(() => viewEngine.Extensions).Returns(new[] { "liquid" });
 
-            var viewLocator = new DefaultViewLocator(viewLocationProvider, new[] { viewEngine });
+            var viewLocator = new DefaultViewLocator(viewLocationProvider, new[] { viewEngine }, this.environment);
 
             var startupContext = new ViewEngineStartupContext(
                 null,

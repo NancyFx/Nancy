@@ -3,7 +3,6 @@ namespace Nancy
     using System;
     using System.Diagnostics;
     using System.Linq;
-
     using Nancy.Bootstrapper;
     using Nancy.Diagnostics;
 
@@ -113,46 +112,5 @@ namespace Nancy
         /// </summary>
         /// <value><c>true</c> if allow file stream upload async; otherwise, <c>false</c>.</value>
         public static bool AllowFileStreamUploadAsync { get; set; }
-
-        public static class Caching
-        {
-            private static bool? enableRuntimeViewDiscovery;
-
-            private static bool? enableRuntimeViewUpdates;
-
-            /// <summary>
-            /// Gets or sets a value indicating whether or not to enable runtime view discovery
-            /// Defaults to True in debug mode and False in release mode
-            /// </summary>
-            [Description("Enable runtime discovery of new views.")]
-            public static bool EnableRuntimeViewDiscovery
-            {
-                get
-                {
-                    return enableRuntimeViewDiscovery ?? (bool)(enableRuntimeViewDiscovery = IsRunningDebug);
-                }
-                set
-                {
-                    enableRuntimeViewDiscovery = value;
-                }
-            }
-
-            /// <summary>
-            /// Gets or sets a value indicating whether or not to allow runtime changes of views
-            /// Defaults to True in debug mode and False in release mode
-            /// </summary>
-            [Description("Enable runtime updating of view templates.")]
-            public static bool EnableRuntimeViewUpdates
-            {
-                get
-                {
-                    return enableRuntimeViewUpdates ?? (bool)(enableRuntimeViewUpdates = IsRunningDebug);
-                }
-                set
-                {
-                    enableRuntimeViewUpdates = value;
-                }
-            }
-        }
     }
 }

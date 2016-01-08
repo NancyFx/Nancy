@@ -2,22 +2,21 @@ namespace Nancy.ViewEngines.Spark.Tests
 {
     using System.Collections.Generic;
     using System.IO;
-
+    using Configuration;
     using FakeItEasy;
-
     using Nancy.Tests;
-
     using Xunit;
 
     public class NancyViewFolderFixture
     {
         private readonly IViewCache cache;
-        private readonly IEnumerable<string> extensions;
+        private readonly INancyEnvironment environment;
 
         public NancyViewFolderFixture()
         {
             this.cache = A.Fake<IViewCache>();
-            this.extensions = new[] {"spark"};
+            this.environment = new DefaultNancyEnvironment();
+            this.environment.AddValue(ViewConfiguration.Default);
         }
 
         [Fact]
@@ -108,9 +107,9 @@ namespace Nancy.ViewEngines.Spark.Tests
         private NancyViewFolder CreateViewFolder(params ViewLocationResult[] results)
         {
             var context =
-                CreateContext(results);
+                this.CreateContext(results);
 
-            return new NancyViewFolder(context);
+            return new NancyViewFolder(context, this.environment);
         }
 
         private ViewEngineStartupContext CreateContext(params ViewLocationResult[] results)
@@ -122,7 +121,7 @@ namespace Nancy.ViewEngines.Spark.Tests
             var viewEngine = A.Fake<IViewEngine>();
             A.CallTo(() => viewEngine.Extensions).Returns(new[] { "liquid" });
 
-            var viewLocator = new DefaultViewLocator(viewLocationProvider, new[] { viewEngine });
+            var viewLocator = new DefaultViewLocator(viewLocationProvider, new[] { viewEngine }, this.environment);
 
             var startupContext = new ViewEngineStartupContext(
                 this.cache,

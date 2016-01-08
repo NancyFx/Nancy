@@ -5,7 +5,6 @@
     using System.Linq;
     using System.Reflection;
     using System.Text.RegularExpressions;
-
     using Nancy.ModelBinding;
 
     public class SettingsModule : DiagnosticModule

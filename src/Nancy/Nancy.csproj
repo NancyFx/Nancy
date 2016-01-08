@@ -160,6 +160,7 @@
     <Compile Include="DefaultRuntimeEnvironmentInformation.cs" />
     <Compile Include="DefaultSerializerFactory.cs" />
     <Compile Include="DefaultStaticContentProvider.cs" />
+    <Compile Include="DefaultViewConfigurationProvider.cs" />
     <Compile Include="Diagnostics\DefaultRequestTraceFactory.cs" />
     <Compile Include="Diagnostics\DefaultTraceLog.cs" />
     <Compile Include="Diagnostics\DiagnosticsConfiguration.cs" />
@@ -377,6 +378,8 @@
     <Compile Include="Validation\ModelValidationError.cs" />
     <Compile Include="Validation\ModelValidationResult.cs" />
     <Compile Include="Validation\ModelValidationRule.cs" />
+    <Compile Include="ViewConfiguration.cs" />
+    <Compile Include="ViewConfigurationExtensions.cs" />
     <Compile Include="ViewEngines\DefaultFileSystemReader.cs" />
     <Compile Include="ViewEngines\DefaultRenderContext.cs" />
     <Compile Include="ViewEngines\DefaultRenderContextFactory.cs" />

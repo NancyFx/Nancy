@@ -6,7 +6,6 @@
     using System.Dynamic;
     using System.Linq;
     using System.Reflection;
-
     using Nancy.Bootstrapper;
     using Nancy.ViewEngines;
 
