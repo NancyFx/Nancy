@@ -1,6 +1,7 @@
 namespace Nancy
 {
     using Nancy.Bootstrapper;
+    using Nancy.Configuration;
     using Nancy.Responses;
 
     /// <summary>
@@ -9,13 +10,16 @@ namespace Nancy
     /// <remarks>This task is run at application startup.</remarks>
     public class RootPathApplicationStartup : IApplicationStartup
     {
+        private readonly INancyEnvironment envronment;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="RootPathApplicationStartup"/> class.
         /// </summary>
         /// <param name="rootPathProvider">An <see cref="IRootPathProvider"/> instance.</param>
         public RootPathApplicationStartup(IRootPathProvider rootPathProvider)
         {
-            GenericFileResponse.SafePaths.Add(rootPathProvider.GetRootPath());
+            envronment = new DefaultNancyEnvironment();
+            envronment.AddValue(new SafePathConfiguration(new[]{ rootPathProvider.GetRootPath() }));
         }
 
         /// <summary>
