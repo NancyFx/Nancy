@@ -86,7 +86,7 @@ namespace Nancy
             {
                 if (!StaticConfiguration.EnableHeadRouting)
                 {
-                    throw new InvalidOperationException("Explicit HEAD routing is disabled. Set StaticConfiguration.EnableHeadRouting to enable.");
+                    throw new InvalidOperationException("Explicit HEAD routing is disabled. Set RouteConfiguration.ExplicitHeadRouting to enable.");
                 }
 
                 return new RouteBuilder("HEAD", this);

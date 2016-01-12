@@ -54,7 +54,8 @@ namespace Nancy.Diagnostics
                 diagnosticsModuleCatalog,
                 new DiagnosticsModuleBuilder(rootPathProvider, modelBinderLocator, diagnosticsEnvironment, environment),
                 diagnosticsRouteCache,
-                new RouteResolverTrie(new TrieNodeFactory(routeSegmentConstraints)));
+                new RouteResolverTrie(new TrieNodeFactory(routeSegmentConstraints)),
+                diagnosticsEnvironment);
 
             var serializer = new DefaultObjectSerializer();
 
