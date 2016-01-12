@@ -14,6 +14,7 @@ namespace Nancy
         /// Initializes a new instance of the <see cref="RootPathApplicationStartup"/> class.
         /// </summary>
         /// <param name="rootPathProvider">An <see cref="IRootPathProvider"/> instance.</param>
+        /// <param name = "environment">An <see cref="INancyEnvironment"/> instance.</param>
         public RootPathApplicationStartup(IRootPathProvider rootPathProvider, INancyEnvironment environment)
         {
             environment.AddValue(new SafePathConfiguration(new[]{ rootPathProvider.GetRootPath() }));
