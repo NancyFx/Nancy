@@ -21,6 +21,7 @@ namespace Nancy
     {
         private readonly List<HttpFile> files = new List<HttpFile>();
         private dynamic form = new DynamicDictionary();
+        private bool parsedFormData;
 
         private IDictionary<string, string> cookies;
 
@@ -98,8 +99,6 @@ namespace Nancy
             {
                 this.Url.Path = "/";
             }
-
-            this.ParseFormData();
             this.RewriteMethod();
         }
 
@@ -207,7 +206,11 @@ namespace Nancy
         /// <value>An <see cref="IEnumerable{T}"/> instance, containing an <see cref="HttpFile"/> instance for each uploaded file.</value>
         public IEnumerable<HttpFile> Files
         {
-            get { return this.files; }
+            get
+            {
+                ParseFormData();
+                return this.files;
+            }
         }
 
         /// <summary>
@@ -217,7 +220,11 @@ namespace Nancy
         /// <remarks>Currently Nancy will only parse form data sent using the application/x-www-url-encoded mime-type.</remarks>
         public dynamic Form
         {
-            get { return this.form; }
+            get
+            {
+                ParseFormData();
+                return this.form;
+            }
         }
 
         /// <summary>
@@ -234,6 +241,10 @@ namespace Nancy
 
         private void ParseFormData()
         {
+            if (parsedFormData)
+            {
+                return;
+            }
             if (string.IsNullOrEmpty(this.Headers.ContentType))
             {
                 return;
@@ -243,9 +254,11 @@ namespace Nancy
             var mimeType = contentType.Split(';').First();
             if (mimeType.Equals("application/x-www-form-urlencoded", StringComparison.OrdinalIgnoreCase))
             {
+                this.Body.BufferStream();
                 var reader = new StreamReader(this.Body);
                 this.form = reader.ReadToEnd().AsQueryDictionary();
                 this.Body.Position = 0;
+                parsedFormData = true;
             }
 
             if (!mimeType.Equals("multipart/form-data", StringComparison.OrdinalIgnoreCase))
@@ -253,6 +266,7 @@ namespace Nancy
                 return;
             }
 
+            this.Body.BufferStream();
             var boundary = Regex.Match(contentType, @"boundary=""?(?<token>[^\n\;\"" ]*)").Groups["token"].Value;
             var multipart = new HttpMultipart(this.Body, boundary);
 
@@ -280,6 +294,7 @@ namespace Nancy
             }
 
             this.Body.Position = 0;
+            parsedFormData = true;
         }
 
         private void RewriteMethod()
@@ -292,10 +307,13 @@ namespace Nancy
             var overrides =
                 new List<Tuple<string, string>>
                 {
-                    Tuple.Create("_method form input element", (string)this.Form["_method"]),
-                    Tuple.Create("X-HTTP-Method-Override form input element", (string)this.Form["X-HTTP-Method-Override"]),
                     Tuple.Create("X-HTTP-Method-Override header", this.Headers["X-HTTP-Method-Override"].FirstOrDefault())
                 };
+            if (!StaticConfiguration.DisableXHttpMethodOverrideBodyDiscovery)
+            {
+                overrides.Add(Tuple.Create("_method form input element", (string)this.Form["_method"]));
+                overrides.Add(Tuple.Create("X-HTTP-Method-Override form input element", (string)this.Form["X-HTTP-Method-Override"]));
+            }
 
             var providedOverride =
                 overrides.Where(x => !string.IsNullOrEmpty(x.Item2))

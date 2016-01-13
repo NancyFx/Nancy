@@ -131,7 +131,7 @@ namespace Nancy.Testing.Tests
             var writer = new StreamWriter(stream);
             writer.Write(thisIsMyRequestBody);
             writer.Flush();
-
+            stream.Position = 0;
             // When
             var result = await browser.Post("/", with =>
                 {
@@ -299,10 +299,12 @@ namespace Nancy.Testing.Tests
             var firstRequestWriter = new StreamWriter(firstRequestStream);
             firstRequestWriter.Write(FirstRequestBody);
             firstRequestWriter.Flush();
+            firstRequestStream.Position = 0;
             var secondRequestStream = new MemoryStream();
             var secondRequestWriter = new StreamWriter(secondRequestStream);
             secondRequestWriter.Write(SecondRequestBody);
             secondRequestWriter.Flush();
+            secondRequestStream.Position = 0;
 
             // When
             await browser.Post("/", with =>

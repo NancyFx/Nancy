@@ -64,6 +64,7 @@
             contextValues.Body = new MemoryStream();
 
             serializer.Serialize("application/json", model, contextValues.Body);
+            contextValues.Body.Position = 0;
             browserContext.Header("Content-Type", "application/json");
         }
 
@@ -86,6 +87,7 @@
             contextValues.Body = new MemoryStream();
 
             serializer.Serialize("application/xml", model, contextValues.Body);
+            contextValues.Body.Position = 0;
             browserContext.Header("Content-Type", "application/xml");
         }
 

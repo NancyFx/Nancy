@@ -50,11 +50,7 @@ namespace Nancy.Tests.Unit
         {
             // Given
             const string bodyContent = "_method=GET";
-            var memory = CreateRequestStream();
-            var writer = new StreamWriter(memory);
-            writer.Write(bodyContent);
-            writer.Flush();
-            memory.Position = 0;
+            var memory = CreateRequestStream(bodyContent);
 
             var headers =
                 new Dictionary<string, IEnumerable<string>> { { "content-type", new[] { "application/x-www-form-urlencoded" } } };
@@ -75,11 +71,7 @@ namespace Nancy.Tests.Unit
         {
             // Given
             const string bodyContent = "_method=TEST";
-            var memory = CreateRequestStream();
-            var writer = new StreamWriter(memory);
-            writer.Write(bodyContent);
-            writer.Flush();
-            memory.Position = 0;
+            var memory = CreateRequestStream(bodyContent);
 
             var headers =
                 new Dictionary<string, IEnumerable<string>> { { "content-type", new[] { "application/x-www-form-urlencoded" } } };
@@ -160,7 +152,7 @@ namespace Nancy.Tests.Unit
                 };
 
             // When
-            var request = new Request("GET", new Url { Path = "/", Scheme = "http" }, CreateRequestStream(), headers);
+            var request = new Request("GET", new Url { Path = "/", Scheme = "http" }, CreateRequestStream(new MemoryStream()), headers);
 
             // Then
             request.Headers.ContentType.ShouldNotBeEmpty();
@@ -170,7 +162,7 @@ namespace Nancy.Tests.Unit
         public void Should_set_body_parameter_value_to_body_property_when_initialized()
         {
             // Given
-            var body = CreateRequestStream();
+            var body = CreateRequestStream(new MemoryStream());
 
             // When
             var request = new Request("GET", new Url { Path = "/", Scheme = "http" }, body, new Dictionary<string, IEnumerable<string>>());
@@ -184,11 +176,7 @@ namespace Nancy.Tests.Unit
         {
             // Given
             const string bodyContent = "name=John+Doe&gender=male&family=5&city=kent&city=miami&other=abc%0D%0Adef&nickname=J%26D";
-            var memory = CreateRequestStream();
-            var writer = new StreamWriter(memory);
-            writer.Write(bodyContent);
-            writer.Flush();
-            memory.Position = 0;
+            var memory = CreateRequestStream(bodyContent);
 
             var headers =
                 new Dictionary<string, IEnumerable<string>>
@@ -208,11 +196,7 @@ namespace Nancy.Tests.Unit
         {
             // Given
             const string bodyContent = "name=John+Doe&gender=male&family=5&city=kent&city=miami&other=abc%0D%0Adef&nickname=J%26D";
-            var memory = CreateRequestStream();
-            var writer = new StreamWriter(memory);
-            writer.Write(bodyContent);
-            writer.Flush();
-            memory.Position = 0;
+            var memory = CreateRequestStream(bodyContent);
 
             var headers =
                 new Dictionary<string, IEnumerable<string>>
@@ -258,11 +242,7 @@ namespace Nancy.Tests.Unit
             // Given
             StaticConfiguration.CaseSensitive = false;
             const string bodyContent = "key=value&key=value&KEY=VALUE";
-            var memory = CreateRequestStream();
-            var writer = new StreamWriter(memory);
-            writer.Write(bodyContent);
-            writer.Flush();
-            memory.Position = 0;
+            var memory = CreateRequestStream(bodyContent);
 
             var headers =
                 new Dictionary<string, IEnumerable<string>>
@@ -284,11 +264,7 @@ namespace Nancy.Tests.Unit
             // Given
             StaticConfiguration.CaseSensitive = true;
             const string bodyContent = "key=value&key=value&KEY=VALUE";
-            var memory = CreateRequestStream();
-            var writer = new StreamWriter(memory);
-            writer.Write(bodyContent);
-            writer.Flush();
-            memory.Position = 0;
+            var memory = CreateRequestStream(bodyContent);
 
             var headers =
                 new Dictionary<string, IEnumerable<string>>
@@ -495,7 +471,7 @@ namespace Nancy.Tests.Unit
 
             // When
             var request = new Request("POST", new Url { Path = "/", Scheme = "http" }, CreateRequestStream(memory), headers);
-            
+
             // Then
             ((string)request.Form.name).ShouldEqual("John Doe");
         }
@@ -562,7 +538,7 @@ namespace Nancy.Tests.Unit
             const string cookieName = "path";
             const string cookieData = "/";
             var headers = new Dictionary<string, IEnumerable<string>>();
-            var cookies = new List<string> { string.Format("{0}={1}; Secure", cookieName, cookieData)} ;
+            var cookies = new List<string> { string.Format("{0}={1}; Secure", cookieName, cookieData) };
             headers.Add("cookie", cookies);
             var newUrl = new Url
             {
@@ -571,7 +547,7 @@ namespace Nancy.Tests.Unit
             var request = new Request("GET", newUrl, null, headers);
 
             // Then
-            request.Cookies[cookieName].ShouldEqual(cookieData);            
+            request.Cookies[cookieName].ShouldEqual(cookieData);
         }
 
         [Fact]
@@ -634,22 +610,22 @@ namespace Nancy.Tests.Unit
         [Fact]
         public void Should_add_attribute_in_cookie_as_empty_value()
         {
-          // Given, when
-          const string cookieName = "path";
-          const string cookieData = "/";
-          const string cookieAttribute = "SomeAttribute";
-          var headers = new Dictionary<string, IEnumerable<string>>();
-          var cookies = new List<string> { string.Format("{0}={1}; {2}", cookieName, cookieData, cookieAttribute) };
-          headers.Add("cookie", cookies);
-          var newUrl = new Url
-          {
-            Path = "/"
-          };
-          var request = new Request("GET", newUrl, null, headers);
+            // Given, when
+            const string cookieName = "path";
+            const string cookieData = "/";
+            const string cookieAttribute = "SomeAttribute";
+            var headers = new Dictionary<string, IEnumerable<string>>();
+            var cookies = new List<string> { string.Format("{0}={1}; {2}", cookieName, cookieData, cookieAttribute) };
+            headers.Add("cookie", cookies);
+            var newUrl = new Url
+            {
+                Path = "/"
+            };
+            var request = new Request("GET", newUrl, null, headers);
 
-          // Then
-          request.Cookies[cookieName].ShouldEqual(cookieData);
-          request.Cookies[cookieAttribute].ShouldEqual(string.Empty);
+            // Then
+            request.Cookies[cookieName].ShouldEqual(cookieData);
+            request.Cookies[cookieAttribute].ShouldEqual(string.Empty);
         }
 
         [Fact]
@@ -657,11 +633,7 @@ namespace Nancy.Tests.Unit
         {
             // Given
             const string bodyContent = "name=John+Doe&gender=male&family=5&city=kent&city=miami&other=abc%0D%0Adef&nickname=J%26D";
-            var memory = CreateRequestStream();
-            var writer = new StreamWriter(memory);
-            writer.Write(bodyContent);
-            writer.Flush();
-            memory.Position = 0;
+            var memory = CreateRequestStream(bodyContent);
 
             var headers =
                 new Dictionary<string, IEnumerable<string>>
@@ -696,7 +668,7 @@ namespace Nancy.Tests.Unit
             var request = new Request("POST", new Url { Path = "/", Scheme = "http" }, CreateRequestStream(memory), headers);
 
             // Then
-            memory.Position.ShouldEqual(0L);
+            request.Body.Position.ShouldEqual(0L);
         }
 
         [Fact]
@@ -737,11 +709,12 @@ namespace Nancy.Tests.Unit
 
                 sb.AppendFormat("Field{0}=Value{0}", i);
             }
-            var memory = CreateRequestStream();
+            var memory = new MemoryStream();
             var writer = new StreamWriter(memory);
             writer.Write(sb.ToString());
             writer.Flush();
             memory.Position = 0;
+            var requestStream = CreateRequestStream(memory);
 
             var headers =
                 new Dictionary<string, IEnumerable<string>>
@@ -750,7 +723,7 @@ namespace Nancy.Tests.Unit
                 };
 
             // When
-            var request = new Request("POST", new Url { Path = "/", Scheme = "http" }, memory, headers);
+            var request = new Request("POST", new Url { Path = "/", Scheme = "http" }, requestStream, headers);
 
             // Then
             ((IEnumerable<string>)request.Form.GetDynamicMemberNames()).Count().ShouldEqual(StaticConfiguration.RequestQueryFormMultipartLimit);
@@ -770,10 +743,10 @@ namespace Nancy.Tests.Unit
 
                 sb.AppendFormat("Field{0}=Value{0}", i);
             }
-            var memory = CreateRequestStream();
+            var requestStream = CreateRequestStream(new MemoryStream());
 
             // When
-            var request = new Request("GET", new Url { Path = "/", Scheme = "http", Query = sb.ToString() }, memory, new Dictionary<string, IEnumerable<string>>());
+            var request = new Request("GET", new Url { Path = "/", Scheme = "http", Query = sb.ToString() }, requestStream, new Dictionary<string, IEnumerable<string>>());
 
             // Then
             ((IEnumerable<string>)request.Query.GetDynamicMemberNames()).Count().ShouldEqual(StaticConfiguration.RequestQueryFormMultipartLimit);
@@ -791,21 +764,21 @@ namespace Nancy.Tests.Unit
         public void Should_replace_value_of_query_key_without_value_with_true()
         {
             // Given
-            var memory = CreateRequestStream();
+            var memory = CreateRequestStream(new MemoryStream());
 
             // When
             var request = new Request("GET", new Url { Path = "/", Scheme = "http", Query = "key1" }, memory);
 
             // Then
             ((bool)request.Query.key1).ShouldBeTrue();
-            ((string)request.Query.key1).ShouldEqual("key1"); 
+            ((string)request.Query.key1).ShouldEqual("key1");
         }
 
         [Fact]
         public void Should_not_replace_equal_key_value_query_with_bool()
         {
             // Given
-            var memory = CreateRequestStream();
+            var memory = CreateRequestStream(new MemoryStream());
 
             // When
             var request = new Request("GET", new Url { Path = "/", Scheme = "http", Query = "key1=key1" }, memory);
@@ -814,9 +787,14 @@ namespace Nancy.Tests.Unit
             ShouldAssertExtensions.ShouldBeOfType<string>(request.Query["key1"].Value);
         }
 
-        private static RequestStream CreateRequestStream()
+        private static RequestStream CreateRequestStream(string bodyContent)
         {
-            return CreateRequestStream(new MemoryStream());
+            var memory = new MemoryStream();
+            var writer = new StreamWriter(memory);
+            writer.Write(bodyContent);
+            writer.Flush();
+            memory.Position = 0;
+            return RequestStream.FromStream(memory);
         }
 
         private static RequestStream CreateRequestStream(Stream stream)

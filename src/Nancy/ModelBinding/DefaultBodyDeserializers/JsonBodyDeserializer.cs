@@ -58,10 +58,9 @@ namespace Nancy.ModelBinding.DefaultBodyDeserializers
 
             bodyStream.Position = 0;
             string bodyText;
-            using (var bodyReader = new StreamReader(bodyStream))
-            {
-                bodyText = bodyReader.ReadToEnd();
-            }
+            var bodyReader = new StreamReader(bodyStream);
+            bodyText = bodyReader.ReadToEnd();
+            bodyStream.Position = 0;
 
             var genericDeserializeMethod = this.deserializeMethod.MakeGenericMethod(context.DestinationType);
 

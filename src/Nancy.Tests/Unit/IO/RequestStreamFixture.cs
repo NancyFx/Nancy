@@ -26,19 +26,6 @@ namespace Nancy.Tests.Unit.IO
         }
 
         [Fact]
-        public void Should_move_non_seekable_stream_into_seekable_stream_when_stream_switching_is_disabled()
-        {
-            // Given
-            var stream = new ConfigurableMemoryStream(Seekable: false);
-
-            // When
-            var result = RequestStream.FromStream(stream, 0, 1, true);
-
-            // Then
-            result.CanSeek.ShouldBeTrue();
-        }
-
-        [Fact]
         public void Should_move_stream_out_of_memory_if_longer_than_threshold_and_stream_switching_is_enabled()
         {
             // Given
@@ -46,6 +33,7 @@ namespace Nancy.Tests.Unit.IO
 
             // When
             var result = RequestStream.FromStream(inputStream, 0, 4, false);
+            result.BufferStream();
 
             // Then
             result.IsInMemory.ShouldBeFalse();
@@ -59,6 +47,7 @@ namespace Nancy.Tests.Unit.IO
 
             // When
             var result = RequestStream.FromStream(inputStream, 0, 4, true);
+            result.BufferStream();
 
             // Then
             result.IsInMemory.ShouldBeTrue();
@@ -134,7 +123,7 @@ namespace Nancy.Tests.Unit.IO
         }
 
         [Fact]
-        public void Should_return_true_when_queried_about_supporting_writing()
+        public void Should_return_false_when_queried_about_supporting_writing()
         {
             // Given
             var stream = new ConfigurableMemoryStream();
@@ -144,11 +133,11 @@ namespace Nancy.Tests.Unit.IO
             var result = request.CanWrite;
 
             // Then
-            result.ShouldBeTrue();
+            result.ShouldBeFalse();
         }
 
         [Fact]
-        public void Should_return_true_when_queried_about_supporting_seeking()
+        public void Should_return_false_when_queried_about_supporting_seeking()
         {
             // Given
             var stream = new ConfigurableMemoryStream();
@@ -158,21 +147,36 @@ namespace Nancy.Tests.Unit.IO
             var result = request.CanSeek;
 
             // Then
+            result.ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Should_return_true_when_queried_about_supporting_seeking_if_buffered()
+        {
+            // Given
+            var stream = new ConfigurableMemoryStream();
+            var request = RequestStream.FromStream(stream, 0, 1, false);
+            request.BufferStream();
+
+            // When
+            var result = request.CanSeek;
+
+            // Then
             result.ShouldBeTrue();
         }
 
         [Fact]
-        public void Should_return_false_when_queried_about_supporting_timeout()
+        public void Should_return_underlaying_stream_when_queried_about_supporting_timeout()
         {
             // Given
-            var stream = new ConfigurableMemoryStream();
+            var stream = new ConfigurableMemoryStream(Timeoutable: true);
             var request = RequestStream.FromStream(stream, 0, 1, false);
 
             // When
             var result = request.CanTimeout;
 
             // Then
-            result.ShouldBeFalse();
+            result.ShouldBeTrue();
         }
 
         [Fact]
@@ -247,17 +251,17 @@ namespace Nancy.Tests.Unit.IO
         }
 
         [Fact]
-        public void Should_flush_underlaying_stream()
+        public void Should_throw_on_flush()
         {
             // Given
             var stream = new ConfigurableMemoryStream();
             var request = RequestStream.FromStream(stream, 0, 1, false);
 
             // When
-            request.Flush();
+            var exception = Record.Exception(() => request.Flush());
 
             // Then
-            stream.HasBeenFlushed.ShouldBeTrue();
+            exception.ShouldBeOfType<NotSupportedException>();
         }
 
         [Fact]
@@ -275,45 +279,17 @@ namespace Nancy.Tests.Unit.IO
         }
 
         [Fact]
-        public void Should_set_position_of_underlaying_stream_to_zero_when_created()
-        {
-            // Given
-            var stream = new ConfigurableMemoryStream(Position: 10L);
-
-            // When
-            var request = RequestStream.FromStream(stream, 0, 1, false);
-
-            // Then
-            stream.Position.ShouldEqual(0L);
-        }
-
-        [Fact]
-        public void Should_seek_in_the_underlaying_stream_when_seek_is_called()
+        public void Should_throw_when_seek_is_called()
         {
             // Given
             var stream = new ConfigurableMemoryStream();
             var request = RequestStream.FromStream(stream, 0, 1, false);
 
             // When
-            request.Seek(10L, SeekOrigin.Current);
+            var exception = Record.Exception(() => request.Seek(10L, SeekOrigin.Current));
 
             // Then
-            stream.HasBeenSeeked.ShouldBeTrue();
-        }
-
-        [Fact]
-        public void Should_return_the_new_position_of_the_underlaying_stream_when_seek_is_called()
-        {
-            // Given
-            var stream = CreateFakeStream();
-            A.CallTo(() => stream.Seek(A<long>.Ignored, A<SeekOrigin>.Ignored)).Returns(100L);
-            var request = RequestStream.FromStream(stream, 0, 1, false);
-
-            // When
-            var result = request.Seek(10L, SeekOrigin.Current);
-
-            // Then
-            result.ShouldEqual(100L);
+            exception.ShouldBeOfType<NotSupportedException>();
         }
 
         [Fact]
@@ -377,7 +353,7 @@ namespace Nancy.Tests.Unit.IO
         }
 
         [Fact]
-        public void Should_write_to_underlaying_stream_when_write_is_called()
+        public void Should_throw_when_write_is_called()
         {
             // Given
             var stream = CreateFakeStream();
@@ -385,10 +361,10 @@ namespace Nancy.Tests.Unit.IO
             var request = RequestStream.FromStream(stream, 0, 1, false);
 
             // When
-            request.Write(buffer, 0, buffer.Length);
+            var exception = Record.Exception(() => request.Write(buffer, 0, buffer.Length));
 
             // Then
-            A.CallTo(() => stream.Write(buffer, 0, buffer.Length)).MustHaveHappened();
+            exception.ShouldBeOfType<NotSupportedException>();
         }
 
         [Fact]
@@ -396,44 +372,12 @@ namespace Nancy.Tests.Unit.IO
         {
             // Given
             var stream = CreateFakeStream();
-            
+
             // When
             var request = RequestStream.FromStream(stream, 1, 0, false);
 
             // Then
             request.IsInMemory.ShouldBeFalse();
-        }
-
-        [Fact]
-        public void Should_no_longer_be_in_memory_when_more_bytes_have_been_written_to_stream_then_size_of_the_threshold_and_stream_swapping_is_enabled()
-        {
-            // Given
-            var stream = CreateFakeStream();
-            var buffer = new byte[100];
-            var request = RequestStream.FromStream(stream, 0, 10, false);
-            A.CallTo(() => stream.Length).Returns(100);
-
-            // When
-            request.Write(buffer, 0, buffer.Length);
-
-            // Then
-            request.IsInMemory.ShouldBeFalse();
-        }
-
-        [Fact]
-        public void Should_still_be_in_memory_when_more_bytes_have_been_written_to_stream_than_size_of_threshold_and_stream_swapping_is_disabled()
-        {
-            // Given
-            var stream = CreateFakeStream();
-            var buffer = new byte[100];
-            var request = RequestStream.FromStream(stream, 0, 10, true);
-            A.CallTo(() => stream.Length).Returns(100);
-
-            // When
-            request.Write(buffer, 0, buffer.Length);
-
-            // Then
-            request.IsInMemory.ShouldBeTrue();
         }
 
         [Fact]
@@ -540,7 +484,7 @@ namespace Nancy.Tests.Unit.IO
         }
 
         [Fact]
-        public void Should_call_endwrite_on_underlaying_stream_when_endwrite_is_called()
+        public void Should_throw_when_endwrite_is_called()
         {
             // Given
             var stream = CreateFakeStream();
@@ -548,10 +492,10 @@ namespace Nancy.Tests.Unit.IO
             var request = RequestStream.FromStream(stream, 0, 10, true);
 
             // When
-            request.EndWrite(asyncResult);
+            var exception = Record.Exception(() => request.EndWrite(asyncResult));
 
             // Then
-            A.CallTo(() => stream.EndWrite(asyncResult)).MustHaveHappened();
+            exception.ShouldBeOfType<NotSupportedException>();
         }
 
         private static Stream CreateFakeStream()
@@ -565,7 +509,7 @@ namespace Nancy.Tests.Unit.IO
             A.CallTo(() => stream.CanSeek).Returns(true);
             A.CallTo(() => stream.CanTimeout).Returns(true);
             A.CallTo(() => stream.CanWrite).Returns(true);
-            
+
             return stream;
         }
 
@@ -620,7 +564,7 @@ namespace Nancy.Tests.Unit.IO
             public override long Position
             {
                 get { return this.position; }
-                set { this.position = value ; }
+                set { this.position = value; }
             }
 
             protected override void Dispose(bool disposing)

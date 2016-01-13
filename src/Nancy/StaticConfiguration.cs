@@ -56,6 +56,14 @@ namespace Nancy
         public static bool EnableHeadRouting { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether or not to disable the discovery of the X-HTTP-Method-Override flag in a request body.
+        /// This can be in the headers or posted form body of a request.  This flag will disable the discovery of this 
+        /// flag in the body of a request to avoid buffering the request body.
+        /// </summary>
+        [Description("Gets or sets a value indicating whether or not to disable the discovery of the X-HTTP-Method-Override flag in a request body.")]
+        public static bool DisableXHttpMethodOverrideBodyDiscovery { get; set; }
+
+        /// <summary>
         /// Gets a value indicating whether we are running in debug mode or not.
         /// Checks the entry assembly to see whether it has been built in debug mode.
         /// If anything goes wrong it returns false.
