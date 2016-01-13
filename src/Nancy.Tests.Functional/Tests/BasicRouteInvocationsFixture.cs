@@ -184,8 +184,14 @@
         public async Task Should_use_head_response_values_for_basic_head_request()
         {
             // Given
-            StaticConfiguration.EnableHeadRouting = true;
-            var browser = new Browser(with => with.Module<BasicRouteInvocationsModuleWithHead>());
+            var browser = new Browser(with =>
+            {
+                with.Module<BasicRouteInvocationsModuleWithHead>();
+                with.Configure(env =>
+                {
+                    env.Routing(explicitHeadRouting: true);
+                });
+            });
 
             // When
             var response = await browser.Head("/");
@@ -195,8 +201,6 @@
             Assert.Equal("text/html", response.ContentType);
             Assert.Equal(string.Empty, response.Body.AsString());
             Assert.Equal("HEAD!", response.ReasonPhrase);
-
-            StaticConfiguration.EnableHeadRouting = false;
         }
     }
 }

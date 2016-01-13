@@ -13,6 +13,7 @@ namespace Nancy
         private readonly ICultureService cultureService;
         private readonly IRequestTraceFactory requestTraceFactory;
         private readonly ITextResource textResource;
+        private readonly INancyEnvironment environment;
 
         /// <summary>
         /// Creates a new instance of the <see cref="DefaultNancyContextFactory"/> class.
@@ -20,11 +21,13 @@ namespace Nancy
         /// <param name="cultureService">An <see cref="ICultureService"/> instance.</param>
         /// <param name="requestTraceFactory">An <see cref="IRequestTraceFactory"/> instance.</param>
         /// <param name="textResource">An <see cref="ITextResource"/> instance.</param>
-        public DefaultNancyContextFactory(ICultureService cultureService, IRequestTraceFactory requestTraceFactory, ITextResource textResource)
+        /// <param name="environment">An <see cref="INancyEnvironment"/> instance.</param>
+        public DefaultNancyContextFactory(ICultureService cultureService, IRequestTraceFactory requestTraceFactory, ITextResource textResource, INancyEnvironment environment)
         {
             this.cultureService = cultureService;
             this.requestTraceFactory = requestTraceFactory;
             this.textResource = textResource;
+            this.environment = environment;
         }
 
         /// <summary>
@@ -40,6 +43,7 @@ namespace Nancy
             context.Request = request;
             context.Culture = this.cultureService.DetermineCurrentCulture(context);
             context.Text = new TextResourceFinder(this.textResource, context);
+            context.Environment = this.environment;
 
             // Move this to DefaultRequestTrace.
             context.Trace.TraceLog.WriteLog(s => s.AppendLine("New Request Started"));

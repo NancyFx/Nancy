@@ -5,7 +5,7 @@ namespace Nancy
     using System.ComponentModel;
     using System.Threading;
     using System.Threading.Tasks;
-
+    using Nancy.Configuration;
     using Nancy.ModelBinding;
     using Nancy.Responses.Negotiation;
     using Nancy.Routing;
@@ -84,7 +84,7 @@ namespace Nancy
         {
             get
             {
-                if (!StaticConfiguration.EnableHeadRouting)
+                if (!this.Context.Environment.GetValue<RouteConfiguration>().ExplicitHeadRouting)
                 {
                     throw new InvalidOperationException("Explicit HEAD routing is disabled. Set RouteConfiguration.ExplicitHeadRouting to enable.");
                 }

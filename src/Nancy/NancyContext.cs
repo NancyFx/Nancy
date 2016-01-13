@@ -6,7 +6,7 @@ namespace Nancy
     using System.Globalization;
     using System.Linq;
     using System.Security.Claims;
-
+    using Nancy.Configuration;
     using Nancy.Diagnostics;
     using Nancy.Responses.Negotiation;
     using Nancy.Routing;
@@ -115,6 +115,12 @@ namespace Nancy
         /// Gets or sets the dynamic object used to locate text resources.
         /// </summary>
         public dynamic Text { get; set; }
+
+        /// <summary>
+        /// Gets or sets the <see cref="INancyEnvironment"/>.
+        /// </summary>
+        /// <value>An <see cref="INancyEnvironment"/> instance.</value>
+        public INancyEnvironment Environment { get; set; }
 
         /// <summary>
         /// Disposes any disposable items in the <see cref="Items"/> dictionary.

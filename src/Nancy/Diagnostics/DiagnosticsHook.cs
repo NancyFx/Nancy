@@ -44,7 +44,7 @@ namespace Nancy.Diagnostics
 
             var diagnosticsRouteCache = new RouteCache(
                 diagnosticsModuleCatalog,
-                new DefaultNancyContextFactory(cultureService, requestTraceFactory, textResource),
+                new DefaultNancyContextFactory(cultureService, requestTraceFactory, textResource, diagnosticsEnvironment),
                 new DefaultRouteSegmentExtractor(),
                 new DefaultRouteDescriptionProvider(),
                 cultureService,
