@@ -18,6 +18,7 @@
         {
             if (this.Id > 100)
             {
+                //important:must assign member!
                 yield return new ValidationResult("The Id cannot be greater than 100", new[] { "Id" });
             }
         }
