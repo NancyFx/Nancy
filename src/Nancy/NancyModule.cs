@@ -82,15 +82,7 @@ namespace Nancy
         /// <value>A <see cref="RouteBuilder"/> instance.</value>
         public RouteBuilder Head
         {
-            get
-            {
-                if (!this.Context.Environment.GetValue<RouteConfiguration>().ExplicitHeadRouting)
-                {
-                    throw new InvalidOperationException("Explicit HEAD routing is disabled. Set RouteConfiguration.ExplicitHeadRouting to enable.");
-                }
-
-                return new RouteBuilder("HEAD", this);
-            }
+            get { return new RouteBuilder("HEAD", this); }
         }
 
         /// <summary>

@@ -16,7 +16,7 @@
         private readonly INancyModuleBuilder moduleBuilder;
         private readonly IRouteCache routeCache;
         private readonly IRouteResolverTrie trie;
-        private readonly RouteConfiguration configuration;
+        private readonly Lazy<RouteConfiguration> configuration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultRouteResolver"/> class, using
@@ -34,7 +34,7 @@
             this.moduleBuilder = moduleBuilder;
             this.routeCache = routeCache;
             this.trie = trie;
-            this.configuration = environment.GetValue<RouteConfiguration>();
+            this.configuration = new Lazy<RouteConfiguration>(environment.GetValue<RouteConfiguration>);
 
             this.BuildTrie();
         }
@@ -49,7 +49,7 @@
             var pathDecoded =
                 HttpUtility.UrlDecode(context.Request.Path);
 
-            var results = this.trie.GetMatches(GetMethod(context), pathDecoded, context);
+            var results = this.trie.GetMatches(this.GetMethod(context), pathDecoded, context);
 
             if (!results.Any())
             {
@@ -91,7 +91,7 @@
 
         private bool IsMethodNotAllowed(IEnumerable<string> allowedMethods)
         {
-            return allowedMethods.Any() && !this.configuration.DisableMethodNotAllowedResponses;
+            return allowedMethods.Any() && !this.configuration.Value.DisableMethodNotAllowedResponses;
         }
 
         private static bool IsOptionsRequest(NancyContext context)
@@ -164,7 +164,7 @@
             var requestedMethod =
                 context.Request.Method;
 
-            if (!this.configuration.ExplicitHeadRouting)
+            if (!this.configuration.Value.ExplicitHeadRouting)
             {
                 return requestedMethod.Equals("HEAD", StringComparison.OrdinalIgnoreCase) ?
                     "GET" :

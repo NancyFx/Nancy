@@ -44,7 +44,7 @@ namespace Nancy.Diagnostics
 
             var diagnosticsRouteCache = new RouteCache(
                 diagnosticsModuleCatalog,
-                new DefaultNancyContextFactory(cultureService, requestTraceFactory, textResource, diagnosticsEnvironment),
+                new DefaultNancyContextFactory(cultureService, requestTraceFactory, textResource, environment),
                 new DefaultRouteSegmentExtractor(),
                 new DefaultRouteDescriptionProvider(),
                 cultureService,
@@ -55,7 +55,7 @@ namespace Nancy.Diagnostics
                 new DiagnosticsModuleBuilder(rootPathProvider, modelBinderLocator, diagnosticsEnvironment, environment),
                 diagnosticsRouteCache,
                 new RouteResolverTrie(new TrieNodeFactory(routeSegmentConstraints)),
-                diagnosticsEnvironment);
+                environment);
 
             var serializer = new DefaultObjectSerializer();
 
