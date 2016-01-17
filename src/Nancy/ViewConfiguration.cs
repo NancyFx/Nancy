@@ -19,8 +19,8 @@ namespace Nancy
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewConfiguration"/> class.
         /// </summary>
-        /// <param name="runtimeViewDiscovery"></param>
-        /// <param name="runtimeViewUpdates"></param>
+        /// <param name="runtimeViewDiscovery">Determines if views can be discovered during runtime.</param>
+        /// <param name="runtimeViewUpdates">Determines if views can be updated during runtime.</param>
         public ViewConfiguration(bool runtimeViewDiscovery = false, bool runtimeViewUpdates = false)
         {
             this.RuntimeViewDiscovery = runtimeViewDiscovery;

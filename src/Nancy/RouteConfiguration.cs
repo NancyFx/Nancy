@@ -13,10 +13,10 @@ namespace Nancy
             explicitHeadRouting: false);
 
         /// <summary>
-        ///
+        /// Initializes a new instance of the <see cref="RouteConfiguration"/> class.
         /// </summary>
-        /// <param name="disableMethodNotAllowedResponses"></param>
-        /// <param name="explicitHeadRouting"></param>
+        /// <param name="disableMethodNotAllowedResponses">Determins is 405 responses are allowed.</param>
+        /// <param name="explicitHeadRouting">Enabled support for explicit HEAD route declarations.</param>
         public RouteConfiguration(bool disableMethodNotAllowedResponses = false, bool explicitHeadRouting = false)
         {
             this.DisableMethodNotAllowedResponses = disableMethodNotAllowedResponses;
