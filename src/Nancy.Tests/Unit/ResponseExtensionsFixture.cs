@@ -3,13 +3,20 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
-
+    using Nancy.Configuration;
     using Nancy.Responses;
-
     using Xunit;
 
     public class ResponseExtensionsFixture
     {
+        private readonly INancyEnvironment envrionment;
+
+        public ResponseExtensionsFixture()
+        {
+            this.envrionment = new DefaultNancyEnvironment();
+           
+        }
+
         [Fact]
         public void Should_add_content_disposition_header_for_attachments()
         {
@@ -48,7 +55,7 @@
             var assemblyPath =
                 Path.GetDirectoryName(this.GetType().Assembly.Location);
 
-            GenericFileResponse.SafePaths = new List<string> {assemblyPath};
+            this.envrionment.AddValue(new SafePathConfiguration(new[]{ assemblyPath }));
 
             var filename = Path.GetFileName(this.GetType().Assembly.Location);
             var response = new GenericFileResponse(filename, "image/png");
@@ -114,8 +121,8 @@
             var response = new Response();
 
             var result = response.WithHeaders(
-                            Tuple.Create("test", "testvalue"), 
-                            Tuple.Create("test2", "test2value"));
+                             Tuple.Create("test", "testvalue"), 
+                             Tuple.Create("test2", "test2value"));
 
             result.Headers.ShouldNotBeNull();
             result.Headers["test"].ShouldEqual("testvalue");
@@ -128,8 +135,8 @@
             var response = new Response();
 
             var result = response.WithHeaders(
-                new { Header = "test", Value = "testvalue" }, 
-                new { Header = "test2", Value = "test2value" });
+                             new { Header = "test", Value = "testvalue" }, 
+                             new { Header = "test2", Value = "test2value" });
 
             result.Headers.ShouldNotBeNull();
             result.Headers["test"].ShouldEqual("testvalue");

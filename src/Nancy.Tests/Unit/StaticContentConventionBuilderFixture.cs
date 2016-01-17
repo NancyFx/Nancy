@@ -4,8 +4,10 @@
     using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
+    using System.Linq;
     using System.Text;
 
+    using Nancy.Configuration;
     using Nancy.Conventions;
     using Nancy.Diagnostics;
     using Nancy.Responses;
@@ -20,12 +22,15 @@
 }";
 
         private readonly string directory;
+        private readonly INancyEnvironment envrionment;
+        private readonly SafePathConfiguration configuration;
 
         public StaticContentConventionBuilderFixture()
         {
             this.directory = Environment.CurrentDirectory;
-
-            GenericFileResponse.SafePaths.Add(this.directory);
+            this.configuration = new SafePathConfiguration(new[]{ this.directory });
+            this.envrionment = new DefaultNancyEnvironment();
+            this.envrionment.AddValue(this.configuration);
         }
 
         [Fact]
@@ -240,9 +245,10 @@
             var fileName = string.Format("name{0}.ext", invalidCharacter);
 
             // When
-            var exception = Record.Exception(() => {
-                this.GetStaticContent("css/css", fileName);
-            });
+            var exception = Record.Exception(() =>
+                {
+                    this.GetStaticContent("css/css", fileName);
+                });
 
             // Then
             exception.ShouldBeNull();
@@ -274,7 +280,7 @@
 
             var rootFolder = root ?? this.directory;
 
-            GenericFileResponse.SafePaths.Add(rootFolder);
+            this.configuration.Paths = this.configuration.Paths.Concat(new[]{ rootFolder });
 
             var response = resolver.Invoke(context, rootFolder);
             return response;
@@ -285,9 +291,9 @@
             var resource = string.Format("/{0}/{1}", virtualDirectory, requestedFilename);
 
             var request = new Request(
-                "GET",
-                new Url { Path = resource, Scheme = "http" },
-                headers: headers ?? new Dictionary<string, IEnumerable<string>>());
+                              "GET",
+                              new Url { Path = resource, Scheme = "http" },
+                              headers: headers ?? new Dictionary<string, IEnumerable<string>>());
 
             var context = new NancyContext
             {

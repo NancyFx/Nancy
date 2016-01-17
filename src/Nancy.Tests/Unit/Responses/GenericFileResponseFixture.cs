@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.IO;
 
+    using Nancy.Configuration;
     using Nancy.Responses;
 
     using Xunit;
@@ -11,13 +12,17 @@
     {
         private readonly string imagePath;
         private const string imageContentType = "image/png";
+        private readonly INancyEnvironment envrionment;
+        private readonly SafePathConfiguration configuration;
 
         public GenericFileResponseFixture()
         {
             var assemblyPath =
                 Path.GetDirectoryName(this.GetType().Assembly.Location);
 
-            GenericFileResponse.SafePaths = new List<string> {assemblyPath};
+            this.configuration = new SafePathConfiguration(new[]{ assemblyPath });
+            this.envrionment = new DefaultNancyEnvironment();
+            this.envrionment.AddValue(this.configuration);
 
             this.imagePath =
                 Path.GetFileName(this.GetType().Assembly.Location);
@@ -92,7 +97,7 @@
             // Then
             response.StatusCode.ShouldEqual(HttpStatusCode.OK);
         }
-        
+
         [Fact]
         public void Should_return_file_unchanged()
         {
@@ -106,7 +111,7 @@
             // Then
             result.ShouldEqualSequence(expected);
         }
-        
+
         [Fact]
         public void Should_set_filename_property_to_filename()
         {
@@ -140,7 +145,7 @@
             // Then
             response.Headers["Content-Length"].ShouldEqual(expected);
         }
-        
+
         private static IEnumerable<byte> GetResponseContents(Response response)
         {
             var ms = new MemoryStream();
