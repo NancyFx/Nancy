@@ -157,6 +157,7 @@
     <Compile Include="Culture\ICultureService.cs" />
     <Compile Include="DefaultResponseFormatterFactory.cs" />
     <Compile Include="DefaultRootPathProvider.cs" />
+    <Compile Include="DefaultRouteConfigurationProvider.cs" />
     <Compile Include="DefaultRuntimeEnvironmentInformation.cs" />
     <Compile Include="DefaultSerializerFactory.cs" />
     <Compile Include="DefaultStaticContentProvider.cs" />
@@ -259,6 +260,8 @@
     <Compile Include="Responses\DefaultJsonSerializer.cs" />
     <Compile Include="Responses\DefaultXmlSerializer.cs" />
     <Compile Include="Responses\TextResponse.cs" />
+    <Compile Include="RouteConfiguration.cs" />
+    <Compile Include="RouteConfigurationExtensions.cs" />
     <Compile Include="Routing\Constraints\AlphaRouteSegmentConstraint.cs" />
     <Compile Include="Routing\Constraints\BoolRouteSegmentConstraint.cs" />
     <Compile Include="Routing\Constraints\CustomDateTimeRouteSegmentConstraint.cs" />

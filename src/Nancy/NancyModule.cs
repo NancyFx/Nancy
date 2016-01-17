@@ -5,7 +5,7 @@ namespace Nancy
     using System.ComponentModel;
     using System.Threading;
     using System.Threading.Tasks;
-
+    using Nancy.Configuration;
     using Nancy.ModelBinding;
     using Nancy.Responses.Negotiation;
     using Nancy.Routing;
@@ -82,15 +82,7 @@ namespace Nancy
         /// <value>A <see cref="RouteBuilder"/> instance.</value>
         public RouteBuilder Head
         {
-            get
-            {
-                if (!StaticConfiguration.EnableHeadRouting)
-                {
-                    throw new InvalidOperationException("Explicit HEAD routing is disabled. Set StaticConfiguration.EnableHeadRouting to enable.");
-                }
-
-                return new RouteBuilder("HEAD", this);
-            }
+            get { return new RouteBuilder("HEAD", this); }
         }
 
         /// <summary>

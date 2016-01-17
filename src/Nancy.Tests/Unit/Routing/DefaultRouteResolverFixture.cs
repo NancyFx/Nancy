@@ -358,8 +358,14 @@
         public async Task Should_return_405_if_requested_method_is_not_permitted_but_others_are_available_and_not_disabled()
         {
             // Given
-            StaticConfiguration.DisableMethodNotAllowedResponses = false;
-            var browser = new Browser(with => with.Module<MethodNotAllowedModule>());
+            var browser = new Browser(with =>
+            {
+                with.Module<MethodNotAllowedModule>();
+                with.Configure(env =>
+                {
+                    env.Routing(disableMethodNotAllowedResponses: false);
+                });
+            });
 
             // When
             var result = await browser.Get("/");
@@ -372,8 +378,14 @@
         public async Task Should_not_return_405_if_requested_method_is_not_permitted_but_others_are_available_and_disabled()
         {
             // Given
-            StaticConfiguration.DisableMethodNotAllowedResponses = true;
-            var browser = new Browser(with => with.Module<MethodNotAllowedModule>());
+            var browser = new Browser(with =>
+            {
+                with.Module<MethodNotAllowedModule>();
+                with.Configure(env =>
+                {
+                    env.Routing(disableMethodNotAllowedResponses: true);
+                });
+            });
 
             // When
             var result = await browser.Get("/");
@@ -386,8 +398,14 @@
         public async Task Should_set_allowed_method_on_response_when_returning_405()
         {
             // Given
-            StaticConfiguration.DisableMethodNotAllowedResponses = false;
-            var browser = new Browser(with => with.Module<MethodNotAllowedModule>());
+            var browser = new Browser(with =>
+            {
+                with.Module<MethodNotAllowedModule>();
+                with.Configure(env =>
+                {
+                    env.Routing(disableMethodNotAllowedResponses: false);
+                });
+            });
 
             // When
             var result = await browser.Get("/");

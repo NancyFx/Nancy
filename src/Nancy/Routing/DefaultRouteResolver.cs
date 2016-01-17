@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Helpers;
+    using Nancy.Configuration;
     using Trie;
 
     /// <summary>
@@ -15,22 +16,25 @@
         private readonly INancyModuleBuilder moduleBuilder;
         private readonly IRouteCache routeCache;
         private readonly IRouteResolverTrie trie;
+        private readonly Lazy<RouteConfiguration> configuration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultRouteResolver"/> class, using
         /// the provided <paramref name="catalog"/>, <paramref name="moduleBuilder"/>,
         /// <paramref name="routeCache"/> and <paramref name="trie"/>.
         /// </summary>
-        /// <param name="catalog">A <see cref="INancyModuleCatalog"/> instance.</param>
-        /// <param name="moduleBuilder">A <see cref="INancyModuleBuilder"/> instance.</param>
-        /// <param name="routeCache">A <see cref="IRouteCache"/> instance.</param>
-        /// <param name="trie">A <see cref="IRouteResolverTrie"/> instance.</param>
-        public DefaultRouteResolver(INancyModuleCatalog catalog, INancyModuleBuilder moduleBuilder, IRouteCache routeCache, IRouteResolverTrie trie)
+        /// <param name="catalog">An <see cref="INancyModuleCatalog"/> instance.</param>
+        /// <param name="moduleBuilder">An <see cref="INancyModuleBuilder"/> instance.</param>
+        /// <param name="routeCache">An <see cref="IRouteCache"/> instance.</param>
+        /// <param name="trie">An <see cref="IRouteResolverTrie"/> instance.</param>
+        /// <param name="environment">An <see cref="INancyEnvironment"/> instance.</param>
+        public DefaultRouteResolver(INancyModuleCatalog catalog, INancyModuleBuilder moduleBuilder, IRouteCache routeCache, IRouteResolverTrie trie, INancyEnvironment environment)
         {
             this.catalog = catalog;
             this.moduleBuilder = moduleBuilder;
             this.routeCache = routeCache;
             this.trie = trie;
+            this.configuration = new Lazy<RouteConfiguration>(environment.GetValue<RouteConfiguration>);
 
             this.BuildTrie();
         }
@@ -45,7 +49,7 @@
             var pathDecoded =
                 HttpUtility.UrlDecode(context.Request.Path);
 
-            var results = this.trie.GetMatches(GetMethod(context), pathDecoded, context);
+            var results = this.trie.GetMatches(this.GetMethod(context), pathDecoded, context);
 
             if (!results.Any())
             {
@@ -57,7 +61,7 @@
                     return BuildOptionsResult(allowedMethods, context);
                 }
 
-                return IsMethodNotAllowed(allowedMethods) ?
+                return this.IsMethodNotAllowed(allowedMethods) ?
                     BuildMethodNotAllowedResult(context, allowedMethods) :
                     GetNotFoundResult(context);
             }
@@ -85,9 +89,9 @@
             return new ResolveResult(route, new DynamicDictionary(), null, null, null);
         }
 
-        private static bool IsMethodNotAllowed(IEnumerable<string> allowedMethods)
+        private bool IsMethodNotAllowed(IEnumerable<string> allowedMethods)
         {
-            return allowedMethods.Any() && !StaticConfiguration.DisableMethodNotAllowedResponses;
+            return allowedMethods.Any() && !this.configuration.Value.DisableMethodNotAllowedResponses;
         }
 
         private static bool IsOptionsRequest(NancyContext context)
@@ -155,12 +159,12 @@
             };
         }
 
-        private static string GetMethod(NancyContext context)
+        private string GetMethod(NancyContext context)
         {
             var requestedMethod =
                 context.Request.Method;
 
-            if (!StaticConfiguration.EnableHeadRouting)
+            if (!this.configuration.Value.ExplicitHeadRouting)
             {
                 return requestedMethod.Equals("HEAD", StringComparison.OrdinalIgnoreCase) ?
                     "GET" :
