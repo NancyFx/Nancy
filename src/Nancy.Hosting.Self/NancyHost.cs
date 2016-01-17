@@ -252,7 +252,7 @@
             var expectedRequestLength =
                 GetExpectedRequestLength(request.Headers.ToDictionary());
 
-            var relativeUrl = baseUri.MakeAppLocalPath(request.Url);
+            var relativeUrl = HttpUtility.UrlDecode(baseUri.MakeAppLocalPath(request.Url));
 
             var nancyUrl = new Url
             {
@@ -260,7 +260,7 @@
                 HostName = request.Url.Host,
                 Port = request.Url.IsDefaultPort ? null : (int?)request.Url.Port,
                 BasePath = baseUri.AbsolutePath.TrimEnd('/'),
-                Path = HttpUtility.UrlDecode(relativeUrl),
+                Path = string.Concat(relativeUrl, request.Url.Fragment),
                 Query = request.Url.Query,
             };
 
