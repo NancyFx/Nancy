@@ -48,7 +48,7 @@
                 Path.GetDirectoryName(this.GetType().Assembly.Location);
 
             var environment = new DefaultNancyEnvironment();
-            environment.Paths(assemblyPath);
+            environment.AddSafePaths(assemblyPath);
 
             var filename = Path.GetFileName(this.GetType().Assembly.Location);
             var response = new GenericFileResponse(filename, "image/png", new NancyContext() {Environment = environment});

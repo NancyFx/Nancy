@@ -28,7 +28,7 @@
         {
             this.directory = Environment.CurrentDirectory;
             this.envrionment = new DefaultNancyEnvironment();
-            this.envrionment.Paths(this.directory);
+            this.envrionment.AddSafePaths(this.directory);
         }
 
         [Fact]
@@ -279,7 +279,7 @@
             var rootFolder = root ?? this.directory;
 
             context.Environment = new DefaultNancyEnvironment();
-            context.Environment.Paths(rootFolder);
+            context.Environment.AddSafePaths(rootFolder);
 
             var response = resolver.Invoke(context, rootFolder);
             return response;

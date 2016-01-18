@@ -11,7 +11,7 @@ namespace Nancy
         /// <summary>
         /// Initializes a new instance of the <see cref="Nancy.SafePathConfiguration"/> class.
         /// </summary>
-        /// <param name="paths">Paths.</param>
+        /// <param name="paths">AddSafePaths.</param>
         public SafePathConfiguration(IEnumerable<string> paths)
         {
             this.Paths = paths;
