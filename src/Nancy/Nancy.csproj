@@ -359,7 +359,6 @@
     <Compile Include="Security\ICsrfTokenValidator.cs" />
     <Compile Include="Security\CsrfTokenValidationResult.cs" />
     <Compile Include="ResponseExtensions.cs" />
-    <Compile Include="RootPathApplicationStartup.cs" />
     <Compile Include="StaticConfiguration.cs" />
     <Compile Include="Url.cs" />
     <Compile Include="Validation\CompositeValidator.cs" />

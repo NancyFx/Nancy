@@ -286,7 +286,7 @@
             return response;
         }
 
-        private static NancyContext GetContext(string virtualDirectory, string requestedFilename, IDictionary<string, IEnumerable<string>> headers = null)
+        private NancyContext GetContext(string virtualDirectory, string requestedFilename, IDictionary<string, IEnumerable<string>> headers = null)
         {
             var resource = string.Format("/{0}/{1}", virtualDirectory, requestedFilename);
 
@@ -300,8 +300,9 @@
                 Request = request,
                 Trace = new DefaultRequestTrace
                 {
-                    TraceLog = new DefaultTraceLog()
-                }
+                    TraceLog = new DefaultTraceLog(),
+                },
+                Environment = this.envrionment
             };
 
             return context;

@@ -9,14 +9,6 @@
 
     public class ResponseExtensionsFixture
     {
-        private readonly INancyEnvironment envrionment;
-
-        public ResponseExtensionsFixture()
-        {
-            this.envrionment = new DefaultNancyEnvironment();
-           
-        }
-
         [Fact]
         public void Should_add_content_disposition_header_for_attachments()
         {
@@ -55,10 +47,11 @@
             var assemblyPath =
                 Path.GetDirectoryName(this.GetType().Assembly.Location);
 
-            this.envrionment.AddValue(new SafePathConfiguration(new[]{ assemblyPath }));
+            var environment = new DefaultNancyEnvironment();
+            environment.AddValue(new SafePathConfiguration(new[]{ assemblyPath }));
 
             var filename = Path.GetFileName(this.GetType().Assembly.Location);
-            var response = new GenericFileResponse(filename, "image/png");
+            var response = new GenericFileResponse(filename, "image/png", new NancyContext() {Environment = environment});
 
             // When
             var result = response.AsAttachment();

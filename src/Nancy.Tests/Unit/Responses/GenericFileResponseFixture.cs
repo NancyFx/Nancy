@@ -12,6 +12,7 @@
     {
         private readonly string imagePath;
         private const string imageContentType = "image/png";
+        private readonly NancyContext context;
         private readonly INancyEnvironment envrionment;
         private readonly SafePathConfiguration configuration;
 
@@ -19,10 +20,11 @@
         {
             var assemblyPath =
                 Path.GetDirectoryName(this.GetType().Assembly.Location);
-
+            this.context = new NancyContext();
             this.configuration = new SafePathConfiguration(new[]{ assemblyPath });
             this.envrionment = new DefaultNancyEnvironment();
             this.envrionment.AddValue(this.configuration);
+            this.context.Environment = this.envrionment;
 
             this.imagePath =
                 Path.GetFileName(this.GetType().Assembly.Location);
@@ -32,7 +34,7 @@
         public void Should_set_status_code_to_not_found_when_file_name_is_empty()
         {
             // Given, When
-            var response = new GenericFileResponse(string.Empty, imageContentType);
+            var response = new GenericFileResponse(string.Empty, imageContentType, this.context);
 
             // Then
             response.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
@@ -42,7 +44,7 @@
         public void Should_set_status_code_to_not_found_when_file_name_is_null()
         {
             // Given, When
-            var response = new GenericFileResponse(null, imageContentType);
+            var response = new GenericFileResponse(null, imageContentType, this.context);
 
             // Then
             response.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
@@ -55,7 +57,7 @@
             var path = Path.Combine("Resources", "zip");
 
             // When
-            var response = new GenericFileResponse(path, imageContentType);
+            var response = new GenericFileResponse(path, imageContentType, this.context);
 
             // Then
             response.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
@@ -68,7 +70,7 @@
             var path = Path.Combine("Resources", "thatsnotit.jpg");
 
             // When
-            var response = new GenericFileResponse(path, imageContentType);
+            var response = new GenericFileResponse(path, imageContentType, this.context);
 
             // Then
             response.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
@@ -82,7 +84,7 @@
                 Path.Combine(this.imagePath, "..", "..");
 
             // When
-            var response = new GenericFileResponse(path, imageContentType);
+            var response = new GenericFileResponse(path, imageContentType, this.context);
 
             // Then
             response.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
@@ -92,7 +94,7 @@
         public void Should_set_status_code_to_ok()
         {
             // Given, When
-            var response = new GenericFileResponse(this.imagePath, imageContentType);
+            var response = new GenericFileResponse(this.imagePath, imageContentType, this.context);
                         
             // Then
             response.StatusCode.ShouldEqual(HttpStatusCode.OK);
@@ -103,7 +105,7 @@
         {
             // Given
             var expected = File.ReadAllBytes(this.imagePath);
-            var response = new GenericFileResponse(this.imagePath, imageContentType);
+            var response = new GenericFileResponse(this.imagePath, imageContentType, this.context);
             
             // When
             var result = GetResponseContents(response);
@@ -116,7 +118,7 @@
         public void Should_set_filename_property_to_filename()
         {
             // Given, When
-            var response = new GenericFileResponse(this.imagePath, imageContentType);
+            var response = new GenericFileResponse(this.imagePath, imageContentType, this.context);
 
             // Then
             response.Filename.ShouldEqual(Path.GetFileName(this.imagePath));
@@ -127,7 +129,7 @@
         {
             // Given, when
             var response =
-                new GenericFileResponse(this.imagePath, imageContentType);
+                new GenericFileResponse(this.imagePath, imageContentType, this.context);
 
             // Then
             response.Headers["ETag"].ShouldStartWith("\"");
@@ -140,7 +142,7 @@
             // Given, when
             var expected = new FileInfo(imagePath).Length.ToString();
             var response =
-                new GenericFileResponse(this.imagePath, imageContentType);
+                new GenericFileResponse(this.imagePath, imageContentType, this.context);
 
             // Then
             response.Headers["Content-Length"].ShouldEqual(expected);
