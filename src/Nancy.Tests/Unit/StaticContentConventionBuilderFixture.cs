@@ -23,14 +23,12 @@
 
         private readonly string directory;
         private readonly INancyEnvironment envrionment;
-        private readonly SafePathConfiguration configuration;
 
         public StaticContentConventionBuilderFixture()
         {
             this.directory = Environment.CurrentDirectory;
-            this.configuration = new SafePathConfiguration(new[]{ this.directory });
             this.envrionment = new DefaultNancyEnvironment();
-            this.envrionment.AddValue(this.configuration);
+            this.envrionment.Paths(this.directory);
         }
 
         [Fact]
@@ -280,7 +278,8 @@
 
             var rootFolder = root ?? this.directory;
 
-            this.configuration.Paths = this.configuration.Paths.Concat(new[]{ rootFolder });
+            context.Environment = new DefaultNancyEnvironment();
+            context.Environment.Paths(rootFolder);
 
             var response = resolver.Invoke(context, rootFolder);
             return response;

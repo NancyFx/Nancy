@@ -13,18 +13,16 @@
         private readonly string imagePath;
         private const string imageContentType = "image/png";
         private readonly NancyContext context;
-        private readonly INancyEnvironment envrionment;
-        private readonly SafePathConfiguration configuration;
 
         public GenericFileResponseFixture()
         {
             var assemblyPath =
                 Path.GetDirectoryName(this.GetType().Assembly.Location);
-            this.context = new NancyContext();
-            this.configuration = new SafePathConfiguration(new[]{ assemblyPath });
-            this.envrionment = new DefaultNancyEnvironment();
-            this.envrionment.AddValue(this.configuration);
-            this.context.Environment = this.envrionment;
+            
+            var envrionment = new DefaultNancyEnvironment();
+            envrionment.Paths(assemblyPath);
+
+            this.context = new NancyContext { Environment = envrionment };
 
             this.imagePath =
                 Path.GetFileName(this.GetType().Assembly.Location);

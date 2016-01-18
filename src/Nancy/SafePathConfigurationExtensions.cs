@@ -4,7 +4,7 @@
     using Nancy.Configuration;
 
     /// <summary>
-    /// Contains <see cref="SafePathConfiguration"/> configuration for <see cref="INancyEnvironment"/>.  
+    /// Contains <see cref="SafePathConfiguration"/> configuration extensions for <see cref="INancyEnvironment"/>.  
     /// </summary>
     public static class SafePathConfigurationExtensions
     {
@@ -13,7 +13,7 @@
         /// </summary>
         /// <param name="environment"><see cref="INancyEnvironment"/> that should be configured.</param>
         /// <param name="paths">Safe paths.</param>
-        public static void Paths(this INancyEnvironment environment, IEnumerable<string> paths)
+        public static void Paths(this INancyEnvironment environment, params string[] paths)
         {
             environment.AddValue(new SafePathConfiguration(paths));
         }

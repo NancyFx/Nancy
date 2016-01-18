@@ -21,6 +21,6 @@ namespace Nancy
         /// Gets or sets the paths.
         /// </summary>
         /// <value>The paths.</value>
-        public IEnumerable<string> Paths { get; set; }
+        public IEnumerable<string> Paths { get; private set; }
     }
 }
