@@ -13,7 +13,7 @@
         /// </summary>
         /// <param name="environment"><see cref="INancyEnvironment"/> that should be configured.</param>
         /// <param name="paths">Safe paths.</param>
-        public static void Paths(this INancyEnvironment environment, IEnumerable<string> paths = null)
+        public static void Paths(this INancyEnvironment environment, IEnumerable<string> paths)
         {
             environment.AddValue(new SafePathConfiguration(paths));
         }
