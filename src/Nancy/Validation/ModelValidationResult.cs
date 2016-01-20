@@ -89,12 +89,12 @@
                 
                 if (!result.MemberNames.Any() && !string.IsNullOrEmpty(result.ErrorMessage))
                 {
-                    if (!output.ContainsKey(""))
+                    if (!output.ContainsKey(string.Empty))
                     {
-                        output.Add("", new List<ModelValidationError>());
+                        output.Add(string.Empty, new List<ModelValidationError>());
                     }
 
-                    output[""].Add(result);
+                    output[string.Empty].Add(result);
                 }
             }
 
