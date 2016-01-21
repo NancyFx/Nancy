@@ -5,15 +5,15 @@
     /// <summary>
     /// Provides the default configuration for <see cref="StaticContentConfiguration"/>. 
     /// </summary>
-    public class DefaultSafePathConfigurationProvider : NancyDefaultConfigurationProvider<StaticContentConfiguration>
+    public class DefaultStaticContentConfigurationProvider : NancyDefaultConfigurationProvider<StaticContentConfiguration>
     {
         private readonly IRootPathProvider rootPathProvider;
 
         /// <summary>
-        /// Creates and instance of DefaultSafePathConfigurationProvider
+        /// Creates and instance of DefaultStaticContentConfigurationProvider
         /// </summary>
         /// <param name="rootPathProvider">Use <see cref="IRootPathProvider"/> to get root path</param>
-        public DefaultSafePathConfigurationProvider(IRootPathProvider rootPathProvider)
+        public DefaultStaticContentConfigurationProvider(IRootPathProvider rootPathProvider)
         {
             this.rootPathProvider = rootPathProvider;
         }
@@ -22,7 +22,6 @@
         /// Gets the default configuration instance to register in the <see cref="INancyEnvironment"/> .
         /// </summary>
         /// <returns>The configuration instance.</returns>
-        /// <remarks>Will return <see cref="StaticContentConfiguration.Default"/>.</remarks>
         public override StaticContentConfiguration GetDefaultConfiguration()
         {
             return new StaticContentConfiguration(new []{this.rootPathProvider.GetRootPath()});

@@ -515,7 +515,7 @@
     <Compile Include="Xml\XmlConfigurationExtensions.cs" />
     <Compile Include="Xml\XmlConfiguration.cs" />
     <Compile Include="Xml\DefaultXmlConfigurationProvider.cs" />
-    <Compile Include="DefaultSafePathConfigurationProvider.cs" />
+    <Compile Include="DefaultStaticContentConfigurationProvider.cs" />
     <Compile Include="StaticContentConfiguration.cs" />
     <Compile Include="StaticContentConfigurationExtensions.cs" />
   </ItemGroup>
