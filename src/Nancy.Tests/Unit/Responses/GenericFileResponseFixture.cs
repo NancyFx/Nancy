@@ -20,7 +20,7 @@
                 Path.GetDirectoryName(this.GetType().Assembly.Location);
             
             var envrionment = new DefaultNancyEnvironment();
-            envrionment.AddSafePaths(assemblyPath);
+            envrionment.StaticContent(assemblyPath);
 
             this.context = new NancyContext { Environment = envrionment };
 

@@ -516,8 +516,8 @@
     <Compile Include="Xml\XmlConfiguration.cs" />
     <Compile Include="Xml\DefaultXmlConfigurationProvider.cs" />
     <Compile Include="DefaultSafePathConfigurationProvider.cs" />
-    <Compile Include="SafePathConfiguration.cs" />
-    <Compile Include="SafePathConfigurationExtensions.cs" />
+    <Compile Include="StaticContentConfiguration.cs" />
+    <Compile Include="StaticContentConfigurationExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Diagnostics\Views\Dashboard.sshtml" />

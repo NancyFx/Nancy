@@ -3,9 +3,9 @@
     using Nancy.Configuration;
 
     /// <summary>
-    /// Provides the default configuration for <see cref="SafePathConfiguration"/>. 
+    /// Provides the default configuration for <see cref="StaticContentConfiguration"/>. 
     /// </summary>
-    public class DefaultSafePathConfigurationProvider : NancyDefaultConfigurationProvider<SafePathConfiguration>
+    public class DefaultSafePathConfigurationProvider : NancyDefaultConfigurationProvider<StaticContentConfiguration>
     {
         private readonly IRootPathProvider rootPathProvider;
 
@@ -22,10 +22,10 @@
         /// Gets the default configuration instance to register in the <see cref="INancyEnvironment"/> .
         /// </summary>
         /// <returns>The configuration instance.</returns>
-        /// <remarks>Will return <see cref="SafePathConfiguration.Default"/>.</remarks>
-        public override SafePathConfiguration GetDefaultConfiguration()
+        /// <remarks>Will return <see cref="StaticContentConfiguration.Default"/>.</remarks>
+        public override StaticContentConfiguration GetDefaultConfiguration()
         {
-            return new SafePathConfiguration(new []{this.rootPathProvider.GetRootPath()});
+            return new StaticContentConfiguration(new []{this.rootPathProvider.GetRootPath()});
         }
     }
 }

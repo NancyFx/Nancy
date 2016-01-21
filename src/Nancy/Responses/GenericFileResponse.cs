@@ -12,7 +12,7 @@
     /// <remarks>If the response contains an invalid file (not found, empty name, missing extension and so on) the status code of the response will be set to <see cref="HttpStatusCode.NotFound"/>.</remarks>
     public class GenericFileResponse : Response
     {
-        private readonly SafePathConfiguration configuration;
+        private readonly StaticContentConfiguration configuration;
 
         /// <summary>
         ///  Size of buffer for transmitting file. Default size 4 Mb
@@ -41,7 +41,7 @@
         public GenericFileResponse(string filePath, string contentType, NancyContext context)
         {
             var environment = context.Environment;
-            this.configuration = environment.GetValue<SafePathConfiguration>();
+            this.configuration = environment.GetValue<StaticContentConfiguration>();
             this.InitializeGenericFileResponse(filePath, contentType, context);
         }
 
@@ -82,11 +82,11 @@
                 return;
             }
 
-            if (this.configuration.Paths == null || !this.configuration.Paths.Any())
+            if (this.configuration.SafePaths == null || !this.configuration.SafePaths.Any())
             {
                 throw new InvalidOperationException("No SafePaths defined.");
             }
-            foreach (var rootPath in this.configuration.Paths)
+            foreach (var rootPath in this.configuration.SafePaths)
             {
                 string fullPath;
                 if (Path.IsPathRooted(filePath))
