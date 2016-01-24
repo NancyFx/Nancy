@@ -284,7 +284,7 @@ namespace Nancy
             /// <summary>
             /// Defines an async route for the specified <paramref name="path"/>
             /// </summary>
-            public Func<dynamic, CancellationToken, Task<dynamic>> this[string path, bool runAsync]
+            public Func<dynamic, CancellationToken, Task<dynamic>> this[string path]
             {
                 set { this.AddRoute(string.Empty, path, null, value); }
             }
@@ -292,7 +292,7 @@ namespace Nancy
             /// <summary>
             /// Defines an async route for the specified <paramref name="path"/> and <paramref name="condition"/>.
             /// </summary>
-            public Func<dynamic, CancellationToken, Task<dynamic>> this[string path, Func<NancyContext, bool> condition, bool runAsync]
+            public Func<dynamic, CancellationToken, Task<dynamic>> this[string path, Func<NancyContext, bool> condition]
             {
                 set { this.AddRoute(string.Empty, path, condition, value); }
             }
@@ -300,7 +300,7 @@ namespace Nancy
             /// <summary>
             /// Defines an async route for the specified <paramref name="path"/> and <paramref name="name"/>
             /// </summary>
-            public Func<dynamic, CancellationToken, Task<dynamic>> this[string name, string path, bool runAsync]
+            public Func<dynamic, CancellationToken, Task<dynamic>> this[string name, string path]
             {
                 set { this.AddRoute(name, path, null, value); }
             }
@@ -308,7 +308,7 @@ namespace Nancy
             /// <summary>
             /// Defines an async route for the specified <paramref name="path"/>, <paramref name="condition"/> and <paramref name="name"/>
             /// </summary>
-            public Func<dynamic, CancellationToken, Task<dynamic>> this[string name, string path, Func<NancyContext, bool> condition, bool runAsync]
+            public Func<dynamic, CancellationToken, Task<dynamic>> this[string name, string path, Func<NancyContext, bool> condition]
             {
                 set { this.AddRoute(name, path, condition, value); }
             }
