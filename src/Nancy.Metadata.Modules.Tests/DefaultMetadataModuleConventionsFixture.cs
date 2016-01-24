@@ -21,7 +21,7 @@
             // Given
             var convention = this.conventions.ElementAt(0);
             var module = new FakeLegacyNancyModule();
-            var metadataModules = new[] { new FakeNancyMetadataModule() };
+            var metadataModules = new[] { new FakeLegacyNancyMetadataModule() };
 
             // When
             var result = convention.Invoke(
@@ -38,7 +38,7 @@
             // Given
             var convention = this.conventions.ElementAt(1);
             var module = new FakeLegacyNancyModule();
-            var metadataModules = new[] { new Metadata.FakeNancyMetadataModule() };
+            var metadataModules = new[] { new Metadata.FakeLegacyNancyMetadataModule() };
 
             // When
             var result = convention.Invoke(
@@ -54,8 +54,8 @@
         {
             // Given
             var convention = this.conventions.ElementAt(2);
-            var module = new Modules.FakeNancyModule();
-            var metadataModules = new[] { new Metadata.FakeNancyMetadataModule() };
+            var module = new Modules.FakeLegacyNancyModule();
+            var metadataModules = new[] { new Metadata.FakeLegacyNancyMetadataModule() };
 
             // When
             var result = convention.Invoke(

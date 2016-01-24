@@ -14,7 +14,7 @@
         public MetadataModuleFixture()
         {
             this.route = new RouteDescription("NamedDescription", "GET", "/things", ctx => true);
-            this.metadataModule = new FakeNancyMetadataModule();
+            this.metadataModule = new FakeLegacyNancyMetadataModule();
         }
 
         [Fact]
