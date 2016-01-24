@@ -349,13 +349,6 @@ namespace Nancy
                 set { this.AddRoute(name, path, condition, value); }
             }
 
-            protected void AddRoute(string name, string path, Func<NancyContext, bool> condition, Func<dynamic, dynamic> value)
-            {
-                var fullPath = GetFullPath(path);
-
-                this.parentModule.routes.Add(Route.FromSync(name, this.method, fullPath, condition, value));
-            }
-
             protected void AddRoute(string name, string path, Func<NancyContext, bool> condition, Func<dynamic, CancellationToken, Task<dynamic>> value)
             {
                 var fullPath = GetFullPath(path);
