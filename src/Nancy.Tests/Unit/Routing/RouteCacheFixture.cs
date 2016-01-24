@@ -181,7 +181,7 @@
                 new IRouteMetadataProvider[0]);
 
             // Then
-            A.CallTo(() => descriptionProvider.GetDescription(A<NancyModule>._, expectedPath)).MustHaveHappened();
+            A.CallTo(() => descriptionProvider.GetDescription(A<LegacyNancyModule>._, expectedPath)).MustHaveHappened();
         }
 
         [Fact]
