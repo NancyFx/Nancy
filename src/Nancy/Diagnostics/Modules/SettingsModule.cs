@@ -15,7 +15,7 @@
         public SettingsModule()
             : base("/settings")
         {
-            Get["/"] = _ =>
+            Get["/"] = async (_, __) =>
             {
                 var properties = Types.SelectMany(t => t.GetProperties(BindingFlags.Static | BindingFlags.Public))
                                       .Where(x => x.PropertyType == typeof(bool));
@@ -36,7 +36,7 @@
                 return View["Settings", model];
             };
 
-            Post["/"] = parameters => {
+            Post["/"] = async (_, __) => {
 
                 var model =
                     this.Bind<SettingsModel>();

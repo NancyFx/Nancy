@@ -15,12 +15,12 @@
         {
             this.interactiveDiagnostics = interactiveDiagnostics;
 
-            Get["/"] = _ =>
+            Get["/"] = async (_, __) =>
             {
                 return View["InteractiveDiagnostics"];
             };
 
-            Get["/providers"] = _ =>
+            Get["/providers"] = async (_, __) =>
             {
                 var providers = this.interactiveDiagnostics
                     .AvailableDiagnostics
@@ -37,7 +37,7 @@
                 return this.Response.AsJson(providers);
             };
 
-            Get["/providers/{providerName}"] = ctx =>
+            Get["/providers/{providerName}"] = async (ctx, __) =>
             {
                 var providerName =
                     HttpUtility.UrlDecode((string)ctx.providerName);
@@ -67,7 +67,7 @@
                 return this.Response.AsJson(methods);
             };
 
-            Get["/providers/{providerName}/{methodName}"] = ctx =>
+            Get["/providers/{providerName}/{methodName}"] = async (ctx, __) =>
             {
                 var providerName =
                     HttpUtility.UrlDecode((string)ctx.providerName);
@@ -89,7 +89,7 @@
                 return this.Response.AsJson(new { Result = this.interactiveDiagnostics.ExecuteDiagnostic(method, arguments) });
             };
 
-            Get["/templates/{providerName}/{methodName}"] = ctx =>
+            Get["/templates/{providerName}/{methodName}"] = async (ctx, __) =>
             {
                 var providerName =
                     HttpUtility.UrlDecode((string)ctx.providerName);

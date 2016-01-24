@@ -12,17 +12,17 @@
         {
             this.sessionProvider = sessionProvider;
 
-            Get["/"] = _ =>
+            Get["/"] = async (_, __) =>
             {
                 return View["RequestTracing"];
             };
 
-            Get["/sessions"] = _ =>
+            Get["/sessions"] = async (_, __) =>
             {
                 return this.Response.AsJson(this.sessionProvider.GetSessions().Select(s => new { Id = s.Id }).ToArray());
             };
 
-            Get["/sessions/{id}"] = ctx =>
+            Get["/sessions/{id}"] = async (ctx, __) =>
             {
                 Guid id;
                 if (!Guid.TryParse(ctx.Id, out id))
