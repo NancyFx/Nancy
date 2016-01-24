@@ -30,7 +30,7 @@
             result.Body.AsString().ShouldEqual("capture");
         }
 
-        private class TestModule : NancyModule
+        private class TestModule : LegacyNancyModule
         {
             public TestModule()
             {

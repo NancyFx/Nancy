@@ -426,7 +426,7 @@
             return !caseSensitive || !isUpperCase;
         }
 
-        private class MethodNotAllowedModule : NancyModule
+        private class MethodNotAllowedModule : LegacyNancyModule
         {
             public MethodNotAllowedModule()
             {
@@ -436,7 +436,7 @@
             }
         }
 
-        private class NoRootModule : NancyModule
+        private class NoRootModule : LegacyNancyModule
         {
             public NoRootModule()
             {
@@ -444,7 +444,7 @@
             }
         }
 
-        private class TestModule : NancyModule
+        private class TestModule : LegacyNancyModule
         {
             public TestModule()
             {

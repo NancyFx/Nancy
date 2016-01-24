@@ -1,6 +1,6 @@
 ﻿namespace Nancy.Tests.Functional.Modules
 {
-    public class SerializeTestModule : NancyModule
+    public class SerializeTestModule : LegacyNancyModule
     {
         public SerializeTestModule()
         {

@@ -1,6 +1,6 @@
 ﻿namespace Nancy.Testing.Tests.TestingViewExtensions
 {
-    public class TestingViewFactoryTestModule : NancyModule
+    public class TestingViewFactoryTestModule : LegacyNancyModule
     {
         private const string VIEW_PATH = "TestingViewExtensions/ViewFactoryTest.sshtml";
 

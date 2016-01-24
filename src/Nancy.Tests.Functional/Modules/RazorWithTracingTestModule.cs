@@ -1,6 +1,6 @@
 ﻿namespace Nancy.Tests.Functional.Modules
 {
-    public class RazorWithTracingTestModule : NancyModule
+    public class RazorWithTracingTestModule : LegacyNancyModule
     {
         public RazorWithTracingTestModule()
         {

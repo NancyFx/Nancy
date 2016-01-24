@@ -57,7 +57,7 @@ namespace Nancy.ViewEngines.DotLiquid.Tests.Functional
         }
     }
 
-    public class PartialRenderingModule : NancyModule
+    public class PartialRenderingModule : LegacyNancyModule
     {
         public PartialRenderingModule()
         {

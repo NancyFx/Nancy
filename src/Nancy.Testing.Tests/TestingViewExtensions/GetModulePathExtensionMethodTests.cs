@@ -39,7 +39,7 @@ namespace Nancy.Testing.Tests.TestingViewExtensions
             Assert.Equal("", response.GetModulePath());
         }
 
-        internal class TestModuleWithLongModulePath : NancyModule
+        internal class TestModuleWithLongModulePath : LegacyNancyModule
         {
             public TestModuleWithLongModulePath()
                 : base("/a/long/path")
@@ -48,7 +48,7 @@ namespace Nancy.Testing.Tests.TestingViewExtensions
             }
         }
 
-        internal class ModuleWithoutModulePath : NancyModule
+        internal class ModuleWithoutModulePath : LegacyNancyModule
         {
             public ModuleWithoutModulePath()
             {

@@ -2,7 +2,7 @@
 {
     using Nancy.Security;
 
-    public class PerRouteAuthModule : NancyModule
+    public class PerRouteAuthModule : LegacyNancyModule
     {
         public PerRouteAuthModule()
         {

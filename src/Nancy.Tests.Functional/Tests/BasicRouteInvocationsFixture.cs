@@ -134,7 +134,7 @@
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
-        public class BasicRouteInvocationsModule : NancyModule
+        public class BasicRouteInvocationsModule : LegacyNancyModule
         {
             public BasicRouteInvocationsModule()
             {
@@ -160,7 +160,7 @@
             }
         }
 
-        public class BasicRouteInvocationsModuleWithHead : NancyModule
+        public class BasicRouteInvocationsModuleWithHead : LegacyNancyModule
         {
             public BasicRouteInvocationsModuleWithHead()
             {

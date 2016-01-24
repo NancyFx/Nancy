@@ -381,7 +381,7 @@
             result.Body.AsString().ShouldEqual("CaseInsensitive");
         }
         
-        private class TestModule : NancyModule
+        private class TestModule : LegacyNancyModule
         {
             public TestModule()
             {

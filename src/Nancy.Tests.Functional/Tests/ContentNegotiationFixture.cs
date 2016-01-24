@@ -832,7 +832,7 @@ namespace Nancy.Tests.Functional.Tests
             }
         }
 
-        private class NegotiationModule : NancyModule
+        private class NegotiationModule : LegacyNancyModule
         {
             public NegotiationModule()
             {

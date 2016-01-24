@@ -93,7 +93,7 @@
             }
         }
     }
-    public class RouteConstraintsModule : NancyModule
+    public class RouteConstraintsModule : LegacyNancyModule
     {
         public RouteConstraintsModule()
         {

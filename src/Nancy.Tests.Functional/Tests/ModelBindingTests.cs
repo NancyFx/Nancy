@@ -48,7 +48,7 @@
         }
     }
 
-    public class ModelBindingModule : NancyModule
+    public class ModelBindingModule : LegacyNancyModule
     {
         public ModelBindingModule()
         {
@@ -63,7 +63,7 @@
         }
     }
 
-    public class MixedSourceModelBindingModule : NancyModule
+    public class MixedSourceModelBindingModule : LegacyNancyModule
     {
         public MixedSourceModelBindingModule()
         {

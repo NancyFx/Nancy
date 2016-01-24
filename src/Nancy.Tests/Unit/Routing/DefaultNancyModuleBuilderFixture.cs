@@ -15,7 +15,7 @@
         private readonly DefaultNancyModuleBuilder builder;
         private readonly IResponseFormatterFactory responseFormatterFactory;
         private readonly IViewFactory viewFactory;
-        private readonly NancyModule module;
+        private readonly FakeNancyModule module;
         private readonly IModelBinderLocator modelBinderLocator;
         private readonly IModelValidatorLocator validatorLocator;
 
