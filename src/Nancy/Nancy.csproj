@@ -212,6 +212,7 @@
     <Compile Include="ModelBinding\PropertyBindingException.cs" />
     <Compile Include="INancyModule.cs" />
     <Compile Include="NancyEngineExtensions.cs" />
+    <Compile Include="LegacyNancyModule.cs" />
     <Compile Include="NegotiatorExtensions.cs" />
     <Compile Include="Owin\DelegateExtensions.cs" />
     <Compile Include="Owin\NancyContextExtensions.cs" />
