@@ -20,7 +20,7 @@ namespace Nancy.Tests.Unit
         public void Adds_route_when_get_indexer_used()
         {
             // Given, When
-            this.module.Get["/test"] = d => null;
+            this.module.Get["/test"] = async (_, __) => null;
 
             // Then
             this.module.Routes.Count().ShouldEqual(1);
@@ -30,7 +30,7 @@ namespace Nancy.Tests.Unit
         public void Adds_route_when_put_indexer_used()
         {
             // Given, When
-            this.module.Put["/test"] = d => null;
+            this.module.Put["/test"] = async (_, __) => null;
 
             // Then
             this.module.Routes.Count().ShouldEqual(1);
@@ -40,7 +40,7 @@ namespace Nancy.Tests.Unit
         public void Adds_route_when_post_indexer_used()
         {
             // Given, When
-            this.module.Post["/test"] = d => null;
+            this.module.Post["/test"] = async (_, __) => null;
 
             // Then
             this.module.Routes.Count().ShouldEqual(1);
@@ -50,7 +50,7 @@ namespace Nancy.Tests.Unit
         public void Adds_route_when_delete_indexer_used()
         {
             // Given, When
-            this.module.Delete["/test"] = d => null;
+            this.module.Delete["/test"] = async (_, __) => null;
 
             // Then
             this.module.Routes.Count().ShouldEqual(1);
@@ -60,7 +60,7 @@ namespace Nancy.Tests.Unit
         public void Adds_route_when_options_indexer_userd()
         {
             // Given, When
-            this.module.Options["/test"] = d => null;
+            this.module.Options["/test"] = async (_, __) => null;
 
             // Then
             this.module.Routes.Count().ShouldEqual(1);
@@ -70,7 +70,7 @@ namespace Nancy.Tests.Unit
         public void Should_store_route_with_specified_path_when_route_indexer_is_invoked_with_a_path_but_no_condition()
         {
             // Given, When
-            this.module.Get["/test"] = d => null;
+            this.module.Get["/test"] = async (_, __) => null;
 
             // Then
             module.Routes.First().Description.Path.ShouldEqual("/test");
@@ -83,7 +83,7 @@ namespace Nancy.Tests.Unit
             Func<NancyContext, bool> condition = r => true;
 
             // When
-            this.module.Get["/test", condition] = d => null;
+            this.module.Get["/test", condition] = async (_, __) => null;
 
             // Then
             module.Routes.First().Description.Path.ShouldEqual("/test");
@@ -93,7 +93,7 @@ namespace Nancy.Tests.Unit
         public void Should_store_route_with_null_condition_when_route_indexer_is_invoked_without_a_condition()
         {
             // Given, When
-            this.module.Get["/test"] = d => null;
+            this.module.Get["/test"] = async (_, __) => null;
 
             // Then
             module.Routes.First().Description.Condition.ShouldBeNull();
@@ -106,7 +106,7 @@ namespace Nancy.Tests.Unit
             Func<NancyContext, bool> condition = r => true;
 
             // When
-            this.module.Get["/test", condition] = d => null;
+            this.module.Get["/test", condition] = async (_, __) => null;
 
             // Then
             module.Routes.First().Description.Condition.ShouldBeSameAs(condition);
@@ -116,7 +116,7 @@ namespace Nancy.Tests.Unit
         public void Should_add_route_with_get_method_when_added_using_get_indexer()
         {
             // Given, When
-            this.module.Get["/test"] = d => null;
+            this.module.Get["/test"] = async (_, __) => null;
 
             // Then
             module.Routes.First().Description.Method.ShouldEqual("GET");
@@ -126,7 +126,7 @@ namespace Nancy.Tests.Unit
         public void Should_add_route_with_put_method_when_added_using_get_indexer()
         {
             // Given, When
-            this.module.Put["/test"] = d => null;
+            this.module.Put["/test"] = async (_, __) => null;
 
             // Then
             module.Routes.First().Description.Method.ShouldEqual("PUT");
@@ -136,7 +136,7 @@ namespace Nancy.Tests.Unit
         public void Should_add_route_with_post_method_when_added_using_get_indexer()
         {
             // Given, When
-            this.module.Post["/test"] = d => null;
+            this.module.Post["/test"] = async(_, __) => null;
 
             // Then
             module.Routes.First().Description.Method.ShouldEqual("POST");
@@ -146,7 +146,7 @@ namespace Nancy.Tests.Unit
         public void Should_add_route_with_delete_method_when_added_using_get_indexer()
         {
             // Given, When
-            this.module.Delete["/test"] = d => null;
+            this.module.Delete["/test"] = async (_, __) => null;
 
             // Then
             module.Routes.First().Description.Method.ShouldEqual("DELETE");
@@ -199,7 +199,7 @@ namespace Nancy.Tests.Unit
             var moduleWithBasePath = new CustomNancyModule();
 
             // When
-            moduleWithBasePath.Post["/Test1"] = d => null;
+            moduleWithBasePath.Post["/Test1"] = async (_, __) => null;
 
             // Then
             moduleWithBasePath.Routes.Last().Description.Path.ShouldEqual("/Test1");
@@ -214,7 +214,7 @@ namespace Nancy.Tests.Unit
             // Then
             Assert.DoesNotThrow(() =>
             {
-                moduleWithNullPath.Post["/Test1"] = d => null;
+                moduleWithNullPath.Post["/Test1"] = async (_, __) => null;
             });
         }
 
@@ -222,7 +222,7 @@ namespace Nancy.Tests.Unit
         public void Adds_named_route_when_named_indexer_used()
         {
             // Given, When
-            this.module.Get["Foo", "/test"] = d => null;
+            this.module.Get["Foo", "/test"] = async (_, __) => null;
 
             // Then
             this.module.Routes.Count().ShouldEqual(1);
@@ -257,7 +257,7 @@ namespace Nancy.Tests.Unit
                     {
                         foreach (var path in paths)
                         {
-                            this.AddRoute(String.Empty, path, null, value);
+                            this.AddRoute(String.Empty, path, null, async (p, __) => value.Invoke(p));
                         }
                     }
                 }

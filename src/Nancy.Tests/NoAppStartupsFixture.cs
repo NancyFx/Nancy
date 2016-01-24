@@ -108,7 +108,7 @@
             }
         }
 
-        public class NoAppStartupsModule : NancyModule
+        public class NoAppStartupsModule : LegacyNancyModule
         {
             public NoAppStartupsModule(INoAppStartupsTestDependency dependency)
             {
