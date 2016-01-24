@@ -282,24 +282,6 @@ namespace Nancy
             }
 
             /// <summary>
-            /// Defines a Nancy route for the specified <paramref name="path"/>.
-            /// </summary>
-            /// <value>A delegate that is used to invoke the route.</value>
-            public Func<dynamic, dynamic> this[string path]
-            {
-                set { this.AddRoute(string.Empty, path, null, value); }
-            }
-
-            /// <summary>
-            /// Defines a Nancy route for the specified <paramref name="path"/> and <paramref name="condition"/>.
-            /// </summary>
-            /// <value>A delegate that is used to invoke the route.</value>
-            public Func<dynamic, dynamic> this[string path, Func<NancyContext, bool> condition]
-            {
-                set { this.AddRoute(string.Empty, path, condition, value); }
-            }
-
-            /// <summary>
             /// Defines an async route for the specified <paramref name="path"/>
             /// </summary>
             public Func<dynamic, CancellationToken, Task<dynamic>> this[string path, bool runAsync]
@@ -313,24 +295,6 @@ namespace Nancy
             public Func<dynamic, CancellationToken, Task<dynamic>> this[string path, Func<NancyContext, bool> condition, bool runAsync]
             {
                 set { this.AddRoute(string.Empty, path, condition, value); }
-            }
-
-            /// <summary>
-            /// Defines a Nancy route for the specified <paramref name="path"/> and <paramref name="name"/>
-            /// </summary>
-            /// <value>A delegate that is used to invoke the route.</value>
-            public Func<dynamic, dynamic> this[string name, string path]
-            {
-                set { this.AddRoute(name, path, null, value); }
-            }
-
-            /// <summary>
-            /// Defines a Nancy route for the specified <paramref name="path"/>, <paramref name="condition"/> and <paramref name="name"/>
-            /// </summary>
-            /// <value>A delegate that is used to invoke the route.</value>
-            public Func<dynamic, dynamic> this[string name, string path, Func<NancyContext, bool> condition]
-            {
-                set { this.AddRoute(name, path, condition, value); }
             }
 
             /// <summary>
