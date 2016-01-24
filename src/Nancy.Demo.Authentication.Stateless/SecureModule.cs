@@ -3,7 +3,7 @@ namespace Nancy.Demo.Authentication.Stateless
     using Nancy.Demo.Authentication.Stateless.Models;
     using Nancy.Security;
 
-    public class SecureModule : NancyModule
+    public class SecureModule : LegacyNancyModule
     {
         //by this time, the api key should have already been pulled out of our querystring
         //and, using the api key, an identity assigned to our NancyContext

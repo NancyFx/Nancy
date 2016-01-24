@@ -6,7 +6,7 @@ namespace Nancy.Demo.ModelBinding
     using Nancy.Demo.ModelBinding.Models;
     using Nancy.ModelBinding;
 
-    public class EventsModule : NancyModule
+    public class EventsModule : LegacyNancyModule
     {
         public EventsModule()
             : base("/events")

@@ -5,7 +5,7 @@
     /// <summary>
     /// Provides a way to define a Nancy module though an API.
     /// </summary>
-    public class ConfigurableNancyModule : NancyModule
+    public class ConfigurableNancyModule : LegacyNancyModule
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ConfigurableNancyModule"/> class.

@@ -2,13 +2,13 @@
 {
     using System;
 
-    public class FakeNancyModule : NancyModule
+    public class FakeLegacyNancyModule : LegacyNancyModule
     {
-        public FakeNancyModule()
+        public FakeLegacyNancyModule()
         {
         }
 
-        public FakeNancyModule(Action<FakeNancyModuleConfigurator> closure)
+        public FakeLegacyNancyModule(Action<FakeNancyModuleConfigurator> closure)
         {
             var configurator = 
                 new FakeNancyModuleConfigurator(this);
@@ -18,9 +18,9 @@
 
         public class FakeNancyModuleConfigurator
         {
-            private readonly NancyModule module;
+            private readonly LegacyNancyModule module;
 
-            public FakeNancyModuleConfigurator(NancyModule module)
+            public FakeNancyModuleConfigurator(LegacyNancyModule module)
             {
                 this.module = module;
             }

@@ -2,7 +2,7 @@
 {
     using Nancy.Demo.Bootstrapping.Aspnet.Models;
 
-    public class DependencyModule : NancyModule
+    public class DependencyModule : LegacyNancyModule
     {
         private readonly IApplicationDependency applicationDependency;
         private readonly IRequestDependency requestDependency;

@@ -4,7 +4,7 @@
     using Nancy.ModelBinding;
     using Nancy.Validation;
 
-    public class ProductsModule : NancyModule
+    public class ProductsModule : LegacyNancyModule
     {
         public ProductsModule() : base("/products")
         {

@@ -229,7 +229,7 @@ namespace Nancy.Tests.Unit
             this.module.Routes.First().Description.Name.ShouldEqual("Foo");
         }
 
-        private class CustomModulePathModule : NancyModule
+        private class CustomModulePathModule : LegacyNancyModule
         {
             public CustomModulePathModule(string modulePath)
                 : base(modulePath)
@@ -237,16 +237,16 @@ namespace Nancy.Tests.Unit
             }
         }
 
-        private class CustomNancyModule : NancyModule
+        private class CustomNancyModule : LegacyNancyModule
         {
             public new CustomRouteBuilder Get
             {
                 get { return new CustomRouteBuilder("GET", this); }
             }
 
-            public class CustomRouteBuilder : RouteBuilder
+            public class CustomRouteBuilder : LegacyRouteBuilder
             {
-                public CustomRouteBuilder(string method, NancyModule parentModule)
+                public CustomRouteBuilder(string method, LegacyNancyModule parentModule)
                     : base(method, parentModule)
                 {
                 }

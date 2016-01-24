@@ -84,7 +84,7 @@
     </Compile>
     <Compile Include="DefaultMetadataModuleConventionsFixture.cs" />
     <Compile Include="FakeNancyMetadataModule.cs" />
-    <Compile Include="FakeNancyModule.cs" />
+    <Compile Include="FakeLegacyNancyModule.cs" />
     <Compile Include="MetadataModuleFixture.cs" />
     <Compile Include="MetadataModuleRouteMetadataProviderFixture.cs" />
     <Compile Include="Metadata\FakeNancyMetadataModule.cs" />

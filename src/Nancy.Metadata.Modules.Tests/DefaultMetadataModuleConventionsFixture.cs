@@ -20,7 +20,7 @@
         {
             // Given
             var convention = this.conventions.ElementAt(0);
-            var module = new FakeNancyModule();
+            var module = new FakeLegacyNancyModule();
             var metadataModules = new[] { new FakeNancyMetadataModule() };
 
             // When
@@ -37,7 +37,7 @@
         {
             // Given
             var convention = this.conventions.ElementAt(1);
-            var module = new FakeNancyModule();
+            var module = new FakeLegacyNancyModule();
             var metadataModules = new[] { new Metadata.FakeNancyMetadataModule() };
 
             // When

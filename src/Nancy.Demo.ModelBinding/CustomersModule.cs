@@ -6,7 +6,7 @@ namespace Nancy.BindingDemo
     using Nancy.Demo.ModelBinding.Models;
     using Nancy.ModelBinding;
 
-    public class CustomersModule : NancyModule
+    public class CustomersModule : LegacyNancyModule
     {
         public CustomersModule()
             : base("/customers")

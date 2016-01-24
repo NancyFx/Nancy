@@ -4,7 +4,7 @@ namespace Nancy.Demo.Hosting.Self
 
     using Nancy.Demo.Hosting.Self.Models;
 
-    public class TestModule : NancyModule
+    public class TestModule : LegacyNancyModule
     {
         public TestModule()
         {

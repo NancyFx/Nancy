@@ -7,7 +7,7 @@ namespace Nancy.Demo.Validation
     using Nancy.ModelBinding;
     using Nancy.Validation;
 
-    public class CustomersModule : NancyModule
+    public class CustomersModule : LegacyNancyModule
     {
         public CustomersModule() : base("/customers")
         {

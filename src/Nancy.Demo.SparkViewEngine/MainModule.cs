@@ -1,6 +1,6 @@
 namespace Nancy.Demo.SparkViewEngine
 {
-    public class MainModule : NancyModule
+    public class MainModule : LegacyNancyModule
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="INancyModule"/> class.
