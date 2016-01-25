@@ -22,13 +22,13 @@
 }";
 
         private readonly string directory;
-        private readonly INancyEnvironment envrionment;
+        private readonly INancyEnvironment environment;
 
         public StaticContentConventionBuilderFixture()
         {
             this.directory = Environment.CurrentDirectory;
-            this.envrionment = new DefaultNancyEnvironment();
-            this.envrionment.StaticContent(safepaths:this.directory);
+            this.environment = new DefaultNancyEnvironment();
+            this.environment.StaticContent(safepaths:this.directory);
         }
 
         [Fact]
@@ -301,7 +301,7 @@
                 {
                     TraceLog = new DefaultTraceLog(),
                 },
-                Environment = this.envrionment
+                Environment = this.environment
             };
 
             return context;
