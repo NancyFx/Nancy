@@ -115,6 +115,9 @@ namespace Nancy.Diagnostics
 
             diagnosticsEnvironment.Json(retainCasing: false);
             diagnosticsEnvironment.AddValue(ViewConfiguration.Default);
+            diagnosticsEnvironment.Tracing(
+                enabled: true,
+                displayErrorTraces: true);
 
             return diagnosticsEnvironment;
         }

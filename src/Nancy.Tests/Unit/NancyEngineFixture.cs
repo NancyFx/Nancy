@@ -8,6 +8,7 @@ namespace Nancy.Tests.Unit
     using FakeItEasy;
 
     using Nancy.Bootstrapper;
+    using Nancy.Configuration;
     using Nancy.Diagnostics;
     using Nancy.ErrorHandling;
     using Nancy.Extensions;
@@ -31,9 +32,17 @@ namespace Nancy.Tests.Unit
         private readonly IRouteInvoker routeInvoker;
         private readonly IRequestDispatcher requestDispatcher;
         private readonly IResponseNegotiator negotiator;
+        private readonly INancyEnvironment environment;
 
         public NancyEngineFixture()
         {
+            this.environment =
+                new DefaultNancyEnvironment();
+
+            this.environment.Tracing(
+                enabled: true,
+                displayErrorTraces: true);
+
             this.resolver = A.Fake<IRouteResolver>();
             this.response = new Response();
             this.route = new FakeRoute(response);
@@ -63,7 +72,7 @@ namespace Nancy.Tests.Unit
             });
 
             this.engine =
-                new NancyEngine(this.requestDispatcher, this.contextFactory, new[] { this.statusCodeHandler }, A.Fake<IRequestTracing>(), new DisabledStaticContentProvider(), this.negotiator)
+                new NancyEngine(this.requestDispatcher, this.contextFactory, new[] { this.statusCodeHandler }, A.Fake<IRequestTracing>(), new DisabledStaticContentProvider(), this.negotiator, this.environment)
                 {
                     RequestPipelinesFactory = ctx => applicationPipelines
                 };
@@ -74,7 +83,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new NancyEngine(null, A.Fake<INancyContextFactory>(), new[] { this.statusCodeHandler }, A.Fake<IRequestTracing>(), new DisabledStaticContentProvider(), this.negotiator));
+                Record.Exception(() => new NancyEngine(null, A.Fake<INancyContextFactory>(), new[] { this.statusCodeHandler }, A.Fake<IRequestTracing>(), new DisabledStaticContentProvider(), this.negotiator, this.environment));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -85,7 +94,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new NancyEngine(this.requestDispatcher, null, new[] { this.statusCodeHandler }, A.Fake<IRequestTracing>(), new DisabledStaticContentProvider(), this.negotiator));
+                Record.Exception(() => new NancyEngine(this.requestDispatcher, null, new[] { this.statusCodeHandler }, A.Fake<IRequestTracing>(), new DisabledStaticContentProvider(), this.negotiator, this.environment));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -96,7 +105,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new NancyEngine(this.requestDispatcher, A.Fake<INancyContextFactory>(), null, A.Fake<IRequestTracing>(), new DisabledStaticContentProvider(), this.negotiator));
+                Record.Exception(() => new NancyEngine(this.requestDispatcher, A.Fake<INancyContextFactory>(), null, A.Fake<IRequestTracing>(), new DisabledStaticContentProvider(), this.negotiator, this.environment));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -534,21 +543,27 @@ namespace Nancy.Tests.Unit
         [Fact]
         public async Task Should_return_static_content_response_if_one_returned()
         {
+            // Given
             var localResponse = new Response();
             var staticContent = A.Fake<IStaticContentProvider>();
             A.CallTo(() => staticContent.GetContent(A<NancyContext>._))
                         .Returns(localResponse);
+
             var localEngine = new NancyEngine(
                                     this.requestDispatcher,
                                     this.contextFactory,
                                     new[] { this.statusCodeHandler },
                                     A.Fake<IRequestTracing>(),
                                     staticContent,
-                                    this.negotiator);
+                                    this.negotiator
+                                    , this.environment);
+
             var request = new Request("GET", "/", "http");
 
+            // When
             var result = await localEngine.HandleRequest(request);
 
+            // Then
             result.Response.ShouldBeSameAs(localResponse);
         }
 
@@ -583,8 +598,9 @@ namespace Nancy.Tests.Unit
             // Given
             var request = new Request("GET", "/", "http");
             var engine = new NancyEngine(A.Fake<IRequestDispatcher>(), A.Fake<INancyContextFactory>(),
-                new[] {this.statusCodeHandler}, A.Fake<IRequestTracing>(), new DisabledStaticContentProvider(),
-                this.negotiator);
+                new[] { this.statusCodeHandler }, A.Fake<IRequestTracing>(), new DisabledStaticContentProvider(),
+                this.negotiator, this.environment);
+
             engine.Dispose();
 
             // When

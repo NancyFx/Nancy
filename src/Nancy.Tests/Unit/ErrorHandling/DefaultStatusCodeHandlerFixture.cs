@@ -3,6 +3,7 @@ namespace Nancy.Tests.Unit.ErrorHandling
     using System;
     using System.IO;
     using FakeItEasy;
+    using Nancy.Configuration;
     using Nancy.ErrorHandling;
     using Nancy.Responses.Negotiation;
     using Nancy.ViewEngines;
@@ -16,8 +17,15 @@ namespace Nancy.Tests.Unit.ErrorHandling
 
         public DefaultStatusCodeHandlerFixture()
         {
+            var environment =
+                new DefaultNancyEnvironment();
+
+            environment.Tracing(
+                enabled: true,
+                displayErrorTraces: true);
+
             this.responseNegotiator = A.Fake<IResponseNegotiator>();
-            this.statusCodeHandler = new DefaultStatusCodeHandler(this.responseNegotiator);
+            this.statusCodeHandler = new DefaultStatusCodeHandler(this.responseNegotiator, environment);
         }
 
         [Theory]

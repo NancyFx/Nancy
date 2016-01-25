@@ -21,6 +21,9 @@ namespace Nancy.Tests.Unit
             this.rootPathProvider = A.Fake<IRootPathProvider>();
             var environment = new DefaultNancyEnvironment();
             environment.AddValue(XmlConfiguration.Default);
+            environment.Tracing(
+                enabled: true,
+                displayErrorTraces: true);
 
             var serializerFactory =
                 new DefaultSerializerFactory(new ISerializer[] { new DefaultXmlSerializer(environment) });

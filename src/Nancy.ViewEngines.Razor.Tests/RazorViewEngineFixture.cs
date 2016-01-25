@@ -19,6 +19,7 @@
     using Microsoft.VisualBasic;
 
     using Nancy.Bootstrapper;
+    using Nancy.Configuration;
     using Nancy.Tests;
     using Nancy.ViewEngines.Razor.Tests.Models;
 
@@ -36,9 +37,13 @@
 
         public RazorViewEngineFixture()
         {
-            StaticConfiguration.DisableErrorTraces = false;
+            var environment = new DefaultNancyEnvironment();
+            environment.Tracing(
+                enabled: true,
+                displayErrorTraces: true);
+
             this.configuration = A.Fake<IRazorConfiguration>();
-            this.engine = new RazorViewEngine(this.configuration);
+            this.engine = new RazorViewEngine(this.configuration, environment);
 
             var cache = A.Fake<IViewCache>();
             A.CallTo(() => cache.GetOrAdd(A<ViewLocationResult>.Ignored, A<Func<ViewLocationResult, Func<INancyRazorView>>>.Ignored))
@@ -737,7 +742,7 @@
         {
             // Given
             var location = this.CreateViewLocationWithModel(expectedType, new VBCodeProvider(), "ModelType");
-            
+
             // When
             var stream = new MemoryStream();
             var response = this.engine.RenderView(location, null, this.renderContext);
@@ -756,13 +761,13 @@
             var modelTypeCode = BuildCodeExtractingModelType(provider);
 
             var view = string.Format("@{0} {1}\n\n@{2}", modelDirective, modelType, modelTypeCode);
-            
+
             return new ViewLocationResult(
                 string.Empty,
                 string.Empty,
                 string.Concat(provider.FileExtension, "html"),
                 () => new StringReader(view)
-                );           
+                );
         }
 
         private static string BuildCodeExtractingModelType(CodeDomProvider provider)
@@ -772,13 +777,13 @@
                     new CodeThisReferenceExpression(),
                     "GetType"
                 );
-            
+
             var baseType = new CodeFieldReferenceExpression
                 (
                     getType,
                     "BaseType"
                 );
-            
+
             var getFirstGenericArgument = new CodeArrayIndexerExpression
                 (
                     new CodeMethodInvokeExpression
@@ -788,7 +793,7 @@
                         ),
                     new CodePrimitiveExpression(0)
                 );
-            
+
             var fullName = new CodeFieldReferenceExpression
                 (
                     getFirstGenericArgument,

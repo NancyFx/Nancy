@@ -52,7 +52,7 @@ namespace Nancy.Diagnostics
             diagContainer.Register<IBinder, DefaultBinder>();
             diagContainer.Register<IFieldNameConverter, DefaultFieldNameConverter>();
             diagContainer.Register<BindingDefaults, BindingDefaults>();
-
+            diagContainer.Register<INancyEnvironment>(diagnosticsEnvironment);
             diagContainer.Register<ISerializer>(new DefaultJsonSerializer(diagnosticsEnvironment));
 
             foreach (var diagnosticsProvider in providers)

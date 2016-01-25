@@ -4,6 +4,7 @@ namespace Nancy.ErrorHandling
     using System.IO;
     using System.Linq;
     using System.Text;
+    using Nancy.Configuration;
     using Nancy.Extensions;
     using Nancy.IO;
     using Nancy.Responses.Negotiation;
@@ -20,12 +21,14 @@ namespace Nancy.ErrorHandling
         private readonly IDictionary<HttpStatusCode, string> errorPages;
         private readonly IResponseNegotiator responseNegotiator;
         private readonly HttpStatusCode[] supportedStatusCodes = { HttpStatusCode.NotFound, HttpStatusCode.InternalServerError };
+        private readonly TraceConfiguration configuration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultStatusCodeHandler"/> type.
         /// </summary>
         /// <param name="responseNegotiator">The response negotiator.</param>
-        public DefaultStatusCodeHandler(IResponseNegotiator responseNegotiator)
+        /// <param name="environment">An <see cref="INancyEnvironment"/> instance.</param>
+        public DefaultStatusCodeHandler(IResponseNegotiator responseNegotiator, INancyEnvironment environment)
         {
             this.errorMessages = new Dictionary<HttpStatusCode, string>
             {
@@ -40,6 +43,7 @@ namespace Nancy.ErrorHandling
             };
 
             this.responseNegotiator = responseNegotiator;
+            this.configuration = environment.GetValue<TraceConfiguration>();
         }
 
         /// <summary>
@@ -82,7 +86,7 @@ namespace Nancy.ErrorHandling
             // from swapping a view model with a `DefaultStatusCodeHandlerResult`
             context.NegotiationContext = new NegotiationContext();
 
-            var result = new DefaultStatusCodeHandlerResult(statusCode, this.errorMessages[statusCode], StaticConfiguration.DisableErrorTraces ? DisableErrorTracesTrueMessage : context.GetExceptionDetails());
+            var result = new DefaultStatusCodeHandlerResult(statusCode, this.errorMessages[statusCode], !this.configuration.DisplayErrorTraces ? DisableErrorTracesTrueMessage : context.GetExceptionDetails());
             try
             {
                 context.Response = this.responseNegotiator.NegotiateResponse(result, context);

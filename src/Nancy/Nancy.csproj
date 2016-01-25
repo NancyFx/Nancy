@@ -161,6 +161,7 @@
     <Compile Include="DefaultRuntimeEnvironmentInformation.cs" />
     <Compile Include="DefaultSerializerFactory.cs" />
     <Compile Include="DefaultStaticContentProvider.cs" />
+    <Compile Include="DefaultTraceConfigurationProvider.cs" />
     <Compile Include="DefaultViewConfigurationProvider.cs" />
     <Compile Include="Diagnostics\DefaultRequestTraceFactory.cs" />
     <Compile Include="Diagnostics\DefaultTraceLog.cs" />
@@ -363,6 +364,8 @@
     <Compile Include="ResponseExtensions.cs" />
     <Compile Include="RootPathApplicationStartup.cs" />
     <Compile Include="StaticConfiguration.cs" />
+    <Compile Include="TraceConfiguration.cs" />
+    <Compile Include="TraceConfigurationExtensions.cs" />
     <Compile Include="Url.cs" />
     <Compile Include="Validation\CompositeValidator.cs" />
     <Compile Include="Validation\DefaultValidatorLocator.cs" />

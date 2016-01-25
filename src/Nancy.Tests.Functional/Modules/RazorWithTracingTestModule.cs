@@ -4,7 +4,6 @@
     {
         public RazorWithTracingTestModule()
         {
-            StaticConfiguration.EnableRequestTracing = true;
             Get["/tracing/razor-viewbag"] = _ =>
                 {
                     this.ViewBag.Name = "Bob";

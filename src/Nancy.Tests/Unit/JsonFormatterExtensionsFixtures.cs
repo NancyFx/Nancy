@@ -89,6 +89,10 @@ namespace Nancy.Tests.Unit
 
             envionment.AddValue(JsonConfiguration.Default);
 
+            envionment.Tracing(
+                enabled: true,
+                displayErrorTraces: true);
+
             return envionment;
         }
     }

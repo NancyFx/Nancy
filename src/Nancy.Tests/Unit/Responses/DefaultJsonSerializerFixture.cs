@@ -177,13 +177,20 @@
 
         private static INancyEnvironment GetTestableEnvironment()
         {
-            return GetTestableEnvironment(x => x.Json());
+            return GetTestableEnvironment(env =>
+            {
+                env.Json();
+            });
         }
 
         private static INancyEnvironment GetTestableEnvironment(Action<INancyEnvironment> closure)
         {
             var environment =
                 new DefaultNancyEnvironment();
+
+            environment.Tracing(
+                enabled: true,
+                displayErrorTraces: true);
 
             closure.Invoke(environment);
 
