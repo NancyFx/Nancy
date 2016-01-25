@@ -2,7 +2,7 @@
 {
     using System.Globalization;
 
-    public class HomeModule : NancyModule
+    public class HomeModule : LegacyNancyModule
     {
         public HomeModule()
         {

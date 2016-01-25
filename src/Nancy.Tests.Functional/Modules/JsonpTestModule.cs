@@ -1,6 +1,6 @@
 ﻿namespace Nancy.Tests.Functional.Modules
 {
-    public class JsonpTestModule : NancyModule
+    public class JsonpTestModule : LegacyNancyModule
     {
         public JsonpTestModule() : base("/test")
         {

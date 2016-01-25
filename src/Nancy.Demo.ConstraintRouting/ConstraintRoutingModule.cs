@@ -1,6 +1,6 @@
 ﻿namespace Nancy.Demo.ModelBinding
 {
-    public class ConstraintRoutingModule : NancyModule
+    public class ConstraintRoutingModule : LegacyNancyModule
     {
         public ConstraintRoutingModule()
         {

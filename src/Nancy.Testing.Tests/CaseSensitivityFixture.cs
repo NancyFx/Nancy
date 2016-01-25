@@ -128,7 +128,7 @@
             }
         }
 
-        public class MainModule : NancyModule
+        public class MainModule : LegacyNancyModule
         {
             public MainModule()
             {

@@ -100,7 +100,7 @@ namespace Nancy.Tests.Functional.Tests
         }
     }
 
-    public class MethodRewriteModule : NancyModule
+    public class MethodRewriteModule : LegacyNancyModule
     {
         public MethodRewriteModule()
         {

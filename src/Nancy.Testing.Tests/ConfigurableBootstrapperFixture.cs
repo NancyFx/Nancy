@@ -212,7 +212,7 @@
             }
         }
 
-        private class BlowUpModule : NancyModule
+        private class BlowUpModule : LegacyNancyModule
         {
             public BlowUpModule()
             {

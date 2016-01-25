@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using Nancy.Owin;
 
-    public class MainModule : NancyModule
+    public class MainModule : LegacyNancyModule
     {
         public MainModule()
         {

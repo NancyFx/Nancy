@@ -116,6 +116,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Fakes\FakeLegacyNancyModuleNoRoutes.cs" />
     <Compile Include="Fakes\PersonWithAgeField.cs" />
     <Compile Include="Fakes\StructModel.cs" />
     <Compile Include="Helpers\ExceptionExtensionsFixture.cs" />
@@ -227,6 +228,7 @@
     <Compile Include="Unit\NancyCookieFixture.cs" />
     <Compile Include="Unit\NancyEngineFixture.cs" />
     <Compile Include="Unit\NancyMiddlewareFixture.cs" />
+    <Compile Include="Unit\LegacyNancyModuleFixture.cs" />
     <Compile Include="Unit\NancyModuleFixture.cs" />
     <Compile Include="Unit\AfterPipelineFixture.cs" />
     <Compile Include="Unit\BeforePipelineFixture.cs" />

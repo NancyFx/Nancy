@@ -1,6 +1,6 @@
 ﻿namespace Nancy.Tests.Fakes
 {
-    public class FakeNancyModuleWithoutBasePath : NancyModule
+    public class FakeNancyModuleWithoutBasePath : LegacyNancyModule
     {
         public FakeNancyModuleWithoutBasePath()
         {

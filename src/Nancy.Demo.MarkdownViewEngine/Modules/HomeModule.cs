@@ -7,7 +7,7 @@ namespace Nancy.Demo.MarkdownViewEngine.Modules
 
     using Nancy.ViewEngines;
 
-    public class HomeModule : NancyModule
+    public class HomeModule : LegacyNancyModule
     {
         private readonly IViewLocationProvider viewLocationProvider;
 

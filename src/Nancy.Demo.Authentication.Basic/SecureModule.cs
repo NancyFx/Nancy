@@ -2,7 +2,7 @@
 {
     using Nancy.Security;
 
-    public class SecureModule : NancyModule
+    public class SecureModule : LegacyNancyModule
     {
         public SecureModule() : base("/secure")
         {

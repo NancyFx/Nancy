@@ -16,14 +16,15 @@ namespace Nancy
     /// <summary>
     /// Basic class containing the functionality for defining routes and actions in Nancy.
     /// </summary>
-    public abstract class NancyModule : INancyModule, IHideObjectMembers
+    [Obsolete("LegacyNancyModule is a compatibility shim that will be removed in a future release. Please migrate to the 'async only' NancyModule.")]
+    public abstract class LegacyNancyModule : INancyModule, IHideObjectMembers
     {
         private readonly List<Route> routes;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyModule"/> class.
         /// </summary>
-        protected NancyModule()
+        protected LegacyNancyModule()
             : this(String.Empty)
         {
         }
@@ -32,7 +33,7 @@ namespace Nancy
         /// Initializes a new instance of the <see cref="NancyModule"/> class.
         /// </summary>
         /// <param name="modulePath">A <see cref="string"/> containing the root relative path that all paths in the module will be a subset of.</param>
-        protected NancyModule(string modulePath)
+        protected LegacyNancyModule(string modulePath)
         {
             this.After = new AfterPipeline();
             this.Before = new BeforePipeline();
@@ -59,66 +60,66 @@ namespace Nancy
         }
 
         /// <summary>
-        /// Gets <see cref="RouteBuilder"/> for declaring actions for DELETE requests.
+        /// Gets <see cref="LegacyRouteBuilder"/> for declaring actions for DELETE requests.
         /// </summary>
-        /// <value>A <see cref="RouteBuilder"/> instance.</value>
-        public RouteBuilder Delete
+        /// <value>A <see cref="LegacyRouteBuilder"/> instance.</value>
+        public LegacyRouteBuilder Delete
         {
-            get { return new RouteBuilder("DELETE", this); }
+            get { return new LegacyRouteBuilder("DELETE", this); }
         }
 
         /// <summary>
-        /// Gets <see cref="RouteBuilder"/> for declaring actions for GET requests.
+        /// Gets <see cref="LegacyRouteBuilder"/> for declaring actions for GET requests.
         /// </summary>
-        /// <value>A <see cref="RouteBuilder"/> instance.</value>
-        public RouteBuilder Get
+        /// <value>A <see cref="LegacyRouteBuilder"/> instance.</value>
+        public LegacyRouteBuilder Get
         {
-            get { return new RouteBuilder("GET", this); }
+            get { return new LegacyRouteBuilder("GET", this); }
         }
 
         /// <summary>
-        /// Gets <see cref="RouteBuilder"/> for declaring actions for HEAD requests.
+        /// Gets <see cref="LegacyRouteBuilder"/> for declaring actions for HEAD requests.
         /// </summary>
-        /// <value>A <see cref="RouteBuilder"/> instance.</value>
-        public RouteBuilder Head
+        /// <value>A <see cref="LegacyRouteBuilder"/> instance.</value>
+        public LegacyRouteBuilder Head
         {
-            get { return new RouteBuilder("HEAD", this); }
+            get { return new LegacyRouteBuilder("HEAD", this); }
         }
 
         /// <summary>
-        /// Gets <see cref="RouteBuilder"/> for declaring actions for OPTIONS requests.
+        /// Gets <see cref="LegacyRouteBuilder"/> for declaring actions for OPTIONS requests.
         /// </summary>
-        /// <value>A <see cref="RouteBuilder"/> instance.</value>
-        public RouteBuilder Options
+        /// <value>A <see cref="LegacyRouteBuilder"/> instance.</value>
+        public LegacyRouteBuilder Options
         {
-            get { return new RouteBuilder("OPTIONS", this); }
+            get { return new LegacyRouteBuilder("OPTIONS", this); }
         }
 
         /// <summary>
-        /// Gets <see cref="RouteBuilder"/> for declaring actions for PATCH requests.
+        /// Gets <see cref="LegacyRouteBuilder"/> for declaring actions for PATCH requests.
         /// </summary>
-        /// <value>A <see cref="RouteBuilder"/> instance.</value>
-        public RouteBuilder Patch
+        /// <value>A <see cref="LegacyRouteBuilder"/> instance.</value>
+        public LegacyRouteBuilder Patch
         {
-            get { return new RouteBuilder("PATCH", this); }
+            get { return new LegacyRouteBuilder("PATCH", this); }
         }
 
         /// <summary>
-        /// Gets <see cref="RouteBuilder"/> for declaring actions for POST requests.
+        /// Gets <see cref="LegacyRouteBuilder"/> for declaring actions for POST requests.
         /// </summary>
-        /// <value>A <see cref="RouteBuilder"/> instance.</value>
-        public RouteBuilder Post
+        /// <value>A <see cref="LegacyRouteBuilder"/> instance.</value>
+        public LegacyRouteBuilder Post
         {
-            get { return new RouteBuilder("POST", this); }
+            get { return new LegacyRouteBuilder("POST", this); }
         }
 
         /// <summary>
-        /// Gets <see cref="RouteBuilder"/> for declaring actions for PUT requests.
+        /// Gets <see cref="LegacyRouteBuilder"/> for declaring actions for PUT requests.
         /// </summary>
-        /// <value>A <see cref="RouteBuilder"/> instance.</value>
-        public RouteBuilder Put
+        /// <value>A <see cref="LegacyRouteBuilder"/> instance.</value>
+        public LegacyRouteBuilder Put
         {
-            get { return new RouteBuilder("PUT", this); }
+            get { return new LegacyRouteBuilder("PUT", this); }
         }
 
         /// <summary>
@@ -265,26 +266,44 @@ namespace Nancy
         /// <summary>
         /// Helper class for configuring a route handler in a module.
         /// </summary>
-        public class RouteBuilder : IHideObjectMembers
+        public class LegacyRouteBuilder : IHideObjectMembers
         {
             private readonly string method;
-            private readonly NancyModule parentModule;
+            private readonly LegacyNancyModule parentModule;
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="RouteBuilder"/> class.
+            /// Initializes a new instance of the <see cref="LegacyRouteBuilder"/> class.
             /// </summary>
             /// <param name="method">The HTTP request method that the route should be available for.</param>
             /// <param name="parentModule">The <see cref="INancyModule"/> that the route is being configured for.</param>
-            public RouteBuilder(string method, NancyModule parentModule)
+            public LegacyRouteBuilder(string method, LegacyNancyModule parentModule)
             {
                 this.method = method;
                 this.parentModule = parentModule;
             }
 
             /// <summary>
+            /// Defines a Nancy route for the specified <paramref name="path"/>.
+            /// </summary>
+            /// <value>A delegate that is used to invoke the route.</value>
+            public Func<dynamic, dynamic> this[string path]
+            {
+                set { this.AddRoute(string.Empty, path, null, value); }
+            }
+
+            /// <summary>
+            /// Defines a Nancy route for the specified <paramref name="path"/> and <paramref name="condition"/>.
+            /// </summary>
+            /// <value>A delegate that is used to invoke the route.</value>
+            public Func<dynamic, dynamic> this[string path, Func<NancyContext, bool> condition]
+            {
+                set { this.AddRoute(string.Empty, path, condition, value); }
+            }
+
+            /// <summary>
             /// Defines an async route for the specified <paramref name="path"/>
             /// </summary>
-            public Func<dynamic, CancellationToken, Task<dynamic>> this[string path]
+            public Func<dynamic, CancellationToken, Task<dynamic>> this[string path, bool runAsync]
             {
                 set { this.AddRoute(string.Empty, path, null, value); }
             }
@@ -292,15 +311,33 @@ namespace Nancy
             /// <summary>
             /// Defines an async route for the specified <paramref name="path"/> and <paramref name="condition"/>.
             /// </summary>
-            public Func<dynamic, CancellationToken, Task<dynamic>> this[string path, Func<NancyContext, bool> condition]
+            public Func<dynamic, CancellationToken, Task<dynamic>> this[string path, Func<NancyContext, bool> condition, bool runAsync]
             {
                 set { this.AddRoute(string.Empty, path, condition, value); }
             }
 
             /// <summary>
+            /// Defines a Nancy route for the specified <paramref name="path"/> and <paramref name="name"/>
+            /// </summary>
+            /// <value>A delegate that is used to invoke the route.</value>
+            public Func<dynamic, dynamic> this[string name, string path]
+            {
+                set { this.AddRoute(name, path, null, value); }
+            }
+
+            /// <summary>
+            /// Defines a Nancy route for the specified <paramref name="path"/>, <paramref name="condition"/> and <paramref name="name"/>
+            /// </summary>
+            /// <value>A delegate that is used to invoke the route.</value>
+            public Func<dynamic, dynamic> this[string name, string path, Func<NancyContext, bool> condition]
+            {
+                set { this.AddRoute(name, path, condition, value); }
+            }
+
+            /// <summary>
             /// Defines an async route for the specified <paramref name="path"/> and <paramref name="name"/>
             /// </summary>
-            public Func<dynamic, CancellationToken, Task<dynamic>> this[string name, string path]
+            public Func<dynamic, CancellationToken, Task<dynamic>> this[string name, string path, bool runAsync]
             {
                 set { this.AddRoute(name, path, null, value); }
             }
@@ -308,9 +345,16 @@ namespace Nancy
             /// <summary>
             /// Defines an async route for the specified <paramref name="path"/>, <paramref name="condition"/> and <paramref name="name"/>
             /// </summary>
-            public Func<dynamic, CancellationToken, Task<dynamic>> this[string name, string path, Func<NancyContext, bool> condition]
+            public Func<dynamic, CancellationToken, Task<dynamic>> this[string name, string path, Func<NancyContext, bool> condition, bool runAsync]
             {
                 set { this.AddRoute(name, path, condition, value); }
+            }
+
+            protected void AddRoute(string name, string path, Func<NancyContext, bool> condition, Func<dynamic, dynamic> value)
+            {
+                var fullPath = GetFullPath(path);
+
+                this.parentModule.routes.Add(Route.FromSync(name, this.method, fullPath, condition, value));
             }
 
             protected void AddRoute(string name, string path, Func<NancyContext, bool> condition, Func<dynamic, CancellationToken, Task<dynamic>> value)

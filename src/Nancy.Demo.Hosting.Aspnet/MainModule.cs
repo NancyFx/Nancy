@@ -8,7 +8,7 @@ namespace Nancy.Demo.Hosting.Aspnet
     using Nancy.Routing;
     using Nancy.Security;
 
-    public class MainModule : NancyModule
+    public class MainModule : LegacyNancyModule
     {
         public MainModule(IRouteCacheProvider routeCacheProvider, INancyEnvironment environment)
         {

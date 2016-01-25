@@ -11,7 +11,7 @@
     {
         private readonly MetadataModuleRouteMetadataProvider provider;
         private readonly INancyModule module;
-        private readonly FakeNancyMetadataModule metadataModule;
+        private readonly FakeLegacyNancyMetadataModule metadataModule;
         private readonly RouteDescription route;
         private readonly IMetadataModuleResolver resolver;
         private const string Metadata = "metadata";
@@ -21,7 +21,7 @@
             this.resolver = A.Fake<IMetadataModuleResolver>();
             this.module = A.Fake<INancyModule>();
             this.route = new RouteDescription("NamedDescription", "GET", "/things", ctx => true);
-            this.metadataModule = new FakeNancyMetadataModule();
+            this.metadataModule = new FakeLegacyNancyMetadataModule();
             this.metadataModule.Describe[this.route.Name] = desc => { return Metadata; };
 
             this.provider = new MetadataModuleRouteMetadataProvider(this.resolver);

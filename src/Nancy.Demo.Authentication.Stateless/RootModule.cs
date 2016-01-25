@@ -1,6 +1,6 @@
 namespace Nancy.Demo.Authentication.Stateless
 {
-    public class RootModule : NancyModule
+    public class RootModule : LegacyNancyModule
     {
         public RootModule()
         {

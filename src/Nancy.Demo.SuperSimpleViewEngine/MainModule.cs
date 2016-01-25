@@ -2,7 +2,7 @@ namespace Nancy.Demo.SuperSimpleViewEngine
 {
     using Nancy.Demo.SuperSimpleViewEngine.Models;
 
-    public class MainModule : NancyModule
+    public class MainModule : LegacyNancyModule
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="INancyModule"/> class.

@@ -3,7 +3,7 @@
     using System;
     using System.IO;
 
-    public class TestModule : NancyModule
+    public class TestModule : LegacyNancyModule
     {
         public TestModule()
         {

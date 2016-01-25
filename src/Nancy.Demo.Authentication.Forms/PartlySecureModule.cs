@@ -3,7 +3,7 @@ namespace Nancy.Demo.Authentication.Forms
     using Nancy.Demo.Authentication.Forms.Models;
     using Nancy.Security;
 
-    public class PartlySecureModule : NancyModule
+    public class PartlySecureModule : LegacyNancyModule
     {
         public PartlySecureModule()
             : base("/partlysecure")

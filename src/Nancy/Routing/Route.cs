@@ -81,6 +81,7 @@
         /// <param name="description"></param>
         /// <param name="syncFunc">The action that should take place when the route is invoked.</param>
         /// <returns>A Route instance</returns>
+        [Obsolete("Sync routes are deprecated (see LegacyNancyModule)")]
         public static Route FromSync(RouteDescription description, Func<dynamic, dynamic> syncFunc)
         {
             return new Route(description, Wrap(syncFunc));
@@ -94,6 +95,7 @@
         /// <param name="condition">A condition that needs to be satisfied inorder for the route to be eligiable for invocation.</param>
         /// <param name="syncFunc">The action that should take place when the route is invoked.</param>
         /// <returns>A Route instance</returns>
+        [Obsolete("Sync routes are deprecated (see LegacyNancyModule)")]
         public static Route FromSync(string method, string path, Func<NancyContext, bool> condition, Func<dynamic, dynamic> syncFunc)
         {
             return FromSync(string.Empty, method, path, condition, syncFunc);
@@ -108,6 +110,7 @@
         /// <param name="condition">A condition that needs to be satisfied inorder for the route to be eligible for invocation.</param>
         /// <param name="syncFunc">The action that should take place when the route is invoked.</param>
         /// <returns>A Route instance</returns>
+        [Obsolete("Sync routes are deprecated (see LegacyNancyModule)")]
         public static Route FromSync(string name, string method, string path, Func<NancyContext, bool> condition, Func<dynamic, dynamic> syncFunc)
         {
             return FromSync(new RouteDescription(name, method, path, condition), syncFunc);

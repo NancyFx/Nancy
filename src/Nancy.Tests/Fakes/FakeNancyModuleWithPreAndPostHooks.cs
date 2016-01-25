@@ -1,6 +1,6 @@
 ﻿namespace Nancy.Tests.Fakes
 {
-    public class FakeNancyModuleWithPreAndPostHooks : NancyModule
+    public class FakeNancyModuleWithPreAndPostHooks : LegacyNancyModule
     {
         public FakeNancyModuleWithPreAndPostHooks()
         {

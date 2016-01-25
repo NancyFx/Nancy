@@ -167,7 +167,7 @@
             Assert.Equal(this.captureRequestModule.CapturedRequest.Query.testKey.Value, "testValue");
         }
 
-        public class CaptureRequestModule : NancyModule
+        public class CaptureRequestModule : LegacyNancyModule
         {
             public Request CapturedRequest;
 

@@ -2,7 +2,7 @@
 {
     using System;
 
-    public class ThrowingModule : NancyModule
+    public class ThrowingModule : LegacyNancyModule
     {
         public ThrowingModule()
         {

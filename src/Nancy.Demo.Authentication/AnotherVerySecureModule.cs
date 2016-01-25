@@ -8,7 +8,7 @@ namespace Nancy.Demo.Authentication
     /// <summary>
     /// A module that only people with SuperSecure clearance are allowed to access
     /// </summary>
-    public class AnotherVerySecureModule : NancyModule
+    public class AnotherVerySecureModule : LegacyNancyModule
     {
         public AnotherVerySecureModule() : base("/superSecure")
         {

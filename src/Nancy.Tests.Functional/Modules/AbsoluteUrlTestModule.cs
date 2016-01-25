@@ -1,6 +1,6 @@
 ﻿namespace Nancy.Tests.Functional.Modules
 {
-    public class AbsoluteUrlTestModule : NancyModule
+    public class AbsoluteUrlTestModule : LegacyNancyModule
     {
         public AbsoluteUrlTestModule()
         {

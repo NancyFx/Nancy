@@ -734,7 +734,7 @@ namespace Nancy.Tests.Functional.Tests
             Assert.Equal(contentType, result.ContentType);
         }
 
-        private static Func<dynamic, NancyModule, dynamic> CreateNegotiatedResponse(Action<Negotiator> action = null)
+        private static Func<dynamic, LegacyNancyModule, dynamic> CreateNegotiatedResponse(Action<Negotiator> action = null)
         {
             return (parameters, module) =>
                 {
@@ -832,7 +832,7 @@ namespace Nancy.Tests.Functional.Tests
             }
         }
 
-        private class NegotiationModule : NancyModule
+        private class NegotiationModule : LegacyNancyModule
         {
             public NegotiationModule()
             {

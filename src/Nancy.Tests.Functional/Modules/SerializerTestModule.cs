@@ -4,7 +4,7 @@
     using System.Globalization;
     using Nancy.ModelBinding;
 
-    public class SerializerTestModule : NancyModule
+    public class SerializerTestModule : LegacyNancyModule
     {
         public SerializerTestModule()
         {

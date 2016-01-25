@@ -4,7 +4,7 @@ namespace Nancy.Tests.Functional.Modules
 {
     using Nancy.Cookies;
 
-    public class CookieModule : NancyModule
+    public class CookieModule : LegacyNancyModule
     {
         public CookieModule()
         {

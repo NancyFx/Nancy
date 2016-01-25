@@ -32,7 +32,7 @@
         }
 #endif
 
-        public class TestModule : NancyModule
+        public class TestModule : LegacyNancyModule
         {
             public TestModule()
             {

@@ -5,7 +5,7 @@
     /// <summary>
     /// Provides a way to define a Nancy module though an API.
     /// </summary>
-    public class ConfigurableNancyModule : NancyModule
+    public class ConfigurableNancyModule : LegacyNancyModule
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ConfigurableNancyModule"/> class.
@@ -95,7 +95,7 @@
             /// <param name="action">The action that should be invoked by the route.</param>
             /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
             /// <remarks>This will add a route with a condition that is always evaluates to <see langword="true"/>.</remarks>
-            public ConfigurableNancyModuleConfigurator Delete(string path, Func<dynamic, NancyModule, dynamic> action)
+            public ConfigurableNancyModuleConfigurator Delete(string path, Func<dynamic, LegacyNancyModule, dynamic> action)
             {
                 return this.Delete(path, condition => true, action);
             }
@@ -107,7 +107,7 @@
             /// <param name="condition">The condition that has to be fulfilled in order for the route to be invoked</param>
             /// <param name="action">The action that should be invoked by the route.</param>
             /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
-            public ConfigurableNancyModuleConfigurator Delete(string path, Func<NancyContext, bool> condition, Func<dynamic, NancyModule, dynamic> action)
+            public ConfigurableNancyModuleConfigurator Delete(string path, Func<NancyContext, bool> condition, Func<dynamic, LegacyNancyModule, dynamic> action)
             {
                 this.module.Delete[path, GetSafeRouteCondition(condition)] = GetSafeRouteAction(action);
                 return this;
@@ -131,7 +131,7 @@
             /// <param name="action">The action that should be invoked by the route.</param>
             /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
             /// <remarks>This will add a route with a condition that is always evaluates to <see langword="true"/>.</remarks>
-            public ConfigurableNancyModuleConfigurator Get(string path, Func<dynamic, NancyModule, dynamic> action)
+            public ConfigurableNancyModuleConfigurator Get(string path, Func<dynamic, LegacyNancyModule, dynamic> action)
             {
                 return this.Get(path, condition => true, action);
             }
@@ -143,7 +143,7 @@
             /// <param name="condition">The condition that has to be fulfilled in order for the route to be invoked</param>
             /// <param name="action">The action that should be invoked by the route.</param>
             /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
-            public ConfigurableNancyModuleConfigurator Get(string path, Func<NancyContext, bool> condition, Func<dynamic, NancyModule, dynamic> action)
+            public ConfigurableNancyModuleConfigurator Get(string path, Func<NancyContext, bool> condition, Func<dynamic, LegacyNancyModule, dynamic> action)
             {
                 this.module.Get[path, GetSafeRouteCondition(condition)] = GetSafeRouteAction(action);
                 return this;
@@ -167,7 +167,7 @@
             /// <param name="action">The action that should be invoked by the route.</param>
             /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
             /// <remarks>This will add a route with a condition that is always evaluates to <see langword="true"/>.</remarks>
-            public ConfigurableNancyModuleConfigurator Patch(string path, Func<dynamic, NancyModule, dynamic> action)
+            public ConfigurableNancyModuleConfigurator Patch(string path, Func<dynamic, LegacyNancyModule, dynamic> action)
             {
                 return this.Patch(path, condition => true, action);
             }
@@ -179,7 +179,7 @@
             /// <param name="condition">The condition that has to be fulfilled in order for the route to be invoked</param>
             /// <param name="action">The action that should be invoked by the route.</param>
             /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
-            public ConfigurableNancyModuleConfigurator Patch(string path, Func<NancyContext, bool> condition, Func<dynamic, NancyModule, dynamic> action)
+            public ConfigurableNancyModuleConfigurator Patch(string path, Func<NancyContext, bool> condition, Func<dynamic, LegacyNancyModule, dynamic> action)
             {
                 this.module.Patch[path, GetSafeRouteCondition(condition)] = GetSafeRouteAction(action);
                 return this;
@@ -203,7 +203,7 @@
             /// <param name="action">The action that should be invoked by the route.</param>
             /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
             /// <remarks>This will add a route with a condition that is always evaluates to <see langword="true"/>.</remarks>
-            public ConfigurableNancyModuleConfigurator Post(string path, Func<dynamic, NancyModule, dynamic> action)
+            public ConfigurableNancyModuleConfigurator Post(string path, Func<dynamic, LegacyNancyModule, dynamic> action)
             {
                 return this.Post(path, condition => true, action);
             }
@@ -215,7 +215,7 @@
             /// <param name="condition">The condition that has to be fulfilled in order for the route to be invoked</param>
             /// <param name="action">The action that should be invoked by the route.</param>
             /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
-            public ConfigurableNancyModuleConfigurator Post(string path, Func<NancyContext, bool> condition, Func<dynamic, NancyModule, dynamic> action)
+            public ConfigurableNancyModuleConfigurator Post(string path, Func<NancyContext, bool> condition, Func<dynamic, LegacyNancyModule, dynamic> action)
             {
                 this.module.Post[path, GetSafeRouteCondition(condition)] = GetSafeRouteAction(action);
                 return this;
@@ -239,7 +239,7 @@
             /// <param name="action">The action that should be invoked by the route.</param>
             /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
             /// <remarks>This will add a route with a condition that is always evaluates to <see langword="true"/>.</remarks>
-            public ConfigurableNancyModuleConfigurator Put(string path, Func<dynamic, NancyModule, dynamic> action)
+            public ConfigurableNancyModuleConfigurator Put(string path, Func<dynamic, LegacyNancyModule, dynamic> action)
             {
                 return this.Put(path, condition => true, action);
             }
@@ -251,7 +251,7 @@
             /// <param name="condition">The condition that has to be fulfilled in order for the route to be invoked</param>
             /// <param name="action">The action that should be invoked by the route.</param>
             /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
-            public ConfigurableNancyModuleConfigurator Put(string path, Func<NancyContext, bool> condition, Func<dynamic, NancyModule, dynamic> action)
+            public ConfigurableNancyModuleConfigurator Put(string path, Func<NancyContext, bool> condition, Func<dynamic, LegacyNancyModule, dynamic> action)
             {
                 this.module.Post[path, GetSafeRouteCondition(condition)] = GetSafeRouteAction(action);
                 return this;
@@ -275,7 +275,7 @@
             /// <param name="action">The action that should be invoked by the route.</param>
             /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
             /// <remarks>This will add a route with a condition that is always evaluates to <see langword="true"/>.</remarks>
-            public ConfigurableNancyModuleConfigurator Options(string path, Func<dynamic, NancyModule, dynamic> action)
+            public ConfigurableNancyModuleConfigurator Options(string path, Func<dynamic, LegacyNancyModule, dynamic> action)
             {
                 return this.Options(path, condition => true, action);
             }
@@ -287,13 +287,13 @@
             /// <param name="condition">The condition that has to be fulfilled in order for the route to be invoked</param>
             /// <param name="action">The action that should be invoked by the route.</param>
             /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
-            public ConfigurableNancyModuleConfigurator Options(string path, Func<NancyContext, bool> condition, Func<dynamic, NancyModule, dynamic> action)
+            public ConfigurableNancyModuleConfigurator Options(string path, Func<NancyContext, bool> condition, Func<dynamic, LegacyNancyModule, dynamic> action)
             {
                 this.module.Options[path, GetSafeRouteCondition(condition)] = GetSafeRouteAction(action);
                 return this;
             }
 
-            private Func<dynamic, dynamic> GetSafeRouteAction(Func<dynamic, NancyModule, dynamic> action)
+            private Func<dynamic, dynamic> GetSafeRouteAction(Func<dynamic, LegacyNancyModule, dynamic> action)
             {
                 if (action == null)
                 {

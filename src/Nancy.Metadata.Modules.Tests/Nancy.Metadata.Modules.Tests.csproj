@@ -83,12 +83,12 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="DefaultMetadataModuleConventionsFixture.cs" />
-    <Compile Include="FakeNancyMetadataModule.cs" />
-    <Compile Include="FakeNancyModule.cs" />
+    <Compile Include="FakeLegacyNancyMetadataModule.cs" />
+    <Compile Include="FakeLegacyNancyModule.cs" />
     <Compile Include="MetadataModuleFixture.cs" />
     <Compile Include="MetadataModuleRouteMetadataProviderFixture.cs" />
-    <Compile Include="Metadata\FakeNancyMetadataModule.cs" />
-    <Compile Include="Modules\FakeNancyModule.cs" />
+    <Compile Include="Metadata\FakeLegacyNancyMetadataModule.cs" />
+    <Compile Include="Modules\FakeLegacyNancyModule.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy.Metadata.Modules\Nancy.Metadata.Modules.csproj">

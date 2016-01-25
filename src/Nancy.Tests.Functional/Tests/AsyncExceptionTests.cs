@@ -39,7 +39,7 @@
         }
     }
 
-    public class MyModule : NancyModule
+    public class MyModule : LegacyNancyModule
     {
         public MyModule()
         {

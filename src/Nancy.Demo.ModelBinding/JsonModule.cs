@@ -5,7 +5,7 @@ namespace Nancy.Demo.ModelBinding
     using Nancy.Demo.ModelBinding.Models;
     using Nancy.ModelBinding;
 
-    public class JsonModule : NancyModule
+    public class JsonModule : LegacyNancyModule
     {
         public JsonModule()
         {

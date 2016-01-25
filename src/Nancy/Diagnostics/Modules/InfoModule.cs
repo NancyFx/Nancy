@@ -14,12 +14,12 @@
         public InfoModule(IRootPathProvider rootPathProvider, NancyInternalConfiguration configuration)
             : base("/info")
         {
-            Get["/"] = _ =>
+            Get["/"] = async (_, __) =>
             {
                 return View["Info"];
             };
 
-            Get["/data"] = _ =>
+            Get["/data"] = async (_, __) =>
             {
                 dynamic data = new ExpandoObject();
 

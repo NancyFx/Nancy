@@ -161,7 +161,7 @@
             Assert.Contains(_dataFromFake2, bodyAsString);
         }
 
-        public class ModuleWithOneDependency : NancyModule
+        public class ModuleWithOneDependency : LegacyNancyModule
         {
             public ModuleWithOneDependency(ITestDependency dependency)
                 : base("/1dependency")
@@ -173,7 +173,7 @@
             }
         }
 
-        public class ModuleWithTwoDependencies : NancyModule
+        public class ModuleWithTwoDependencies : LegacyNancyModule
         {
             public ModuleWithTwoDependencies(ITestDependency dependency, ITestDependency2 dependency2)
                 : base("/2dependencies")

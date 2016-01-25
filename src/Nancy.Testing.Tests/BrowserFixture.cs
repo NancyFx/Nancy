@@ -596,7 +596,7 @@ namespace Nancy.Testing.Tests
             public Category Category { get; set; }
         }
 
-        public class EchoModule : NancyModule
+        public class EchoModule : LegacyNancyModule
         {
             public EchoModule()
             {
