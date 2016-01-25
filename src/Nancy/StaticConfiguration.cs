@@ -9,13 +9,9 @@ namespace Nancy
     public static class StaticConfiguration
     {
         private static bool? isRunningDebug;
-        //private static bool? disableCaches;
-
-        //private static bool? disableErrorTraces;
 
         static StaticConfiguration()
         {
-            //disableErrorTraces = !(disableCaches = IsRunningDebug);
             CaseSensitive = false;
             RequestQueryFormMultipartLimit = 1000;
             AllowFileStreamUploadAsync = true;
