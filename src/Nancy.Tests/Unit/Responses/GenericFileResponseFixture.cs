@@ -19,10 +19,10 @@
             var assemblyPath =
                 Path.GetDirectoryName(this.GetType().Assembly.Location);
             
-            var envrionment = new DefaultNancyEnvironment();
-            envrionment.StaticContent(safepaths:assemblyPath);
+            var environment = new DefaultNancyEnvironment();
+            environment.StaticContent(safepaths:assemblyPath);
 
-            this.context = new NancyContext { Environment = envrionment };
+            this.context = new NancyContext { Environment = environment };
 
             this.imagePath =
                 Path.GetFileName(this.GetType().Assembly.Location);
