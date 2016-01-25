@@ -166,7 +166,7 @@
                 enabled: true,
                 displayErrorTraces: true);
 
-            environment.AddValue(JsonConfiguration.Default);
+            environment.Json();
 
             return environment;
         }

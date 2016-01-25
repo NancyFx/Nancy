@@ -10,7 +10,7 @@ namespace Nancy
         /// <summary>
         /// Configures <see cref="TraceConfiguration"/>.
         /// </summary>
-        /// <param name="environment"><see cref="INancyEnvironment"/> that should be configured.</param>
+        /// <param name="environment">An <see cref="INancyEnvironment"/> that should be configured.</param>
         /// <param name="enabled"><see langword="true"/> if tracing should be enabled, otherwise <see langword="false"/>.</param>
         /// <param name="displayErrorTraces"><see langword="true"/> traces should be displayed in error messages, otherwise <see langword="false"/>.</param>
         public static void Tracing(this INancyEnvironment environment, bool enabled, bool displayErrorTraces)
