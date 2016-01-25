@@ -3,14 +3,14 @@
     using Nancy.Configuration;
 
     /// <summary>
-    /// Creates and instance of <see cref="DefaultStaticContentConfigurationProvider" />. 
+    /// Provides the default conf <see cref="StaticContentConfiguration"/>. 
     /// </summary>
     public class DefaultStaticContentConfigurationProvider : NancyDefaultConfigurationProvider<StaticContentConfiguration>
     {
         private readonly IRootPathProvider rootPathProvider;
 
         /// <summary>
-        /// Creates and instance of DefaultStaticContentConfigurationProvider
+        /// Creates and instance of <see cref="DefaultStaticContentConfigurationProvider" />. 
         /// </summary>
         /// <param name="rootPathProvider">Use <see cref="IRootPathProvider"/> to get the root path of the application</param>
         public DefaultStaticContentConfigurationProvider(IRootPathProvider rootPathProvider)
