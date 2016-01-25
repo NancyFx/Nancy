@@ -12,10 +12,11 @@
         /// Configures <see cref="StaticContentConfiguration"/> 
         /// </summary>
         /// <param name="environment"><see cref="INancyEnvironment"/> that should be configured.</param>
-        /// <param name="paths">Safe paths.</param>
-        public static void StaticContent(this INancyEnvironment environment, params string[] paths)
+        /// <param name="safepaths">Paths that the application consider safe to return static content from</param>
+        public static void StaticContent(this INancyEnvironment environment, params string[] safepaths)
         {
-            environment.AddValue(new StaticContentConfiguration(paths));
+            environment.AddValue(new StaticContentConfiguration(
+               safePaths: safepaths));
         }
     }
 }

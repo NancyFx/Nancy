@@ -12,7 +12,7 @@
         /// <summary>
         /// Creates and instance of DefaultStaticContentConfigurationProvider
         /// </summary>
-        /// <param name="rootPathProvider">Use <see cref="IRootPathProvider"/> to get root path</param>
+        /// <param name="rootPathProvider">Use <see cref="IRootPathProvider"/> to get the root path of the application</param>
         public DefaultStaticContentConfigurationProvider(IRootPathProvider rootPathProvider)
         {
             this.rootPathProvider = rootPathProvider;
@@ -24,7 +24,7 @@
         /// <returns>The configuration instance.</returns>
         public override StaticContentConfiguration GetDefaultConfiguration()
         {
-            return new StaticContentConfiguration(new []{this.rootPathProvider.GetRootPath()});
+            return new StaticContentConfiguration(safePaths:new []{this.rootPathProvider.GetRootPath()});
         }
     }
 }
