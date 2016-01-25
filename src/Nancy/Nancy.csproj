@@ -3,8 +3,6 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -362,7 +360,6 @@
     <Compile Include="Security\ICsrfTokenValidator.cs" />
     <Compile Include="Security\CsrfTokenValidationResult.cs" />
     <Compile Include="ResponseExtensions.cs" />
-    <Compile Include="RootPathApplicationStartup.cs" />
     <Compile Include="StaticConfiguration.cs" />
     <Compile Include="Url.cs" />
     <Compile Include="Validation\CompositeValidator.cs" />
@@ -519,6 +516,9 @@
     <Compile Include="Xml\XmlConfigurationExtensions.cs" />
     <Compile Include="Xml\XmlConfiguration.cs" />
     <Compile Include="Xml\DefaultXmlConfigurationProvider.cs" />
+    <Compile Include="DefaultStaticContentConfigurationProvider.cs" />
+    <Compile Include="StaticContentConfiguration.cs" />
+    <Compile Include="StaticContentConfigurationExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Diagnostics\Views\Dashboard.sshtml" />

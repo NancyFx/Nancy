@@ -24,7 +24,7 @@ namespace Nancy
         /// <param name="contentType">Value for the <c>Content-Type</c> header.</param>
         public static Response AsFile(this IResponseFormatter formatter, string applicationRelativeFilePath, string contentType)
         {
-            return new GenericFileResponse(applicationRelativeFilePath, contentType);
+            return new GenericFileResponse(applicationRelativeFilePath, contentType, formatter.Context);
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace Nancy
         /// <param name="applicationRelativeFilePath">The application relative file path.</param>
         public static Response AsFile(this IResponseFormatter formatter, string applicationRelativeFilePath)
         {
-            return new GenericFileResponse(applicationRelativeFilePath);
+            return new GenericFileResponse(applicationRelativeFilePath, formatter.Context);
         }
 
         /// <summary>

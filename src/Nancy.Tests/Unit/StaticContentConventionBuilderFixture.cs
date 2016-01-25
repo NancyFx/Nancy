@@ -4,8 +4,10 @@
     using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
+    using System.Linq;
     using System.Text;
 
+    using Nancy.Configuration;
     using Nancy.Conventions;
     using Nancy.Diagnostics;
     using Nancy.Responses;
@@ -20,12 +22,13 @@
 }";
 
         private readonly string directory;
+        private readonly INancyEnvironment environment;
 
         public StaticContentConventionBuilderFixture()
         {
             this.directory = Environment.CurrentDirectory;
-
-            GenericFileResponse.SafePaths.Add(this.directory);
+            this.environment = new DefaultNancyEnvironment();
+            this.environment.StaticContent(safepaths:this.directory);
         }
 
         [Fact]
@@ -240,9 +243,10 @@
             var fileName = string.Format("name{0}.ext", invalidCharacter);
 
             // When
-            var exception = Record.Exception(() => {
-                this.GetStaticContent("css/css", fileName);
-            });
+            var exception = Record.Exception(() =>
+                {
+                    this.GetStaticContent("css/css", fileName);
+                });
 
             // Then
             exception.ShouldBeNull();
@@ -274,28 +278,30 @@
 
             var rootFolder = root ?? this.directory;
 
-            GenericFileResponse.SafePaths.Add(rootFolder);
+            context.Environment = new DefaultNancyEnvironment();
+            context.Environment.StaticContent(safepaths:rootFolder);
 
             var response = resolver.Invoke(context, rootFolder);
             return response;
         }
 
-        private static NancyContext GetContext(string virtualDirectory, string requestedFilename, IDictionary<string, IEnumerable<string>> headers = null)
+        private NancyContext GetContext(string virtualDirectory, string requestedFilename, IDictionary<string, IEnumerable<string>> headers = null)
         {
             var resource = string.Format("/{0}/{1}", virtualDirectory, requestedFilename);
 
             var request = new Request(
-                "GET",
-                new Url { Path = resource, Scheme = "http" },
-                headers: headers ?? new Dictionary<string, IEnumerable<string>>());
+                              "GET",
+                              new Url { Path = resource, Scheme = "http" },
+                              headers: headers ?? new Dictionary<string, IEnumerable<string>>());
 
             var context = new NancyContext
             {
                 Request = request,
                 Trace = new DefaultRequestTrace
                 {
-                    TraceLog = new DefaultTraceLog()
-                }
+                    TraceLog = new DefaultTraceLog(),
+                },
+                Environment = this.environment
             };
 
             return context;
