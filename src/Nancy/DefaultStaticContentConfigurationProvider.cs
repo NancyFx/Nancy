@@ -3,7 +3,7 @@
     using Nancy.Configuration;
 
     /// <summary>
-    /// Provides the default configuration for <see cref="StaticContentConfiguration"/>. 
+    /// Creates and instance of <see cref="DefaultStaticContentConfigurationProvider" />. 
     /// </summary>
     public class DefaultStaticContentConfigurationProvider : NancyDefaultConfigurationProvider<StaticContentConfiguration>
     {
@@ -19,7 +19,7 @@
         }
 
         /// <summary>
-        /// Gets the default configuration instance to register in the <see cref="INancyEnvironment"/> .
+        /// Gets the default <see cref="StaticContentConfiguration"/> configuration instance to register in the <see cref="INancyEnvironment"/> .
         /// </summary>
         /// <returns>The configuration instance.</returns>
         public override StaticContentConfiguration GetDefaultConfiguration()

@@ -11,7 +11,7 @@
         /// <summary>
         /// Configures <see cref="StaticContentConfiguration"/> 
         /// </summary>
-        /// <param name="environment"><see cref="INancyEnvironment"/> that should be configured.</param>
+        /// <param name="environment">An <see cref="INancyEnvironment"/> that should be configured.</param>
         /// <param name="safepaths">Paths that the application consider safe to return static content from</param>
         public static void StaticContent(this INancyEnvironment environment, params string[] safepaths)
         {
