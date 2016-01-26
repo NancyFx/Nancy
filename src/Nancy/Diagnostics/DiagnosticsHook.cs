@@ -32,7 +32,7 @@ namespace Nancy.Diagnostics
         /// Enables the diagnostics dashboard and will intercept all requests that are passed to
         /// the condigured paths.
         /// </summary>
-        public static void Enable(IPipelines pipelines, IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration, IModelBinderLocator modelBinderLocator, IEnumerable<IResponseProcessor> responseProcessors, IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints, ICultureService cultureService, IRequestTraceFactory requestTraceFactory, IEnumerable<IRouteMetadataProvider> routeMetadataProviders, ITextResource textResource, INancyEnvironment environment)
+        public static void Enable(IPipelines pipelines, IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration, IModelBinderLocator modelBinderLocator, IEnumerable<IResponseProcessor> responseProcessors, IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints, ICultureService cultureService, IRequestTraceFactory requestTraceFactory, IEnumerable<IRouteMetadataProvider> routeMetadataProviders, ITextResource textResource, INancyEnvironment environment, IRuntimeEnvironmentInformation runtimeEnvironmentInformation)
         {
             var diagnosticsConfiguration =
                 environment.GetValue<DiagnosticsConfiguration>();
@@ -99,7 +99,7 @@ namespace Nancy.Diagnostics
 
                         return ValidateConfiguration(diagnosticsConfiguration)
                                    ? ExecuteDiagnostics(ctx, diagnosticsRouteResolver, diagnosticsConfiguration, serializer, diagnosticsEnvironment)
-                                   : GetDiagnosticsHelpView(ctx, diagnosticsEnvironment);
+                                   : GetDiagnosticsHelpView(ctx, diagnosticsEnvironment, runtimeEnvironmentInformation);
                     }));
         }
 
@@ -135,9 +135,9 @@ namespace Nancy.Diagnostics
             pipelines.BeforeRequest.RemoveByName(PipelineKey);
         }
 
-        private static Response GetDiagnosticsHelpView(NancyContext ctx, INancyEnvironment environment)
+        private static Response GetDiagnosticsHelpView(NancyContext ctx, INancyEnvironment environment, IRuntimeEnvironmentInformation runtimeEnvironmentInformation)
         {
-            return (StaticConfiguration.IsRunningDebug)
+            return (runtimeEnvironmentInformation.IsDebug)
                        ? new DiagnosticsViewRenderer(ctx, environment)["help"]
                        : HttpStatusCode.NotFound;
         }
