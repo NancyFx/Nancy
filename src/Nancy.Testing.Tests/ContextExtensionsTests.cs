@@ -102,6 +102,10 @@ namespace Nancy.Testing.Tests
             // Given
             var environment = new DefaultNancyEnvironment();
             environment.AddValue(XmlConfiguration.Default);
+            environment.Tracing(
+                enabled: true,
+                displayErrorTraces: true);
+
             var response = new XmlResponse<Model>(new Model() { Dummy = "Data" }, new DefaultXmlSerializer(environment), environment);
             var context = new NancyContext() { Response = response };
 
@@ -129,12 +133,16 @@ namespace Nancy.Testing.Tests
 
         private static INancyEnvironment GetTestingEnvironment()
         {
-            var envionment =
+            var environment =
                 new DefaultNancyEnvironment();
 
-            envionment.AddValue(JsonConfiguration.Default);
+            environment.Tracing(
+                enabled: true,
+                displayErrorTraces: true);
 
-            return envionment;
+            environment.Json();
+
+            return environment;
         }
 
         public class Model

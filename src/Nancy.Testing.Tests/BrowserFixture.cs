@@ -16,6 +16,7 @@ namespace Nancy.Testing.Tests
     using Nancy.Authentication.Forms;
     using System.Collections.ObjectModel;
     using System.Threading.Tasks;
+    using FakeItEasy.ExtensionSyntax;
     using Nancy.Configuration;
     using Nancy.Tests.xUnitExtensions;
     using Xunit.Extensions;
@@ -331,7 +332,7 @@ namespace Nancy.Testing.Tests
             var result = await this.browser.Get(
                              "/session",
                              with => with.HttpRequest());
-            
+
             //Then
             result.Body.AsString().ShouldEqual("Current session value is: I've created a session!");
         }
@@ -344,7 +345,7 @@ namespace Nancy.Testing.Tests
             await browser.Get("/session", with => with.HttpRequest());
 
             await browser.Get("/nothing", with => with.HttpRequest());
-            
+
             var result = await browser.Get("/session", with => with.HttpRequest());
 
             //Then
@@ -377,7 +378,7 @@ namespace Nancy.Testing.Tests
             //Given, When
             var exception = await RecordAsync.Exception(() =>
                 {
-                    return browser.Get("/ajax", with => 
+                    return browser.Get("/ajax", with =>
                                          with.Certificate(
                                              StoreLocation.CurrentUser,
                                              StoreName.My,
@@ -548,14 +549,23 @@ namespace Nancy.Testing.Tests
         [InlineData("application/xml")]
         public async Task Should_return_error_message_on_cyclical_exception(string accept)
         {
-            //Given/When
-            using (new StaticConfigurationContext(x => x.DisableErrorTraces = false))
+            //Given
+            var browser = new Browser(with =>
             {
-                var result = await browser.Get("/cyclical", with => with.Accept(accept));
+                with.Modules(typeof(EchoModule));
+                with.Configure(env =>
+                {
+                    env.Tracing(
+                        enabled: true,
+                        displayErrorTraces: true);
+                });
+            });
 
-                //Then
-                result.Body.AsString().ShouldNotBeEmpty();
-            }
+            // When
+            var result = await browser.Get("/cyclical", with => with.Accept(accept));
+
+            //Then
+            result.Body.AsString().ShouldNotBeEmpty();
         }
 
         [Theory]
@@ -563,14 +573,23 @@ namespace Nancy.Testing.Tests
         [InlineData("application/xml")]
         public async Task Should_return_no_error_message_on_cyclical_exception_when_disabled_error_trace(string accept)
         {
-            //Given/When
-            using (new StaticConfigurationContext(x => x.DisableErrorTraces = true))
+            //Given
+            var browser = new Browser(with =>
             {
-                var result = await browser.Get("/cyclical", with => with.Accept(accept));
+                with.Modules(typeof(EchoModule));
+                with.Configure(env =>
+                {
+                    env.Tracing(
+                        enabled: true,
+                        displayErrorTraces: false);
+                });
+            });
 
-                //Then
-                result.Body.AsString().ShouldBeEmpty();
-            }
+            // When
+            var result = await browser.Get("/cyclical", with => with.Accept(accept));
+
+            //Then
+            result.Body.AsString().ShouldBeEmpty();
         }
 
         public class EchoModel

@@ -15,7 +15,8 @@
     {
         private bool? retainCasing;
         private bool? iso8601DateFormat;
-        private readonly JsonConfiguration configuration;
+        private readonly JsonConfiguration jsonConfiguration;
+        private readonly TraceConfiguration traceConfiguration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultJsonSerializer"/> class,
@@ -24,7 +25,8 @@
         /// <param name="environment">An <see cref="INancyEnvironment"/> instance.</param>
         public DefaultJsonSerializer(INancyEnvironment environment)
         {
-            this.configuration = environment.GetValue<JsonConfiguration>();
+            this.jsonConfiguration = environment.GetValue<JsonConfiguration>();
+            this.traceConfiguration = environment.GetValue<TraceConfiguration>();
         }
 
         /// <summary>
@@ -53,7 +55,7 @@
         /// </summary>
         public bool RetainCasing
         {
-            get { return retainCasing.HasValue ? retainCasing.Value : this.configuration.RetainCasing; }
+            get { return retainCasing.HasValue ? retainCasing.Value : this.jsonConfiguration.RetainCasing; }
             set { retainCasing = value; }
         }
 
@@ -64,7 +66,7 @@
         /// </summary>
         public bool ISO8601DateFormat
         {
-            get { return iso8601DateFormat.HasValue ? iso8601DateFormat.Value : this.configuration.UseISO8601DateFormat; }
+            get { return iso8601DateFormat.HasValue ? iso8601DateFormat.Value : this.jsonConfiguration.UseISO8601DateFormat; }
             set { iso8601DateFormat = value; }
         }
 
@@ -82,14 +84,14 @@
                 var serializer = new JavaScriptSerializer(
                     null,
                     false,
-                    this.configuration.MaxJsonLength,
-                    this.configuration.MaxRecursions,
+                    this.jsonConfiguration.MaxJsonLength,
+                    this.jsonConfiguration.MaxRecursions,
                     RetainCasing,
                     ISO8601DateFormat,
-                    this.configuration.Converters,
-                    this.configuration.PrimitiveConverters);
+                    this.jsonConfiguration.Converters,
+                    this.jsonConfiguration.PrimitiveConverters);
 
-                serializer.RegisterConverters(this.configuration.Converters, this.configuration.PrimitiveConverters);
+                serializer.RegisterConverters(this.jsonConfiguration.Converters, this.jsonConfiguration.PrimitiveConverters);
 
                 try
                 {
@@ -97,7 +99,7 @@
                 }
                 catch (Exception exception)
                 {
-                    if (!StaticConfiguration.DisableErrorTraces)
+                    if (this.traceConfiguration.DisplayErrorTraces)
                     {
                         writer.Write(exception.Message);
                     }

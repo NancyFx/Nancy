@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using System.IO;
-
+    using Nancy.Configuration;
     using Nancy.Diagnostics;
     using Nancy.IO;
     using Nancy.Testing;
@@ -11,43 +11,41 @@
 
     public class DefaultRequestTraceFactoryFixture
     {
-        private readonly DefaultRequestTraceFactory factory;
+        private DefaultRequestTraceFactory factory;
         private readonly Request request;
 
         public DefaultRequestTraceFactoryFixture()
         {
-            this.factory = new DefaultRequestTraceFactory();
+            this.factory = CreateFactory();
             this.request = CreateRequest();
         }
 
         [Fact]
         public void Should_create_default_trace_log_instance_when_error_tracing_is_activated()
         {
-            using (new StaticConfigurationContext(x => x.DisableErrorTraces = false))
-            {
-                // Given
-                // When
-                var trace = this.factory.Create(this.request);
+            // Given
+            this.factory = CreateFactory(true);
 
-                // Then
-                trace.TraceLog.ShouldNotBeNull();
-                trace.TraceLog.ShouldBeOfType<DefaultTraceLog>();
-            }
+            // When
+            var trace = this.factory.Create(this.request);
+
+            // Then
+            trace.TraceLog.ShouldNotBeNull();
+            trace.TraceLog.ShouldBeOfType<DefaultTraceLog>();
         }
 
         [Fact]
         public void Should_create_null_trace_log_instance_when_error_tracing_is_deactivated()
         {
-            using (new StaticConfigurationContext(x => x.DisableErrorTraces = true))
-            {
-                // Given
-                // When
-                var trace = this.factory.Create(this.request);
+            // Given
+            this.factory = CreateFactory(false);
 
-                // Then
-                trace.TraceLog.ShouldNotBeNull();
-                trace.TraceLog.ShouldBeOfType<NullLog>();
-            }
+            // When
+            var trace = this.factory.Create(this.request);
+
+            // Then
+            trace.TraceLog.ShouldNotBeNull();
+            trace.TraceLog.ShouldBeOfType<NullLog>();
         }
 
         [Fact]
@@ -113,11 +111,23 @@
             trace.ResponseData.ShouldBeNull();
         }
 
+        private static DefaultRequestTraceFactory CreateFactory(bool displayErrorTraces = true)
+        {
+            var environment =
+                new DefaultNancyEnvironment();
+
+            environment.Tracing(
+                enabled: true,
+                displayErrorTraces: displayErrorTraces);
+
+            return new DefaultRequestTraceFactory(environment);
+        }
+
         private static Request CreateRequest()
         {
             return new Request(
-                "GET", 
-                new Url(), 
+                "GET",
+                new Url(),
                 RequestStream.FromStream(new MemoryStream()),
                 new Dictionary<string, IEnumerable<string>>
                 {

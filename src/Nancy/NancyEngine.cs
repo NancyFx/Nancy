@@ -13,6 +13,7 @@
     using Routing;
 
     using Helpers;
+    using Nancy.Configuration;
     using Responses.Negotiation;
 
     /// <summary>
@@ -30,6 +31,7 @@
         private readonly IStaticContentProvider staticContentProvider;
         private readonly IResponseNegotiator negotiator;
         private readonly CancellationTokenSource engineDisposedCts;
+        private readonly TraceConfiguration traceConfiguration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyEngine"/> class.
@@ -40,12 +42,14 @@
         /// <param name="requestTracing">The request tracing instance.</param>
         /// <param name="staticContentProvider">The provider to use for serving static content</param>
         /// <param name="negotiator">The response negotiator.</param>
+        /// <param name="environment">An <see cref="INancyEnvironment"/> instance.</param>
         public NancyEngine(IRequestDispatcher dispatcher,
             INancyContextFactory contextFactory,
             IEnumerable<IStatusCodeHandler> statusCodeHandlers,
             IRequestTracing requestTracing,
             IStaticContentProvider staticContentProvider,
-            IResponseNegotiator negotiator)
+            IResponseNegotiator negotiator,
+            INancyEnvironment environment)
         {
             if (dispatcher == null)
             {
@@ -84,6 +88,7 @@
             this.staticContentProvider = staticContentProvider;
             this.negotiator = negotiator;
             this.engineDisposedCts = new CancellationTokenSource();
+            this.traceConfiguration = environment.GetValue<TraceConfiguration>();
         }
 
         /// <summary>
@@ -170,8 +175,7 @@
 
         private bool EnableTracing(NancyContext ctx)
         {
-            return StaticConfiguration.EnableRequestTracing &&
-                   !ctx.Items.ContainsKey(DiagnosticsHook.ItemsKey);
+            return this.traceConfiguration.Enabled && !ctx.Items.ContainsKey(DiagnosticsHook.ItemsKey);
         }
 
         private Guid GetDiagnosticsSessionGuid(NancyContext ctx)

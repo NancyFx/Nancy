@@ -9,32 +9,12 @@ namespace Nancy
     public static class StaticConfiguration
     {
         private static bool? isRunningDebug;
-        private static bool? disableCaches;
-
-        private static bool? disableErrorTraces;
 
         static StaticConfiguration()
         {
-            disableErrorTraces = !(disableCaches = IsRunningDebug);
             CaseSensitive = false;
             RequestQueryFormMultipartLimit = 1000;
             AllowFileStreamUploadAsync = true;
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether or not to disable traces in error messages
-        /// </summary>
-        [Description("Disables trace output in the default 500 error pages.")]
-        public static bool DisableErrorTraces
-        {
-            get
-            {
-                return disableErrorTraces ?? (bool)(disableErrorTraces = IsRunningDebug);
-            }
-            set
-            {
-                disableErrorTraces = value;
-            }
         }
 
         /// <summary>
@@ -82,12 +62,6 @@ namespace Nancy
                 return false;
             }
         }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether or not to enable request tracing
-        /// </summary>
-        [Description("Enable request tracing.")]
-        public static bool EnableRequestTracing { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether or not to disable request stream switching

@@ -15,6 +15,7 @@
     public class DefaultXmlSerializer : ISerializer
     {
         private readonly XmlConfiguration configuration;
+        private readonly TraceConfiguration traceConfiguration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultXmlSerializer"/> class,
@@ -24,6 +25,7 @@
         public DefaultXmlSerializer(INancyEnvironment environment)
         {
             this.configuration = environment.GetValue<XmlConfiguration>();
+            this.traceConfiguration = environment.GetValue<TraceConfiguration>();
         }
 
         /// <summary>
@@ -69,7 +71,7 @@
             }
             catch (Exception exception)
             {
-                if (!StaticConfiguration.DisableErrorTraces)
+                if (this.traceConfiguration.DisplayErrorTraces)
                 {
                     var bytes = Encoding.UTF8.GetBytes(exception.Message);
                     outputStream.Write(bytes, 0, exception.Message.Length);

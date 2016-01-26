@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-
+    using Nancy.Configuration;
     using Nancy.ViewEngines;
 
     /// <summary>
@@ -11,15 +11,18 @@
     public class ViewProcessor : IResponseProcessor
     {
         private readonly IViewFactory viewFactory;
+        private readonly TraceConfiguration traceConfiguration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewProcessor"/> class,
         /// with the provided <paramref name="viewFactory"/>.
         /// </summary>
         /// <param name="viewFactory">The view factory that should be used to render views.</param>
-        public ViewProcessor(IViewFactory viewFactory)
+        /// <param name="environment">An <see cref="INancyEnvironment"/> instance.</param>
+        public ViewProcessor(IViewFactory viewFactory, INancyEnvironment environment)
         {
             this.viewFactory = viewFactory;
+            this.traceConfiguration = environment.GetValue<TraceConfiguration>();
         }
 
         /// <summary>
@@ -59,7 +62,9 @@
         {
             var viewResponse = this.viewFactory.RenderView(context.NegotiationContext.ViewName, model, GetViewLocationContext(context));
 
-            return StaticConfiguration.DisableErrorTraces ? viewResponse : new MaterialisingResponse(viewResponse);
+            return this.traceConfiguration.DisplayErrorTraces
+                ? new MaterialisingResponse(viewResponse)
+                : viewResponse;
         }
 
         private static ViewLocationContext GetViewLocationContext(NancyContext context)

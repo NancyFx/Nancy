@@ -36,6 +36,10 @@
                 slidingTimeout: 30,
                 cryptographyConfiguration: CryptographyConfiguration.NoEncryption);
 
+            environment.Tracing(
+                enabled: true,
+                displayErrorTraces: true);
+
             environment.MyConfig("Hello World");
         }
 
@@ -58,8 +62,6 @@
         {
             base.ApplicationStartup(container, pipelines);
 
-            StaticConfiguration.EnableRequestTracing = true;
-            StaticConfiguration.DisableErrorTraces = false;
             Csrf.Enable(pipelines);
 
             this.Conventions.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory("moo", "Content"));

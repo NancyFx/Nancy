@@ -14,6 +14,7 @@
     using Microsoft.CSharp;
 
     using Nancy.Bootstrapper;
+    using Nancy.Configuration;
     using Nancy.Helpers;
     using Nancy.Responses;
     using Nancy.ViewEngines.Razor.CSharp;
@@ -27,6 +28,7 @@
         private readonly IRazorConfiguration razorConfiguration;
         private readonly IEnumerable<IRazorViewRenderer> viewRenderers;
         private readonly object compileLock = new object();
+        private readonly TraceConfiguration traceConfiguration;
 
         /// <summary>
         /// Gets the extensions file extensions that are supported by the view engine.
@@ -42,7 +44,8 @@
         /// Initializes a new instance of the <see cref="RazorViewEngine"/> class.
         /// </summary>
         /// <param name="configuration">The <see cref="IRazorConfiguration"/> that should be used by the engine.</param>
-        public RazorViewEngine(IRazorConfiguration configuration)
+        /// <param name="environment">An <see cref="INancyEnvironment"/> instance.</param>
+        public RazorViewEngine(IRazorConfiguration configuration, INancyEnvironment environment)
         {
             this.viewRenderers = new List<IRazorViewRenderer>
             {
@@ -51,6 +54,7 @@
             };
 
             this.razorConfiguration = configuration;
+            this.traceConfiguration = environment.GetValue<TraceConfiguration>();
 
             foreach (var renderer in this.viewRenderers)
             {
@@ -279,27 +283,27 @@
                                         templateLines.Aggregate((s1, s2) => s1 + "<br/>" + s2),
                                         compilationSource.Aggregate((s1, s2) => s1 + "<br/>Line " + lineNumber++ + ":\t" + s2));
 
-                return () => new NancyRazorErrorView(errorDetails);
+                return () => new NancyRazorErrorView(errorDetails, this.traceConfiguration);
             }
 
             var assembly = Assembly.LoadFrom(outputAssemblyName);
             if (assembly == null)
             {
                 const string error = "Error loading template assembly";
-                return () => new NancyRazorErrorView(error);
+                return () => new NancyRazorErrorView(error, this.traceConfiguration);
             }
 
             var type = assembly.GetType("RazorOutput.RazorView");
             if (type == null)
             {
                 var error = String.Format("Could not find type RazorOutput.Template in assembly {0}", assembly.FullName);
-                return () => new NancyRazorErrorView(error);
+                return () => new NancyRazorErrorView(error, this.traceConfiguration);
             }
 
             if (Activator.CreateInstance(type) as INancyRazorView == null)
             {
                 const string error = "Could not construct RazorOutput.Template or it does not inherit from INancyRazorView";
-                return () => new NancyRazorErrorView(error);
+                return () => new NancyRazorErrorView(error, this.traceConfiguration);
             }
 
             return () => (INancyRazorView)Activator.CreateInstance(type);

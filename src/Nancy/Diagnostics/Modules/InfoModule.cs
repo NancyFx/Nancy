@@ -7,11 +7,12 @@
     using System.Linq;
     using System.Reflection;
     using Nancy.Bootstrapper;
+    using Nancy.Configuration;
     using Nancy.ViewEngines;
 
     public class InfoModule : DiagnosticModule
     {
-        public InfoModule(IRootPathProvider rootPathProvider, NancyInternalConfiguration configuration)
+        public InfoModule(IRootPathProvider rootPathProvider, NancyInternalConfiguration configuration, INancyEnvironment environment)
             : base("/info")
         {
             Get["/"] = async (_, __) =>
@@ -23,9 +24,11 @@
             {
                 dynamic data = new ExpandoObject();
 
+
+
                 data.Nancy = new ExpandoObject();
                 data.Nancy.Version = string.Format("v{0}", this.GetType().Assembly.GetName().Version.ToString());
-                data.Nancy.TracesDisabled = StaticConfiguration.DisableErrorTraces;
+                data.Nancy.TracesDisabled = !environment.GetValue<TraceConfiguration>().DisplayErrorTraces;
                 data.Nancy.CaseSensitivity = StaticConfiguration.CaseSensitive ? "Sensitive" : "Insensitive";
                 data.Nancy.RootPath = rootPathProvider.GetRootPath();
                 data.Nancy.Hosting = GetHosting();

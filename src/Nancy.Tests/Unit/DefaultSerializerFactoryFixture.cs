@@ -159,12 +159,16 @@
 
         private static INancyEnvironment GetTestingEnvironment()
         {
-            var envionment =
+            var environment =
                 new DefaultNancyEnvironment();
 
-            envionment.AddValue(JsonConfiguration.Default);
+            environment.Tracing(
+                enabled: true,
+                displayErrorTraces: true);
 
-            return envionment;
+            environment.Json();
+
+            return environment;
         }
 
         internal class ExceptionThrowingSerializer : ISerializer
