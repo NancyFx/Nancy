@@ -9,23 +9,18 @@
     using Nancy.Cryptography;
     using Nancy.Culture;
     using Nancy.Diagnostics;
-    using Nancy.Helpers;
     using Nancy.Localization;
     using Nancy.ModelBinding;
     using Nancy.Responses.Negotiation;
     using Nancy.Routing;
     using Nancy.Routing.Constraints;
     using Nancy.Testing;
-
     using Xunit;
-//While this directive is redundant, it's required to build on mono 2.x to allow it to resolve the Should* extension methods
 
     public class CustomInteractiveDiagnosticsHookFixture
     {
         private const string DiagsCookieName = "__ncd";
-
         private readonly CryptographyConfiguration cryptoConfig;
-
         private readonly IObjectSerializer objectSerializer;
 
         public CustomInteractiveDiagnosticsHookFixture()
@@ -48,6 +43,7 @@
             private readonly IEnumerable<IRouteMetadataProvider> routeMetadataProviders;
             private readonly ITextResource textResource;
             private readonly INancyEnvironment environment;
+            private readonly IRuntimeEnvironmentInformation runtimeEnvironmentInformation;
 
             public FakeDiagnostics(
                 IRootPathProvider rootPathProvider,
@@ -60,7 +56,8 @@
                 IRequestTraceFactory requestTraceFactory,
                 IEnumerable<IRouteMetadataProvider> routeMetadataProviders,
                 ITextResource textResource,
-                INancyEnvironment environment)
+                INancyEnvironment environment,
+                IRuntimeEnvironmentInformation runtimeEnvironmentInformation)
             {
                 this.diagnosticProviders = (new IDiagnosticsProvider[] { new FakeDiagnosticsProvider() }).ToArray();
                 this.rootPathProvider = rootPathProvider;
@@ -74,6 +71,7 @@
                 this.routeMetadataProviders = routeMetadataProviders;
                 this.textResource = textResource;
                 this.environment = environment;
+                this.runtimeEnvironmentInformation = runtimeEnvironmentInformation;
             }
 
             public void Initialize(IPipelines pipelines)
@@ -91,7 +89,8 @@
                     this.requestTraceFactory,
                     this.routeMetadataProviders,
                     this.textResource,
-                    this.environment);
+                    this.environment,
+                    this.runtimeEnvironmentInformation);
             }
         }
 
