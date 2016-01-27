@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
+  <!-- If system.codedom tag is absent -->
+  <system.codedom xdt:Transform="InsertIfMissing">
+  </system.codedom>
+
+  <!-- If compilers tag is absent -->
+  <system.codedom>
+    <compilers xdt:Transform="InsertIfMissing">
+    </compilers>
+  </system.codedom>
+
+  <!-- If a .cs compiler is already present, the existing entry needs to be removed before inserting the new entry -->
+  <system.codedom>
+    <compilers>
+      <compiler
+        extension=".cs"
+        xdt:Transform="Remove"
+        xdt:Locator="Match(extension)" />
+    </compilers>
+  </system.codedom>
+
+  <!-- Inserting the new compiler -->
+  <system.codedom>
+    <compilers>
+      <compiler
+        language="c#;cs;csharp"
+        extension=".cs"
+        type="Microsoft.CodeDom.Providers.DotNetCompilerPlatform.CSharpCodeProvider, Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"
+        warningLevel="4"
+        compilerOptions="/langversion:6 /nowarn:1659;1699;1701"
+        xdt:Transform="Insert" />
+    </compilers>
+  </system.codedom>
+
+  <!-- If a .vb compiler is already present, the existing entry needs to be removed before inserting the new entry -->
+  <system.codedom>
+    <compilers>
+      <compiler
+        extension=".vb"
+        xdt:Transform="Remove"
+        xdt:Locator="Match(extension)" />
+    </compilers>
+  </system.codedom>
+
+  <!-- Inserting the new compiler -->
+  <system.codedom>
+    <compilers>
+      <compiler
+        language="vb;vbs;visualbasic;vbscript"
+        extension=".vb"
+        type="Microsoft.CodeDom.Providers.DotNetCompilerPlatform.VBCodeProvider, Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"
+        warningLevel="4"
+        compilerOptions="/langversion:14 /nowarn:41008 /define:_MYTYPE=\&quot;Web\&quot; /optionInfer+"
+        xdt:Transform="Insert" />
+    </compilers>
+  </system.codedom>
+</configuration>

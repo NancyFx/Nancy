@@ -123,6 +123,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Metadata.Modules.Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Hosting.Owin", "Nancy.Demo.Hosting.Owin\Nancy.Demo.Hosting.Owin.csproj", "{7959D79C-9E2B-4871-9470-6A6B527ABE5E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Conventions", "Nancy.Demo.Conventions\Nancy.Demo.Conventions.csproj", "{B19C579A-85AE-4AE4-B7D4-14C7EBEDAEA5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -809,6 +811,22 @@ Global
 		{7959D79C-9E2B-4871-9470-6A6B527ABE5E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7959D79C-9E2B-4871-9470-6A6B527ABE5E}.Release|x86.ActiveCfg = Release|Any CPU
 		{7959D79C-9E2B-4871-9470-6A6B527ABE5E}.Release|x86.Build.0 = Release|Any CPU
+		{B19C579A-85AE-4AE4-B7D4-14C7EBEDAEA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B19C579A-85AE-4AE4-B7D4-14C7EBEDAEA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B19C579A-85AE-4AE4-B7D4-14C7EBEDAEA5}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B19C579A-85AE-4AE4-B7D4-14C7EBEDAEA5}.Debug|x86.Build.0 = Debug|Any CPU
+		{B19C579A-85AE-4AE4-B7D4-14C7EBEDAEA5}.MonoDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B19C579A-85AE-4AE4-B7D4-14C7EBEDAEA5}.MonoDebug|Any CPU.Build.0 = Debug|Any CPU
+		{B19C579A-85AE-4AE4-B7D4-14C7EBEDAEA5}.MonoDebug|x86.ActiveCfg = Debug|Any CPU
+		{B19C579A-85AE-4AE4-B7D4-14C7EBEDAEA5}.MonoDebug|x86.Build.0 = Debug|Any CPU
+		{B19C579A-85AE-4AE4-B7D4-14C7EBEDAEA5}.MonoRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{B19C579A-85AE-4AE4-B7D4-14C7EBEDAEA5}.MonoRelease|Any CPU.Build.0 = Release|Any CPU
+		{B19C579A-85AE-4AE4-B7D4-14C7EBEDAEA5}.MonoRelease|x86.ActiveCfg = Release|Any CPU
+		{B19C579A-85AE-4AE4-B7D4-14C7EBEDAEA5}.MonoRelease|x86.Build.0 = Release|Any CPU
+		{B19C579A-85AE-4AE4-B7D4-14C7EBEDAEA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B19C579A-85AE-4AE4-B7D4-14C7EBEDAEA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B19C579A-85AE-4AE4-B7D4-14C7EBEDAEA5}.Release|x86.ActiveCfg = Release|Any CPU
+		{B19C579A-85AE-4AE4-B7D4-14C7EBEDAEA5}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -870,6 +888,7 @@ Global
 		{DC8AAA8B-7FD0-47C4-9413-3CC94088BCC4} = {E944109B-0B7A-4ADE-8602-004CEFA5897D}
 		{508A3A68-2012-4E62-925F-2F3083A013FC} = {A427F9F8-0A6F-4EEA-837F-FCDAB6E7D4B3}
 		{7959D79C-9E2B-4871-9470-6A6B527ABE5E} = {4A24657F-9695-437B-9702-2541ED280628}
+		{B19C579A-85AE-4AE4-B7D4-14C7EBEDAEA5} = {4A24657F-9695-437B-9702-2541ED280628}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Nancy.Demo.Hosting.Aspnet\Nancy.Demo.Hosting.Aspnet.csproj
