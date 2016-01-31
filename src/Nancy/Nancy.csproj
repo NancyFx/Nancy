@@ -109,6 +109,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="AppDomainAssemblyCatalog.cs" />
     <Compile Include="AsyncNamedPipelineBase.cs" />
     <Compile Include="Bootstrapper\AppDomainAssemblyTypeScanner.cs" />
     <Compile Include="Bootstrapper\IRequestStartup.cs" />
@@ -160,6 +161,7 @@
     <Compile Include="DefaultSerializerFactory.cs" />
     <Compile Include="DefaultStaticContentProvider.cs" />
     <Compile Include="DefaultTraceConfigurationProvider.cs" />
+    <Compile Include="DefaultTypeCatalog.cs" />
     <Compile Include="DefaultViewConfigurationProvider.cs" />
     <Compile Include="Diagnostics\DefaultRequestTraceFactory.cs" />
     <Compile Include="Diagnostics\DefaultTraceLog.cs" />
@@ -193,10 +195,13 @@
     <Compile Include="Diagnostics\DiagnosticsViewRenderer.cs" />
     <Compile Include="Helpers\CacheHelpers.cs" />
     <Compile Include="Helpers\ExceptionExtensions.cs" />
+    <Compile Include="IAssemblyCatalog.cs" />
     <Compile Include="IncludeInNancyAssemblyScanningAttribute.cs" />
     <Compile Include="IRuntimeEnvironmentInformation.cs" />
     <Compile Include="ISerializerFactory.cs" />
     <Compile Include="IStaticContentProvider.cs" />
+    <Compile Include="ITypeCatalog.cs" />
+    <Compile Include="ITypeCatalogExtensions.cs" />
     <Compile Include="Json\Converters\TupleConverter.cs" />
     <Compile Include="Json\DefaultJsonConfigurationProvider.cs" />
     <Compile Include="Json\JavaScriptPrimitiveConverter.cs" />
@@ -314,6 +319,8 @@
     <Compile Include="Routing\Trie\RouteResolverTrie.cs" />
     <Compile Include="Routing\Trie\SegmentMatch.cs" />
     <Compile Include="Routing\Trie\TrieNodeFactory.cs" />
+    <Compile Include="TypeResolveStrategies.cs" />
+    <Compile Include="TypeResolveStrategy.cs" />
     <Compile Include="Security\SSLProxy.cs" />
     <Compile Include="Session\CookieBasedSessionsConfiguration.cs" />
     <Compile Include="StaticContent.cs" />
