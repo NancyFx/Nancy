@@ -1,0 +1,36 @@
+{
+    "version": "1.0.0-*",
+    "projectUrl": "https://github.com/NancyFx/Nancy/",
+    "licenseUrl": "https://github.com/NancyFx/Nancy/blob/master/license.txt",
+
+    "frameworks": {
+        "dnx451": {
+        },
+        "dnxcore50": {
+            "dependencies": {
+              "Microsoft.CSharp": "4.0.0-beta-23516",
+              "System.Collections.Concurrent": "4.0.10-beta-23516",
+              "System.Collections.Specialized": "4.0.0-beta-23516",
+              "System.Console": "4.0.0-beta-23516",
+              "System.Diagnostics.Tools": "4.0.0-beta-23516",
+              "System.Dynamic.Runtime": "4.0.0-beta-23516",
+              "System.IO": "4.0.10-beta-23516",
+              "System.IO.UnmanagedMemoryStream": "4.0.0-beta-23516",
+              "System.Linq": "4.0.0-beta-23516",
+              "System.Reflection": "4.0.10-beta-23516",
+              "System.Reflection.Emit": "4.0.0-beta-23516",
+              "System.Reflection.TypeExtensions": "4.0.0-beta-23516",
+              "System.Runtime": "4.0.20-beta-23516",
+              "System.Runtime.Serialization.Xml": "4.0.10-beta-23516",
+              "System.Security.Claims": "4.0.0-beta-23516",
+              "System.Security.Cryptography.DeriveBytes": "4.0.0-beta-23225",
+              "System.Security.Cryptography.Encoding": "4.0.0-beta-23516",
+              "System.Security.Cryptography.Hashing": "4.0.0-beta-23225",
+              "System.Security.Cryptography.X509Certificates": "4.0.0-beta-23516",
+              "System.Text.RegularExpressions": "4.0.0-beta-23516",
+              "System.Threading": "4.0.10-beta-23516",
+              "System.Xml.XmlSerializer": "4.0.10-beta-23516"
+            }
+        }
+    }
+}
