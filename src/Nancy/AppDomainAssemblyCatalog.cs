@@ -1,7 +1,6 @@
 namespace Nancy
 {
     using System;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -11,31 +10,21 @@ namespace Nancy
     /// Default implementation of the <see cref="IAssemblyCatalog"/> interface, based on
     /// retrieving <see cref="Assembly"/> information from <see cref="AppDomain.CurrentDomain"/>.
     /// </summary>
-    public class AppDomainAssemblyCatalog : IAssemblyCatalog
+    public class AppDomainAssemblyCatalog : AssemblyCatalogBase
     {
-        private readonly Lazy<IReadOnlyCollection<Assembly>> assemblies = new Lazy<IReadOnlyCollection<Assembly>>(GetAssembliesInAppDomain);
-        private readonly ConcurrentDictionary<AssemblyResolveStrategy, IReadOnlyCollection<Assembly>> cache;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="AppDomainAssemblyCatalog"/> class.
         /// </summary>
         public AppDomainAssemblyCatalog()
         {
-            this.cache = new ConcurrentDictionary<AssemblyResolveStrategy, IReadOnlyCollection<Assembly>>();
-
-            EnsureNancyReferencingAssembliesAreLoaded();
+            this.EnsureNancyReferencingAssembliesAreLoaded();
         }
 
         /// <summary>
-        /// Gets all <see cref="Assembly"/> instances in the catalog.
+        /// Get all available <see cref="Assembly"/> instances.
         /// </summary>
         /// <returns>An <see cref="IReadOnlyCollection{T}"/> of <see cref="Assembly"/> instances.</returns>
-        public IReadOnlyCollection<Assembly> GetAssemblies(AssemblyResolveStrategy strategy)
-        {
-            return this.cache.GetOrAdd(strategy, s => this.assemblies.Value.Where(s.Invoke).ToArray());
-        }
-
-        private static IReadOnlyCollection<Assembly> GetAssembliesInAppDomain()
+        protected override IReadOnlyCollection<Assembly> GetAvailableAssemblies()
         {
             return AppDomain.CurrentDomain
                 .GetAssemblies()
@@ -44,9 +33,9 @@ namespace Nancy
                 .ToArray();
         }
 
-        private static void EnsureNancyReferencingAssembliesAreLoaded()
+        private void EnsureNancyReferencingAssembliesAreLoaded()
         {
-            var assemblyPaths = GetAssembliesInAppDomain()
+            var assemblyPaths = this.GetAvailableAssemblies()
                 .Select(assembly => assembly.Location)
                 .ToArray();
 
