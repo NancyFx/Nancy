@@ -44,7 +44,7 @@ namespace Nancy
         /// </summary>
         public static readonly TypeResolveStrategy OnlyNancyNamespace = type =>
         {
-            return type.Assembly.GetName().Name.StartsWith("Nancy", StringComparison.OrdinalIgnoreCase);
+            return (type.Namespace ?? string.Empty).StartsWith("Nancy", StringComparison.OrdinalIgnoreCase);
         };
     }
 }

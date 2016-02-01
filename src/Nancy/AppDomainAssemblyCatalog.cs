@@ -13,7 +13,8 @@ namespace Nancy
     /// </summary>
     public class AppDomainAssemblyCatalog : IAssemblyCatalog
     {
-        private readonly Lazy<IReadOnlyCollection<Assembly>> assemblies = new Lazy<IReadOnlyCollection<Assembly>>(GetAllAssemblies);
+        private readonly Lazy<IReadOnlyCollection<Assembly>> assemblies =
+            new Lazy<IReadOnlyCollection<Assembly>>(GetAllAssemblies);
 
         /// <summary>
         /// Gets all <see cref="Assembly"/> instances in the catalog.
@@ -34,11 +35,11 @@ namespace Nancy
         private static IReadOnlyCollection<Assembly> GetAssembliesInAppDomain()
         {
             var assemblies = AppDomain.CurrentDomain
-                                      .GetAssemblies()
-                                      .Where(IsNancyReferencingAssembly)
-                                      .Where(assembly => !assembly.IsDynamic)
-                                      .Where(assembly => !assembly.ReflectionOnly)
-                                      .ToArray();
+                .GetAssemblies()
+                .Where(IsNancyReferencingAssembly)
+                .Where(assembly => !assembly.IsDynamic)
+                .Where(assembly => !assembly.ReflectionOnly)
+                .ToArray();
 
             return new ReadOnlyCollection<Assembly>(assemblies);
         }
@@ -86,7 +87,7 @@ namespace Nancy
                         continue;
                     }
 
-                    if (!reflectionAssembly.GetReferencedAssemblies().Any(referece =>referece.Name.StartsWith("Nancy", StringComparison.OrdinalIgnoreCase)))
+                    if (!reflectionAssembly.GetReferencedAssemblies().Any(referece => referece.Name.Equals("Nancy", StringComparison.OrdinalIgnoreCase)))
                     {
                         continue;
                     }
@@ -115,7 +116,7 @@ namespace Nancy
             }
             catch (BadImageFormatException)
             {
-                //the assembly maybe it's not managed code
+                //the assembly maybe it's not managed assembly
             }
             catch (FileLoadException)
             {

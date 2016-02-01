@@ -6,7 +6,7 @@ namespace Nancy
     /// <summary>
     /// Contains extension methods for <see cref="ITypeCatalog"/> implementations.
     /// </summary>
-    public static class ITypeCatalogExtensions
+    public static class TypeCatalogExtensions
     {
         /// <summary>
         /// Gets all <see cref="Type"/> instances that are assigneable to <paramref name="type"/>, using <see cref="TypeResolveStrategies.All"/>.
@@ -28,6 +28,18 @@ namespace Nancy
         public static IReadOnlyCollection<Type> GetTypesAssignableTo<TType>(this ITypeCatalog typeCatalog)
         {
             return typeCatalog.GetTypesAssignableTo(typeof(TType), TypeResolveStrategies.All);
+        }
+
+        /// <summary>
+        /// Gets all types that are assignable to the provided <typeparamref name="TType"/>.
+        /// </summary>
+        /// <param name="typeCatalog">The <see cref="ITypeCatalog"/> instance where the types should be retrieved from.</param>
+        /// <param name="strategy">A <see cref="TypeResolveStrategy"/> that should be used then retrieving types.</param>
+        /// <typeparam name="TType">The <see cref="Type"/> that returned types should be assignable to.</typeparam>
+        /// <returns>An <see cref="IReadOnlyCollection{T}"/> of <see cref="Type"/> instances.</returns>
+        public static IReadOnlyCollection<Type> GetTypesAssignableTo<TType>(this ITypeCatalog typeCatalog, TypeResolveStrategy strategy)
+        {
+            return typeCatalog.GetTypesAssignableTo(typeof(TType), strategy);
         }
     }
 }

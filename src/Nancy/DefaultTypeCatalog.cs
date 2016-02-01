@@ -12,6 +12,7 @@
     public class DefaultTypeCatalog : ITypeCatalog
     {
         private readonly IAssemblyCatalog assemblyCatalog;
+
         private readonly ConcurrentDictionary<Type, IReadOnlyCollection<Type>> cache;
 
         /// <summary>
@@ -35,25 +36,14 @@
             return this.cache.GetOrAdd(type, t => this.GetTypesAssignableTo(type)).Where(strategy.Invoke).ToArray();
         }
 
-        /// <summary>
-        /// Gets all types that are assignable to the provided <typeparamref name="TType"/>.
-        /// </summary>
-        /// <typeparam name="TType">The <see cref="Type"/> that returned types should be assignable to.</typeparam>
-        /// <param name="strategy">A <see cref="TypeResolveStrategy"/> that should be used then retrieving types.</param>
-        /// <returns>An <see cref="IReadOnlyCollection{T}"/> of <see cref="Type"/> instances.</returns>
-        public IReadOnlyCollection<Type> GetTypesAssignableTo<TType>(TypeResolveStrategy strategy)
-        {
-            return this.GetTypesAssignableTo(typeof(TType), strategy);
-        }
-
         private IReadOnlyCollection<Type> GetTypesAssignableTo(Type type)
         {
             return this.assemblyCatalog
-                            .GetAssemblies()
-                            .SelectMany(assembly => assembly.SafeGetExportedTypes())
-                            .Where(type.IsAssignableFrom)
-                            .Where(t => !t.IsAbstract)
-                            .ToArray();
+                .GetAssemblies()
+                .SelectMany(assembly => assembly.SafeGetExportedTypes())
+                .Where(type.IsAssignableFrom)
+                .Where(t => !t.IsAbstract)
+                .ToArray();
         }
     }
 }
