@@ -125,6 +125,13 @@
 
         protected override bool TrySerializeKnownTypes(object input, out object output)
         {
+            var type = input as Type;
+            if (type != null)
+            {
+                output = type.FullName;
+                return true;
+            }
+            
             if (input is DateTime)
             {
                 return SerializeDateTime((DateTime)input, out output);
