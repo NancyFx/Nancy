@@ -542,7 +542,6 @@ namespace Nancy.Testing.Tests
         }
 
         [Theory]
-        [InlineData("application/json")]
         [InlineData("application/xml")]
         public async Task Should_return_error_message_on_cyclical_exception(string accept)
         {
@@ -567,7 +566,6 @@ namespace Nancy.Testing.Tests
         }
 
         [Theory]
-        [InlineData("application/json")]
         [InlineData("application/xml")]
         public async Task Should_return_no_error_message_on_cyclical_exception_when_disabled_error_trace(string accept)
         {
