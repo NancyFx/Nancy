@@ -1,8 +1,8 @@
 namespace Nancy
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -13,55 +13,35 @@ namespace Nancy
     /// </summary>
     public class AppDomainAssemblyCatalog : IAssemblyCatalog
     {
-        private readonly Lazy<IReadOnlyCollection<Assembly>> assemblies =
-            new Lazy<IReadOnlyCollection<Assembly>>(GetAllAssemblies);
+        private readonly Lazy<IReadOnlyCollection<Assembly>> assemblies = new Lazy<IReadOnlyCollection<Assembly>>(GetAssembliesInAppDomain);
+        private readonly ConcurrentDictionary<AssemblyResolveStrategy, IReadOnlyCollection<Assembly>> cache;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AppDomainAssemblyCatalog"/> class.
+        /// </summary>
+        public AppDomainAssemblyCatalog()
+        {
+            this.cache = new ConcurrentDictionary<AssemblyResolveStrategy, IReadOnlyCollection<Assembly>>();
+
+            EnsureNancyReferencingAssembliesAreLoaded();
+        }
 
         /// <summary>
         /// Gets all <see cref="Assembly"/> instances in the catalog.
         /// </summary>
         /// <returns>An <see cref="IReadOnlyCollection{T}"/> of <see cref="Assembly"/> instances.</returns>
-        public IReadOnlyCollection<Assembly> GetAssemblies()
+        public IReadOnlyCollection<Assembly> GetAssemblies(AssemblyResolveStrategy strategy)
         {
-            return this.assemblies.Value;
-        }
-
-        private static IReadOnlyCollection<Assembly> GetAllAssemblies()
-        {
-            EnsureNancyReferencingAssembliesAreLoaded();
-
-            return GetAssembliesInAppDomain();
+            return this.cache.GetOrAdd(strategy, s => this.assemblies.Value.Where(s.Invoke).ToArray());
         }
 
         private static IReadOnlyCollection<Assembly> GetAssembliesInAppDomain()
         {
-            var assemblies = AppDomain.CurrentDomain
+            return AppDomain.CurrentDomain
                 .GetAssemblies()
-                .Where(IsNancyReferencingAssembly)
                 .Where(assembly => !assembly.IsDynamic)
                 .Where(assembly => !assembly.ReflectionOnly)
                 .ToArray();
-
-            return new ReadOnlyCollection<Assembly>(assemblies);
-        }
-
-        private static bool IsNancyReferencingAssembly(Assembly assembly)
-        {
-            if (assembly.Equals(typeof(INancyEngine).Assembly))
-            {
-                return true;
-            }
-
-            if (assembly.GetName().Name.Equals("Nancy.Testing", StringComparison.OrdinalIgnoreCase))
-            {
-                return false;
-            }
-
-            if (assembly.GetReferencedAssemblies().Any(reference => reference.Name.StartsWith("Nancy", StringComparison.OrdinalIgnoreCase)))
-            {
-                return true;
-            }
-
-            return false;
         }
 
         private static void EnsureNancyReferencingAssembliesAreLoaded()

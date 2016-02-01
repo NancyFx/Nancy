@@ -110,6 +110,8 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AppDomainAssemblyCatalog.cs" />
+    <Compile Include="AssemblyResolveStrategies.cs" />
+    <Compile Include="AssemblyResolveStrategy.cs" />
     <Compile Include="AsyncNamedPipelineBase.cs" />
     <Compile Include="Bootstrapper\AppDomainAssemblyTypeScanner.cs" />
     <Compile Include="Bootstrapper\IRequestStartup.cs" />
@@ -201,7 +203,7 @@
     <Compile Include="ISerializerFactory.cs" />
     <Compile Include="IStaticContentProvider.cs" />
     <Compile Include="ITypeCatalog.cs" />
-    <Compile Include="ITypeCatalogExtensions.cs" />
+    <Compile Include="TypeCatalogExtensions.cs" />
     <Compile Include="Json\Converters\TupleConverter.cs" />
     <Compile Include="Json\DefaultJsonConfigurationProvider.cs" />
     <Compile Include="Json\JavaScriptPrimitiveConverter.cs" />

@@ -12,7 +12,6 @@
     public class DefaultTypeCatalog : ITypeCatalog
     {
         private readonly IAssemblyCatalog assemblyCatalog;
-
         private readonly ConcurrentDictionary<Type, IReadOnlyCollection<Type>> cache;
 
         /// <summary>
@@ -29,7 +28,7 @@
         /// Gets all types that are assignable to the provided <paramref name="type"/>.
         /// </summary>
         /// <param name="type">The <see cref="Type"/> that returned types should be assignable to.</param>
-        /// <param name="strategy">A <see cref="TypeResolveStrategy"/> that should be used then retrieving types.</param>
+        /// <param name="strategy">A <see cref="TypeResolveStrategy"/> that should be used when retrieving types.</param>
         /// <returns>An <see cref="IReadOnlyCollection{T}"/> of <see cref="Type"/> instances.</returns>
         public IReadOnlyCollection<Type> GetTypesAssignableTo(Type type, TypeResolveStrategy strategy)
         {
@@ -39,7 +38,7 @@
         private IReadOnlyCollection<Type> GetTypesAssignableTo(Type type)
         {
             return this.assemblyCatalog
-                .GetAssemblies()
+                .GetAssemblies(AssemblyResolveStrategies.NancyReferencing)
                 .SelectMany(assembly => assembly.SafeGetExportedTypes())
                 .Where(type.IsAssignableFrom)
                 .Where(t => !t.IsAbstract)
