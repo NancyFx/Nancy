@@ -64,11 +64,6 @@
                 clrPropertyName.ToCamelCase();
         }
 
-        internal override ReflectionUtils.ConstructorDelegate ContructorDelegateFactory(Type key)
-        {
-            return base.ContructorDelegateFactory(key);
-        }
-
         public override object DeserializeObject(object value, Type type)
         {
             if (type.IsEnum || (ReflectionUtils.IsNullableType(type) && Nullable.GetUnderlyingType(type).IsEnum))									
@@ -106,21 +101,6 @@
             }
 
             return base.DeserializeObject(value, type);
-        }
-
-        internal override System.Collections.Generic.IDictionary<string, ReflectionUtils.GetDelegate> GetterValueFactory(Type type)
-        {
-            return base.GetterValueFactory(type);
-        }
-
-        protected override object SerializeEnum(Enum p)
-        {
-            return base.SerializeEnum(p);
-        }
-
-        internal override System.Collections.Generic.IDictionary<string, System.Collections.Generic.KeyValuePair<Type, ReflectionUtils.SetDelegate>> SetterValueFactory(Type type)
-        {
-            return base.SetterValueFactory(type);
         }
 
         protected override bool TrySerializeKnownTypes(object input, out object output)
@@ -233,16 +213,6 @@
         {
             var converter = this._converters.FirstOrDefault(x => x.SupportedTypes.Any(st => st.IsAssignableFrom(inputType)));
             return converter;
-        }
-
-        public override bool TrySerializeNonPrimitiveObject(object input, out object output)
-        {
-            return base.TrySerializeNonPrimitiveObject(input, out output);
-        }
-
-        protected override bool TrySerializeUnknownTypes(object input, out object output)
-        {
-            return base.TrySerializeUnknownTypes(input, out output);
         }
     }
 }
