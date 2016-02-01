@@ -12,8 +12,8 @@
 
         private readonly bool useIso8601;
 
-        private readonly List<JavaScriptConverter> _converters = new List<JavaScriptConverter>();
-        private readonly List<JavaScriptPrimitiveConverter> _primitiveConverters = new List<JavaScriptPrimitiveConverter>();
+        private readonly List<JavaScriptConverter> converters = new List<JavaScriptConverter>();
+        private readonly List<JavaScriptPrimitiveConverter> primitiveConverters = new List<JavaScriptPrimitiveConverter>();
         internal static readonly long InitialJavaScriptDateTicks = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).Ticks;
         static readonly DateTime MinimumJavaScriptDate = new DateTime(100, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
@@ -35,26 +35,26 @@
             }
         }
 
-        private void RegisterConverters(IEnumerable<JavaScriptConverter> converters, IEnumerable<JavaScriptPrimitiveConverter> primitiveConverters)
+        private void RegisterConverters(IEnumerable<JavaScriptConverter> javaScriptConverters, IEnumerable<JavaScriptPrimitiveConverter> javaScriptPrimitiveConverters)
         {
-            if (converters != null)
+            if (javaScriptConverters != null)
             {
-                this.RegisterConverters(converters);
+                this.RegisterConverters(javaScriptConverters);
             }
-            if (primitiveConverters != null)
+            if (javaScriptPrimitiveConverters != null)
             {
-                this.RegisterConverters(primitiveConverters);
+                this.RegisterConverters(javaScriptPrimitiveConverters);
             }
         }
 
-        public void RegisterConverters(IEnumerable<JavaScriptConverter> converters)
+        public void RegisterConverters(IEnumerable<JavaScriptConverter> javaScriptConverters)
         {
-            this._converters.AddRange(converters);
+            this.converters.AddRange(javaScriptConverters);
         }
 
-        public void RegisterConverters(IEnumerable<JavaScriptPrimitiveConverter> converters)
+        public void RegisterConverters(IEnumerable<JavaScriptPrimitiveConverter> javaScriptPrimitiveConverters)
         {
-            this._primitiveConverters.AddRange(converters);
+            this.primitiveConverters.AddRange(javaScriptPrimitiveConverters);
         }
 
         protected override string MapClrMemberNameToJsonFieldName(string clrPropertyName)
@@ -191,7 +191,7 @@
         private JavaScriptPrimitiveConverter FindPrimitiveConverter(Type inputType)
         {
             var primitiveConverter =
-                this._primitiveConverters.FirstOrDefault(x => x.SupportedTypes.Any(st => st.IsAssignableFrom(inputType)));
+                this.primitiveConverters.FirstOrDefault(x => x.SupportedTypes.Any(st => st.IsAssignableFrom(inputType)));
             return primitiveConverter;
         }
 
@@ -210,7 +210,7 @@
 
         private JavaScriptConverter FindJavaScriptConverter(Type inputType)
         {
-            var converter = this._converters.FirstOrDefault(x => x.SupportedTypes.Any(st => st.IsAssignableFrom(inputType)));
+            var converter = this.converters.FirstOrDefault(x => x.SupportedTypes.Any(st => st.IsAssignableFrom(inputType)));
             return converter;
         }
     }
