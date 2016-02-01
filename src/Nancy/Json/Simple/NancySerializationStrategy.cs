@@ -5,7 +5,6 @@
     using System.Globalization;
     using System.Linq;
     using Nancy.Extensions;
-    using Nancy.Reflection;
 
     internal class NancySerializationStrategy : PocoJsonSerializerStrategy
     {

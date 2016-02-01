@@ -49,30 +49,24 @@
 #if NETFX_CORE
 #define SIMPLE_JSON_TYPEINFO
 #endif
-
-using System;
-using System.CodeDom.Compiler;
-using System.Collections;
-using System.Collections.Generic;
-#if !SIMPLE_JSON_NO_LINQ_EXPRESSION
-using System.Linq.Expressions;
-#endif
-using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
-#if SIMPLE_JSON_DYNAMIC
-using System.Dynamic;
-#endif
-using System.Globalization;
-using System.Reflection;
-using System.Runtime.Serialization;
-using System.Text;
-using Nancy.Reflection;
-
-// ReSharper disable LoopCanBeConvertedToQuery
-// ReSharper disable RedundantExplicitArrayCreation
-// ReSharper disable SuggestUseVarKeywordEvident
-namespace Nancy
+namespace Nancy.Json.Simple
 {
+    using System;
+    using System.CodeDom.Compiler;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Dynamic;
+    using System.Globalization;
+    using System.Linq.Expressions;
+    using System.Reflection;
+    using System.Runtime.Serialization;
+    using System.Text;
+
+    // ReSharper disable LoopCanBeConvertedToQuery
+    // ReSharper disable RedundantExplicitArrayCreation
+    // ReSharper disable SuggestUseVarKeywordEvident
     /// <summary>
     /// Represents the json array.
     /// </summary>
@@ -84,7 +78,7 @@ namespace Nancy
 #else
     public
 #endif
- class JsonArray : List<object>
+        class JsonArray : List<object>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="JsonArray"/> class. 
@@ -118,11 +112,11 @@ namespace Nancy
 #else
     public
 #endif
- class JsonObject :
+        class JsonObject :
 #if SIMPLE_JSON_DYNAMIC
- DynamicObject,
+            DynamicObject,
 #endif
- IDictionary<string, object>
+            IDictionary<string, object>
     {
         /// <summary>
         /// The internal member dictionary.
@@ -140,7 +134,7 @@ namespace Nancy
         /// <param name="comparer">The <see cref="T:System.Collections.Generic.IEqualityComparer`1"/> implementation to use when comparing keys, or null to use the default <see cref="T:System.Collections.Generic.EqualityComparer`1"/> for the type of the key.</param>
         public JsonObject(IEqualityComparer<string> comparer)
         {
-            _members = new Dictionary<string, object>(comparer);
+            this._members = new Dictionary<string, object>(comparer);
         }
 
         /// <summary>
@@ -149,7 +143,7 @@ namespace Nancy
         /// <value></value>
         public object this[int index]
         {
-            get { return GetAtIndex(_members, index); }
+            get { return GetAtIndex(this._members, index); }
         }
 
         internal static object GetAtIndex(IDictionary<string, object> obj, int index)
@@ -171,7 +165,7 @@ namespace Nancy
         /// <param name="value">The value.</param>
         public void Add(string key, object value)
         {
-            _members.Add(key, value);
+            this._members.Add(key, value);
         }
 
         /// <summary>
@@ -183,7 +177,7 @@ namespace Nancy
         /// </returns>
         public bool ContainsKey(string key)
         {
-            return _members.ContainsKey(key);
+            return this._members.ContainsKey(key);
         }
 
         /// <summary>
@@ -192,7 +186,7 @@ namespace Nancy
         /// <value>The keys.</value>
         public ICollection<string> Keys
         {
-            get { return _members.Keys; }
+            get { return this._members.Keys; }
         }
 
         /// <summary>
@@ -202,7 +196,7 @@ namespace Nancy
         /// <returns></returns>
         public bool Remove(string key)
         {
-            return _members.Remove(key);
+            return this._members.Remove(key);
         }
 
         /// <summary>
@@ -213,7 +207,7 @@ namespace Nancy
         /// <returns></returns>
         public bool TryGetValue(string key, out object value)
         {
-            return _members.TryGetValue(key, out value);
+            return this._members.TryGetValue(key, out value);
         }
 
         /// <summary>
@@ -222,7 +216,7 @@ namespace Nancy
         /// <value>The values.</value>
         public ICollection<object> Values
         {
-            get { return _members.Values; }
+            get { return this._members.Values; }
         }
 
         /// <summary>
@@ -231,8 +225,8 @@ namespace Nancy
         /// <value></value>
         public object this[string key]
         {
-            get { return _members[key]; }
-            set { _members[key] = value; }
+            get { return this._members[key]; }
+            set { this._members[key] = value; }
         }
 
         /// <summary>
@@ -241,7 +235,7 @@ namespace Nancy
         /// <param name="item">The item.</param>
         public void Add(KeyValuePair<string, object> item)
         {
-            _members.Add(item.Key, item.Value);
+            this._members.Add(item.Key, item.Value);
         }
 
         /// <summary>
@@ -249,7 +243,7 @@ namespace Nancy
         /// </summary>
         public void Clear()
         {
-            _members.Clear();
+            this._members.Clear();
         }
 
         /// <summary>
@@ -261,7 +255,7 @@ namespace Nancy
         /// </returns>
         public bool Contains(KeyValuePair<string, object> item)
         {
-            return _members.ContainsKey(item.Key) && _members[item.Key] == item.Value;
+            return this._members.ContainsKey(item.Key) && this._members[item.Key] == item.Value;
         }
 
         /// <summary>
@@ -272,7 +266,7 @@ namespace Nancy
         public void CopyTo(KeyValuePair<string, object>[] array, int arrayIndex)
         {
             if (array == null) throw new ArgumentNullException("array");
-            int num = Count;
+            int num = this.Count;
             foreach (KeyValuePair<string, object> kvp in this)
             {
                 array[arrayIndex++] = kvp;
@@ -287,7 +281,7 @@ namespace Nancy
         /// <value>The count.</value>
         public int Count
         {
-            get { return _members.Count; }
+            get { return this._members.Count; }
         }
 
         /// <summary>
@@ -308,7 +302,7 @@ namespace Nancy
         /// <returns></returns>
         public bool Remove(KeyValuePair<string, object> item)
         {
-            return _members.Remove(item.Key);
+            return this._members.Remove(item.Key);
         }
 
         /// <summary>
@@ -317,7 +311,7 @@ namespace Nancy
         /// <returns></returns>
         public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
         {
-            return _members.GetEnumerator();
+            return this._members.GetEnumerator();
         }
 
         /// <summary>
@@ -328,7 +322,7 @@ namespace Nancy
         /// </returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return _members.GetEnumerator();
+            return this._members.GetEnumerator();
         }
 
         /// <summary>
@@ -384,7 +378,7 @@ namespace Nancy
             if (binder == null)
                 throw new ArgumentNullException("binder");
             // </pex>
-            return _members.Remove(binder.Name);
+            return this._members.Remove(binder.Name);
         }
 
         /// <summary>
@@ -419,7 +413,7 @@ namespace Nancy
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
             object value;
-            if (_members.TryGetValue(binder.Name, out value))
+            if (this._members.TryGetValue(binder.Name, out value))
             {
                 result = value;
                 return true;
@@ -462,7 +456,7 @@ namespace Nancy
             if (binder == null)
                 throw new ArgumentNullException("binder");
             // </pex>
-            _members[binder.Name] = value;
+            this._members[binder.Name] = value;
             return true;
         }
 
@@ -474,16 +468,11 @@ namespace Nancy
         /// </returns>
         public override IEnumerable<string> GetDynamicMemberNames()
         {
-            foreach (var key in Keys)
+            foreach (var key in this.Keys)
                 yield return key;
         }
 #endif
     }
-}
-
-namespace Nancy
-{
-    using Nancy.Extensions;
 
     /// <summary>
     /// This class encodes and decodes JSON strings.
@@ -498,7 +487,7 @@ namespace Nancy
 #else
     public
 #endif
- static class SimpleJson
+        static class SimpleJson
     {
         private const int TOKEN_NONE = 0;
         private const int TOKEN_CURLY_OPEN = 1;
@@ -575,8 +564,8 @@ namespace Nancy
         {
             object jsonObject = DeserializeObject(json);
             return type == null || jsonObject != null && ReflectionUtils.IsAssignableFrom(jsonObject.GetType(), type)
-                       ? jsonObject
-                       : (jsonSerializerStrategy ?? CurrentJsonSerializerStrategy).DeserializeObject(jsonObject, type);
+                ? jsonObject
+                : (jsonSerializerStrategy ?? CurrentJsonSerializerStrategy).DeserializeObject(jsonObject, type);
         }
 
         public static object DeserializeObject(string json, Type type)
@@ -1187,9 +1176,9 @@ namespace Nancy
 #if SIMPLE_JSON_DATACONTRACT
  DataContractJsonSerializerStrategy
 #else
- PocoJsonSerializerStrategy
+                        PocoJsonSerializerStrategy
 #endif
-);
+                        );
             }
             set
             {
@@ -1228,7 +1217,7 @@ namespace Nancy
 #else
     public
 #endif
- interface IJsonSerializerStrategy
+        interface IJsonSerializerStrategy
     {
         [SuppressMessage("Microsoft.Design", "CA1007:UseGenericsWhereAppropriate", Justification="Need to support .NET 2")]
         bool TrySerializeNonPrimitiveObject(object input, out object output);
@@ -1243,7 +1232,7 @@ namespace Nancy
 #else
     public
 #endif
- class PocoJsonSerializerStrategy : IJsonSerializerStrategy
+        class PocoJsonSerializerStrategy : IJsonSerializerStrategy
     {
         internal static IDictionary<Type, ReflectionUtils.ConstructorDelegate> ConstructorCache;
         internal static IDictionary<Type, IDictionary<string, ReflectionUtils.GetDelegate>> GetCache;
@@ -1255,13 +1244,13 @@ namespace Nancy
         protected static string FullDateTimeUtc = @"yyyy-MM-dd\THH:mm:ss.fffffff\Z";
 
         private static readonly string[] Iso8601Format = new string[]
-                                                             {
-                                                                 FullDateTimeWithOffset,
-                                                                 @"yyyy-MM-dd\THH:mm:ss.FFFFFFFK",
-                                                                 FullDateTimeUtc,
-                                                                 @"yyyy-MM-dd\THH:mm:ss\Z",
-                                                                 @"yyyy-MM-dd\THH:mm:ssK"
-                                                             };
+        {
+            FullDateTimeWithOffset,
+            @"yyyy-MM-dd\THH:mm:ss.FFFFFFFK",
+            FullDateTimeUtc,
+            @"yyyy-MM-dd\THH:mm:ss\Z",
+            @"yyyy-MM-dd\THH:mm:ssK"
+        };
 
 
         static PocoJsonSerializerStrategy()
@@ -1332,7 +1321,7 @@ namespace Nancy
 
         public virtual bool TrySerializeNonPrimitiveObject(object input, out object output)
         {
-            return TrySerializeKnownTypes(input, out output) || TrySerializeUnknownTypes(input, out output);
+            return this.TrySerializeKnownTypes(input, out output) || this.TrySerializeUnknownTypes(input, out output);
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
@@ -1367,13 +1356,13 @@ namespace Nancy
                         if (isValid && Uri.TryCreate(str, UriKind.RelativeOrAbsolute, out result))
                             return result;
 
-												return null;
+                        return null;
                     }
                   
-									if (type == typeof(string))  
-										return str;
+                    if (type == typeof(string))  
+                        return str;
 
-									return Convert.ChangeType(str, type, CultureInfo.InvariantCulture);
+                    return Convert.ChangeType(str, type, CultureInfo.InvariantCulture);
                 }
                 else
                 {
@@ -1398,8 +1387,8 @@ namespace Nancy
             if ((valueIsDouble && type != typeof(double)) || (valueIsLong && type != typeof(long)))
             {
                 obj = type == typeof(int) || type == typeof(uint) || type == typeof(long) || type == typeof(double) || type == typeof(float) || type == typeof(bool) || type == typeof(decimal) || type == typeof(byte) || type == typeof(short)
-                            ? Convert.ChangeType(value, type, CultureInfo.InvariantCulture)
-                            : value;
+                    ? Convert.ChangeType(value, type, CultureInfo.InvariantCulture)
+                    : value;
             }
             else
             {
@@ -1420,7 +1409,7 @@ namespace Nancy
                         IDictionary dict = (IDictionary)ConstructorCache[genericType]();
 
                         foreach (KeyValuePair<string, object> kvp in jsonObject)
-                            dict.Add(kvp.Key, DeserializeObject(kvp.Value, valueType));
+                            dict.Add(kvp.Key, this.DeserializeObject(kvp.Value, valueType));
 
                         obj = dict;
                     }
@@ -1436,7 +1425,7 @@ namespace Nancy
                                 object jsonValue;
                                 if (jsonObject.TryGetValue(setter.Key, out jsonValue))
                                 {
-                                    jsonValue = DeserializeObject(jsonValue, setter.Value.Key);
+                                    jsonValue = this.DeserializeObject(jsonValue, setter.Value.Key);
                                     setter.Value.Value(obj, jsonValue);
                                 }
                             }
@@ -1456,14 +1445,14 @@ namespace Nancy
                             list = (IList)ConstructorCache[type](jsonObject.Count);
                             int i = 0;
                             foreach (object o in jsonObject)
-                                list[i++] = DeserializeObject(o, type.GetElementType());
+                                list[i++] = this.DeserializeObject(o, type.GetElementType());
                         }
                         else if (ReflectionUtils.IsTypeGenericeCollectionInterface(type) || ReflectionUtils.IsAssignableFrom(typeof(IList), type))
                         {
                             Type innerType = ReflectionUtils.GetGenericListElementType(type);
                             list = (IList)(ConstructorCache[type] ?? ConstructorCache[typeof(List<>).MakeGenericType(innerType)])(jsonObject.Count);
                             foreach (object o in jsonObject)
-                                list.Add(DeserializeObject(o, innerType));
+                                list.Add(this.DeserializeObject(o, innerType));
                         }
                         obj = list;
                     }
@@ -1497,7 +1486,7 @@ namespace Nancy
             {
                 Enum inputEnum = input as Enum;
                 if (inputEnum != null)
-                    output = SerializeEnum(inputEnum);
+                    output = this.SerializeEnum(inputEnum);
                 else
                 {
                     returnValue = false;
@@ -1519,7 +1508,7 @@ namespace Nancy
             foreach (KeyValuePair<string, ReflectionUtils.GetDelegate> getter in getters)
             {
                 if (getter.Value != null)
-                    obj.Add(MapClrMemberNameToJsonFieldName(getter.Key), getter.Value(input));
+                    obj.Add(this.MapClrMemberNameToJsonFieldName(getter.Key), getter.Value(input));
             }
             output = obj;
             return true;
@@ -1605,25 +1594,23 @@ namespace Nancy
 
 #endif
 
-    namespace Reflection
-    {
-        // This class is meant to be copied into other libraries. So we want to exclude it from Code Analysis rules
- 	    // that might be in place in the target project.
-        [GeneratedCode("reflection-utils", "1.0.0")]
+    // This class is meant to be copied into other libraries. So we want to exclude it from Code Analysis rules
+    // that might be in place in the target project.
+    [GeneratedCode("reflection-utils", "1.0.0")]
 #if SIMPLE_JSON_REFLECTION_UTILS_PUBLIC
         public
 #else
-        internal
+    internal
 #endif
- class ReflectionUtils
-        {
-            private static readonly object[] EmptyObjects = new object[] { };
+        class ReflectionUtils
+    {
+        private static readonly object[] EmptyObjects = new object[] { };
 
-            public delegate object GetDelegate(object source);
-            public delegate void SetDelegate(object source, object value);
-            public delegate object ConstructorDelegate(params object[] args);
+        public delegate object GetDelegate(object source);
+        public delegate void SetDelegate(object source, object value);
+        public delegate object ConstructorDelegate(params object[] args);
 
-            public delegate TValue ThreadSafeDictionaryValueFactory<TKey, TValue>(TKey key);
+        public delegate TValue ThreadSafeDictionaryValueFactory<TKey, TValue>(TKey key);
 
 #if SIMPLE_JSON_TYPEINFO
             public static TypeInfo GetTypeInfo(Type type)
@@ -1631,509 +1618,509 @@ namespace Nancy
                 return type.GetTypeInfo();
             }
 #else
-            public static Type GetTypeInfo(Type type)
-            {
-                return type;
-            }
+        public static Type GetTypeInfo(Type type)
+        {
+            return type;
+        }
 #endif
 
-            public static Attribute GetAttribute(MemberInfo info, Type type)
-            {
+        public static Attribute GetAttribute(MemberInfo info, Type type)
+        {
 #if SIMPLE_JSON_TYPEINFO
                 if (info == null || type == null || !info.IsDefined(type))
                     return null;
                 return info.GetCustomAttribute(type);
 #else
-                if (info == null || type == null || !Attribute.IsDefined(info, type))
-                    return null;
-                return Attribute.GetCustomAttribute(info, type);
+            if (info == null || type == null || !Attribute.IsDefined(info, type))
+                return null;
+            return Attribute.GetCustomAttribute(info, type);
 #endif
-            }
+        }
 
-            public static Type GetGenericListElementType(Type type)
-            {
-                IEnumerable<Type> interfaces;
+        public static Type GetGenericListElementType(Type type)
+        {
+            IEnumerable<Type> interfaces;
 #if SIMPLE_JSON_TYPEINFO
                 interfaces = type.GetTypeInfo().ImplementedInterfaces;
 #else
-                interfaces = type.GetInterfaces();
+            interfaces = type.GetInterfaces();
 #endif
-                foreach (Type implementedInterface in interfaces)
-                {
-                    if (IsTypeGeneric(implementedInterface) &&
-                        implementedInterface.GetGenericTypeDefinition() == typeof (IList<>))
-                    {
-                        return GetGenericTypeArguments(implementedInterface)[0];
-                    }
-                }
-                return GetGenericTypeArguments(type)[0];
-            }
-
-            public static Attribute GetAttribute(Type objectType, Type attributeType)
+            foreach (Type implementedInterface in interfaces)
             {
+                if (IsTypeGeneric(implementedInterface) &&
+                    implementedInterface.GetGenericTypeDefinition() == typeof (IList<>))
+                {
+                    return GetGenericTypeArguments(implementedInterface)[0];
+                }
+            }
+            return GetGenericTypeArguments(type)[0];
+        }
+
+        public static Attribute GetAttribute(Type objectType, Type attributeType)
+        {
 
 #if SIMPLE_JSON_TYPEINFO
                 if (objectType == null || attributeType == null || !objectType.GetTypeInfo().IsDefined(attributeType))
                     return null;
                 return objectType.GetTypeInfo().GetCustomAttribute(attributeType);
 #else
-                if (objectType == null || attributeType == null || !Attribute.IsDefined(objectType, attributeType))
-                    return null;
-                return Attribute.GetCustomAttribute(objectType, attributeType);
+            if (objectType == null || attributeType == null || !Attribute.IsDefined(objectType, attributeType))
+                return null;
+            return Attribute.GetCustomAttribute(objectType, attributeType);
 #endif
-            }
+        }
 
-            public static Type[] GetGenericTypeArguments(Type type)
-            {
+        public static Type[] GetGenericTypeArguments(Type type)
+        {
 #if SIMPLE_JSON_TYPEINFO
                 return type.GetTypeInfo().GenericTypeArguments;
 #else
-                return type.GetGenericArguments();
+            return type.GetGenericArguments();
 #endif
-            }
+        }
 
-            public static bool IsTypeGeneric(Type type)
-            {
-                return GetTypeInfo(type).IsGenericType;
-            }
+        public static bool IsTypeGeneric(Type type)
+        {
+            return GetTypeInfo(type).IsGenericType;
+        }
 
-            public static bool IsTypeGenericeCollectionInterface(Type type)
-            {
-                if (!IsTypeGeneric(type))
-                    return false;
+        public static bool IsTypeGenericeCollectionInterface(Type type)
+        {
+            if (!IsTypeGeneric(type))
+                return false;
 
-                Type genericDefinition = type.GetGenericTypeDefinition();
+            Type genericDefinition = type.GetGenericTypeDefinition();
 
-                return (genericDefinition == typeof(IList<>)
-                    || genericDefinition == typeof(ICollection<>)
-                    || genericDefinition == typeof(IEnumerable<>)
+            return (genericDefinition == typeof(IList<>)
+                || genericDefinition == typeof(ICollection<>)
+                || genericDefinition == typeof(IEnumerable<>)
 #if SIMPLE_JSON_READONLY_COLLECTIONS
                     || genericDefinition == typeof(IReadOnlyCollection<>)
                     || genericDefinition == typeof(IReadOnlyList<>)
 #endif
-                    );
-            }
+                );
+        }
 
-            public static bool IsAssignableFrom(Type type1, Type type2)
-            {
-                return GetTypeInfo(type1).IsAssignableFrom(GetTypeInfo(type2));
-            }
+        public static bool IsAssignableFrom(Type type1, Type type2)
+        {
+            return GetTypeInfo(type1).IsAssignableFrom(GetTypeInfo(type2));
+        }
 
-            public static bool IsTypeDictionary(Type type)
-            {
+        public static bool IsTypeDictionary(Type type)
+        {
 #if SIMPLE_JSON_TYPEINFO
                 if (typeof(IDictionary<,>).GetTypeInfo().IsAssignableFrom(type.GetTypeInfo()))
                     return true;
 #else
-                if (typeof(System.Collections.IDictionary).IsAssignableFrom(type))
-                    return true;
+            if (typeof(System.Collections.IDictionary).IsAssignableFrom(type))
+                return true;
 #endif
-                if (!GetTypeInfo(type).IsGenericType)
-                    return false;
+            if (!GetTypeInfo(type).IsGenericType)
+                return false;
 
-                Type genericDefinition = type.GetGenericTypeDefinition();
-                return genericDefinition == typeof(IDictionary<,>);
-            }
+            Type genericDefinition = type.GetGenericTypeDefinition();
+            return genericDefinition == typeof(IDictionary<,>);
+        }
 
-            public static bool IsNullableType(Type type)
-            {
-                return GetTypeInfo(type).IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
-            }
+        public static bool IsNullableType(Type type)
+        {
+            return GetTypeInfo(type).IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
+        }
 
-            public static object ToNullableType(object obj, Type nullableType)
-            {
-                return obj == null ? null : Convert.ChangeType(obj, Nullable.GetUnderlyingType(nullableType), CultureInfo.InvariantCulture);
-            }
+        public static object ToNullableType(object obj, Type nullableType)
+        {
+            return obj == null ? null : Convert.ChangeType(obj, Nullable.GetUnderlyingType(nullableType), CultureInfo.InvariantCulture);
+        }
 
-            public static bool IsValueType(Type type)
-            {
-                return GetTypeInfo(type).IsValueType;
-            }
+        public static bool IsValueType(Type type)
+        {
+            return GetTypeInfo(type).IsValueType;
+        }
 
-            public static IEnumerable<ConstructorInfo> GetConstructors(Type type)
-            {
+        public static IEnumerable<ConstructorInfo> GetConstructors(Type type)
+        {
 #if SIMPLE_JSON_TYPEINFO
                 return type.GetTypeInfo().DeclaredConstructors;
 #else
-                return type.GetConstructors();
+            return type.GetConstructors();
 #endif
-            }
+        }
 
-            public static ConstructorInfo GetConstructorInfo(Type type, params Type[] argsType)
+        public static ConstructorInfo GetConstructorInfo(Type type, params Type[] argsType)
+        {
+            IEnumerable<ConstructorInfo> constructorInfos = GetConstructors(type);
+            int i;
+            bool matches;
+            foreach (ConstructorInfo constructorInfo in constructorInfos)
             {
-                IEnumerable<ConstructorInfo> constructorInfos = GetConstructors(type);
-                int i;
-                bool matches;
-                foreach (ConstructorInfo constructorInfo in constructorInfos)
+                ParameterInfo[] parameters = constructorInfo.GetParameters();
+                if (argsType.Length != parameters.Length)
+                    continue;
+
+                i = 0;
+                matches = true;
+                foreach (ParameterInfo parameterInfo in constructorInfo.GetParameters())
                 {
-                    ParameterInfo[] parameters = constructorInfo.GetParameters();
-                    if (argsType.Length != parameters.Length)
-                        continue;
-
-                    i = 0;
-                    matches = true;
-                    foreach (ParameterInfo parameterInfo in constructorInfo.GetParameters())
+                    if (parameterInfo.ParameterType != argsType[i])
                     {
-                        if (parameterInfo.ParameterType != argsType[i])
-                        {
-                            matches = false;
-                            break;
-                        }
+                        matches = false;
+                        break;
                     }
-
-                    if (matches)
-                        return constructorInfo;
                 }
 
-                return null;
+                if (matches)
+                    return constructorInfo;
             }
 
-            public static IEnumerable<PropertyInfo> GetProperties(Type type)
-            {
+            return null;
+        }
+
+        public static IEnumerable<PropertyInfo> GetProperties(Type type)
+        {
 #if SIMPLE_JSON_TYPEINFO
                 return type.GetRuntimeProperties();
 #else
-                return type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+            return type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
 #endif
-            }
+        }
 
-            public static IEnumerable<FieldInfo> GetFields(Type type)
-            {
+        public static IEnumerable<FieldInfo> GetFields(Type type)
+        {
 #if SIMPLE_JSON_TYPEINFO
                 return type.GetRuntimeFields();
 #else
-                return type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+            return type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
 #endif
-            }
+        }
 
-            public static MethodInfo GetGetterMethodInfo(PropertyInfo propertyInfo)
-            {
+        public static MethodInfo GetGetterMethodInfo(PropertyInfo propertyInfo)
+        {
 #if SIMPLE_JSON_TYPEINFO
                 return propertyInfo.GetMethod;
 #else
-                return propertyInfo.GetGetMethod(true);
+            return propertyInfo.GetGetMethod(true);
 #endif
-            }
+        }
 
-            public static MethodInfo GetSetterMethodInfo(PropertyInfo propertyInfo)
-            {
+        public static MethodInfo GetSetterMethodInfo(PropertyInfo propertyInfo)
+        {
 #if SIMPLE_JSON_TYPEINFO
                 return propertyInfo.SetMethod;
 #else
-                return propertyInfo.GetSetMethod(true);
+            return propertyInfo.GetSetMethod(true);
 #endif
-            }
+        }
 
-            public static ConstructorDelegate GetContructor(ConstructorInfo constructorInfo)
-            {
+        public static ConstructorDelegate GetContructor(ConstructorInfo constructorInfo)
+        {
 #if SIMPLE_JSON_NO_LINQ_EXPRESSION
                 return GetConstructorByReflection(constructorInfo);
 #else
-                return GetConstructorByExpression(constructorInfo);
+            return GetConstructorByExpression(constructorInfo);
 #endif
-            }
+        }
 
-            public static ConstructorDelegate GetContructor(Type type, params Type[] argsType)
-            {
+        public static ConstructorDelegate GetContructor(Type type, params Type[] argsType)
+        {
 #if SIMPLE_JSON_NO_LINQ_EXPRESSION
                 return GetConstructorByReflection(type, argsType);
 #else
-                return GetConstructorByExpression(type, argsType);
+            return GetConstructorByExpression(type, argsType);
 #endif
-            }
+        }
 
-            public static ConstructorDelegate GetConstructorByReflection(ConstructorInfo constructorInfo)
-            {
-                return delegate(object[] args) { return constructorInfo.Invoke(args); };
-            }
+        public static ConstructorDelegate GetConstructorByReflection(ConstructorInfo constructorInfo)
+        {
+            return delegate(object[] args) { return constructorInfo.Invoke(args); };
+        }
 
-            public static ConstructorDelegate GetConstructorByReflection(Type type, params Type[] argsType)
-            {
-                ConstructorInfo constructorInfo = GetConstructorInfo(type, argsType);
-                return constructorInfo == null ? null : GetConstructorByReflection(constructorInfo);
-            }
+        public static ConstructorDelegate GetConstructorByReflection(Type type, params Type[] argsType)
+        {
+            ConstructorInfo constructorInfo = GetConstructorInfo(type, argsType);
+            return constructorInfo == null ? null : GetConstructorByReflection(constructorInfo);
+        }
 
 #if !SIMPLE_JSON_NO_LINQ_EXPRESSION
 
-            public static ConstructorDelegate GetConstructorByExpression(ConstructorInfo constructorInfo)
+        public static ConstructorDelegate GetConstructorByExpression(ConstructorInfo constructorInfo)
+        {
+            ParameterInfo[] paramsInfo = constructorInfo.GetParameters();
+            ParameterExpression param = Expression.Parameter(typeof(object[]), "args");
+            Expression[] argsExp = new Expression[paramsInfo.Length];
+            for (int i = 0; i < paramsInfo.Length; i++)
             {
-                ParameterInfo[] paramsInfo = constructorInfo.GetParameters();
-                ParameterExpression param = Expression.Parameter(typeof(object[]), "args");
-                Expression[] argsExp = new Expression[paramsInfo.Length];
-                for (int i = 0; i < paramsInfo.Length; i++)
-                {
-                    Expression index = Expression.Constant(i);
-                    Type paramType = paramsInfo[i].ParameterType;
-                    Expression paramAccessorExp = Expression.ArrayIndex(param, index);
-                    Expression paramCastExp = Expression.Convert(paramAccessorExp, paramType);
-                    argsExp[i] = paramCastExp;
-                }
-                NewExpression newExp = Expression.New(constructorInfo, argsExp);
-                Expression<Func<object[], object>> lambda = Expression.Lambda<Func<object[], object>>(newExp, param);
-                Func<object[], object> compiledLambda = lambda.Compile();
-                return delegate(object[] args) { return compiledLambda(args); };
+                Expression index = Expression.Constant(i);
+                Type paramType = paramsInfo[i].ParameterType;
+                Expression paramAccessorExp = Expression.ArrayIndex(param, index);
+                Expression paramCastExp = Expression.Convert(paramAccessorExp, paramType);
+                argsExp[i] = paramCastExp;
             }
+            NewExpression newExp = Expression.New(constructorInfo, argsExp);
+            Expression<Func<object[], object>> lambda = Expression.Lambda<Func<object[], object>>(newExp, param);
+            Func<object[], object> compiledLambda = lambda.Compile();
+            return delegate(object[] args) { return compiledLambda(args); };
+        }
 
-            public static ConstructorDelegate GetConstructorByExpression(Type type, params Type[] argsType)
-            {
-                ConstructorInfo constructorInfo = GetConstructorInfo(type, argsType);
-                return constructorInfo == null ? null : GetConstructorByExpression(constructorInfo);
-            }
+        public static ConstructorDelegate GetConstructorByExpression(Type type, params Type[] argsType)
+        {
+            ConstructorInfo constructorInfo = GetConstructorInfo(type, argsType);
+            return constructorInfo == null ? null : GetConstructorByExpression(constructorInfo);
+        }
 
 #endif
 
-            public static GetDelegate GetGetMethod(PropertyInfo propertyInfo)
-            {
+        public static GetDelegate GetGetMethod(PropertyInfo propertyInfo)
+        {
 #if SIMPLE_JSON_NO_LINQ_EXPRESSION
                 return GetGetMethodByReflection(propertyInfo);
 #else
-                return GetGetMethodByExpression(propertyInfo);
+            return GetGetMethodByExpression(propertyInfo);
 #endif
-            }
+        }
 
-            public static GetDelegate GetGetMethod(FieldInfo fieldInfo)
-            {
+        public static GetDelegate GetGetMethod(FieldInfo fieldInfo)
+        {
 #if SIMPLE_JSON_NO_LINQ_EXPRESSION
                 return GetGetMethodByReflection(fieldInfo);
 #else
-                return GetGetMethodByExpression(fieldInfo);
+            return GetGetMethodByExpression(fieldInfo);
 #endif
-            }
+        }
 
-            public static GetDelegate GetGetMethodByReflection(PropertyInfo propertyInfo)
-            {
-                MethodInfo methodInfo = GetGetterMethodInfo(propertyInfo);
-                return delegate(object source) { return methodInfo.Invoke(source, EmptyObjects); };
-            }
+        public static GetDelegate GetGetMethodByReflection(PropertyInfo propertyInfo)
+        {
+            MethodInfo methodInfo = GetGetterMethodInfo(propertyInfo);
+            return delegate(object source) { return methodInfo.Invoke(source, EmptyObjects); };
+        }
 
-            public static GetDelegate GetGetMethodByReflection(FieldInfo fieldInfo)
-            {
-                return delegate(object source) { return fieldInfo.GetValue(source); };
-            }
+        public static GetDelegate GetGetMethodByReflection(FieldInfo fieldInfo)
+        {
+            return delegate(object source) { return fieldInfo.GetValue(source); };
+        }
 
 #if !SIMPLE_JSON_NO_LINQ_EXPRESSION
 
-            public static GetDelegate GetGetMethodByExpression(PropertyInfo propertyInfo)
-            {
-                MethodInfo getMethodInfo = GetGetterMethodInfo(propertyInfo);
-                ParameterExpression instance = Expression.Parameter(typeof(object), "instance");
-                UnaryExpression instanceCast = (!IsValueType(propertyInfo.DeclaringType)) ? Expression.TypeAs(instance, propertyInfo.DeclaringType) : Expression.Convert(instance, propertyInfo.DeclaringType);
-                Func<object, object> compiled = Expression.Lambda<Func<object, object>>(Expression.TypeAs(Expression.Call(instanceCast, getMethodInfo), typeof(object)), instance).Compile();
-                return delegate(object source) { return compiled(source); };
-            }
+        public static GetDelegate GetGetMethodByExpression(PropertyInfo propertyInfo)
+        {
+            MethodInfo getMethodInfo = GetGetterMethodInfo(propertyInfo);
+            ParameterExpression instance = Expression.Parameter(typeof(object), "instance");
+            UnaryExpression instanceCast = (!IsValueType(propertyInfo.DeclaringType)) ? Expression.TypeAs(instance, propertyInfo.DeclaringType) : Expression.Convert(instance, propertyInfo.DeclaringType);
+            Func<object, object> compiled = Expression.Lambda<Func<object, object>>(Expression.TypeAs(Expression.Call(instanceCast, getMethodInfo), typeof(object)), instance).Compile();
+            return delegate(object source) { return compiled(source); };
+        }
 
-            public static GetDelegate GetGetMethodByExpression(FieldInfo fieldInfo)
-            {
-                ParameterExpression instance = Expression.Parameter(typeof(object), "instance");
-                MemberExpression member = Expression.Field(Expression.Convert(instance, fieldInfo.DeclaringType), fieldInfo);
-                GetDelegate compiled = Expression.Lambda<GetDelegate>(Expression.Convert(member, typeof(object)), instance).Compile();
-                return delegate(object source) { return compiled(source); };
-            }
+        public static GetDelegate GetGetMethodByExpression(FieldInfo fieldInfo)
+        {
+            ParameterExpression instance = Expression.Parameter(typeof(object), "instance");
+            MemberExpression member = Expression.Field(Expression.Convert(instance, fieldInfo.DeclaringType), fieldInfo);
+            GetDelegate compiled = Expression.Lambda<GetDelegate>(Expression.Convert(member, typeof(object)), instance).Compile();
+            return delegate(object source) { return compiled(source); };
+        }
 
 #endif
 
-            public static SetDelegate GetSetMethod(PropertyInfo propertyInfo)
-            {
+        public static SetDelegate GetSetMethod(PropertyInfo propertyInfo)
+        {
 #if SIMPLE_JSON_NO_LINQ_EXPRESSION
                 return GetSetMethodByReflection(propertyInfo);
 #else
-                return GetSetMethodByExpression(propertyInfo);
+            return GetSetMethodByExpression(propertyInfo);
 #endif
-            }
+        }
 
-            public static SetDelegate GetSetMethod(FieldInfo fieldInfo)
-            {
+        public static SetDelegate GetSetMethod(FieldInfo fieldInfo)
+        {
 #if SIMPLE_JSON_NO_LINQ_EXPRESSION
                 return GetSetMethodByReflection(fieldInfo);
 #else
-                return GetSetMethodByExpression(fieldInfo);
+            return GetSetMethodByExpression(fieldInfo);
 #endif
-            }
+        }
 
-            public static SetDelegate GetSetMethodByReflection(PropertyInfo propertyInfo)
-            {
-                MethodInfo methodInfo = GetSetterMethodInfo(propertyInfo);
-                return delegate(object source, object value) { methodInfo.Invoke(source, new object[] { value }); };
-            }
+        public static SetDelegate GetSetMethodByReflection(PropertyInfo propertyInfo)
+        {
+            MethodInfo methodInfo = GetSetterMethodInfo(propertyInfo);
+            return delegate(object source, object value) { methodInfo.Invoke(source, new object[] { value }); };
+        }
 
-            public static SetDelegate GetSetMethodByReflection(FieldInfo fieldInfo)
-            {
-                return delegate(object source, object value) { fieldInfo.SetValue(source, value); };
-            }
+        public static SetDelegate GetSetMethodByReflection(FieldInfo fieldInfo)
+        {
+            return delegate(object source, object value) { fieldInfo.SetValue(source, value); };
+        }
 
 #if !SIMPLE_JSON_NO_LINQ_EXPRESSION
 
-            public static SetDelegate GetSetMethodByExpression(PropertyInfo propertyInfo)
-            {
-                MethodInfo setMethodInfo = GetSetterMethodInfo(propertyInfo);
-                ParameterExpression instance = Expression.Parameter(typeof(object), "instance");
-                ParameterExpression value = Expression.Parameter(typeof(object), "value");
-                UnaryExpression instanceCast = (!IsValueType(propertyInfo.DeclaringType)) ? Expression.TypeAs(instance, propertyInfo.DeclaringType) : Expression.Convert(instance, propertyInfo.DeclaringType);
-                UnaryExpression valueCast = (!IsValueType(propertyInfo.PropertyType)) ? Expression.TypeAs(value, propertyInfo.PropertyType) : Expression.Convert(value, propertyInfo.PropertyType);
-                Action<object, object> compiled = Expression.Lambda<Action<object, object>>(Expression.Call(instanceCast, setMethodInfo, valueCast), new ParameterExpression[] { instance, value }).Compile();
-                return delegate(object source, object val) { compiled(source, val); };
-            }
+        public static SetDelegate GetSetMethodByExpression(PropertyInfo propertyInfo)
+        {
+            MethodInfo setMethodInfo = GetSetterMethodInfo(propertyInfo);
+            ParameterExpression instance = Expression.Parameter(typeof(object), "instance");
+            ParameterExpression value = Expression.Parameter(typeof(object), "value");
+            UnaryExpression instanceCast = (!IsValueType(propertyInfo.DeclaringType)) ? Expression.TypeAs(instance, propertyInfo.DeclaringType) : Expression.Convert(instance, propertyInfo.DeclaringType);
+            UnaryExpression valueCast = (!IsValueType(propertyInfo.PropertyType)) ? Expression.TypeAs(value, propertyInfo.PropertyType) : Expression.Convert(value, propertyInfo.PropertyType);
+            Action<object, object> compiled = Expression.Lambda<Action<object, object>>(Expression.Call(instanceCast, setMethodInfo, valueCast), new ParameterExpression[] { instance, value }).Compile();
+            return delegate(object source, object val) { compiled(source, val); };
+        }
 
-            public static SetDelegate GetSetMethodByExpression(FieldInfo fieldInfo)
-            {
-                ParameterExpression instance = Expression.Parameter(typeof(object), "instance");
-                ParameterExpression value = Expression.Parameter(typeof(object), "value");
-                Action<object, object> compiled = Expression.Lambda<Action<object, object>>(
-                    Assign(Expression.Field(Expression.Convert(instance, fieldInfo.DeclaringType), fieldInfo), Expression.Convert(value, fieldInfo.FieldType)), instance, value).Compile();
-                return delegate(object source, object val) { compiled(source, val); };
-            }
+        public static SetDelegate GetSetMethodByExpression(FieldInfo fieldInfo)
+        {
+            ParameterExpression instance = Expression.Parameter(typeof(object), "instance");
+            ParameterExpression value = Expression.Parameter(typeof(object), "value");
+            Action<object, object> compiled = Expression.Lambda<Action<object, object>>(
+                Assign(Expression.Field(Expression.Convert(instance, fieldInfo.DeclaringType), fieldInfo), Expression.Convert(value, fieldInfo.FieldType)), instance, value).Compile();
+            return delegate(object source, object val) { compiled(source, val); };
+        }
 
-            public static BinaryExpression Assign(Expression left, Expression right)
-            {
+        public static BinaryExpression Assign(Expression left, Expression right)
+        {
 #if SIMPLE_JSON_TYPEINFO
                 return Expression.Assign(left, right);
 #else
-                MethodInfo assign = typeof(Assigner<>).MakeGenericType(left.Type).GetMethod("Assign");
-                BinaryExpression assignExpr = Expression.Add(left, right, assign);
-                return assignExpr;
+            MethodInfo assign = typeof(Assigner<>).MakeGenericType(left.Type).GetMethod("Assign");
+            BinaryExpression assignExpr = Expression.Add(left, right, assign);
+            return assignExpr;
 #endif
-            }
-
-            private static class Assigner<T>
-            {
-                public static T Assign(ref T left, T right)
-                {
-                    return (left = right);
-                }
-            }
-
-#endif
-
-            public sealed class ThreadSafeDictionary<TKey, TValue> : IDictionary<TKey, TValue>
-            {
-                private readonly object _lock = new object();
-                private readonly ThreadSafeDictionaryValueFactory<TKey, TValue> _valueFactory;
-                private Dictionary<TKey, TValue> _dictionary;
-
-                public ThreadSafeDictionary(ThreadSafeDictionaryValueFactory<TKey, TValue> valueFactory)
-                {
-                    _valueFactory = valueFactory;
-                }
-
-                private TValue Get(TKey key)
-                {
-                    if (_dictionary == null)
-                        return AddValue(key);
-                    TValue value;
-                    if (!_dictionary.TryGetValue(key, out value))
-                        return AddValue(key);
-                    return value;
-                }
-
-                private TValue AddValue(TKey key)
-                {
-                    TValue value = _valueFactory(key);
-                    lock (_lock)
-                    {
-                        if (_dictionary == null)
-                        {
-                            _dictionary = new Dictionary<TKey, TValue>();
-                            _dictionary[key] = value;
-                        }
-                        else
-                        {
-                            TValue val;
-                            if (_dictionary.TryGetValue(key, out val))
-                                return val;
-                            Dictionary<TKey, TValue> dict = new Dictionary<TKey, TValue>(_dictionary);
-                            dict[key] = value;
-                            _dictionary = dict;
-                        }
-                    }
-                    return value;
-                }
-
-                public void Add(TKey key, TValue value)
-                {
-                    throw new NotImplementedException();
-                }
-
-                public bool ContainsKey(TKey key)
-                {
-                    return _dictionary.ContainsKey(key);
-                }
-
-                public ICollection<TKey> Keys
-                {
-                    get { return _dictionary.Keys; }
-                }
-
-                public bool Remove(TKey key)
-                {
-                    throw new NotImplementedException();
-                }
-
-                public bool TryGetValue(TKey key, out TValue value)
-                {
-                    value = this[key];
-                    return true;
-                }
-
-                public ICollection<TValue> Values
-                {
-                    get { return _dictionary.Values; }
-                }
-
-                public TValue this[TKey key]
-                {
-                    get { return Get(key); }
-                    set { throw new NotImplementedException(); }
-                }
-
-                public void Add(KeyValuePair<TKey, TValue> item)
-                {
-                    throw new NotImplementedException();
-                }
-
-                public void Clear()
-                {
-                    throw new NotImplementedException();
-                }
-
-                public bool Contains(KeyValuePair<TKey, TValue> item)
-                {
-                    throw new NotImplementedException();
-                }
-
-                public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
-                {
-                    throw new NotImplementedException();
-                }
-
-                public int Count
-                {
-                    get { return _dictionary.Count; }
-                }
-
-                public bool IsReadOnly
-                {
-                    get { throw new NotImplementedException(); }
-                }
-
-                public bool Remove(KeyValuePair<TKey, TValue> item)
-                {
-                    throw new NotImplementedException();
-                }
-
-                public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
-                {
-                    return _dictionary.GetEnumerator();
-                }
-
-                System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-                {
-                    return _dictionary.GetEnumerator();
-                }
-            }
-
         }
+
+        private static class Assigner<T>
+        {
+            public static T Assign(ref T left, T right)
+            {
+                return (left = right);
+            }
+        }
+
+#endif
+
+        public sealed class ThreadSafeDictionary<TKey, TValue> : IDictionary<TKey, TValue>
+        {
+            private readonly object _lock = new object();
+            private readonly ThreadSafeDictionaryValueFactory<TKey, TValue> _valueFactory;
+            private Dictionary<TKey, TValue> _dictionary;
+
+            public ThreadSafeDictionary(ThreadSafeDictionaryValueFactory<TKey, TValue> valueFactory)
+            {
+                this._valueFactory = valueFactory;
+            }
+
+            private TValue Get(TKey key)
+            {
+                if (this._dictionary == null)
+                    return this.AddValue(key);
+                TValue value;
+                if (!this._dictionary.TryGetValue(key, out value))
+                    return this.AddValue(key);
+                return value;
+            }
+
+            private TValue AddValue(TKey key)
+            {
+                TValue value = this._valueFactory(key);
+                lock (this._lock)
+                {
+                    if (this._dictionary == null)
+                    {
+                        this._dictionary = new Dictionary<TKey, TValue>();
+                        this._dictionary[key] = value;
+                    }
+                    else
+                    {
+                        TValue val;
+                        if (this._dictionary.TryGetValue(key, out val))
+                            return val;
+                        Dictionary<TKey, TValue> dict = new Dictionary<TKey, TValue>(this._dictionary);
+                        dict[key] = value;
+                        this._dictionary = dict;
+                    }
+                }
+                return value;
+            }
+
+            public void Add(TKey key, TValue value)
+            {
+                throw new NotImplementedException();
+            }
+
+            public bool ContainsKey(TKey key)
+            {
+                return this._dictionary.ContainsKey(key);
+            }
+
+            public ICollection<TKey> Keys
+            {
+                get { return this._dictionary.Keys; }
+            }
+
+            public bool Remove(TKey key)
+            {
+                throw new NotImplementedException();
+            }
+
+            public bool TryGetValue(TKey key, out TValue value)
+            {
+                value = this[key];
+                return true;
+            }
+
+            public ICollection<TValue> Values
+            {
+                get { return this._dictionary.Values; }
+            }
+
+            public TValue this[TKey key]
+            {
+                get { return this.Get(key); }
+                set { throw new NotImplementedException(); }
+            }
+
+            public void Add(KeyValuePair<TKey, TValue> item)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void Clear()
+            {
+                throw new NotImplementedException();
+            }
+
+            public bool Contains(KeyValuePair<TKey, TValue> item)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
+            {
+                throw new NotImplementedException();
+            }
+
+            public int Count
+            {
+                get { return this._dictionary.Count; }
+            }
+
+            public bool IsReadOnly
+            {
+                get { throw new NotImplementedException(); }
+            }
+
+            public bool Remove(KeyValuePair<TKey, TValue> item)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
+            {
+                return this._dictionary.GetEnumerator();
+            }
+
+            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+            {
+                return this._dictionary.GetEnumerator();
+            }
+        }
+
     }
+
+    // ReSharper restore LoopCanBeConvertedToQuery
+    // ReSharper restore RedundantExplicitArrayCreation
+    // ReSharper restore SuggestUseVarKeywordEvident
 }
-// ReSharper restore LoopCanBeConvertedToQuery
-// ReSharper restore RedundantExplicitArrayCreation
-// ReSharper restore SuggestUseVarKeywordEvident
