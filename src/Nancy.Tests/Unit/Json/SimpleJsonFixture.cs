@@ -1,6 +1,6 @@
 ﻿namespace Nancy.Tests.Unit.Json
 {
-    using Nancy.Json;
+    using Nancy.Json.Simple;
     using Xunit;
 
     public class SimpleJsonFixture

@@ -1,4 +1,4 @@
-﻿namespace Nancy.Json
+﻿namespace Nancy.Json.Simple
 {
     using System;
     using System.Collections.Generic;
@@ -40,27 +40,27 @@
         {
             if (converters != null)
             {
-                RegisterConverters(converters);
+                this.RegisterConverters(converters);
             }
             if (primitiveConverters != null)
             {
-                RegisterConverters(primitiveConverters);
+                this.RegisterConverters(primitiveConverters);
             }
         }
 
         public void RegisterConverters(IEnumerable<JavaScriptConverter> converters)
         {
-            _converters.AddRange(converters);
+            this._converters.AddRange(converters);
         }
 
         public void RegisterConverters(IEnumerable<JavaScriptPrimitiveConverter> converters)
         {
-            _primitiveConverters.AddRange(converters);
+            this._primitiveConverters.AddRange(converters);
         }
 
         protected override string MapClrMemberNameToJsonFieldName(string clrPropertyName)
         {
-            return retainCasing ? base.MapClrMemberNameToJsonFieldName(clrPropertyName) :
+            return this.retainCasing ? base.MapClrMemberNameToJsonFieldName(clrPropertyName) :
                 clrPropertyName.ToCamelCase();
         }
 
@@ -114,7 +114,7 @@
             
             if (input is DateTime)
             {
-                return SerializeDateTime((DateTime)input, out output);
+                return this.SerializeDateTime((DateTime)input, out output);
             }
 
             if (input is DateTimeOffset)
@@ -139,7 +139,7 @@
 
         private bool SerializeDateTime(DateTime input, out object output)
         {
-            if (useIso8601)
+            if (this.useIso8601)
             {
                 var dateTime = input;
                 if (dateTime.Kind == DateTimeKind.Unspecified)
