@@ -29,75 +29,9 @@
 namespace Nancy.Json
 {
     using System;
-    using System.Globalization;
-    using System.IO;
-    using System.Text;
 
     internal static class Json
     {
-
-        public static void Serialize(object obj, StringBuilder output)
-        {
-            Serialize(obj, JavaScriptSerializer.DefaultSerializer, output);
-        }
-
-        public static void Serialize(object obj, JavaScriptSerializer jss, StringBuilder output)
-        {
-            JsonSerializer js = new JsonSerializer(jss);
-            js.Serialize(obj, output);
-            js = null;
-        }
-
-        public static void Serialize(object obj, TextWriter output)
-        {
-            Serialize(obj, JavaScriptSerializer.DefaultSerializer, output);
-        }
-
-        public static void Serialize(object obj, JavaScriptSerializer jss, TextWriter output)
-        {
-            JsonSerializer js = new JsonSerializer(jss);
-            js.Serialize(obj, output);
-            js = null;
-        }
-
-        public static object Deserialize(string input)
-        {
-            return Deserialize(input, JavaScriptSerializer.DefaultSerializer);
-        }
-
-        public static object Deserialize(string input, JavaScriptSerializer jss)
-        {
-            if (jss == null)
-            {
-                throw new ArgumentNullException("jss");
-            }
-            return Deserialize(new StringReader(input), jss);
-        }
-
-        public static object Deserialize(TextReader input)
-        {
-            return Deserialize(input, JavaScriptSerializer.DefaultSerializer);
-        }
-
-        public static object Deserialize(TextReader input, JavaScriptSerializer jss)
-        {
-            if (jss == null)
-            {
-                throw new ArgumentNullException("jss");
-            }
-            JsonDeserializer ser = new JsonDeserializer(jss);
-            return ser.Deserialize(input);
-        }
-
-        public static IFormatProvider DefaultNumberFormatInfo
-        {
-            get
-            {
-                return new NumberFormatInfo(){ NumberDecimalSeparator = ".", NumberGroupSeparator = string.Empty };
-            }
-
-        }
-
         /// <summary>
         /// Attempts to detect if the content type is JSON.
         /// Supports:

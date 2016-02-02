@@ -210,6 +210,8 @@
     <Compile Include="Json\DefaultJsonConfigurationProvider.cs" />
     <Compile Include="Json\JavaScriptPrimitiveConverter.cs" />
     <Compile Include="Json\JsonConfigurationExtensions.cs" />
+    <Compile Include="Json\Simple\NancySerializationStrategy.cs" />
+    <Compile Include="Json\Simple\SimpleJson.cs" />
     <Compile Include="Localization\TextResourceFinder.cs" />
     <Compile Include="Helpers\TaskHelpers.cs" />
     <Compile Include="ModelBinding\BindingConfig.cs" />
@@ -422,10 +424,7 @@
     <Compile Include="IResponseFormatter.cs" />
     <Compile Include="Json\JavaScriptConverter.cs" />
     <Compile Include="Json\JavaScriptSerializer.cs" />
-    <Compile Include="Json\JavaScriptTypeResolver.cs" />
     <Compile Include="Json\Json.cs" />
-    <Compile Include="Json\JsonDeserializer.cs" />
-    <Compile Include="Json\JsonSerializer.cs" />
     <Compile Include="Helpers\ReflectionUtils.cs" />
     <Compile Include="Json\ScriptIgnoreAttribute.cs" />
     <Compile Include="Json\StringBuilderExtensions.cs" />
