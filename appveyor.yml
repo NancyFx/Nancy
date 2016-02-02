@@ -24,3 +24,8 @@ deploy:
     secure: sQd0wpfElb6z4Qmb+xMqltRVOhDy7e/0Prk0iw9xWFPXBeCiczooFzADiGN2+74K
   skip_symbols: true
   artifact: MyGet
+  
+build:
+  verbosity: minimal
+
+test: off
