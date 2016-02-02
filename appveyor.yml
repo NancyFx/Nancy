@@ -1,0 +1,26 @@
+os: Visual Studio 2015
+
+version: 2.0.0-beta000{build}
+configuration: Release
+cache: C:\Users\appveyor\.dnx\packages
+
+nuget:
+  disable_publish_on_pr: true
+
+install:
+- set PATH=C:\Program Files (x86)\MSBuild\14.0\Bin;%PATH%
+
+build_script:
+- ps: .\build.ps1
+
+artifacts:
+- path: artifacts\packages\**\*.nupkg
+  name: MyGet
+
+deploy:
+- provider: NuGet
+  server: https://www.myget.org/F/nancyfx/
+  api_key:
+    secure: sQd0wpfElb6z4Qmb+xMqltRVOhDy7e/0Prk0iw9xWFPXBeCiczooFzADiGN2+74K
+  skip_symbols: true
+  artifact: MyGet
