@@ -1,0 +1,18 @@
+os: Visual Studio 2015
+
+version: 2.0.0-beta000{build}
+configuration: Release
+cache: C:\Users\appveyor\.dnx\packages
+
+nuget:
+  disable_publish_on_pr: true
+
+install:
+- set PATH=C:\Program Files (x86)\MSBuild\14.0\Bin;%PATH%
+
+build_script:
+- ps: .\build.ps1
+
+artifacts:
+- path: artifacts\packages\**\*.nupkg
+  name: MyGet
