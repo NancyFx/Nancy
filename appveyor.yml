@@ -16,14 +16,6 @@ build_script:
 artifacts:
 - path: artifacts\packages\**\*.nupkg
   name: MyGet
-
-deploy:
-- provider: NuGet
-  server: https://www.myget.org/F/nancyfx/
-  api_key:
-    secure: sQd0wpfElb6z4Qmb+xMqltRVOhDy7e/0Prk0iw9xWFPXBeCiczooFzADiGN2+74K
-  skip_symbols: true
-  artifact: MyGet
   
 build:
   verbosity: minimal
