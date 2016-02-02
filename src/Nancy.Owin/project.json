@@ -1,0 +1,19 @@
+﻿{
+    "version": "2.0.0-*",
+
+    "description": "Nancy extensions for OWIN hosting.",
+    "authors": [ "Andreas Håkansson, Steven Robbins and contributors" ],
+    "tags": [ "Nancy", "OWIN" ],
+    "projectUrl": "http://nancyfx.org",
+    "licenseUrl": "https://github.com/NancyFx/Nancy/blob/master/license.txt",
+    "iconUrl": "http://nancyfx.org/nancy-nuget.png",
+
+    "dependencies": {
+        "Nancy": { "target": "project" },
+        "OWIN": "1.0.0"
+    },
+
+    "frameworks": {
+        "net451": { }
+    }
+}

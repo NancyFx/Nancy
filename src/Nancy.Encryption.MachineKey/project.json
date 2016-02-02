@@ -1,0 +1,23 @@
+﻿{
+    "version": "2.0.0-*",
+
+    "description": "System.Web MachineKey encrypton and HMAC providers for Nancy.",
+    "authors": [ "Andreas Håkansson, Steven Robbins and contributors" ],
+    "tags": [ "Nancy", "Encryption" ],
+    "projectUrl": "http://nancyfx.org",
+    "licenseUrl": "https://github.com/NancyFx/Nancy/blob/master/license.txt",
+    "iconUrl": "http://nancyfx.org/nancy-nuget.png",
+
+    "dependencies": {
+        "Nancy": { "target": "project" }
+    },
+
+    "frameworks": {
+        "net451": {
+            "frameworkAssemblies": {
+                "System.Configuration": "4.0.0.0",
+                "System.Web": "4.0.0.0"
+            }
+        }
+    }
+}

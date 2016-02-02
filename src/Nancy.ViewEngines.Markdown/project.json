@@ -1,0 +1,19 @@
+﻿{
+    "version": "2.0.0-*",
+
+    "description": "Enables using Markdown with Nancy.",
+    "authors": [ "Andreas Håkansson, Steven Robbins and contributors" ],
+    "tags": [ "Nancy", "View Engine", "Markdown" ],
+    "projectUrl": "http://nancyfx.org",
+    "licenseUrl": "https://github.com/NancyFx/Nancy/blob/master/license.txt",
+    "iconUrl": "http://nancyfx.org/nancy-nuget.png",
+
+    "dependencies": {
+        "Nancy": { "target": "project" },
+        "MarkdownSharp": "1.13.0"
+    },
+
+    "frameworks": {
+        "net451": { }
+    }
+}

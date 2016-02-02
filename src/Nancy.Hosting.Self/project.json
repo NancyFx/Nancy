@@ -1,0 +1,18 @@
+﻿{
+    "version": "2.0.0-*",
+
+    "description": "Enables hosting Nancy in any application.",
+    "authors": [ "Andreas Håkansson, Steven Robbins and contributors" ],
+    "tags": [ "Nancy", "Host" ],
+    "projectUrl": "http://nancyfx.org",
+    "licenseUrl": "https://github.com/NancyFx/Nancy/blob/master/license.txt",
+    "iconUrl": "http://nancyfx.org/nancy-nuget.png",
+
+    "dependencies": {
+        "Nancy": { "target": "project" }
+    },
+
+    "frameworks": {
+        "net451": { }
+    }
+}

@@ -1,0 +1,23 @@
+﻿{
+    "version": "2.0.0-*",
+
+    "description": "Enables using the Razor view engine with Nancy.",
+    "authors": [ "Andreas Håkansson, Steven Robbins and contributors" ],
+    "tags": [ "Nancy", "View Engine", "Razor" ],
+    "projectUrl": "http://nancyfx.org",
+    "licenseUrl": "https://github.com/NancyFx/Nancy/blob/master/license.txt",
+    "iconUrl": "http://nancyfx.org/nancy-nuget.png",
+
+    "dependencies": {
+        "Nancy": { "target": "project" },
+        "Microsoft.AspNet.Razor": "2.0.30506.0"
+    },
+
+    "frameworks": {
+        "net451": {
+            "frameworkAssemblies": {
+                "System.Configuration": "4.0.0.0"
+            }
+        }
+    }
+}
