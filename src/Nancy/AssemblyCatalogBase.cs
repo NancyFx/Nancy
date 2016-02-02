@@ -14,7 +14,6 @@ namespace Nancy
         private readonly Lazy<IReadOnlyCollection<Assembly>> assemblies;
         private readonly ConcurrentDictionary<AssemblyResolveStrategy, IReadOnlyCollection<Assembly>> cache;
 
-
         /// <summary>
         /// Initializes a new instance of the <see cref="AssemblyCatalogBase"/> class.
         /// </summary>

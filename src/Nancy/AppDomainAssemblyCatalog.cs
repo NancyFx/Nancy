@@ -12,13 +12,7 @@ namespace Nancy
     /// </summary>
     public class AppDomainAssemblyCatalog : AssemblyCatalogBase
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AppDomainAssemblyCatalog"/> class.
-        /// </summary>
-        public AppDomainAssemblyCatalog()
-        {
-            this.EnsureNancyReferencingAssembliesAreLoaded();
-        }
+        private bool loadedReferencingAssemblies;
 
         /// <summary>
         /// Get all available <see cref="Assembly"/> instances.
@@ -26,6 +20,11 @@ namespace Nancy
         /// <returns>An <see cref="IReadOnlyCollection{T}"/> of <see cref="Assembly"/> instances.</returns>
         protected override IReadOnlyCollection<Assembly> GetAvailableAssemblies()
         {
+            if (!this.loadedReferencingAssemblies)
+            {
+                this.EnsureNancyReferencingAssembliesAreLoaded();
+            }
+
             return AppDomain.CurrentDomain
                 .GetAssemblies()
                 .Where(assembly => !assembly.IsDynamic)
@@ -35,6 +34,8 @@ namespace Nancy
 
         private void EnsureNancyReferencingAssembliesAreLoaded()
         {
+            this.loadedReferencingAssemblies = true;
+
             var assemblyPaths = this.GetAvailableAssemblies()
                 .Select(assembly => assembly.Location)
                 .ToArray();

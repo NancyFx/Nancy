@@ -9,7 +9,7 @@ namespace Nancy
     public static class TypeCatalogExtensions
     {
         /// <summary>
-        /// Gets all <see cref="Type"/> instances that are assigneable to <paramref name="type"/>, using <see cref="TypeResolveStrategies.All"/>.
+        /// Gets all <see cref="Type"/> instances that are assignable to <paramref name="type"/>, using <see cref="TypeResolveStrategies.All"/>.
         /// </summary>
         /// <param name="typeCatalog">The <see cref="ITypeCatalog"/> instance where the types should be retrieved from.</param>
         /// <param name="type">The <see cref="Type"/> that all returned types should be assingable to.</param>
@@ -20,7 +20,7 @@ namespace Nancy
         }
 
         /// <summary>
-        /// Gets all <see cref="Type"/> instances that are assigneable to <typeparamref name="TType"/>, using <see cref="TypeResolveStrategies.All"/>.
+        /// Gets all <see cref="Type"/> instances that are assignable to <typeparamref name="TType"/>, using <see cref="TypeResolveStrategies.All"/>.
         /// </summary>
         /// <param name="typeCatalog">The <see cref="ITypeCatalog"/> instance where the types should be retrieved from.</param>
         /// <typeparam name="TType">The <see cref="Type"/> that all returned types should be assingable to.</typeparam>

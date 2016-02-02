@@ -111,6 +111,7 @@
     </Compile>
     <Compile Include="AppDomainAssemblyCatalog.cs" />
     <Compile Include="AssemblyCatalogBase.cs" />
+    <Compile Include="AssemblyCatalogExtensions.cs" />
     <Compile Include="AssemblyResolveStrategies.cs" />
     <Compile Include="AssemblyResolveStrategy.cs" />
     <Compile Include="AsyncNamedPipelineBase.cs" />
