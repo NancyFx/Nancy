@@ -92,7 +92,7 @@
   <ItemGroup>
     <Reference Include="Nustache.Core, Version=1.13.8.22, Culture=neutral, PublicKeyToken=efd6f3d8f76ecd9f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Nustache.1.13.8.22\lib\net20\Nustache.Core.dll</HintPath>
+      <HintPath>..\..\packages\Nustache.1.13.8.22\lib\net20\Nustache.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -103,7 +103,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\SharedAssemblyInfo.cs">
+    <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="NustacheViewEngine.cs" />
