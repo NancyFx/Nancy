@@ -1,11 +1,14 @@
 os: Visual Studio 2015
 
-version: 2.0.0-beta000{build}
+version: 2.0.0-ci000{build}
 configuration: Release
 cache: C:\Users\appveyor\.dnx\packages
 
 nuget:
   disable_publish_on_pr: true
+  
+pull_requests:
+  do_not_increment_build_number: true
 
 install:
 - set PATH=C:\Program Files (x86)\MSBuild\14.0\Bin;%PATH%
