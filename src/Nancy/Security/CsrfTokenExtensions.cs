@@ -8,8 +8,11 @@
 
     public static class CsrfTokenExtensions
     {
+#if DNXCORE50
+        private static readonly RandomNumberGenerator randomGenerator = RandomNumberGenerator.Create();
+#else
         private static readonly RandomNumberGenerator randomGenerator = new RNGCryptoServiceProvider();
-
+#endif
         /// <summary>
         /// Gets a byte array representation of the csrf token for generating
         /// hmacs
