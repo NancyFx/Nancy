@@ -14,9 +14,9 @@ namespace Nancy.Diagnostics
     {
         private readonly TinyIoCContainer container;
 
-        public DiagnosticsModuleCatalog(IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration, INancyEnvironment diagnosticsEnvironment)
+        public DiagnosticsModuleCatalog(IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration, INancyEnvironment diagnosticsEnvironment, ITypeCatalog typeCatalog)
         {
-            this.container = ConfigureContainer(providers, rootPathProvider, requestTracing, configuration, diagnosticsEnvironment);
+            this.container = ConfigureContainer(providers, rootPathProvider, requestTracing, configuration, diagnosticsEnvironment, typeCatalog);
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace Nancy.Diagnostics
             return this.container.Resolve<INancyModule>(moduleType.FullName);
         }
 
-        private static TinyIoCContainer ConfigureContainer(IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration, INancyEnvironment diagnosticsEnvironment)
+        private static TinyIoCContainer ConfigureContainer(IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration, INancyEnvironment diagnosticsEnvironment, ITypeCatalog typeCatalog)
         {
             var diagContainer = new TinyIoCContainer();
 
@@ -54,13 +54,14 @@ namespace Nancy.Diagnostics
             diagContainer.Register<BindingDefaults, BindingDefaults>();
             diagContainer.Register<INancyEnvironment>(diagnosticsEnvironment);
             diagContainer.Register<ISerializer>(new DefaultJsonSerializer(diagnosticsEnvironment));
+            diagContainer.Register<ITypeCatalog>(typeCatalog);
 
             foreach (var diagnosticsProvider in providers)
             {
                 var key = string.Concat(
-                    diagnosticsProvider.GetType().FullName,
-                    "_",
-                    diagnosticsProvider.DiagnosticObject.GetType().FullName);
+                              diagnosticsProvider.GetType().FullName,
+                              "_",
+                              diagnosticsProvider.DiagnosticObject.GetType().FullName);
 
                 diagContainer.Register<IDiagnosticsProvider>(diagnosticsProvider, key);
             }
