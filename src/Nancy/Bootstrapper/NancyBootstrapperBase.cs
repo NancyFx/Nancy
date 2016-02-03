@@ -133,8 +133,8 @@
                 return
                     this.modules
                     ??
-                    (this.modules = AppDomainAssemblyTypeScanner
-                                        .TypesOf<INancyModule>(ScanMode.ExcludeNancy)
+                    (this.modules = this.TypeCatalog
+                                        .GetTypesAssignableTo<INancyModule>(TypeResolveStrategies.ExcludeNancy)
                                         .NotOfType<DiagnosticModule>()
                                         .Select(t => new ModuleRegistration(t))
                                         .ToArray());
@@ -148,7 +148,7 @@
         {
             get
             {
-                return AppDomainAssemblyTypeScanner.TypesOf<IViewEngine>();
+                return this.TypeCatalog.GetTypesAssignableTo<IViewEngine>();
             }
         }
 
@@ -159,7 +159,7 @@
         {
             get
             {
-                return AppDomainAssemblyTypeScanner.TypesOf<IModelBinder>();
+                return this.TypeCatalog.GetTypesAssignableTo<IModelBinder>();
             }
         }
 
@@ -170,7 +170,7 @@
         {
             get
             {
-                return AppDomainAssemblyTypeScanner.TypesOf<ITypeConverter>(ScanMode.ExcludeNancy);
+                return this.TypeCatalog.GetTypesAssignableTo<ITypeConverter>(TypeResolveStrategies.ExcludeNancy);
             }
         }
 
@@ -179,7 +179,7 @@
         /// </summary>
         protected virtual IEnumerable<Type> BodyDeserializers
         {
-            get { return AppDomainAssemblyTypeScanner.TypesOf<IBodyDeserializer>(ScanMode.ExcludeNancy); }
+            get { return this.TypeCatalog.GetTypesAssignableTo<IBodyDeserializer>(TypeResolveStrategies.ExcludeNancy); }
         }
 
         /// <summary>
@@ -187,7 +187,7 @@
         /// </summary>
         protected virtual IEnumerable<Type> ApplicationStartupTasks
         {
-            get { return AppDomainAssemblyTypeScanner.TypesOf<IApplicationStartup>(); }
+            get { return this.typeCatalog.GetTypesAssignableTo<IApplicationStartup>(); }
         }
 
         /// <summary>
@@ -195,7 +195,7 @@
         /// </summary>
         protected virtual IEnumerable<Type> RequestStartupTasks
         {
-            get { return AppDomainAssemblyTypeScanner.TypesOf<IRequestStartup>(); }
+            get { return this.TypeCatalog.GetTypesAssignableTo<IRequestStartup>(); }
         }
 
         /// <summary>
@@ -203,7 +203,7 @@
         /// </summary>
         protected virtual IEnumerable<Type> RegistrationTasks
         {
-            get { return AppDomainAssemblyTypeScanner.TypesOf<IRegistrations>(); }
+            get { return this.TypeCatalog.GetTypesAssignableTo<IRegistrations>(); }
         }
 
         /// <summary>
@@ -211,7 +211,7 @@
         /// </summary>
         protected virtual IRootPathProvider RootPathProvider
         {
-            get { return this.rootPathProvider ?? (this.rootPathProvider = GetRootPathProvider()); }
+            get { return this.rootPathProvider ?? (this.rootPathProvider = this.GetRootPathProvider()); }
         }
 
         /// <summary>
@@ -219,7 +219,7 @@
         /// </summary>
         protected virtual IEnumerable<Type> ModelValidatorFactories
         {
-            get { return AppDomainAssemblyTypeScanner.TypesOf<IModelValidatorFactory>(); }
+            get { return this.TypeCatalog.GetTypesAssignableTo<IModelValidatorFactory>(); }
         }
 
         /// <summary>
@@ -258,9 +258,6 @@
             this.RegisterBootstrapperTypes(this.ApplicationContainer);
 
             this.ConfigureApplicationContainer(this.ApplicationContainer);
-
-            // We need to call this to fix an issue with assemblies that are referenced by DI not being loaded
-            AppDomainAssemblyTypeScanner.UpdateTypes();
 
             var typeRegistrations = this.InternalConfiguration
                 .GetTypeRegistrations()
@@ -695,10 +692,10 @@
             }
         }
 
-        private static IRootPathProvider GetRootPathProvider()
+        private IRootPathProvider GetRootPathProvider()
         {
-            var providerTypes = AppDomainAssemblyTypeScanner
-                .TypesOf<IRootPathProvider>(ScanMode.ExcludeNancy)
+            var providerTypes = this.TypeCatalog
+                .GetTypesAssignableTo<IRootPathProvider>(TypeResolveStrategies.ExcludeNancy)
                 .ToArray();
 
             if (providerTypes.Length > 1)
