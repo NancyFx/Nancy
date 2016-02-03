@@ -1,21 +1,27 @@
 namespace Nancy.Tests.Unit.Bootstrapper
 {
     using System.Linq;
-
     using FakeItEasy;
-
     using Nancy.Bootstrapper;
     using Nancy.ModelBinding;
-
     using Xunit;
 
     public class NancyInternalConfigurationFixture
     {
+        private readonly ITypeCatalog typeCatalog;
+
+        public NancyInternalConfigurationFixture()
+        {
+            this.typeCatalog = new DefaultTypeCatalog(new AppDomainAssemblyCatalog());
+        }
+
         [Fact]
         public void Should_return_default_instance()
         {
-            var result = NancyInternalConfiguration.Default;
+            // Given, When
+            var result = NancyInternalConfiguration.Default.Invoke(this.typeCatalog);
 
+            // Then
             result.ShouldNotBeNull();
             result.ShouldBeOfType(typeof(NancyInternalConfiguration));
         }
@@ -23,20 +29,26 @@ namespace Nancy.Tests.Unit.Bootstrapper
         [Fact]
         public void Should_be_valid_default()
         {
-            var config = NancyInternalConfiguration.Default;
+            // Given
+            var config = NancyInternalConfiguration.Default.Invoke(this.typeCatalog);
 
+            // When
             var result = config.IsValid;
 
+            // Then
             result.ShouldBeTrue();
         }
 
         [Fact]
         public void Should_have_type_registrations_in_default()
         {
-            var config = NancyInternalConfiguration.Default;
+            // Given
+            var config = NancyInternalConfiguration.Default.Invoke(this.typeCatalog);
 
+            // When
             var result = config.GetTypeRegistrations();
 
+            // Then
             result.ShouldNotBeNull();
             result.Count().ShouldBeGreaterThan(0);
         }
@@ -44,22 +56,27 @@ namespace Nancy.Tests.Unit.Bootstrapper
         [Fact]
         public void Should_allow_overrides()
         {
+            // Given
             var fakeModelBinderLocator = A.Fake<IModelBinderLocator>();
             var config = NancyInternalConfiguration.WithOverrides((c) => c.ModelBinderLocator = fakeModelBinderLocator.GetType());
 
-            var result = config.GetTypeRegistrations();
+            // When
+            var result = config.Invoke(this.typeCatalog).GetTypeRegistrations();
 
-            result.Where(tr => tr.ImplementationType == fakeModelBinderLocator.GetType()).Any()
-                .ShouldBeTrue();
+            // Then
+            result.Where(tr => tr.ImplementationType == fakeModelBinderLocator.GetType()).Any().ShouldBeTrue();
         }
 
         [Fact]
         public void Should_not_be_valid_if_any_types_null()
         {
+            // Given
             var config = NancyInternalConfiguration.WithOverrides((c) => c.ModelBinderLocator = null);
 
-            var result = config.IsValid;
+            // When
+            var result = config.Invoke(this.typeCatalog).IsValid;
 
+             // Then
             result.ShouldBeFalse();
         }
     }

@@ -3,7 +3,6 @@ namespace Nancy.Bootstrapper
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
     using Nancy.Configuration;
     using Nancy.Culture;
     using Nancy.Diagnostics;
@@ -29,59 +28,59 @@ namespace Nancy.Bootstrapper
         /// <summary>
         /// Gets the Nancy default configuration
         /// </summary>
-        public static NancyInternalConfiguration Default
+        public static Func<ITypeCatalog, NancyInternalConfiguration> Default
         {
             get
             {
-                return new NancyInternalConfiguration
+                return typeCatalog => new NancyInternalConfiguration
                 {
-                    RouteResolver = typeof(DefaultRouteResolver),
-                    RoutePatternMatcher = typeof(DefaultRoutePatternMatcher),
-                    ContextFactory = typeof(DefaultNancyContextFactory),
-                    NancyEngine = typeof(NancyEngine),
-                    RouteCache = typeof(RouteCache),
-                    RouteCacheProvider = typeof(DefaultRouteCacheProvider),
-                    ViewLocator = typeof(DefaultViewLocator),
-                    ViewFactory = typeof(DefaultViewFactory),
-                    NancyModuleBuilder = typeof(DefaultNancyModuleBuilder),
-                    ResponseFormatterFactory = typeof(DefaultResponseFormatterFactory),
-                    ModelBinderLocator = typeof(DefaultModelBinderLocator),
                     Binder = typeof(DefaultBinder),
                     BindingDefaults = typeof(BindingDefaults),
-                    FieldNameConverter = typeof(DefaultFieldNameConverter),
-                    ViewResolver = typeof(DefaultViewResolver),
-                    ViewCache = typeof(DefaultViewCache),
-                    RenderContextFactory = typeof(DefaultRenderContextFactory),
-                    ModelValidatorLocator = typeof(DefaultValidatorLocator),
-                    ViewLocationProvider = typeof(FileSystemViewLocationProvider),
-                    StatusCodeHandlers = new List<Type>(AppDomainAssemblyTypeScanner.TypesOf<IStatusCodeHandler>(ScanMode.ExcludeNancy).Concat(new[] { typeof(DefaultStatusCodeHandler) })),
+                    ContextFactory = typeof(DefaultNancyContextFactory),
                     CsrfTokenValidator = typeof(DefaultCsrfTokenValidator),
-                    ObjectSerializer = typeof(DefaultObjectSerializer),
-                    Serializers = AppDomainAssemblyTypeScanner.TypesOf<ISerializer>(ScanMode.ExcludeNancy).Union(new List<Type>(new[] { typeof(DefaultJsonSerializer), typeof(DefaultXmlSerializer) })).ToList(),
-                    InteractiveDiagnosticProviders = new List<Type>(AppDomainAssemblyTypeScanner.TypesOf<IDiagnosticsProvider>()),
-                    RequestTracing = typeof(DefaultRequestTracing),
-                    RouteInvoker = typeof(DefaultRouteInvoker),
-                    ResponseProcessors = AppDomainAssemblyTypeScanner.TypesOf<IResponseProcessor>().ToList(),
-                    RequestDispatcher = typeof(DefaultRequestDispatcher),
-                    Diagnostics = typeof(DefaultDiagnostics),
-                    RouteSegmentExtractor = typeof(DefaultRouteSegmentExtractor),
-                    RouteDescriptionProvider = typeof(DefaultRouteDescriptionProvider),
                     CultureService = typeof(DefaultCultureService),
-                    TextResource = typeof(ResourceBasedTextResource),
-                    ResourceAssemblyProvider = typeof(ResourceAssemblyProvider),
-                    ResourceReader = typeof(DefaultResourceReader),
-                    StaticContentProvider = typeof(DefaultStaticContentProvider),
-                    RouteResolverTrie = typeof(RouteResolverTrie),
-                    TrieNodeFactory = typeof(TrieNodeFactory),
-                    RouteSegmentConstraints = AppDomainAssemblyTypeScanner.TypesOf<IRouteSegmentConstraint>().ToList(),
-                    RequestTraceFactory = typeof(DefaultRequestTraceFactory),
-                    ResponseNegotiator = typeof(DefaultResponseNegotiator),
-                    RouteMetadataProviders = AppDomainAssemblyTypeScanner.TypesOf<IRouteMetadataProvider>().ToList(),
+                    DefaultConfigurationProviders = typeCatalog.GetTypesAssignableTo<INancyDefaultConfigurationProvider>().ToList(),
+                    Diagnostics = typeof(DefaultDiagnostics),
                     EnvironmentFactory = typeof(DefaultNancyEnvironmentFactory),
                     EnvironmentConfigurator = typeof(DefaultNancyEnvironmentConfigurator),
-                    DefaultConfigurationProviders = AppDomainAssemblyTypeScanner.TypesOf<INancyDefaultConfigurationProvider>().ToList(),
-                    SerializerFactory = typeof(DefaultSerializerFactory),
+                    FieldNameConverter = typeof(DefaultFieldNameConverter),
+                    InteractiveDiagnosticProviders = new List<Type>(typeCatalog.GetTypesAssignableTo<IDiagnosticsProvider>()),
+                    ModelBinderLocator = typeof(DefaultModelBinderLocator),
+                    ModelValidatorLocator = typeof(DefaultValidatorLocator),
+                    NancyEngine = typeof(NancyEngine),
+                    NancyModuleBuilder = typeof(DefaultNancyModuleBuilder),
+                    ObjectSerializer = typeof(DefaultObjectSerializer),
+                    RenderContextFactory = typeof(DefaultRenderContextFactory),
+                    RequestDispatcher = typeof(DefaultRequestDispatcher),
+                    RequestTraceFactory = typeof(DefaultRequestTraceFactory),
+                    RequestTracing = typeof(DefaultRequestTracing),
+                    ResourceAssemblyProvider = typeof(ResourceAssemblyProvider),
+                    ResourceReader = typeof(DefaultResourceReader),
+                    ResponseFormatterFactory = typeof(DefaultResponseFormatterFactory),
+                    ResponseNegotiator = typeof(DefaultResponseNegotiator),
+                    ResponseProcessors = typeCatalog.GetTypesAssignableTo<IResponseProcessor>().ToList(),
+                    RouteCache = typeof(RouteCache),
+                    RouteCacheProvider = typeof(DefaultRouteCacheProvider),
+                    RouteInvoker = typeof(DefaultRouteInvoker),
+                    RoutePatternMatcher = typeof(DefaultRoutePatternMatcher),
+                    RouteResolver = typeof(DefaultRouteResolver),
+                    RouteResolverTrie = typeof(RouteResolverTrie),
+                    RouteSegmentConstraints = typeCatalog.GetTypesAssignableTo<IRouteSegmentConstraint>().ToList(),
+                    RouteSegmentExtractor = typeof(DefaultRouteSegmentExtractor),
+                    RouteMetadataProviders = typeCatalog.GetTypesAssignableTo<IRouteMetadataProvider>().ToList(),
+                    RouteDescriptionProvider = typeof(DefaultRouteDescriptionProvider),
                     RuntimeEnvironmentInformation = typeof(DefaultRuntimeEnvironmentInformation),
+                    SerializerFactory = typeof(DefaultSerializerFactory),
+                    Serializers = typeCatalog.GetTypesAssignableTo<ISerializer>(TypeResolveStrategies.ExcludeNancy).Union(new List<Type>(new[] { typeof(DefaultJsonSerializer), typeof(DefaultXmlSerializer) })).ToList(),
+                    StaticContentProvider = typeof(DefaultStaticContentProvider),
+                    StatusCodeHandlers = new List<Type>(typeCatalog.GetTypesAssignableTo<IStatusCodeHandler>(TypeResolveStrategies.ExcludeNancy).Concat(new[] { typeof(DefaultStatusCodeHandler) })),
+                    TextResource = typeof(ResourceBasedTextResource),
+                    TrieNodeFactory = typeof(TrieNodeFactory),
+                    ViewLocator = typeof(DefaultViewLocator),
+                    ViewFactory = typeof(DefaultViewFactory),
+                    ViewResolver = typeof(DefaultViewResolver),
+                    ViewCache = typeof(DefaultViewCache),
+                    ViewLocationProvider = typeof(FileSystemViewLocationProvider),
                 };
             }
         }
@@ -198,18 +197,17 @@ namespace Nancy.Bootstrapper
             }
         }
 
-        /// <summary>
-        /// Default Nancy configuration with specific overloads
-        /// </summary>
-        /// <param name="configurationBuilder">Configuration builder for overriding the default configuration properties.</param>
-        /// <returns>Nancy configuration instance</returns>
-        public static NancyInternalConfiguration WithOverrides(Action<NancyInternalConfiguration> configurationBuilder)
+        public static Func<ITypeCatalog, NancyInternalConfiguration> WithOverrides(Action<NancyInternalConfiguration> builder)
         {
-            var configuration = Default;
+            return catalog =>
+            {
+                var configuration =
+                    Default.Invoke(catalog);
 
-            configurationBuilder.Invoke(configuration);
+                builder.Invoke(configuration);
 
-            return configuration;
+                return configuration;
+            };
         }
 
         /// <summary>

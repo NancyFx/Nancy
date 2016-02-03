@@ -21,11 +21,11 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
     public abstract class BootstrapperBaseFixtureBase<TContainer>
         where TContainer : class
     {
-        private readonly NancyInternalConfiguration configuration;
+        private readonly Func<ITypeCatalog, NancyInternalConfiguration> configuration;
 
         protected abstract NancyBootstrapperBase<TContainer> Bootstrapper { get; }
 
-        protected NancyInternalConfiguration Configuration
+        protected Func<ITypeCatalog, NancyInternalConfiguration> Configuration
         {
             get { return this.configuration; }
         }
@@ -84,7 +84,7 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
             // When
             var result1 = this.Bootstrapper.GetEngine();
             var result2 = this.Bootstrapper.GetEngine();
-            
+
             // Then
             result1.ShouldBeSameAs(result2);
         }
@@ -94,7 +94,7 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
         {
             // Given
             this.Bootstrapper.Initialise();
-            
+
             // When
             var result1 = ((TestDependencyModule)this.Bootstrapper.GetModule(typeof(TestDependencyModule), new NancyContext()));
             var result2 = ((TestDependencyModule)this.Bootstrapper.GetModule(typeof(TestDependencyModule), new NancyContext()));
