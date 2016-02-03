@@ -65,6 +65,9 @@
         /// </summary>
         protected Type[] RequestStartupTaskTypeCache { get; private set; }
 
+        private IAssemblyCatalog assemblyCatalog;
+        private ITypeCatalog typeCatalog;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyBootstrapperBase{TContainer}"/> class.
         /// </summary>
@@ -78,6 +81,24 @@
         /// Gets the Container instance - automatically set during initialise.
         /// </summary>
         protected TContainer ApplicationContainer { get; private set; }
+
+        /// <summary>
+        /// Gets the <see cref="IAssemblyCatalog"/> that should be used by the application.
+        /// </summary>
+        /// <value>An <see cref="IAssemblyCatalog"/> instance.</value>
+        protected virtual IAssemblyCatalog AssemblyCatalog
+        {
+            get { return this.assemblyCatalog ?? (this.assemblyCatalog = new AppDomainAssemblyCatalog()); }
+        }
+
+        /// <summary>
+        /// Gets the <see cref="ITypeCatalog"/> that should be used by the application.
+        /// </summary>
+        /// <value>An <see cref="ITypeCatalog"/> instance.</value>
+        protected virtual ITypeCatalog TypeCatalog
+        {
+            get { return this.typeCatalog ?? (this.typeCatalog = new DefaultTypeCatalog(this.AssemblyCatalog)); }
+        }
 
         /// <summary>
         /// Nancy internal configuration
@@ -606,6 +627,8 @@
                 new InstanceRegistration(typeof(CryptographyConfiguration), this.CryptographyConfiguration),
                 new InstanceRegistration(typeof(NancyInternalConfiguration), this.InternalConfiguration),
                 new InstanceRegistration(typeof(IRootPathProvider), this.RootPathProvider),
+                new InstanceRegistration(typeof(IAssemblyCatalog), this.AssemblyCatalog),
+                new InstanceRegistration(typeof(ITypeCatalog), this.TypeCatalog),
             };
         }
 
@@ -616,16 +639,15 @@
         /// <returns>Collection of CollectionTypeRegistration types</returns>
         private IEnumerable<CollectionTypeRegistration> GetApplicationCollections()
         {
-            return new[]
-                {
-                    new CollectionTypeRegistration(typeof(IViewEngine), this.ViewEngines),
-                    new CollectionTypeRegistration(typeof(IModelBinder), this.ModelBinders),
-                    new CollectionTypeRegistration(typeof(ITypeConverter), this.TypeConverters),
-                    new CollectionTypeRegistration(typeof(IBodyDeserializer), this.BodyDeserializers),
-                    new CollectionTypeRegistration(typeof(IApplicationStartup), this.ApplicationStartupTasks),
-                    new CollectionTypeRegistration(typeof(IRegistrations), this.RegistrationTasks),
-                    new CollectionTypeRegistration(typeof(IModelValidatorFactory), this.ModelValidatorFactories)
-                };
+            return new[] {
+                new CollectionTypeRegistration(typeof(IViewEngine), this.ViewEngines),
+                new CollectionTypeRegistration(typeof(IModelBinder), this.ModelBinders),
+                new CollectionTypeRegistration(typeof(ITypeConverter), this.TypeConverters),
+                new CollectionTypeRegistration(typeof(IBodyDeserializer), this.BodyDeserializers),
+                new CollectionTypeRegistration(typeof(IApplicationStartup), this.ApplicationStartupTasks),
+                new CollectionTypeRegistration(typeof(IRegistrations), this.RegistrationTasks),
+                new CollectionTypeRegistration(typeof(IModelValidatorFactory), this.ModelValidatorFactories)
+            };
         }
 
         private INancyEngine SafeGetNancyEngineInstance()
