@@ -1,5 +1,5 @@
 language: csharp
-solution: src/Nancy.sln
+solution: Nancy.sln
 sudo: false
 install:
   - gem install bundle
@@ -9,7 +9,6 @@ install:
   - echo set -e >> ./travis.sh
   - echo set -x >> ./travis.sh
   - echo set -o pipefail >> ./travis.sh
-  - echo echo Running on Mono 3.x >> ./travis.sh
   - echo rake mono >> ./travis.sh
   - chmod +x ./travis.sh
   - cat travis.sh
