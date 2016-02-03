@@ -66,7 +66,7 @@ namespace Nancy.Diagnostics
                 diagContainer.Register<IDiagnosticsProvider>(diagnosticsProvider, key);
             }
 
-            foreach (var moduleType in AppDomainAssemblyTypeScanner.TypesOf<DiagnosticModule>().ToArray())
+            foreach (var moduleType in typeCatalog.GetTypesAssignableTo<DiagnosticModule>())
             {
                 diagContainer.Register(typeof(INancyModule), moduleType, moduleType.FullName).AsMultiInstance();
             }
