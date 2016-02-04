@@ -1,18 +1,24 @@
 ﻿namespace Nancy.Tests.Unit.Conventions
 {
+    using System;
+    using System.Linq;
+    using FakeItEasy;
     using Nancy.Conventions;
 
     using Xunit;
 
     public class DefaultAcceptHeaderCoercionConventionsFixture
     {
-         
+
         private readonly NancyConventions conventions;
         private readonly DefaultAcceptHeaderCoercionConventions acceptHeaderConventions;
 
         public DefaultAcceptHeaderCoercionConventionsFixture()
         {
-            this.conventions = new NancyConventions();
+            var typeCatalog = A.Fake<ITypeCatalog>();
+            A.CallTo(() => typeCatalog.GetTypesAssignableTo(A<Type>._, A<TypeResolveStrategy>._)).Returns(new Type[] { });
+
+            this.conventions = new NancyConventions(typeCatalog);
             this.acceptHeaderConventions = new DefaultAcceptHeaderCoercionConventions();
         }
 
@@ -48,7 +54,7 @@
             this.acceptHeaderConventions.Initialise(this.conventions);
 
             // Then
-            this.conventions.CultureConventions.Count.ShouldBeGreaterThan(0);
+            this.conventions.AcceptHeaderCoercionConventions.Count.ShouldBeGreaterThan(0);
         }
     }
 }

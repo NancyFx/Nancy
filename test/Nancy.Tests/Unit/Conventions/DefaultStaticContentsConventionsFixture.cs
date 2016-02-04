@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-
+    using FakeItEasy;
     using Nancy.Conventions;
 
     using Xunit;
@@ -14,7 +14,10 @@
 
         public DefaultStaticContentsConventionsFixture()
         {
-            this.conventions = new NancyConventions();
+            var typeCatalog = A.Fake<ITypeCatalog>();
+            A.CallTo(() => typeCatalog.GetTypesAssignableTo(A<Type>._, A<TypeResolveStrategy>._)).Returns(new Type[] { });
+
+            this.conventions = new NancyConventions(typeCatalog);
             this.staticContentsConventions = new DefaultStaticContentsConventions();
         }
 
