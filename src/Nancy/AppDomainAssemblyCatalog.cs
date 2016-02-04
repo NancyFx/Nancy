@@ -12,7 +12,7 @@ namespace Nancy
     /// </summary>
     public class AppDomainAssemblyCatalog : AssemblyCatalogBase
     {
-        private bool loadedReferencingAssemblies;
+        private bool isAppDomainPrepouplated;
 
         /// <summary>
         /// Get all available <see cref="Assembly"/> instances.
@@ -20,9 +20,9 @@ namespace Nancy
         /// <returns>An <see cref="IReadOnlyCollection{T}"/> of <see cref="Assembly"/> instances.</returns>
         protected override IReadOnlyCollection<Assembly> GetAvailableAssemblies()
         {
-            if (!this.loadedReferencingAssemblies)
+            if (!this.isAppDomainPrepouplated)
             {
-                this.EnsureNancyReferencingAssembliesAreLoaded();
+                this.PrepopulateAppDomain();
             }
 
             return AppDomain.CurrentDomain
@@ -32,13 +32,24 @@ namespace Nancy
                 .ToArray();
         }
 
-        private void EnsureNancyReferencingAssembliesAreLoaded()
+        private void PrepopulateAppDomain()
         {
-            this.loadedReferencingAssemblies = true;
+            this.isAppDomainPrepouplated = true;
 
-            var assemblyPaths = this.GetAvailableAssemblies()
+            var assemblies = this.GetAvailableAssemblies();
+
+            var assemblyPaths = assemblies
                 .Select(assembly => assembly.Location)
                 .ToArray();
+
+            foreach (var assembly in assemblies)
+            {
+                var references = assembly.GetReferencedAssemblies();
+                foreach (var reference in references)
+                {
+                    Assembly.Load(reference);
+                }
+            }
 
             foreach (var directory in GetAssemblyDirectories())
             {
