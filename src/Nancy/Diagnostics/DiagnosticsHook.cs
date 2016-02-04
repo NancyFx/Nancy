@@ -51,11 +51,11 @@ namespace Nancy.Diagnostics
                 routeMetadataProviders);
 
             var diagnosticsRouteResolver = new DefaultRouteResolver(
-               diagnosticsModuleCatalog,
-               new DiagnosticsModuleBuilder(rootPathProvider, modelBinderLocator, diagnosticsEnvironment, environment),
-               diagnosticsRouteCache,
-               new RouteResolverTrie(new TrieNodeFactory(routeSegmentConstraints)),
-               environment);
+                diagnosticsModuleCatalog,
+                new DiagnosticsModuleBuilder(rootPathProvider, modelBinderLocator, diagnosticsEnvironment, environment),
+                diagnosticsRouteCache,
+                new RouteResolverTrie(new TrieNodeFactory(routeSegmentConstraints)),
+                environment);
 
             var serializer = new DefaultObjectSerializer();
 
@@ -125,9 +125,9 @@ namespace Nancy.Diagnostics
         private static bool ValidateConfiguration(DiagnosticsConfiguration configuration)
         {
             return !string.IsNullOrWhiteSpace(configuration.Password) &&
-            !string.IsNullOrWhiteSpace(configuration.CookieName) &&
-            !string.IsNullOrWhiteSpace(configuration.Path) &&
-            configuration.SlidingTimeout != 0;
+                !string.IsNullOrWhiteSpace(configuration.CookieName) &&
+                !string.IsNullOrWhiteSpace(configuration.Path) &&
+                configuration.SlidingTimeout != 0;
         }
 
         public static void Disable(IPipelines pipelines)
@@ -283,8 +283,8 @@ namespace Nancy.Diagnostics
         private static bool IsLoginRequest(NancyContext context, DiagnosticsConfiguration diagnosticsConfiguration)
         {
             return context.Request.Method.Equals("POST", StringComparison.OrdinalIgnoreCase) &&
-            context.Request.Url.BasePath.TrimEnd('/').EndsWith(diagnosticsConfiguration.Path) &&
-            context.Request.Url.Path == "/";
+                context.Request.Url.BasePath.TrimEnd('/').EndsWith(diagnosticsConfiguration.Path) &&
+                context.Request.Url.Path == "/";
         }
 
         private static void ExecuteRoutePreReq(NancyContext context, CancellationToken cancellationToken, BeforePipeline resolveResultPreReq)
