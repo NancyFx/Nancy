@@ -107,12 +107,12 @@
 
         public CustomResourceAssemblyProvider(IAssemblyCatalog assemblyCatalog)
         {
-            this.assemblyCatalog = assemblyCatalog;            
+            this.assemblyCatalog = assemblyCatalog;
         }
 
         public IEnumerable<Assembly> GetAssembliesToScan()
         {
-            return (this.filteredAssemblies ?? (this.filteredAssemblies = this.assemblyCatalog.GetAssemblies()));
+            return (this.filteredAssemblies ?? (this.filteredAssemblies = this.assemblyCatalog.GetAssemblies(AssemblyResolveStrategies.NancyReferencing)));
         }
     }
 }
