@@ -32,7 +32,7 @@ namespace Nancy.Diagnostics
         /// Enables the diagnostics dashboard and will intercept all requests that are passed to
         /// the condigured paths.
         /// </summary>
-        public static void Enable(IPipelines pipelines, IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration, IModelBinderLocator modelBinderLocator, IEnumerable<IResponseProcessor> responseProcessors, IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints, ICultureService cultureService, IRequestTraceFactory requestTraceFactory, IEnumerable<IRouteMetadataProvider> routeMetadataProviders, ITextResource textResource, INancyEnvironment environment, IRuntimeEnvironmentInformation runtimeEnvironmentInformation)
+        public static void Enable(IPipelines pipelines, IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration, IModelBinderLocator modelBinderLocator, IEnumerable<IResponseProcessor> responseProcessors, IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints, ICultureService cultureService, IRequestTraceFactory requestTraceFactory, IEnumerable<IRouteMetadataProvider> routeMetadataProviders, ITextResource textResource, INancyEnvironment environment, IRuntimeEnvironmentInformation runtimeEnvironmentInformation, ITypeCatalog typeCatalog)
         {
             var diagnosticsConfiguration =
                 environment.GetValue<DiagnosticsConfiguration>();
@@ -40,7 +40,7 @@ namespace Nancy.Diagnostics
             var diagnosticsEnvironment =
                 GetDiagnosticsEnvironment();
 
-            var diagnosticsModuleCatalog = new DiagnosticsModuleCatalog(providers, rootPathProvider, requestTracing, configuration, diagnosticsEnvironment);
+            var diagnosticsModuleCatalog = new DiagnosticsModuleCatalog(providers, rootPathProvider, requestTracing, configuration, diagnosticsEnvironment, typeCatalog);
 
             var diagnosticsRouteCache = new RouteCache(
                 diagnosticsModuleCatalog,

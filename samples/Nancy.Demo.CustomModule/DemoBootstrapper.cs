@@ -7,7 +7,8 @@
     {
         public override void Configure(INancyEnvironment environment)
         {
-            environment.Diagnostics("password");
+            environment.Diagnostics(
+                password: "password");
         }
     }
 }

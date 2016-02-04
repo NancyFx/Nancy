@@ -3,8 +3,6 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{0B3EA40E-F7D8-4E14-A30F-1536F41B62D1}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -40,6 +38,7 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
+    <Externalconsole>true</Externalconsole>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -115,6 +114,7 @@
     <Compile Include="Models\Index.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="TestModule.cs" />
+    <Compile Include="DemoBootstrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Nancy.Hosting.Self\Nancy.Hosting.Self.csproj">
@@ -122,7 +122,7 @@
       <Name>Nancy.Hosting.Self</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\src\Nancy.ViewEngines.Spark\Nancy.ViewEngines.Spark.csproj">
-      <Project>{4b7e35df-1569-4346-b180-a09615723095}</Project>
+      <Project>{4B7E35DF-1569-4346-B180-A09615723095}</Project>
       <Name>Nancy.ViewEngines.Spark</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\src\Nancy\Nancy.csproj">

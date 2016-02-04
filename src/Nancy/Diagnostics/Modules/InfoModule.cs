@@ -12,9 +12,13 @@
 
     public class InfoModule : DiagnosticModule
     {
-        public InfoModule(IRootPathProvider rootPathProvider, NancyInternalConfiguration configuration, INancyEnvironment environment)
+        private readonly ITypeCatalog typeCatalog;
+
+        public InfoModule(IRootPathProvider rootPathProvider, NancyInternalConfiguration configuration, INancyEnvironment environment, ITypeCatalog typeCatalog)
             : base("/info")
         {
+            this.typeCatalog = typeCatalog;
+
             Get["/"] = async (_, __) =>
             {
                 return View["Info"];
@@ -44,17 +48,16 @@
 
                     data.Configuration[propertyInfo.Name] = (!typeof(IEnumerable).IsAssignableFrom(value.GetType())) ?
                         new[] { value.ToString() } :
-                        ((IEnumerable<object>) value).Select(x => x.ToString());
+                        ((IEnumerable<object>)value).Select(x => x.ToString());
                 }
 
                 return this.Response.AsJson((object)data);
             };
         }
 
-        private static string[] GetViewEngines()
+        private string[] GetViewEngines()
         {
-            var engines =
-                AppDomainAssemblyTypeScanner.TypesOf<IViewEngine>();
+            var engines = this.typeCatalog.GetTypesAssignableTo<IViewEngine>();
 
             return engines
                 .Select(engine => engine.Name.Split(new [] { "ViewEngine" }, StringSplitOptions.None)[0])
