@@ -45,12 +45,13 @@
         /// </summary>
         /// <param name="configuration">The <see cref="IRazorConfiguration"/> that should be used by the engine.</param>
         /// <param name="environment">An <see cref="INancyEnvironment"/> instance.</param>
-        public RazorViewEngine(IRazorConfiguration configuration, INancyEnvironment environment)
+        /// <param name="assemblyCatalog">An <see cref="IAssemblyCatalog"/> instance.</param>
+        public RazorViewEngine(IRazorConfiguration configuration, INancyEnvironment environment, IAssemblyCatalog assemblyCatalog)
         {
             this.viewRenderers = new List<IRazorViewRenderer>
             {
-                new CSharpRazorViewRenderer(),
-                new VisualBasicRazorViewRenderer()
+                new CSharpRazorViewRenderer(assemblyCatalog),
+                new VisualBasicRazorViewRenderer(assemblyCatalog)
             };
 
             this.razorConfiguration = configuration;

@@ -19,11 +19,12 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyCSharpRazorBuildProvider"/> class.
         /// </summary>
-        public NancyCSharpRazorBuildProvider()
+        /// <param name="assemblyCatalog">An <see cref="IAssemblyCatalog"/> instance.</param>
+        public NancyCSharpRazorBuildProvider(IAssemblyCatalog assemblyCatalog)
         {
             this.compilerType = this.GetDefaultCompilerTypeForLanguage("C#");
 
-            this.host = new NancyRazorEngineHost(new CSharpRazorCodeLanguage());
+            this.host = new NancyRazorEngineHost(new CSharpRazorCodeLanguage(), assemblyCatalog);
         }
 
         /// <summary>

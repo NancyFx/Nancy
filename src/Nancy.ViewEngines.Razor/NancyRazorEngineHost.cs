@@ -12,13 +12,17 @@
     /// </summary>
     public class NancyRazorEngineHost : RazorEngineHost
     {
+        private readonly IAssemblyCatalog assemblyCatalog;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyRazorEngineHost"/> class.
         /// </summary>
         /// <param name="language">The language.</param>
-        public NancyRazorEngineHost(RazorCodeLanguage language)
+        /// <param name="assemblyCatalog">An <see cref="IAssemblyCatalog"/> instance.</param>
+        public NancyRazorEngineHost(RazorCodeLanguage language, IAssemblyCatalog assemblyCatalog)
             : base(language)
         {
+            this.assemblyCatalog = assemblyCatalog;
             this.DefaultBaseClass = typeof (NancyRazorViewBase).FullName;
             this.DefaultNamespace = "RazorOutput";
             this.DefaultClassName = "RazorView";
@@ -39,12 +43,12 @@
         {
             if (incomingCodeParser is CSharpCodeParser)
             {
-                return new NancyCSharpRazorCodeParser();
+                return new NancyCSharpRazorCodeParser(this.assemblyCatalog);
             }
 
             if (incomingCodeParser is VBCodeParser)
             {
-                return new NancyVisualBasicRazorCodeParser();
+                return new NancyVisualBasicRazorCodeParser(this.assemblyCatalog);
             }
 
             return base.DecorateCodeParser(incomingCodeParser);

@@ -10,8 +10,8 @@ namespace Nancy.ViewEngines.Razor.VisualBasic
     /// </summary>
     internal class VisualBasicClrTypeResolver : ClrTypeResolver<VBSymbolType, VBSymbol>
     {
-        public VisualBasicClrTypeResolver()
-            : base(VBSymbolType.Identifier, VBSymbolType.Keyword, VBSymbolType.Dot, VBSymbolType.WhiteSpace, VBSymbolType.LeftParenthesis, VBSymbolType.RightParenthesis)
+        public VisualBasicClrTypeResolver(IAssemblyCatalog catalog)
+            : base(catalog, VBSymbolType.Identifier, VBSymbolType.Keyword, VBSymbolType.Dot, VBSymbolType.WhiteSpace, VBSymbolType.LeftParenthesis, VBSymbolType.RightParenthesis)
         {
         }
 
@@ -54,7 +54,7 @@ namespace Nancy.ViewEngines.Razor.VisualBasic
             }
 
             var next = this.Symbols.ElementAt(1);
-            
+
             if (next.Type != VBSymbolType.Keyword || next.Keyword != VBKeyword.Of)
             {
                 return false;
@@ -89,7 +89,7 @@ namespace Nancy.ViewEngines.Razor.VisualBasic
                 {"ULong", typeof (UInt64)},
                 {"Object", typeof (object)},
                 {"SByte", typeof (SByte)},
-                {"Single", typeof (Single)},                
+                {"Single", typeof (Single)},
             };
 
             return (primitives.ContainsKey(typeName) ? primitives[typeName] : null);

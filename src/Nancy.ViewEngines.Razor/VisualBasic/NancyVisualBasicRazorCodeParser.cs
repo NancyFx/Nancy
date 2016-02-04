@@ -22,11 +22,12 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyVisualBasicRazorCodeParser"/> class.
         /// </summary>
-        public NancyVisualBasicRazorCodeParser()
+        /// <param name="assemblyCatalog">An <see cref="IAssemblyCatalog"/> instance.</param>
+        public NancyVisualBasicRazorCodeParser(IAssemblyCatalog assemblyCatalog)
         {
             MapDirective(ModelTypeKeyword, ModelTypeDirective);
 
-            this.clrTypeResolver = new VisualBasicClrTypeResolver();
+            this.clrTypeResolver = new VisualBasicClrTypeResolver(assemblyCatalog);
         }
 
         protected virtual bool ModelTypeDirective()
@@ -66,7 +67,7 @@
 
             var baseType = string.Concat(Span.Symbols.Select(s => s.Content)).Trim();
 
-            var modelType = this.clrTypeResolver.Resolve(this.Language.TokenizeString(baseType).ToList());           
+            var modelType = this.clrTypeResolver.Resolve(this.Language.TokenizeString(baseType).ToList());
 
             if (modelType == null)
             {
@@ -76,9 +77,9 @@
             this.Span.CodeGenerator = new ModelCodeGenerator(modelType, modelType.FullName);
 
             this.CheckForInheritsAndModelStatements();
-            
+
             this.Output(SpanKind.Code);
-            
+
             return false;
         }
 
