@@ -3,29 +3,21 @@
     using System;
     using System.CodeDom;
     using System.CodeDom.Compiler;
-    using System.Collections;
-    using System.Collections.Generic;
     using System.Dynamic;
     using System.IO;
     using System.Linq;
     using System.Reflection;
     using System.Text;
-    using System.Text.RegularExpressions;
     using System.Threading;
-
     using FakeItEasy;
-
     using Microsoft.CSharp;
     using Microsoft.VisualBasic;
-
     using Nancy.Bootstrapper;
     using Nancy.Configuration;
     using Nancy.Tests;
     using Nancy.ViewEngines.Razor.Tests.Models;
-
     using Xunit;
     using Xunit.Extensions;
-    using Xunit.Sdk;
 
     public class RazorViewEngineFixture
     {
@@ -43,7 +35,7 @@
                 displayErrorTraces: true);
 
             this.configuration = A.Fake<IRazorConfiguration>();
-            this.engine = new RazorViewEngine(this.configuration, environment);
+            this.engine = new RazorViewEngine(this.configuration, environment, new AppDomainAssemblyCatalog());
 
             var cache = A.Fake<IViewCache>();
             A.CallTo(() => cache.GetOrAdd(A<ViewLocationResult>.Ignored, A<Func<ViewLocationResult, Func<INancyRazorView>>>.Ignored))
@@ -66,8 +58,6 @@
             A.CallTo(() => this.rootPathProvider.GetRootPath()).Returns(Path.Combine(Environment.CurrentDirectory, "TestViews"));
 
             this.fileSystemViewLocationProvider = new FileSystemViewLocationProvider(this.rootPathProvider, new DefaultFileSystemReader());
-
-            AppDomainAssemblyTypeScanner.AddAssembliesToScan("Nancy.ViewEngines.Razor.Tests.Models.dll");
         }
 
         [Fact]

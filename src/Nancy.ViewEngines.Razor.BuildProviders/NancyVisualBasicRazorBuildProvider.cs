@@ -19,11 +19,12 @@ namespace Nancy.ViewEngines.Razor.BuildProviders
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyCSharpRazorBuildProvider"/> class.
         /// </summary>
-        public NancyVisualBasicRazorBuildProvider()
+        /// <param name="assemblyCatalog"></param>
+        public NancyVisualBasicRazorBuildProvider(IAssemblyCatalog assemblyCatalog)
         {
             this.compilerType = this.GetDefaultCompilerTypeForLanguage("VB");
 
-            this.host = new NancyRazorEngineHost(new VBRazorCodeLanguage());
+            this.host = new NancyRazorEngineHost(new VBRazorCodeLanguage(), assemblyCatalog);
         }
 
         /// <summary>

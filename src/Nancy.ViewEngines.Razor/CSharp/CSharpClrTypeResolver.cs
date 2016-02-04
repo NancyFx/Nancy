@@ -10,8 +10,8 @@ namespace Nancy.ViewEngines.Razor.CSharp
     /// </summary>
     internal class CSharpClrTypeResolver : ClrTypeResolver<CSharpSymbolType, CSharpSymbol>
     {
-        public CSharpClrTypeResolver()
-            : base(CSharpSymbolType.Identifier, CSharpSymbolType.Keyword, CSharpSymbolType.Dot, CSharpSymbolType.WhiteSpace, CSharpSymbolType.LeftBracket, CSharpSymbolType.RightBracket)
+        public CSharpClrTypeResolver(IAssemblyCatalog catalog)
+            : base(catalog, CSharpSymbolType.Identifier, CSharpSymbolType.Keyword, CSharpSymbolType.Dot, CSharpSymbolType.WhiteSpace, CSharpSymbolType.LeftBracket, CSharpSymbolType.RightBracket)
         {
         }
 

@@ -21,11 +21,12 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyCSharpRazorCodeParser"/> class.
         /// </summary>
-        public NancyCSharpRazorCodeParser()
+        /// <param name="assemblyCatalog">An <see cref="IAssemblyCatalog"/> instance.</param>
+        public NancyCSharpRazorCodeParser(IAssemblyCatalog assemblyCatalog)
         {
             this.MapDirectives(this.ModelDirective, "model");
 
-            this.clrTypeResolver = new CSharpClrTypeResolver();
+            this.clrTypeResolver = new CSharpClrTypeResolver(assemblyCatalog);
         }
 
         protected virtual void ModelDirective()

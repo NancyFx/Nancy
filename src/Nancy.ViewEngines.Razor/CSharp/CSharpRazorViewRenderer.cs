@@ -47,7 +47,8 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="CSharpRazorViewRenderer"/> class.
         /// </summary>
-        public CSharpRazorViewRenderer()
+        /// <param name="assemblyCatalog">An <see cref="IAssemblyCatalog"/> instance.</param>
+        public CSharpRazorViewRenderer(IAssemblyCatalog assemblyCatalog)
         {
             this.Assemblies = new List<string>
             {
@@ -58,7 +59,7 @@
 
             this.Provider = new CSharpCodeProvider();
 
-            this.Host = new NancyRazorEngineHost(new CSharpRazorCodeLanguage());
+            this.Host = new NancyRazorEngineHost(new CSharpRazorCodeLanguage(), assemblyCatalog);
 
             this.Host.NamespaceImports.Add("Microsoft.CSharp.RuntimeBinder");
         }

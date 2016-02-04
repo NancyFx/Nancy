@@ -44,7 +44,8 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="VisualBasicRazorViewRenderer"/> class.
         /// </summary>
-        public VisualBasicRazorViewRenderer()
+        /// <param name="assemblyCatalog">An <see cref="IAssemblyCatalog"/> instance.</param>
+        public VisualBasicRazorViewRenderer(IAssemblyCatalog assemblyCatalog)
         {
             this.ModelCodeGenerator = typeof(ModelCodeGenerator);
 
@@ -52,7 +53,7 @@
 
             this.Provider = new VBCodeProvider();
 
-            this.Host = new NancyRazorEngineHost(new VBRazorCodeLanguage());
+            this.Host = new NancyRazorEngineHost(new VBRazorCodeLanguage(), assemblyCatalog);
         }
 
         /// <summary>
