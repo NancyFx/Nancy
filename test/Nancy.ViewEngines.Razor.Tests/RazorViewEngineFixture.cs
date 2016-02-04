@@ -223,13 +223,6 @@
         [Fact]
         public void RenderView_csharp_should_be_able_to_find_the_model_when_a_null_model_is_passed()
         {
-            // Given
-            AppDomainAssemblyTypeScanner.AssembliesToScan =
-                AppDomainAssemblyTypeScanner.DefaultAssembliesToScan.Union(new Func<Assembly, bool>[]
-                                                                               {
-                                                                                   x =>
-                                                                                   x.GetName().Name.StartsWith("Nancy")
-                                                                               });
             var view = new StringBuilder()
                 .AppendLine("@model Nancy.ViewEngines.Razor.Tests.Models.Person")
                 .AppendLine(@"@{ var hobby = new Hobby { Name = ""Music"" }; }")
