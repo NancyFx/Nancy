@@ -130,9 +130,6 @@
     <Compile Include="..\Nancy.ViewEngines.DotLiquid.Tests\Functional\PartialRenderingFixture.cs">
       <Link>Functional\PartialRenderingFixture.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy.ViewEngines.DotLiquid.Tests\Functional\RootPathProvider.cs">
-      <Link>Functional\RootPathProvider.cs</Link>
-    </Compile>
     <Compile Include="..\Nancy.ViewEngines.DotLiquid.Tests\LiquidNancyFileSystemFixture.cs">
       <Link>LiquidNancyFileSystemFixture.cs</Link>
     </Compile>

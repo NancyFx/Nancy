@@ -13,7 +13,6 @@ namespace Nancy.ViewEngines.DotLiquid.Tests.Functional
         {
             var bootstrapper = new ConfigurableBootstrapper(with => {
                 with.Module<PartialRenderingModule>();
-                with.RootPathProvider<RootPathProvider>();
             });
 
             this.browser =
