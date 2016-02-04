@@ -44,6 +44,7 @@
             private readonly ITextResource textResource;
             private readonly INancyEnvironment environment;
             private readonly IRuntimeEnvironmentInformation runtimeEnvironmentInformation;
+            private readonly ITypeCatalog typeCatalog;
 
             public FakeDiagnostics(
                 IRootPathProvider rootPathProvider,
@@ -57,7 +58,8 @@
                 IEnumerable<IRouteMetadataProvider> routeMetadataProviders,
                 ITextResource textResource,
                 INancyEnvironment environment,
-                IRuntimeEnvironmentInformation runtimeEnvironmentInformation)
+                IRuntimeEnvironmentInformation runtimeEnvironmentInformation,
+                ITypeCatalog typeCatalog)
             {
                 this.diagnosticProviders = (new IDiagnosticsProvider[] { new FakeDiagnosticsProvider() }).ToArray();
                 this.rootPathProvider = rootPathProvider;
@@ -72,6 +74,7 @@
                 this.textResource = textResource;
                 this.environment = environment;
                 this.runtimeEnvironmentInformation = runtimeEnvironmentInformation;
+                this.typeCatalog = typeCatalog;
             }
 
             public void Initialize(IPipelines pipelines)
@@ -90,7 +93,8 @@
                     this.routeMetadataProviders,
                     this.textResource,
                     this.environment,
-                    this.runtimeEnvironmentInformation);
+                    this.runtimeEnvironmentInformation,
+                    this.typeCatalog);
             }
         }
 
