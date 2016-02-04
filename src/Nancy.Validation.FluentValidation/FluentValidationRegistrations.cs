@@ -13,7 +13,8 @@ namespace Nancy.Validation.FluentValidation
         /// Creates a new instance of the <see cref="FluentValidationRegistrations"/> class, that performs
         /// the default registrations of the Fluent Validation types.
         /// </summary>
-        public FluentValidationRegistrations()
+        /// <param name="typeCatalog">An <see cref="ITypeCatalog"/> instance.</param>
+        public FluentValidationRegistrations(ITypeCatalog typeCatalog) : base(typeCatalog)
         {
             this.Register<IFluentAdapterFactory>(typeof(DefaultFluentAdapterFactory));
             this.RegisterAll<IFluentAdapter>();
