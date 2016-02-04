@@ -17,18 +17,19 @@
         /// <summary>
         /// User-configured root namespaces for assemblies.
         /// </summary>
-        public readonly static IDictionary<Assembly, string> RootNamespaces = new Dictionary<Assembly, string>();
+        public static readonly IDictionary<Assembly, string> RootNamespaces = new Dictionary<Assembly, string>();
 
         /// <summary>
         /// A list of assemblies to ignore when scanning for embedded views.
         /// </summary>
-        public readonly static IList<Assembly> Ignore = new List<Assembly>();
+        public static readonly IList<Assembly> Ignore = new List<Assembly>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResourceViewLocationProvider"/> class.
         /// </summary>
-        public ResourceViewLocationProvider()
-            : this(new DefaultResourceReader(), new ResourceAssemblyProvider())
+        /// <param name="assemblyCatalog">An <see cref="IAssemblyCatalog"/> instance.</param>
+        public ResourceViewLocationProvider(IAssemblyCatalog assemblyCatalog)
+            : this(new DefaultResourceReader(), new ResourceAssemblyProvider(assemblyCatalog))
         {
         }
 
