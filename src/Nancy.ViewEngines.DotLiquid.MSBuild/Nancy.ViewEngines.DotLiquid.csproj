@@ -27,7 +27,6 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -96,62 +95,46 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\DotLiquid.1.7.0\lib\NET40\DotLiquid.dll</HintPath>
     </Reference>
-    <Reference Include="System">
-    </Reference>
-    <Reference Include="System.Core">
-    </Reference>
-    <Reference Include="System.Xml.Linq">
-    </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-    </Reference>
-    <Reference Include="Microsoft.CSharp">
-    </Reference>
-    <Reference Include="System.Data">
-    </Reference>
-    <Reference Include="System.Xml">
-    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="DefaultFileSystemFactory.cs" />
-    <Compile Include="DotLiquidRegistrations.cs" />
-    <Compile Include="DotLiquidViewEngine.cs" />
-    <Compile Include="DynamicDrop.cs" />
-    <Compile Include="IFileSystemFactory.cs" />
-    <Compile Include="LiquidNancyFileSystem.cs" />
+    <Compile Include="..\Nancy.ViewEngines.DotLiquid\DefaultFileSystemFactory.cs">
+      <Link>DefaultFileSystemFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.DotLiquid\DotLiquidRegistrations.cs">
+      <Link>DotLiquidRegistrations.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.DotLiquid\DotLiquidViewEngine.cs">
+      <Link>DotLiquidViewEngine.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.DotLiquid\DynamicDrop.cs">
+      <Link>DynamicDrop.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.DotLiquid\IFileSystemFactory.cs">
+      <Link>IFileSystemFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.DotLiquid\LiquidNancyFileSystem.cs">
+      <Link>LiquidNancyFileSystem.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nancy\Nancy.csproj">
+    <ProjectReference Include="..\Nancy.MSBuild\Nancy.csproj">
       <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
       <Name>Nancy</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
-      <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
-      <Visible>False</Visible>
-      <ProductName>Windows Installer 3.1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\500.liquid" />
+    <EmbeddedResource Include="..\Nancy.ViewEngines.DotLiquid\Resources\500.liquid">
+      <Link>Resources\500.liquid</Link>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

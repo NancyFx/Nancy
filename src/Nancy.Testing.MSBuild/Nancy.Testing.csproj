@@ -27,7 +27,6 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -94,96 +93,133 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\CsQuery.1.3.3\lib\net40\CsQuery.dll</HintPath>
     </Reference>
-    <Reference Include="System">
-    </Reference>
-    <Reference Include="System.Core">
-    </Reference>
-    <Reference Include="System.Xml.Linq">
-    </Reference>
-    <Reference Include="Microsoft.CSharp">
-    </Reference>
-    <Reference Include="System.Xml">
-    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Accept.cs" />
-    <Compile Include="AndConnector.cs" />
-    <Compile Include="AssertEqualityComparer.cs" />
-    <Compile Include="AssertException.cs" />
-    <Compile Include="Asserts.cs" />
-    <Compile Include="LegacyBrowser.cs" />
-    <Compile Include="Browser.cs" />
-    <Compile Include="BrowserContext.cs" />
-    <Compile Include="BrowserContextExtensions.cs" />
-    <Compile Include="BrowserContextMultipartFormData.cs" />
-    <Compile Include="BrowserResponse.cs" />
-    <Compile Include="BrowserResponseBodyWrapper.cs" />
-    <Compile Include="BrowserResponseBodyWrapperExtensions.cs" />
-    <Compile Include="BrowserResponseExtensions.cs" />
-    <Compile Include="StaticConfigurationContext.cs" />
-    <Compile Include="TestingViewBrowserResponseExtensions.cs" />
-    <Compile Include="TestingViewContextKeys.cs" />
-    <Compile Include="TestingViewFactory.cs" />
-    <Compile Include="ConfigurableBootstrapper.cs" />
-    <Compile Include="DocumentWrapper.cs" />
-    <Compile Include="NancyContextExtensions.cs" />
-    <Compile Include="Fakes\FakeRootPathProvider.cs" />
-    <Compile Include="ConfigurableNancyModule.cs" />
-    <Compile Include="IBrowserContextValues.cs" />
-    <Compile Include="IndexHelper.cs" />
-    <Compile Include="NodeWrapper.cs" />
-    <Compile Include="PassThroughStatusHandler.cs" />
-    <Compile Include="PathHelper.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
+    <Compile Include="..\Nancy.Testing\Accept.cs">
+      <Link>Accept.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Testing\AndConnector.cs">
+      <Link>AndConnector.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Testing\AssertEqualityComparer.cs">
+      <Link>AssertEqualityComparer.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Testing\AssertException.cs">
+      <Link>AssertException.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Testing\Asserts.cs">
+      <Link>Asserts.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Testing\LegacyBrowser.cs">
+      <Link>LegacyBrowser.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Testing\Browser.cs">
+      <Link>Browser.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Testing\BrowserContext.cs">
+      <Link>BrowserContext.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Testing\BrowserContextExtensions.cs">
+      <Link>BrowserContextExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Testing\BrowserContextMultipartFormData.cs">
+      <Link>BrowserContextMultipartFormData.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Testing\BrowserResponse.cs">
+      <Link>BrowserResponse.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Testing\BrowserResponseBodyWrapper.cs">
+      <Link>BrowserResponseBodyWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Testing\BrowserResponseBodyWrapperExtensions.cs">
+      <Link>BrowserResponseBodyWrapperExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Testing\BrowserResponseExtensions.cs">
+      <Link>BrowserResponseExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Testing\StaticConfigurationContext.cs">
+      <Link>StaticConfigurationContext.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Testing\TestingViewBrowserResponseExtensions.cs">
+      <Link>TestingViewBrowserResponseExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Testing\TestingViewContextKeys.cs">
+      <Link>TestingViewContextKeys.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Testing\TestingViewFactory.cs">
+      <Link>TestingViewFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Testing\ConfigurableBootstrapper.cs">
+      <Link>ConfigurableBootstrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Testing\DocumentWrapper.cs">
+      <Link>DocumentWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Testing\NancyContextExtensions.cs">
+      <Link>NancyContextExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Testing\Fakes\FakeRootPathProvider.cs">
+      <Link>Fakes\FakeRootPathProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Testing\ConfigurableNancyModule.cs">
+      <Link>ConfigurableNancyModule.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Testing\IBrowserContextValues.cs">
+      <Link>IBrowserContextValues.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Testing\IndexHelper.cs">
+      <Link>IndexHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Testing\NodeWrapper.cs">
+      <Link>NodeWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Testing\PassThroughStatusHandler.cs">
+      <Link>PassThroughStatusHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Testing\PathHelper.cs">
+      <Link>PathHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Testing\Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
+      <Link>Properties\Resources.Designer.cs</Link>
     </Compile>
-    <Compile Include="QueryWrapper.cs" />
-    <Compile Include="AssertExtensions.cs" />
+    <Compile Include="..\Nancy.Testing\QueryWrapper.cs">
+      <Link>QueryWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Testing\AssertExtensions.cs">
+      <Link>AssertExtensions.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nancy.Authentication.Forms\Nancy.Authentication.Forms.csproj">
+    <ProjectReference Include="..\Nancy.Authentication.Forms.MSBuild\Nancy.Authentication.Forms.csproj">
       <Project>{E8B18958-7C8A-4FBA-AF00-3041C34A20CE}</Project>
       <Name>Nancy.Authentication.Forms</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Nancy\Nancy.csproj">
+    <ProjectReference Include="..\Nancy.MSBuild\Nancy.csproj">
       <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
       <Name>Nancy</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
-      <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
-      <Visible>False</Visible>
-      <ProductName>Windows Installer 3.1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
+    <EmbeddedResource Include="..\Nancy.Testing\Resources\Nancy Testing Cert.pfx">
+      <Link>Resources\Nancy Testing Cert.pfx</Link>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\Nancy Testing Cert.pfx" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx">
+    <EmbeddedResource Include="..\Nancy.Testing\Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <Link>Properties\Resources.resx</Link>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

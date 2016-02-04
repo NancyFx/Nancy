@@ -25,8 +25,6 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>
-    </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{396F0BCE-5B51-4B6A-931E-312880C24725}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
@@ -40,7 +38,6 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
-    <TargetFrameworkProfile />
     <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -64,65 +61,82 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Web.DynamicData" />
-    <Reference Include="System.Web.Entity" />
-    <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
-    <Reference Include="System.Web.Services" />
-    <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Web.config" />
+    <Content Include="..\Nancy.Demo.Razor.Localization\Web.config">
+      <Link>Web.config</Link>
+    </Content>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CustomResourceAssemblyProvider.cs" />
-    <Compile Include="DemoBootstrapper.cs" />
-    <Compile Include="Modules\HomeModule.cs" />
-    <Compile Include="Resources\Text.Designer.cs">
+    <Compile Include="..\Nancy.Demo.Razor.Localization\CustomResourceAssemblyProvider.cs">
+      <Link>CustomResourceAssemblyProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Demo.Razor.Localization\DemoBootstrapper.cs">
+      <Link>DemoBootstrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Demo.Razor.Localization\Modules\HomeModule.cs">
+      <Link>Modules\HomeModule.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Demo.Razor.Localization\Resources\Text.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Text.resx</DependentUpon>
+      <Link>Resources\Text.Designer.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Index.cshtml" />
-    <Content Include="Views\razor-layout.cshtml" />
-    <Content Include="Views\CultureView.cshtml" />
-    <Content Include="Views\CultureView-de-DE.cshtml" />
-    <None Include="Web.Debug.config">
+    <Content Include="..\Nancy.Demo.Razor.Localization\Views\Index.cshtml">
+      <Link>Views\Index.cshtml</Link>
+    </Content>
+    <Content Include="..\Nancy.Demo.Razor.Localization\Views\razor-layout.cshtml">
+      <Link>Views\razor-layout.cshtml</Link>
+    </Content>
+    <Content Include="..\Nancy.Demo.Razor.Localization\Views\CultureView.cshtml">
+      <Link>Views\CultureView.cshtml</Link>
+    </Content>
+    <Content Include="..\Nancy.Demo.Razor.Localization\Views\CultureView-de-DE.cshtml">
+      <Link>Views\CultureView-de-DE.cshtml</Link>
+    </Content>
+    <None Include="..\Nancy.Demo.Razor.Localization\Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
+      <Link>Web.Debug.config</Link>
     </None>
-    <None Include="Web.Release.config">
+    <None Include="..\Nancy.Demo.Razor.Localization\Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
+      <Link>Web.Release.config</Link>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\Text.de-DE.resx" />
-    <EmbeddedResource Include="Resources\Text.en-US.resx" />
-    <EmbeddedResource Include="Resources\Text.resx">
+    <EmbeddedResource Include="..\Nancy.Demo.Razor.Localization\Resources\Text.de-DE.resx">
+      <Link>Resources\Text.de-DE.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Nancy.Demo.Razor.Localization\Resources\Text.en-US.resx">
+      <Link>Resources\Text.en-US.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Nancy.Demo.Razor.Localization\Resources\Text.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Text.Designer.cs</LastGenOutput>
+      <Link>Resources\Text.resx</Link>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Nancy.Hosting.Aspnet\Nancy.Hosting.Aspnet.csproj">
+    <ProjectReference Include="..\..\src\Nancy.Hosting.Aspnet.MSBuild\Nancy.Hosting.Aspnet.csproj">
       <Project>{15b7f794-0bb2-4b66-ad78-4a951f1209b2}</Project>
       <Name>Nancy.Hosting.Aspnet</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\Nancy.ViewEngines.Razor\Nancy.ViewEngines.Razor.csproj">
+    <ProjectReference Include="..\..\src\Nancy.ViewEngines.Razor.MSBuild\Nancy.ViewEngines.Razor.csproj">
       <Project>{2c6f51df-015c-4db6-b44c-0e5e4f25e2a9}</Project>
       <Name>Nancy.ViewEngines.Razor</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\Nancy\Nancy.csproj">
+    <ProjectReference Include="..\..\src\Nancy.MSBuild\Nancy.csproj">
       <Project>{34576216-0dca-4b0f-a0dc-9075e75a676f}</Project>
       <Name>Nancy</Name>
     </ProjectReference>

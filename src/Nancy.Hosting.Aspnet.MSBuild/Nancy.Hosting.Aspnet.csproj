@@ -27,7 +27,6 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -92,65 +91,49 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System">
-    </Reference>
-    <Reference Include="System.Configuration">
-    </Reference>
-    <Reference Include="System.Core">
-    </Reference>
-    <Reference Include="System.Web">
-    </Reference>
-    <Reference Include="System.Xml.Linq">
-    </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-    </Reference>
-    <Reference Include="Microsoft.CSharp">
-    </Reference>
-    <Reference Include="System.Data">
-    </Reference>
-    <Reference Include="System.Xml">
-    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="AspNetRootPathProvider.cs" />
-    <Compile Include="BootstrapperEntry.cs" />
-    <Compile Include="DefaultNancyAspNetBootstrapper.cs" />
-    <Compile Include="NancyFxSection.cs" />
-    <Compile Include="NancyHandler.cs" />
-    <Compile Include="NancyHttpRequestHandler.cs" />
-    <Compile Include="NancyResponseStream.cs" />
-    <Compile Include="TinyIoCAspNetExtensions.cs" />
+    <Compile Include="..\Nancy.Hosting.Aspnet\AspNetRootPathProvider.cs">
+      <Link>AspNetRootPathProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Hosting.Aspnet\BootstrapperEntry.cs">
+      <Link>BootstrapperEntry.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Hosting.Aspnet\DefaultNancyAspNetBootstrapper.cs">
+      <Link>DefaultNancyAspNetBootstrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Hosting.Aspnet\NancyFxSection.cs">
+      <Link>NancyFxSection.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Hosting.Aspnet\NancyHandler.cs">
+      <Link>NancyHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Hosting.Aspnet\NancyHttpRequestHandler.cs">
+      <Link>NancyHttpRequestHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Hosting.Aspnet\NancyResponseStream.cs">
+      <Link>NancyResponseStream.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Hosting.Aspnet\TinyIoCAspNetExtensions.cs">
+      <Link>TinyIoCAspNetExtensions.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nancy\Nancy.csproj">
+    <ProjectReference Include="..\Nancy.MSBuild\Nancy.csproj">
       <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
       <Name>Nancy</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
-      <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
-      <Visible>False</Visible>
-      <ProductName>Windows Installer 3.1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

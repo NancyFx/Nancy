@@ -12,7 +12,6 @@
     <AssemblyName>Nancy.Encryption.MachineKey.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -58,7 +57,6 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -75,15 +73,19 @@
     <Compile Include="..\Nancy.Tests\ShouldExtensions.cs">
       <Link>ShouldExtensions.cs</Link>
     </Compile>
-    <Compile Include="MachineConfigEncryptionProviderFixture.cs" />
-    <Compile Include="MachineKeyHmacProviderFixture.cs" />
+    <Compile Include="..\Nancy.Encryption.MachineKey.Tests\MachineConfigEncryptionProviderFixture.cs">
+      <Link>MachineConfigEncryptionProviderFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Encryption.MachineKey.Tests\MachineKeyHmacProviderFixture.cs">
+      <Link>MachineKeyHmacProviderFixture.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Nancy.Encryption.MachineKey\Nancy.Encryption.MachineKey.csproj">
+    <ProjectReference Include="..\..\src\Nancy.Encryption.MachineKey.MSBuild\Nancy.Encryption.MachineKey.csproj">
       <Project>{14a66047-5f67-4774-b0e3-195d1d25b6a5}</Project>
       <Name>Nancy.Encryption.MachineKey</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\Nancy\Nancy.csproj">
+    <ProjectReference Include="..\..\src\Nancy.MSBuild\Nancy.csproj">
       <Project>{34576216-0dca-4b0f-a0dc-9075e75a676f}</Project>
       <Name>Nancy</Name>
     </ProjectReference>

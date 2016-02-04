@@ -4,8 +4,6 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>
-    </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{911196F4-B88F-4940-B1FD-D30F5290D06D}</ProjectGuid>
     <ProjectTypeGuids>{349C5851-65DF-11DA-9384-00065B846F21};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -15,12 +13,7 @@
     <AssemblyName>Nancy.Demo.Authentication.Basic</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <UseIISExpress>false</UseIISExpress>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
     <OldToolsVersion>4.0</OldToolsVersion>
-    <TargetFrameworkProfile />
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -89,46 +82,51 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Web.DynamicData" />
-    <Reference Include="System.Web.Entity" />
-    <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
-    <Reference Include="System.Web.Services" />
-    <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Web.config" />
-    <Content Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
+    <Content Include="..\Nancy.Demo.Authentication.Basic\Web.config">
+      <Link>Web.config</Link>
     </Content>
-    <Content Include="Web.Release.config">
+    <Content Include="..\Nancy.Demo.Authentication.Basic\Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
+      <Link>Web.Debug.config</Link>
+    </Content>
+    <Content Include="..\Nancy.Demo.Authentication.Basic\Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+      <Link>Web.Release.config</Link>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AuthenticationBootstrapper.cs" />
-    <Compile Include="MainModule.cs" />
-    <Compile Include="SecureModule.cs" />
-    <Compile Include="UserValidator.cs" />
+    <Compile Include="..\Nancy.Demo.Authentication.Basic\AuthenticationBootstrapper.cs">
+      <Link>AuthenticationBootstrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Demo.Authentication.Basic\MainModule.cs">
+      <Link>MainModule.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Demo.Authentication.Basic\SecureModule.cs">
+      <Link>SecureModule.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Demo.Authentication.Basic\UserValidator.cs">
+      <Link>UserValidator.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Nancy.Authentication.Basic\Nancy.Authentication.Basic.csproj">
+    <ProjectReference Include="..\..\src\Nancy.Authentication.Basic.MSBuild\Nancy.Authentication.Basic.csproj">
       <Project>{BD72B98D-C81A-4013-B606-94B4BA2273E5}</Project>
       <Name>Nancy.Authentication.Basic</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\Nancy.Hosting.Aspnet\Nancy.Hosting.Aspnet.csproj">
+    <ProjectReference Include="..\..\src\Nancy.Hosting.Aspnet.MSBuild\Nancy.Hosting.Aspnet.csproj">
       <Project>{15B7F794-0BB2-4B66-AD78-4A951F1209B2}</Project>
       <Name>Nancy.Hosting.Aspnet</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\Nancy\Nancy.csproj">
+    <ProjectReference Include="..\..\src\Nancy.MSBuild\Nancy.csproj">
       <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
       <Name>Nancy</Name>
     </ProjectReference>

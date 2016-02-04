@@ -27,7 +27,6 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -93,55 +92,62 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
-      <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
-      <Visible>False</Visible>
-      <ProductName>Windows Installer 3.1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="DefaultPropertyValidatorFactory.cs" />
-    <Compile Include="IPropertyValidator.cs" />
-    <Compile Include="IPropertyValidatorFactory.cs" />
-    <Compile Include="IValidatableObjectAdapter.cs" />
-    <Compile Include="PropertyValidator.cs" />
-    <Compile Include="DataAnnotationsRegistrations.cs" />
-    <Compile Include="DefaultValidatableObjectAdapter.cs" />
-    <Compile Include="DataAnnotationsValidator.cs" />
-    <Compile Include="DataAnnotationsValidatorAdapter.cs" />
-    <Compile Include="DataAnnotationsValidatorFactory.cs" />
-    <Compile Include="IDataAnnotationsValidatorAdapter.cs" />
-    <Compile Include="RangeValidatorAdapter.cs" />
-    <Compile Include="RegexValidatorAdapter.cs" />
-    <Compile Include="RequiredValidatorAdapter.cs" />
-    <Compile Include="StringLengthValidatorAdapter.cs" />
+    <Compile Include="..\Nancy.Validation.DataAnnotations\DefaultPropertyValidatorFactory.cs">
+      <Link>DefaultPropertyValidatorFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotations\IPropertyValidator.cs">
+      <Link>IPropertyValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotations\IPropertyValidatorFactory.cs">
+      <Link>IPropertyValidatorFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotations\IValidatableObjectAdapter.cs">
+      <Link>IValidatableObjectAdapter.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotations\PropertyValidator.cs">
+      <Link>PropertyValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotations\DataAnnotationsRegistrations.cs">
+      <Link>DataAnnotationsRegistrations.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotations\DefaultValidatableObjectAdapter.cs">
+      <Link>DefaultValidatableObjectAdapter.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotations\DataAnnotationsValidator.cs">
+      <Link>DataAnnotationsValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotations\DataAnnotationsValidatorAdapter.cs">
+      <Link>DataAnnotationsValidatorAdapter.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotations\DataAnnotationsValidatorFactory.cs">
+      <Link>DataAnnotationsValidatorFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotations\IDataAnnotationsValidatorAdapter.cs">
+      <Link>IDataAnnotationsValidatorAdapter.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotations\RangeValidatorAdapter.cs">
+      <Link>RangeValidatorAdapter.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotations\RegexValidatorAdapter.cs">
+      <Link>RegexValidatorAdapter.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotations\RequiredValidatorAdapter.cs">
+      <Link>RequiredValidatorAdapter.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotations\StringLengthValidatorAdapter.cs">
+      <Link>StringLengthValidatorAdapter.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nancy\Nancy.csproj">
+    <ProjectReference Include="..\Nancy.MSBuild\Nancy.csproj">
       <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
       <Name>Nancy</Name>
     </ProjectReference>

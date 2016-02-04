@@ -12,7 +12,6 @@
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
@@ -71,13 +70,19 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="MarkDownViewEngine.cs" />
-    <Compile Include="MarkdownViewEngineHost.cs" />
-    <Compile Include="MarkdownViewengineRender.cs" />
+    <Compile Include="..\Nancy.ViewEngines.Markdown\MarkDownViewEngine.cs">
+      <Link>MarkDownViewEngine.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.Markdown\MarkdownViewEngineHost.cs">
+      <Link>MarkdownViewEngineHost.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.Markdown\MarkdownViewengineRender.cs">
+      <Link>MarkdownViewengineRender.cs</Link>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\Nancy\Nancy.csproj">
+    <ProjectReference Include="..\Nancy.MSBuild\Nancy.csproj">
       <Project>{34576216-0dca-4b0f-a0dc-9075e75a676f}</Project>
       <Name>Nancy</Name>
     </ProjectReference>

@@ -34,8 +34,6 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>
-    </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{BAE74CD5-57C2-40E3-8F7A-EDE5721C2ACC}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
@@ -45,12 +43,7 @@
     <AssemblyName>Nancy.Demo.Authentication.Stateless</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <UseIISExpress>false</UseIISExpress>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
     <OldToolsVersion>4.0</OldToolsVersion>
-    <TargetFrameworkProfile />
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -78,51 +71,60 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Web.DynamicData" />
-    <Reference Include="System.Web.Entity" />
-    <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
-    <Reference Include="System.Web.Services" />
-    <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Web.config" />
-    <Content Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
+    <Content Include="..\Nancy.Demo.Authentication.Stateless\Web.config">
+      <Link>Web.config</Link>
     </Content>
-    <Content Include="Web.Release.config">
+    <Content Include="..\Nancy.Demo.Authentication.Stateless\Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
+      <Link>Web.Debug.config</Link>
+    </Content>
+    <Content Include="..\Nancy.Demo.Authentication.Stateless\Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+      <Link>Web.Release.config</Link>
     </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="AuthModule.cs" />
-    <Compile Include="Models\UserModel.cs" />
-    <Compile Include="RootModule.cs" />
-    <Compile Include="SecureModule.cs" />
-    <Compile Include="StatelessAuthBootstrapper.cs" />
-    <Compile Include="UserDatabase.cs" />
+    <Compile Include="..\Nancy.Demo.Authentication.Stateless\AuthModule.cs">
+      <Link>AuthModule.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Demo.Authentication.Stateless\Models\UserModel.cs">
+      <Link>Models\UserModel.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Demo.Authentication.Stateless\RootModule.cs">
+      <Link>RootModule.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Demo.Authentication.Stateless\SecureModule.cs">
+      <Link>SecureModule.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Demo.Authentication.Stateless\StatelessAuthBootstrapper.cs">
+      <Link>StatelessAuthBootstrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Demo.Authentication.Stateless\UserDatabase.cs">
+      <Link>UserDatabase.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Nancy.Authentication.Stateless\Nancy.Authentication.Stateless.csproj">
+    <ProjectReference Include="..\..\src\Nancy.Authentication.Stateless.MSBuild\Nancy.Authentication.Stateless.csproj">
       <Project>{211560C3-FDDF-46D6-AB0C-F3BC04B173B5}</Project>
       <Name>Nancy.Authentication.Stateless</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\Nancy.Hosting.Aspnet\Nancy.Hosting.Aspnet.csproj">
+    <ProjectReference Include="..\..\src\Nancy.Hosting.Aspnet.MSBuild\Nancy.Hosting.Aspnet.csproj">
       <Project>{15B7F794-0BB2-4B66-AD78-4A951F1209B2}</Project>
       <Name>Nancy.Hosting.Aspnet</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\Nancy\Nancy.csproj">
+    <ProjectReference Include="..\..\src\Nancy.MSBuild\Nancy.csproj">
       <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
       <Name>Nancy</Name>
     </ProjectReference>

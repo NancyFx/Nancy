@@ -14,7 +14,6 @@
     <ProductVersion>12.0.0</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
@@ -67,7 +66,6 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -80,44 +78,56 @@
     <Compile Include="..\Nancy.Tests\ShouldExtensions.cs">
       <Link>ShouldExtensions.cs</Link>
     </Compile>
-    <Compile Include="MarkdownViewEngineFixture.cs" />
+    <Compile Include="..\Nancy.ViewEngines.Markdown.Tests\MarkdownViewEngineFixture.cs">
+      <Link>MarkdownViewEngineFixture.cs</Link>
+    </Compile>
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="MarkdownViewengineRenderFixture.cs" />
-    <Compile Include="UserModel.cs" />
+    <Compile Include="..\Nancy.ViewEngines.Markdown.Tests\MarkdownViewengineRenderFixture.cs">
+      <Link>MarkdownViewengineRenderFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.Markdown.Tests\UserModel.cs">
+      <Link>UserModel.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Markdown\standalone.md">
+    <None Include="..\Nancy.ViewEngines.Markdown.Tests\Markdown\standalone.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>Markdown\standalone.md</Link>
     </None>
-    <None Include="Markdown\home.md">
+    <None Include="..\Nancy.ViewEngines.Markdown.Tests\Markdown\home.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>Markdown\home.md</Link>
     </None>
-    <None Include="Markdown\master.md">
+    <None Include="..\Nancy.ViewEngines.Markdown.Tests\Markdown\master.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>Markdown\master.md</Link>
     </None>
-    <None Include="Markdown\partial.markdown">
+    <None Include="..\Nancy.ViewEngines.Markdown.Tests\Markdown\partial.markdown">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>Markdown\partial.markdown</Link>
     </None>
-    <None Include="Markdown\viewwithhtmlmaster.md">
+    <None Include="..\Nancy.ViewEngines.Markdown.Tests\Markdown\viewwithhtmlmaster.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>Markdown\viewwithhtmlmaster.md</Link>
     </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Nancy.ViewEngines.Markdown\Nancy.ViewEngines.Markdown.csproj">
+    <ProjectReference Include="..\..\src\Nancy.ViewEngines.Markdown.MSBuild\Nancy.ViewEngines.Markdown.csproj">
       <Project>{864AF449-0902-44FC-BEEE-06BA9A6F4A8F}</Project>
       <Name>Nancy.ViewEngines.Markdown</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\Nancy\Nancy.csproj">
+    <ProjectReference Include="..\..\src\Nancy.MSBuild\Nancy.csproj">
       <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
       <Name>Nancy</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Markdown\htmlmaster.html">
+    <None Include="..\Nancy.ViewEngines.Markdown.Tests\Markdown\htmlmaster.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>Markdown\htmlmaster.html</Link>
     </None>
   </ItemGroup>
   <ItemGroup>

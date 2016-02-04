@@ -28,7 +28,6 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
@@ -94,7 +93,6 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -114,109 +112,115 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="GreetingViewBase.cs" />
-    <Compile Include="RazorViewEngineFixture.cs" />
-    <Compile Include="TestModel.cs" />
-    <Compile Include="TextResourceFinderFixture.cs" />
+    <Compile Include="..\Nancy.ViewEngines.Razor.Tests\GreetingViewBase.cs">
+      <Link>GreetingViewBase.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.Razor.Tests\RazorViewEngineFixture.cs">
+      <Link>RazorViewEngineFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.Razor.Tests\TestModel.cs">
+      <Link>TestModel.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.Razor.Tests\TextResourceFinderFixture.cs">
+      <Link>TextResourceFinderFixture.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nancy.ViewEngines.Razor.Tests.Models\Nancy.ViewEngines.Razor.Tests.Models.csproj">
+    <ProjectReference Include="..\Nancy.ViewEngines.Razor.Tests.Models.MSBuild\Nancy.ViewEngines.Razor.Tests.Models.csproj">
       <Project>{3F18F5DA-93E0-4513-8BF4-BC8EE5C4117C}</Project>
       <Name>Nancy.ViewEngines.Razor.Tests.Models</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\Nancy.ViewEngines.Razor\Nancy.ViewEngines.Razor.csproj">
+    <ProjectReference Include="..\..\src\Nancy.ViewEngines.Razor.MSBuild\Nancy.ViewEngines.Razor.csproj">
       <Project>{2C6F51DF-015C-4DB6-B44C-0E5E4F25E2A9}</Project>
       <Name>Nancy.ViewEngines.Razor</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\Nancy\Nancy.csproj">
+    <ProjectReference Include="..\..\src\Nancy.MSBuild\Nancy.csproj">
       <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
       <Name>Nancy</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="TestViews\ViewThatUsesAttributeWithRawHtmlStringInside.cshtml">
+    <None Include="..\Nancy.ViewEngines.Razor.Tests\TestViews\ViewThatUsesAttributeWithRawHtmlStringInside.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\ViewThatUsesAttributeWithRawHtmlStringInside.cshtml</Link>
     </None>
-    <None Include="TestViews\ViewThatUsesHelper.cshtml">
+    <None Include="..\Nancy.ViewEngines.Razor.Tests\TestViews\ViewThatUsesHelper.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\ViewThatUsesHelper.cshtml</Link>
     </None>
-    <None Include="TestViews\ViewThatUsesAttributeWithCodeInside.cshtml">
+    <None Include="..\Nancy.ViewEngines.Razor.Tests\TestViews\ViewThatUsesAttributeWithCodeInside.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\ViewThatUsesAttributeWithCodeInside.cshtml</Link>
     </None>
-    <None Include="TestViews\ViewThatUsesAttributeWithDynamicNullInside.cshtml">
+    <None Include="..\Nancy.ViewEngines.Razor.Tests\TestViews\ViewThatUsesAttributeWithDynamicNullInside.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\ViewThatUsesAttributeWithDynamicNullInside.cshtml</Link>
     </None>
-    <None Include="TestViews\ViewThatUsesAttributeWithHtmlStringInside.cshtml">
+    <None Include="..\Nancy.ViewEngines.Razor.Tests\TestViews\ViewThatUsesAttributeWithHtmlStringInside.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\ViewThatUsesAttributeWithHtmlStringInside.cshtml</Link>
     </None>
-    <None Include="TestViews\ViewThatUsesAttributeWithNonEncodedHtmlStringInside.cshtml">
+    <None Include="..\Nancy.ViewEngines.Razor.Tests\TestViews\ViewThatUsesAttributeWithNonEncodedHtmlStringInside.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\ViewThatUsesAttributeWithNonEncodedHtmlStringInside.cshtml</Link>
     </None>
-    <None Include="TestViews\ViewThatUsesModelVB.vbhtml">
+    <None Include="..\Nancy.ViewEngines.Razor.Tests\TestViews\ViewThatUsesModelVB.vbhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\ViewThatUsesModelVB.vbhtml</Link>
     </None>
-    <None Include="TestViews\ViewThatUsesModelCSharp.cshtml">
+    <None Include="..\Nancy.ViewEngines.Razor.Tests\TestViews\ViewThatUsesModelCSharp.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\ViewThatUsesModelCSharp.cshtml</Link>
     </None>
-    <None Include="TestViews\Layouts\LayoutWithManySections.cshtml">
+    <None Include="..\Nancy.ViewEngines.Razor.Tests\TestViews\Layouts\LayoutWithManySections.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\Layouts\LayoutWithManySections.cshtml</Link>
     </None>
-    <None Include="TestViews\Layouts\LayoutWithOptionalSection.cshtml">
+    <None Include="..\Nancy.ViewEngines.Razor.Tests\TestViews\Layouts\LayoutWithOptionalSection.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\Layouts\LayoutWithOptionalSection.cshtml</Link>
     </None>
-    <None Include="TestViews\Layouts\LayoutWithOptionalSectionWithDefaults.cshtml">
+    <None Include="..\Nancy.ViewEngines.Razor.Tests\TestViews\Layouts\LayoutWithOptionalSectionWithDefaults.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\Layouts\LayoutWithOptionalSectionWithDefaults.cshtml</Link>
     </None>
-    <None Include="TestViews\Layouts\LayoutWithSection.cshtml">
+    <None Include="..\Nancy.ViewEngines.Razor.Tests\TestViews\Layouts\LayoutWithSection.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\Layouts\LayoutWithSection.cshtml</Link>
     </None>
-    <None Include="TestViews\Layouts\SimplyLayout.cshtml">
+    <None Include="..\Nancy.ViewEngines.Razor.Tests\TestViews\Layouts\SimplyLayout.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\Layouts\SimplyLayout.cshtml</Link>
     </None>
-    <None Include="TestViews\ViewThatUsesLayout.cshtml">
+    <None Include="..\Nancy.ViewEngines.Razor.Tests\TestViews\ViewThatUsesLayout.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\ViewThatUsesLayout.cshtml</Link>
     </None>
-    <None Include="TestViews\ViewThatUsesLayoutAndManySection.cshtml">
+    <None Include="..\Nancy.ViewEngines.Razor.Tests\TestViews\ViewThatUsesLayoutAndManySection.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\ViewThatUsesLayoutAndManySection.cshtml</Link>
     </None>
-    <None Include="TestViews\ViewThatUsesLayoutAndModel.cshtml">
+    <None Include="..\Nancy.ViewEngines.Razor.Tests\TestViews\ViewThatUsesLayoutAndModel.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\ViewThatUsesLayoutAndModel.cshtml</Link>
     </None>
-    <None Include="TestViews\ViewThatUsesLayoutAndOptionalSection.cshtml">
+    <None Include="..\Nancy.ViewEngines.Razor.Tests\TestViews\ViewThatUsesLayoutAndOptionalSection.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\ViewThatUsesLayoutAndOptionalSection.cshtml</Link>
     </None>
-    <None Include="TestViews\ViewThatUsesLayoutAndOptionalSectionOverridingDefaults.cshtml">
+    <None Include="..\Nancy.ViewEngines.Razor.Tests\TestViews\ViewThatUsesLayoutAndOptionalSectionOverridingDefaults.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\ViewThatUsesLayoutAndOptionalSectionOverridingDefaults.cshtml</Link>
     </None>
-    <None Include="TestViews\ViewThatUsesLayoutAndOptionalSectionWithDefaults.cshtml">
+    <None Include="..\Nancy.ViewEngines.Razor.Tests\TestViews\ViewThatUsesLayoutAndOptionalSectionWithDefaults.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\ViewThatUsesLayoutAndOptionalSectionWithDefaults.cshtml</Link>
     </None>
-    <None Include="TestViews\ViewThatUsesLayoutAndSection.cshtml">
+    <None Include="..\Nancy.ViewEngines.Razor.Tests\TestViews\ViewThatUsesLayoutAndSection.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\ViewThatUsesLayoutAndSection.cshtml</Link>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
-      <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4 Client Profile %28x86 and x64%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
-      <Visible>False</Visible>
-      <ProductName>Windows Installer 3.1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />

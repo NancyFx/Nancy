@@ -4,8 +4,6 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>
-    </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{F417B81C-B914-4BFD-8299-6BBD11072B01}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
@@ -15,16 +13,11 @@
     <AssemblyName>Nancy.Demo.Validation</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <UseIISExpress>false</UseIISExpress>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
     <OldToolsVersion>4.0</OldToolsVersion>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
-    <TargetFrameworkProfile />
     <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -88,72 +81,90 @@
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Web.DynamicData" />
-    <Reference Include="System.Web.Entity" />
-    <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
-    <Reference Include="System.Web.Services" />
-    <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Web.config" />
-    <Content Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
+    <Content Include="..\Nancy.Demo.Validation\Web.config">
+      <Link>Web.config</Link>
     </Content>
-    <Content Include="Web.Release.config">
+    <Content Include="..\Nancy.Demo.Validation\Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
+      <Link>Web.Debug.config</Link>
+    </Content>
+    <Content Include="..\Nancy.Demo.Validation\Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+      <Link>Web.Release.config</Link>
     </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="CustomersModule.cs" />
-    <Compile Include="Database\DB.cs" />
-    <Compile Include="MainModule.cs" />
-    <Compile Include="Models\Customer.cs" />
-    <Compile Include="Models\OddLengthStringAttribute.cs" />
-    <Compile Include="Models\OddLengthStringAttributeAdapter.cs" />
-    <Compile Include="Models\Product.cs" />
-    <Compile Include="ProductsModule.cs" />
-    <Compile Include="ValidationBootstrapper.cs" />
+    <Compile Include="..\Nancy.Demo.Validation\CustomersModule.cs">
+      <Link>CustomersModule.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Demo.Validation\Database\DB.cs">
+      <Link>Database\DB.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Demo.Validation\MainModule.cs">
+      <Link>MainModule.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Demo.Validation\Models\Customer.cs">
+      <Link>Models\Customer.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Demo.Validation\Models\OddLengthStringAttribute.cs">
+      <Link>Models\OddLengthStringAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Demo.Validation\Models\OddLengthStringAttributeAdapter.cs">
+      <Link>Models\OddLengthStringAttributeAdapter.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Demo.Validation\Models\Product.cs">
+      <Link>Models\Product.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Demo.Validation\ProductsModule.cs">
+      <Link>ProductsModule.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Demo.Validation\ValidationBootstrapper.cs">
+      <Link>ValidationBootstrapper.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Nancy.Hosting.Aspnet\Nancy.Hosting.Aspnet.csproj">
+    <ProjectReference Include="..\..\src\Nancy.Hosting.Aspnet.MSBuild\Nancy.Hosting.Aspnet.csproj">
       <Project>{15B7F794-0BB2-4B66-AD78-4A951F1209B2}</Project>
       <Name>Nancy.Hosting.Aspnet</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\Nancy.Validation.DataAnnotations\Nancy.Validation.DataAnnotations.csproj">
+    <ProjectReference Include="..\..\src\Nancy.Validation.DataAnnotations.MSBuild\Nancy.Validation.DataAnnotations.csproj">
       <Project>{701765DC-F4F2-4943-A37F-6ED253198158}</Project>
       <Name>Nancy.Validation.DataAnnotations</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\Nancy.Validation.FluentValidation\Nancy.Validation.FluentValidation.csproj">
+    <ProjectReference Include="..\..\src\Nancy.Validation.FluentValidation.MSBuild\Nancy.Validation.FluentValidation.csproj">
       <Project>{01230F2A-D108-480C-B834-8CE0569FD3B3}</Project>
       <Name>Nancy.Validation.FluentValidation</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\Nancy.ViewEngines.Spark\Nancy.ViewEngines.Spark.csproj">
+    <ProjectReference Include="..\..\src\Nancy.ViewEngines.Spark.MSBuild\Nancy.ViewEngines.Spark.csproj">
       <Project>{4B7E35DF-1569-4346-B180-A09615723095}</Project>
       <Name>Nancy.ViewEngines.Spark</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\Nancy\Nancy.csproj">
+    <ProjectReference Include="..\..\src\Nancy.MSBuild\Nancy.csproj">
       <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
       <Name>Nancy</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
-    <None Include="Views\CustomerError.spark">
+    <None Include="..\Nancy.Demo.Validation\Views\CustomerError.spark">
       <SubType>Designer</SubType>
+      <Link>Views\CustomerError.spark</Link>
     </None>
-    <None Include="Views\Customers.spark" />
+    <None Include="..\Nancy.Demo.Validation\Views\Customers.spark">
+      <Link>Views\Customers.spark</Link>
+    </None>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

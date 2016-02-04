@@ -26,7 +26,6 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -69,7 +68,6 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -90,92 +88,127 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Modules\AbsoluteUrlTestModule.cs" />
-    <Compile Include="Modules\CookieModule.cs" />
-    <Compile Include="Modules\PerRouteAuthModule.cs" />
-    <Compile Include="Modules\RazorWithTracingTestModule.cs" />
-    <Compile Include="Modules\JsonpTestModule.cs" />
-    <Compile Include="Modules\RazorTestModule.cs" />
-    <Compile Include="Modules\SerializerTestModule.cs" />
-    <Compile Include="Modules\ThrowingModule.cs" />
-    <Compile Include="Tests\AbsoluteUrlTests.cs" />
-    <Compile Include="Tests\AsyncExceptionTests.cs" />
-    <Compile Include="Tests\BasicRouteInvocationsFixture.cs" />
-    <Compile Include="Modules\SerializeTestModule.cs" />
-    <Compile Include="Tests\ContentNegotiationFixture.cs" />
-    <Compile Include="Tests\CookieFixture.cs" />
-    <Compile Include="Tests\MethodRewriteFixture.cs" />
-    <Compile Include="Tests\PerRouteAuthFixture.cs" />
-    <Compile Include="Tests\RouteConstraintTests.cs" />
-    <Compile Include="Tests\SerializerTests.cs" />
-    <Compile Include="Tests\TracingSmokeTests.cs" />
-    <Compile Include="Tests\JsonpTests.cs" />
-    <Compile Include="Tests\ModelBindingTests.cs" />
-    <Compile Include="Tests\ManualStaticContentTests.cs" />
-    <Compile Include="Tests\PartialViewTests.cs" />
-    <Compile Include="Tests\ViewBagTests.cs" />
-    <Compile Include="Tests\SerializeTests.cs" />
+    <Compile Include="..\Nancy.Tests.Functional\Modules\AbsoluteUrlTestModule.cs">
+      <Link>Modules\AbsoluteUrlTestModule.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Modules\CookieModule.cs">
+      <Link>Modules\CookieModule.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Modules\PerRouteAuthModule.cs">
+      <Link>Modules\PerRouteAuthModule.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Modules\RazorWithTracingTestModule.cs">
+      <Link>Modules\RazorWithTracingTestModule.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Modules\JsonpTestModule.cs">
+      <Link>Modules\JsonpTestModule.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Modules\RazorTestModule.cs">
+      <Link>Modules\RazorTestModule.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Modules\SerializerTestModule.cs">
+      <Link>Modules\SerializerTestModule.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Modules\ThrowingModule.cs">
+      <Link>Modules\ThrowingModule.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Tests\AbsoluteUrlTests.cs">
+      <Link>Tests\AbsoluteUrlTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Tests\AsyncExceptionTests.cs">
+      <Link>Tests\AsyncExceptionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Tests\BasicRouteInvocationsFixture.cs">
+      <Link>Tests\BasicRouteInvocationsFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Modules\SerializeTestModule.cs">
+      <Link>Modules\SerializeTestModule.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Tests\ContentNegotiationFixture.cs">
+      <Link>Tests\ContentNegotiationFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Tests\CookieFixture.cs">
+      <Link>Tests\CookieFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Tests\MethodRewriteFixture.cs">
+      <Link>Tests\MethodRewriteFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Tests\PerRouteAuthFixture.cs">
+      <Link>Tests\PerRouteAuthFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Tests\RouteConstraintTests.cs">
+      <Link>Tests\RouteConstraintTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Tests\SerializerTests.cs">
+      <Link>Tests\SerializerTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Tests\TracingSmokeTests.cs">
+      <Link>Tests\TracingSmokeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Tests\JsonpTests.cs">
+      <Link>Tests\JsonpTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Tests\ModelBindingTests.cs">
+      <Link>Tests\ModelBindingTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Tests\ManualStaticContentTests.cs">
+      <Link>Tests\ManualStaticContentTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Tests\PartialViewTests.cs">
+      <Link>Tests\PartialViewTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Tests\ViewBagTests.cs">
+      <Link>Tests\ViewBagTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Tests\SerializeTests.cs">
+      <Link>Tests\SerializeTests.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Nancy.Testing\Nancy.Testing.csproj">
+    <ProjectReference Include="..\..\src\Nancy.Testing.MSBuild\Nancy.Testing.csproj">
       <Project>{D79203C0-B672-4751-9C95-C3AB7D3FEFBE}</Project>
       <Name>Nancy.Testing</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\Nancy.ViewEngines.Razor\Nancy.ViewEngines.Razor.csproj">
+    <ProjectReference Include="..\..\src\Nancy.ViewEngines.Razor.MSBuild\Nancy.ViewEngines.Razor.csproj">
       <Project>{2C6F51DF-015C-4DB6-B44C-0E5E4F25E2A9}</Project>
       <Name>Nancy.ViewEngines.Razor</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\Nancy\Nancy.csproj">
+    <ProjectReference Include="..\..\src\Nancy.MSBuild\Nancy.csproj">
       <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
       <Name>Nancy</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\smiley.png">
+    <Content Include="..\Nancy.Tests.Functional\Content\smiley.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>Content\smiley.png</Link>
     </Content>
-    <Content Include="Hidden.txt">
+    <Content Include="..\Nancy.Tests.Functional\Hidden.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>Hidden.txt</Link>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
-      <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
-      <Visible>False</Visible>
-      <ProductName>Windows Installer 3.1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Views\RazorPageWithUnknownPartial.cshtml">
+    <None Include="..\Nancy.Tests.Functional\Views\RazorPageWithUnknownPartial.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>Views\RazorPageWithUnknownPartial.cshtml</Link>
     </None>
-    <None Include="Views\_PartialTest.cshtml">
+    <None Include="..\Nancy.Tests.Functional\Views\_PartialTest.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>Views\_PartialTest.cshtml</Link>
     </None>
-    <None Include="Views\_LayoutPage.cshtml">
+    <None Include="..\Nancy.Tests.Functional\Views\_LayoutPage.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>Views\_LayoutPage.cshtml</Link>
     </None>
-    <None Include="Views\_ViewStart.cshtml">
+    <None Include="..\Nancy.Tests.Functional\Views\_ViewStart.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>Views\_ViewStart.cshtml</Link>
     </None>
-    <None Include="Views\RazorPage.cshtml">
+    <None Include="..\Nancy.Tests.Functional\Views\RazorPage.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>Views\RazorPage.cshtml</Link>
     </None>
   </ItemGroup>
   <ItemGroup>

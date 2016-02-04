@@ -25,7 +25,6 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -92,79 +91,60 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System">
-    </Reference>
-    <Reference Include="System.Core">
-    </Reference>
-    <Reference Include="System.Xml.Linq">
-    </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-    </Reference>
-    <Reference Include="Microsoft.CSharp">
-    </Reference>
-    <Reference Include="System.Data">
-    </Reference>
-    <Reference Include="System.Xml">
-    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Models\Index.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="TestModule.cs" />
-    <Compile Include="DemoBootstrapper.cs" />
+    <Compile Include="..\Nancy.Demo.Hosting.Self\Models\Index.cs">
+      <Link>Models\Index.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Demo.Hosting.Self\Program.cs">
+      <Link>Program.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Demo.Hosting.Self\TestModule.cs">
+      <Link>TestModule.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Demo.Hosting.Self\DemoBootstrapper.cs">
+      <Link>DemoBootstrapper.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Nancy.Hosting.Self\Nancy.Hosting.Self.csproj">
+    <ProjectReference Include="..\..\src\Nancy.Hosting.Self.MSBuild\Nancy.Hosting.Self.csproj">
       <Project>{AA7F66EB-EC2C-47DE-855F-30B3E6EF2134}</Project>
       <Name>Nancy.Hosting.Self</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\Nancy.ViewEngines.Spark\Nancy.ViewEngines.Spark.csproj">
+    <ProjectReference Include="..\..\src\Nancy.ViewEngines.Spark.MSBuild\Nancy.ViewEngines.Spark.csproj">
       <Project>{4B7E35DF-1569-4346-B180-A09615723095}</Project>
       <Name>Nancy.ViewEngines.Spark</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\Nancy\Nancy.csproj">
+    <ProjectReference Include="..\..\src\Nancy.MSBuild\Nancy.csproj">
       <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
       <Name>Nancy</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config">
+    <None Include="..\Nancy.Demo.Hosting.Self\app.config">
       <SubType>Designer</SubType>
+      <Link>app.config</Link>
     </None>
-    <Content Include="Views\FileUpload.spark">
+    <Content Include="..\Nancy.Demo.Hosting.Self\Views\FileUpload.spark">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>Views\FileUpload.spark</Link>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\staticview.html">
+    <Content Include="..\Nancy.Demo.Hosting.Self\Views\staticview.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>Views\staticview.html</Link>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
-      <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
-      <Visible>False</Visible>
-      <ProductName>Windows Installer 3.1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -12,7 +12,6 @@
     <AssemblyName>Nancy.Embedded.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -37,7 +36,6 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -57,28 +55,35 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Unit\EmbeddedStaticContentConventionBuilderFixture.cs" />
+    <Compile Include="..\Nancy.Embedded.Tests\Unit\EmbeddedStaticContentConventionBuilderFixture.cs">
+      <Link>Unit\EmbeddedStaticContentConventionBuilderFixture.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Nancy.Embedded\Nancy.Embedded.csproj">
+    <ProjectReference Include="..\..\src\Nancy.Embedded.MSBuild\Nancy.Embedded.csproj">
       <Project>{d8eba39b-63ae-4a66-bd0e-f7f95e572135}</Project>
       <Name>Nancy.Embedded</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\Nancy\Nancy.csproj">
+    <ProjectReference Include="..\..\src\Nancy.MSBuild\Nancy.csproj">
       <Project>{34576216-0dca-4b0f-a0dc-9075e75a676f}</Project>
       <Name>Nancy</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\embedded.txt">
+    <EmbeddedResource Include="..\Nancy.Embedded.Tests\Resources\embedded.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>Resources\embedded.txt</Link>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\Subfolder-with-hyphen\embedded3.txt" />
+    <EmbeddedResource Include="..\Nancy.Embedded.Tests\Resources\Subfolder-with-hyphen\embedded3.txt">
+      <Link>Resources\Subfolder-with-hyphen\embedded3.txt</Link>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\Subfolder\embedded2.txt" />
+    <EmbeddedResource Include="..\Nancy.Embedded.Tests\Resources\Subfolder\embedded2.txt">
+      <Link>Resources\Subfolder\embedded2.txt</Link>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

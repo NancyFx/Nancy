@@ -28,7 +28,6 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -95,22 +94,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Spark.1.7.0.0\lib\NET40\Spark.dll</HintPath>
     </Reference>
-    <Reference Include="System">
-    </Reference>
-    <Reference Include="System.Core">
-    </Reference>
-    <Reference Include="System.Web">
-    </Reference>
-    <Reference Include="System.Xml.Linq">
-    </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-    </Reference>
-    <Reference Include="Microsoft.CSharp">
-    </Reference>
-    <Reference Include="System.Data">
-    </Reference>
-    <Reference Include="System.Xml">
-    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
     <Reference Include="xunit, Version=1.9.1.1600, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\xunit.1.9.1\lib\net20\xunit.dll</HintPath>
@@ -127,156 +117,179 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="NancyViewFolderFixture.cs" />
-    <Compile Include="ViewModels\FakeViewModel.cs" />
-    <Compile Include="SparkViewEngineFixture.cs" />
+    <Compile Include="..\Nancy.ViewEngines.Spark.Tests\NancyViewFolderFixture.cs">
+      <Link>NancyViewFolderFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.Spark.Tests\ViewModels\FakeViewModel.cs">
+      <Link>ViewModels\FakeViewModel.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.Spark.Tests\SparkViewEngineFixture.cs">
+      <Link>SparkViewEngineFixture.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Nancy.ViewEngines.Spark\Nancy.ViewEngines.Spark.csproj">
+    <ProjectReference Include="..\..\src\Nancy.ViewEngines.Spark.MSBuild\Nancy.ViewEngines.Spark.csproj">
       <Project>{4B7E35DF-1569-4346-B180-A09615723095}</Project>
       <Name>Nancy.ViewEngines.Spark</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\Nancy\Nancy.csproj">
+    <ProjectReference Include="..\..\src\Nancy.MSBuild\Nancy.csproj">
       <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
       <Name>Nancy</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="..\Nancy.ViewEngines.Spark.Tests\App.config">
+      <Link>App.config</Link>
+    </None>
     <None Include="packages.config" />
-    <None Include="ShadeViews\Features\ShadeCodeMayBeDashOrAtBraced.shade">
+    <None Include="..\Nancy.ViewEngines.Spark.Tests\ShadeViews\Features\ShadeCodeMayBeDashOrAtBraced.shade">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>ShadeViews\Features\ShadeCodeMayBeDashOrAtBraced.shade</Link>
     </None>
-    <None Include="ShadeViews\Features\ShadeElementsMayStackOnOneLine.shade">
+    <None Include="..\Nancy.ViewEngines.Spark.Tests\ShadeViews\Features\ShadeElementsMayStackOnOneLine.shade">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>ShadeViews\Features\ShadeElementsMayStackOnOneLine.shade</Link>
     </None>
-    <None Include="ShadeViews\Features\ShadeEvaluatesExpressions.shade">
+    <None Include="..\Nancy.ViewEngines.Spark.Tests\ShadeViews\Features\ShadeEvaluatesExpressions.shade">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>ShadeViews\Features\ShadeEvaluatesExpressions.shade</Link>
     </None>
-    <None Include="ShadeViews\Features\ShadeFileRenders.shade">
+    <None Include="..\Nancy.ViewEngines.Spark.Tests\ShadeViews\Features\ShadeFileRenders.shade">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>ShadeViews\Features\ShadeFileRenders.shade</Link>
     </None>
-    <None Include="ShadeViews\Features\ShadeSupportsAttributesAndMayTreatSomeElementsAsSpecialNodes.shade">
+    <None Include="..\Nancy.ViewEngines.Spark.Tests\ShadeViews\Features\ShadeSupportsAttributesAndMayTreatSomeElementsAsSpecialNodes.shade">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>ShadeViews\Features\ShadeSupportsAttributesAndMayTreatSomeElementsAsSpecialNodes.shade</Link>
     </None>
-    <None Include="ShadeViews\Features\ShadeTextMayContainExpressions.shade">
+    <None Include="..\Nancy.ViewEngines.Spark.Tests\ShadeViews\Features\ShadeTextMayContainExpressions.shade">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>ShadeViews\Features\ShadeTextMayContainExpressions.shade</Link>
     </None>
-    <None Include="ShadeViews\Features\ShadeThatUsesApplicationLayout.shade">
+    <None Include="..\Nancy.ViewEngines.Spark.Tests\ShadeViews\Features\ShadeThatUsesApplicationLayout.shade">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>ShadeViews\Features\ShadeThatUsesApplicationLayout.shade</Link>
     </None>
-    <None Include="ShadeViews\Shared\_SimpleValue.spark">
+    <None Include="..\Nancy.ViewEngines.Spark.Tests\ShadeViews\Shared\_SimpleValue.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>ShadeViews\Shared\_SimpleValue.spark</Link>
     </None>
-    <None Include="TestViews\Layouts\anotherLayout.spark">
+    <None Include="..\Nancy.ViewEngines.Spark.Tests\TestViews\Layouts\anotherLayout.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\Layouts\anotherLayout.spark</Link>
     </None>
-    <None Include="ShadeViews\Shared\Application.shade">
+    <None Include="..\Nancy.ViewEngines.Spark.Tests\ShadeViews\Shared\Application.shade">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>ShadeViews\Shared\Application.shade</Link>
     </None>
-    <None Include="TestViews\Shared\Application.spark">
+    <None Include="..\Nancy.ViewEngines.Spark.Tests\TestViews\Shared\Application.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\Shared\Application.spark</Link>
     </None>
-    <None Include="TestViews\Shared\elementLayout.spark">
+    <None Include="..\Nancy.ViewEngines.Spark.Tests\TestViews\Shared\elementLayout.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\Shared\elementLayout.spark</Link>
     </None>
-    <None Include="TestViews\Shared\layout.spark">
+    <None Include="..\Nancy.ViewEngines.Spark.Tests\TestViews\Shared\layout.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\Shared\layout.spark</Link>
     </None>
-    <None Include="TestViews\Shared\Partial.spark">
+    <None Include="..\Nancy.ViewEngines.Spark.Tests\TestViews\Shared\Partial.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\Shared\Partial.spark</Link>
     </None>
-    <None Include="TestViews\Stub\ViewThatUsesTildeSubstitutionWithSparkReplace.spark">
+    <None Include="..\Nancy.ViewEngines.Spark.Tests\TestViews\Stub\ViewThatUsesTildeSubstitutionWithSparkReplace.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\Stub\ViewThatUsesTildeSubstitutionWithSparkReplace.spark</Link>
     </None>
-    <None Include="TestViews\Stub\ViewThatUsesViewDataForViewBag.spark">
+    <None Include="..\Nancy.ViewEngines.Spark.Tests\TestViews\Stub\ViewThatUsesViewDataForViewBag.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\Stub\ViewThatUsesViewDataForViewBag.spark</Link>
     </None>
-    <None Include="TestViews\Stub\Subfolder\Subfolderview.spark">
+    <None Include="..\Nancy.ViewEngines.Spark.Tests\TestViews\Stub\Subfolder\Subfolderview.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\Stub\Subfolder\Subfolderview.spark</Link>
     </None>
-    <None Include="TestViews\Stub\ViewThatUsesNullHtmlEncoding.spark">
+    <None Include="..\Nancy.ViewEngines.Spark.Tests\TestViews\Stub\ViewThatUsesNullHtmlEncoding.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\Stub\ViewThatUsesNullHtmlEncoding.spark</Link>
     </None>
-    <None Include="TestViews\Stub\ViewThatUsesTildeSubstitution.spark">
+    <None Include="..\Nancy.ViewEngines.Spark.Tests\TestViews\Stub\ViewThatUsesTildeSubstitution.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\Stub\ViewThatUsesTildeSubstitution.spark</Link>
     </None>
-    <None Include="TestViews\Stub\ViewThatExpectsALayout.spark">
+    <None Include="..\Nancy.ViewEngines.Spark.Tests\TestViews\Stub\ViewThatExpectsALayout.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\Stub\ViewThatExpectsALayout.spark</Link>
     </None>
-    <None Include="TestViews\Stub\ViewThatUsesAllNamedContentAreas.spark">
+    <None Include="..\Nancy.ViewEngines.Spark.Tests\TestViews\Stub\ViewThatUsesAllNamedContentAreas.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\Stub\ViewThatUsesAllNamedContentAreas.spark</Link>
     </None>
-    <None Include="TestViews\Stub\ViewThatUsesApplicationLayout.spark">
+    <None Include="..\Nancy.ViewEngines.Spark.Tests\TestViews\Stub\ViewThatUsesApplicationLayout.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\Stub\ViewThatUsesApplicationLayout.spark</Link>
     </None>
-    <None Include="TestViews\Stub\Index.spark">
+    <None Include="..\Nancy.ViewEngines.Spark.Tests\TestViews\Stub\Index.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\Stub\Index.spark</Link>
     </None>
-    <None Include="TestViews\Stub\List.spark">
+    <None Include="..\Nancy.ViewEngines.Spark.Tests\TestViews\Stub\List.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\Stub\List.spark</Link>
     </None>
-    <None Include="TestViews\Stub\PartialTarget.spark">
+    <None Include="..\Nancy.ViewEngines.Spark.Tests\TestViews\Stub\PartialTarget.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\Stub\PartialTarget.spark</Link>
     </None>
-    <None Include="TestViews\Stub\ViewThatChangesGlobalSettings.spark">
+    <None Include="..\Nancy.ViewEngines.Spark.Tests\TestViews\Stub\ViewThatChangesGlobalSettings.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\Stub\ViewThatChangesGlobalSettings.spark</Link>
     </None>
-    <None Include="TestViews\Stub\ViewThatRendersPartialsThatShareState.spark">
+    <None Include="..\Nancy.ViewEngines.Spark.Tests\TestViews\Stub\ViewThatRendersPartialsThatShareState.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\Stub\ViewThatRendersPartialsThatShareState.spark</Link>
     </None>
-    <None Include="TestViews\Stub\ViewThatUsesAnonymousViewModel.spark">
+    <None Include="..\Nancy.ViewEngines.Spark.Tests\TestViews\Stub\ViewThatUsesAnonymousViewModel.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\Stub\ViewThatUsesAnonymousViewModel.spark</Link>
     </None>
-    <None Include="TestViews\Stub\ViewThatUsesANullViewModel.spark">
+    <None Include="..\Nancy.ViewEngines.Spark.Tests\TestViews\Stub\ViewThatUsesANullViewModel.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\Stub\ViewThatUsesANullViewModel.spark</Link>
     </None>
-    <None Include="TestViews\Stub\ViewThatUsesForeach.spark">
+    <None Include="..\Nancy.ViewEngines.Spark.Tests\TestViews\Stub\ViewThatUsesForeach.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\Stub\ViewThatUsesForeach.spark</Link>
     </None>
-    <None Include="TestViews\Stub\ViewThatUsesFormatting.spark">
+    <None Include="..\Nancy.ViewEngines.Spark.Tests\TestViews\Stub\ViewThatUsesFormatting.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\Stub\ViewThatUsesFormatting.spark</Link>
     </None>
-    <None Include="TestViews\Stub\ViewThatUsesHtmlEncoding.spark">
+    <None Include="..\Nancy.ViewEngines.Spark.Tests\TestViews\Stub\ViewThatUsesHtmlEncoding.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\Stub\ViewThatUsesHtmlEncoding.spark</Link>
     </None>
-    <None Include="TestViews\Stub\ViewThatUsesNamespaces.spark">
+    <None Include="..\Nancy.ViewEngines.Spark.Tests\TestViews\Stub\ViewThatUsesNamespaces.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\Stub\ViewThatUsesNamespaces.spark</Link>
     </None>
-    <None Include="TestViews\Stub\ViewThatUsesPartial.spark">
+    <None Include="..\Nancy.ViewEngines.Spark.Tests\TestViews\Stub\ViewThatUsesPartial.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\Stub\ViewThatUsesPartial.spark</Link>
     </None>
-    <None Include="TestViews\Stub\ViewThatUsesPartialImplicitly.spark">
+    <None Include="..\Nancy.ViewEngines.Spark.Tests\TestViews\Stub\ViewThatUsesPartialImplicitly.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\Stub\ViewThatUsesPartialImplicitly.spark</Link>
     </None>
-    <None Include="TestViews\Stub\ViewThatUsesViewModel.spark">
+    <None Include="..\Nancy.ViewEngines.Spark.Tests\TestViews\Stub\ViewThatUsesViewModel.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\Stub\ViewThatUsesViewModel.spark</Link>
     </None>
-    <None Include="TestViews\Stub\_Row.spark">
+    <None Include="..\Nancy.ViewEngines.Spark.Tests\TestViews\Stub\_Row.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\Stub\_Row.spark</Link>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
-      <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
-      <Visible>False</Visible>
-      <ProductName>Windows Installer 3.1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />

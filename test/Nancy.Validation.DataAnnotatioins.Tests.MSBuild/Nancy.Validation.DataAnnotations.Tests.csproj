@@ -28,7 +28,6 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -94,7 +93,6 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -114,43 +112,31 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="DataAnnotationsValidatorFixture.cs" />
-    <Compile Include="DataAnnotationValidatorFactoryFixture.cs" />
-    <Compile Include="DataAnnotationValidatorFixture.cs" />
-    <Compile Include="DefaultValidatableObjectAdapterFixture.cs" />
-    <Compile Include="PropertyValidatorFixture.cs" />
+    <Compile Include="..\Nancy.Validation.DataAnnotatioins.Tests\DataAnnotationsValidatorFixture.cs">
+      <Link>DataAnnotationsValidatorFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotatioins.Tests\DataAnnotationValidatorFactoryFixture.cs">
+      <Link>DataAnnotationValidatorFactoryFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotatioins.Tests\DataAnnotationValidatorFixture.cs">
+      <Link>DataAnnotationValidatorFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotatioins.Tests\DefaultValidatableObjectAdapterFixture.cs">
+      <Link>DefaultValidatableObjectAdapterFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotatioins.Tests\PropertyValidatorFixture.cs">
+      <Link>PropertyValidatorFixture.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Nancy.Validation.DataAnnotations\Nancy.Validation.DataAnnotations.csproj">
+    <ProjectReference Include="..\..\src\Nancy.Validation.DataAnnotations.MSBuild\Nancy.Validation.DataAnnotations.csproj">
       <Project>{701765DC-F4F2-4943-A37F-6ED253198158}</Project>
       <Name>Nancy.Validation.DataAnnotations</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\Nancy\Nancy.csproj">
+    <ProjectReference Include="..\..\src\Nancy.MSBuild\Nancy.csproj">
       <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
       <Name>Nancy</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
-      <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
-      <Visible>False</Visible>
-      <ProductName>Windows Installer 3.1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

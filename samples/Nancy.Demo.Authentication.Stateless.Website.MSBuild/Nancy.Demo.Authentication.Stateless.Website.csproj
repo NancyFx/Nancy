@@ -34,8 +34,6 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>
-    </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{B5E3586D-81DE-49C3-83BC-062684795127}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
@@ -45,16 +43,7 @@
     <AssemblyName>Nancy.Demo.Authentication.Stateless.Website</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <UseIISExpress>false</UseIISExpress>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
     <OldToolsVersion>4.0</OldToolsVersion>
-    <TargetFrameworkProfile />
-    <IISExpressSSLPort />
-    <IISExpressAnonymousAuthentication />
-    <IISExpressWindowsAuthentication />
-    <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -77,32 +66,38 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.ApplicationServices" />
-    <Reference Include="System.Web.DynamicData" />
-    <Reference Include="System.Web.Entity" />
-    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="index.html">
+    <Content Include="..\Nancy.Demo.Authentication.Stateless.Website\index.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>index.html</Link>
     </Content>
-    <Content Include="login.html">
+    <Content Include="..\Nancy.Demo.Authentication.Stateless.Website\login.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>login.html</Link>
     </Content>
-    <Content Include="Scripts\api.js" />
-    <Content Include="Scripts\apiToken.js" />
-    <Content Include="secure.html">
+    <Content Include="..\Nancy.Demo.Authentication.Stateless.Website\Scripts\api.js">
+      <Link>Scripts\api.js</Link>
+    </Content>
+    <Content Include="..\Nancy.Demo.Authentication.Stateless.Website\Scripts\apiToken.js">
+      <Link>Scripts\apiToken.js</Link>
+    </Content>
+    <Content Include="..\Nancy.Demo.Authentication.Stateless.Website\secure.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>secure.html</Link>
     </Content>
-    <Content Include="Web.config" />
-    <Content Include="Web.Debug.config">
+    <Content Include="..\Nancy.Demo.Authentication.Stateless.Website\Web.config">
+      <Link>Web.config</Link>
+    </Content>
+    <Content Include="..\Nancy.Demo.Authentication.Stateless.Website\Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
+      <Link>Web.Debug.config</Link>
     </Content>
-    <Content Include="Web.Release.config">
+    <Content Include="..\Nancy.Demo.Authentication.Stateless.Website\Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
+      <Link>Web.Release.config</Link>
     </Content>
   </ItemGroup>
   <ItemGroup>
@@ -125,12 +120,8 @@
           <AutoAssignPort>False</AutoAssignPort>
           <DevelopmentServerPort>51101</DevelopmentServerPort>
           <DevelopmentServerVPath>/statelessWebsite</DevelopmentServerVPath>
-          <IISUrl>
-          </IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>
-          </CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>

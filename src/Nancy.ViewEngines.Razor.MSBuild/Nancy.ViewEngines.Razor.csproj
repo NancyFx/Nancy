@@ -12,8 +12,6 @@
     <AssemblyName>Nancy.ViewEngines.Razor</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -91,83 +89,108 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System">
-    </Reference>
-    <Reference Include="System.Configuration">
-    </Reference>
-    <Reference Include="System.Core">
-    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
     <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\..\packages\Microsoft.AspNet.Razor.2.0.30506.0\lib\net40\System.Web.Razor.dll</HintPath>
     </Reference>
-    <Reference Include="System.Xml.Linq">
-    </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-    </Reference>
-    <Reference Include="Microsoft.CSharp">
-    </Reference>
-    <Reference Include="System.Data">
-    </Reference>
-    <Reference Include="System.Xml">
-    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="AttributeValue.cs" />
-    <Compile Include="ClrTypeResolver.cs" />
-    <Compile Include="CodeParserHelper.cs" />
-    <Compile Include="CSharp\CSharpClrTypeResolver.cs" />
-    <Compile Include="CSharp\CSharpRazorViewRenderer.cs" />
-    <Compile Include="DefaultRazorConfiguration.cs" />
-    <Compile Include="HelperResult.cs" />
-    <Compile Include="HtmlHelpers.cs" />
-    <Compile Include="HtmlHelpersExtensions.cs" />
-    <Compile Include="IHtmlString.cs" />
-    <Compile Include="INancyRazorView.cs" />
-    <Compile Include="IRazorConfiguration.cs" />
-    <Compile Include="IRazorViewRenderer.cs" />
-    <Compile Include="CSharp\NancyCSharpRazorCodeParser.cs" />
-    <Compile Include="ModelCodeGenerator.cs" />
-    <Compile Include="NancyRazorEngineHost.cs" />
-    <Compile Include="NancyRazorErrorView.cs" />
-    <Compile Include="NancyRazorViewBase.cs" />
-    <Compile Include="NonEncodedHtmlString.cs" />
-    <Compile Include="RazorConfigurationSection.cs" />
-    <Compile Include="RazorViewEngine.cs" />
-    <Compile Include="RazorViewEngineApplicationStartupRegistrations.cs" />
-    <Compile Include="UrlHelpers.cs" />
-    <Compile Include="VisualBasic\NancyVisualBasicRazorCodeParser.cs" />
-    <Compile Include="VisualBasic\VisualBasicClrTypeResolver.cs" />
-    <Compile Include="VisualBasic\VisualBasicRazorViewRenderer.cs" />
-    <Compile Include="EncodedHtmlString.cs" />
+    <Compile Include="..\Nancy.ViewEngines.Razor\AttributeValue.cs">
+      <Link>AttributeValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.Razor\ClrTypeResolver.cs">
+      <Link>ClrTypeResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.Razor\CodeParserHelper.cs">
+      <Link>CodeParserHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.Razor\CSharp\CSharpClrTypeResolver.cs">
+      <Link>CSharp\CSharpClrTypeResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.Razor\CSharp\CSharpRazorViewRenderer.cs">
+      <Link>CSharp\CSharpRazorViewRenderer.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.Razor\DefaultRazorConfiguration.cs">
+      <Link>DefaultRazorConfiguration.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.Razor\HelperResult.cs">
+      <Link>HelperResult.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.Razor\HtmlHelpers.cs">
+      <Link>HtmlHelpers.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.Razor\HtmlHelpersExtensions.cs">
+      <Link>HtmlHelpersExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.Razor\IHtmlString.cs">
+      <Link>IHtmlString.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.Razor\INancyRazorView.cs">
+      <Link>INancyRazorView.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.Razor\IRazorConfiguration.cs">
+      <Link>IRazorConfiguration.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.Razor\IRazorViewRenderer.cs">
+      <Link>IRazorViewRenderer.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.Razor\CSharp\NancyCSharpRazorCodeParser.cs">
+      <Link>CSharp\NancyCSharpRazorCodeParser.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.Razor\ModelCodeGenerator.cs">
+      <Link>ModelCodeGenerator.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.Razor\NancyRazorEngineHost.cs">
+      <Link>NancyRazorEngineHost.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.Razor\NancyRazorErrorView.cs">
+      <Link>NancyRazorErrorView.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.Razor\NancyRazorViewBase.cs">
+      <Link>NancyRazorViewBase.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.Razor\NonEncodedHtmlString.cs">
+      <Link>NonEncodedHtmlString.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.Razor\RazorConfigurationSection.cs">
+      <Link>RazorConfigurationSection.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.Razor\RazorViewEngine.cs">
+      <Link>RazorViewEngine.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.Razor\RazorViewEngineApplicationStartupRegistrations.cs">
+      <Link>RazorViewEngineApplicationStartupRegistrations.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.Razor\UrlHelpers.cs">
+      <Link>UrlHelpers.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.Razor\VisualBasic\NancyVisualBasicRazorCodeParser.cs">
+      <Link>VisualBasic\NancyVisualBasicRazorCodeParser.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.Razor\VisualBasic\VisualBasicClrTypeResolver.cs">
+      <Link>VisualBasic\VisualBasicClrTypeResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.Razor\VisualBasic\VisualBasicRazorViewRenderer.cs">
+      <Link>VisualBasic\VisualBasicRazorViewRenderer.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.Razor\EncodedHtmlString.cs">
+      <Link>EncodedHtmlString.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\CompilationError.html" />
-  </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
-      <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4 Client Profile %28x86 and x64%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
-      <Visible>False</Visible>
-      <ProductName>Windows Installer 3.1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
+    <EmbeddedResource Include="..\Nancy.ViewEngines.Razor\Resources\CompilationError.html">
+      <Link>Resources\CompilationError.html</Link>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -178,7 +201,7 @@
   </Target>
   -->
   <ItemGroup>
-    <ProjectReference Include="..\Nancy\Nancy.csproj">
+    <ProjectReference Include="..\Nancy.MSBuild\Nancy.csproj">
       <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
       <Name>Nancy</Name>
     </ProjectReference>

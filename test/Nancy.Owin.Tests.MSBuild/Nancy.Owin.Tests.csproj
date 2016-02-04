@@ -12,7 +12,6 @@
     <AssemblyName>Nancy.Owin.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -98,24 +97,28 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="AppBuilderExtensionsFixture.cs" />
+    <Compile Include="..\Nancy.Owin.Tests\AppBuilderExtensionsFixture.cs">
+      <Link>AppBuilderExtensionsFixture.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Nancy.Owin\Nancy.Owin.csproj">
+    <ProjectReference Include="..\..\src\Nancy.Owin.MSBuild\Nancy.Owin.csproj">
       <Project>{D6B2480C-2A52-4D02-9477-D387D7A486E5}</Project>
       <Name>Nancy.Owin</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\Nancy.Testing\Nancy.Testing.csproj">
+    <ProjectReference Include="..\..\src\Nancy.Testing.MSBuild\Nancy.Testing.csproj">
       <Project>{d79203c0-b672-4751-9c95-c3ab7d3fefbe}</Project>
       <Name>Nancy.Testing</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\Nancy\Nancy.csproj">
+    <ProjectReference Include="..\..\src\Nancy.MSBuild\Nancy.csproj">
       <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
       <Name>Nancy</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="..\Nancy.Owin.Tests\app.config">
+      <Link>app.config</Link>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
