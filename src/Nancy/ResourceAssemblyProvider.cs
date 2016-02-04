@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Reflection;
 
     /// <summary>
@@ -34,7 +35,9 @@
 
         private IEnumerable<Assembly> GetFilteredAssemblies()
         {
-            return this.assemblyCatalog.GetAssemblies(x => !x.GetName().Name.StartsWith("Nancy", StringComparison.OrdinalIgnoreCase));
+            return this.assemblyCatalog
+                .GetAssemblies(AssemblyResolveStrategies.NancyReferencing)
+                .Where(x => !x.GetName().Name.StartsWith("Nancy", StringComparison.OrdinalIgnoreCase));
         }
     }
 }
