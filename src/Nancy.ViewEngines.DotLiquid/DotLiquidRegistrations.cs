@@ -15,7 +15,8 @@
         /// <summary>
         /// Register the <c>RubyNamingConvention</c> as the default.
         /// </summary>
-        public DotLiquidRegistrations()
+        /// <param name="typeCatalog">An <see cref="ITypeCatalog"/> instance.</param>
+        public DotLiquidRegistrations(ITypeCatalog typeCatalog) : base(typeCatalog)
         {
             this.RegisterWithDefault<INamingConvention>(typeof(RubyNamingConvention));
         }

@@ -7,7 +7,11 @@ namespace Nancy.ViewEngines.Razor
     /// </summary>
     public class RazorViewEngineRegistrations : Registrations
     {
-        public RazorViewEngineRegistrations()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RazorViewEngineRegistrations"/> class.
+        /// </summary>
+        /// <param name="typeCatalog">An <see cref="ITypeCatalog"/> instance.</param>
+        public RazorViewEngineRegistrations(ITypeCatalog typeCatalog) : base(typeCatalog)
         {
             this.RegisterWithDefault<IRazorConfiguration>(typeof(DefaultRazorConfiguration));
         }
