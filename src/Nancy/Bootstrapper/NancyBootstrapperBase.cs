@@ -41,7 +41,7 @@
         /// <summary>
         /// Default Nancy conventions
         /// </summary>
-        private readonly NancyConventions conventions;
+        private NancyConventions conventions;
 
         /// <summary>
         /// Internal configuration
@@ -74,7 +74,6 @@
         protected NancyBootstrapperBase()
         {
             this.ApplicationPipelines = new Pipelines();
-            this.conventions = new NancyConventions();
         }
 
         /// <summary>
@@ -118,7 +117,7 @@
         {
             get
             {
-                return this.conventions;
+                return this.conventions ?? (this.conventions = new NancyConventions(this.TypeCatalog));
             }
         }
 

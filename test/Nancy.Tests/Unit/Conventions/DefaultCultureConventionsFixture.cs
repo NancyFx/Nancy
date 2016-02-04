@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
-
+    using FakeItEasy;
     using Nancy.Conventions;
 
     using Xunit;
@@ -15,7 +15,10 @@
 
         public DefaultCultureConventionsFixture()
         {
-            this.conventions = new NancyConventions();
+            var typeCatalog = A.Fake<ITypeCatalog>();
+            A.CallTo(() => typeCatalog.GetTypesAssignableTo(A<Type>._, A<TypeResolveStrategy>._)).Returns(new Type[] { });
+
+            this.conventions = new NancyConventions(typeCatalog);
             this.cultureConventions = new DefaultCultureConventions();
         }
 
