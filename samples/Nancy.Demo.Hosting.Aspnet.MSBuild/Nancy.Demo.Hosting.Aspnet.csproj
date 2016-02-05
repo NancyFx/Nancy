@@ -17,8 +17,6 @@
     <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
     <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
     <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
-    <IISExpressSSLPort />
-    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -131,17 +129,14 @@
     <Content Include="..\Nancy.Demo.Hosting.Aspnet\Views\static.html">
       <Link>Views\static.html</Link>
     </Content>
-    <Content Include="..\Nancy.Demo.Hosting.Aspnet\Web.config">
+    <Content Include="Web.config">
       <SubType>Designer</SubType>
-      <Link>Web.config</Link>
     </Content>
-    <Content Include="..\Nancy.Demo.Hosting.Aspnet\Web.Debug.config">
+    <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
-      <Link>Web.Debug.config</Link>
     </Content>
-    <Content Include="..\Nancy.Demo.Hosting.Aspnet\Web.Release.config">
+    <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
-      <Link>Web.Release.config</Link>
     </Content>
   </ItemGroup>
   <ItemGroup>
@@ -325,8 +320,6 @@
           <IISUrl>http://localhost:59017/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>
-          </CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>

@@ -14,11 +14,6 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <UseIISExpress>false</UseIISExpress>
     <OldToolsVersion>4.0</OldToolsVersion>
-    <IISExpressSSLPort />
-    <IISExpressAnonymousAuthentication />
-    <IISExpressWindowsAuthentication />
-    <IISExpressUseClassicPipelineMode />
-    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -78,16 +73,12 @@
     <Content Include="..\Nancy.Demo.ConstraintRouting\Views\Index.html">
       <Link>Views\Index.html</Link>
     </Content>
-    <Content Include="..\Nancy.Demo.ConstraintRouting\Web.config">
-      <Link>Web.config</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.ConstraintRouting\Web.Debug.config">
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
-      <Link>Web.Debug.config</Link>
     </Content>
-    <Content Include="..\Nancy.Demo.ConstraintRouting\Web.Release.config">
+    <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
-      <Link>Web.Release.config</Link>
     </Content>
   </ItemGroup>
   <ItemGroup>
@@ -130,12 +121,8 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>56281</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>
-          </IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>
-          </CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>

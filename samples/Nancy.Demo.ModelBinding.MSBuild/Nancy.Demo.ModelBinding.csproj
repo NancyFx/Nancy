@@ -14,11 +14,6 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <UseIISExpress>false</UseIISExpress>
     <OldToolsVersion>4.0</OldToolsVersion>
-    <IISExpressSSLPort />
-    <IISExpressAnonymousAuthentication />
-    <IISExpressWindowsAuthentication />
-    <IISExpressUseClassicPipelineMode />
-    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -91,16 +86,12 @@
     <Content Include="..\Nancy.Demo.ModelBinding\Views\PostJson.html">
       <Link>Views\PostJson.html</Link>
     </Content>
-    <Content Include="..\Nancy.Demo.ModelBinding\Web.config">
-      <Link>Web.config</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.ModelBinding\Web.Debug.config">
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
-      <Link>Web.Debug.config</Link>
     </Content>
-    <Content Include="..\Nancy.Demo.ModelBinding\Web.Release.config">
+    <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
-      <Link>Web.Release.config</Link>
     </Content>
   </ItemGroup>
   <ItemGroup>
@@ -178,12 +169,8 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>1953</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>
-          </IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>
-          </CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>

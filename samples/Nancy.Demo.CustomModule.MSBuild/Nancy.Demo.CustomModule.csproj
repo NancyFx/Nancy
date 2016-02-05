@@ -13,11 +13,6 @@
     <AssemblyName>Nancy.Demo.CustomModule</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
-    <IISExpressSSLPort />
-    <IISExpressAnonymousAuthentication />
-    <IISExpressWindowsAuthentication />
-    <IISExpressUseClassicPipelineMode />
-    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -53,18 +48,14 @@
     <Content Include="..\Nancy.Demo.CustomModule\Views\Index.html">
       <Link>Views\Index.html</Link>
     </Content>
-    <Content Include="..\Nancy.Demo.CustomModule\Web.config">
-      <Link>Web.config</Link>
-    </Content>
+    <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Nancy.Demo.CustomModule\Web.Debug.config">
+    <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
-      <Link>Web.Debug.config</Link>
     </None>
-    <None Include="..\Nancy.Demo.CustomModule\Web.Release.config">
+    <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
-      <Link>Web.Release.config</Link>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -135,8 +126,6 @@
           <IISUrl>http://localhost:53007/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>
-          </CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>

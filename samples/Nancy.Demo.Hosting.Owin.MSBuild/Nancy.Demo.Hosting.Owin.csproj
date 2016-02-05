@@ -104,17 +104,14 @@
     <None Include="..\Nancy.Demo.Hosting.Owin\Views\Root.spark">
       <Link>Views\Root.spark</Link>
     </None>
-    <Content Include="..\Nancy.Demo.Hosting.Owin\Web.config">
+    <Content Include="Web.config">
       <SubType>Designer</SubType>
-      <Link>Web.config</Link>
     </Content>
-    <Content Include="..\Nancy.Demo.Hosting.Owin\Web.Debug.config">
+    <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
-      <Link>Web.Debug.config</Link>
     </Content>
-    <Content Include="..\Nancy.Demo.Hosting.Owin\Web.Release.config">
+    <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
-      <Link>Web.Release.config</Link>
     </Content>
   </ItemGroup>
   <ItemGroup>

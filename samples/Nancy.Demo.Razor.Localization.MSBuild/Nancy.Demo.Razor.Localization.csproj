@@ -34,11 +34,6 @@
     <AssemblyName>Nancy.Demo.Razor.Localization</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
-    <IISExpressSSLPort />
-    <IISExpressAnonymousAuthentication />
-    <IISExpressWindowsAuthentication />
-    <IISExpressUseClassicPipelineMode />
-    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -71,9 +66,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Nancy.Demo.Razor.Localization\Web.config">
-      <Link>Web.config</Link>
-    </Content>
+    <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Nancy.Demo.Razor.Localization\CustomResourceAssemblyProvider.cs">
@@ -105,13 +98,11 @@
     <Content Include="..\Nancy.Demo.Razor.Localization\Views\CultureView-de-DE.cshtml">
       <Link>Views\CultureView-de-DE.cshtml</Link>
     </Content>
-    <None Include="..\Nancy.Demo.Razor.Localization\Web.Debug.config">
+    <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
-      <Link>Web.Debug.config</Link>
     </None>
-    <None Include="..\Nancy.Demo.Razor.Localization\Web.Release.config">
+    <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
-      <Link>Web.Release.config</Link>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -162,8 +153,6 @@
           <IISUrl>http://localhost:61703/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>
-          </CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>

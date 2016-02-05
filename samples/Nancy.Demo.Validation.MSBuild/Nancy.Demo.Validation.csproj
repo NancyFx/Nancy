@@ -14,11 +14,6 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <UseIISExpress>false</UseIISExpress>
     <OldToolsVersion>4.0</OldToolsVersion>
-    <IISExpressSSLPort />
-    <IISExpressAnonymousAuthentication />
-    <IISExpressWindowsAuthentication />
-    <IISExpressUseClassicPipelineMode />
-    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -90,16 +85,12 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Nancy.Demo.Validation\Web.config">
-      <Link>Web.config</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.Validation\Web.Debug.config">
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
-      <Link>Web.Debug.config</Link>
     </Content>
-    <Content Include="..\Nancy.Demo.Validation\Web.Release.config">
+    <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
-      <Link>Web.Release.config</Link>
     </Content>
   </ItemGroup>
   <ItemGroup>
@@ -181,12 +172,8 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>3382</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>
-          </IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>
-          </CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
