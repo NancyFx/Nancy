@@ -70,11 +70,6 @@ namespace Nancy.Testing
             this.applicationStartupActions = new List<Action<TinyIoCContainer, IPipelines>>();
             this.requestStartupActions = new List<Action<TinyIoCContainer, IPipelines, NancyContext>>();
 
-            var testAssembly =
-                Assembly.GetCallingAssembly();
-
-            PerformConventionBasedAssemblyLoading(testAssembly);
-
             if (configuration != null)
             {
                 var configurator =
@@ -83,14 +78,6 @@ namespace Nancy.Testing
                 configurator.StatusCodeHandler<PassThroughStatusCodeHandler>();
                 configuration.Invoke(configurator);
             }
-        }
-
-        private static void PerformConventionBasedAssemblyLoading(Assembly testAssembly)
-        {
-            var testAssemblyName =
-                testAssembly.GetName().Name;
-
-            LoadReferencesForAssemblyUnderTest(testAssemblyName);
         }
 
         /// <summary>
@@ -192,37 +179,6 @@ namespace Nancy.Testing
             return this.registeredTypes.Where(x => x.GetType() == typeof(CollectionTypeRegistration)).Cast<CollectionTypeRegistration>();
         }
 
-        private static void LoadReferencesForAssemblyUnderTest(string testAssemblyName)
-        {
-            if (!TestAssemblySuffixes.Any(x => GetSafePathExtension(testAssemblyName).Equals("." + x, StringComparison.OrdinalIgnoreCase)))
-            {
-                return;
-            }
-
-            var testAssemblyNameWithoutExtension =
-                Path.GetFileNameWithoutExtension(testAssemblyName);
-
-            var testAssemblyPath =
-                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, string.Concat(testAssemblyNameWithoutExtension, ".dll"));
-
-            if (File.Exists(testAssemblyPath))
-            {
-                AppDomainAssemblyTypeScanner.LoadAssemblies(AppDomain.CurrentDomain.BaseDirectory, string.Concat(testAssemblyNameWithoutExtension, ".dll"));
-
-                var assemblyUnderTest = AppDomain.CurrentDomain
-                    .GetAssemblies()
-                    .FirstOrDefault(x => x.GetName().Name.Equals(testAssemblyNameWithoutExtension, StringComparison.OrdinalIgnoreCase));
-
-                if (assemblyUnderTest != null)
-                {
-                    foreach (var referencedAssembly in assemblyUnderTest.GetReferencedAssemblies())
-                    {
-                        AppDomainAssemblyTypeScanner.LoadAssemblies(AppDomain.CurrentDomain.BaseDirectory, string.Concat(referencedAssembly.Name, ".dll"));
-                    }
-                }
-            }
-        }
-
         private static string GetSafePathExtension(string name)
         {
             return Path.GetExtension(name) ?? string.Empty;
@@ -241,7 +197,7 @@ namespace Nancy.Testing
         /// <summary>
         /// Nancy internal configuration
         /// </summary>
-        protected override sealed NancyInternalConfiguration InternalConfiguration
+        protected sealed override NancyInternalConfiguration InternalConfiguration
         {
             get { return this.configuration; }
         }
