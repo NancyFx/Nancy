@@ -85,143 +85,66 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Nancy.Demo.Hosting.Aspnet\Content\face.png">
-      <Link>Content\face.png</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.Hosting.Aspnet\Content\main.css">
-      <Link>Content\main.css</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.Hosting.Aspnet\Content\scripts.js">
-      <Link>Content\scripts.js</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.Hosting.Aspnet\Views\razor-error.cshtml">
-      <Link>Views\razor-error.cshtml</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.Hosting.Aspnet\Views\razor-layout-error.cshtml">
-      <Link>Views\razor-layout-error.cshtml</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.Hosting.Aspnet\Views\negotiatedview.cshtml">
-      <Link>Views\negotiatedview.cshtml</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.Hosting.Aspnet\Views\razor2.cshtml">
-      <Link>Views\razor2.cshtml</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.Hosting.Aspnet\Views\nustachePartial.nustache">
-      <Link>Views\nustachePartial.nustache</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.Hosting.Aspnet\Views\uber-meta.cshtml">
-      <Link>Views\uber-meta.cshtml</Link>
-    </Content>
-    <None Include="..\Nancy.Demo.Hosting.Aspnet\Views\FileUpload.sshtml">
+    <Content Include="Content\face.png" />
+    <Content Include="Content\main.css" />
+    <Content Include="Content\scripts.js" />
+    <Content Include="Views\razor-error.cshtml" />
+    <Content Include="Views\razor-layout-error.cshtml" />
+    <Content Include="Views\negotiatedview.cshtml" />
+    <Content Include="Views\razor2.cshtml" />
+    <Content Include="Views\nustachePartial.nustache" />
+    <Content Include="Views\uber-meta.cshtml" />
+    <None Include="Views\FileUpload.sshtml">
       <SubType>Designer</SubType>
-      <Link>Views\FileUpload.sshtml</Link>
     </None>
-    <None Include="..\Nancy.Demo.Hosting.Aspnet\Views\interactive-diags-results.sshtml">
-      <Link>Views\interactive-diags-results.sshtml</Link>
-    </None>
-    <None Include="..\Nancy.Demo.Hosting.Aspnet\Views\interactive-diags-methods.sshtml">
-      <Link>Views\interactive-diags-methods.sshtml</Link>
-    </None>
-    <None Include="..\Nancy.Demo.Hosting.Aspnet\Views\interactive-diags.sshtml">
-      <Link>Views\interactive-diags.sshtml</Link>
-    </None>
-    <Content Include="..\Nancy.Demo.Hosting.Aspnet\Views\javascript.html">
-      <Link>Views\javascript.html</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.Hosting.Aspnet\Views\static.html">
-      <Link>Views\static.html</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.Hosting.Aspnet\Web.config">
+    <None Include="Views\interactive-diags-results.sshtml" />
+    <None Include="Views\interactive-diags-methods.sshtml" />
+    <None Include="Views\interactive-diags.sshtml" />
+    <Content Include="Views\javascript.html" />
+    <Content Include="Views\static.html" />
+    <Content Include="Web.config">
       <SubType>Designer</SubType>
-      <Link>Web.config</Link>
     </Content>
-    <Content Include="..\Nancy.Demo.Hosting.Aspnet\Web.Debug.config">
+    <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
-      <Link>Web.Debug.config</Link>
     </Content>
-    <Content Include="..\Nancy.Demo.Hosting.Aspnet\Web.Release.config">
+    <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
-      <Link>Web.Release.config</Link>
     </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy.Demo.Hosting.Aspnet\ApplicationDependencyClass.cs">
-      <Link>ApplicationDependencyClass.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Hosting.Aspnet\CustomStatusHandler.cs">
-      <Link>CustomStatusHandler.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Hosting.Aspnet\DefaultRouteMetadataProvider.cs">
-      <Link>DefaultRouteMetadataProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Hosting.Aspnet\HereBeAResponseYouScurvyDog.cs">
-      <Link>HereBeAResponseYouScurvyDog.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Hosting.Aspnet\DemoBootstrapper.cs">
-      <Link>DemoBootstrapper.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Hosting.Aspnet\DependencyModule.cs">
-      <Link>DependencyModule.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Hosting.Aspnet\IApplicationDependency.cs">
-      <Link>IApplicationDependency.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Hosting.Aspnet\IRequestDependency.cs">
-      <Link>IRequestDependency.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Hosting.Aspnet\MainModule.cs">
-      <Link>MainModule.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Hosting.Aspnet\Metadata\MainMetadataModule.cs">
-      <Link>Metadata\MainMetadataModule.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Hosting.Aspnet\Metadata\MyUberRouteMetadata.cs">
-      <Link>Metadata\MyUberRouteMetadata.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Hosting.Aspnet\Models\Payload.cs">
-      <Link>Models\Payload.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Hosting.Aspnet\Models\RatPack.cs">
-      <Link>Models\RatPack.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Hosting.Aspnet\Models\RatPackWithDependencyText.cs">
-      <Link>Models\RatPackWithDependencyText.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Hosting.Aspnet\Models\Razor2.cs">
-      <Link>Models\Razor2.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Hosting.Aspnet\Models\SomeViewModel.cs">
-      <Link>Models\SomeViewModel.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Hosting.Aspnet\MyConfig.cs">
-      <Link>MyConfig.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Hosting.Aspnet\MyConfigExtensions.cs">
-      <Link>MyConfigExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Hosting.Aspnet\Piratizer4000.cs">
-      <Link>Piratizer4000.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Hosting.Aspnet\PngSerializer.cs">
-      <Link>PngSerializer.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Hosting.Aspnet\RequestDependencyClass.cs">
-      <Link>RequestDependencyClass.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Hosting.Aspnet\Resources\Menu.Designer.cs">
+    <Compile Include="ApplicationDependencyClass.cs" />
+    <Compile Include="CustomStatusHandler.cs" />
+    <Compile Include="DefaultRouteMetadataProvider.cs" />
+    <Compile Include="HereBeAResponseYouScurvyDog.cs" />
+    <Compile Include="DemoBootstrapper.cs" />
+    <Compile Include="DependencyModule.cs" />
+    <Compile Include="IApplicationDependency.cs" />
+    <Compile Include="IRequestDependency.cs" />
+    <Compile Include="MainModule.cs" />
+    <Compile Include="Metadata\MainMetadataModule.cs" />
+    <Compile Include="Metadata\MyUberRouteMetadata.cs" />
+    <Compile Include="Models\Payload.cs" />
+    <Compile Include="Models\RatPack.cs" />
+    <Compile Include="Models\RatPackWithDependencyText.cs" />
+    <Compile Include="Models\Razor2.cs" />
+    <Compile Include="Models\SomeViewModel.cs" />
+    <Compile Include="MyConfig.cs" />
+    <Compile Include="MyConfigExtensions.cs" />
+    <Compile Include="Piratizer4000.cs" />
+    <Compile Include="PngSerializer.cs" />
+    <Compile Include="RequestDependencyClass.cs" />
+    <Compile Include="Resources\Menu.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Menu.resx</DependentUpon>
-      <Link>Resources\Menu.Designer.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Nancy.Demo.Hosting.Aspnet\Views\razor.cshtml">
-      <Link>Views\razor.cshtml</Link>
-    </Content>
+    <Content Include="Views\razor.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Nancy.Hosting.Aspnet.MSBuild\Nancy.Hosting.Aspnet.csproj">
@@ -254,57 +177,26 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Nancy.Demo.Hosting.Aspnet\Views\someview.cshtml">
-      <Link>Views\someview.cshtml</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.Hosting.Aspnet\Views\razor-layout.cshtml">
-      <Link>Views\razor-layout.cshtml</Link>
-    </Content>
-    <None Include="..\Nancy.Demo.Hosting.Aspnet\Views\anon.spark">
-      <Link>Views\anon.spark</Link>
-    </None>
-    <Content Include="..\Nancy.Demo.Hosting.Aspnet\Views\csrf.cshtml">
-      <Link>Views\csrf.cshtml</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.Hosting.Aspnet\Views\razor-strong.cshtml">
-      <Link>Views\razor-strong.cshtml</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.Hosting.Aspnet\Views\razor-divzero.cshtml">
-      <Link>Views\razor-divzero.cshtml</Link>
-    </Content>
-    <None Include="..\Nancy.Demo.Hosting.Aspnet\Views\razor-strong.vbhtml">
-      <Link>Views\razor-strong.vbhtml</Link>
-    </None>
-    <None Include="..\Nancy.Demo.Hosting.Aspnet\Views\dot.liquid">
-      <Link>Views\dot.liquid</Link>
-    </None>
-    <Content Include="..\Nancy.Demo.Hosting.Aspnet\Views\razor-dependency.cshtml">
-      <Link>Views\razor-dependency.cshtml</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.Hosting.Aspnet\Views\razor-simple.cshtml">
-      <Link>Views\razor-simple.cshtml</Link>
-    </Content>
-    <None Include="..\Nancy.Demo.Hosting.Aspnet\Views\nustache.nustache">
-      <Link>Views\nustache.nustache</Link>
-    </None>
-    <Content Include="..\Nancy.Demo.Hosting.Aspnet\Views\meta.cshtml">
-      <Link>Views\meta.cshtml</Link>
-    </Content>
-    <None Include="..\Nancy.Demo.Hosting.Aspnet\Views\routes.cshtml">
-      <Link>Views\routes.cshtml</Link>
-    </None>
-    <None Include="..\Nancy.Demo.Hosting.Aspnet\Views\spark.spark">
-      <Link>Views\spark.spark</Link>
-    </None>
-    <None Include="..\Nancy.Demo.Hosting.Aspnet\Views\ssve.sshtml">
-      <Link>Views\ssve.sshtml</Link>
-    </None>
+    <Content Include="Views\someview.cshtml" />
+    <Content Include="Views\razor-layout.cshtml" />
+    <None Include="Views\anon.spark" />
+    <Content Include="Views\csrf.cshtml" />
+    <Content Include="Views\razor-strong.cshtml" />
+    <Content Include="Views\razor-divzero.cshtml" />
+    <None Include="Views\razor-strong.vbhtml" />
+    <None Include="Views\dot.liquid" />
+    <Content Include="Views\razor-dependency.cshtml" />
+    <Content Include="Views\razor-simple.cshtml" />
+    <None Include="Views\nustache.nustache" />
+    <Content Include="Views\meta.cshtml" />
+    <None Include="Views\routes.cshtml" />
+    <None Include="Views\spark.spark" />
+    <None Include="Views\ssve.sshtml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\Nancy.Demo.Hosting.Aspnet\Resources\Menu.resx">
+    <EmbeddedResource Include="Resources\Menu.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Menu.Designer.cs</LastGenOutput>
-      <Link>Resources\Menu.resx</Link>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

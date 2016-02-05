@@ -75,31 +75,21 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="..\Nancy.Demo.ConstraintRouting\Views\Index.html">
-      <Link>Views\Index.html</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.ConstraintRouting\Web.config">
-      <Link>Web.config</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.ConstraintRouting\Web.Debug.config">
+    <Content Include="Views\Index.html" />
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
-      <Link>Web.Debug.config</Link>
     </Content>
-    <Content Include="..\Nancy.Demo.ConstraintRouting\Web.Release.config">
+    <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
-      <Link>Web.Release.config</Link>
     </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy.Demo.ConstraintRouting\ConstraintRoutingModule.cs">
-      <Link>ConstraintRoutingModule.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.ConstraintRouting\EmailRouteSegmentConstraint.cs">
-      <Link>EmailRouteSegmentConstraint.cs</Link>
-    </Compile>
+    <Compile Include="ConstraintRoutingModule.cs" />
+    <Compile Include="EmailRouteSegmentConstraint.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />

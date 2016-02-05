@@ -71,60 +71,36 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Nancy.Demo.Razor.Localization\Web.config">
-      <Link>Web.config</Link>
-    </Content>
+    <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Nancy.Demo.Razor.Localization\CustomResourceAssemblyProvider.cs">
-      <Link>CustomResourceAssemblyProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Razor.Localization\DemoBootstrapper.cs">
-      <Link>DemoBootstrapper.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Razor.Localization\Modules\HomeModule.cs">
-      <Link>Modules\HomeModule.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Razor.Localization\Resources\Text.Designer.cs">
+    <Compile Include="CustomResourceAssemblyProvider.cs" />
+    <Compile Include="DemoBootstrapper.cs" />
+    <Compile Include="Modules\HomeModule.cs" />
+    <Compile Include="Resources\Text.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Text.resx</DependentUpon>
-      <Link>Resources\Text.Designer.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Nancy.Demo.Razor.Localization\Views\Index.cshtml">
-      <Link>Views\Index.cshtml</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.Razor.Localization\Views\razor-layout.cshtml">
-      <Link>Views\razor-layout.cshtml</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.Razor.Localization\Views\CultureView.cshtml">
-      <Link>Views\CultureView.cshtml</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.Razor.Localization\Views\CultureView-de-DE.cshtml">
-      <Link>Views\CultureView-de-DE.cshtml</Link>
-    </Content>
-    <None Include="..\Nancy.Demo.Razor.Localization\Web.Debug.config">
+    <Content Include="Views\Index.cshtml" />
+    <Content Include="Views\razor-layout.cshtml" />
+    <Content Include="Views\CultureView.cshtml" />
+    <Content Include="Views\CultureView-de-DE.cshtml" />
+    <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
-      <Link>Web.Debug.config</Link>
     </None>
-    <None Include="..\Nancy.Demo.Razor.Localization\Web.Release.config">
+    <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
-      <Link>Web.Release.config</Link>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\Nancy.Demo.Razor.Localization\Resources\Text.de-DE.resx">
-      <Link>Resources\Text.de-DE.resx</Link>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\Nancy.Demo.Razor.Localization\Resources\Text.en-US.resx">
-      <Link>Resources\Text.en-US.resx</Link>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\Nancy.Demo.Razor.Localization\Resources\Text.resx">
+    <EmbeddedResource Include="Resources\Text.de-DE.resx" />
+    <EmbeddedResource Include="Resources\Text.en-US.resx" />
+    <EmbeddedResource Include="Resources\Text.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Text.Designer.cs</LastGenOutput>
-      <Link>Resources\Text.resx</Link>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -107,76 +107,32 @@
     </VisualStudio>
   </ProjectExtensions>
   <ItemGroup>
-    <Content Include="..\Nancy.Demo.MarkdownViewEngine\Content\blog.css">
-      <Link>Content\blog.css</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.MarkdownViewEngine\Content\images\body.png">
-      <Link>Content\images\body.png</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.MarkdownViewEngine\Content\images\cloud1.png">
-      <Link>Content\images\cloud1.png</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.MarkdownViewEngine\Content\images\cloud2.png">
-      <Link>Content\images\cloud2.png</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.MarkdownViewEngine\Content\images\cloud3.png">
-      <Link>Content\images\cloud3.png</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.MarkdownViewEngine\Content\images\logo.png">
-      <Link>Content\images\logo.png</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.MarkdownViewEngine\Content\images\mountain.png">
-      <Link>Content\images\mountain.png</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.MarkdownViewEngine\Content\images\nancy-nuget.png">
-      <Link>Content\images\nancy-nuget.png</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.MarkdownViewEngine\Content\images\post-foot.png">
-      <Link>Content\images\post-foot.png</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.MarkdownViewEngine\Content\images\post-head.png">
-      <Link>Content\images\post-head.png</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.MarkdownViewEngine\Content\images\post-midd.png">
-      <Link>Content\images\post-midd.png</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.MarkdownViewEngine\Content\js\jquery.spritely-0.6.js">
-      <Link>Content\js\jquery.spritely-0.6.js</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.MarkdownViewEngine\Views\blogfooter.html">
-      <Link>Views\blogfooter.html</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.MarkdownViewEngine\Views\blogheader.html">
-      <Link>Views\blogheader.html</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.MarkdownViewEngine\Views\blogindex.html">
-      <Link>Views\blogindex.html</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.MarkdownViewEngine\Views\master.html">
-      <Link>Views\master.html</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.MarkdownViewEngine\Views\popularposts.html">
-      <Link>Views\popularposts.html</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.MarkdownViewEngine\Views\Posts\why-use-nancy.md">
-      <Link>Views\Posts\why-use-nancy.md</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.MarkdownViewEngine\Views\Posts\my-first-blog-post.md">
-      <Link>Views\Posts\my-first-blog-post.md</Link>
-    </Content>
+    <Content Include="Content\blog.css" />
+    <Content Include="Content\images\body.png" />
+    <Content Include="Content\images\cloud1.png" />
+    <Content Include="Content\images\cloud2.png" />
+    <Content Include="Content\images\cloud3.png" />
+    <Content Include="Content\images\logo.png" />
+    <Content Include="Content\images\mountain.png" />
+    <Content Include="Content\images\nancy-nuget.png" />
+    <Content Include="Content\images\post-foot.png" />
+    <Content Include="Content\images\post-head.png" />
+    <Content Include="Content\images\post-midd.png" />
+    <Content Include="Content\js\jquery.spritely-0.6.js" />
+    <Content Include="Views\blogfooter.html" />
+    <Content Include="Views\blogheader.html" />
+    <Content Include="Views\blogindex.html" />
+    <Content Include="Views\master.html" />
+    <Content Include="Views\popularposts.html" />
+    <Content Include="Views\Posts\why-use-nancy.md" />
+    <Content Include="Views\Posts\my-first-blog-post.md" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Nancy.Demo.MarkdownViewEngine\Model\BlogModel.cs">
-      <Link>Model\BlogModel.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.MarkdownViewEngine\Modules\HomeModule.cs">
-      <Link>Modules\HomeModule.cs</Link>
-    </Compile>
+    <Compile Include="Model\BlogModel.cs" />
+    <Compile Include="Modules\HomeModule.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Nancy.Demo.MarkdownViewEngine\web.config">
-      <Link>web.config</Link>
-    </Content>
+    <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Nancy.Hosting.Aspnet.MSBuild\Nancy.Hosting.Aspnet.csproj">
@@ -193,14 +149,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Nancy.Demo.MarkdownViewEngine\Views\Posts\readme.md">
-      <Link>Views\Posts\readme.md</Link>
-    </Content>
+    <Content Include="Views\Posts\readme.md" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Nancy.Demo.MarkdownViewEngine\Views\Posts\future-post.md">
-      <Link>Views\Posts\future-post.md</Link>
-    </Content>
+    <Content Include="Views\Posts\future-post.md" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

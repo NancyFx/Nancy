@@ -85,69 +85,35 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Nancy.Demo.ModelBinding\Views\PostXml.html">
-      <Link>Views\PostXml.html</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.ModelBinding\Views\PostJson.html">
-      <Link>Views\PostJson.html</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.ModelBinding\Web.config">
-      <Link>Web.config</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.ModelBinding\Web.Debug.config">
+    <Content Include="Views\PostXml.html" />
+    <Content Include="Views\PostJson.html" />
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
-      <Link>Web.Debug.config</Link>
     </Content>
-    <Content Include="..\Nancy.Demo.ModelBinding\Web.Release.config">
+    <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
-      <Link>Web.Release.config</Link>
     </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy.Demo.ModelBinding\CustomersModule.cs">
-      <Link>CustomersModule.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.ModelBinding\Database\DB.cs">
-      <Link>Database\DB.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.ModelBinding\EventsModule.cs">
-      <Link>EventsModule.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.ModelBinding\JsonModule.cs">
-      <Link>JsonModule.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.ModelBinding\MainModule.cs">
-      <Link>MainModule.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.ModelBinding\ModelBinders\CustomerModelBinder.cs">
-      <Link>ModelBinders\CustomerModelBinder.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.ModelBinding\ModelBindingBootstrapper.cs">
-      <Link>ModelBindingBootstrapper.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.ModelBinding\Models\Customer.cs">
-      <Link>Models\Customer.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.ModelBinding\Models\Event.cs">
-      <Link>Models\Event.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.ModelBinding\Models\User.cs">
-      <Link>Models\User.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.ModelBinding\XmlModule.cs">
-      <Link>XmlModule.cs</Link>
-    </Compile>
+    <Compile Include="CustomersModule.cs" />
+    <Compile Include="Database\DB.cs" />
+    <Compile Include="EventsModule.cs" />
+    <Compile Include="JsonModule.cs" />
+    <Compile Include="MainModule.cs" />
+    <Compile Include="ModelBinders\CustomerModelBinder.cs" />
+    <Compile Include="ModelBindingBootstrapper.cs" />
+    <Compile Include="Models\Customer.cs" />
+    <Compile Include="Models\Event.cs" />
+    <Compile Include="Models\User.cs" />
+    <Compile Include="XmlModule.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Nancy.Demo.ModelBinding\Views\Customers.spark">
-      <Link>Views\Customers.spark</Link>
-    </None>
-    <None Include="..\Nancy.Demo.ModelBinding\Views\Events.spark">
-      <Link>Views\Events.spark</Link>
-    </None>
+    <None Include="Views\Customers.spark" />
+    <None Include="Views\Events.spark" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Nancy.Hosting.Aspnet.MSBuild\Nancy.Hosting.Aspnet.csproj">

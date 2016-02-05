@@ -70,34 +70,23 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Nancy.Demo.Authentication.Stateless.Website\index.html">
+    <Content Include="index.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <Link>index.html</Link>
     </Content>
-    <Content Include="..\Nancy.Demo.Authentication.Stateless.Website\login.html">
+    <Content Include="login.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <Link>login.html</Link>
     </Content>
-    <Content Include="..\Nancy.Demo.Authentication.Stateless.Website\Scripts\api.js">
-      <Link>Scripts\api.js</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.Authentication.Stateless.Website\Scripts\apiToken.js">
-      <Link>Scripts\apiToken.js</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.Authentication.Stateless.Website\secure.html">
+    <Content Include="Scripts\api.js" />
+    <Content Include="Scripts\apiToken.js" />
+    <Content Include="secure.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <Link>secure.html</Link>
     </Content>
-    <Content Include="..\Nancy.Demo.Authentication.Stateless.Website\Web.config">
-      <Link>Web.config</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.Authentication.Stateless.Website\Web.Debug.config">
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
-      <Link>Web.Debug.config</Link>
     </Content>
-    <Content Include="..\Nancy.Demo.Authentication.Stateless.Website\Web.Release.config">
+    <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
-      <Link>Web.Release.config</Link>
     </Content>
   </ItemGroup>
   <ItemGroup>

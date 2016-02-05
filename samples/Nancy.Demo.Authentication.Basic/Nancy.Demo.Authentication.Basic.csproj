@@ -91,31 +91,19 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Nancy.Demo.Authentication.Basic\Web.config">
-      <Link>Web.config</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.Authentication.Basic\Web.Debug.config">
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
-      <Link>Web.Debug.config</Link>
     </Content>
-    <Content Include="..\Nancy.Demo.Authentication.Basic\Web.Release.config">
+    <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
-      <Link>Web.Release.config</Link>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Nancy.Demo.Authentication.Basic\AuthenticationBootstrapper.cs">
-      <Link>AuthenticationBootstrapper.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Authentication.Basic\MainModule.cs">
-      <Link>MainModule.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Authentication.Basic\SecureModule.cs">
-      <Link>SecureModule.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Authentication.Basic\UserValidator.cs">
-      <Link>UserValidator.cs</Link>
-    </Compile>
+    <Compile Include="AuthenticationBootstrapper.cs" />
+    <Compile Include="MainModule.cs" />
+    <Compile Include="SecureModule.cs" />
+    <Compile Include="UserValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Nancy.Authentication.Basic.MSBuild\Nancy.Authentication.Basic.csproj">

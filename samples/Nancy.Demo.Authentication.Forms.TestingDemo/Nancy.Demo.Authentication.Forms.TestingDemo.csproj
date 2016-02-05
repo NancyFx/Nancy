@@ -106,15 +106,11 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy.Demo.Authentication.Forms.TestingDemo\LoginFixture.cs">
-      <Link>LoginFixture.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Authentication.Forms.TestingDemo\TestBootstrapper.cs">
-      <Link>TestBootstrapper.cs</Link>
-    </Compile>
+    <Compile Include="LoginFixture.cs" />
+    <Compile Include="TestBootstrapper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nancy.Demo.Authentication.Forms.MSBuild\Nancy.Demo.Authentication.Forms.csproj">
+    <ProjectReference Include="..\Nancy.Demo.Authentication.Forms\Nancy.Demo.Authentication.Forms.csproj">
       <Project>{98940A30-1B48-4F71-A6BA-85F0AAF31A2F}</Project>
       <Name>Nancy.Demo.Authentication.Forms</Name>
     </ProjectReference>

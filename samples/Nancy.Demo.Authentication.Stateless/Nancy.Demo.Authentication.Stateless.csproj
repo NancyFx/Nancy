@@ -80,40 +80,24 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Nancy.Demo.Authentication.Stateless\Web.config">
-      <Link>Web.config</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.Authentication.Stateless\Web.Debug.config">
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
-      <Link>Web.Debug.config</Link>
     </Content>
-    <Content Include="..\Nancy.Demo.Authentication.Stateless\Web.Release.config">
+    <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
-      <Link>Web.Release.config</Link>
     </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy.Demo.Authentication.Stateless\AuthModule.cs">
-      <Link>AuthModule.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Authentication.Stateless\Models\UserModel.cs">
-      <Link>Models\UserModel.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Authentication.Stateless\RootModule.cs">
-      <Link>RootModule.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Authentication.Stateless\SecureModule.cs">
-      <Link>SecureModule.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Authentication.Stateless\StatelessAuthBootstrapper.cs">
-      <Link>StatelessAuthBootstrapper.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Authentication.Stateless\UserDatabase.cs">
-      <Link>UserDatabase.cs</Link>
-    </Compile>
+    <Compile Include="AuthModule.cs" />
+    <Compile Include="Models\UserModel.cs" />
+    <Compile Include="RootModule.cs" />
+    <Compile Include="SecureModule.cs" />
+    <Compile Include="StatelessAuthBootstrapper.cs" />
+    <Compile Include="UserDatabase.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Nancy.Authentication.Stateless.MSBuild\Nancy.Authentication.Stateless.csproj">

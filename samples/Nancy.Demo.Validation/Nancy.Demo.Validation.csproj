@@ -90,49 +90,27 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Nancy.Demo.Validation\Web.config">
-      <Link>Web.config</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.Validation\Web.Debug.config">
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
-      <Link>Web.Debug.config</Link>
     </Content>
-    <Content Include="..\Nancy.Demo.Validation\Web.Release.config">
+    <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
-      <Link>Web.Release.config</Link>
     </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy.Demo.Validation\CustomersModule.cs">
-      <Link>CustomersModule.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Validation\Database\DB.cs">
-      <Link>Database\DB.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Validation\MainModule.cs">
-      <Link>MainModule.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Validation\Models\Customer.cs">
-      <Link>Models\Customer.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Validation\Models\OddLengthStringAttribute.cs">
-      <Link>Models\OddLengthStringAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Validation\Models\OddLengthStringAttributeAdapter.cs">
-      <Link>Models\OddLengthStringAttributeAdapter.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Validation\Models\Product.cs">
-      <Link>Models\Product.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Validation\ProductsModule.cs">
-      <Link>ProductsModule.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Validation\ValidationBootstrapper.cs">
-      <Link>ValidationBootstrapper.cs</Link>
-    </Compile>
+    <Compile Include="CustomersModule.cs" />
+    <Compile Include="Database\DB.cs" />
+    <Compile Include="MainModule.cs" />
+    <Compile Include="Models\Customer.cs" />
+    <Compile Include="Models\OddLengthStringAttribute.cs" />
+    <Compile Include="Models\OddLengthStringAttributeAdapter.cs" />
+    <Compile Include="Models\Product.cs" />
+    <Compile Include="ProductsModule.cs" />
+    <Compile Include="ValidationBootstrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Nancy.Hosting.Aspnet.MSBuild\Nancy.Hosting.Aspnet.csproj">
@@ -158,13 +136,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
-    <None Include="..\Nancy.Demo.Validation\Views\CustomerError.spark">
+    <None Include="Views\CustomerError.spark">
       <SubType>Designer</SubType>
-      <Link>Views\CustomerError.spark</Link>
     </None>
-    <None Include="..\Nancy.Demo.Validation\Views\Customers.spark">
-      <Link>Views\Customers.spark</Link>
-    </None>
+    <None Include="Views\Customers.spark" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
