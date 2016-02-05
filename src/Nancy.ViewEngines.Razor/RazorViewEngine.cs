@@ -10,10 +10,6 @@
     using System.Runtime.CompilerServices;
     using System.Text;
     using System.Web.Razor;
-
-    using Microsoft.CSharp;
-
-    using Nancy.Bootstrapper;
     using Nancy.Configuration;
     using Nancy.Helpers;
     using Nancy.Responses;
@@ -26,6 +22,7 @@
     public class RazorViewEngine : IViewEngine, IDisposable
     {
         private readonly IRazorConfiguration razorConfiguration;
+        private readonly IAssemblyCatalog assemblyCatalog;
         private readonly IEnumerable<IRazorViewRenderer> viewRenderers;
         private readonly object compileLock = new object();
         private readonly TraceConfiguration traceConfiguration;
@@ -55,6 +52,7 @@
             };
 
             this.razorConfiguration = configuration;
+            this.assemblyCatalog = assemblyCatalog;
             this.traceConfiguration = environment.GetValue<TraceConfiguration>();
 
             foreach (var renderer in this.viewRenderers)
@@ -228,7 +226,7 @@
                 GetAssemblyPath(modelType)
             };
 
-            assemblies.AddRange(AppDomainAssemblyTypeScanner.Assemblies.Select(GetAssemblyPath));
+            assemblies.AddRange(this.assemblyCatalog.GetAssemblies().Select(GetAssemblyPath));
 
             if (referencingAssembly != null)
             {
