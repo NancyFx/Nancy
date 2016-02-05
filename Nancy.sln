@@ -44,31 +44,31 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Authentication.Basic.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Tests.Functional", "test\Nancy.Tests.Functional.MSBuild\Nancy.Tests.Functional.csproj", "{BDA5E175-07D7-4E6F-B46F-C2CF7D63E231}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Authentication", "samples\Nancy.Demo.Authentication.MSBuild\Nancy.Demo.Authentication.csproj", "{5F2DD52D-471B-4946-8F7B-F050C88EFC52}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Authentication", "samples\Nancy.Demo.Authentication\Nancy.Demo.Authentication.csproj", "{5F2DD52D-471B-4946-8F7B-F050C88EFC52}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Authentication.Forms", "samples\Nancy.Demo.Authentication.Forms.MSBuild\Nancy.Demo.Authentication.Forms.csproj", "{98940A30-1B48-4F71-A6BA-85F0AAF31A2F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Authentication.Forms", "samples\Nancy.Demo.Authentication.Forms\Nancy.Demo.Authentication.Forms.csproj", "{98940A30-1B48-4F71-A6BA-85F0AAF31A2F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Bootstrapping.Aspnet", "samples\Nancy.Demo.Bootstrapper.Aspnet.MSBuild\Nancy.Demo.Bootstrapping.Aspnet.csproj", "{EF660223-4DFD-4E36-BF36-9DD6AFB3F837}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Bootstrapping.Aspnet", "samples\Nancy.Demo.Bootstrapper.Aspnet\Nancy.Demo.Bootstrapping.Aspnet.csproj", "{EF660223-4DFD-4E36-BF36-9DD6AFB3F837}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Caching", "samples\Nancy.Demo.Caching.MSBuild\Nancy.Demo.Caching.csproj", "{28F9EA8B-90F7-4974-BB40-0B7FA9309D02}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Caching", "samples\Nancy.Demo.Caching\Nancy.Demo.Caching.csproj", "{28F9EA8B-90F7-4974-BB40-0B7FA9309D02}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Hosting.Self", "samples\Nancy.Demo.Hosting.Self.MSBuild\Nancy.Demo.Hosting.Self.csproj", "{0B3EA40E-F7D8-4E14-A30F-1536F41B62D1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Hosting.Self", "samples\Nancy.Demo.Hosting.Self\Nancy.Demo.Hosting.Self.csproj", "{0B3EA40E-F7D8-4E14-A30F-1536F41B62D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Hosting.Aspnet", "samples\Nancy.Demo.Hosting.Aspnet.MSBuild\Nancy.Demo.Hosting.Aspnet.csproj", "{E127FED3-01C0-41BA-BF83-D8DCDD827D6A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Hosting.Aspnet", "samples\Nancy.Demo.Hosting.Aspnet\Nancy.Demo.Hosting.Aspnet.csproj", "{E127FED3-01C0-41BA-BF83-D8DCDD827D6A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Authentication.Forms.TestingDemo", "samples\Nancy.Demo.Authentication.Forms.TestingDemo.MSBuild\Nancy.Demo.Authentication.Forms.TestingDemo.csproj", "{948A8EF6-D50C-45EA-9AFD-7A4723ADAB0B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Authentication.Forms.TestingDemo", "samples\Nancy.Demo.Authentication.Forms.TestingDemo\Nancy.Demo.Authentication.Forms.TestingDemo.csproj", "{948A8EF6-D50C-45EA-9AFD-7A4723ADAB0B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.ModelBinding", "samples\Nancy.Demo.ModelBinding.MSBuild\Nancy.Demo.ModelBinding.csproj", "{1258BFCD-3BAD-4373-B786-4D698EC3C157}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.ModelBinding", "samples\Nancy.Demo.ModelBinding\Nancy.Demo.ModelBinding.csproj", "{1258BFCD-3BAD-4373-B786-4D698EC3C157}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.SuperSimpleViewEngine", "samples\Nancy.Demo.SuperSimpleViewEngine.MSBuild\Nancy.Demo.SuperSimpleViewEngine.csproj", "{4885B9DF-D99C-4A1C-8606-259D32A58C33}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.SuperSimpleViewEngine", "samples\Nancy.Demo.SuperSimpleViewEngine\Nancy.Demo.SuperSimpleViewEngine.csproj", "{4885B9DF-D99C-4A1C-8606-259D32A58C33}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.SparkViewEngine", "samples\Nancy.Demo.SparkViewEngine.MSBuild\Nancy.Demo.SparkViewEngine.csproj", "{DE91D085-70DF-4892-B0E3-B849E9BF6AF5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.SparkViewEngine", "samples\Nancy.Demo.SparkViewEngine\Nancy.Demo.SparkViewEngine.csproj", "{DE91D085-70DF-4892-B0E3-B849E9BF6AF5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Authentication.Basic", "samples\Nancy.Demo.Authentication.Basic.MSBuild\Nancy.Demo.Authentication.Basic.csproj", "{911196F4-B88F-4940-B1FD-D30F5290D06D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Authentication.Basic", "samples\Nancy.Demo.Authentication.Basic\Nancy.Demo.Authentication.Basic.csproj", "{911196F4-B88F-4940-B1FD-D30F5290D06D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.ViewEngines.Nustache", "src\Nancy.ViewEngines.Nustache.MSBuild\Nancy.ViewEngines.Nustache.csproj", "{A1A9E636-A37C-4170-B2E4-99D4F69B415D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Validation", "samples\Nancy.Demo.Validation.MSBuild\Nancy.Demo.Validation.csproj", "{F417B81C-B914-4BFD-8299-6BBD11072B01}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Validation", "samples\Nancy.Demo.Validation\Nancy.Demo.Validation.csproj", "{F417B81C-B914-4BFD-8299-6BBD11072B01}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Validation.DataAnnotations", "src\Nancy.Validation.DataAnnotations.MSBuild\Nancy.Validation.DataAnnotations.csproj", "{701765DC-F4F2-4943-A37F-6ED253198158}"
 EndProject
@@ -86,17 +86,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Hosting.Self.Tests", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Authentication.Stateless", "src\Nancy.Authentication.Stateless.MSBuild\Nancy.Authentication.Stateless.csproj", "{211560C3-FDDF-46D6-AB0C-F3BC04B173B5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Authentication.Stateless.Website", "samples\Nancy.Demo.Authentication.Stateless.Website.MSBuild\Nancy.Demo.Authentication.Stateless.Website.csproj", "{B5E3586D-81DE-49C3-83BC-062684795127}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Authentication.Stateless.Website", "samples\Nancy.Demo.Authentication.Stateless.Website\Nancy.Demo.Authentication.Stateless.Website.csproj", "{B5E3586D-81DE-49C3-83BC-062684795127}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Authentication.Stateless", "samples\Nancy.Demo.Authentication.Stateless.MSBuild\Nancy.Demo.Authentication.Stateless.csproj", "{BAE74CD5-57C2-40E3-8F7A-EDE5721C2ACC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Authentication.Stateless", "samples\Nancy.Demo.Authentication.Stateless\Nancy.Demo.Authentication.Stateless.csproj", "{BAE74CD5-57C2-40E3-8F7A-EDE5721C2ACC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Razor.Localization", "samples\Nancy.Demo.Razor.Localization.MSBuild\Nancy.Demo.Razor.Localization.csproj", "{396F0BCE-5B51-4B6A-931E-312880C24725}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Razor.Localization", "samples\Nancy.Demo.Razor.Localization\Nancy.Demo.Razor.Localization.csproj", "{396F0BCE-5B51-4B6A-931E-312880C24725}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Encryption.MachineKey", "src\Nancy.Encryption.MachineKey.MSBuild\Nancy.Encryption.MachineKey.csproj", "{14A66047-5F67-4774-B0E3-195D1D25B6A5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Encryption.MachineKey.Tests", "test\Nancy.Encryption.MachineKey.Tests.MSBuild\Nancy.Encryption.MachineKey.Tests.csproj", "{429873F5-1E53-4ECC-A9EC-7950C789C6DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.CustomModule", "samples\Nancy.Demo.CustomModule.MSBuild\Nancy.Demo.CustomModule.csproj", "{F56F3983-0C34-4AEC-B418-A8AFFA63F1C4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.CustomModule", "samples\Nancy.Demo.CustomModule\Nancy.Demo.CustomModule.csproj", "{F56F3983-0C34-4AEC-B418-A8AFFA63F1C4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Owin", "src\Nancy.Owin.MSBuild\Nancy.Owin.csproj", "{D6B2480C-2A52-4D02-9477-D387D7A486E5}"
 EndProject
@@ -104,7 +104,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Embedded", "src\Nancy
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Embedded.Tests", "test\Nancy.Embedded.Tests.MSBuild\Nancy.Embedded.Tests.csproj", "{6EED2486-39BF-491D-B033-720DFCFD1211}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.MarkdownViewEngine", "samples\Nancy.Demo.MarkdownViewEngine.MSBuild\Nancy.Demo.MarkdownViewEngine.csproj", "{B6929D0B-5104-4C7E-979D-F4914E813FA6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.MarkdownViewEngine", "samples\Nancy.Demo.MarkdownViewEngine\Nancy.Demo.MarkdownViewEngine.csproj", "{B6929D0B-5104-4C7E-979D-F4914E813FA6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.ViewEngines.Markdown.Tests", "test\Nancy.ViewEngines.Markdown.Tests.MSBuild\Nancy.ViewEngines.Markdown.Tests.csproj", "{8EE6F976-F11F-44B3-B065-F5AAA598B30D}"
 EndProject
@@ -112,13 +112,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.ViewEngines.Markdown"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Owin.Tests", "test\Nancy.Owin.Tests.MSBuild\Nancy.Owin.Tests.csproj", "{34DDDA42-4041-4F92-87A6-F0E8CE12C7E3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.ConstraintRouting", "samples\Nancy.Demo.ConstraintRouting.MSBuild\Nancy.Demo.ConstraintRouting.csproj", "{972C2D45-49B6-4109-9A3A-0C8BC9225B95}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.ConstraintRouting", "samples\Nancy.Demo.ConstraintRouting\Nancy.Demo.ConstraintRouting.csproj", "{972C2D45-49B6-4109-9A3A-0C8BC9225B95}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Metadata.Modules", "src\Nancy.Metadata.Modules.MSBuild\Nancy.Metadata.Modules.csproj", "{DC8AAA8B-7FD0-47C4-9413-3CC94088BCC4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Metadata.Modules.Tests", "test\Nancy.Metadata.Modules.Tests.MSBuild\Nancy.Metadata.Modules.Tests.csproj", "{508A3A68-2012-4E62-925F-2F3083A013FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Hosting.Owin", "samples\Nancy.Demo.Hosting.Owin.MSBuild\Nancy.Demo.Hosting.Owin.csproj", "{7959D79C-9E2B-4871-9470-6A6B527ABE5E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Hosting.Owin", "samples\Nancy.Demo.Hosting.Owin\Nancy.Demo.Hosting.Owin.csproj", "{7959D79C-9E2B-4871-9470-6A6B527ABE5E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
