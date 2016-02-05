@@ -5,12 +5,12 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{911196F4-B88F-4940-B1FD-D30F5290D06D}</ProjectGuid>
+    <ProjectGuid>{DE91D085-70DF-4892-B0E3-B849E9BF6AF5}</ProjectGuid>
     <ProjectTypeGuids>{349C5851-65DF-11DA-9384-00065B846F21};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Nancy.Demo.Authentication.Basic</RootNamespace>
-    <AssemblyName>Nancy.Demo.Authentication.Basic</AssemblyName>
+    <RootNamespace>Nancy.Demo.SparkViewEngine</RootNamespace>
+    <AssemblyName>Nancy.Demo.SparkViewEngine</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <UseIISExpress>false</UseIISExpress>
     <OldToolsVersion>4.0</OldToolsVersion>
@@ -47,7 +47,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <CodeAnalysisLogFile>bin\Nancy.Demo.Authentication.Basic.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisLogFile>bin\Nancy.Demo.SparkViewEngine.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
     <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
     <ErrorReport>prompt</ErrorReport>
@@ -56,7 +56,6 @@
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
     <Prefer32Bit>false</Prefer32Bit>
@@ -67,7 +66,7 @@
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <CodeAnalysisLogFile>bin\Nancy.Demo.Authentication.Basic.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisLogFile>bin\Nancy.Demo.SparkViewEngine.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
     <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
     <ErrorReport>prompt</ErrorReport>
@@ -76,7 +75,6 @@
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
@@ -91,40 +89,29 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Nancy.Demo.Authentication.Basic\Web.config">
-      <Link>Web.config</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.Authentication.Basic\Web.Debug.config">
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
-      <Link>Web.Debug.config</Link>
     </Content>
-    <Content Include="..\Nancy.Demo.Authentication.Basic\Web.Release.config">
+    <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
-      <Link>Web.Release.config</Link>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Nancy.Demo.Authentication.Basic\AuthenticationBootstrapper.cs">
-      <Link>AuthenticationBootstrapper.cs</Link>
+    <Compile Include="..\..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy.Demo.Authentication.Basic\MainModule.cs">
-      <Link>MainModule.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Authentication.Basic\SecureModule.cs">
-      <Link>SecureModule.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Authentication.Basic\UserValidator.cs">
-      <Link>UserValidator.cs</Link>
-    </Compile>
+    <Compile Include="FifthElement\FifthElementModule.cs" />
+    <Compile Include="MainModule.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Nancy.Authentication.Basic.MSBuild\Nancy.Authentication.Basic.csproj">
-      <Project>{BD72B98D-C81A-4013-B606-94B4BA2273E5}</Project>
-      <Name>Nancy.Authentication.Basic</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\src\Nancy.Hosting.Aspnet.MSBuild\Nancy.Hosting.Aspnet.csproj">
       <Project>{15B7F794-0BB2-4B66-AD78-4A951F1209B2}</Project>
       <Name>Nancy.Hosting.Aspnet</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\Nancy.ViewEngines.Spark.MSBuild\Nancy.ViewEngines.Spark.csproj">
+      <Project>{4B7E35DF-1569-4346-B180-A09615723095}</Project>
+      <Name>Nancy.ViewEngines.Spark</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\src\Nancy.MSBuild\Nancy.csproj">
       <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
@@ -132,7 +119,22 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Properties\" />
+    <Folder Include="Models\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Index.spark" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\_SmallBit.spark" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="FifthElement\Fifth.spark" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Views\Main\test.spark" />
+    <None Include="Views\Main\test2.spark" />
+    <None Include="Views\Shared\application.spark" />
+    <None Include="Views\Shared\html5.spark" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -147,7 +149,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>12615</DevelopmentServerPort>
+          <DevelopmentServerPort>6459</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>

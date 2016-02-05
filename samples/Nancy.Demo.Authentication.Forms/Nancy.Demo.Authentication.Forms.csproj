@@ -5,12 +5,12 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{972C2D45-49B6-4109-9A3A-0C8BC9225B95}</ProjectGuid>
+    <ProjectGuid>{98940A30-1B48-4F71-A6BA-85F0AAF31A2F}</ProjectGuid>
     <ProjectTypeGuids>{349C5851-65DF-11DA-9384-00065B846F21};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Nancy.Demo.ModelBinding</RootNamespace>
-    <AssemblyName>Nancy.Demo.ModelBinding</AssemblyName>
+    <RootNamespace>Nancy.Demo.Authentication.Forms</RootNamespace>
+    <AssemblyName>Nancy.Demo.Authentication.Forms</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <UseIISExpress>false</UseIISExpress>
     <OldToolsVersion>4.0</OldToolsVersion>
@@ -47,13 +47,15 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <CodeAnalysisLogFile>bin\Nancy.Demo.ModelBinding.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisLogFile>bin\Nancy.Demo.Authentication.Forms.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
     <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
     <Prefer32Bit>false</Prefer32Bit>
@@ -64,56 +66,74 @@
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <CodeAnalysisLogFile>bin\Nancy.Demo.ModelBinding.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisLogFile>bin\Nancy.Demo.Authentication.Forms.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
     <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="..\Nancy.Demo.ConstraintRouting\Views\Index.html">
-      <Link>Views\Index.html</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.ConstraintRouting\Web.config">
-      <Link>Web.config</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.ConstraintRouting\Web.Debug.config">
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
-      <Link>Web.Debug.config</Link>
     </Content>
-    <Content Include="..\Nancy.Demo.ConstraintRouting\Web.Release.config">
+    <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
-      <Link>Web.Release.config</Link>
     </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy.Demo.ConstraintRouting\ConstraintRoutingModule.cs">
-      <Link>ConstraintRoutingModule.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.ConstraintRouting\EmailRouteSegmentConstraint.cs">
-      <Link>EmailRouteSegmentConstraint.cs</Link>
-    </Compile>
+    <Compile Include="SecureModule.cs" />
+    <Compile Include="FormsAuthBootstrapper.cs" />
+    <Compile Include="MainModule.cs" />
+    <Compile Include="Models\UserModel.cs" />
+    <Compile Include="PartlySecureModule.cs" />
+    <Compile Include="UserDatabase.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Xml.Linq" />
-  </ItemGroup>
-  <ItemGroup>
+    <ProjectReference Include="..\..\src\Nancy.Authentication.Forms.MSBuild\Nancy.Authentication.Forms.csproj">
+      <Project>{E8B18958-7C8A-4FBA-AF00-3041C34A20CE}</Project>
+      <Name>Nancy.Authentication.Forms</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\src\Nancy.Hosting.Aspnet.MSBuild\Nancy.Hosting.Aspnet.csproj">
-      <Project>{15b7f794-0bb2-4b66-ad78-4a951f1209b2}</Project>
+      <Project>{15B7F794-0BB2-4B66-AD78-4A951F1209B2}</Project>
       <Name>Nancy.Hosting.Aspnet</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\src\Nancy.ViewEngines.Razor.MSBuild\Nancy.ViewEngines.Razor.csproj">
+      <Project>{2C6F51DF-015C-4DB6-B44C-0E5E4F25E2A9}</Project>
+      <Name>Nancy.ViewEngines.Razor</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\src\Nancy.MSBuild\Nancy.csproj">
-      <Project>{34576216-0dca-4b0f-a0dc-9075e75a676f}</Project>
+      <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
       <Name>Nancy</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\login.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\secure.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -128,8 +148,8 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>56281</DevelopmentServerPort>
-          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <DevelopmentServerPort>2146</DevelopmentServerPort>
+          <DevelopmentServerVPath>/forms</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>

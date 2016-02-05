@@ -102,18 +102,10 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy.Demo.Hosting.Self\Models\Index.cs">
-      <Link>Models\Index.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Hosting.Self\Program.cs">
-      <Link>Program.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Hosting.Self\TestModule.cs">
-      <Link>TestModule.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Hosting.Self\DemoBootstrapper.cs">
-      <Link>DemoBootstrapper.cs</Link>
-    </Compile>
+    <Compile Include="Models\Index.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="TestModule.cs" />
+    <Compile Include="DemoBootstrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Nancy.Hosting.Self.MSBuild\Nancy.Hosting.Self.csproj">
@@ -130,20 +122,17 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Nancy.Demo.Hosting.Self\app.config">
+    <None Include="app.config">
       <SubType>Designer</SubType>
-      <Link>app.config</Link>
     </None>
-    <Content Include="..\Nancy.Demo.Hosting.Self\Views\FileUpload.spark">
+    <Content Include="Views\FileUpload.spark">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <Link>Views\FileUpload.spark</Link>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Nancy.Demo.Hosting.Self\Views\staticview.html">
+    <Content Include="Views\staticview.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <Link>Views\staticview.html</Link>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -5,27 +5,25 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{1258BFCD-3BAD-4373-B786-4D698EC3C157}</ProjectGuid>
+    <ProjectGuid>{7959D79C-9E2B-4871-9470-6A6B527ABE5E}</ProjectGuid>
     <ProjectTypeGuids>{349C5851-65DF-11DA-9384-00065B846F21};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Nancy.Demo.ModelBinding</RootNamespace>
-    <AssemblyName>Nancy.Demo.ModelBinding</AssemblyName>
+    <RootNamespace>Nancy.Demo.Hosting.Owin</RootNamespace>
+    <AssemblyName>Nancy.Demo.Hosting.Owin</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <UseIISExpress>false</UseIISExpress>
     <OldToolsVersion>4.0</OldToolsVersion>
-    <IISExpressSSLPort />
-    <IISExpressAnonymousAuthentication />
-    <IISExpressWindowsAuthentication />
-    <IISExpressUseClassicPipelineMode />
-    <UseGlobalApplicationHostFile />
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
+    <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
@@ -47,12 +45,13 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <CodeAnalysisLogFile>bin\Nancy.Demo.ModelBinding.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisLogFile>bin\Nancy.Demo.Hosting.Owin.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
     <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
@@ -64,7 +63,7 @@
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <CodeAnalysisLogFile>bin\Nancy.Demo.ModelBinding.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisLogFile>bin\Nancy.Demo.Hosting.Owin.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
     <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
     <ErrorReport>prompt</ErrorReport>
@@ -76,83 +75,55 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Owin, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Owin.Host.SystemWeb.3.0.1\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
+    <Reference Include="Spark, Version=1.5.0.0, Culture=neutral, PublicKeyToken=7f8549eed921a12c">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Spark.1.7.0.0\lib\NET40\Spark.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Nancy.Demo.ModelBinding\Views\PostXml.html">
-      <Link>Views\PostXml.html</Link>
+    <None Include="Views\Root.spark" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
     </Content>
-    <Content Include="..\Nancy.Demo.ModelBinding\Views\PostJson.html">
-      <Link>Views\PostJson.html</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.ModelBinding\Web.config">
-      <Link>Web.config</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.ModelBinding\Web.Debug.config">
+    <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
-      <Link>Web.Debug.config</Link>
     </Content>
-    <Content Include="..\Nancy.Demo.ModelBinding\Web.Release.config">
+    <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
-      <Link>Web.Release.config</Link>
     </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy.Demo.ModelBinding\CustomersModule.cs">
-      <Link>CustomersModule.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.ModelBinding\Database\DB.cs">
-      <Link>Database\DB.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.ModelBinding\EventsModule.cs">
-      <Link>EventsModule.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.ModelBinding\JsonModule.cs">
-      <Link>JsonModule.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.ModelBinding\MainModule.cs">
-      <Link>MainModule.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.ModelBinding\ModelBinders\CustomerModelBinder.cs">
-      <Link>ModelBinders\CustomerModelBinder.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.ModelBinding\ModelBindingBootstrapper.cs">
-      <Link>ModelBindingBootstrapper.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.ModelBinding\Models\Customer.cs">
-      <Link>Models\Customer.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.ModelBinding\Models\Event.cs">
-      <Link>Models\Event.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.ModelBinding\Models\User.cs">
-      <Link>Models\User.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.ModelBinding\XmlModule.cs">
-      <Link>XmlModule.cs</Link>
-    </Compile>
+    <Compile Include="MainModule.cs" />
+    <Compile Include="Models\Index.cs" />
+    <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Nancy.Demo.ModelBinding\Views\Customers.spark">
-      <Link>Views\Customers.spark</Link>
-    </None>
-    <None Include="..\Nancy.Demo.ModelBinding\Views\Events.spark">
-      <Link>Views\Events.spark</Link>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\Nancy.Hosting.Aspnet.MSBuild\Nancy.Hosting.Aspnet.csproj">
-      <Project>{15B7F794-0BB2-4B66-AD78-4A951F1209B2}</Project>
-      <Name>Nancy.Hosting.Aspnet</Name>
+    <ProjectReference Include="..\..\src\Nancy.Owin.MSBuild\Nancy.Owin.csproj">
+      <Project>{d6b2480c-2a52-4d02-9477-d387d7a486e5}</Project>
+      <Name>Nancy.Owin</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\src\Nancy.ViewEngines.Spark.MSBuild\Nancy.ViewEngines.Spark.csproj">
       <Project>{4B7E35DF-1569-4346-B180-A09615723095}</Project>
@@ -162,6 +133,9 @@
       <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
       <Name>Nancy</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -174,17 +148,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349C5851-65DF-11DA-9384-00065B846F21}">
         <WebProjectProperties>
-          <UseIIS>False</UseIIS>
-          <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>1953</DevelopmentServerPort>
-          <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>
-          </IISUrl>
-          <NTLMAuthentication>False</NTLMAuthentication>
-          <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>
-          </CustomServerUrl>
-          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+          <SaveServerSettingsInUserFile>True</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
     </VisualStudio>

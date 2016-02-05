@@ -6,13 +6,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <CodeAnalysisLogFile>bin\Nancy.Demo.Authentication.Stateless.Website.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
-    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
-    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
     <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
-    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'MonoRelease|AnyCPU'">
@@ -21,13 +16,9 @@
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <CodeAnalysisLogFile>bin\Nancy.Demo.Authentication.Stateless.Website.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
-    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
-    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
     <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
-    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -35,15 +26,19 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{B5E3586D-81DE-49C3-83BC-062684795127}</ProjectGuid>
+    <ProjectGuid>{396F0BCE-5B51-4B6A-931E-312880C24725}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Nancy.Demo.Authentication.Stateless.Website</RootNamespace>
-    <AssemblyName>Nancy.Demo.Authentication.Stateless.Website</AssemblyName>
+    <RootNamespace>Nancy.Demo.Razor.Localization</RootNamespace>
+    <AssemblyName>Nancy.Demo.Razor.Localization</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <UseIISExpress>false</UseIISExpress>
-    <OldToolsVersion>4.0</OldToolsVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -65,45 +60,65 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Nancy.Demo.Authentication.Stateless.Website\index.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <Link>index.html</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.Authentication.Stateless.Website\login.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <Link>login.html</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.Authentication.Stateless.Website\Scripts\api.js">
-      <Link>Scripts\api.js</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.Authentication.Stateless.Website\Scripts\apiToken.js">
-      <Link>Scripts\apiToken.js</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.Authentication.Stateless.Website\secure.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <Link>secure.html</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.Authentication.Stateless.Website\Web.config">
-      <Link>Web.config</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.Authentication.Stateless.Website\Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-      <Link>Web.Debug.config</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.Authentication.Stateless.Website\Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
-      <Link>Web.Release.config</Link>
-    </Content>
+    <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\SharedAssemblyInfo.cs">
-      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    <Compile Include="CustomResourceAssemblyProvider.cs" />
+    <Compile Include="DemoBootstrapper.cs" />
+    <Compile Include="Modules\HomeModule.cs" />
+    <Compile Include="Resources\Text.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Text.resx</DependentUpon>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Index.cshtml" />
+    <Content Include="Views\razor-layout.cshtml" />
+    <Content Include="Views\CultureView.cshtml" />
+    <Content Include="Views\CultureView-de-DE.cshtml" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Text.de-DE.resx" />
+    <EmbeddedResource Include="Resources\Text.en-US.resx" />
+    <EmbeddedResource Include="Resources\Text.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Text.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Nancy.Hosting.Aspnet.MSBuild\Nancy.Hosting.Aspnet.csproj">
+      <Project>{15b7f794-0bb2-4b66-ad78-4a951f1209b2}</Project>
+      <Name>Nancy.Hosting.Aspnet</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\Nancy.ViewEngines.Razor.MSBuild\Nancy.ViewEngines.Razor.csproj">
+      <Project>{2c6f51df-015c-4db6-b44c-0e5e4f25e2a9}</Project>
+      <Name>Nancy.ViewEngines.Razor</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\Nancy.MSBuild\Nancy.csproj">
+      <Project>{34576216-0dca-4b0f-a0dc-9075e75a676f}</Project>
+      <Name>Nancy</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -117,11 +132,14 @@
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
-          <AutoAssignPort>False</AutoAssignPort>
-          <DevelopmentServerPort>51101</DevelopmentServerPort>
-          <DevelopmentServerVPath>/statelessWebsite</DevelopmentServerVPath>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>56029</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:61703/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>

@@ -50,21 +50,15 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Nancy.Demo.CustomModule\Views\Index.html">
-      <Link>Views\Index.html</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.CustomModule\Web.config">
-      <Link>Web.config</Link>
-    </Content>
+    <Content Include="Views\Index.html" />
+    <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Nancy.Demo.CustomModule\Web.Debug.config">
+    <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
-      <Link>Web.Debug.config</Link>
     </None>
-    <None Include="..\Nancy.Demo.CustomModule\Web.Release.config">
+    <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
-      <Link>Web.Release.config</Link>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -81,18 +75,10 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy.Demo.CustomModule\DemoBootstrapper.cs">
-      <Link>DemoBootstrapper.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.CustomModule\MainModule.cs">
-      <Link>MainModule.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.CustomModule\NancyRouteAttribute.cs">
-      <Link>NancyRouteAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.CustomModule\UglifiedNancyModule.cs">
-      <Link>UglifiedNancyModule.cs</Link>
-    </Compile>
+    <Compile Include="DemoBootstrapper.cs" />
+    <Compile Include="MainModule.cs" />
+    <Compile Include="NancyRouteAttribute.cs" />
+    <Compile Include="UglifiedNancyModule.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

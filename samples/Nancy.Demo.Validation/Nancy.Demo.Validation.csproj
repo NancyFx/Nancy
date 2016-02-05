@@ -5,12 +5,12 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{98940A30-1B48-4F71-A6BA-85F0AAF31A2F}</ProjectGuid>
-    <ProjectTypeGuids>{349C5851-65DF-11DA-9384-00065B846F21};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectGuid>{F417B81C-B914-4BFD-8299-6BBD11072B01}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Nancy.Demo.Authentication.Forms</RootNamespace>
-    <AssemblyName>Nancy.Demo.Authentication.Forms</AssemblyName>
+    <RootNamespace>Nancy.Demo.Validation</RootNamespace>
+    <AssemblyName>Nancy.Demo.Validation</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <UseIISExpress>false</UseIISExpress>
     <OldToolsVersion>4.0</OldToolsVersion>
@@ -47,7 +47,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <CodeAnalysisLogFile>bin\Nancy.Demo.Authentication.Forms.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisLogFile>bin\Nancy.Demo.Validation.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
     <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
     <ErrorReport>prompt</ErrorReport>
@@ -56,8 +56,6 @@
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-    <WarningLevel>4</WarningLevel>
-    <Optimize>false</Optimize>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'MonoRelease|AnyCPU'">
@@ -66,7 +64,7 @@
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <CodeAnalysisLogFile>bin\Nancy.Demo.Authentication.Forms.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisLogFile>bin\Nancy.Demo.Validation.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
     <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
     <ErrorReport>prompt</ErrorReport>
@@ -74,12 +72,15 @@
     <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-    <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FluentValidation, Version=3.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\FluentValidation.3.4.0.0\lib\Net40\FluentValidation.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -89,53 +90,44 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Nancy.Demo.Authentication.Forms\Web.config">
-      <Link>Web.config</Link>
-    </Content>
-    <Content Include="..\Nancy.Demo.Authentication.Forms\Web.Debug.config">
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
-      <Link>Web.Debug.config</Link>
     </Content>
-    <Content Include="..\Nancy.Demo.Authentication.Forms\Web.Release.config">
+    <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
-      <Link>Web.Release.config</Link>
     </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy.Demo.Authentication.Forms\SecureModule.cs">
-      <Link>SecureModule.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Authentication.Forms\FormsAuthBootstrapper.cs">
-      <Link>FormsAuthBootstrapper.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Authentication.Forms\MainModule.cs">
-      <Link>MainModule.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Authentication.Forms\Models\UserModel.cs">
-      <Link>Models\UserModel.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Authentication.Forms\PartlySecureModule.cs">
-      <Link>PartlySecureModule.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Demo.Authentication.Forms\UserDatabase.cs">
-      <Link>UserDatabase.cs</Link>
-    </Compile>
+    <Compile Include="CustomersModule.cs" />
+    <Compile Include="Database\DB.cs" />
+    <Compile Include="MainModule.cs" />
+    <Compile Include="Models\Customer.cs" />
+    <Compile Include="Models\OddLengthStringAttribute.cs" />
+    <Compile Include="Models\OddLengthStringAttributeAdapter.cs" />
+    <Compile Include="Models\Product.cs" />
+    <Compile Include="ProductsModule.cs" />
+    <Compile Include="ValidationBootstrapper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Nancy.Authentication.Forms.MSBuild\Nancy.Authentication.Forms.csproj">
-      <Project>{E8B18958-7C8A-4FBA-AF00-3041C34A20CE}</Project>
-      <Name>Nancy.Authentication.Forms</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\src\Nancy.Hosting.Aspnet.MSBuild\Nancy.Hosting.Aspnet.csproj">
       <Project>{15B7F794-0BB2-4B66-AD78-4A951F1209B2}</Project>
       <Name>Nancy.Hosting.Aspnet</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\Nancy.ViewEngines.Razor.MSBuild\Nancy.ViewEngines.Razor.csproj">
-      <Project>{2C6F51DF-015C-4DB6-B44C-0E5E4F25E2A9}</Project>
-      <Name>Nancy.ViewEngines.Razor</Name>
+    <ProjectReference Include="..\..\src\Nancy.Validation.DataAnnotations.MSBuild\Nancy.Validation.DataAnnotations.csproj">
+      <Project>{701765DC-F4F2-4943-A37F-6ED253198158}</Project>
+      <Name>Nancy.Validation.DataAnnotations</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\Nancy.Validation.FluentValidation.MSBuild\Nancy.Validation.FluentValidation.csproj">
+      <Project>{01230F2A-D108-480C-B834-8CE0569FD3B3}</Project>
+      <Name>Nancy.Validation.FluentValidation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\Nancy.ViewEngines.Spark.MSBuild\Nancy.ViewEngines.Spark.csproj">
+      <Project>{4B7E35DF-1569-4346-B180-A09615723095}</Project>
+      <Name>Nancy.ViewEngines.Spark</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\src\Nancy.MSBuild\Nancy.csproj">
       <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
@@ -143,19 +135,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Nancy.Demo.Authentication.Forms\Views\login.cshtml">
-      <Link>Views\login.cshtml</Link>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="..\Nancy.Demo.Authentication.Forms\Views\index.cshtml">
-      <Link>Views\index.cshtml</Link>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="..\Nancy.Demo.Authentication.Forms\Views\secure.cshtml">
-      <Link>Views\secure.cshtml</Link>
-    </Content>
+    <Content Include="packages.config" />
+    <None Include="Views\CustomerError.spark">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Views\Customers.spark" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -166,12 +150,12 @@
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
   <ProjectExtensions>
     <VisualStudio>
-      <FlavorProperties GUID="{349C5851-65DF-11DA-9384-00065B846F21}">
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>2146</DevelopmentServerPort>
-          <DevelopmentServerVPath>/forms</DevelopmentServerVPath>
+          <DevelopmentServerPort>3382</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
@@ -182,11 +166,6 @@
         </WebProjectProperties>
       </FlavorProperties>
     </VisualStudio>
-    <MonoDevelop>
-      <Properties VerifyCodeBehindFields="true" VerifyCodeBehindEvents="true">
-        <XspParameters Port="8080" Address="127.0.0.1" SslMode="None" SslProtocol="Default" KeyType="None" CertFile="" KeyFile="" PasswordOptions="None" Password="" Verbose="true" />
-      </Properties>
-    </MonoDevelop>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
