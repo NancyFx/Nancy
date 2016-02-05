@@ -90,7 +90,6 @@
     <DocumentationFile>bin\MonoRelease\Nancy.ViewEngines.Razor.BuildProviders.XML</DocumentationFile>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
-  <PropertyGroup />
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
