@@ -1,0 +1,27 @@
+﻿{
+  "version": "2.0.0-*",
+
+  "description": "Nancy is a lightweight web framework for the .Net platform, inspired by Sinatra. Nancy aim at delivering a low ceremony approach to building light, fast web applications.",
+  "authors": [ "Andreas Håkansson, Steven Robbins and contributors" ],
+  "tags": [ "Nancy" ],
+  "projectUrl": "http://nancyfx.org",
+  "licenseUrl": "https://github.com/NancyFx/Nancy/blob/master/license.txt",
+  "iconUrl": "http://nancyfx.org/nancy-nuget.png",
+
+  "dependencies": {
+    "Nancy.Authentication.Basic": { "target": "project" },
+    "Nancy": { "target": "project" },
+    "FakeItEasy": "1.19.0",
+    "xunit": "1.9.1",
+    "xunit.extensions": "1.9.1"
+  },
+
+  "compileFiles": [ "../Nancy.Tests/ShouldExtensions.cs", "../Nancy.Tests/Fakes/FakeRequest.cs"],
+
+  "frameworks": {
+    "net451": {
+      "frameworkAssemblies": {
+      }
+    }
+  }
+}

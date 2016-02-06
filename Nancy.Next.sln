@@ -48,6 +48,18 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Nancy.ViewEngines.Razor.Bui
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Nancy.ViewEngines.Spark", "src\Nancy.ViewEngines.Spark\Nancy.ViewEngines.Spark.xproj", "{25E3AB38-D95E-4D11-B0F0-0F60571A97A0}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{9CD37F2D-5C83-47A7-AFA1-8233B8204C33}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Nancy.Authentication.Basic.Tests", "test\Nancy.Authentication.Basic.Tests\Nancy.Authentication.Basic.Tests.xproj", "{19DF862C-EB75-416A-A897-21F14373701D}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Nancy.Authentication.Forms.Tests", "test\Nancy.Authentication.Forms.Tests\Nancy.Authentication.Forms.Tests.xproj", "{8F896AF4-BEC9-40FA-9585-9587D4BBA59D}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Nancy.Embedded.Tests", "test\Nancy.Embedded.Tests\Nancy.Embedded.Tests.xproj", "{181E1269-C85C-4C55-83BB-4457B752F583}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Nancy.Encryption.MachineKey.Tests", "test\Nancy.Encryption.MachineKey.Tests\Nancy.Encryption.MachineKey.Tests.xproj", "{CCAB11C7-8310-49C6-A5B6-B59A9AF3F84F}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Nancy.Hosting.Aspnet.Tests", "test\Nancy.Hosting.Aspnet.Tests\Nancy.Hosting.Aspnet.Tests.xproj", "{179CD5A5-F592-4FD4-926D-2498A2699EE8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -130,6 +142,26 @@ Global
 		{25E3AB38-D95E-4D11-B0F0-0F60571A97A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{25E3AB38-D95E-4D11-B0F0-0F60571A97A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{25E3AB38-D95E-4D11-B0F0-0F60571A97A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19DF862C-EB75-416A-A897-21F14373701D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19DF862C-EB75-416A-A897-21F14373701D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19DF862C-EB75-416A-A897-21F14373701D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19DF862C-EB75-416A-A897-21F14373701D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F896AF4-BEC9-40FA-9585-9587D4BBA59D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F896AF4-BEC9-40FA-9585-9587D4BBA59D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F896AF4-BEC9-40FA-9585-9587D4BBA59D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F896AF4-BEC9-40FA-9585-9587D4BBA59D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{181E1269-C85C-4C55-83BB-4457B752F583}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{181E1269-C85C-4C55-83BB-4457B752F583}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{181E1269-C85C-4C55-83BB-4457B752F583}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{181E1269-C85C-4C55-83BB-4457B752F583}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCAB11C7-8310-49C6-A5B6-B59A9AF3F84F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCAB11C7-8310-49C6-A5B6-B59A9AF3F84F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCAB11C7-8310-49C6-A5B6-B59A9AF3F84F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCAB11C7-8310-49C6-A5B6-B59A9AF3F84F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{179CD5A5-F592-4FD4-926D-2498A2699EE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{179CD5A5-F592-4FD4-926D-2498A2699EE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{179CD5A5-F592-4FD4-926D-2498A2699EE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{179CD5A5-F592-4FD4-926D-2498A2699EE8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -154,5 +186,10 @@ Global
 		{3A376B78-DD7D-4450-9FDE-F7236FAA6E63} = {5734E9DC-CF67-4337-B28E-695280598B88}
 		{26DF3BE0-146B-43A6-B230-D5B33355F415} = {5734E9DC-CF67-4337-B28E-695280598B88}
 		{25E3AB38-D95E-4D11-B0F0-0F60571A97A0} = {5734E9DC-CF67-4337-B28E-695280598B88}
+		{19DF862C-EB75-416A-A897-21F14373701D} = {9CD37F2D-5C83-47A7-AFA1-8233B8204C33}
+		{8F896AF4-BEC9-40FA-9585-9587D4BBA59D} = {9CD37F2D-5C83-47A7-AFA1-8233B8204C33}
+		{181E1269-C85C-4C55-83BB-4457B752F583} = {9CD37F2D-5C83-47A7-AFA1-8233B8204C33}
+		{CCAB11C7-8310-49C6-A5B6-B59A9AF3F84F} = {9CD37F2D-5C83-47A7-AFA1-8233B8204C33}
+		{179CD5A5-F592-4FD4-926D-2498A2699EE8} = {9CD37F2D-5C83-47A7-AFA1-8233B8204C33}
 	EndGlobalSection
 EndGlobal
