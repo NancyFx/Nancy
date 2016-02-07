@@ -1,10 +1,11 @@
 ﻿namespace Nancy.Demo.Razor.Localization
 {
+    using System;
     using Nancy.Bootstrapper;
 
     public class DemoBootstrapper : DefaultNancyBootstrapper
     {
-        protected override NancyInternalConfiguration InternalConfiguration
+        protected override Func<ITypeCatalog, NancyInternalConfiguration> InternalConfiguration
         {
             get
             {

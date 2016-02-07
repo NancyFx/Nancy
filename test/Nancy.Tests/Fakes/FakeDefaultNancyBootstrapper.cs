@@ -13,7 +13,7 @@
     {
         public IEnumerable<Type> OverriddenRegistrationTasks { get; set; }
 
-        private NancyInternalConfiguration configuration;
+        private Func<ITypeCatalog, NancyInternalConfiguration> configuration;
 
         protected override IEnumerable<ModuleRegistration> Modules
         {
@@ -25,7 +25,7 @@
         public FakeDefaultNancyBootstrapper()
             : this(NancyInternalConfiguration.WithOverrides(b => b.StatusCodeHandlers = new List<Type>(new[] { typeof(DefaultStatusCodeHandler) })))
         {
-            
+
         }
 
         protected override IEnumerable<Type> RegistrationTasks
@@ -43,13 +43,13 @@
                 return base.AutoRegisterIgnoredAssemblies.Union(new Func<Assembly, bool>[] { asm => asm.FullName.StartsWith("TestAssembly") });
             }
         }
-        public FakeDefaultNancyBootstrapper(NancyInternalConfiguration configuration)
+        public FakeDefaultNancyBootstrapper(Func<ITypeCatalog, NancyInternalConfiguration> configuration)
         {
             this.configuration = configuration;
             this.RequestContainerInitialisations = new Dictionary<NancyContext, int>();
         }
 
-        protected override NancyInternalConfiguration InternalConfiguration
+        protected override Func<ITypeCatalog, NancyInternalConfiguration> InternalConfiguration
         {
             get { return configuration; }
         }

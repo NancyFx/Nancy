@@ -46,6 +46,7 @@
         /// <summary>
         /// Internal configuration
         /// </summary>
+        private Func<ITypeCatalog, NancyInternalConfiguration> internalConfigurationFactory;
         private NancyInternalConfiguration internalConfiguration;
 
         /// <summary>
@@ -102,12 +103,9 @@
         /// <summary>
         /// Nancy internal configuration
         /// </summary>
-        protected virtual NancyInternalConfiguration InternalConfiguration
+        protected virtual Func<ITypeCatalog, NancyInternalConfiguration> InternalConfiguration
         {
-            get
-            {
-                return this.internalConfiguration ?? (this.internalConfiguration = NancyInternalConfiguration.Default);
-            }
+            get { return this.internalConfigurationFactory ?? (this.internalConfigurationFactory = NancyInternalConfiguration.Default); }
         }
 
         /// <summary>
@@ -128,15 +126,11 @@
         {
             get
             {
-                // Shouldn't need thread safety here?
-                return
-                    this.modules
-                    ??
-                    (this.modules = this.TypeCatalog
-                                        .GetTypesAssignableTo<INancyModule>(TypeResolveStrategies.ExcludeNancy)
-                                        .NotOfType<DiagnosticModule>()
-                                        .Select(t => new ModuleRegistration(t))
-                                        .ToArray());
+                return this.modules ?? (this.modules = this.TypeCatalog
+                    .GetTypesAssignableTo<INancyModule>(TypeResolveStrategies.ExcludeNancy)
+                    .NotOfType<DiagnosticModule>()
+                    .Select(t => new ModuleRegistration(t))
+                    .ToArray());
             }
         }
 
@@ -145,10 +139,7 @@
         /// </summary>
         protected virtual IEnumerable<Type> ViewEngines
         {
-            get
-            {
-                return this.TypeCatalog.GetTypesAssignableTo<IViewEngine>();
-            }
+            get { return this.TypeCatalog.GetTypesAssignableTo<IViewEngine>(); }
         }
 
         /// <summary>
@@ -156,10 +147,7 @@
         /// </summary>
         protected virtual IEnumerable<Type> ModelBinders
         {
-            get
-            {
-                return this.TypeCatalog.GetTypesAssignableTo<IModelBinder>();
-            }
+            get { return this.TypeCatalog.GetTypesAssignableTo<IModelBinder>(); }
         }
 
         /// <summary>
@@ -167,10 +155,7 @@
         /// </summary>
         protected virtual IEnumerable<Type> TypeConverters
         {
-            get
-            {
-                return this.TypeCatalog.GetTypesAssignableTo<ITypeConverter>(TypeResolveStrategies.ExcludeNancy);
-            }
+            get { return this.TypeCatalog.GetTypesAssignableTo<ITypeConverter>(TypeResolveStrategies.ExcludeNancy); }
         }
 
         /// <summary>
@@ -186,7 +171,7 @@
         /// </summary>
         protected virtual IEnumerable<Type> ApplicationStartupTasks
         {
-            get { return this.typeCatalog.GetTypesAssignableTo<IApplicationStartup>(); }
+            get { return this.TypeCatalog.GetTypesAssignableTo<IApplicationStartup>(); }
         }
 
         /// <summary>
@@ -237,17 +222,25 @@
             get { return CryptographyConfiguration.Default; }
         }
 
+        private NancyInternalConfiguration GetInitializedInternalConfiguration()
+        {
+            return this.internalConfiguration ?? (this.internalConfiguration = this.InternalConfiguration.Invoke(this.TypeCatalog));
+        }
+
         /// <summary>
         /// Initialise the bootstrapper. Must be called prior to GetEngine.
         /// </summary>
         public void Initialise()
         {
-            if (this.InternalConfiguration == null)
+            var configuration =
+                this.GetInitializedInternalConfiguration();
+
+            if (configuration == null)
             {
                 throw new InvalidOperationException("Configuration cannot be null");
             }
 
-            if (!this.InternalConfiguration.IsValid)
+            if (!configuration.IsValid)
             {
                 throw new InvalidOperationException("Configuration is invalid");
             }
@@ -258,11 +251,11 @@
 
             this.ConfigureApplicationContainer(this.ApplicationContainer);
 
-            var typeRegistrations = this.InternalConfiguration
+            var typeRegistrations = configuration
                 .GetTypeRegistrations()
                 .Concat(this.GetAdditionalTypes());
 
-            var collectionTypeRegistrations = this.InternalConfiguration
+            var collectionTypeRegistrations = configuration
                 .GetCollectionTypeRegistrations()
                 .Concat(this.GetApplicationCollections());
 
@@ -621,7 +614,7 @@
         {
             return new[] {
                 new InstanceRegistration(typeof(CryptographyConfiguration), this.CryptographyConfiguration),
-                new InstanceRegistration(typeof(NancyInternalConfiguration), this.InternalConfiguration),
+                new InstanceRegistration(typeof(NancyInternalConfiguration), this.GetInitializedInternalConfiguration()),
                 new InstanceRegistration(typeof(IRootPathProvider), this.RootPathProvider),
                 new InstanceRegistration(typeof(IAssemblyCatalog), this.AssemblyCatalog),
                 new InstanceRegistration(typeof(ITypeCatalog), this.TypeCatalog),
