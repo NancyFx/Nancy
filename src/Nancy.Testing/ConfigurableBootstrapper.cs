@@ -637,12 +637,6 @@ namespace Nancy.Testing
                 return this;
             }
 
-            public ConfigurableBootstrapperConfigurator Assembly(string pattern)
-            {
-                AppDomainAssemblyTypeScanner.LoadAssemblies(AppDomain.CurrentDomain.BaseDirectory, pattern);
-                return this;
-            }
-
             /// <summary>
             /// Configures the bootstrapper to create an <see cref="IBinder"/> instance of the specified type.
             /// </summary>
