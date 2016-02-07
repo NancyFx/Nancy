@@ -22,6 +22,31 @@
     ],
 
     "frameworks": {
+        "dotnet5.4": {
+          "dependencies": {
+            "Microsoft.CSharp": "4.0.1-beta-23516",
+            "System.Collections.Concurrent": "4.0.11-beta-23516",
+            "System.Collections.Specialized": "4.0.1-beta-23516",
+            "System.ComponentModel.TypeConverter": "4.0.1-beta-23516",
+            "System.Console": "4.0.0-beta-23516",
+            "System.Data.Common": "4.0.1-beta-23516",
+            "System.Diagnostics.Tools": "4.0.1-beta-23516",
+            "System.Dynamic.Runtime": "4.0.11-beta-23516",
+            "System.IO.FileSystem": "4.0.1-beta-23516",
+            "System.Linq": "4.0.1-beta-23516",
+            "System.Net.NameResolution": "4.0.0-beta-23516",
+            "System.Net.Primitives": "4.0.11-beta-23516",
+            "System.Reflection.TypeExtensions": "4.0.1-beta-23409",
+            "System.Reflection.Extensions" : "4.0.1-beta-23516",
+            "System.Runtime": "4.0.21-beta-23516",
+            "System.Runtime.Serialization.Primitives": "4.0.11-beta-23409",
+            "System.Security.Claims": "4.0.1-beta-23516",
+            "System.Security.Cryptography.X509Certificates": "4.0.0-beta-23516",
+            "System.Text.RegularExpressions": "4.0.11-beta-23516",
+            "System.Threading.Thread": "4.0.0-beta-23516",
+            "System.Xml.XmlSerializer": "4.0.11-beta-23516"
+          }
+        },
         "net451": {
             "frameworkAssemblies": {
                 "System.Xml": "4.0.0.0"
