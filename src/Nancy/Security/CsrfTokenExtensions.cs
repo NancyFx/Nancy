@@ -8,7 +8,7 @@
 
     public static class CsrfTokenExtensions
     {
-        private static readonly RandomNumberGenerator randomGenerator = new RNGCryptoServiceProvider();
+        private static readonly RandomNumberGenerator randomGenerator = RandomNumberGenerator.Create();
 
         /// <summary>
         /// Gets a byte array representation of the csrf token for generating
