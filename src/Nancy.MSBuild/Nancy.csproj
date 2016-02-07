@@ -314,6 +314,9 @@
     <Compile Include="..\Nancy\ErrorHandling\RouteExecutionEarlyExitException.cs">
       <Link>ErrorHandling\RouteExecutionEarlyExitException.cs</Link>
     </Compile>
+    <Compile Include="..\Nancy\Extensions\MemoryStreamExtensions.cs">
+      <Link>Extensions\MemoryStreamExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\Nancy\Extensions\ModelValidationErrorExtensions.cs">
       <Link>Extensions\ModelValidationErrorExtensions.cs</Link>
     </Compile>

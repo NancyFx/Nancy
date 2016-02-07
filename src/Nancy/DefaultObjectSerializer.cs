@@ -1,5 +1,6 @@
 namespace Nancy
 {
+    using Extensions;
     using System;
     using System.IO;
     using System.Runtime.Serialization;
@@ -25,9 +26,8 @@ namespace Nancy
             {
                 formatter.Serialize(outputStream, sourceObject);
 
-                var outputBytes = outputStream.GetBuffer();
-
-                return Convert.ToBase64String(outputBytes, 0, (int)outputStream.Length);
+                var buffer = outputStream.GetBufferSegment();
+                return Convert.ToBase64String(buffer.Array, buffer.Offset, buffer.Count);
             }
         }
 
