@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Nancy.Extensions;
 
     /// <summary>
     /// Class for locating an INancyBootstrapper implementation.
@@ -38,11 +39,22 @@
             }
         }
 
+        private static IReadOnlyCollection<Type> GetAvailableBootstrapperTypes()
+        {
+            var assemblies = AppDomain.CurrentDomain
+                .GetAssemblies()
+                .Where(x => !x.IsDynamic && !x.ReflectionOnly);
+
+            return assemblies
+                .SelectMany(x => x.SafeGetExportedTypes())
+                .Where(x => !x.IsAbstract && x.IsPublic)
+                .Where(x => typeof(INancyBootstrapper).IsAssignableFrom(x))
+                .ToArray();
+        }
+
         private static Type GetBootstrapperType()
         {
-            var customBootstrappers = AppDomainAssemblyTypeScanner
-                .TypesOf<INancyBootstrapper>(ScanMode.ExcludeNancy)
-                .ToList();
+            var customBootstrappers = GetAvailableBootstrapperTypes();
 
             if (!customBootstrappers.Any())
             {
@@ -65,7 +77,7 @@
             throw new BootstrapperException(errorMessage);
         }
 
-        internal static bool TryFindMostDerivedType(List<Type> customBootstrappers, out Type bootstrapper)
+        internal static bool TryFindMostDerivedType(IReadOnlyCollection<Type> customBootstrappers, out Type bootstrapper)
         {
             var set = new HashSet<Type>();
             bootstrapper = null;
