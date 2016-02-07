@@ -15,7 +15,7 @@ namespace Nancy.Diagnostics
 
         public static byte[] GenerateRandomSalt()
         {
-            var provider = new RNGCryptoServiceProvider();
+            var provider = RandomNumberGenerator.Create();
 
             var buffer = new byte[32];
             provider.GetBytes(buffer);
