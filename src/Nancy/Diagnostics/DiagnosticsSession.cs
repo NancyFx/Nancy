@@ -4,7 +4,9 @@ namespace Nancy.Diagnostics
     using System.Security.Cryptography;
     using System.Text;
 
+#if !DOTNET5_4
     [Serializable]
+#endif
     public class DiagnosticsSession
     {
         public byte[] Hash { get; set; }
