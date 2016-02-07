@@ -38,7 +38,7 @@ namespace Nancy.ModelBinding
             this.PropertyBindingExceptions = propertyBindingExceptions ?? new List<PropertyBindingException>();
             this.BoundType = boundType;
         }
-
+#if !DOTNET5_4
         /// <summary>
         /// Initializes a new instance of the <see cref="ModelBindingException" /> class with serialized data.
         /// </summary>
@@ -48,5 +48,6 @@ namespace Nancy.ModelBinding
             : base(info, context)
         {
         }
+#endif
     }
 }
