@@ -6,7 +6,9 @@
     /// <summary>
     /// Represents a Csrf protection token
     /// </summary>
+#if !DOTNET5_4
     [Serializable]
+#endif
     public sealed class CsrfToken
     {
         /// <summary>
