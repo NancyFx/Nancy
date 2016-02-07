@@ -115,6 +115,17 @@
             return false;
         }
 
+        /// <summary>
+        /// Filters our all types not assignable to <typeparamref name="TType"/>.
+        /// </summary>
+        /// <typeparam name="TType">The type that all resulting <see cref="Type"/> should be assignable to.</typeparam>
+        /// <param name="types">An <see cref="IEnumerable{T}"/> of <see cref="Type"/> instances that should be filtered.</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="Type"/> instances.</returns>
+        public static IEnumerable<Type> NotOfType<TType>(this IEnumerable<Type> types)
+        {
+            return types.Where(t => !typeof(TType).IsAssignableFrom(t));
+        }
+
         private static bool HasInterfaceThatMapsToGenericTypeDefinition(this Type givenType, Type genericType)
         {
             return givenType

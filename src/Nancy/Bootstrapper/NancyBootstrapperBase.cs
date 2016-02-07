@@ -9,6 +9,7 @@
     using Nancy.Conventions;
     using Nancy.Cryptography;
     using Nancy.Diagnostics;
+    using Nancy.Extensions;
     using Nancy.ModelBinding;
     using Nancy.Validation;
     using Nancy.ViewEngines;

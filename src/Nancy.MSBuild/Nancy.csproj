@@ -119,9 +119,6 @@
     <Compile Include="..\Nancy\AsyncNamedPipelineBase.cs">
       <Link>AsyncNamedPipelineBase.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy\Bootstrapper\AppDomainAssemblyTypeScanner.cs">
-      <Link>Bootstrapper\AppDomainAssemblyTypeScanner.cs</Link>
-    </Compile>
     <Compile Include="..\Nancy\Bootstrapper\IRequestStartup.cs">
       <Link>Bootstrapper\IRequestStartup.cs</Link>
     </Compile>
@@ -163,9 +160,6 @@
     </Compile>
     <Compile Include="..\Nancy\Bootstrapper\Pipelines.cs">
       <Link>Bootstrapper\Pipelines.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy\Bootstrapper\ScanMode.cs">
-      <Link>Bootstrapper\ScanMode.cs</Link>
     </Compile>
     <Compile Include="..\Nancy\Configuration\DefaultNancyEnvironment.cs">
       <Link>Configuration\DefaultNancyEnvironment.cs</Link>
