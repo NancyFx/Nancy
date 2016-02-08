@@ -9,11 +9,7 @@ namespace Nancy
     /// Represents a full Url of the form scheme://hostname:port/basepath/path?query
     /// </summary>
     /// <remarks>Since this is for  internal use, and fragments are not passed to the server, fragments are not supported.</remarks>
-#if DOTNET5_4
     public sealed class Url
-#else
-    public sealed class Url : ICloneable
-#endif
     {
         private string basePath;
 
