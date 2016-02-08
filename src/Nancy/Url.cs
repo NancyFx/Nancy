@@ -122,17 +122,6 @@ namespace Nancy
                 .ToString();
         }
 
-#if !DOTNET5_4
-        /// <summary>
-        /// Clones the url.
-        /// </summary>
-        /// <returns>Returns a new cloned instance of the url.</returns>
-        object ICloneable.Clone()
-        {
-            return this.Clone();
-        }
-#endif
-
         /// <summary>
         /// Clones the url.
         /// </summary>
