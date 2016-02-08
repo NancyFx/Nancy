@@ -10,14 +10,14 @@
     public class DefaultCultureService : ICultureService
     {
         private readonly CultureConventions cultureConventions;
-        private readonly CultureConfiguration configuration;
+        private readonly GlobalizationConfiguration configuration;
 
         /// <summary>
         /// Creates a new instance of DefaultCultureService
         /// </summary>
         /// <param name="cultureConventions">CultureConventions to use for determining culture</param>
-        /// <param name="configuration">CultureConfiguration containing allowed cultures</param>
-        public DefaultCultureService(CultureConventions cultureConventions, CultureConfiguration configuration)
+        /// <param name="configuration">GlobalizationConfiguration containing allowed cultures</param>
+        public DefaultCultureService(CultureConventions cultureConventions, GlobalizationConfiguration configuration)
         {
             this.cultureConventions = cultureConventions;
             this.configuration = configuration;

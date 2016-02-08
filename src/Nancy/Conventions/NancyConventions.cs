@@ -46,7 +46,7 @@
         /// <summary>
         /// Gets or sets the conventions for determining request culture
         /// </summary>
-        public IList<Func<NancyContext, CultureConfiguration, CultureInfo>> CultureConventions { get; set; }
+        public IList<Func<NancyContext, GlobalizationConfiguration, CultureInfo>> CultureConventions { get; set; }
 
         /// <summary>
         /// Validates the conventions

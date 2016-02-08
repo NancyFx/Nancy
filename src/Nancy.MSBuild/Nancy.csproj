@@ -1367,9 +1367,9 @@
     <Compile Include="..\Nancy\StaticContentConfigurationExtensions.cs">
       <Link>StaticContentConfigurationExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy\CultureConfiguration.cs" />
-    <Compile Include="..\Nancy\CultureConfigurationExtensions.cs" />
-    <Compile Include="..\Nancy\DefaultCultureConfigurationProvider.cs" />
+    <Compile Include="..\Nancy\GlobalizationConfiguration.cs" />
+    <Compile Include="..\Nancy\GlobalizationConfigurationExtensions.cs" />
+    <Compile Include="..\Nancy\DefaultGlobalizationConfigurationProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\Nancy\Diagnostics\Views\Dashboard.sshtml">

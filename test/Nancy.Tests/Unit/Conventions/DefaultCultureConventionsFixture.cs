@@ -53,7 +53,7 @@
         {
             // Given
             this.conventions.CultureConventions =
-                new List<Func<NancyContext, CultureConfiguration, CultureInfo>>();
+                new List<Func<NancyContext, GlobalizationConfiguration, CultureInfo>>();
 
             // When
             var result = this.cultureConventions.Validate(this.conventions);
@@ -66,7 +66,7 @@
         public void Should_return_correct_error_message_when_not_valid_because_culture_conventions_is_empty()
         {
             // Given
-            this.conventions.CultureConventions = new List<Func<NancyContext, CultureConfiguration, CultureInfo>>();
+            this.conventions.CultureConventions = new List<Func<NancyContext, GlobalizationConfiguration, CultureInfo>>();
 
             // When
             var result = this.cultureConventions.Validate(this.conventions);
@@ -80,7 +80,7 @@
         {
             // Given
             this.conventions.CultureConventions =
-                new List<Func<NancyContext, CultureConfiguration, CultureInfo>>
+                new List<Func<NancyContext, GlobalizationConfiguration, CultureInfo>>
                 {
                     (ctx, config) => {
                         return new CultureInfo("en-GB");
@@ -99,7 +99,7 @@
         {
             // Given
             this.conventions.CultureConventions =
-                new List<Func<NancyContext, CultureConfiguration, CultureInfo>>
+                new List<Func<NancyContext, GlobalizationConfiguration, CultureInfo>>
                 {
                     (ctx, config) => {
                         return new CultureInfo("en-GB");

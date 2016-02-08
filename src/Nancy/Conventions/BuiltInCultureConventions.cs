@@ -20,7 +20,7 @@
         /// <param name="context">NancyContext</param>
         /// <param name="configuration">Culture configuration that contains allowed cultures</param>
         /// <returns>CultureInfo if found in Form otherwise null</returns>
-        public static CultureInfo FormCulture(NancyContext context, CultureConfiguration configuration)
+        public static CultureInfo FormCulture(NancyContext context, GlobalizationConfiguration configuration)
         {
             if (context.Request.Form["CurrentCulture"] != null)
             {
@@ -43,7 +43,7 @@
         /// <param name="context">NancyContext</param>
         /// <param name="configuration">Culture configuration that contains allowed cultures</param>
         /// <returns>CultureInfo if found in Path otherwise null</returns>
-        public static CultureInfo PathCulture(NancyContext context, CultureConfiguration configuration)
+        public static CultureInfo PathCulture(NancyContext context, GlobalizationConfiguration configuration)
         {
             var segments =
                 context.Request.Url.Path.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
@@ -68,7 +68,7 @@
         /// <param name="context">NancyContext</param>
         /// <param name="configuration">Culture configuration that contains allowed cultures</param>
         /// <returns>CultureInfo if found in Headers otherwise null</returns>
-        public static CultureInfo HeaderCulture(NancyContext context, CultureConfiguration configuration)
+        public static CultureInfo HeaderCulture(NancyContext context, GlobalizationConfiguration configuration)
         {
             if (context.Request.Headers.AcceptLanguage.Any())
             {
@@ -91,7 +91,7 @@
         /// <param name="context">NancyContext</param>
         /// <param name="configuration">Culture configuration that contains allowed cultures</param>
         /// <returns>CultureInfo if found in Session otherwise null</returns>
-        public static CultureInfo SessionCulture(NancyContext context, CultureConfiguration configuration)
+        public static CultureInfo SessionCulture(NancyContext context, GlobalizationConfiguration configuration)
         {
             var sessionType = context.Request.Session as NullSessionProvider;
             if (sessionType == null && context.Request.Session["CurrentCulture"] != null)
@@ -108,7 +108,7 @@
         /// <param name="context">NancyContext</param>
         /// <param name="configuration">Culture configuration that contains allowed cultures</param>
         /// <returns>CultureInfo if found in Cookies otherwise null</returns>
-        public static CultureInfo CookieCulture(NancyContext context, CultureConfiguration configuration)
+        public static CultureInfo CookieCulture(NancyContext context, GlobalizationConfiguration configuration)
         {
             string cookieCulture = null;
 
@@ -131,7 +131,7 @@
         /// <param name="context">NancyContext</param>
         /// <param name="configuration">Culture configuration that contains allowed cultures</param>
         /// <returns>CultureInfo from CurrentThread</returns>
-        public static CultureInfo ThreadCulture(NancyContext context, CultureConfiguration configuration)
+        public static CultureInfo ThreadCulture(NancyContext context, GlobalizationConfiguration configuration)
         {
             return Thread.CurrentThread.CurrentCulture;
         }
@@ -142,14 +142,14 @@
         /// <param name="name">Culture name eg\en-GB</param>
         /// <param name="configuration">Culture configuration that contains allowed cultures</param>
         /// <returns>True/False if valid culture</returns>
-        public static bool IsValidCultureInfoName(string name, CultureConfiguration configuration)
+        public static bool IsValidCultureInfoName(string name, GlobalizationConfiguration configuration)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
                 return false;
             }
 
-            return configuration.CultureNames.Contains(name);
+            return configuration.SupportedCultureNames.Contains(name);
         }
     }
 }
