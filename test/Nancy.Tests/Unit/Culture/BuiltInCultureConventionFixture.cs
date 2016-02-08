@@ -4,8 +4,9 @@
     using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
+    using System.Linq;
     using System.Threading;
-
+    using Nancy.Configuration;
     using Nancy.Conventions;
     using Nancy.IO;
     using Nancy.Session;
@@ -22,7 +23,7 @@
             var context = CreateContextRequest("/");
 
             //When
-            var culture = BuiltInCultureConventions.FormCulture(context);
+            var culture = BuiltInCultureConventions.FormCulture(context, context.Environment.GetValue<CultureConfiguration>());
 
             //Then
             culture.ShouldBeNull();
@@ -35,7 +36,7 @@
             var context = PopulateForm("en-GB");
 
             //When
-            var culture = BuiltInCultureConventions.FormCulture(context);
+            var culture = BuiltInCultureConventions.FormCulture(context, new CultureConfiguration(new[] { "en-GB" }));
 
             //Then
             culture.Name.ShouldEqual("en-GB");
@@ -50,7 +51,7 @@
             var context = PopulateForm(cultureName);
 
             //When
-            var culture = BuiltInCultureConventions.FormCulture(context);
+            var culture = BuiltInCultureConventions.FormCulture(context, CultureConfiguration.Default);
 
             //Then
             culture.ShouldBeNull();
@@ -65,7 +66,7 @@
             var context = CreateContextRequest(path);
 
             //When
-            var culture = BuiltInCultureConventions.PathCulture(context);
+            var culture = BuiltInCultureConventions.PathCulture(context, context.Environment.GetValue<CultureConfiguration>());
 
             //Then
             culture.ShouldBeNull();
@@ -81,7 +82,7 @@
             var context = CreateContextRequest(path);
 
             //When
-            var culture = BuiltInCultureConventions.PathCulture(context);
+            var culture = BuiltInCultureConventions.PathCulture(context, new CultureConfiguration(new[] { expected }));
 
             //Then
             culture.Name.ShouldEqual(expected);
@@ -96,7 +97,7 @@
             var context = CreateContextRequest(path);
 
             //When
-            var culture = BuiltInCultureConventions.PathCulture(context);
+            var culture = BuiltInCultureConventions.PathCulture(context, new CultureConfiguration(new string[] { "en-GB" }));
 
             //Then
             context.Request.Url.Path.ShouldEqual(expectedPath);
@@ -109,7 +110,7 @@
             var context = CreateContextRequest("/");
 
             //When
-            var culture = BuiltInCultureConventions.HeaderCulture(context);
+            var culture = BuiltInCultureConventions.HeaderCulture(context, context.Environment.GetValue<CultureConfiguration>());
 
             //Then
             culture.ShouldBeNull();
@@ -130,7 +131,7 @@
             var context = CreateContextRequest("/", headers);
 
             //When
-            var culture = BuiltInCultureConventions.HeaderCulture(context);
+            var culture = BuiltInCultureConventions.HeaderCulture(context, context.Environment.GetValue<CultureConfiguration>());
 
             //Then
             culture.ShouldBeNull();
@@ -149,7 +150,7 @@
             var context = CreateContextRequest("/", headers);
 
             //When
-            var culture = BuiltInCultureConventions.HeaderCulture(context);
+            var culture = BuiltInCultureConventions.HeaderCulture(context, new CultureConfiguration(new[] { "en-GB", "de-DE", "nl", "es" }));
 
             //Then
             culture.Name.ShouldEqual("en-GB");
@@ -168,7 +169,7 @@
             var context = CreateContextRequest("/", headers);
 
             //When
-            var culture = BuiltInCultureConventions.HeaderCulture(context);
+            var culture = BuiltInCultureConventions.HeaderCulture(context, new CultureConfiguration(new[] { "en-GB" }));
 
             //Then
             culture.Name.ShouldEqual("en-GB");
@@ -181,7 +182,7 @@
             var context = CreateContextRequest("/");
 
             //When
-            var culture = BuiltInCultureConventions.SessionCulture(context);
+            var culture = BuiltInCultureConventions.SessionCulture(context, context.Environment.GetValue<CultureConfiguration>());
 
             //Then
             culture.ShouldBeNull();
@@ -204,7 +205,7 @@
 
             //When
             var exception =
-                Record.Exception(() => BuiltInCultureConventions.SessionCulture(context));
+                Record.Exception(() => BuiltInCultureConventions.SessionCulture(context, context.Environment.GetValue<CultureConfiguration>()));
 
             //Then
             exception.ShouldBeOfType<InvalidCastException>();
@@ -224,7 +225,7 @@
             context.Request.Session = new Session(new Dictionary<string, object>(sessionValues));
 
             //When
-            var culture = BuiltInCultureConventions.SessionCulture(context);
+            var culture = BuiltInCultureConventions.SessionCulture(context, context.Environment.GetValue<CultureConfiguration>());
 
             //Then
             culture.Name.ShouldEqual("en-GB");
@@ -237,7 +238,7 @@
             var context = CreateContextRequest("/");
 
             //When
-            var culture = BuiltInCultureConventions.CookieCulture(context);
+            var culture = BuiltInCultureConventions.CookieCulture(context, context.Environment.GetValue<CultureConfiguration>());
 
             //Then
             culture.ShouldBeNull();
@@ -260,14 +261,14 @@
             var context = CreateContextRequest("/", headers);
 
             //When
-            var culture = BuiltInCultureConventions.CookieCulture(context);
+            var culture = BuiltInCultureConventions.CookieCulture(context, context.Environment.GetValue<CultureConfiguration>());
 
             //Then
             culture.ShouldBeNull();
         }
 
         [Fact]
-        public void Should_return_culture_if_cookie_populate()
+        public void Should_return_culture_if_cookie_populated()
         {
             // Given
             const string cookieName = "CurrentCulture";
@@ -281,7 +282,7 @@
             var context = CreateContextRequest("/", headers);
 
             //When
-            var culture = BuiltInCultureConventions.CookieCulture(context);
+            var culture = BuiltInCultureConventions.CookieCulture(context, new CultureConfiguration(new[] { "en-GB" }));
 
             // Then
             culture.Name.ShouldEqual("en-GB");
@@ -295,7 +296,7 @@
             var expectedCultureName = Thread.CurrentThread.CurrentCulture.Name;
 
             //When
-            var culture = BuiltInCultureConventions.ThreadCulture(context);
+            var culture = BuiltInCultureConventions.ThreadCulture(context, context.Environment.GetValue<CultureConfiguration>());
 
             //Then
             culture.Name.ShouldEqual(expectedCultureName);
@@ -305,7 +306,7 @@
         public void Validation_should_return_false_if_null_culture_name()
         {
             //Given/When
-            var result = BuiltInCultureConventions.IsValidCultureInfoName(null);
+            var result = BuiltInCultureConventions.IsValidCultureInfoName(null, null);
 
             //Then
             result.ShouldBeFalse();
@@ -317,7 +318,8 @@
         public void Validation_should_return_false_if_invalid_culture_name(string cultureName)
         {
             //Given/When
-            var result = BuiltInCultureConventions.IsValidCultureInfoName(cultureName);
+            var configuration = new CultureConfiguration(Enumerable.Empty<string>());
+            var result = BuiltInCultureConventions.IsValidCultureInfoName(cultureName, configuration);
 
             //Then
             result.ShouldBeFalse();
@@ -335,7 +337,8 @@
         public void Validation_should_return_true_if_valid_culture_name(string cultureName)
         {
             //Given/When
-            var result = BuiltInCultureConventions.IsValidCultureInfoName(cultureName);
+            var configuration = new CultureConfiguration(new[] { cultureName });
+            var result = BuiltInCultureConventions.IsValidCultureInfoName(cultureName, configuration);
 
             //Then
             result.ShouldBeTrue();
@@ -358,15 +361,18 @@
 
 
             var context = new NancyContext();
-            context.Request = new Request("POST", new Url {Path = "/", Scheme = "http" }, RequestStream.FromStream(memory), headers);
+            context.Request = new Request("POST", new Url { Path = "/", Scheme = "http" }, RequestStream.FromStream(memory), headers);
             return context;
         }
 
         private NancyContext CreateContextRequest(string path, IDictionary<string, IEnumerable<string>> cultureHeaders = null)
         {
             var context = new NancyContext();
-            var request = new Request("GET", new Url{ Path = path, Scheme = "http" }, null, cultureHeaders);
+            var request = new Request("GET", new Url { Path = path, Scheme = "http" }, null, cultureHeaders);
             context.Request = request;
+            var environment = new DefaultNancyEnvironment();
+            environment.Cultures(CultureConfiguration.Default.CultureNames);
+            context.Environment = environment;
             return context;
         }
     }

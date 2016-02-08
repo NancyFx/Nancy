@@ -10,14 +10,17 @@
     public class DefaultCultureService : ICultureService
     {
         private readonly CultureConventions cultureConventions;
+        private readonly CultureConfiguration configuration;
 
         /// <summary>
         /// Creates a new instance of DefaultCultureService
         /// </summary>
         /// <param name="cultureConventions">CultureConventions to use for determining culture</param>
-        public DefaultCultureService(CultureConventions cultureConventions)
+        /// <param name="configuration">CultureConfiguration containing allowed cultures</param>
+        public DefaultCultureService(CultureConventions cultureConventions, CultureConfiguration configuration)
         {
             this.cultureConventions = cultureConventions;
+            this.configuration = configuration;
         }
 
         /// <summary>
@@ -31,7 +34,7 @@
 
             foreach (var convention in this.cultureConventions)
             {
-                culture = convention(context);
+                culture = convention(context, this.configuration);
                 if (culture != null)
                 {
                     break;
