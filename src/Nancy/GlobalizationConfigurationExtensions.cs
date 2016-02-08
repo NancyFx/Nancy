@@ -6,17 +6,17 @@
     /// <summary>
     /// Contains <see cref="GlobalizationConfiguration"/> configuration extensions for <see cref="INancyEnvironment"/>.
     /// </summary>
-    public static class CultureConfigurationExtensions
+    public static class GlobalizationConfigurationExtensions
     {
         /// <summary>
         /// Configures <see cref="GlobalizationConfiguration"/>
         /// </summary>
         /// <param name="environment">An <see cref="INancyEnvironment"/> that should be configured.</param>
-        /// <param name="cultures">Cultures that the application can accept</param>
-        public static void Cultures(this INancyEnvironment environment, IEnumerable<string> cultures)
+        /// <param name="supportedCultureNames">Cultures that the application can accept</param>
+        public static void Cultures(this INancyEnvironment environment, IEnumerable<string> supportedCultureNames)
         {
             environment.AddValue(new GlobalizationConfiguration(
-                supportedCultureNames:cultures));
+                supportedCultureNames: supportedCultureNames));
         }
     }
 }
