@@ -83,13 +83,5 @@ Nancy is licensed under [MIT](http://www.opensource.org/licenses/mit-license.php
 ### TC (.net) 
 [![Build Status](http://nancy-ci.cloudapp.net/app/rest/builds/buildType:%28id:Nancy_NancyMaster%29/statusIcon)](http://nancy-ci.cloudapp.net/viewType.html?buildTypeId=Nancy_NancyMaster&guest=1)
 
-### Travis (Mono 2.x) 
+### Travis (Mono) 
 [![Build Status](https://travis-ci.org/NancyFx/Nancy.png?branch=master)](https://travis-ci.org/NancyFx/Nancy)
-
-### TC (Mono 2.x) 
-[![Build Status](http://nancy-ci.cloudapp.net/app/rest/builds/buildType:%28id:Nancy_NancyMasterMono2x%29/statusIcon)](http://nancy-ci.cloudapp.net/viewType.html?buildTypeId=Nancy_NancyMasterMono2x&guest=1)
-
-### TC (Mono 3.x) 
-[![Build Status](http://nancy-ci.cloudapp.net/app/rest/builds/buildType:%28id:Nancy_NancyMasterMono3x%29/statusIcon)](http://nancy-ci.cloudapp.net/viewType.html?buildTypeId=Nancy_NancyMasterMono3x&guest=1)
-
-
