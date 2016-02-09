@@ -99,11 +99,11 @@
 
             var config = new DefaultNancyEnvironmentConfigurator(this.factory, new[] { provider });
 
-            // When, Then
-            Assert.DoesNotThrow(() =>
-            {
-                config.ConfigureEnvironment(env => { });
-            });
+            // When
+            var result = config.ConfigureEnvironment(env => { });
+
+            // Then
+            Assert.NotNull(result);
         }
 
         [Theory]

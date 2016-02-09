@@ -3,12 +3,9 @@
     using System;
     using System.Linq;
     using System.Threading.Tasks;
-    using FakeItEasy.ExtensionSyntax;
-
     using Nancy.Cookies;
     using Nancy.Cryptography;
     using Nancy.Diagnostics;
-    using Nancy.Helpers;
     using Nancy.Testing;
 
     using Xunit;

@@ -639,6 +639,9 @@
     <Compile Include="..\Nancy.Tests\xUnitExtensions\RecordAsync.cs">
       <Link>xUnitExtensions\RecordAsync.cs</Link>
     </Compile>
+    <Compile Include="..\Nancy.Tests\xUnitExtensions\Skip.cs">
+      <Link>xUnitExtensions\Skip.cs</Link>
+    </Compile>
     <Compile Include="..\Nancy.Tests\xUnitExtensions\SkipException.cs">
       <Link>xUnitExtensions\SkipException.cs</Link>
     </Compile>

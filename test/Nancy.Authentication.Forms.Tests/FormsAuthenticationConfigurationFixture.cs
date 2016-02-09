@@ -28,7 +28,7 @@ namespace Nancy.Authentication.Forms.Tests
         public void Should_be_valid_with_all_properties_set()
         {
             // Given, When, Then
-            Assert.DoesNotThrow(() => config.EnsureConfigurationIsValid());
+            config.EnsureConfigurationIsValid();
         }
 
         [Fact]
@@ -39,7 +39,7 @@ namespace Nancy.Authentication.Forms.Tests
             config.DisableRedirect = true;
 
             // When, Then
-            Assert.DoesNotThrow(() => config.EnsureConfigurationIsValid());
+            config.EnsureConfigurationIsValid();
         }
 
         [Fact]

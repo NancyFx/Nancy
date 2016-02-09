@@ -137,17 +137,16 @@
             collection["key"].ShouldEqual("key,key");
         }
 
-		[Theory]
-		[InlineData("/a/a&/b&/c")]
-		[InlineData("/build/app-transitions-css/app-transitions-css-min.css&/build/widget-base/assets/skins/sam/widget-base.css&/build/scrollview-base/assets/skins/sam/scrollview-base.css&/build/scrollview-scrollbars/assets/skins/sam/scrollview-scrollbars.css&/build/widget-stack/assets/skins/sam/widget-stack.css&/build/overlay/assets/skins/sam/overlay.css&/build/console/assets/skins/sam/console.css")]
-		public void ParseQueryString_handles_irregular_yui_format(string query)
-		{
-			Assert.DoesNotThrow(() =>
-			{
-				var collection = HttpUtility.ParseQueryString(query);
-	
-				collection.ShouldNotBeNull();
-			});
-		}
+        [Theory]
+        [InlineData("/a/a&/b&/c")]
+        [InlineData("/build/app-transitions-css/app-transitions-css-min.css&/build/widget-base/assets/skins/sam/widget-base.css&/build/scrollview-base/assets/skins/sam/scrollview-base.css&/build/scrollview-scrollbars/assets/skins/sam/scrollview-scrollbars.css&/build/widget-stack/assets/skins/sam/widget-stack.css&/build/overlay/assets/skins/sam/overlay.css&/build/console/assets/skins/sam/console.css")]
+        public void ParseQueryString_handles_irregular_yui_format(string query)
+        {
+            Record.Exception(() =>
+            {
+                var collection = HttpUtility.ParseQueryString(query);
+                collection.ShouldNotBeNull();
+            }).ShouldBeNull();
+        }
     }
 }
