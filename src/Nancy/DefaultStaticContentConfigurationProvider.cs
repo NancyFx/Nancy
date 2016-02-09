@@ -3,7 +3,7 @@
     using Nancy.Configuration;
 
     /// <summary>
-    /// Provides the default conf <see cref="StaticContentConfiguration"/>. 
+    /// Provides the default <see cref="StaticContentConfiguration"/>. 
     /// </summary>
     public class DefaultStaticContentConfigurationProvider : NancyDefaultConfigurationProvider<StaticContentConfiguration>
     {

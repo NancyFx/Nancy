@@ -38,7 +38,7 @@
         /// <param name="conventions"></param>
         private static void ConfigureDefaultConventions(NancyConventions conventions)
         {
-            conventions.CultureConventions = new List<Func<NancyContext, CultureInfo>>
+            conventions.CultureConventions = new List<Func<NancyContext, GlobalizationConfiguration, CultureInfo>>
             {
                 BuiltInCultureConventions.FormCulture,
                 BuiltInCultureConventions.HeaderCulture,

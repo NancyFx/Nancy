@@ -17,7 +17,7 @@ namespace Nancy
         }
 
         /// <summary>
-        /// Gets the safe paths to retireve retrieve static content from.
+        /// Gets the safe paths to retrieve static content from.
         /// </summary>
         /// <value>Safe paths to retrieve static content from</value>
         public IEnumerable<string> SafePaths { get; private set; }

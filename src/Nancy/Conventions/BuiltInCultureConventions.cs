@@ -5,7 +5,7 @@
     using System.Globalization;
     using System.Linq;
     using System.Threading;
-
+    using Nancy.Configuration;
     using Nancy.Session;
 
     /// <summary>
@@ -15,29 +15,18 @@
     public static class BuiltInCultureConventions
     {
         /// <summary>
-        /// Gets a set of all valid cultures
-        /// </summary>
-        public static HashSet<string> CultureNames { get; private set; }
-
-        static BuiltInCultureConventions()
-        {
-            CultureNames = new HashSet<string>(
-                                    CultureInfo.GetCultures(CultureTypes.AllCultures).Select(c => c.Name),
-                                    StringComparer.OrdinalIgnoreCase);
-        }
-
-        /// <summary>
         /// Checks to see if the Form has a CurrentCulture key.
         /// </summary>
         /// <param name="context">NancyContext</param>
+        /// <param name="configuration">Culture configuration that contains allowed cultures</param>
         /// <returns>CultureInfo if found in Form otherwise null</returns>
-        public static CultureInfo FormCulture(NancyContext context)
+        public static CultureInfo FormCulture(NancyContext context, GlobalizationConfiguration configuration)
         {
             if (context.Request.Form["CurrentCulture"] != null)
             {
                 string cultureLetters = context.Request.Form["CurrentCulture"];
 
-                if (!IsValidCultureInfoName(cultureLetters))
+                if (!IsValidCultureInfoName(cultureLetters, configuration))
                 {
                     return null;
                 }
@@ -52,8 +41,9 @@
         /// Checks to see if the first argument in the Path can be used to make a CultureInfo.
         /// </summary>
         /// <param name="context">NancyContext</param>
+        /// <param name="configuration">Culture configuration that contains allowed cultures</param>
         /// <returns>CultureInfo if found in Path otherwise null</returns>
-        public static CultureInfo PathCulture(NancyContext context)
+        public static CultureInfo PathCulture(NancyContext context, GlobalizationConfiguration configuration)
         {
             var segments =
                 context.Request.Url.Path.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
@@ -61,7 +51,7 @@
             var firstSegment =
                 segments.FirstOrDefault();
 
-            if (firstSegment != null && IsValidCultureInfoName(firstSegment))
+            if (firstSegment != null && IsValidCultureInfoName(firstSegment, configuration))
             {
                 context.Request.Url.Path =
                     string.Concat("/", string.Join("/", segments.Skip(1)));
@@ -76,14 +66,15 @@
         /// Checks to see if the AcceptLanguage in the Headers can be used to make a CultureInfo. Uses highest weighted if multiple defined.
         /// </summary>
         /// <param name="context">NancyContext</param>
+        /// <param name="configuration">Culture configuration that contains allowed cultures</param>
         /// <returns>CultureInfo if found in Headers otherwise null</returns>
-        public static CultureInfo HeaderCulture(NancyContext context)
+        public static CultureInfo HeaderCulture(NancyContext context, GlobalizationConfiguration configuration)
         {
             if (context.Request.Headers.AcceptLanguage.Any())
             {
                 var cultureLetters = context.Request.Headers.AcceptLanguage.First().Item1;
 
-                if (!IsValidCultureInfoName(cultureLetters))
+                if (!IsValidCultureInfoName(cultureLetters, configuration))
                 {
                     return null;
                 }
@@ -98,8 +89,9 @@
         /// Checks to see if the Session has a CurrentCulture key
         /// </summary>
         /// <param name="context">NancyContext</param>
+        /// <param name="configuration">Culture configuration that contains allowed cultures</param>
         /// <returns>CultureInfo if found in Session otherwise null</returns>
-        public static CultureInfo SessionCulture(NancyContext context)
+        public static CultureInfo SessionCulture(NancyContext context, GlobalizationConfiguration configuration)
         {
             var sessionType = context.Request.Session as NullSessionProvider;
             if (sessionType == null && context.Request.Session["CurrentCulture"] != null)
@@ -114,14 +106,15 @@
         /// Checks to see if the Cookies has a CurrentCulture key
         /// </summary>
         /// <param name="context">NancyContext</param>
+        /// <param name="configuration">Culture configuration that contains allowed cultures</param>
         /// <returns>CultureInfo if found in Cookies otherwise null</returns>
-        public static CultureInfo CookieCulture(NancyContext context)
+        public static CultureInfo CookieCulture(NancyContext context, GlobalizationConfiguration configuration)
         {
             string cookieCulture = null;
 
             if (context.Request.Cookies.TryGetValue("CurrentCulture", out cookieCulture))
             {
-                if (!IsValidCultureInfoName(cookieCulture))
+                if (!IsValidCultureInfoName(cookieCulture, configuration))
                 {
                     return null;
                 }
@@ -136,8 +129,9 @@
         /// Uses the Thread.CurrentThread.CurrentCulture
         /// </summary>
         /// <param name="context">NancyContext</param>
+        /// <param name="configuration">Culture configuration that contains allowed cultures</param>
         /// <returns>CultureInfo from CurrentThread</returns>
-        public static CultureInfo ThreadCulture(NancyContext context)
+        public static CultureInfo ThreadCulture(NancyContext context, GlobalizationConfiguration configuration)
         {
             return Thread.CurrentThread.CurrentCulture;
         }
@@ -146,15 +140,16 @@
         /// Validates culture name
         /// </summary>
         /// <param name="name">Culture name eg\en-GB</param>
+        /// <param name="configuration">Culture configuration that contains allowed cultures</param>
         /// <returns>True/False if valid culture</returns>
-        public static bool IsValidCultureInfoName(string name)
+        public static bool IsValidCultureInfoName(string name, GlobalizationConfiguration configuration)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
                 return false;
             }
 
-            return CultureNames.Contains(name);
+            return configuration.SupportedCultureNames.Contains(name);
         }
     }
 }
