@@ -1,6 +1,7 @@
 language: csharp
+sudo: required
+dist: trusty
 solution: src/Nancy.sln
-sudo: false
 install:
   - gem install bundle
   - bundle
@@ -9,7 +10,6 @@ install:
   - echo set -e >> ./travis.sh
   - echo set -x >> ./travis.sh
   - echo set -o pipefail >> ./travis.sh
-  - echo echo Running on Mono 3.x >> ./travis.sh
   - echo rake mono >> ./travis.sh
   - chmod +x ./travis.sh
   - cat travis.sh
@@ -17,4 +17,9 @@ script: ./travis.sh
 notifications:
   email:
     - nancy@nancyfx.org
+os:
+  - linux
+  - osx
+mono:
+  - 4.0.5
 gemfile: Gemfile
