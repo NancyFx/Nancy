@@ -20,6 +20,4 @@ notifications:
 os:
   - linux
   - osx
-mono:
-  - 4.0.5
 gemfile: Gemfile
