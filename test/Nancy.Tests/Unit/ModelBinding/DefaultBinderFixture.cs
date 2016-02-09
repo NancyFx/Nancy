@@ -17,9 +17,7 @@ namespace Nancy.Tests.Unit.ModelBinding
     using Nancy.Responses.Negotiation;
     using Nancy.Tests.Fakes;
     using Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers;
-
     using Xunit;
-    using Xunit.Extensions;
 
     public class DefaultBinderFixture
     {
@@ -97,7 +95,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             var config = new BindingConfig { IgnoreErrors = true };
 
             // When, Then
-            Record.Exception(() => binder.Bind(context, this.GetType(), null, config)).ShouldBeNull();
+            binder.Bind(context, this.GetType(), null, config);
         }
 
         [Fact]
