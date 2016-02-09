@@ -8,7 +8,7 @@
 *.pidb
 *.ide
 *.userprefs
-AssemblyInfo.cs
+/AssemblyInfo.cs
 .DS_Store
 deploy/
 /build/

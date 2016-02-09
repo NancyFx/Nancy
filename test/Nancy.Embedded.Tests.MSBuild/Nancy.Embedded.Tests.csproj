@@ -59,11 +59,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Nancy.Embedded.Tests\Properties\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="..\Nancy.Tests\ShouldExtensions.cs">
       <Link>ShouldExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SharedAssemblyInfo.cs">
-      <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="..\Nancy.Embedded.Tests\Unit\EmbeddedStaticContentConventionBuilderFixture.cs">
       <Link>Unit\EmbeddedStaticContentConventionBuilderFixture.cs</Link>

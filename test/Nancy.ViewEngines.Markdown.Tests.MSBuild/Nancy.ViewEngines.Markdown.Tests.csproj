@@ -95,11 +95,11 @@
     <Compile Include="..\Nancy.ViewEngines.Markdown.Tests\MarkdownViewEngineFixture.cs">
       <Link>MarkdownViewEngineFixture.cs</Link>
     </Compile>
-    <Compile Include="..\..\SharedAssemblyInfo.cs">
-      <Link>Properties\SharedAssemblyInfo.cs</Link>
-    </Compile>
     <Compile Include="..\Nancy.ViewEngines.Markdown.Tests\MarkdownViewengineRenderFixture.cs">
       <Link>MarkdownViewengineRenderFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.Markdown.Tests\Properties\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="..\Nancy.ViewEngines.Markdown.Tests\UserModel.cs">
       <Link>UserModel.cs</Link>

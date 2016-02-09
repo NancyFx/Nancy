@@ -116,6 +116,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Nancy.Authentication.Basic.Tests\Properties\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="..\Nancy.Tests\Fakes\FakeRequest.cs">
       <Link>Fakes\FakeRequest.cs</Link>
     </Compile>
@@ -139,9 +142,7 @@
       <Name>Nancy</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />

@@ -118,14 +118,14 @@
     <Compile Include="..\Nancy.Tests\ShouldExtensions.cs">
       <Link>ShouldExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\..\SharedAssemblyInfo.cs">
-      <Link>Properties\SharedAssemblyInfo.cs</Link>
-    </Compile>
     <Compile Include="..\Nancy.Validation.FluentValidation.Tests\DefaultFluentAdapterFactoryFixture.cs">
       <Link>DefaultFluentAdapterFactoryFixture.cs</Link>
     </Compile>
     <Compile Include="..\Nancy.Validation.FluentValidation.Tests\FluentValidationValidatorFactoryFixture.cs">
       <Link>FluentValidationValidatorFactoryFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.FluentValidation.Tests\Properties\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>

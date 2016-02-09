@@ -94,11 +94,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Nancy.Tests.Functional\Properties\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="..\Nancy.Tests\xUnitExtensions\RecordAsync.cs">
       <Link>RecordAsync.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SharedAssemblyInfo.cs">
-      <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="..\Nancy.Tests.Functional\Modules\AbsoluteUrlTestModule.cs">
       <Link>Modules\AbsoluteUrlTestModule.cs</Link>

@@ -115,6 +115,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Nancy.Hosting.Self.Tests\Properties\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="..\Nancy.Tests\ShouldExtensions.cs">
       <Link>ShouldExtensions.cs</Link>
     </Compile>
@@ -123,9 +126,6 @@
     </Compile>
     <Compile Include="..\Nancy.Tests\xUnitExtensions\SkippableFactAttribute.cs">
       <Link>SkippableFactAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SharedAssemblyInfo.cs">
-      <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="..\Nancy.Hosting.Self.Tests\IsCaseInstensitiveBaseOfFixture.cs">
       <Link>IsCaseInstensitiveBaseOfFixture.cs</Link>

@@ -119,9 +119,6 @@
     <Compile Include="..\Nancy.Tests\ShouldExtensions.cs">
       <Link>ShouldExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\..\SharedAssemblyInfo.cs">
-      <Link>Properties\SharedAssemblyInfo.cs</Link>
-    </Compile>
     <Compile Include="..\Nancy.Validation.DataAnnotatioins.Tests\DataAnnotationsValidatorFixture.cs">
       <Link>DataAnnotationsValidatorFixture.cs</Link>
     </Compile>
@@ -133,6 +130,9 @@
     </Compile>
     <Compile Include="..\Nancy.Validation.DataAnnotatioins.Tests\DefaultValidatableObjectAdapterFixture.cs">
       <Link>DefaultValidatableObjectAdapterFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotatioins.Tests\Properties\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="..\Nancy.Validation.DataAnnotatioins.Tests\PropertyValidatorFixture.cs">
       <Link>PropertyValidatorFixture.cs</Link>

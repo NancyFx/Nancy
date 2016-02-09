@@ -124,11 +124,11 @@
     <Compile Include="..\Nancy.Tests\ShouldExtensions.cs">
       <Link>ShouldExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\..\SharedAssemblyInfo.cs">
-      <Link>Properties\SharedAssemblyInfo.cs</Link>
-    </Compile>
     <Compile Include="..\Nancy.ViewEngines.Spark.Tests\NancyViewFolderFixture.cs">
       <Link>NancyViewFolderFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.Spark.Tests\Properties\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="..\Nancy.ViewEngines.Spark.Tests\ViewModels\FakeViewModel.cs">
       <Link>ViewModels\FakeViewModel.cs</Link>

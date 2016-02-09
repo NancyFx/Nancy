@@ -125,9 +125,6 @@
     <Compile Include="..\Nancy.Tests\ShouldExtensions.cs">
       <Link>ShouldExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\..\SharedAssemblyInfo.cs">
-      <Link>Properties\SharedAssemblyInfo.cs</Link>
-    </Compile>
     <Compile Include="..\Nancy.ViewEngines.DotLiquid.Tests\DotLiquidViewEngineFixture.cs">
       <Link>DotLiquidViewEngineFixture.cs</Link>
     </Compile>
@@ -142,6 +139,9 @@
     </Compile>
     <Compile Include="..\Nancy.ViewEngines.DotLiquid.Tests\LiquidNancyFileSystemFixture.cs">
       <Link>LiquidNancyFileSystemFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.DotLiquid.Tests\Properties\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>

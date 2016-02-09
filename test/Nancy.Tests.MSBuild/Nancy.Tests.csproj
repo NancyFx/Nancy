@@ -117,9 +117,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\SharedAssemblyInfo.cs">
-      <Link>Properties\SharedAssemblyInfo.cs</Link>
-    </Compile>
     <Compile Include="..\Nancy.Tests\Fakes\FakeLegacyNancyModuleNoRoutes.cs">
       <Link>Fakes\FakeLegacyNancyModuleNoRoutes.cs</Link>
     </Compile>
@@ -179,6 +176,9 @@
     </Compile>
     <Compile Include="..\Nancy.Tests\Helpers\CacheHelpersFixture.cs">
       <Link>Helpers\CacheHelpersFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Properties\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="..\Nancy.Tests\Resources\Link.Texts.Designer.cs">
       <DependentUpon>Link.Texts.resx</DependentUpon>
