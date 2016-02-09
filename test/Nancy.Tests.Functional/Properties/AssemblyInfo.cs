@@ -1,5 +1,3 @@
-﻿using JetBrains.dotMemoryUnit;
-using Xunit;
+﻿using Xunit;
 
-[assembly: SuppressXUnitOutputException]
 [assembly: CollectionBehavior(DisableTestParallelization = true)]
