@@ -1,7 +1,7 @@
 ﻿namespace Nancy.Culture
 {
     using System.Globalization;
-
+    using Nancy.Configuration;
     using Nancy.Conventions;
 
     /// <summary>
@@ -16,11 +16,11 @@
         /// Creates a new instance of DefaultCultureService
         /// </summary>
         /// <param name="cultureConventions">CultureConventions to use for determining culture</param>
-        /// <param name="configuration">GlobalizationConfiguration containing allowed cultures</param>
-        public DefaultCultureService(CultureConventions cultureConventions, GlobalizationConfiguration configuration)
+        /// <param name="environment">An instance of <see cref="INancyEnvironment"/> to retrieve <see cref="GlobalizationConfiguration"/> from.</param>
+        public DefaultCultureService(CultureConventions cultureConventions, INancyEnvironment environment)
         {
             this.cultureConventions = cultureConventions;
-            this.configuration = configuration;
+            this.configuration = environment.GetValue<GlobalizationConfiguration>();
         }
 
         /// <summary>
