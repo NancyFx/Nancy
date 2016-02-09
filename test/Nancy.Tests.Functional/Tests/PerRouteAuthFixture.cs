@@ -90,7 +90,7 @@
         {
             var claims = claimTypes.Select(claimType => new Claim(claimType, string.Empty)).ToList();
             claims.Add(new Claim(ClaimTypes.NameIdentifier, "user"));
-            
+
             return new ClaimsPrincipal(new ClaimsIdentity(claims, "test"));
         }
     }

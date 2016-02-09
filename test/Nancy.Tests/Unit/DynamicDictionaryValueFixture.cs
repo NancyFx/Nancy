@@ -1054,12 +1054,8 @@
             //Given
             dynamic value = new DynamicDictionaryValue(new EventArgs());
 
-            //When
-            //Then
-            Assert.DoesNotThrow(() =>
-            {
-                EventArgs e = (EventArgs)value;
-            });
+            //When, Then
+            Record.Exception(() => (EventArgs)value).ShouldBeNull();
         }
 
         [Fact]

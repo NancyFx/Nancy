@@ -75,7 +75,7 @@ desc "Executes xUnit tests"
 xunit :xunit => [:compile] do |xunit|
     tests = FileList["test/**/#{CONFIGURATION}/*.Tests*.dll"].exclude(/obj\//).exclude(/Nancy.ViewEngines.Razor.Tests.Models/)
 
-    xunit.command = "tools/xunit/xunit.console.clr4.x86.exe"
+    xunit.command = "tools/xunit/xunit.console.x86.exe"
     xunit.assemblies = tests
 end
 

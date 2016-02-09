@@ -77,8 +77,11 @@
 
             this.serializerFactory = new DefaultSerializerFactory(serializers);
 
-            // When, Then
-            Assert.DoesNotThrow(() => this.serializerFactory.GetSerializer("application/json"));
+            // When
+            var result = this.serializerFactory.GetSerializer("application/json");
+
+            // Then
+            Assert.Null(result);
         }
 
         [Fact]
@@ -107,8 +110,11 @@
 
             this.serializerFactory = new DefaultSerializerFactory(serializers);
 
-            // When, Then
-            Assert.DoesNotThrow(() => this.serializerFactory.GetSerializer("application/json"));
+            // When
+            var result = this.serializerFactory.GetSerializer("application/json");
+
+            // Then
+            Assert.NotNull(result);
         }
 
         [Fact]
