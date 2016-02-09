@@ -20,7 +20,7 @@ namespace Nancy
         /// </summary>
         public Url()
         {
-            this.Scheme = Uri.UriSchemeHttp;
+            this.Scheme = "http://";
             this.HostName = string.Empty;
             this.Port = null;
             this.BasePath = string.Empty;
@@ -91,7 +91,7 @@ namespace Nancy
             {
                 return new StringBuilder()
                     .Append(this.Scheme)
-                    .Append(Uri.SchemeDelimiter)
+                    .Append("://")
                     .Append(GetHostName(this.HostName))
                     .Append(GetPort(this.Port))
                     .ToString();
@@ -105,7 +105,7 @@ namespace Nancy
         {
             get
             {
-                return Uri.UriSchemeHttps.Equals(this.Scheme, StringComparison.OrdinalIgnoreCase);
+                return "https://".Equals(this.Scheme, StringComparison.OrdinalIgnoreCase);
             }
         }
 
@@ -113,7 +113,7 @@ namespace Nancy
         {
             return new StringBuilder()
                 .Append(this.Scheme)
-                .Append(Uri.SchemeDelimiter)
+                .Append("://")
                 .Append(GetHostName(this.HostName))
                 .Append(GetPort(this.Port))
                 .Append(GetCorrectPath(this.BasePath))
