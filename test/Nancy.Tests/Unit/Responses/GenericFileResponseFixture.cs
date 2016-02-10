@@ -2,37 +2,50 @@
 {
     using System.Collections.Generic;
     using System.IO;
-
     using Nancy.Configuration;
     using Nancy.Responses;
-
     using Xunit;
+    using Xunit.Abstractions;
 
     public class GenericFileResponseFixture
     {
-        private readonly string imagePath;
-        private const string imageContentType = "image/png";
+        private readonly string filePath;
+        private readonly string fileContentType = "foo/bar";
         private readonly NancyContext context;
 
-        public GenericFileResponseFixture()
+        public GenericFileResponseFixture(ITestOutputHelper output)
         {
-            var assemblyPath =
-                Path.GetDirectoryName(this.GetType().Assembly.Location);
-            
             var environment = new DefaultNancyEnvironment();
-            environment.StaticContent(safepaths:assemblyPath);
+            environment.StaticContent(safepaths: this.GetLocation());
 
             this.context = new NancyContext { Environment = environment };
 
-            this.imagePath =
-                Path.GetFileName(this.GetType().Assembly.Location);
+            this.filePath = this.GetFilePath();
+        }
+
+        private string GetLocation()
+        {
+#if DNX
+            return Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.Application.ApplicationBasePath;
+#else
+            return Path.GetDirectoryName(this.GetType().Assembly.Location);
+#endif
+        }
+
+        private string GetFilePath()
+        {
+#if DNX
+            return Path.Combine("Resources", "test.txt");
+#else
+            return Path.GetFileName(this.GetType().Assembly.Location);
+#endif
         }
 
         [Fact]
         public void Should_set_status_code_to_not_found_when_file_name_is_empty()
         {
             // Given, When
-            var response = new GenericFileResponse(string.Empty, imageContentType, this.context);
+            var response = new GenericFileResponse(string.Empty, this.fileContentType, this.context);
 
             // Then
             response.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
@@ -42,7 +55,7 @@
         public void Should_set_status_code_to_not_found_when_file_name_is_null()
         {
             // Given, When
-            var response = new GenericFileResponse(null, imageContentType, this.context);
+            var response = new GenericFileResponse(null, this.fileContentType, this.context);
 
             // Then
             response.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
@@ -52,10 +65,10 @@
         public void Should_set_status_code_to_not_found_when_file_name_does_not_contain_extension()
         {
             // Given
-            var path = Path.Combine("Resources", "zip");
+            var fileNameWithoutExtensions = Path.GetFileNameWithoutExtension(this.filePath);
 
             // When
-            var response = new GenericFileResponse(path, imageContentType, this.context);
+            var response = new GenericFileResponse(fileNameWithoutExtensions, this.fileContentType, this.context);
 
             // Then
             response.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
@@ -65,10 +78,8 @@
         public void Should_set_status_code_to_not_found_when_file_does_not_exist()
         {
             // Given
-            var path = Path.Combine("Resources", "thatsnotit.jpg");
-
             // When
-            var response = new GenericFileResponse(path, imageContentType, this.context);
+            var response = new GenericFileResponse("nancy", this.fileContentType, this.context);
 
             // Then
             response.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
@@ -78,11 +89,11 @@
         public void Should_set_status_code_to_not_found_when_file_is_above_root_path()
         {
             // Given
-            var path = 
-                Path.Combine(this.imagePath, "..", "..");
+            var path =
+                Path.Combine(this.filePath, "..", "..");
 
             // When
-            var response = new GenericFileResponse(path, imageContentType, this.context);
+            var response = new GenericFileResponse(path, this.fileContentType, this.context);
 
             // Then
             response.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
@@ -91,9 +102,10 @@
         [Fact]
         public void Should_set_status_code_to_ok()
         {
-            // Given, When
-            var response = new GenericFileResponse(this.imagePath, imageContentType, this.context);
-                        
+            // Given
+            // When
+            var response = new GenericFileResponse(this.filePath, "text/plain", this.context);
+
             // Then
             response.StatusCode.ShouldEqual(HttpStatusCode.OK);
         }
@@ -102,12 +114,13 @@
         public void Should_return_file_unchanged()
         {
             // Given
-            var expected = File.ReadAllBytes(this.imagePath);
-            var response = new GenericFileResponse(this.imagePath, imageContentType, this.context);
-            
+            var path = Path.Combine(this.GetLocation(), this.filePath);
+            var expected = File.ReadAllBytes(path);
+            var response = new GenericFileResponse(this.filePath, this.fileContentType, this.context);
+
             // When
             var result = GetResponseContents(response);
-            
+
             // Then
             result.ShouldEqualSequence(expected);
         }
@@ -115,19 +128,20 @@
         [Fact]
         public void Should_set_filename_property_to_filename()
         {
-            // Given, When
-            var response = new GenericFileResponse(this.imagePath, imageContentType, this.context);
+            // Given
+            // When
+            var response = new GenericFileResponse(this.filePath, this.fileContentType, this.context);
 
             // Then
-            response.Filename.ShouldEqual(Path.GetFileName(this.imagePath));
+            response.Filename.ShouldEqual(Path.GetFileName(this.filePath));
         }
 
         [Fact]
         public void Should_contain_etag_in_response_header()
         {
-            // Given, when
-            var response =
-                new GenericFileResponse(this.imagePath, imageContentType, this.context);
+            // Given
+            // When
+            var response = new GenericFileResponse(this.filePath, this.fileContentType, this.context);
 
             // Then
             response.Headers["ETag"].ShouldStartWith("\"");
@@ -138,9 +152,9 @@
         public void Should_set_content_length_in_response_header()
         {
             // Given, when
-            var expected = new FileInfo(imagePath).Length.ToString();
-            var response =
-                new GenericFileResponse(this.imagePath, imageContentType, this.context);
+            var path = Path.Combine(this.GetLocation(), this.filePath);
+            var expected = new FileInfo(path).Length.ToString();
+            var response = new GenericFileResponse(this.filePath, this.fileContentType, this.context);
 
             // Then
             response.Headers["Content-Length"].ShouldEqual(expected);
@@ -151,7 +165,7 @@
             var ms = new MemoryStream();
             response.Contents(ms);
             ms.Flush();
-            
+
             return ms.ToArray();
         }
     }

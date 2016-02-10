@@ -103,6 +103,9 @@
     <Compile Include="..\Nancy.Hosting.Self\IgnoredHeaders.cs">
       <Link>IgnoredHeaders.cs</Link>
     </Compile>
+    <Compile Include="..\Nancy.Hosting.Self\Properties\InternalsVisibleTo.cs">
+      <Link>Properties\InternalsVisibleTo.cs</Link>
+    </Compile>
     <Compile Include="..\Nancy.Hosting.Self\UrlReservations.cs">
       <Link>UrlReservations.cs</Link>
     </Compile>

@@ -8,6 +8,11 @@
     "licenseUrl": "https://github.com/NancyFx/Nancy/blob/master/license.txt",
     "iconUrl": "http://nancyfx.org/nancy-nuget.png",
 
+    "resource": [
+        "Diagnostics/Resources/**/*.*",
+        "Diagnostics/Views/**/*.*"
+    ],
+
     "frameworks": {
         "net451": {
             "frameworkAssemblies": {

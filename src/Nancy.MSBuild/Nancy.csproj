@@ -383,6 +383,9 @@
     <Compile Include="..\Nancy\ITypeCatalog.cs">
       <Link>ITypeCatalog.cs</Link>
     </Compile>
+    <Compile Include="..\Nancy\Properties\InternalsVisibleTo.cs">
+      <Link>Properties\InternalsVisibleTo.cs</Link>
+    </Compile>
     <Compile Include="..\Nancy\TypeCatalogExtensions.cs">
       <Link>TypeCatalogExtensions.cs</Link>
     </Compile>

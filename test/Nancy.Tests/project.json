@@ -1,0 +1,28 @@
+{
+    "dependencies": {
+        "FakeItEasy": "2.0.0-beta011",
+        "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc1-final",
+        "Nancy": { "target": "project" },
+        "Nancy.Testing": { "target": "project" },
+        "xunit": "2.1.0",
+        "xunit.runner.dnx": "2.1.0-*"
+    },
+
+    "commands": {
+        "test": "xunit.runner.dnx"
+    },
+
+    "compilationOptions": {
+        "define": [ "DNX" ]
+    },
+
+    "resource": "Resources/views/staticviewresource.html",
+
+    "frameworks": {
+        "dnx451": {
+            "frameworkAssemblies": {
+                "System.Web": ""
+            }
+        }
+    }
+}
