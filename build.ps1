@@ -45,8 +45,7 @@ function Pack-Projects
 
 function Test-Projects
 {
-    param([string] $DirectoryName)
-    & dnx -p ("""" + $DirectoryName + """") test; if($LASTEXITCODE -ne 0) { exit 3 }
+    & dnx test; if($LASTEXITCODE -ne 0) { exit 3 }
 }
 
 function Remove-PathVariable
@@ -99,12 +98,20 @@ Write-Host "Build number: " $env:DNX_BUILD_VERSION
 Get-ChildItem -Path .\src -Filter *.xproj -Recurse | ForEach-Object { Pack-Projects $_.DirectoryName $env:CONFIGURATION }
 
 # Test - Skipping tests until properly migrated to new xUnit
-Get-ChildItem -Path .\test -Filter *.xproj -Recurse | ForEach-Object { Test-Projects $_.DirectoryName }
+Get-ChildItem -Path .\test -Filter *.xproj -Recurse | ForEach-Object {
+    Push-Location $_.DirectoryName
+    Test-Projects $_.DirectoryName
+    Pop-Location
+ }
 
 # Switch to Core CLR
-dnvm use $dnxVersion -r CoreCLR
+#dnvm use $dnxVersion -r CoreCLR
 
 # Test again
-Get-ChildItem -Path .\test -Filter *.xproj -Recurse | ForEach-Object { Test-Projects $_.DirectoryName }
+# Get-ChildItem -Path .\test -Filter *.xproj -Recurse | ForEach-Object {
+#    Push-Location $_.DirectoryName
+#    Test-Projects $_.DirectoryName
+#    Pop-Location
+# }
 
 Pop-Location
