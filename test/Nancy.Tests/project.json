@@ -13,8 +13,10 @@
     },
 
     "compilationOptions": {
-        "define": ["DNX"]
+        "define": [ "DNX" ]
     },
+
+    "resource": "Resources/views/staticviewresource.html",
 
     "frameworks": {
         "dnx451": {
