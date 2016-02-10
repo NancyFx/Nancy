@@ -114,7 +114,8 @@
         public void Should_return_file_unchanged()
         {
             // Given
-            var expected = File.ReadAllBytes(this.filePath);
+            var path = Path.Combine(this.GetLocation(), this.filePath);
+            var expected = File.ReadAllBytes(path);
             var response = new GenericFileResponse(this.filePath, this.fileContentType, this.context);
 
             // When
@@ -151,7 +152,8 @@
         public void Should_set_content_length_in_response_header()
         {
             // Given, when
-            var expected = new FileInfo(this.filePath).Length.ToString();
+            var path = Path.Combine(this.GetLocation(), this.filePath);
+            var expected = new FileInfo(path).Length.ToString();
             var response = new GenericFileResponse(this.filePath, this.fileContentType, this.context);
 
             // Then
