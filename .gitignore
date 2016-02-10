@@ -1,4 +1,4 @@
-*.[Cc]ache
+m*.[Cc]ache
 *.csproj.user
 *.[Rr]e[Ss]harper*
 *.sln.cache
@@ -30,3 +30,4 @@ Gemfile.lock
 .vs/
 packages/
 project.lock.json
+TestAssembly.dll
