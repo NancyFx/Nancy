@@ -20,7 +20,7 @@ namespace Nancy
         /// </summary>
         public Url()
         {
-            this.Scheme = "http://";
+            this.Scheme = "http";
             this.HostName = string.Empty;
             this.Port = null;
             this.BasePath = string.Empty;
@@ -105,7 +105,7 @@ namespace Nancy
         {
             get
             {
-                return "https://".Equals(this.Scheme, StringComparison.OrdinalIgnoreCase);
+                return "https".Equals(this.Scheme, StringComparison.OrdinalIgnoreCase);
             }
         }
 
