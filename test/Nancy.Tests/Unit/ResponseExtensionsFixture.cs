@@ -44,21 +44,18 @@
         public void Should_use_filename_and_content_type_for_attachments_from_file_response_if_not_overridden()
         {
             // Given
-            var assemblyPath =
-                Path.GetDirectoryName(this.GetType().Assembly.Location);
-
             var environment = new DefaultNancyEnvironment();
-            environment.StaticContent(safepaths:assemblyPath);
+            environment.StaticContent(safepaths:this.GetLocation());
 
-            var filename = Path.GetFileName(this.GetType().Assembly.Location);
-            var response = new GenericFileResponse(filename, "image/png", new NancyContext() {Environment = environment});
+            var filename = this.GetFilePath();
+            var response = new GenericFileResponse(filename, "foo/bar", new NancyContext() {Environment = environment});
 
             // When
             var result = response.AsAttachment();
-            
+
             // Then
-            result.Headers["Content-Disposition"].ShouldContain(filename);
-            result.ContentType.ShouldEqual("image/png");
+            result.Headers["Content-Disposition"].ShouldContain(Path.GetFileName(filename));
+            result.ContentType.ShouldEqual("foo/bar");
         }
 
         [Fact]
@@ -114,7 +111,7 @@
             var response = new Response();
 
             var result = response.WithHeaders(
-                             Tuple.Create("test", "testvalue"), 
+                             Tuple.Create("test", "testvalue"),
                              Tuple.Create("test2", "test2value"));
 
             result.Headers.ShouldNotBeNull();
@@ -128,7 +125,7 @@
             var response = new Response();
 
             var result = response.WithHeaders(
-                             new { Header = "test", Value = "testvalue" }, 
+                             new { Header = "test", Value = "testvalue" },
                              new { Header = "test2", Value = "test2value" });
 
             result.Headers.ShouldNotBeNull();
@@ -176,6 +173,24 @@
             var result = respone.WithStatusCode(404);
 
             respone.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
+        }
+
+        private string GetLocation()
+        {
+#if DNX
+            return Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.Application.ApplicationBasePath;
+#else
+            return Path.GetDirectoryName(this.GetType().Assembly.Location);
+#endif
+        }
+
+        private string GetFilePath()
+        {
+#if DNX
+            return Path.Combine("Resources", "test.txt");
+#else
+            return Path.GetFileName(this.GetType().Assembly.Location);
+#endif
         }
     }
 }
