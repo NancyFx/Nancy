@@ -1,7 +1,7 @@
 //
 // Authors:
 //   Patrik Torstensson (Patrik.Torstensson@labs2.com)
-//   Wictor Wilén (decode/encode functions) (wictor@ibizkit.se)
+//   Wictor Wilï¿½n (decode/encode functions) (wictor@ibizkit.se)
 //   Tim Coleman (tim@timcoleman.com)
 //   Gonzalo Paniagua Javier (gonzalo@ximian.com)
 
@@ -565,19 +565,14 @@ namespace Nancy.Helpers
 
         internal static bool IsHexDigit(char character)
         {
-#if DOTNET5_4
             //implementation from https://github.com/dotnet/corefx/blob/ac67ffac987d0c27236c4a6cf1255c2bcbc7fe7d/src/System.Private.Uri/src/System/Uri.cs#L1366
             return ((character >= '0') && (character <= '9'))
                 || ((character >= 'A') && (character <= 'F'))
                 || ((character >= 'a') && (character <= 'f'));
-#else
-            return Uri.IsHexDigit(character);
-#endif
         }
 
         internal static int FromHex(char digit)
         {
-#if DOTNET5_4
             //implementation from https://github.com/dotnet/corefx/blob/ac67ffac987d0c27236c4a6cf1255c2bcbc7fe7d/src/System.Private.Uri/src/System/Uri.cs#L1379
             if (((digit >= '0') && (digit <= '9'))
                 || ((digit >= 'A') && (digit <= 'F'))
@@ -591,9 +586,6 @@ namespace Nancy.Helpers
                     + 10);
             }
             throw new ArgumentException("digit");
-#else
-            return Uri.FromHex(digit);
-#endif
         }
 
 
