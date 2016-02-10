@@ -99,12 +99,12 @@ Write-Host "Build number: " $env:DNX_BUILD_VERSION
 Get-ChildItem -Path .\src -Filter *.xproj -Recurse | ForEach-Object { Pack-Projects $_.DirectoryName $env:CONFIGURATION }
 
 # Test - Skipping tests until properly migrated to new xUnit
-# Get-ChildItem -Path .\test -Filter *.xproj -Recurse | ForEach-Object { Test-Projects $_.DirectoryName }
+Get-ChildItem -Path .\test -Filter *.xproj -Recurse | ForEach-Object { Test-Projects $_.DirectoryName }
 
 # Switch to Core CLR
-# dnvm use $dnxVersion -r CoreCLR
+dnvm use $dnxVersion -r CoreCLR
 
 # Test again
-# Get-ChildItem -Path .\test -Filter *.xproj -Recurse | ForEach-Object { Test-Projects $_.DirectoryName }
+Get-ChildItem -Path .\test -Filter *.xproj -Recurse | ForEach-Object { Test-Projects $_.DirectoryName }
 
 Pop-Location
