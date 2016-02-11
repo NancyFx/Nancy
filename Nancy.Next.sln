@@ -64,6 +64,8 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Nancy.Hosting.Aspnet.Tests"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Nancy.Hosting.Self.Tests", "test\Nancy.Hosting.Self.Tests\Nancy.Hosting.Self.Tests.xproj", "{21AA5847-70DF-4C96-9AED-1C9A9AF9325C}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Nancy.Metadata.Modules.Tests", "test\Nancy.Metadata.Modules.Tests\Nancy.Metadata.Modules.Tests.xproj", "{E5047274-5A15-41C6-986F-A6A36588A012}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -174,6 +176,10 @@ Global
 		{21AA5847-70DF-4C96-9AED-1C9A9AF9325C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{21AA5847-70DF-4C96-9AED-1C9A9AF9325C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{21AA5847-70DF-4C96-9AED-1C9A9AF9325C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5047274-5A15-41C6-986F-A6A36588A012}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5047274-5A15-41C6-986F-A6A36588A012}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5047274-5A15-41C6-986F-A6A36588A012}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5047274-5A15-41C6-986F-A6A36588A012}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -205,5 +211,6 @@ Global
 		{FF8C9795-2AD5-45E6-851D-6BDF8A7841CE} = {F44224E5-8E58-4D52-A0F0-BCBA2ADC0A0B}
 		{98067EC0-5028-432F-B94A-99195D70B76F} = {F44224E5-8E58-4D52-A0F0-BCBA2ADC0A0B}
 		{21AA5847-70DF-4C96-9AED-1C9A9AF9325C} = {F44224E5-8E58-4D52-A0F0-BCBA2ADC0A0B}
+		{E5047274-5A15-41C6-986F-A6A36588A012} = {F44224E5-8E58-4D52-A0F0-BCBA2ADC0A0B}
 	EndGlobalSection
 EndGlobal
