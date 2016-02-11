@@ -56,6 +56,8 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Nancy.Authentication.Basic.
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Nancy.Authentication.Forms.Tests", "test\Nancy.Authentication.Forms.Tests\Nancy.Authentication.Forms.Tests.xproj", "{93E15BE9-BF06-4F94-A42F-BFD664774DC5}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Nancy.Embedded.Tests", "test\Nancy.Embedded.Tests\Nancy.Embedded.Tests.xproj", "{838F9240-4541-4646-AAC2-0EAA6F05A654}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -150,6 +152,10 @@ Global
 		{93E15BE9-BF06-4F94-A42F-BFD664774DC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{93E15BE9-BF06-4F94-A42F-BFD664774DC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{93E15BE9-BF06-4F94-A42F-BFD664774DC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{838F9240-4541-4646-AAC2-0EAA6F05A654}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{838F9240-4541-4646-AAC2-0EAA6F05A654}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{838F9240-4541-4646-AAC2-0EAA6F05A654}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{838F9240-4541-4646-AAC2-0EAA6F05A654}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -177,5 +183,6 @@ Global
 		{3BA7D452-98E5-47B0-BD1E-DC348E13A72A} = {F44224E5-8E58-4D52-A0F0-BCBA2ADC0A0B}
 		{51494B38-0D18-4B9D-AB75-39E804747D5F} = {F44224E5-8E58-4D52-A0F0-BCBA2ADC0A0B}
 		{93E15BE9-BF06-4F94-A42F-BFD664774DC5} = {F44224E5-8E58-4D52-A0F0-BCBA2ADC0A0B}
+		{838F9240-4541-4646-AAC2-0EAA6F05A654} = {F44224E5-8E58-4D52-A0F0-BCBA2ADC0A0B}
 	EndGlobalSection
 EndGlobal
