@@ -60,6 +60,8 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Nancy.Embedded.Tests", "tes
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Nancy.Encryption.MachineKey.Tests", "test\Nancy.Encryption.MachineKey.Tests\Nancy.Encryption.MachineKey.Tests.xproj", "{FF8C9795-2AD5-45E6-851D-6BDF8A7841CE}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Nancy.Hosting.Aspnet.Tests", "test\Nancy.Hosting.Aspnet.Tests\Nancy.Hosting.Aspnet.Tests.xproj", "{98067EC0-5028-432F-B94A-99195D70B76F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -162,6 +164,10 @@ Global
 		{FF8C9795-2AD5-45E6-851D-6BDF8A7841CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF8C9795-2AD5-45E6-851D-6BDF8A7841CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FF8C9795-2AD5-45E6-851D-6BDF8A7841CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98067EC0-5028-432F-B94A-99195D70B76F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98067EC0-5028-432F-B94A-99195D70B76F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98067EC0-5028-432F-B94A-99195D70B76F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98067EC0-5028-432F-B94A-99195D70B76F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -191,5 +197,6 @@ Global
 		{93E15BE9-BF06-4F94-A42F-BFD664774DC5} = {F44224E5-8E58-4D52-A0F0-BCBA2ADC0A0B}
 		{838F9240-4541-4646-AAC2-0EAA6F05A654} = {F44224E5-8E58-4D52-A0F0-BCBA2ADC0A0B}
 		{FF8C9795-2AD5-45E6-851D-6BDF8A7841CE} = {F44224E5-8E58-4D52-A0F0-BCBA2ADC0A0B}
+		{98067EC0-5028-432F-B94A-99195D70B76F} = {F44224E5-8E58-4D52-A0F0-BCBA2ADC0A0B}
 	EndGlobalSection
 EndGlobal
