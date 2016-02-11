@@ -13,6 +13,10 @@
         "CsQuery": "1.3.3"
     },
 
+    "resource": [
+        "Resources/Nancy Testing Cert.pfx"
+    ],
+
     "frameworks": {
         "net451": {
             "frameworkAssemblies": {
