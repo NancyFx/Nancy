@@ -1,0 +1,27 @@
+{
+    "dependencies": {
+        "FakeItEasy": "2.0.0-beta011",
+        "Nancy": { "target": "project" },
+        "Nancy.Hosting.Self": { "target": "project" },
+        "xunit": "2.1.0",
+        "xunit.runner.dnx": "2.1.0-*"
+    },
+
+    "commands": {
+        "test": "xunit.runner.dnx"
+    },
+
+    "compilationOptions": {
+        "define": [ "DNX" ]
+    },
+
+    "compileFiles": [
+        "../Nancy.Tests/ShouldExtensions.cs",
+        "../Nancy.Tests/xUnitExtensions/SkipException.cs",
+        "../Nancy.Tests/xUnitExtensions/SkippableFactAttribute.cs"
+    ],
+
+    "frameworks": {
+        "dnx451": { }
+    }
+}
