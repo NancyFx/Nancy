@@ -1,0 +1,30 @@
+{
+    "dependencies": {
+        "FakeItEasy": "2.0.0-beta011",
+        "Nancy": { "target": "project" },
+        "Nancy.Authentication.Forms": { "target": "project" },
+        "xunit": "2.1.0",
+        "xunit.runner.dnx": "2.1.0-*"
+    },
+
+    "commands": {
+        "test": "xunit.runner.dnx"
+    },
+
+    "compileFiles": [
+        "../Nancy.Tests/Fakes/FakeRequest.cs",
+        "../Nancy.Tests/ShouldExtensions.cs"
+    ],
+
+    "compilationOptions": {
+        "define": [ "DNX" ]
+    },
+
+    "frameworks": {
+        "dnx451": {
+            "frameworkAssemblies": {
+                "System.Web": ""
+            }
+        }
+    }
+}
