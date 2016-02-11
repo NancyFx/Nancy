@@ -1,0 +1,28 @@
+{
+    "dependencies": {
+        "FakeItEasy": "2.0.0-beta011",
+        "Microsoft.Owin.Testing": "2.1.0",
+        "Nancy": { "target": "project" },
+        "Nancy.Owin": { "target": "project" },
+        "Nancy.Testing": { "target": "project" },
+        "xunit": "2.1.0",
+        "xunit.runner.dnx": "2.1.0-*"
+    },
+
+    "commands": {
+        "test": "xunit.runner.dnx"
+    },
+
+    "compilationOptions": {
+        "define": [ "DNX" ]
+    },
+
+    "compileFiles": [
+        "../Nancy.Tests/Fakes/FakeRequest.cs",
+        "../Nancy.Tests/ShouldExtensions.cs"
+    ],
+
+    "frameworks": {
+        "dnx451": { }
+    }
+}
