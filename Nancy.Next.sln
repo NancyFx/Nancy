@@ -76,6 +76,8 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Nancy.Validation.FluentVali
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Nancy.ViewEngines.DotLiquid.Tests", "test\Nancy.ViewEngines.DotLiquid.Tests\Nancy.ViewEngines.DotLiquid.Tests.xproj", "{91F4EA23-788B-4E54-A38E-FE738B3BF2F1}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Nancy.ViewEngines.Markdown.Tests", "test\Nancy.ViewEngines.Markdown.Tests\Nancy.ViewEngines.Markdown.Tests.xproj", "{C46BFAA7-F471-45A6-A5AC-FCF9390408EE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -210,6 +212,10 @@ Global
 		{91F4EA23-788B-4E54-A38E-FE738B3BF2F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{91F4EA23-788B-4E54-A38E-FE738B3BF2F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{91F4EA23-788B-4E54-A38E-FE738B3BF2F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C46BFAA7-F471-45A6-A5AC-FCF9390408EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C46BFAA7-F471-45A6-A5AC-FCF9390408EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C46BFAA7-F471-45A6-A5AC-FCF9390408EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C46BFAA7-F471-45A6-A5AC-FCF9390408EE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -247,5 +253,6 @@ Global
 		{8830DBE0-2162-4F35-8D81-1577F17ABB10} = {F44224E5-8E58-4D52-A0F0-BCBA2ADC0A0B}
 		{8DD96D02-C6D3-435B-B0F7-2460161A250F} = {F44224E5-8E58-4D52-A0F0-BCBA2ADC0A0B}
 		{91F4EA23-788B-4E54-A38E-FE738B3BF2F1} = {F44224E5-8E58-4D52-A0F0-BCBA2ADC0A0B}
+		{C46BFAA7-F471-45A6-A5AC-FCF9390408EE} = {F44224E5-8E58-4D52-A0F0-BCBA2ADC0A0B}
 	EndGlobalSection
 EndGlobal
