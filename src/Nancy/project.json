@@ -8,6 +8,14 @@
     "licenseUrl": "https://github.com/NancyFx/Nancy/blob/master/license.txt",
     "iconUrl": "http://nancyfx.org/nancy-nuget.png",
 
+    "compilationOptions": {
+        "define": [ "DNX" ]
+    },
+
+    "dependencies": {
+        "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc1-final"
+    },
+
     "resource": [
         "Diagnostics/Resources/**/*.*",
         "Diagnostics/Views/**/*.*"

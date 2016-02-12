@@ -51,6 +51,25 @@ namespace Nancy
                 }
             }
 
+#if DNX
+            // TEMPORARY FIX TO FUNCTION ON DNX UNTIL WE HAVE A PROPER IAssemblyCatalog implementation for
+            // DNX. This NOT intendend to be published in a release verion of Nancy and will be replaced
+            // asap. This ensures that the Nancy project, that we reference in our project.json (like
+            // view engines) are loaded into the appdomain even though there's no reference to any of the
+            // types in them. We can't rely on the existing code to load them.
+
+            var libraryManager =
+                Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.LibraryManager;
+
+            var nancyLibraryName = typeof(INancyEngine).Assembly.GetName().Name;
+
+            var referencing = libraryManager.GetReferencingLibraries(nancyLibraryName);
+            foreach (var library in referencing)
+            {
+                Assembly.Load(library.Name);
+            }
+#endif
+
             foreach (var directory in GetAssemblyDirectories())
             {
                 var unloadedAssemblies = Directory
