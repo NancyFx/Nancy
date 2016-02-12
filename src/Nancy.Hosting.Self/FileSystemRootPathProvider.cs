@@ -1,17 +1,37 @@
 namespace Nancy.Hosting.Self
 {
+    using System;
     using System.IO;
     using System.Reflection;
 
     public class FileSystemRootPathProvider : IRootPathProvider
     {
+        private readonly Lazy<string> rootPath = new Lazy<string>(ExtractRootPath);
+
         public string GetRootPath()
         {
-            var assembly = Assembly.GetEntryAssembly();
+            return this.rootPath.Value;
+        }
 
-            return assembly != null ? 
-                Path.GetDirectoryName(assembly.Location) :
-                Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        private static string ExtractRootPath()
+        {
+            var assembly =
+                Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly();
+
+            var location = string.Empty;
+
+#if DNX
+            var libraryManager =
+                Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.LibraryManager;
+
+            var library =
+                libraryManager.GetLibrary(assembly.GetName().Name);
+
+            location = library.Path;
+#else
+            location = assembly.Location;
+#endif
+            return Path.GetDirectoryName(location);
         }
     }
 }

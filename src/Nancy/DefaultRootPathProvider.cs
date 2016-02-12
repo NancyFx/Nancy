@@ -13,7 +13,11 @@
         /// <returns>A <see cref="string"/> containing the path of the root folder.</returns>
         public string GetRootPath()
         {
+#if DNX
+            return Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.Application.ApplicationBasePath;
+#else
             return AppDomain.CurrentDomain.BaseDirectory;
+#endif
         }
     }
 }
