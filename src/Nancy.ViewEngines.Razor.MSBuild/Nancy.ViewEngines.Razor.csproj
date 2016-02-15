@@ -190,15 +190,6 @@
     <Compile Include="..\Nancy.ViewEngines.Razor\UrlHelpers.cs">
       <Link>UrlHelpers.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy.ViewEngines.Razor\VisualBasic\NancyVisualBasicRazorCodeParser.cs">
-      <Link>VisualBasic\NancyVisualBasicRazorCodeParser.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.ViewEngines.Razor\VisualBasic\VisualBasicClrTypeResolver.cs">
-      <Link>VisualBasic\VisualBasicClrTypeResolver.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.ViewEngines.Razor\VisualBasic\VisualBasicRazorViewRenderer.cs">
-      <Link>VisualBasic\VisualBasicRazorViewRenderer.cs</Link>
-    </Compile>
     <Compile Include="..\Nancy.ViewEngines.Razor\EncodedHtmlString.cs">
       <Link>EncodedHtmlString.cs</Link>
     </Compile>
