@@ -5,19 +5,19 @@ namespace Nancy.Cryptography
     using System.Text;
 
     /// <summary>
-    /// Default encryption provider using Rijndael
+    /// Default encryption provider using Aes
     /// </summary>
-    public class RijndaelEncryptionProvider : IEncryptionProvider
+    public class AesEncryptionProvider : IEncryptionProvider
     {
         private readonly byte[] key;
 
         private readonly byte[] iv;
 
         /// <summary>
-        /// Creates a new instance of the RijndaelEncryptionProvider class
+        /// Creates a new instance of the AesEncryptionProvider class
         /// </summary>
         /// <param name="keyGenerator">Key generator to use to generate the key and iv</param>
-        public RijndaelEncryptionProvider(IKeyGenerator keyGenerator)
+        public AesEncryptionProvider(IKeyGenerator keyGenerator)
         {
             this.key = keyGenerator.GetBytes(32);
             this.iv = keyGenerator.GetBytes(16);
@@ -30,7 +30,7 @@ namespace Nancy.Cryptography
         /// <returns>Encrypted string</returns>
         public string Encrypt(string data)
         {
-            using (var provider = new RijndaelManaged())
+            using (var provider = Aes.Create())
             using (var encryptor = provider.CreateEncryptor(this.key, this.iv))
             {
                 var input = Encoding.UTF8.GetBytes(data);
@@ -49,7 +49,7 @@ namespace Nancy.Cryptography
         {
             try
             {
-                using (var provider = new RijndaelManaged())
+                using (var provider = Aes.Create())
                 using (var decryptor = provider.CreateDecryptor(this.key, this.iv))
                 {
                     var input = Convert.FromBase64String(data);
@@ -65,6 +65,14 @@ namespace Nancy.Cryptography
             catch (CryptographicException)
             {
                 return String.Empty;
+            }
+            catch(ArgumentException ex)
+            {
+                if (ex.ParamName == null)
+                {
+                    return String.Empty;
+                }
+                throw ex;
             }
         }
     }
