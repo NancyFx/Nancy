@@ -10,13 +10,41 @@
 
     "dependencies": {
         "Nancy": { "target": "project" },
-        "Microsoft.AspNet.Razor": "2.0.30506.0"
+        "Nancy.ViewEngines.Razor.Tests.Models": { "target": "project" },
+        "Microsoft.AspNet.Razor": "2.0.30506.0",
+        "Microsoft.CodeAnalysis.CSharp": "1.1.0-rc1-20151109-01"
     },
 
+    "resource": "Resources/**/*.*",
+
     "frameworks": {
+        "dnx451": {
+            "compilationOptions": {
+                "define": [ "DNX" ]
+            },
+            "dependencies": {
+                "Microsoft.Dnx.Compilation.Abstractions": "1.0.0-rc1-final",
+                "Microsoft.Dnx.Compilation.CSharp": "1.0.0-rc1-final",
+                "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc1-final"
+            },
+            "frameworkAssemblies": {
+                "System.Configuration": "4.0.0.0",
+                "System.IO": "4.0.0.0",
+                "System.Reflection": "4.0.0.0",
+                "System.Runtime": "4.0.10.0",
+                "System.Text.Encoding": "4.0.0.0",
+                "System.Threading.Tasks": "4.0.0.0"
+            }
+        },
+
         "net451": {
             "frameworkAssemblies": {
-                "System.Configuration": "4.0.0.0"
+                "System.Configuration": "4.0.0.0",
+                "System.IO": "4.0.0.0",
+                "System.Reflection": "4.0.0.0",
+                "System.Runtime": "4.0.10.0",
+                "System.Text.Encoding": "4.0.0.0",
+                "System.Threading.Tasks": "4.0.0.0"
             }
         }
     }

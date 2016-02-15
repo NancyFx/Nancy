@@ -20,18 +20,6 @@
 			}
 		}
 
-		[ConfigurationProperty("assemblies", IsRequired = false)]
-		public AssemblyConfigurationCollection Assemblies
-		{
-			get
-			{
-				return this["assemblies"] as AssemblyConfigurationCollection;
-			}
-			set
-			{
-				this["assemblies"] = value;
-			}
-		}
 		[ConfigurationProperty("namespaces", IsRequired = false)]
 		public NamespaceConfigurationCollection Namespaces
 		{
@@ -84,44 +72,6 @@
 			}
 		}
 	}
-
-
-	public class AssemblyConfigurationCollection : ConfigurationElementCollection, IEnumerable<AssemblyConfigurationItem>
-	{
-		public const string PluginsElementName = "assembly";
-
-		protected override ConfigurationElement CreateNewElement()
-		{
-			return new AssemblyConfigurationItem();
-		}
-
-		protected override object GetElementKey(ConfigurationElement element)
-		{
-			return ((AssemblyConfigurationItem)element).AssemblyName;
-		}
-
-		protected override string ElementName
-		{
-			get
-			{
-				return PluginsElementName;
-			}
-		}
-
-		// this is extraneous, but I find it very useful for enumerating over a configuration collection in a type-safe manner.
-		#region IEnumerable<AssemblyConfigurationItem> Members
-
-		public new IEnumerator<AssemblyConfigurationItem> GetEnumerator()
-		{
-			foreach (AssemblyConfigurationItem item in (this as IEnumerable))
-			{
-				yield return item;
-			}
-		}
-
-		#endregion
-	}
-
 
 	public class NamespaceConfigurationCollection : ConfigurationElementCollection, IEnumerable<NamespaceConfigurationItem>
 {

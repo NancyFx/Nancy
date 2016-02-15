@@ -31,19 +31,6 @@
 		}
 
         /// <summary>
-        /// Gets the assembly names to include in the generated assembly.
-        /// </summary>
-        public IEnumerable<string> GetAssemblyNames()
-        {
-            if (this.razorConfigurationSection == null || this.razorConfigurationSection.Assemblies == null)
-            {
-                return null;
-            }
-
-            return this.razorConfigurationSection.Assemblies.Select(a=>a.AssemblyName);
-        }
-
-        /// <summary>
         /// Gets the default namespaces to be included in the generated code.
         /// </summary>
         public IEnumerable<string> GetDefaultNamespaces()

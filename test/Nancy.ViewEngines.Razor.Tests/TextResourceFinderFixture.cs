@@ -1,14 +1,10 @@
 ﻿namespace Nancy.ViewEngines.Razor.Tests
 {
     using System;
-
     using FakeItEasy;
-
     using Nancy.Localization;
     using Nancy.Tests;
-
     using Xunit;
-    using Xunit.Extensions;
 
     public class TextResourceFinderFixture
     {

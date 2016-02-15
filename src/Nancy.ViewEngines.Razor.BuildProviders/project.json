@@ -7,6 +7,12 @@
     },
 
     "frameworks": {
+        "dnx451": {
+            "frameworkAssemblies": {
+                "System.Web": "4.0.0.0"
+            }
+        },
+
         "net451": {
             "frameworkAssemblies": {
                 "System.Web": "4.0.0.0"

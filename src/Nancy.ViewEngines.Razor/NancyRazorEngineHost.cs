@@ -3,9 +3,7 @@
     using System.Web.Razor;
     using System.Web.Razor.Generator;
     using System.Web.Razor.Parser;
-
     using Nancy.ViewEngines.Razor.CSharp;
-    using Nancy.ViewEngines.Razor.VisualBasic;
 
     /// <summary>
     /// A custom razor engine host responsible for decorating the existing code generators with nancy versions.
@@ -44,11 +42,6 @@
             if (incomingCodeParser is CSharpCodeParser)
             {
                 return new NancyCSharpRazorCodeParser(this.assemblyCatalog);
-            }
-
-            if (incomingCodeParser is VBCodeParser)
-            {
-                return new NancyVisualBasicRazorCodeParser(this.assemblyCatalog);
             }
 
             return base.DecorateCodeParser(incomingCodeParser);
