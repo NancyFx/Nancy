@@ -9,7 +9,7 @@
     {
         private static readonly Lazy<CryptographyConfiguration> DefaultConfiguration =
             new Lazy<CryptographyConfiguration>(() => new CryptographyConfiguration(
-                                                          new RijndaelEncryptionProvider(new RandomKeyGenerator()),
+                                                          new AesEncryptionProvider(new RandomKeyGenerator()),
                                                           new DefaultHmacProvider(new RandomKeyGenerator())));
 
         private static readonly Lazy<CryptographyConfiguration> NoEncryptionConfiguration =

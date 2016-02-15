@@ -1181,9 +1181,6 @@
     <Compile Include="..\Nancy\Session\CookieBasedSessions.cs">
       <Link>Session\CookieBasedSessions.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy\Cryptography\RijndaelEncryptionProvider.cs">
-      <Link>Cryptography\RijndaelEncryptionProvider.cs</Link>
-    </Compile>
     <Compile Include="..\Nancy\DefaultObjectSerializer.cs">
       <Link>DefaultObjectSerializer.cs</Link>
     </Compile>
@@ -1358,6 +1355,9 @@
     <Compile Include="..\Nancy\GlobalizationConfiguration.cs" />
     <Compile Include="..\Nancy\GlobalizationConfigurationExtensions.cs" />
     <Compile Include="..\Nancy\DefaultGlobalizationConfigurationProvider.cs" />
+    <Compile Include="..\Nancy\Cryptography\AesEncryptionProvider.cs">
+      <Link>Cryptography\AesEncryptionProvider.cs</Link>
+    </Compile>
     <Compile Include="..\Nancy\Configuration\ConfigurationException.cs">
       <Link>Configuration\ConfigurationException.cs</Link>
     </Compile>
