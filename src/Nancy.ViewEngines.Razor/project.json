@@ -10,7 +10,6 @@
 
     "dependencies": {
         "Nancy": { "target": "project" },
-        "Nancy.ViewEngines.Razor.Tests.Models": { "target": "project" },
         "Microsoft.AspNet.Razor": "2.0.30506.0",
         "Microsoft.CodeAnalysis.CSharp": "1.1.0-rc1-20151109-01"
     },
