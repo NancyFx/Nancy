@@ -7,6 +7,7 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Text.RegularExpressions;
     using System.Web.Razor;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
@@ -246,10 +247,8 @@
 
             var fullTemplateName = viewLocationResult.Location + "/" + viewLocationResult.Name + "." + viewLocationResult.Extension;
             var templateLines = GetViewBodyLines(viewLocationResult);
-            var errorMessages = BuildErrorMessages(failures);
             var compilationSource = GetCompilationSource(sourceCode);
-
-            MarkErrorLines(failures, templateLines);
+            var errorMessages = BuildErrorMessages(failures, templateLines, compilationSource);
 
             var lineNumber = 1;
 
@@ -303,31 +302,48 @@
             });
         }
 
-        private static IEnumerable<string> GetCompilationSource(string code)
+        private static string[] GetCompilationSource(string code)
         {
             return HttpUtility.HtmlEncode(code).Split(new[] { Environment.NewLine }, StringSplitOptions.None);
         }
 
-        private static string BuildErrorMessages(IEnumerable<Diagnostic> errors)
+        private static int GetLineNumber(int startLineIndex, IReadOnlyList<string> compilationSource)
         {
-            return errors.Select(error => String.Format(
-                "[{0}] Line: {1} Column: {2} - {3} (<a class='LineLink' href='#{1}'>show</a>)",
-                error.Id,
-                error.Location.GetLineSpan().StartLinePosition,
-                error.Location.GetLineSpan().Span.Start,
-                error.GetMessage())).Aggregate((s1, s2) => s1 + "<br/>" + s2);
-        }
 
-        private static void MarkErrorLines(IEnumerable<Diagnostic> errors, IList<string> templateLines)
-        {
-            foreach (var compilerError in errors)
+            for (var lineIndex = startLineIndex; lineIndex >= 0; lineIndex--)
             {
-                var lineIndex = compilerError.Location.GetLineSpan().StartLinePosition.Line - 1;
-                if ((lineIndex <= templateLines.Count - 1) && (lineIndex >= 0))
+                var match = Regex.Match(compilationSource[lineIndex], @"#line (?<row>[\d]+)");
+                if (match.Success)
                 {
-                    templateLines[lineIndex] = string.Format("<span class='error'><a name='{0}' />{1}</span>", lineIndex, templateLines[lineIndex]);
+                    return int.Parse(match.Groups["row"].Value);
                 }
             }
+
+            return -1;
+        }
+
+        private static string BuildErrorMessages(IEnumerable<Diagnostic> errors, IList<string> templateLines, IReadOnlyList<string> compilationSource)
+        {
+            return errors.Select(error =>
+            {
+                var lineIndex = error.Location.GetLineSpan().StartLinePosition.Line - 1;
+                var lineNumber = GetLineNumber(lineIndex, compilationSource);
+
+                if (lineNumber > 0)
+                {
+                    templateLines[lineNumber - 1] = string.Format("<span class='error'><a name='{0}' />{1}</span>", lineNumber, templateLines[lineNumber - 1]);
+
+                    return string.Format(
+                        "[{0}] Line: {1} Column: {2} - {3} (<a class='LineLink' href='#{1}'>show</a>)",
+                        error.Id,
+                        lineNumber,
+                        error.Location.GetLineSpan().StartLinePosition.Character,
+                        error.GetMessage());
+                }
+
+                return null;
+
+            }).Where(x => x != null).Aggregate((s1, s2) => s1 + "<br/>" + s2);
         }
 
         private static string[] GetViewBodyLines(ViewLocationResult viewLocationResult)
