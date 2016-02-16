@@ -15,29 +15,23 @@
         "Microsoft.CodeAnalysis.CSharp": "1.1.0-rc1-20151109-01"
     },
 
+    "compilationOptions": {
+        "define": [ "DNX" ]
+    },
+
     "resource": "Resources/**/*.*",
 
     "frameworks": {
-        "dnx451": {
-            "compilationOptions": {
-                "define": [ "DNX" ]
-            },
+        "net451": {
             "dependencies": {
                 "Microsoft.Dnx.Compilation.Abstractions": "1.0.0-rc1-final",
-                "Microsoft.Dnx.Compilation.CSharp": "1.0.0-rc1-final",
-                "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc1-final"
+                "Microsoft.CodeDom.Providers.DotNetCompilerPlatform": "1.0.1",
+                "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc1-final",
+                "Microsoft.Net.Compilers": {
+                    "version": "1.1.1",
+                    "type": "build"
+                }
             },
-            "frameworkAssemblies": {
-                "System.Configuration": "4.0.0.0",
-                "System.IO": "4.0.0.0",
-                "System.Reflection": "4.0.0.0",
-                "System.Runtime": "4.0.10.0",
-                "System.Text.Encoding": "4.0.0.0",
-                "System.Threading.Tasks": "4.0.0.0"
-            }
-        },
-
-        "net451": {
             "frameworkAssemblies": {
                 "System.Configuration": "4.0.0.0",
                 "System.IO": "4.0.0.0",
