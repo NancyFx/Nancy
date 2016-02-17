@@ -2,6 +2,7 @@ namespace Nancy.Routing
 {
     using System;
     using System.Linq;
+    using System.Reflection;
     using System.Resources;
 
     /// <summary>
@@ -20,7 +21,7 @@ namespace Nancy.Routing
         public string GetDescription(INancyModule module, string path)
         {
             var assembly =
-                module.GetType().Assembly;
+                module.GetType().GetTypeInfo().Assembly;
 
             if (assembly.IsDynamic)
             {

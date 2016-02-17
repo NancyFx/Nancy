@@ -279,9 +279,16 @@ namespace Nancy
         /// <param name="container">Container instance</param>
         private static void AutoRegister(TinyIoCContainer container, IEnumerable<Func<Assembly, bool>> ignoredAssemblies)
         {
-            var assembly = typeof(NancyEngine).Assembly;
+            var assembly = typeof(NancyEngine).GetTypeInfo().Assembly;
 
+#if !DNX
             container.AutoRegister(AppDomain.CurrentDomain.GetAssemblies().Where(a => !ignoredAssemblies.Any(ia => ia(a))), DuplicateImplementationActions.RegisterMultiple, t => t.Assembly != assembly);
+#else
+            var libraryManager =
+                Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.LibraryManager;
+            var thisAssemblyName = typeof(DefaultNancyBootstrapper).GetTypeInfo().Assembly.GetName().Name;
+            var referencing = libraryManager.GetReferencingLibraries(thisAssemblyName);
+#endif
         }
     }
 }

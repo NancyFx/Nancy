@@ -6,7 +6,7 @@ namespace Nancy
 
     using Nancy.Cookies;
     using Nancy.Responses;
-
+    using System.Reflection;
     /// <summary>
     /// Containing extensions for the <see cref="Response"/> object.
     /// </summary>
@@ -182,7 +182,8 @@ namespace Nancy
         private static Tuple<string, string> GetTuple(object header)
         {
             var properties = header.GetType()
-                                   .GetProperties()
+                                   .GetTypeInfo()
+                                   .DeclaredProperties
                                    .Where(prop => prop.CanRead && prop.PropertyType == typeof(string))
                                    .ToArray();
 

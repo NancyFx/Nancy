@@ -37,7 +37,8 @@ namespace Nancy.Helpers
             if (t == null)
                 throw new ArgumentNullException("t");
 
-            if (t.IsAbstract || t.IsInterface || t.IsArray)
+
+            if (t.GetTypeInfo().IsAbstract || t.GetTypeInfo().IsInterface || t.IsArray)
                 return false;
 
             if (!HasDefaultConstructor(t))
@@ -50,8 +51,12 @@ namespace Nancy.Helpers
         {
             if (t == null)
                 throw new ArgumentNullException("t");
-
+#if DOTNET5_4
+            return (t.GetConstructor(Type.EmptyTypes) != null);
+#else
             return (t.GetConstructor(BindingFlags.Instance, null, Type.EmptyTypes, null) != null);
+#endif
+
         }
 
         public static bool IsAssignable(Type to, Type from)
@@ -62,7 +67,7 @@ namespace Nancy.Helpers
             if (to.IsAssignableFrom(from))
                 return true;
 
-            if (to.IsGenericType && from.IsGenericTypeDefinition)
+            if (to.GetTypeInfo().IsGenericType && from.GetTypeInfo().IsGenericTypeDefinition)
                 return to.IsAssignableFrom(from.MakeGenericType(to.GetGenericArguments()));
 
             return false;
@@ -76,19 +81,19 @@ namespace Nancy.Helpers
             if (type == check)
                 return true;
 
-            if (check.IsInterface)
+            if (check.GetTypeInfo().IsInterface)
             {
                 foreach (Type t in type.GetInterfaces())
                 {
                     if (IsSubClass(t, check)) return true;
                 }
             }
-            if (type.IsGenericType && !type.IsGenericTypeDefinition)
+            if (type.GetTypeInfo().IsGenericType && !type.GetTypeInfo().IsGenericTypeDefinition)
             {
                 if (IsSubClass(type.GetGenericTypeDefinition(), check))
                     return true;
             }
-            return IsSubClass(type.BaseType, check);
+            return IsSubClass(type.GetTypeInfo().BaseType, check);
         }
 
         /// <summary>
@@ -102,8 +107,8 @@ namespace Nancy.Helpers
                 throw new ArgumentNullException("type");
 
             if (type.IsArray)
-                return type.GetElementType ();
-            else if (type.IsGenericType && typeof(List<>).IsAssignableFrom(type.GetGenericTypeDefinition()))
+                return type.GetElementType();
+            else if (type.GetTypeInfo().IsGenericType && typeof(List<>).IsAssignableFrom(type.GetGenericTypeDefinition()))
                 return type.GetGenericArguments()[0];
             else
                 throw new Exception("Bad type");
@@ -117,7 +122,7 @@ namespace Nancy.Helpers
             Type genDictType = GetGenericDictionary(type);
 
             if (genDictType != null)
-                return genDictType.GetGenericArguments () [1];
+                return genDictType.GetGenericArguments()[1];
             else if (typeof(IDictionary).IsAssignableFrom(type))
                 return null;
             else
@@ -127,14 +132,14 @@ namespace Nancy.Helpers
         static readonly Type GenericDictionaryType = typeof(IDictionary<,>);
         public static Type GetGenericDictionary(Type type)
         {
-            if (type.IsGenericType && GenericDictionaryType.IsAssignableFrom (type.GetGenericTypeDefinition()))
+            if (type.GetTypeInfo().IsGenericType && GenericDictionaryType.IsAssignableFrom(type.GetGenericTypeDefinition()))
                 return type;
 
             Type[] ifaces = type.GetInterfaces();
             if (ifaces != null)
                 for (int i = 0; i < ifaces.Length; i++)
                 {
-                    Type current = GetGenericDictionary (ifaces[i]);
+                    Type current = GetGenericDictionary(ifaces[i]);
                     if (current != null)
                         return current;
                 }
@@ -144,18 +149,24 @@ namespace Nancy.Helpers
 
         public static Type GetMemberUnderlyingType(MemberInfo member)
         {
-            switch (member.MemberType)
+            if (member is FieldInfo)
             {
-                case MemberTypes.Field:
-                    return ((FieldInfo)member).FieldType;
-                case MemberTypes.Property:
-                    return ((PropertyInfo)member).PropertyType;
-                case MemberTypes.Event:
-                    return ((EventInfo)member).EventHandlerType;
-                default:
-                    throw new ArgumentException("MemberInfo must be if type FieldInfo, PropertyInfo or EventInfo", "member");
+                return ((FieldInfo)member).FieldType;
+            }
+            else if (member is PropertyInfo)
+            {
+                return ((PropertyInfo)member).PropertyType;
+            }
+            else if (member is EventInfo)
+            {
+                return ((EventInfo)member).EventHandlerType;
+            }
+            else
+            {
+                throw new ArgumentException("MemberInfo must be if type FieldInfo, PropertyInfo or EventInfo", "member");
             }
         }
+
 
         /// <summary>
         /// Determines whether the member is an indexed property.
@@ -200,22 +211,22 @@ namespace Nancy.Helpers
         /// <returns>The member's value on the object.</returns>
         public static object GetMemberValue(MemberInfo member, object target)
         {
-            switch (member.MemberType)
+            if (member is FieldInfo)
             {
-                case MemberTypes.Field:
-                    return ((FieldInfo)member).GetValue(target);
-                case MemberTypes.Property:
-                    try
-                    {
-                        return ((PropertyInfo)member).GetValue(target, null);
-                    }
-                    catch (TargetParameterCountException e)
-                    {
-                        throw new ArgumentException("MemberInfo has index parameters", "member", e);
-                    }
-                default:
-                    throw new ArgumentException("MemberInfo is not of type FieldInfo or PropertyInfo", "member");
+                return ((FieldInfo)member).GetValue(target);
             }
+            else if (member is PropertyInfo)
+            {
+                try
+                {
+                    return ((PropertyInfo)member).GetValue(target, null);
+                }
+                catch (TargetParameterCountException e)
+                {
+                    throw new ArgumentException("MemberInfo has index parameters", "member", e);
+                }
+            }
+            throw new ArgumentException("MemberInfo is not of type FieldInfo or PropertyInfo", "member");
         }
 
         /// <summary>
@@ -226,17 +237,17 @@ namespace Nancy.Helpers
         /// <param name="value">The value.</param>
         public static void SetMemberValue(MemberInfo member, object target, object value)
         {
-            switch (member.MemberType)
+            if (member is FieldInfo)
             {
-                case MemberTypes.Field:
-                    ((FieldInfo)member).SetValue(target, value);
-                    break;
-                case MemberTypes.Property:
-                    ((PropertyInfo)member).SetValue(target, value, null);
-                    break;
-                default:
-                    throw new ArgumentException("MemberInfo must be if type FieldInfo or PropertyInfo", "member");
+                ((FieldInfo)member).SetValue(target, value);
+                return;
             }
+            else if (member is PropertyInfo)
+            {
+                ((PropertyInfo)member).SetValue(target, value, null);
+                return;
+            }
+            throw new ArgumentException("MemberInfo must be of type FieldInfo or PropertyInfo", "member");
         }
 
         /// <summary>
@@ -248,15 +259,15 @@ namespace Nancy.Helpers
         /// </returns>
         public static bool CanReadMemberValue(MemberInfo member)
         {
-            switch (member.MemberType)
+            if(member is FieldInfo)
             {
-                case MemberTypes.Field:
-                    return true;
-                case MemberTypes.Property:
-                    return ((PropertyInfo) member).CanRead;
-                default:
-                    return false;
+                return true;
             }
+            else if (member is PropertyInfo)
+            {
+                return ((PropertyInfo)member).CanRead;
+            }
+            return false;
         }
 
         /// <summary>
@@ -268,15 +279,15 @@ namespace Nancy.Helpers
         /// </returns>
         public static bool CanSetMemberValue(MemberInfo member)
         {
-            switch (member.MemberType)
+            if (member is FieldInfo)
             {
-                case MemberTypes.Field:
-                    return true;
-                case MemberTypes.Property:
-                    return ((PropertyInfo)member).CanWrite;
-                default:
-                    return false;
+                return true;
             }
+            else if (member is PropertyInfo)
+            {
+                return ((PropertyInfo)member).CanWrite;
+            }
+            return false;
         }
 
         public static IEnumerable<MemberInfo> GetFieldsAndProperties(Type type, BindingFlags bindingAttr)

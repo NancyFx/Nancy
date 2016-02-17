@@ -6,7 +6,7 @@
 
     using Nancy.Cookies;
     using Nancy.Responses.Negotiation;
-
+    using System.Reflection;
     public static class NegotiatorExtensions
     {
         /// <summary>
