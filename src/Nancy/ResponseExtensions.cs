@@ -3,10 +3,10 @@ namespace Nancy
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
+    using System.Reflection;
     using Nancy.Cookies;
     using Nancy.Responses;
-    using System.Reflection;
+
     /// <summary>
     /// Containing extensions for the <see cref="Response"/> object.
     /// </summary>
@@ -110,7 +110,7 @@ namespace Nancy
         /// </summary>
         /// <param name="response">Response object</param>
         /// <param name="headers">
-        /// Array of headers - each header should be an anonymous type with two string properties 
+        /// Array of headers - each header should be an anonymous type with two string properties
         /// 'Header' and 'Value' to represent the header name and its value.
         /// </param>
         /// <returns>Modified response</returns>
@@ -124,7 +124,7 @@ namespace Nancy
         /// </summary>
         /// <param name="response">Response object</param>
         /// <param name="headers">
-        /// Array of headers - each header should be a Tuple with two string elements 
+        /// Array of headers - each header should be a Tuple with two string elements
         /// for header name and header value
         /// </param>
         /// <returns>Modified response</returns>

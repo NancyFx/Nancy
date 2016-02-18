@@ -2,8 +2,8 @@ namespace Nancy
 {
     using System;
     using System.Reflection;
-
     using Nancy.Extensions;
+    
     /// <summary>
     /// Default <see cref="TypeResolveStrategy"/> implementations.
     /// </summary>

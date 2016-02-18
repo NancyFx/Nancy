@@ -5,7 +5,7 @@
     using System.Linq;
     using System.Reflection;
     using Nancy.Extensions;
-    using System.Reflection;
+
     /// <summary>
     /// Class for locating an INancyBootstrapper implementation.
     ///

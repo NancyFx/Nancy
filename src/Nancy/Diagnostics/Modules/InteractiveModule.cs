@@ -4,8 +4,9 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
-    using Nancy.Helpers;
     using System.Reflection;
+    using Nancy.Helpers;
+
     public class InteractiveModule : DiagnosticModule
     {
         private readonly IInteractiveDiagnostics interactiveDiagnostics;

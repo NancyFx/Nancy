@@ -4,7 +4,6 @@ namespace Nancy
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-
     using Nancy.Extensions;
     using Nancy.Responses.Negotiation;
 
