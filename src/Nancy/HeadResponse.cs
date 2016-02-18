@@ -62,6 +62,7 @@
             {
             }
 
+#if !DOTNET5_4
             public override IAsyncResult BeginRead(byte[] buffer, int offset, int count, AsyncCallback callback, object state)
             {
                 throw new NotSupportedException();
@@ -71,6 +72,7 @@
             {
                 throw new NotSupportedException();
             }
+#endif
 
             public override long Seek(long offset, SeekOrigin origin)
             {
