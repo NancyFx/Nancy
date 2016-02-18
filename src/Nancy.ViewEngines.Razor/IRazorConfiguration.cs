@@ -16,11 +16,6 @@
         bool AutoIncludeModelNamespace { get; }
 
         /// <summary>
-        /// Gets the assembly names.
-        /// </summary>
-        IEnumerable<string> GetAssemblyNames();
-
-        /// <summary>
         /// Gets the default namespaces.
         /// </summary>
         IEnumerable<string> GetDefaultNamespaces();

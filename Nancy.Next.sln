@@ -78,6 +78,10 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Nancy.ViewEngines.DotLiquid
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Nancy.ViewEngines.Markdown.Tests", "test\Nancy.ViewEngines.Markdown.Tests\Nancy.ViewEngines.Markdown.Tests.xproj", "{C46BFAA7-F471-45A6-A5AC-FCF9390408EE}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Nancy.ViewEngines.Razor.Tests", "test\Nancy.ViewEngines.Razor.Tests\Nancy.ViewEngines.Razor.Tests.xproj", "{A24271FA-E058-42E0-BB7D-3C8C43DF4B04}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Nancy.ViewEngines.Razor.Tests.Models", "test\Nancy.ViewEngines.Razor.Tests.Models\Nancy.ViewEngines.Razor.Tests.Models.xproj", "{31FA18D3-24AD-4AB0-B297-5A2FD871989E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -216,6 +220,14 @@ Global
 		{C46BFAA7-F471-45A6-A5AC-FCF9390408EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C46BFAA7-F471-45A6-A5AC-FCF9390408EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C46BFAA7-F471-45A6-A5AC-FCF9390408EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A24271FA-E058-42E0-BB7D-3C8C43DF4B04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A24271FA-E058-42E0-BB7D-3C8C43DF4B04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A24271FA-E058-42E0-BB7D-3C8C43DF4B04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A24271FA-E058-42E0-BB7D-3C8C43DF4B04}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31FA18D3-24AD-4AB0-B297-5A2FD871989E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31FA18D3-24AD-4AB0-B297-5A2FD871989E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31FA18D3-24AD-4AB0-B297-5A2FD871989E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31FA18D3-24AD-4AB0-B297-5A2FD871989E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -254,5 +266,7 @@ Global
 		{8DD96D02-C6D3-435B-B0F7-2460161A250F} = {F44224E5-8E58-4D52-A0F0-BCBA2ADC0A0B}
 		{91F4EA23-788B-4E54-A38E-FE738B3BF2F1} = {F44224E5-8E58-4D52-A0F0-BCBA2ADC0A0B}
 		{C46BFAA7-F471-45A6-A5AC-FCF9390408EE} = {F44224E5-8E58-4D52-A0F0-BCBA2ADC0A0B}
+		{A24271FA-E058-42E0-BB7D-3C8C43DF4B04} = {F44224E5-8E58-4D52-A0F0-BCBA2ADC0A0B}
+		{31FA18D3-24AD-4AB0-B297-5A2FD871989E} = {F44224E5-8E58-4D52-A0F0-BCBA2ADC0A0B}
 	EndGlobalSection
 EndGlobal

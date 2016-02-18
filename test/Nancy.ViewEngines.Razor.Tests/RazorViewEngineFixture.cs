@@ -6,18 +6,14 @@
     using System.Dynamic;
     using System.IO;
     using System.Linq;
-    using System.Reflection;
     using System.Text;
     using System.Threading;
     using FakeItEasy;
     using Microsoft.CSharp;
-    using Microsoft.VisualBasic;
-    using Nancy.Bootstrapper;
     using Nancy.Configuration;
     using Nancy.Tests;
     using Nancy.ViewEngines.Razor.Tests.Models;
     using Xunit;
-    using Xunit.Extensions;
 
     public class RazorViewEngineFixture
     {
@@ -118,8 +114,8 @@
             var extensions = this.engine.Extensions;
 
             // Then
-            extensions.ShouldHaveCount(2);
-            extensions.ShouldEqualSequence(new[] { "cshtml", "vbhtml" });
+            extensions.ShouldHaveCount(1);
+            extensions.ShouldEqualSequence(new[] { "cshtml" });
         }
 
         [Fact]
@@ -276,26 +272,6 @@
             // Then
             stream.ShouldEqual("<h1>Mr. Jeff likes Music!</h1>", true);
         }
-
-#if !__MonoCS__
-        [Fact]
-        public void RenderView_vb_should_use_model_directive_for_strongly_typed_view()
-        {
-            // Given
-            var location = FindView("ViewThatUsesModelVB");
-
-            var stream = new MemoryStream();
-
-            var model = new DateTime(2000, 1, 1);
-
-            // When
-            var response = this.engine.RenderView(location, model, this.renderContext);
-            response.Contents.Invoke(stream);
-
-            // Then
-            stream.ShouldEqual("\r\n<h1>Hello at " + model.ToString("MM/dd/yyyy") + "</h1>");
-        }
-#endif
 
         [Fact]
         public void Should_be_able_to_render_view_with_layout_to_stream()
@@ -463,8 +439,6 @@
 
             var stream = new MemoryStream();
 
-            A.CallTo(() => this.configuration.GetAssemblyNames()).Returns(new[] { "Nancy.ViewEngines.Razor.Tests" });
-
             // When
             var response = this.engine.RenderView(location, null, this.renderContext);
             response.Contents.Invoke(stream);
@@ -472,69 +446,6 @@
             // Then
             var output = ReadAll(stream).Trim();
             output.ShouldEqual("<h1>Hi, Nancy!</h1>");
-        }
-
-#if !__MonoCS__
-        [Fact]
-        public void Should_use_custom_view_base_with_vb_views()
-        {
-            // Given
-            var view = new StringBuilder()
-                .AppendLine("@inherits Nancy.ViewEngines.Razor.Tests.GreetingViewBase")
-                .Append("<h1>@Greet()</h1>");
-
-            var location = new ViewLocationResult(
-                string.Empty,
-                string.Empty,
-                "vbhtml",
-                () => new StringReader(view.ToString())
-            );
-
-            var stream = new MemoryStream();
-
-            A.CallTo(() => this.configuration.GetAssemblyNames()).Returns(new[] { "Nancy.ViewEngines.Razor.Tests" });
-
-            // When
-            var response = this.engine.RenderView(location, null, this.renderContext);
-            response.Contents.Invoke(stream);
-
-            // Then
-            var output = ReadAll(stream).Trim();
-            output.ShouldEqual("<h1>Hi, Nancy!</h1>");
-        }
-#endif
-        [Fact(Skip = "Multi-threading regression test")]
-        public void should_work_on_multiple_threads()
-        {
-            // Given
-            var location = new ViewLocationResult(
-                string.Empty,
-                string.Empty,
-                "cshtml",
-                () =>
-                {
-                    Thread.Sleep(500);
-                    return new StringReader(@"@{var x = ""test"";}<h1>Hello Mr. @x</h1>");
-                });
-
-            var wait = new ManualResetEvent(false);
-
-            var stream = new MemoryStream();
-
-            // When
-            ThreadPool.QueueUserWorkItem(_ =>
-                {
-                    var response2 = this.engine.RenderView(location, null, this.renderContext);
-                    response2.Contents.Invoke(new MemoryStream());
-                    wait.Set();
-                });
-            var response = this.engine.RenderView(location, null, this.renderContext);
-            response.Contents.Invoke(stream);
-
-            wait.WaitOne(1000).ShouldBeTrue();
-
-            // Then
-            stream.ShouldEqual("<h1>Hello Mr. test</h1>");
         }
 
         [Fact]
@@ -679,7 +590,7 @@
         public void Should_be_able_to_render_csharp_view_with_generic_model(Type expectedType)
         {
             // Given
-            var location = this.CreateViewLocationWithModel(expectedType, new CSharpCodeProvider(), "model");
+            var location = CreateViewLocationWithModel(expectedType, new CSharpCodeProvider(), "model");
 
             // When
             var stream = new MemoryStream();
@@ -690,53 +601,7 @@
             stream.ShouldEqual(expectedType.FullName, true);
         }
 
-#if !__MonoCS__
-        [Theory]
-        [InlineData(typeof(string))]
-        [InlineData(typeof(byte))]
-        [InlineData(typeof(sbyte))]
-        [InlineData(typeof(short))]
-        [InlineData(typeof(ushort))]
-        [InlineData(typeof(int))]
-        [InlineData(typeof(uint))]
-        [InlineData(typeof(long))]
-        [InlineData(typeof(ulong))]
-        [InlineData(typeof(float))]
-        [InlineData(typeof(double))]
-        [InlineData(typeof(decimal))]
-        [InlineData(typeof(char))]
-        [InlineData(typeof(bool))]
-        [InlineData(typeof(object))]
-        [InlineData(typeof(Tuple<string>))]
-        [InlineData(typeof(Tuple<Tuple<string>>))]
-        [InlineData(typeof(Tuple<string, int>))]
-        [InlineData(typeof(Tuple<string, Tuple<int>>))]
-        [InlineData(typeof(Tuple<string, Tuple<int>, int>))]
-        [InlineData(typeof(Tuple<string, Tuple<int, string>, Tuple<int>, int>))]
-        [InlineData(typeof(Tuple<string, Tuple<int, string>, Tuple<int>, int, Tuple<string, Tuple<int, int>>>))]
-        [InlineData(typeof(int[]))]
-        [InlineData(typeof(int[,]))]
-        [InlineData(typeof(int[, , , ,]))]
-        [InlineData(typeof(int[][]))]
-        [InlineData(typeof(int[][, ,][]))]
-        [InlineData(typeof(Tuple<int, string>[][, ,][]))]
-        [InlineData(typeof(Tuple<int, int[][, ,][], string>))]
-        public void Should_be_able_to_render_vb_view_with_generic_model(Type expectedType)
-        {
-            // Given
-            var location = this.CreateViewLocationWithModel(expectedType, new VBCodeProvider(), "ModelType");
-
-            // When
-            var stream = new MemoryStream();
-            var response = this.engine.RenderView(location, null, this.renderContext);
-            response.Contents.Invoke(stream);
-
-            // Then
-            stream.ShouldEqual(expectedType.FullName, true);
-        }
-#endif
-
-        private ViewLocationResult CreateViewLocationWithModel(Type expectedType, CodeDomProvider provider, string modelDirective)
+        private static ViewLocationResult CreateViewLocationWithModel(Type expectedType, CodeDomProvider provider, string modelDirective)
         {
             var codeTypeRef = new CodeTypeReference(expectedType);
             var modelType = provider.GetTypeOutput(codeTypeRef);

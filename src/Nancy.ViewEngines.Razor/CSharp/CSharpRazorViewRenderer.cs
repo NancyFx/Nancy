@@ -4,8 +4,6 @@
     using System.CodeDom.Compiler;
     using System.Collections.Generic;
     using System.Web.Razor;
-    using System.Web.Razor.Generator;
-
     using Microsoft.CSharp;
     using Microsoft.CSharp.RuntimeBinder;
 
@@ -57,7 +55,7 @@
 
             this.ModelCodeGenerator = typeof(ModelCodeGenerator);
 
-            this.Provider = new CSharpCodeProvider();
+            this.Provider = new Microsoft.CodeDom.Providers.DotNetCompilerPlatform.CSharpCodeProvider();
 
             this.Host = new NancyRazorEngineHost(new CSharpRazorCodeLanguage(), assemblyCatalog);
 

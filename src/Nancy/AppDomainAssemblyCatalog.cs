@@ -47,7 +47,7 @@ namespace Nancy
                 var references = assembly.GetReferencedAssemblies();
                 foreach (var reference in references)
                 {
-                    Assembly.Load(reference);
+                    SafeLoadAssemblyIntoApplicationDomain(reference);
                 }
             }
 
@@ -92,16 +92,16 @@ namespace Nancy
                         continue;
                     }
 
-                    SafeLoadAssemblyIntoApplicationDomain(reflectionAssembly);
+                    SafeLoadAssemblyIntoApplicationDomain(reflectionAssembly.GetName());
                 }
             }
         }
 
-        private static void SafeLoadAssemblyIntoApplicationDomain(Assembly reflectionAssembly)
+        private static void SafeLoadAssemblyIntoApplicationDomain(AssemblyName assemblyName)
         {
             try
             {
-                Assembly.Load(reflectionAssembly.GetName());
+                Assembly.Load(assemblyName);
             }
             catch
             {
