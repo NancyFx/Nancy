@@ -10,6 +10,15 @@
     /// </summary>
     public static class TypeExtensions
     {
+        /// <summary>
+        /// returns the assembly that the type belongs to
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns> The assembly that contains the type </returns>
+        public static Assembly GetAssembly(this Type source)
+        {
+            return source.GetTypeInfo().Assembly;
+        }
 
         /// <summary>
         /// Checks if a type is an array or not

@@ -38,7 +38,7 @@ namespace Nancy
         /// </summary>
         public static readonly TypeResolveStrategy OnlyNancy = type =>
         {
-            return type.Assembly().Equals(typeof(INancyEngine).GetTypeInfo().Assembly);
+            return type.GetAssembly().Equals(typeof(INancyEngine).GetTypeInfo().Assembly);
         };
 
         /// <summary>

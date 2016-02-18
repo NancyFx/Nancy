@@ -182,18 +182,18 @@ namespace Nancy
         private static Tuple<string, string> GetTuple(object header)
         {
             var properties = header.GetType()
-                                   .GetTypeInfo()
-                                   .DeclaredProperties
-                                   .Where(prop => prop.CanRead && prop.PropertyType == typeof(string))
-                                   .ToArray();
+                .GetTypeInfo()
+                .DeclaredProperties
+                .Where(prop => prop.CanRead && prop.PropertyType == typeof(string))
+                .ToArray();
 
             var headerProperty = properties
-                                    .Where(p => string.Equals(p.Name, "Header", StringComparison.OrdinalIgnoreCase))
-                                    .FirstOrDefault();
+                .Where(p => string.Equals(p.Name, "Header", StringComparison.OrdinalIgnoreCase))
+                .FirstOrDefault();
 
             var valueProperty = properties
-                                    .Where(p => string.Equals(p.Name, "Value", StringComparison.OrdinalIgnoreCase))
-                                    .FirstOrDefault();
+                .Where(p => string.Equals(p.Name, "Value", StringComparison.OrdinalIgnoreCase))
+                .FirstOrDefault();
 
             if (headerProperty == null || valueProperty == null)
             {

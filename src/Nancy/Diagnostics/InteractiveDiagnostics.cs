@@ -175,11 +175,7 @@
 
         private static string GetDescriptionFromAttribute(IDiagnosticsProvider diagnosticsProvider, MethodInfo methodInfo)
         {
-#if DOTNET5_4
             var attribute = (DescriptionAttribute)methodInfo.GetCustomAttribute(typeof(DescriptionAttribute));
-#else
-            var attribute = (DescriptionAttribute)Attribute.GetCustomAttribute(methodInfo, typeof(DescriptionAttribute));
-#endif
 
             return attribute != null ? attribute.Description : null;
         }

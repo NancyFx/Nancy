@@ -12,12 +12,14 @@
     },
 
     "dependencies": {
-        "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc1-final"
+      "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc1-final"
     },
+
     "resource": [
-        "Diagnostics/Resources/**/*.*",
-        "Diagnostics/Views/**/*.*"
+      "Diagnostics/Resources/**/*.*",
+      "Diagnostics/Views/**/*.*"
     ],
+
     "frameworks": {
         "dotnet5.4": {
           "dependencies": {

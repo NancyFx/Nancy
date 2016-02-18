@@ -174,7 +174,7 @@
         {
             var implementations = this.typeCatalog
                 .GetTypesAssignableTo<TRegistration>()
-                .Where(type => type.Assembly() != this.GetType().GetTypeInfo().Assembly)
+                .Where(type => type.GetAssembly() != this.GetType().GetTypeInfo().Assembly)
                 .Where(type => !defaultImplementations.Contains(type))
                 .ToList();
 
@@ -201,7 +201,7 @@
         {
             var implementations = this.typeCatalog
                 .GetTypesAssignableTo<TRegistration>()
-                .Where(type => type.Assembly() != this.GetType().GetTypeInfo().Assembly)
+                .Where(type => type.GetAssembly() != this.GetType().GetTypeInfo().Assembly)
                 .Where(type => !defaultImplementations.Contains(type))
                 .ToList();
 
