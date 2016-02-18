@@ -30,6 +30,8 @@
         private readonly INancyEnvironment environment;
         private readonly ITypeCatalog typeCatalog;
 
+        private readonly IAssemblyCatalog assemblyCatalog;
+
         /// <summary>
         /// Creates a new instance of the <see cref="DefaultDiagnostics"/> class.
         /// </summary>
@@ -46,6 +48,7 @@
         /// <param name="textResource"></param>
         /// <param name="environment"></param>
         /// <param name="typeCatalog"></param>
+        /// <param name="assemblyCatalog"></param>
         public DefaultDiagnostics(
             IEnumerable<IDiagnosticsProvider> diagnosticProviders,
             IRootPathProvider rootPathProvider,
@@ -59,7 +62,8 @@
             IEnumerable<IRouteMetadataProvider> routeMetadataProviders,
             ITextResource textResource,
             INancyEnvironment environment,
-            ITypeCatalog typeCatalog)
+            ITypeCatalog typeCatalog,
+            IAssemblyCatalog assemblyCatalog)
         {
             this.diagnosticProviders = diagnosticProviders;
             this.rootPathProvider = rootPathProvider;
@@ -74,6 +78,7 @@
             this.textResource = textResource;
             this.environment = environment;
             this.typeCatalog = typeCatalog;
+            this.assemblyCatalog = assemblyCatalog;
         }
 
         /// <summary>
@@ -96,7 +101,8 @@
                 this.routeMetadataProviders,
                 this.textResource,
                 this.environment,
-                this.typeCatalog);
+                this.typeCatalog,
+                this.assemblyCatalog);
         }
     }
 }

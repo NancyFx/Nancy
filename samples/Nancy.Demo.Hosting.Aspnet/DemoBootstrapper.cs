@@ -67,7 +67,7 @@
 
             this.Conventions.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory("moo", "Content"));
 
-            CookieBasedSessions.Enable(pipelines);
+            CookieBasedSessions.Enable(pipelines, this.AssemblyCatalog);
 
             pipelines.AfterRequest += (ctx) =>
             {

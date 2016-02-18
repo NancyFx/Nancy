@@ -1,7 +1,8 @@
 namespace Nancy.Tests.Unit.Sessions
 {
     using System;
-
+    using System.Reflection;
+    using FakeItEasy;
     using Xunit;
 
     public class DefaultSessionObjectFormatterFixture
@@ -10,7 +11,10 @@ namespace Nancy.Tests.Unit.Sessions
 
         public DefaultSessionObjectFormatterFixture()
         {
-            this.serializer = new DefaultObjectSerializer();
+            var fakeAssemblyCatalog = A.Fake<IAssemblyCatalog>();
+            A.CallTo(() => fakeAssemblyCatalog.GetAssemblies(AssemblyResolveStrategies.All))
+                .Returns(new[] { typeof(DefaultSessionObjectFormatterFixture).GetTypeInfo().Assembly });
+            this.serializer = new DefaultObjectSerializer(fakeAssemblyCatalog);
         }
 
         [Fact]
@@ -68,11 +72,16 @@ namespace Nancy.Tests.Unit.Sessions
         [Serializable]
         public class Payload : IEquatable<Payload>
         {
-            public int IntValue { get; private set; }
+            public int IntValue { get;  set; }
 
-            public bool BoolValue { get; private set; }
+            public bool BoolValue { get;  set; }
 
-            public string StringValue { get; private set; }
+            public string StringValue { get;  set; }
+
+            public Payload()
+            {
+                
+            }
 
             /// <summary>
             /// Initializes a new instance of the <see cref="T:System.Object"/> class.

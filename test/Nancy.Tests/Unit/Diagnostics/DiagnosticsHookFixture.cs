@@ -2,7 +2,9 @@
 {
     using System;
     using System.Linq;
+    using System.Reflection;
     using System.Threading.Tasks;
+    using FakeItEasy;
     using Nancy.Cookies;
     using Nancy.Cryptography;
     using Nancy.Diagnostics;
@@ -21,7 +23,14 @@
         public DiagnosticsHookFixture()
         {
             this.cryptoConfig = CryptographyConfiguration.Default;
-            this.objectSerializer = new DefaultObjectSerializer();
+            var fakeAssemblyCatalog = A.Fake<IAssemblyCatalog>();
+            A.CallTo(() => fakeAssemblyCatalog.GetAssemblies(AssemblyResolveStrategies.All))
+                .Returns(new[]
+                {
+                    typeof(DiagnosticsHookFixture).GetTypeInfo().Assembly,
+                    typeof(DiagnosticsSession).GetTypeInfo().Assembly
+                });
+            this.objectSerializer = new DefaultObjectSerializer(fakeAssemblyCatalog);
         }
 
 #if DEBUG

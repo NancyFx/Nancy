@@ -33,7 +33,7 @@ namespace Nancy.Diagnostics
         /// Enables the diagnostics dashboard and will intercept all requests that are passed to
         /// the condigured paths.
         /// </summary>
-        public static void Enable(IPipelines pipelines, IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration, IModelBinderLocator modelBinderLocator, IEnumerable<IResponseProcessor> responseProcessors, IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints, ICultureService cultureService, IRequestTraceFactory requestTraceFactory, IEnumerable<IRouteMetadataProvider> routeMetadataProviders, ITextResource textResource, INancyEnvironment environment, ITypeCatalog typeCatalog)
+        public static void Enable(IPipelines pipelines, IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration, IModelBinderLocator modelBinderLocator, IEnumerable<IResponseProcessor> responseProcessors, IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints, ICultureService cultureService, IRequestTraceFactory requestTraceFactory, IEnumerable<IRouteMetadataProvider> routeMetadataProviders, ITextResource textResource, INancyEnvironment environment, ITypeCatalog typeCatalog, IAssemblyCatalog assemblyCatalog)
         {
             var diagnosticsConfiguration =
                 environment.GetValue<DiagnosticsConfiguration>();
@@ -58,7 +58,7 @@ namespace Nancy.Diagnostics
                 new RouteResolverTrie(new TrieNodeFactory(routeSegmentConstraints)),
                 environment);
 
-            var serializer = new DefaultObjectSerializer();
+            var serializer = new DefaultObjectSerializer(assemblyCatalog);
 
             pipelines.BeforeRequest.AddItemToStartOfPipeline(
                 new PipelineItem<Func<NancyContext, Response>>(

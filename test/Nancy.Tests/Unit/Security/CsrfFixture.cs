@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
     using System.Threading;
 
     using FakeItEasy;
@@ -34,8 +35,10 @@
             this.pipelines = new MockPipelines();
 
             this.cryptographyConfiguration = CryptographyConfiguration.Default;
-
-            this.objectSerializer = new DefaultObjectSerializer();
+            var fakeAssemblyCatalog = A.Fake<IAssemblyCatalog>();
+            A.CallTo(() => fakeAssemblyCatalog.GetAssemblies(AssemblyResolveStrategies.All))
+                .Returns(new[] { typeof(CsrfFixture).GetTypeInfo().Assembly, typeof(CsrfToken).GetTypeInfo().Assembly });
+            this.objectSerializer = new DefaultObjectSerializer(fakeAssemblyCatalog);
             var csrfStartup = new CsrfApplicationStartup(
                 this.cryptographyConfiguration,
                 this.objectSerializer,

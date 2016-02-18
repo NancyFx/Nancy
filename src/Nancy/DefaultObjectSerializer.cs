@@ -3,11 +3,28 @@ namespace Nancy
     using Extensions;
     using System;
     using System.IO;
+    using System.Linq;
+    using System.Reflection;
     using System.Runtime.Serialization;
-    using System.Runtime.Serialization.Formatters.Binary;
+    using System.Text;
+    using Nancy.Extensions;
 
+    /// <summary>
+    /// Serializes/Deserializes objects for sessions
+    /// </summary>
     public class DefaultObjectSerializer : IObjectSerializer
     {
+        private readonly IAssemblyCatalog assemblyCatalog;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultObjectSerializer"/> class.
+        /// </summary>
+        /// <param name="assemblyCatalog"></param>
+        public DefaultObjectSerializer(IAssemblyCatalog assemblyCatalog)
+        {
+            this.assemblyCatalog = assemblyCatalog;
+        }
+
         /// <summary>
         /// Serialize an object
         /// </summary>
@@ -17,18 +34,35 @@ namespace Nancy
         {
             if (sourceObject == null)
             {
-                return String.Empty;
+                return string.Empty;
             }
 
-            var formatter = new BinaryFormatter();
+            dynamic serializedObject = (sourceObject is string)
+                ? sourceObject
+                : this.AddTypeInformation(sourceObject);
 
-            using (var outputStream = new MemoryStream())
+            var json = SimpleJson.SerializeObject(serializedObject);
+            return Convert.ToBase64String(Encoding.UTF8.GetBytes(json));
+        }
+
+        private dynamic AddTypeInformation(object sourceObject)
+        {
+            var sourceType = this.assemblyCatalog.GetAssemblies().Select(assembly => assembly.GetType(sourceObject.GetType().FullName)).FirstOrDefault(type => type != null);
+            if (sourceType == null)
             {
-                formatter.Serialize(outputStream, sourceObject);
-
-                var buffer = outputStream.GetBufferSegment();
-                return Convert.ToBase64String(buffer.Array, buffer.Offset, buffer.Count);
+                throw new SerializationException("Unable to find type " + sourceObject.GetType() + " in its assembly to serialize");
             }
+
+            dynamic serializedObject = null;
+
+            var assemblyQualifiedName = sourceType.GetTypeInfo().AssemblyQualifiedName;
+            if (!string.IsNullOrWhiteSpace(assemblyQualifiedName))
+            {
+                serializedObject = sourceObject.ToDynamic();
+                serializedObject.TypeObject = assemblyQualifiedName;
+            }
+
+            return serializedObject;
         }
 
         /// <summary>
@@ -46,13 +80,15 @@ namespace Nancy
             try
             {
                 var inputBytes = Convert.FromBase64String(sourceString);
+                var json = Encoding.UTF8.GetString(inputBytes);
 
-                var formatter = new BinaryFormatter();
-
-                using (var inputStream = new MemoryStream(inputBytes, false))
+                if (ContainsTypeDescription(json))
                 {
-                    return formatter.Deserialize(inputStream);
+                    dynamic serializedObject = SimpleJson.DeserializeObject(json);
+                    var actual = SimpleJson.DeserializeObject(json, Type.GetType(serializedObject.TypeObject));
+                    return actual;
                 }
+                return SimpleJson.DeserializeObject(json);
             }
             catch (FormatException)
             {
@@ -62,10 +98,15 @@ namespace Nancy
             {
                 return null;
             }
-	    catch (IOException)
-	    {
-		return null;
-	    }
+            catch (IOException)
+            {
+                return null;
+            }
+        }
+
+        private static bool ContainsTypeDescription(string json)
+        {
+            return json.Contains("TypeObject");
         }
     }
 }

@@ -3,6 +3,7 @@ namespace Nancy.Tests.Unit.Sessions
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Reflection;
     using System.Threading;
     using System.Web;
 
@@ -18,8 +19,8 @@ namespace Nancy.Tests.Unit.Sessions
 
     public class CookieBasedSessionsFixture
     {
-        private const string ValidData = "VgPJvXYwcXkn0gxDvg84tsfV9F5he1ZxhjsTZK1UZHVqWk7izPd9XsWnuFMrtQNRJEfyiqU2J7tAZDQvdKjQij9wUO6mOTCyZ7HPHK/pEnkgDFMXbHDctGQZSbb2WZZxola+Q3nP2tlQ+Tx//N6YyK7BwpsNPrvyHAvU1z5YzHfPT6HEowIl8mz/uUL6o+FME/Goi7RN2getMeYaPCs0fJkiMCAomnnagAy4aXN0Ak/p7Y3K/kpNAS6PvNu4aok0zVpfo1utP84GyyLomfr4urmDNFIe8PBVoKhuomxjsUOddaarHqqmN3PXOp15SPXPDxEKfpuLzhmqXnStiB8nH9qMBYI/AuLHMckDzkeESH5rQ2q2+1RgCN82PujzGhhVnBMk95ZS9k9zKCvKQa2yzVkaHqwSESyOFboU89kLAEQ0h48dtoJ2FTBs9GjsL3Z4fGogeLwjIvP8I8JF39HI+9U3PC2KnicA/bgUL/Z1paDzZYTrqQS4QSyFgy4DOxYz";
-        private const string ValidHmac = "un/5uJOoOAyn4AX8VU0HsGYYtr79A40TFF1wVqd/jDQ=";
+        private const string ValidData = "PzQmxxriR9Ht9a1rJMC1yAr5Ty+CIIE1/fXX/B2e32wtf8+KzGaBMOW6Ks9xb503haQnFTm9Z9QsJgoUPClwU6Ke25HRjXdKY7RQIG4XXT7APU/NV3KAJZuwbJObv22PR/yKbkTOEYAvn/m7FLM6jxvn5lCCw75Kw0vNvKiTbyE5ijh5EY4XfQHGt+5s6vrehh26reJBuXiY4hPwopGbOsvHNNw3HpbQPmut1qHiqX/w8naD2vuFmX0Dckv1Kkf+K3zG2BVHtXi+C3kufmUR+l/1C7p4Y7r+6n9+7o7Bf8aWkMNWdAA704+xrT+Zyy5NkKkFGMtNmju6bv+6PH1H6hwXs5QUSWcj3Ke9XQvWaYBHCkBdIvY4FvMZUeQfw5oaECST+Zz+nMxAQ5TgOrvVo6Zr0B+CF+COvXeyhX7YbbM=";
+        private const string ValidHmac = "QWc9gRZbQ6pK5ECs2Zp4E5WenpQ/XXgYUDPY46WihPY=";
 
         private readonly IEncryptionProvider fakeEncryptionProvider;
         private readonly CookieBasedSessions cookieStore;
@@ -32,6 +33,8 @@ namespace Nancy.Tests.Unit.Sessions
 
         private IObjectSerializer defaultObjectSerializer;
 
+        private IAssemblyCatalog assemblyCatalog;
+
         public CookieBasedSessionsFixture()
         {
             this.fakeEncryptionProvider = A.Fake<IEncryptionProvider>();
@@ -41,7 +44,10 @@ namespace Nancy.Tests.Unit.Sessions
 
             this.aesEncryptionProvider = new AesEncryptionProvider(new PassphraseKeyGenerator("password", new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 }, 1000));
             this.defaultHmacProvider = new DefaultHmacProvider(new PassphraseKeyGenerator("anotherpassword", new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 }, 1000));
-            this.defaultObjectSerializer = new DefaultObjectSerializer();
+            this.assemblyCatalog = A.Fake<IAssemblyCatalog>();
+            A.CallTo(() => this.assemblyCatalog.GetAssemblies(AssemblyResolveStrategies.All))
+                .Returns(new[] { typeof(CookieBasedSessionsFixture).GetTypeInfo().Assembly });
+            this.defaultObjectSerializer = new DefaultObjectSerializer(this.assemblyCatalog);
         }
 
         [Fact]
@@ -185,7 +191,7 @@ namespace Nancy.Tests.Unit.Sessions
             A.CallTo(() => hooks.BeforeRequest).Returns(beforePipeline);
             A.CallTo(() => hooks.AfterRequest).Returns(afterPipeline);
 
-            CookieBasedSessions.Enable(hooks, new CryptographyConfiguration(this.fakeEncryptionProvider, this.fakeHmacProvider));
+            CookieBasedSessions.Enable(hooks, new CryptographyConfiguration(this.fakeEncryptionProvider, this.fakeHmacProvider), this.assemblyCatalog);
 
             beforePipeline.PipelineDelegates.Count().ShouldEqual(1);
             afterPipeline.PipelineItems.Count().ShouldEqual(1);
@@ -199,7 +205,7 @@ namespace Nancy.Tests.Unit.Sessions
             var hooks = A.Fake<IPipelines>();
             A.CallTo(() => hooks.BeforeRequest).Returns(beforePipeline);
             A.CallTo(() => hooks.AfterRequest).Returns(afterPipeline);
-            CookieBasedSessions.Enable(hooks, new CryptographyConfiguration(this.fakeEncryptionProvider, this.fakeHmacProvider)).WithSerializer(this.fakeObjectSerializer);
+            CookieBasedSessions.Enable(hooks, new CryptographyConfiguration(this.fakeEncryptionProvider, this.fakeHmacProvider), this.assemblyCatalog).WithSerializer(this.fakeObjectSerializer);
             var request = CreateRequest("encryptedkey1=value1");
             A.CallTo(() => this.fakeEncryptionProvider.Decrypt("encryptedkey1=value1")).Returns("key1=value1;");
             var response = A.Fake<Response>();
@@ -219,7 +225,7 @@ namespace Nancy.Tests.Unit.Sessions
             var hooks = A.Fake<IPipelines>();
             A.CallTo(() => hooks.BeforeRequest).Returns(beforePipeline);
             A.CallTo(() => hooks.AfterRequest).Returns(afterPipeline);
-            CookieBasedSessions.Enable(hooks, new CryptographyConfiguration(this.fakeEncryptionProvider, this.fakeHmacProvider)).WithSerializer(this.fakeObjectSerializer);
+            CookieBasedSessions.Enable(hooks, new CryptographyConfiguration(this.fakeEncryptionProvider, this.fakeHmacProvider), this.assemblyCatalog).WithSerializer(this.fakeObjectSerializer);
             var request = CreateRequest("encryptedkey1=value1");
             A.CallTo(() => this.fakeEncryptionProvider.Decrypt("encryptedkey1=value1")).Returns("key1=value1;");
             var response = A.Fake<Response>();
@@ -269,7 +275,7 @@ namespace Nancy.Tests.Unit.Sessions
             A.CallTo(() => hooks.AfterRequest).Returns(afterPipeline);
             var fakeFormatter = A.Fake<IObjectSerializer>();
             A.CallTo(() => this.fakeEncryptionProvider.Decrypt("encryptedkey1=value1")).Returns("key1=value1;");
-            CookieBasedSessions.Enable(hooks, new CryptographyConfiguration(this.fakeEncryptionProvider, this.fakeHmacProvider)).WithSerializer(fakeFormatter);
+            CookieBasedSessions.Enable(hooks, new CryptographyConfiguration(this.fakeEncryptionProvider, this.fakeHmacProvider), this.assemblyCatalog).WithSerializer(fakeFormatter);
             var request = CreateRequest("encryptedkey1=value1");
             var nancyContext = new NancyContext() { Request = request };
 

@@ -1355,6 +1355,12 @@
     <Compile Include="..\Nancy\Cryptography\AesEncryptionProvider.cs">
       <Link>Cryptography\AesEncryptionProvider.cs</Link>
     </Compile>
+    <Compile Include="..\Nancy\Json\SimpleJson.cs">
+      <Link>Json\SimpleJson.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy\Extensions\ObjectExtensions.cs">
+      <Link>Extensions\ObjectExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\Nancy\Configuration\ConfigurationException.cs">
       <Link>Configuration\ConfigurationException.cs</Link>
     </Compile>
