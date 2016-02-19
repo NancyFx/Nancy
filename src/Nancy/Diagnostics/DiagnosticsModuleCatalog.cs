@@ -14,9 +14,9 @@ namespace Nancy.Diagnostics
     {
         private readonly TinyIoCContainer container;
 
-        public DiagnosticsModuleCatalog(IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration, INancyEnvironment diagnosticsEnvironment, ITypeCatalog typeCatalog)
+        public DiagnosticsModuleCatalog(IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration, INancyEnvironment diagnosticsEnvironment, ITypeCatalog typeCatalog, IAssemblyCatalog assemblyCatalog)
         {
-            this.container = ConfigureContainer(providers, rootPathProvider, requestTracing, configuration, diagnosticsEnvironment, typeCatalog);
+            this.container = ConfigureContainer(providers, rootPathProvider, requestTracing, configuration, diagnosticsEnvironment, typeCatalog, assemblyCatalog);
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace Nancy.Diagnostics
             return this.container.Resolve<INancyModule>(moduleType.FullName);
         }
 
-        private static TinyIoCContainer ConfigureContainer(IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration, INancyEnvironment diagnosticsEnvironment, ITypeCatalog typeCatalog)
+        private static TinyIoCContainer ConfigureContainer(IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration, INancyEnvironment diagnosticsEnvironment, ITypeCatalog typeCatalog, IAssemblyCatalog assemblyCatalog)
         {
             var diagContainer = new TinyIoCContainer();
 
@@ -55,6 +55,8 @@ namespace Nancy.Diagnostics
             diagContainer.Register<INancyEnvironment>(diagnosticsEnvironment);
             diagContainer.Register<ISerializer>(new DefaultJsonSerializer(diagnosticsEnvironment));
             diagContainer.Register<ITypeCatalog>(typeCatalog);
+            diagContainer.Register<IAssemblyCatalog>(assemblyCatalog);
+
 
             foreach (var diagnosticsProvider in providers)
             {
