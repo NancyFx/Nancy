@@ -70,11 +70,11 @@
                         var owinRequestHost = GetHeader(owinRequestHeaders, "Host") ?? Dns.GetHostName();
                         var owinUser = GetUser(environment); 
 
-                        byte[] certificate = null;
+                        X509Certificate2 certificate = null;
                         if (options.EnableClientCertificates)
                         {
-                            var clientCertificate = Get<X509Certificate>(environment, "ssl.ClientCertificate");
-                            certificate = (clientCertificate == null) ? null : clientCertificate.GetRawCertData();
+                            var clientCertificate = Get<X509Certificate2>(environment, "ssl.ClientCertificate");
+                            certificate = clientCertificate ?? null;
                         }
 
                         var serverClientIp = Get<string>(environment, "server.RemoteIpAddress");

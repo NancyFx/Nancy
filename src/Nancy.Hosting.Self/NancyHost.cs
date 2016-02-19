@@ -6,6 +6,7 @@
     using System.IO;
     using System.Linq;
     using System.Net;
+    using System.Security.Cryptography.X509Certificates;
     using System.Security.Principal;
     using System.Threading.Tasks;
     using Nancy.Bootstrapper;
@@ -264,7 +265,7 @@
                 Query = request.Url.Query,
             };
 
-            byte[] certificate = null;
+            X509Certificate2 certificate = null;
 
             if (this.configuration.EnableClientCertificates)
             {
@@ -272,7 +273,7 @@
 
                 if (x509Certificate != null)
                 {
-                    certificate = x509Certificate.RawData;
+                    certificate = x509Certificate;
                 }
             }
 
