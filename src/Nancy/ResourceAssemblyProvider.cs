@@ -36,7 +36,7 @@
         private IEnumerable<Assembly> GetFilteredAssemblies()
         {
             return this.assemblyCatalog
-                .GetAssemblies(AssemblyResolveStrategies.NancyReferencing)
+                .GetAssemblies()
                 .Where(x => !x.GetName().Name.StartsWith("Nancy", StringComparison.OrdinalIgnoreCase));
         }
     }

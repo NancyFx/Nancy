@@ -104,18 +104,6 @@
     <Compile Include="..\Nancy\AppDomainAssemblyCatalog.cs">
       <Link>AppDomainAssemblyCatalog.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy\AssemblyCatalogBase.cs">
-      <Link>AssemblyCatalogBase.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy\AssemblyCatalogExtensions.cs">
-      <Link>AssemblyCatalogExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy\AssemblyResolveStrategies.cs">
-      <Link>AssemblyResolveStrategies.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy\AssemblyResolveStrategy.cs">
-      <Link>AssemblyResolveStrategy.cs</Link>
-    </Compile>
     <Compile Include="..\Nancy\AsyncNamedPipelineBase.cs">
       <Link>AsyncNamedPipelineBase.cs</Link>
     </Compile>

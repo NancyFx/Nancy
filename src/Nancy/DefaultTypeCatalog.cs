@@ -38,7 +38,7 @@
         private IReadOnlyCollection<Type> GetTypesAssignableTo(Type type)
         {
             return this.assemblyCatalog
-                .GetAssemblies(AssemblyResolveStrategies.NancyReferencing)
+                .GetAssemblies()
                 .SelectMany(assembly => assembly.SafeGetExportedTypes())
                 .Where(type.IsAssignableFrom)
                 .Where(t => !t.IsAbstract)
