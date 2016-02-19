@@ -58,15 +58,25 @@ namespace Nancy
             {
                 foreach (var assemblyPath in Directory.EnumerateFiles(directory, "*.dll"))
                 {
-                    var unloadedAssemblyName = AssemblyName.GetAssemblyName(assemblyPath);
+                    var unloadedAssemblyName = SafeGetAssemblyName(assemblyPath);
+
+                    if (unloadedAssemblyName == null)
+                    {
+                        continue;
+                    }
 
                     if (!loadedNancyReferencingAssemblyNames.Any(loadedNancyReferencingAssemblyName => AssemblyName.ReferenceMatchesDefinition(loadedNancyReferencingAssemblyName, unloadedAssemblyName)))
                     {
-                        var assembly = inspectionAppDomain.Load(unloadedAssemblyName);
+                        var inspectionAssembly = inspectionAppDomain.Load(unloadedAssemblyName);
 
-                        if (IsNancyReferencing(assembly))
+                        if (IsNancyReferencing(inspectionAssembly))
                         {
-                            assemblies.Add(AppDomain.CurrentDomain.Load(unloadedAssemblyName));
+                            var assembly = SafeLoadAssembly(unloadedAssemblyName);
+
+                            if (assembly != null)
+                            {
+                                assemblies.Add(assembly);
+                            }
                         }
                     }
                 }
@@ -109,6 +119,30 @@ namespace Nancy
             if (AppDomain.CurrentDomain.SetupInformation.PrivateBinPathProbe == null)
             {
                 yield return AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+            }
+        }
+
+        private static AssemblyName SafeGetAssemblyName(string assemblyPath)
+        {
+            try
+            {
+                return AssemblyName.GetAssemblyName(assemblyPath);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        private static Assembly SafeLoadAssembly(AssemblyName assemblyName)
+        {
+            try
+            {
+                return AppDomain.CurrentDomain.Load(assemblyName);
+            }
+            catch
+            {
+                return null;
             }
         }
     }
