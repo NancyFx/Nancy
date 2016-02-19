@@ -156,7 +156,7 @@ namespace Nancy.Json
 				valueType = obj.GetType ();
 			}
 
-			TypeCode typeCode = Type.GetTypeCode (valueType);
+			TypeCode typeCode = valueType.GetTypeCode();
 			switch (typeCode) {
 				case TypeCode.String:
 					WriteValue (output, (string)obj);
@@ -178,7 +178,7 @@ namespace Nancy.Json
                                 case TypeCode.UInt32:
                                 case TypeCode.Int64:
                                 case TypeCode.UInt64:
-					if (valueType.IsEnum) {
+					if (valueType.GetTypeInfo().IsEnum) {
 						WriteEnumValue (output, obj, typeCode);
 						return;
 					}
@@ -270,11 +270,11 @@ namespace Nancy.Json
 		}
 		
 		Type GetClosedIDictionaryBase(Type t) {
-			if(t.IsGenericType && typeof (IDictionary <,>).IsAssignableFrom (t.GetGenericTypeDefinition ()))
+			if(t.GetTypeInfo().IsGenericType && typeof (IDictionary <,>).IsAssignableFrom (t.GetGenericTypeDefinition ()))
 				return t;
 				
 			foreach(Type iface in t.GetInterfaces()) {
-				if(iface.IsGenericType && typeof (IDictionary <,>).IsAssignableFrom (iface.GetGenericTypeDefinition ()))
+				if(iface.GetTypeInfo().IsGenericType && typeof (IDictionary <,>).IsAssignableFrom (iface.GetGenericTypeDefinition ()))
 					return iface;
 			}
 

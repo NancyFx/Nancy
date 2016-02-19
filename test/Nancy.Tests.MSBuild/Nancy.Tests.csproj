@@ -351,6 +351,9 @@
     <Compile Include="..\Nancy.Tests\Unit\Cryptography\NoEncryptionProviderFixture.cs">
       <Link>Unit\Cryptography\NoEncryptionProviderFixture.cs</Link>
     </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Cryptography\AesEncryptionProviderFixture.cs">
+      <Link>Unit\Cryptography\AesEncryptionProviderFixture.cs</Link>
+    </Compile>
     <Compile Include="..\Nancy.Tests\Unit\DefaultNancyBootstrapperModuleCatalogFixture.cs">
       <Link>Unit\DefaultNancyBootstrapperModuleCatalogFixture.cs</Link>
     </Compile>
@@ -561,9 +564,6 @@
     <Compile Include="..\Nancy.Tests\Unit\Sessions\CookieBasedSessionsFixture.cs">
       <Link>Unit\Sessions\CookieBasedSessionsFixture.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy.Tests\Unit\Cryptography\RijndaelEncryptionProviderFixture.cs">
-      <Link>Unit\Cryptography\RijndaelEncryptionProviderFixture.cs</Link>
-    </Compile>
     <Compile Include="..\Nancy.Tests\Unit\Sessions\DefaultSessionObjectFormatterFixture.cs">
       <Link>Unit\Sessions\DefaultSessionObjectFormatterFixture.cs</Link>
     </Compile>
@@ -733,7 +733,7 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props'))" />
   </Target>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

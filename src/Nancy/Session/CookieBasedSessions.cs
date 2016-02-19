@@ -90,12 +90,13 @@ namespace Nancy.Session
         /// </summary>
         /// <param name="pipelines">Application pipelines</param>
         /// <param name="cryptographyConfiguration">Cryptography configuration</param>
+        /// <param name="assemblyCatalog">Assembly catalog</param>
         /// <returns>Formatter selector for choosing a non-default serializer</returns>
-        public static IObjectSerializerSelector Enable(IPipelines pipelines, CryptographyConfiguration cryptographyConfiguration)
+        public static IObjectSerializerSelector Enable(IPipelines pipelines, CryptographyConfiguration cryptographyConfiguration, IAssemblyCatalog assemblyCatalog)
         {
             var cookieBasedSessionsConfiguration = new CookieBasedSessionsConfiguration(cryptographyConfiguration)
             {
-                Serializer = new DefaultObjectSerializer()
+                Serializer = new DefaultObjectSerializer(assemblyCatalog)
             };
             return Enable(pipelines, cookieBasedSessionsConfiguration);
         }
@@ -104,12 +105,13 @@ namespace Nancy.Session
         /// Initialise and add cookie based session hooks to the application pipeline with the default encryption provider.
         /// </summary>
         /// <param name="pipelines">Application pipelines</param>
+        /// <param name="assemblyCatalog">Assembly catalog</param>
         /// <returns>Formatter selector for choosing a non-default serializer</returns>
-        public static IObjectSerializerSelector Enable(IPipelines pipelines)
+        public static IObjectSerializerSelector Enable(IPipelines pipelines, IAssemblyCatalog assemblyCatalog)
         {
             return Enable(pipelines, new CookieBasedSessionsConfiguration
             {
-                Serializer = new DefaultObjectSerializer()
+                Serializer = new DefaultObjectSerializer(assemblyCatalog)
             });
         }
 

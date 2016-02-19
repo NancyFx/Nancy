@@ -3,6 +3,7 @@ namespace Nancy.ErrorHandling
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Reflection;
     using System.Text;
     using Nancy.Configuration;
     using Nancy.Extensions;
@@ -133,7 +134,8 @@ namespace Nancy.ErrorHandling
 
         private static string LoadResource(string filename)
         {
-            var resourceStream = typeof(INancyEngine).Assembly.GetManifestResourceStream(string.Format("Nancy.ErrorHandling.Resources.{0}", filename));
+            var resourceStream = typeof(INancyEngine).GetTypeInfo().Assembly.GetManifestResourceStream(string.Format("Nancy.ErrorHandling.Resources.{0}", filename));
+
 
             if (resourceStream == null)
             {

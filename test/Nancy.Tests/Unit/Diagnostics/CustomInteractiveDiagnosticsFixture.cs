@@ -3,7 +3,9 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
     using System.Threading.Tasks;
+    using FakeItEasy;
     using Nancy.Bootstrapper;
     using Nancy.Configuration;
     using Nancy.Cryptography;
@@ -26,7 +28,14 @@
         public CustomInteractiveDiagnosticsHookFixture()
         {
             this.cryptoConfig = CryptographyConfiguration.Default;
-            this.objectSerializer = new DefaultObjectSerializer();
+            var fakeAssemblyCatalog = A.Fake<IAssemblyCatalog>();
+            A.CallTo(() => fakeAssemblyCatalog.GetAssemblies(AssemblyResolveStrategies.All))
+                .Returns(new[]
+                {
+                    typeof(CustomInteractiveDiagnosticsHookFixture).GetTypeInfo().Assembly,
+                    typeof(DiagnosticsSession).GetTypeInfo().Assembly
+                });
+            this.objectSerializer = new DefaultObjectSerializer(fakeAssemblyCatalog);
         }
 
         private class FakeDiagnostics : IDiagnostics
@@ -45,6 +54,7 @@
             private readonly INancyEnvironment environment;
             private readonly IRuntimeEnvironmentInformation runtimeEnvironmentInformation;
             private readonly ITypeCatalog typeCatalog;
+            private readonly IAssemblyCatalog assemblyCatalog;
 
             public FakeDiagnostics(
                 IRootPathProvider rootPathProvider,
@@ -59,7 +69,8 @@
                 ITextResource textResource,
                 INancyEnvironment environment,
                 IRuntimeEnvironmentInformation runtimeEnvironmentInformation,
-                ITypeCatalog typeCatalog)
+                ITypeCatalog typeCatalog,
+                IAssemblyCatalog assemblyCatalog)
             {
                 this.diagnosticProviders = (new IDiagnosticsProvider[] { new FakeDiagnosticsProvider() }).ToArray();
                 this.rootPathProvider = rootPathProvider;
@@ -75,6 +86,7 @@
                 this.environment = environment;
                 this.runtimeEnvironmentInformation = runtimeEnvironmentInformation;
                 this.typeCatalog = typeCatalog;
+                this.assemblyCatalog = assemblyCatalog;
             }
 
             public void Initialize(IPipelines pipelines)
@@ -94,7 +106,8 @@
                     this.textResource,
                     this.environment,
                     this.runtimeEnvironmentInformation,
-                    this.typeCatalog);
+                    this.typeCatalog,
+                    this.assemblyCatalog);
             }
         }
 
