@@ -27,7 +27,7 @@ namespace Nancy.Diagnostics
 
         public static byte[] GenerateSaltedHash(byte[] plainText, byte[] salt)
         {
-            var algorithm = new SHA256Managed();
+            var algorithm = SHA256.Create();
 
             var plainTextWithSaltBytes = new byte[plainText.Length + salt.Length];
 
