@@ -5,7 +5,7 @@
     using System.Linq;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
 	public class DefaultRazorConfiguration : IRazorConfiguration
     {
@@ -25,10 +25,23 @@
         /// <value>
         /// 	<c>true</c> if the model's namespace should be automatically included in the generated code; otherwise, <c>false</c>.
         /// </value>
-        public bool AutoIncludeModelNamespace 
+        public bool AutoIncludeModelNamespace
 		{
 			get { return (this.razorConfigurationSection == null || (!this.razorConfigurationSection.DisableAutoIncludeModelNamespace)); }
 		}
+
+        /// <summary>
+        /// Gets the assembly names to include in the generated assembly.
+        /// </summary>
+        public IEnumerable<string> GetAssemblyNames()
+        {
+            if (this.razorConfigurationSection == null || this.razorConfigurationSection.Assemblies == null)
+            {
+                return Enumerable.Empty<string>();
+            }
+
+            return this.razorConfigurationSection.Assemblies.Select(a => a.AssemblyName);
+        }
 
         /// <summary>
         /// Gets the default namespaces to be included in the generated code.
@@ -37,7 +50,7 @@
         {
             if (this.razorConfigurationSection == null || this.razorConfigurationSection.Namespaces == null)
             {
-                return null;
+                return Enumerable.Empty<string>();
             }
 
             return this.razorConfigurationSection.Namespaces.Select(n=>n.NamespaceName);

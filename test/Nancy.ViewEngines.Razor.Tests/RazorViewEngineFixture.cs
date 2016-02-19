@@ -7,7 +7,6 @@
     using System.IO;
     using System.Linq;
     using System.Text;
-    using System.Threading;
     using FakeItEasy;
     using Microsoft.CSharp;
     using Nancy.Configuration;
@@ -31,6 +30,8 @@
                 displayErrorTraces: true);
 
             this.configuration = A.Fake<IRazorConfiguration>();
+            A.CallTo(() => this.configuration.GetAssemblyNames()).Returns(new[] { "Nancy.ViewEngines.Razor.Tests.Models" });
+
             this.engine = new RazorViewEngine(this.configuration, environment, new AppDomainAssemblyCatalog());
 
             var cache = A.Fake<IViewCache>();
