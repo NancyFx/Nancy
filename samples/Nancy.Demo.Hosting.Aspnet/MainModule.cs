@@ -166,7 +166,7 @@ namespace Nancy.Demo.Hosting.Aspnet
 
                 var output = "Current session value is: " + value;
 
-                if (String.IsNullOrEmpty(value.ToString()))
+                if (string.IsNullOrEmpty(value.ToString()))
                 {
                     Session["moo"] = "I've created a session!";
                 }

@@ -258,7 +258,7 @@ namespace Nancy.Authentication.Forms
             var cookieValue = DecryptAndValidateAuthenticationCookie(cookieValueEncrypted, configuration);
 
             Guid returnGuid;
-            if (String.IsNullOrEmpty(cookieValue) || !Guid.TryParse(cookieValue, out returnGuid))
+            if (string.IsNullOrEmpty(cookieValue) || !Guid.TryParse(cookieValue, out returnGuid))
             {
                 return Guid.Empty;
             }
