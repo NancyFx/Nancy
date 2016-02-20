@@ -121,12 +121,12 @@ namespace Nancy.Helpers
 #endif
  void HeaderNameValueEncode(string headerName, string headerValue, out string encodedHeaderName, out string encodedHeaderValue)
         {
-            if (String.IsNullOrEmpty(headerName))
+            if (string.IsNullOrEmpty(headerName))
                 encodedHeaderName = headerName;
             else
                 encodedHeaderName = EncodeHeaderString(headerName);
 
-            if (String.IsNullOrEmpty(headerValue))
+            if (string.IsNullOrEmpty(headerValue))
                 encodedHeaderValue = headerValue;
             else
                 encodedHeaderValue = EncodeHeaderString(headerValue);
@@ -165,7 +165,7 @@ namespace Nancy.Helpers
 			if (output == null)
 				throw new ArgumentNullException ("output");
 
-			if (String.IsNullOrEmpty (value))
+			if (string.IsNullOrEmpty (value))
 				return;
 
 			output.Write (HtmlAttributeEncode (value));
@@ -219,7 +219,7 @@ namespace Nancy.Helpers
 #endif
  string UrlPathEncode(string value)
         {
-            if (String.IsNullOrEmpty(value))
+            if (string.IsNullOrEmpty(value))
                 return value;
 
             MemoryStream result = new MemoryStream();
@@ -332,7 +332,7 @@ namespace Nancy.Helpers
         internal static string HtmlAttributeEncode(string s)
         {
 #if NET_4_0
-			if (String.IsNullOrEmpty (s))
+			if (string.IsNullOrEmpty (s))
 				return String.Empty;
 #else
             if (s == null)

@@ -539,7 +539,7 @@ namespace Nancy.Helpers
 #endif
             }
 
-            if (!String.IsNullOrEmpty(s))
+            if (!string.IsNullOrEmpty(s))
             {
 #if NET_4_0
 				HttpEncoder.Current.HtmlDecode (s, output);
@@ -580,7 +580,7 @@ namespace Nancy.Helpers
 #endif
             }
 
-            if (!String.IsNullOrEmpty(s))
+            if (!string.IsNullOrEmpty(s))
             {
 #if NET_4_0
 				HttpEncoder.Current.HtmlEncode (s, output);
@@ -609,7 +609,7 @@ namespace Nancy.Helpers
 
 		public static string JavaScriptStringEncode (string value, bool addDoubleQuotes)
 		{
-			if (String.IsNullOrEmpty (value))
+			if (string.IsNullOrEmpty (value))
 				return addDoubleQuotes ? "\"\"" : String.Empty;
 
 			int len = value.Length;

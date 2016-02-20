@@ -53,7 +53,7 @@ namespace Nancy
             byte[] certificate = null,
             string protocolVersion = null)
         {
-            if (String.IsNullOrEmpty(method))
+            if (string.IsNullOrEmpty(method))
             {
                 throw new ArgumentOutOfRangeException("method");
             }
@@ -68,7 +68,7 @@ namespace Nancy
                 throw new ArgumentNullException("url.Path");
             }
 
-            if (String.IsNullOrEmpty(url.Scheme))
+            if (string.IsNullOrEmpty(url.Scheme))
             {
                 throw new ArgumentOutOfRangeException("url.Scheme");
             }
@@ -94,7 +94,7 @@ namespace Nancy
 
             this.ProtocolVersion = protocolVersion ?? string.Empty;
 
-            if (String.IsNullOrEmpty(this.Url.Path))
+            if (string.IsNullOrEmpty(this.Url.Path))
             {
                 this.Url.Path = "/";
             }

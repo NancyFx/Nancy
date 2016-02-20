@@ -294,7 +294,7 @@
             {
                 this.ApplicationPipelines.BeforeRequest.AddItemToStartOfPipeline(ctx =>
                     {
-                        if (ctx.Request == null || String.IsNullOrEmpty(ctx.Request.Path))
+                        if (ctx.Request == null || string.IsNullOrEmpty(ctx.Request.Path))
                         {
                             return null;
                         }

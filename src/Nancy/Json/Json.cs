@@ -110,7 +110,7 @@ namespace Nancy.Json
         /// <returns>True if content type is JSON, false otherwise</returns>
         public static bool IsJsonContentType(string contentType)
         {
-            if (String.IsNullOrEmpty(contentType))
+            if (string.IsNullOrEmpty(contentType))
             {
                 return false;
             }

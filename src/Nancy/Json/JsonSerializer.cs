@@ -134,7 +134,7 @@ namespace Nancy.Json
 
 				if (typeResolver != null) {
 					string typeId = typeResolver.ResolveTypeId (valueType);
-					if (!String.IsNullOrEmpty (typeId))
+					if (!string.IsNullOrEmpty (typeId))
 						result [JavaScriptSerializer.SerializedTypeNameKey] = typeId;
 				}
 
@@ -343,7 +343,7 @@ namespace Nancy.Json
 			bool first = true;
 			if (typeResolver != null) {
 				string typeId = typeResolver.ResolveTypeId (type);
-				if (!String.IsNullOrEmpty (typeId)) {
+				if (!string.IsNullOrEmpty (typeId)) {
 					WriteDictionaryEntry (output, first, JavaScriptSerializer.SerializedTypeNameKey, typeId);
 					first = false;
 				}
@@ -564,7 +564,7 @@ namespace Nancy.Json
 
 		void WriteValue (StringBuilder output, string value)
 		{
-			if (String.IsNullOrEmpty (value)) {
+			if (string.IsNullOrEmpty (value)) {
 				StringBuilderExtensions.AppendCount (output, maxJsonLength, "\"\"");
 				return;
 			}

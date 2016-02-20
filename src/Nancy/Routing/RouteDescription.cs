@@ -21,12 +21,12 @@ namespace Nancy.Routing
         /// <param name="condition">The condition that has to be fulfilled for the route to be a valid match.</param>
         public RouteDescription(string name, string method, string path, Func<NancyContext, bool> condition)
         {
-            if (String.IsNullOrEmpty(method))
+            if (string.IsNullOrEmpty(method))
             {
                 throw new ArgumentException("Method must be specified", "method");
             }
 
-            if (String.IsNullOrEmpty(path))
+            if (string.IsNullOrEmpty(path))
             {
                 throw new ArgumentException("Path must be specified", "path");
             }

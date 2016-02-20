@@ -890,7 +890,7 @@ namespace Nancy.Json
 			if (key != null)
 				key = key.Trim ();
 			
-			if (String.IsNullOrEmpty (key))
+			if (string.IsNullOrEmpty (key))
 				throw new InvalidOperationException ("Internal error: key is null, empty or not a string.");
 
 			key = retainCasing ? key : key.ToPascalCase();
@@ -921,7 +921,7 @@ namespace Nancy.Json
 			else
 				key = currentKey.Pop ();
 
-			if (String.IsNullOrEmpty (key))
+			if (string.IsNullOrEmpty (key))
 				throw new InvalidOperationException ("Internal error: object is a dictionary, but no key present.");
 			
 			dict [key] = o;
