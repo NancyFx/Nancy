@@ -323,11 +323,25 @@
 
             //When
             var environment = new DefaultNancyEnvironment();
-            environment.Cultures(GlobalizationConfiguration.Default.SupportedCultureNames, defaultCulture:null);
+            environment.Cultures(GlobalizationConfiguration.Default.SupportedCultureNames, defaultCulture: null);
             var culture = BuiltInCultureConventions.GlobalizationConfigurationCulture(context, environment.GetValue<GlobalizationConfiguration>());
 
             //Then
             culture.Name.ShouldEqual("en-US");
+        }
+
+        [Fact]
+        public void Should_throw_configuration_exception_if_default_culture_not_supported_globalization_configuration()
+        {
+            //Given
+            var context = CreateContextRequest("/");
+
+            //When
+            var environment = new DefaultNancyEnvironment();
+            var exception = Record.Exception(() => environment.Cultures(new[] { "en-GB" }, defaultCulture: "quz-EC"));
+
+            //Then
+            exception.ShouldBeOfType<ConfigurationException>();
         }
 
         [Fact]

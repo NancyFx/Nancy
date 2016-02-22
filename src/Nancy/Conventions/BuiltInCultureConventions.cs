@@ -129,7 +129,7 @@
         /// </summary>
         /// <param name="context">NancyContext</param>
         /// <param name="configuration">Culture configuration that contains allowed cultures</param>
-        /// <returns></returns>
+        /// <returns>CultureInfo if found in <see cref="GlobalizationConfiguration"/> Default Culture else null</returns>
         public static CultureInfo GlobalizationConfigurationCulture(NancyContext context, GlobalizationConfiguration configuration)
         {
             if (configuration.DefaultCulture != null)

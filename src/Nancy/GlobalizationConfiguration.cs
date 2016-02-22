@@ -1,6 +1,8 @@
 ﻿namespace Nancy
 {
+    using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// Globalization configuration
@@ -17,8 +19,18 @@
         /// </summary>
         /// <param name="supportedCultureNames">An array of supported cultures</param>
         /// <param name="defaultCulture">The default culture of the application</param>
-        public GlobalizationConfiguration(IEnumerable<string> supportedCultureNames, string defaultCulture)
+        public GlobalizationConfiguration(IEnumerable<string> supportedCultureNames, string defaultCulture = null)
         {
+            if (supportedCultureNames != null && supportedCultureNames.Any() && defaultCulture == null)
+            {
+                defaultCulture = supportedCultureNames.FirstOrDefault();
+            }
+
+            if (!string.IsNullOrEmpty(defaultCulture) && !supportedCultureNames.Contains(defaultCulture, StringComparer.OrdinalIgnoreCase))
+            {
+                throw new ConfigurationException("Invalid Globalization configuration. " + defaultCulture + " does not exist in the supported culture names");
+            }
+
             this.SupportedCultureNames = supportedCultureNames;
             this.DefaultCulture = defaultCulture;
         }

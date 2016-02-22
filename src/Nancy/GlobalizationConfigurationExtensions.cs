@@ -1,7 +1,6 @@
 ﻿namespace Nancy
 {
     using System.Collections.Generic;
-    using System.Linq;
     using Nancy.Configuration;
 
     /// <summary>
@@ -18,11 +17,6 @@
         /// <remarks>If defaultCulture not specified the first supported culture is used</remarks>
         public static void Cultures(this INancyEnvironment environment, IEnumerable<string> supportedCultureNames, string defaultCulture = null)
         {
-            if (supportedCultureNames != null && supportedCultureNames.Any() && defaultCulture == null)
-            {
-                defaultCulture = supportedCultureNames.FirstOrDefault();
-            }
-
             environment.AddValue(new GlobalizationConfiguration(
                 supportedCultureNames: supportedCultureNames,
                 defaultCulture: defaultCulture));
