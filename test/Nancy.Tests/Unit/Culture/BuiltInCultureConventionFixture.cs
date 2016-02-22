@@ -303,6 +303,19 @@
         }
 
         [Fact]
+        public void Should_return_culture_from_default_culture_on_globalization_configuration()
+        {
+            //Given
+            var context = CreateContextRequest("/");
+
+            //When
+            var culture = BuiltInCultureConventions.ConfigurationCulture(context, context.Environment.GetValue<GlobalizationConfiguration>());
+
+            //Then
+            culture.Name.ShouldEqual("en-US");
+        }
+
+        [Fact]
         public void Validation_should_return_false_if_null_culture_name()
         {
             //Given/When
@@ -371,7 +384,7 @@
             var request = new Request("GET", new Url { Path = path, Scheme = "http" }, null, cultureHeaders);
             context.Request = request;
             var environment = new DefaultNancyEnvironment();
-            environment.Cultures(GlobalizationConfiguration.Default.SupportedCultureNames);
+            environment.Cultures(GlobalizationConfiguration.Default.SupportedCultureNames, GlobalizationConfiguration.Default.SupportedCultureNames.First());
             context.Environment = environment;
             return context;
         }

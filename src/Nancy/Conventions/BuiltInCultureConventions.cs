@@ -124,6 +124,26 @@
 
             return null;
         }
+        /// <summary>
+        /// Checks to see if a default culture has been set on <see cref="GlobalizationConfiguration"/>
+        /// </summary>
+        /// <param name="context">NancyContext</param>
+        /// <param name="configuration">Culture configuration that contains allowed cultures</param>
+        /// <returns></returns>
+        public static CultureInfo ConfigurationCulture(NancyContext context, GlobalizationConfiguration configuration)
+        {
+            if (configuration.DefaultCulture != null)
+            {
+                if (!IsValidCultureInfoName(configuration.DefaultCulture, configuration))
+                {
+                    return null;
+                }
+
+                return new CultureInfo(configuration.DefaultCulture);
+            }
+
+            return null;
+        }
 
         /// <summary>
         /// Uses the Thread.CurrentThread.CurrentCulture
@@ -134,7 +154,6 @@
         public static CultureInfo ThreadCulture(NancyContext context, GlobalizationConfiguration configuration)
         {
 #if DOTNET5_4
-            CultureInfo.CurrentCulture = new CultureInfo(configuration.SupportedCultureNames.First());
             return CultureInfo.CurrentCulture;
 #else
             return Thread.CurrentThread.CurrentCulture;
