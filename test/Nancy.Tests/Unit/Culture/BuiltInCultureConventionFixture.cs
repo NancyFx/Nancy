@@ -36,7 +36,7 @@
             var context = PopulateForm("en-GB");
 
             //When
-            var culture = BuiltInCultureConventions.FormCulture(context, new GlobalizationConfiguration(new[] { "en-GB" }));
+            var culture = BuiltInCultureConventions.FormCulture(context, new GlobalizationConfiguration(new[] { "en-GB" }, "en-GB"));
 
             //Then
             culture.Name.ShouldEqual("en-GB");
@@ -82,7 +82,7 @@
             var context = CreateContextRequest(path);
 
             //When
-            var culture = BuiltInCultureConventions.PathCulture(context, new GlobalizationConfiguration(new[] { expected }));
+            var culture = BuiltInCultureConventions.PathCulture(context, new GlobalizationConfiguration(new[] { expected }, expected));
 
             //Then
             culture.Name.ShouldEqual(expected);
@@ -97,7 +97,7 @@
             var context = CreateContextRequest(path);
 
             //When
-            var culture = BuiltInCultureConventions.PathCulture(context, new GlobalizationConfiguration(new string[] { "en-GB" }));
+            var culture = BuiltInCultureConventions.PathCulture(context, new GlobalizationConfiguration(new string[] { "en-GB" }, "en-GB"));
 
             //Then
             context.Request.Url.Path.ShouldEqual(expectedPath);
@@ -150,7 +150,7 @@
             var context = CreateContextRequest("/", headers);
 
             //When
-            var culture = BuiltInCultureConventions.HeaderCulture(context, new GlobalizationConfiguration(new[] { "en-GB", "de-DE", "nl", "es" }));
+            var culture = BuiltInCultureConventions.HeaderCulture(context, new GlobalizationConfiguration(new[] { "en-GB", "de-DE", "nl", "es" }, "en-GB"));
 
             //Then
             culture.Name.ShouldEqual("en-GB");
@@ -169,7 +169,7 @@
             var context = CreateContextRequest("/", headers);
 
             //When
-            var culture = BuiltInCultureConventions.HeaderCulture(context, new GlobalizationConfiguration(new[] { "en-GB" }));
+            var culture = BuiltInCultureConventions.HeaderCulture(context, new GlobalizationConfiguration(new[] { "en-GB" }, "en-GB"));
 
             //Then
             culture.Name.ShouldEqual("en-GB");
@@ -282,7 +282,7 @@
             var context = CreateContextRequest("/", headers);
 
             //When
-            var culture = BuiltInCultureConventions.CookieCulture(context, new GlobalizationConfiguration(new[] { "en-GB" }));
+            var culture = BuiltInCultureConventions.CookieCulture(context, new GlobalizationConfiguration(new[] { "en-GB" }, "en-GB"));
 
             // Then
             culture.Name.ShouldEqual("en-GB");
@@ -309,7 +309,22 @@
             var context = CreateContextRequest("/");
 
             //When
-            var culture = BuiltInCultureConventions.ConfigurationCulture(context, context.Environment.GetValue<GlobalizationConfiguration>());
+            var culture = BuiltInCultureConventions.GlobalizationConfigurationCulture(context, context.Environment.GetValue<GlobalizationConfiguration>());
+
+            //Then
+            culture.Name.ShouldEqual("en-US");
+        }
+
+        [Fact]
+        public void Should_return_first_culture_from_default_culture_on_globalization_configuration()
+        {
+            //Given
+            var context = CreateContextRequest("/");
+
+            //When
+            var environment = new DefaultNancyEnvironment();
+            environment.Cultures(GlobalizationConfiguration.Default.SupportedCultureNames, defaultCulture:null);
+            var culture = BuiltInCultureConventions.GlobalizationConfigurationCulture(context, environment.GetValue<GlobalizationConfiguration>());
 
             //Then
             culture.Name.ShouldEqual("en-US");
@@ -331,7 +346,7 @@
         public void Validation_should_return_false_if_invalid_culture_name(string cultureName)
         {
             //Given/When
-            var configuration = new GlobalizationConfiguration(Enumerable.Empty<string>());
+            var configuration = new GlobalizationConfiguration(Enumerable.Empty<string>(), null);
             var result = BuiltInCultureConventions.IsValidCultureInfoName(cultureName, configuration);
 
             //Then
@@ -350,7 +365,7 @@
         public void Validation_should_return_true_if_valid_culture_name(string cultureName)
         {
             //Given/When
-            var configuration = new GlobalizationConfiguration(new[] { cultureName });
+            var configuration = new GlobalizationConfiguration(new[] { cultureName }, cultureName);
             var result = BuiltInCultureConventions.IsValidCultureInfoName(cultureName, configuration);
 
             //Then

@@ -47,7 +47,7 @@
                 BuiltInCultureConventions.HeaderCulture,
                 BuiltInCultureConventions.SessionCulture,
                 BuiltInCultureConventions.CookieCulture,
-                BuiltInCultureConventions.ConfigurationCulture,
+                BuiltInCultureConventions.GlobalizationConfigurationCulture,
                 BuiltInCultureConventions.ThreadCulture
             };
         }

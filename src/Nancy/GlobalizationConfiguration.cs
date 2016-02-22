@@ -10,14 +10,14 @@
         /// <summary>
         /// A default instance of the <see cref="GlobalizationConfiguration"/> class
         /// </summary>
-        public static readonly GlobalizationConfiguration Default = new GlobalizationConfiguration(supportedCultureNames: new[] { "en-us" });
+        public static readonly GlobalizationConfiguration Default = new GlobalizationConfiguration(supportedCultureNames: new[] { "en-US" }, defaultCulture: "en-US");
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GlobalizationConfiguration"/> class
         /// </summary>
         /// <param name="supportedCultureNames">An array of supported cultures</param>
         /// <param name="defaultCulture">The default culture of the application</param>
-        public GlobalizationConfiguration(IEnumerable<string> supportedCultureNames, string defaultCulture = null)
+        public GlobalizationConfiguration(IEnumerable<string> supportedCultureNames, string defaultCulture)
         {
             this.SupportedCultureNames = supportedCultureNames;
             this.DefaultCulture = defaultCulture;
