@@ -293,7 +293,7 @@
         {
             //Given
             var context = CreateContextRequest("/");
-            var expectedCultureName = Thread.CurrentThread.CurrentCulture.Name;
+            var expectedCultureName = CultureInfo.CurrentCulture.Name;
 
             //When
             var culture = BuiltInCultureConventions.ThreadCulture(context, context.Environment.GetValue<GlobalizationConfiguration>());

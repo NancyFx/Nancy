@@ -153,11 +153,7 @@
         /// <returns>CultureInfo from CurrentThread</returns>
         public static CultureInfo ThreadCulture(NancyContext context, GlobalizationConfiguration configuration)
         {
-#if DOTNET5_4
             return CultureInfo.CurrentCulture;
-#else
-            return Thread.CurrentThread.CurrentCulture;
-#endif
         }
 
         /// <summary>

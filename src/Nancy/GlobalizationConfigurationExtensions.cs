@@ -18,7 +18,7 @@
         {
             environment.AddValue(new GlobalizationConfiguration(
                 supportedCultureNames: supportedCultureNames,
-                defaultCulture:defaultCulture));
+                defaultCulture: defaultCulture));
         }
     }
 }

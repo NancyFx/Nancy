@@ -31,6 +31,6 @@
         /// <summary>
         /// The default culture for the application
         /// </summary>
-        public string DefaultCulture { get; set; }
+        public string DefaultCulture { get; private set; }
     }
 }
