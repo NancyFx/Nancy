@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
     using Nancy.Extensions;
 
     /// <summary>
@@ -14,6 +15,7 @@
     public static class NancyBootstrapperLocator
     {
         private static INancyBootstrapper instance;
+        private static readonly AssemblyName NancyAssemblyName = typeof(INancyEngine).GetTypeInfo().Assembly.GetName();
 
         /// <summary>
         /// Gets the located bootstrapper
@@ -41,9 +43,9 @@
 
         private static IReadOnlyCollection<Type> GetAvailableBootstrapperTypes()
         {
-            var assemblies = AppDomain.CurrentDomain
-                .GetAssemblies()
-                .Where(x => !x.IsDynamic && !x.ReflectionOnly);
+            var assemblies = GetNancyReferencingAssemblies()
+                .Where(x => !x.IsDynamic && !x.ReflectionOnly)
+                .ToArray();
 
             return assemblies
                 .SelectMany(x => x.SafeGetExportedTypes())
@@ -51,6 +53,55 @@
                 .Where(x => typeof(INancyBootstrapper).IsAssignableFrom(x))
                 .ToArray();
         }
+
+        private static IEnumerable<Assembly> GetNancyReferencingAssemblies()
+        {
+#if DNX
+            var libraryManager = Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.LibraryManager;
+
+            var results = new HashSet<Assembly>
+            {
+                typeof (INancyEngine).Assembly
+            };
+
+            var referencingLibraries = libraryManager.GetReferencingLibraries(NancyAssemblyName.Name);
+
+            foreach (var assemblyName in referencingLibraries.SelectMany(referencingLibrary => referencingLibrary.Assemblies))
+            {
+                try
+                {
+                    results.Add(Assembly.Load(assemblyName));
+                }
+                catch
+                {
+                }
+            }
+
+            return results.ToArray();
+#else
+            return AppDomain.CurrentDomain.GetAssemblies().Where(IsNancyReferencing);
+#endif
+        }
+
+#if !DNX
+        private static bool IsNancyReferencing(Assembly assembly)
+        {
+            if (AssemblyName.ReferenceMatchesDefinition(assembly.GetName(), NancyAssemblyName))
+            {
+                return true;
+            }
+
+            foreach (var referencedAssemblyName in assembly.GetReferencedAssemblies())
+            {
+                if (AssemblyName.ReferenceMatchesDefinition(referencedAssemblyName, NancyAssemblyName))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+#endif
 
         private static Type GetBootstrapperType()
         {
