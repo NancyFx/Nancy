@@ -86,6 +86,16 @@
 
                     output[name].Add(result);
                 }
+                
+                if (!result.MemberNames.Any() && !string.IsNullOrEmpty(result.ErrorMessage))
+                {
+                    if (!output.ContainsKey(string.Empty))
+                    {
+                        output.Add(string.Empty, new List<ModelValidationError>());
+                    }
+
+                    output[string.Empty].Add(result);
+                }
             }
 
             return output;
