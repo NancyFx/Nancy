@@ -13,7 +13,7 @@ namespace Nancy.Diagnostics
 
         public byte[] Salt { get; set; }
 
-        public DateTime Expiry { get; set; }
+        public DateTimeOffset Expiry { get; set; }
 
         public static byte[] GenerateRandomSalt()
         {

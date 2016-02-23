@@ -244,7 +244,7 @@ namespace Nancy.Diagnostics
             var decryptedValue = diagnosticsConfiguration.CryptographyConfiguration.EncryptionProvider.Decrypt(encryptedSession);
             var session = serializer.Deserialize(decryptedValue) as DiagnosticsSession;
 
-            if (session == null || session.Expiry < DateTime.Now || !SessionPasswordValid(session, diagnosticsConfiguration.Password))
+            if (session == null || session.Expiry < DateTimeOffset.Now || !SessionPasswordValid(session, diagnosticsConfiguration.Password))
             {
                 return null;
             }
