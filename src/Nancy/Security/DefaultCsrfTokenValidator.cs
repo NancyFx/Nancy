@@ -61,7 +61,7 @@ namespace Nancy.Security
             {
                 var expiryDate = tokenOne.CreatedDate.Add(validityPeriod.Value);
 
-                if (DateTime.Now > expiryDate)
+                if (DateTimeOffset.Now > expiryDate)
                 {
                     return CsrfTokenValidationResult.TokenExpired;
                 }

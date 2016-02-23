@@ -24,7 +24,7 @@
         /// <summary>
         /// Date and time the token was created
         /// </summary>
-        public DateTime CreatedDate { get; set; }
+        public DateTimeOffset CreatedDate { get; set; }
 
         /// <summary>
         /// Tamper prevention hmac

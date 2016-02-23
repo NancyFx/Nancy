@@ -19,7 +19,7 @@
         public static byte[] GetCsrfTokenBytes(this CsrfToken token)
         {
             return token.RandomBytes
-                        .Concat(BitConverter.GetBytes(token.CreatedDate.Ticks))
+                        .Concat(BitConverter.GetBytes(token.CreatedDate.UtcTicks))
                         .ToArray();
         }
 
