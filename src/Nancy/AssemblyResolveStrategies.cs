@@ -2,6 +2,7 @@ namespace Nancy
 {
     using System;
     using System.Linq;
+    using System.Reflection;
 
     /// <summary>
     /// Default <see cref="AssemblyResolveStrategy"/> implementations.
@@ -21,7 +22,7 @@ namespace Nancy
         /// </summary>
         public static readonly AssemblyResolveStrategy NancyReferencing = assembly =>
         {
-            if (assembly.Equals(typeof(INancyEngine).Assembly))
+            if (assembly.Equals(typeof(INancyEngine).GetTypeInfo().Assembly))
             {
                 return true;
             }

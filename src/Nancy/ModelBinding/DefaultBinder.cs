@@ -71,14 +71,14 @@ namespace Nancy.ModelBinding
             if (modelType.IsArray() || modelType.IsCollection() || modelType.IsEnumerable())
             {
                 //make sure it has a generic type
-                if (modelType.IsGenericType())
+                if (modelType.GetTypeInfo().IsGenericType)
                 {
                     genericType = modelType.GetGenericArguments().FirstOrDefault();
                 }
                 else
                 {
                     var ienumerable =
-                        modelType.GetInterfaces().Where(i => i.IsGenericType()).FirstOrDefault(
+                        modelType.GetInterfaces().Where(i => i.GetTypeInfo().IsGenericType).FirstOrDefault(
                             i => i.GetGenericTypeDefinition() == typeof(IEnumerable<>));
                     genericType = ienumerable == null ? null : ienumerable.GetGenericArguments().FirstOrDefault();
                 }
@@ -240,7 +240,7 @@ namespace Nancy.ModelBinding
         {
             var bodyDeserializedModelType = bodyDeserializedModel.GetType();
 
-            if (bodyDeserializedModelType.IsValueType)
+            if (bodyDeserializedModelType.GetTypeInfo().IsValueType)
             {
                 bindingContext.Model = bodyDeserializedModel;
                 return;
@@ -255,7 +255,7 @@ namespace Nancy.ModelBinding
                 {
                     var model = (IList)bindingContext.Model;
 
-                    if (o.GetType().IsValueType || o is string)
+                    if (o.GetType().GetTypeInfo().IsValueType || o is string)
                     {
                         HandleValueTypeCollectionElement(model, count, o);
                     }
@@ -327,7 +327,7 @@ namespace Nancy.ModelBinding
 
         private static bool IsDefaultValue(object existingValue, Type propertyType)
         {
-            return propertyType.IsValueType
+            return propertyType.GetTypeInfo().IsValueType
                 ? Equals(existingValue, Activator.CreateInstance(propertyType))
                 : existingValue == null;
         }

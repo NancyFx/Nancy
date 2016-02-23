@@ -3,6 +3,8 @@ namespace Nancy
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
+    using Nancy.Extensions;
     using Nancy.Responses.Negotiation;
 
     /// <summary>
@@ -53,7 +55,7 @@ namespace Nancy
             try
             {
                 return this.serializers
-                    .Where(x => x.GetType().Assembly.Equals(typeof(INancyEngine).Assembly))
+                    .Where(x => x.GetType().GetTypeInfo().Assembly.Equals(typeof(INancyEngine).GetAssembly()))
                     .SingleOrDefault(x => x.CanSerialize(mediaRange));
             }
             catch

@@ -4,7 +4,9 @@ namespace Nancy.Diagnostics
     using System.Security.Cryptography;
     using System.Text;
 
+#if !DOTNET5_4
     [Serializable]
+#endif
     public class DiagnosticsSession
     {
         public byte[] Hash { get; set; }
@@ -15,7 +17,7 @@ namespace Nancy.Diagnostics
 
         public static byte[] GenerateRandomSalt()
         {
-            var provider = new RNGCryptoServiceProvider();
+            var provider = RandomNumberGenerator.Create();
 
             var buffer = new byte[32];
             provider.GetBytes(buffer);
@@ -25,7 +27,7 @@ namespace Nancy.Diagnostics
 
         public static byte[] GenerateSaltedHash(byte[] plainText, byte[] salt)
         {
-            var algorithm = new SHA256Managed();
+            var algorithm = SHA256.Create();
 
             var plainTextWithSaltBytes = new byte[plainText.Length + salt.Length];
 

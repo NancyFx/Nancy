@@ -52,6 +52,7 @@
             this.StoreProviderTypes(providerTypes);
         }
 
+#if !DOTNET5_4
         /// <summary>
         /// Initializes a new instance of the <see cref="MultipleRootPathProvidersLocatedException"/> class.
         /// </summary>
@@ -60,6 +61,7 @@
         protected MultipleRootPathProvidersLocatedException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
+#endif
 
         /// <summary>
         /// Gets the provider types.

@@ -176,7 +176,7 @@ namespace Nancy.Json
             if (type.IsAssignableFrom(sourceType))
                 return obj;
 
-            if (type.IsEnum)
+            if (type.GetTypeInfo().IsEnum)
                 return ConvertToEnum(obj, type);
 
             TypeConverter c = TypeDescriptor.GetConverter(type);
@@ -194,7 +194,7 @@ namespace Nancy.Json
                 return DateTimeOffset.Parse((string)obj);
             }
 
-            if ((type.IsGenericType) && (type.GetGenericTypeDefinition() == typeof(Nullable<>)))
+            if ((type.GetTypeInfo().IsGenericType) && (type.GetGenericTypeDefinition() == typeof(Nullable<>)))
             {
                 /*
                  * Take care of the special case whereas in JSON an empty string ("") really means
@@ -210,7 +210,7 @@ namespace Nancy.Json
 
                 var underlyingType = type.GetGenericArguments()[0];
 
-                if (underlyingType.IsEnum)
+                if (underlyingType.GetTypeInfo().IsEnum)
                     return ConvertToEnum(obj, underlyingType);
 
                 return Convert.ChangeType(obj, underlyingType);
@@ -286,7 +286,7 @@ namespace Nancy.Json
                 list = (IList)Activator.CreateInstance(type, true);
             else if (ReflectionUtils.IsAssignable(type, typeofGenList))
             {
-                if (type.IsGenericType)
+                if (type.GetTypeInfo().IsGenericType)
                 {
                     Type[] genArgs = type.GetGenericArguments();
                     elementType = genArgs[0];
@@ -326,7 +326,7 @@ namespace Nancy.Json
             }
 
             var isDictionaryWithGuidKey = false;
-            if (type.IsGenericType)
+            if (type.GetTypeInfo().IsGenericType)
             {
                 var genericTypeDefinition = type.GetGenericTypeDefinition();
                 if (genericTypeDefinition.IsAssignableFrom(typeof(IDictionary<,>)) || genericTypeDefinition.GetInterfaces().Any(i => i == typeof(IDictionary)))
@@ -335,7 +335,7 @@ namespace Nancy.Json
                     if (arguments == null || arguments.Length != 2 || (arguments[0] != typeof(object) && arguments[0] != typeof(string) && arguments[0] != typeof(Guid)))
                         throw new InvalidOperationException(
                             "Type '" + type + "' is not supported for serialization/deserialization of a dictionary, keys must be strings, guids or objects.");
-                    if (type.IsAbstract)
+                    if (type.GetTypeInfo().IsAbstract)
                     {
                         Type dictType = typeof(Dictionary<,>);
                         type = dictType.MakeGenericType(arguments[0], arguments[1]);
@@ -395,9 +395,9 @@ namespace Nancy.Json
 
                 Type memberType = ReflectionUtils.GetMemberUnderlyingType(member);
 
-                if (memberType.IsInterface)
+                if (memberType.GetTypeInfo().IsInterface)
                 {
-                    if (memberType.IsGenericType)
+                    if (memberType.GetTypeInfo().IsGenericType)
                         memberType = ResolveGenericInterfaceToType(memberType);
                     else
                         memberType = ResolveInterfaceToType(memberType);

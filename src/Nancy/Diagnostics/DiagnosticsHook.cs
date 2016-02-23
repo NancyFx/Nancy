@@ -4,6 +4,7 @@ namespace Nancy.Diagnostics
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Reflection;
     using System.Threading;
     using Nancy.Bootstrapper;
     using Nancy.Configuration;
@@ -32,7 +33,7 @@ namespace Nancy.Diagnostics
         /// Enables the diagnostics dashboard and will intercept all requests that are passed to
         /// the condigured paths.
         /// </summary>
-        public static void Enable(IPipelines pipelines, IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration, IModelBinderLocator modelBinderLocator, IEnumerable<IResponseProcessor> responseProcessors, IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints, ICultureService cultureService, IRequestTraceFactory requestTraceFactory, IEnumerable<IRouteMetadataProvider> routeMetadataProviders, ITextResource textResource, INancyEnvironment environment, IRuntimeEnvironmentInformation runtimeEnvironmentInformation, ITypeCatalog typeCatalog)
+        public static void Enable(IPipelines pipelines, IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration, IModelBinderLocator modelBinderLocator, IEnumerable<IResponseProcessor> responseProcessors, IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints, ICultureService cultureService, IRequestTraceFactory requestTraceFactory, IEnumerable<IRouteMetadataProvider> routeMetadataProviders, ITextResource textResource, INancyEnvironment environment, IRuntimeEnvironmentInformation runtimeEnvironmentInformation, ITypeCatalog typeCatalog, IAssemblyCatalog assemblyCatalog)
         {
             var diagnosticsConfiguration =
                 environment.GetValue<DiagnosticsConfiguration>();
@@ -40,7 +41,7 @@ namespace Nancy.Diagnostics
             var diagnosticsEnvironment =
                 GetDiagnosticsEnvironment();
 
-            var diagnosticsModuleCatalog = new DiagnosticsModuleCatalog(providers, rootPathProvider, requestTracing, configuration, diagnosticsEnvironment, typeCatalog);
+            var diagnosticsModuleCatalog = new DiagnosticsModuleCatalog(providers, rootPathProvider, requestTracing, configuration, diagnosticsEnvironment, typeCatalog, assemblyCatalog);
 
             var diagnosticsRouteCache = new RouteCache(
                 diagnosticsModuleCatalog,
@@ -57,7 +58,7 @@ namespace Nancy.Diagnostics
                 new RouteResolverTrie(new TrieNodeFactory(routeSegmentConstraints)),
                 environment);
 
-            var serializer = new DefaultObjectSerializer();
+            var serializer = new DefaultObjectSerializer(assemblyCatalog);
 
             pipelines.BeforeRequest.AddItemToStartOfPipeline(
                 new PipelineItem<Func<NancyContext, Response>>(
@@ -90,7 +91,7 @@ namespace Nancy.Diagnostics
                             }
 
                             return new EmbeddedFileResponse(
-                                typeof(DiagnosticsHook).Assembly,
+                                typeof(DiagnosticsHook).GetTypeInfo().Assembly,
                                 resourceNamespace,
                                 Path.GetFileName(ctx.Request.Url.Path));
                         }

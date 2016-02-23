@@ -368,7 +368,15 @@ namespace Nancy.Json
 				throw new InvalidOperationException ("JSON syntax error.");
 
 			object ret = PopObject ();
-			return ret;
+
+            this.modes = new Stack<JsonMode>();
+            this.currentKey = new Stack<string>();
+            this.returnValue = new Stack<object>();
+            this.state = GO;
+            this.currentPosition = 0;
+            this.recursionDepth = 0;
+
+            return ret;
 		}
 
 #if DEBUG

@@ -61,7 +61,7 @@ namespace Nancy
             var libraryManager =
                 Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.LibraryManager;
 
-            var nancyLibraryName = typeof(INancyEngine).Assembly.GetName().Name;
+            var nancyLibraryName = typeof(INancyEngine).GetTypeInfo().Assembly.GetName().Name;
 
             var referencing = libraryManager.GetReferencingLibraries(nancyLibraryName);
             foreach (var library in referencing)

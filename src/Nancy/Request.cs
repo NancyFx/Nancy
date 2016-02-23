@@ -50,7 +50,7 @@ namespace Nancy
             RequestStream body = null,
             IDictionary<string, IEnumerable<string>> headers = null,
             string ip = null,
-            byte[] certificate = null,
+            X509Certificate certificate = null,
             string protocolVersion = null)
         {
             if (string.IsNullOrEmpty(method))
@@ -87,9 +87,9 @@ namespace Nancy
 
             this.Session = new NullSessionProvider();
 
-            if (certificate != null && certificate.Length != 0)
+            if (certificate != null)
             {
-                this.ClientCertificate = new X509Certificate2(certificate);
+                this.ClientCertificate = certificate;
             }
 
             this.ProtocolVersion = protocolVersion ?? string.Empty;

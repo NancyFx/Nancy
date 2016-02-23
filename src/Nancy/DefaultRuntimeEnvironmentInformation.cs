@@ -3,6 +3,7 @@ namespace Nancy
     using System;
     using System.Diagnostics;
     using System.Linq;
+    using System.Reflection;
 
     /// <summary>
     /// Default implementation of the <see cref="IRuntimeEnvironmentInformation"/> interface.
@@ -33,12 +34,7 @@ namespace Nancy
         {
             try
             {
-                var assembliesInDebug = typeCatalog
-                    .GetTypesAssignableTo<INancyModule>(TypeResolveStrategies.ExcludeNancy)
-                    .Select(x => x.Assembly.GetCustomAttributes(typeof(DebuggableAttribute), true))
-                    .Where(x => x.Length != 0);
-
-                return assembliesInDebug.Any(d => ((DebuggableAttribute)d[0]).IsJITTrackingEnabled);
+                return Debugger.IsAttached;
             }
             catch
             {

@@ -15,6 +15,7 @@ namespace Nancy.Testing.Tests
     using Nancy.Authentication.Forms;
     using System.Collections.ObjectModel;
     using System.Threading.Tasks;
+    using Nancy.Bootstrapper;
     using Nancy.Configuration;
     using Nancy.Tests.xUnitExtensions;
 
@@ -27,7 +28,7 @@ namespace Nancy.Testing.Tests
             var bootstrapper =
                 new ConfigurableBootstrapper(config => config.Modules(typeof(EchoModule)));
 
-            CookieBasedSessions.Enable(bootstrapper);
+            CookieBasedSessions.Enable(bootstrapper, A.Fake<IAssemblyCatalog>());
 
             this.browser = new Browser(bootstrapper);
         }

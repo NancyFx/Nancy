@@ -155,7 +155,7 @@
         {
             var method = GetMethodInfo(interactiveDiagnosticMethod);
 
-            var attribute = (TemplateAttribute)Attribute.GetCustomAttribute(method, typeof(TemplateAttribute));
+            var attribute = (TemplateAttribute)method.GetCustomAttribute(typeof(TemplateAttribute));
 
             return attribute != null ? attribute.Template : null;
         }
@@ -175,7 +175,7 @@
 
         private static string GetDescriptionFromAttribute(IDiagnosticsProvider diagnosticsProvider, MethodInfo methodInfo)
         {
-            var attribute = (DescriptionAttribute)Attribute.GetCustomAttribute(methodInfo, typeof(DescriptionAttribute));
+            var attribute = (DescriptionAttribute)methodInfo.GetCustomAttribute(typeof(DescriptionAttribute));
 
             return attribute != null ? attribute.Description : null;
         }

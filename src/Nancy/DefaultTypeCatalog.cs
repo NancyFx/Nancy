@@ -4,6 +4,7 @@
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
     using Nancy.Extensions;
 
     /// <summary>
@@ -41,7 +42,7 @@
                 .GetAssemblies(AssemblyResolveStrategies.NancyReferencing)
                 .SelectMany(assembly => assembly.SafeGetExportedTypes())
                 .Where(type.IsAssignableFrom)
-                .Where(t => !t.IsAbstract)
+                .Where(t => !t.GetTypeInfo().IsAbstract)
                 .ToArray();
         }
     }

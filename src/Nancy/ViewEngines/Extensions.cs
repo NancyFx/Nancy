@@ -1,6 +1,7 @@
 ﻿namespace Nancy.ViewEngines
 {
     using System;
+    using System.Linq;
     using System.Reflection;
     using System.Runtime.CompilerServices;
 
@@ -26,11 +27,11 @@
                 return false;
             }
 
-            return type.IsGenericType
-                   && (type.Attributes & TypeAttributes.NotPublic) == TypeAttributes.NotPublic
+            return type.GetTypeInfo().IsGenericType
+                   && (type.GetTypeInfo().Attributes & TypeAttributes.NotPublic) == TypeAttributes.NotPublic
                    && (type.Name.StartsWith("<>", StringComparison.OrdinalIgnoreCase) || type.Name.StartsWith("VB$", StringComparison.OrdinalIgnoreCase))
                    && (type.Name.Contains("AnonymousType") || type.Name.Contains("AnonType"))
-                   && Attribute.IsDefined(type, typeof(CompilerGeneratedAttribute), false);
+                   && type.GetTypeInfo().GetCustomAttributes(typeof(CompilerGeneratedAttribute)).Any();
         }
     }
 }

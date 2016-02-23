@@ -13,11 +13,13 @@
     public class InfoModule : DiagnosticModule
     {
         private readonly ITypeCatalog typeCatalog;
+        private readonly IAssemblyCatalog assemblyCatalog;
 
-        public InfoModule(IRootPathProvider rootPathProvider, NancyInternalConfiguration configuration, INancyEnvironment environment, ITypeCatalog typeCatalog)
+        public InfoModule(IRootPathProvider rootPathProvider, NancyInternalConfiguration configuration, INancyEnvironment environment, ITypeCatalog typeCatalog, IAssemblyCatalog assemblyCatalog)
             : base("/info")
         {
             this.typeCatalog = typeCatalog;
+            this.assemblyCatalog = assemblyCatalog;
 
             Get["/"] = async (_, __) =>
             {
@@ -31,7 +33,7 @@
 
 
                 data.Nancy = new ExpandoObject();
-                data.Nancy.Version = string.Format("v{0}", this.GetType().Assembly.GetName().Version.ToString());
+                data.Nancy.Version = string.Format("v{0}", this.GetType().GetTypeInfo().Assembly.GetName().Version.ToString());
                 data.Nancy.TracesDisabled = !environment.GetValue<TraceConfiguration>().DisplayErrorTraces;
                 data.Nancy.CaseSensitivity = StaticConfiguration.CaseSensitive ? "Sensitive" : "Insensitive";
                 data.Nancy.RootPath = rootPathProvider.GetRootPath();
@@ -64,9 +66,9 @@
                 .ToArray();
         }
 
-        private static string GetBootstrapperContainer()
+        private string GetBootstrapperContainer()
         {
-            var name = AppDomain.CurrentDomain
+            var name = this.assemblyCatalog
                 .GetAssemblies()
                 .Select(asm => asm.GetName())
                 .FirstOrDefault(asmName => asmName.Name != null && asmName.Name.StartsWith("Nancy.Bootstrappers."));
@@ -76,9 +78,9 @@
                 string.Format("{0} (v{1})", name.Name.Split('.').Last(), name.Version);
         }
 
-        private static string GetHosting()
+        private string GetHosting()
         {
-            var name = AppDomain.CurrentDomain
+            var name = this.assemblyCatalog
                 .GetAssemblies()
                 .Select(asm => asm.GetName())
                 .FirstOrDefault(asmName => asmName.Name != null && asmName.Name.StartsWith("Nancy.Hosting."));

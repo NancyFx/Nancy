@@ -3,11 +3,11 @@ namespace Nancy.Cryptography
     using System.Security.Cryptography;
 
     /// <summary>
-    /// Generates random secure keys using RNGCryptoServiceProvider
+    /// Generates random secure keys using RandomNumberGenerator
     /// </summary>
     public class RandomKeyGenerator : IKeyGenerator
     {
-        private readonly RNGCryptoServiceProvider provider = new RNGCryptoServiceProvider();
+        private readonly RandomNumberGenerator provider = RandomNumberGenerator.Create();
 
         public byte[] GetBytes(int count)
         {

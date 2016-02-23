@@ -11,6 +11,8 @@
     /// </summary>
     public class RequestStream : Stream
     {
+        internal const int BufferSize = 4096;
+
         public static long DEFAULT_SWITCHOVER_THRESHOLD = 81920;
 
         private bool disableStreamSwitching;
@@ -89,7 +91,7 @@
         private Task MoveToWritableStream()
         {
             var sourceStream = this.stream;
-            this.stream = new MemoryStream(StreamExtensions.BufferSize);
+            this.stream = new MemoryStream(BufferSize);
 
             return sourceStream.CopyToAsync(this);
         }
@@ -168,6 +170,7 @@
             }
         }
 
+#if !DOTNET5_4
         /// <summary>
         /// Begins an asynchronous read operation.
         /// </summary>
@@ -195,6 +198,7 @@
         {
             return this.stream.BeginWrite(buffer, offset, count, callback, state);
         }
+#endif
 
         protected override void Dispose(bool disposing)
         {
@@ -211,7 +215,7 @@
 
             base.Dispose(disposing);
         }
-
+#if !DOTNET5_4
         /// <summary>
         /// Waits for the pending asynchronous read to complete.
         /// </summary>
@@ -234,6 +238,7 @@
 
             this.ShiftStreamToFileStreamIfNecessary();
         }
+#endif
 
         /// <summary>
         /// Clears all buffers for this stream and causes any buffered data to be written to the underlying device.
@@ -338,7 +343,11 @@
                 // in NancyWcfGenericService - webRequest.UriTemplateMatch
                 var old = this.stream;
                 this.MoveStreamContentsToFileStream();
+#if DOTNET5_4
+                old.Dispose();
+#else
                 old.Close();
+#endif
             }
         }
 
@@ -427,7 +436,11 @@
 
             if (this.stream.CanSeek && this.stream.Length == 0)
             {
+#if DOTNET5_4
+                this.stream.Dispose();
+#else
                 this.stream.Close();
+#endif
                 this.stream = targetStream;
                 return;
             }

@@ -31,6 +31,7 @@
 
 namespace Nancy.Helpers
 {
+    using Extensions;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -118,7 +119,8 @@ namespace Nancy.Helpers
 
         static char[] GetChars(MemoryStream b, Encoding e)
         {
-            return e.GetChars(b.GetBuffer(), 0, (int)b.Length);
+            var buffer = b.GetBufferSegment();
+            return e.GetChars(buffer.Array, buffer.Offset, buffer.Count);
         }
 
         static void WriteCharBytes(IList buf, char ch, Encoding e)
@@ -750,6 +752,6 @@ namespace Nancy.Helpers
             return new KeyValuePair<string, string>(key, value);
         }
 
-        #endregion // Methods
+#endregion // Methods
     }
 }
