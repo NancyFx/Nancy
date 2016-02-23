@@ -218,10 +218,10 @@
         /// </summary>
         public void Stop()
         {
-            if (this.listener.IsListening)
+            if (this.listener != null && this.listener.IsListening)
             {
                 this.stop = true;
-                listener.Stop();
+                this.listener.Stop();
             }
         }
 

@@ -248,6 +248,20 @@ namespace Nancy.Hosting.Self.Tests
             prefix.ShouldEqual("http://+:80/");
         }
 
+        [Fact]
+        public void Should_not_throw_when_disposed_without_starting()
+        {
+            // Given
+            var bootstrapperMock = A.Fake<INancyBootstrapper>();
+            var host = new NancyHost(new Uri("http://localhost/"), bootstrapperMock);
+
+            // When
+            host.Dispose();
+
+            // Then
+            A.CallTo(() => bootstrapperMock.Dispose()).MustHaveHappened();
+        }
+
         private class NancyHostWrapper : IDisposable
         {
             private readonly NancyHost host;
