@@ -15,22 +15,13 @@
     public class DiagnosticsHookFixture
     {
         private const string DiagsCookieName = "__ncd";
-
         private readonly CryptographyConfiguration cryptoConfig;
-
         private readonly IObjectSerializer objectSerializer;
 
         public DiagnosticsHookFixture()
         {
             this.cryptoConfig = CryptographyConfiguration.Default;
-            var fakeAssemblyCatalog = A.Fake<IAssemblyCatalog>();
-            A.CallTo(() => fakeAssemblyCatalog.GetAssemblies(AssemblyResolveStrategies.All))
-                .Returns(new[]
-                {
-                    typeof(DiagnosticsHookFixture).GetTypeInfo().Assembly,
-                    typeof(DiagnosticsSession).GetTypeInfo().Assembly
-                });
-            this.objectSerializer = new DefaultObjectSerializer(fakeAssemblyCatalog);
+            this.objectSerializer = new DefaultObjectSerializer();
         }
 
 #if DEBUG

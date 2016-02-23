@@ -58,7 +58,7 @@ namespace Nancy.Diagnostics
                 new RouteResolverTrie(new TrieNodeFactory(routeSegmentConstraints)),
                 environment);
 
-            var serializer = new DefaultObjectSerializer(assemblyCatalog);
+            var serializer = new DefaultObjectSerializer();
 
             pipelines.BeforeRequest.AddItemToStartOfPipeline(
                 new PipelineItem<Func<NancyContext, Response>>(

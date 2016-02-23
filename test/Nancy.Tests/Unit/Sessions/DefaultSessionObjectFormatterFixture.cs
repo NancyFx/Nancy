@@ -1,20 +1,15 @@
 namespace Nancy.Tests.Unit.Sessions
 {
     using System;
-    using System.Reflection;
-    using FakeItEasy;
     using Xunit;
 
     public class DefaultSessionObjectFormatterFixture
     {
-        private DefaultObjectSerializer serializer;
+        private readonly DefaultObjectSerializer serializer;
 
         public DefaultSessionObjectFormatterFixture()
         {
-            var fakeAssemblyCatalog = A.Fake<IAssemblyCatalog>();
-            A.CallTo(() => fakeAssemblyCatalog.GetAssemblies(AssemblyResolveStrategies.All))
-                .Returns(new[] { typeof(DefaultSessionObjectFormatterFixture).GetTypeInfo().Assembly });
-            this.serializer = new DefaultObjectSerializer(fakeAssemblyCatalog);
+            this.serializer = new DefaultObjectSerializer();
         }
 
         [Fact]
@@ -43,7 +38,7 @@ namespace Nancy.Tests.Unit.Sessions
         public void Should_return_empty_string_when_serializing_null()
         {
             object input = null;
-            
+
             var output = this.serializer.Serialize(input);
 
             output.ShouldEqual(string.Empty);
@@ -80,7 +75,7 @@ namespace Nancy.Tests.Unit.Sessions
 
             public Payload()
             {
-                
+
             }
 
             /// <summary>

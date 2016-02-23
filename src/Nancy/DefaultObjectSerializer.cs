@@ -3,28 +3,15 @@ namespace Nancy
     using Extensions;
     using System;
     using System.IO;
-    using System.Linq;
     using System.Reflection;
     using System.Runtime.Serialization;
     using System.Text;
-    using Nancy.Extensions;
 
     /// <summary>
     /// Serializes/Deserializes objects for sessions
     /// </summary>
     public class DefaultObjectSerializer : IObjectSerializer
     {
-        private readonly IAssemblyCatalog assemblyCatalog;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultObjectSerializer"/> class.
-        /// </summary>
-        /// <param name="assemblyCatalog"></param>
-        public DefaultObjectSerializer(IAssemblyCatalog assemblyCatalog)
-        {
-            this.assemblyCatalog = assemblyCatalog;
-        }
-
         /// <summary>
         /// Serialize an object
         /// </summary>
@@ -39,28 +26,18 @@ namespace Nancy
 
             dynamic serializedObject = (sourceObject is string)
                 ? sourceObject
-                : this.AddTypeInformation(sourceObject);
+                : AddTypeInformation(sourceObject);
 
             var json = SimpleJson.SerializeObject(serializedObject);
             return Convert.ToBase64String(Encoding.UTF8.GetBytes(json));
         }
 
-        private dynamic AddTypeInformation(object sourceObject)
+        private static dynamic AddTypeInformation(object sourceObject)
         {
-            var sourceType = this.assemblyCatalog.GetAssemblies().Select(assembly => assembly.GetType(sourceObject.GetType().FullName)).FirstOrDefault(type => type != null);
-            if (sourceType == null)
-            {
-                throw new SerializationException("Unable to find type " + sourceObject.GetType() + " in its assembly to serialize");
-            }
+            var assemblyQualifiedName = sourceObject.GetType().GetTypeInfo().AssemblyQualifiedName;
 
-            dynamic serializedObject = null;
-
-            var assemblyQualifiedName = sourceType.GetTypeInfo().AssemblyQualifiedName;
-            if (!string.IsNullOrWhiteSpace(assemblyQualifiedName))
-            {
-                serializedObject = sourceObject.ToDynamic();
-                serializedObject.TypeObject = assemblyQualifiedName;
-            }
+            dynamic serializedObject = sourceObject.ToDynamic();
+            serializedObject.TypeObject = assemblyQualifiedName;
 
             return serializedObject;
         }
@@ -82,13 +59,14 @@ namespace Nancy
                 var inputBytes = Convert.FromBase64String(sourceString);
                 var json = Encoding.UTF8.GetString(inputBytes);
 
-                if (ContainsTypeDescription(json))
+                if (!ContainsTypeDescription(json))
                 {
-                    dynamic serializedObject = SimpleJson.DeserializeObject(json);
-                    var actual = SimpleJson.DeserializeObject(json, Type.GetType(serializedObject.TypeObject));
-                    return actual;
+                    return SimpleJson.DeserializeObject(json);
                 }
-                return SimpleJson.DeserializeObject(json);
+
+                dynamic serializedObject = SimpleJson.DeserializeObject(json);
+
+                return SimpleJson.DeserializeObject(json, Type.GetType(serializedObject.TypeObject));
             }
             catch (FormatException)
             {

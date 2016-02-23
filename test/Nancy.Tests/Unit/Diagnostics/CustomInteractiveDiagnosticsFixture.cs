@@ -3,9 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
     using System.Threading.Tasks;
-    using FakeItEasy;
     using Nancy.Bootstrapper;
     using Nancy.Configuration;
     using Nancy.Cryptography;
@@ -28,14 +26,7 @@
         public CustomInteractiveDiagnosticsHookFixture()
         {
             this.cryptoConfig = CryptographyConfiguration.Default;
-            var fakeAssemblyCatalog = A.Fake<IAssemblyCatalog>();
-            A.CallTo(() => fakeAssemblyCatalog.GetAssemblies(AssemblyResolveStrategies.All))
-                .Returns(new[]
-                {
-                    typeof(CustomInteractiveDiagnosticsHookFixture).GetTypeInfo().Assembly,
-                    typeof(DiagnosticsSession).GetTypeInfo().Assembly
-                });
-            this.objectSerializer = new DefaultObjectSerializer(fakeAssemblyCatalog);
+            this.objectSerializer = new DefaultObjectSerializer();
         }
 
         private class FakeDiagnostics : IDiagnostics

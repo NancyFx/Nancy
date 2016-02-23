@@ -2,14 +2,10 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
     using System.Threading;
-
     using FakeItEasy;
-
     using Nancy.Bootstrapper;
     using Nancy.Cryptography;
-    using Nancy.Helpers;
     using Nancy.Security;
     using Nancy.Tests.Fakes;
 
@@ -18,27 +14,18 @@
     public class CsrfFixture
     {
         private readonly IPipelines pipelines;
-
         private readonly Request request;
-
         private readonly FakeRequest optionsRequest;
-
         private readonly Response response;
-
         private readonly CryptographyConfiguration cryptographyConfiguration;
-
         private readonly DefaultObjectSerializer objectSerializer;
-
 
         public CsrfFixture()
         {
             this.pipelines = new MockPipelines();
 
             this.cryptographyConfiguration = CryptographyConfiguration.Default;
-            var fakeAssemblyCatalog = A.Fake<IAssemblyCatalog>();
-            A.CallTo(() => fakeAssemblyCatalog.GetAssemblies(AssemblyResolveStrategies.All))
-                .Returns(new[] { typeof(CsrfFixture).GetTypeInfo().Assembly, typeof(CsrfToken).GetTypeInfo().Assembly });
-            this.objectSerializer = new DefaultObjectSerializer(fakeAssemblyCatalog);
+            this.objectSerializer = new DefaultObjectSerializer();
             var csrfStartup = new CsrfApplicationStartup(
                 this.cryptographyConfiguration,
                 this.objectSerializer,

@@ -23,10 +23,7 @@ namespace Nancy.Session
         /// <value>Cookie name</value>
         public string CookieName
         {
-            get
-            {
-                return this.currentConfiguration.CookieName;
-            }
+            get { return this.currentConfiguration.CookieName; }
         }
 
         /// <summary>
@@ -62,8 +59,6 @@ namespace Nancy.Session
             this.currentConfiguration = configuration;
         }
 
-
-
         /// <summary>
         /// Initialise and add cookie based session hooks to the application pipeline
         /// </summary>
@@ -90,13 +85,12 @@ namespace Nancy.Session
         /// </summary>
         /// <param name="pipelines">Application pipelines</param>
         /// <param name="cryptographyConfiguration">Cryptography configuration</param>
-        /// <param name="assemblyCatalog">Assembly catalog</param>
         /// <returns>Formatter selector for choosing a non-default serializer</returns>
-        public static IObjectSerializerSelector Enable(IPipelines pipelines, CryptographyConfiguration cryptographyConfiguration, IAssemblyCatalog assemblyCatalog)
+        public static IObjectSerializerSelector Enable(IPipelines pipelines, CryptographyConfiguration cryptographyConfiguration)
         {
             var cookieBasedSessionsConfiguration = new CookieBasedSessionsConfiguration(cryptographyConfiguration)
             {
-                Serializer = new DefaultObjectSerializer(assemblyCatalog)
+                Serializer = new DefaultObjectSerializer()
             };
             return Enable(pipelines, cookieBasedSessionsConfiguration);
         }
@@ -105,13 +99,12 @@ namespace Nancy.Session
         /// Initialise and add cookie based session hooks to the application pipeline with the default encryption provider.
         /// </summary>
         /// <param name="pipelines">Application pipelines</param>
-        /// <param name="assemblyCatalog">Assembly catalog</param>
         /// <returns>Formatter selector for choosing a non-default serializer</returns>
-        public static IObjectSerializerSelector Enable(IPipelines pipelines, IAssemblyCatalog assemblyCatalog)
+        public static IObjectSerializerSelector Enable(IPipelines pipelines)
         {
             return Enable(pipelines, new CookieBasedSessionsConfiguration
             {
-                Serializer = new DefaultObjectSerializer(assemblyCatalog)
+                Serializer = new DefaultObjectSerializer()
             });
         }
 

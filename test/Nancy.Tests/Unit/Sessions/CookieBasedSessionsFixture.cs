@@ -26,14 +26,9 @@ namespace Nancy.Tests.Unit.Sessions
         private readonly CookieBasedSessions cookieStore;
         private readonly IHmacProvider fakeHmacProvider;
         private readonly IObjectSerializer fakeObjectSerializer;
-
-        private AesEncryptionProvider aesEncryptionProvider;
-
-        private DefaultHmacProvider defaultHmacProvider;
-
-        private IObjectSerializer defaultObjectSerializer;
-
-        private IAssemblyCatalog assemblyCatalog;
+        private readonly AesEncryptionProvider aesEncryptionProvider;
+        private readonly DefaultHmacProvider defaultHmacProvider;
+        private readonly IObjectSerializer defaultObjectSerializer;
 
         public CookieBasedSessionsFixture()
         {
@@ -44,10 +39,7 @@ namespace Nancy.Tests.Unit.Sessions
 
             this.aesEncryptionProvider = new AesEncryptionProvider(new PassphraseKeyGenerator("password", new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 }, 1000));
             this.defaultHmacProvider = new DefaultHmacProvider(new PassphraseKeyGenerator("anotherpassword", new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 }, 1000));
-            this.assemblyCatalog = A.Fake<IAssemblyCatalog>();
-            A.CallTo(() => this.assemblyCatalog.GetAssemblies(AssemblyResolveStrategies.All))
-                .Returns(new[] { typeof(CookieBasedSessionsFixture).GetTypeInfo().Assembly });
-            this.defaultObjectSerializer = new DefaultObjectSerializer(this.assemblyCatalog);
+            this.defaultObjectSerializer = new DefaultObjectSerializer();
         }
 
         [Fact]
@@ -56,7 +48,7 @@ namespace Nancy.Tests.Unit.Sessions
             var response = new Response();
 
             cookieStore.Save(null, response);
-            
+
             response.Cookies.Count.ShouldEqual(0);
         }
 
@@ -76,7 +68,7 @@ namespace Nancy.Tests.Unit.Sessions
             var response = new Response();
             var session = new Session(new Dictionary<string, object>
                                       {
-                                          {"key1", "val1"},                                          
+                                          {"key1", "val1"},
                                       });
             session["key2"] = "val2";
             A.CallTo(() => this.fakeEncryptionProvider.Encrypt("key1=val1;key2=val2;")).Returns("encrypted=key1=val1;key2=val2;");
@@ -124,7 +116,7 @@ namespace Nancy.Tests.Unit.Sessions
             var request = CreateRequest(null);
 
             var result = cookieStore.Load(request);
-            
+
             result.Count.ShouldEqual(0);
         }
 
@@ -191,7 +183,7 @@ namespace Nancy.Tests.Unit.Sessions
             A.CallTo(() => hooks.BeforeRequest).Returns(beforePipeline);
             A.CallTo(() => hooks.AfterRequest).Returns(afterPipeline);
 
-            CookieBasedSessions.Enable(hooks, new CryptographyConfiguration(this.fakeEncryptionProvider, this.fakeHmacProvider), this.assemblyCatalog);
+            CookieBasedSessions.Enable(hooks, new CryptographyConfiguration(this.fakeEncryptionProvider, this.fakeHmacProvider));
 
             beforePipeline.PipelineDelegates.Count().ShouldEqual(1);
             afterPipeline.PipelineItems.Count().ShouldEqual(1);
@@ -205,7 +197,7 @@ namespace Nancy.Tests.Unit.Sessions
             var hooks = A.Fake<IPipelines>();
             A.CallTo(() => hooks.BeforeRequest).Returns(beforePipeline);
             A.CallTo(() => hooks.AfterRequest).Returns(afterPipeline);
-            CookieBasedSessions.Enable(hooks, new CryptographyConfiguration(this.fakeEncryptionProvider, this.fakeHmacProvider), this.assemblyCatalog).WithSerializer(this.fakeObjectSerializer);
+            CookieBasedSessions.Enable(hooks, new CryptographyConfiguration(this.fakeEncryptionProvider, this.fakeHmacProvider)).WithSerializer(this.fakeObjectSerializer);
             var request = CreateRequest("encryptedkey1=value1");
             A.CallTo(() => this.fakeEncryptionProvider.Decrypt("encryptedkey1=value1")).Returns("key1=value1;");
             var response = A.Fake<Response>();
@@ -225,7 +217,7 @@ namespace Nancy.Tests.Unit.Sessions
             var hooks = A.Fake<IPipelines>();
             A.CallTo(() => hooks.BeforeRequest).Returns(beforePipeline);
             A.CallTo(() => hooks.AfterRequest).Returns(afterPipeline);
-            CookieBasedSessions.Enable(hooks, new CryptographyConfiguration(this.fakeEncryptionProvider, this.fakeHmacProvider), this.assemblyCatalog).WithSerializer(this.fakeObjectSerializer);
+            CookieBasedSessions.Enable(hooks, new CryptographyConfiguration(this.fakeEncryptionProvider, this.fakeHmacProvider)).WithSerializer(this.fakeObjectSerializer);
             var request = CreateRequest("encryptedkey1=value1");
             A.CallTo(() => this.fakeEncryptionProvider.Decrypt("encryptedkey1=value1")).Returns("key1=value1;");
             var response = A.Fake<Response>();
@@ -275,7 +267,7 @@ namespace Nancy.Tests.Unit.Sessions
             A.CallTo(() => hooks.AfterRequest).Returns(afterPipeline);
             var fakeFormatter = A.Fake<IObjectSerializer>();
             A.CallTo(() => this.fakeEncryptionProvider.Decrypt("encryptedkey1=value1")).Returns("key1=value1;");
-            CookieBasedSessions.Enable(hooks, new CryptographyConfiguration(this.fakeEncryptionProvider, this.fakeHmacProvider), this.assemblyCatalog).WithSerializer(fakeFormatter);
+            CookieBasedSessions.Enable(hooks, new CryptographyConfiguration(this.fakeEncryptionProvider, this.fakeHmacProvider)).WithSerializer(fakeFormatter);
             var request = CreateRequest("encryptedkey1=value1");
             var nancyContext = new NancyContext() { Request = request };
 
@@ -325,7 +317,7 @@ namespace Nancy.Tests.Unit.Sessions
             var response = new Response();
             var session = new Session(new Dictionary<string, object>
                                       {
-                                          {"key1", "val1"},                                          
+                                          {"key1", "val1"},
                                       });
             session["key2"] = "val2";
 
@@ -341,7 +333,7 @@ namespace Nancy.Tests.Unit.Sessions
             var response = new Response();
             var session = new Session(new Dictionary<string, object>
                                       {
-                                          {"key1", "val1"},                                          
+                                          {"key1", "val1"},
                                       });
             session["key2"] = "val2";
 
