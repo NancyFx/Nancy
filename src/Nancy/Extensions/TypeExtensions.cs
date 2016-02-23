@@ -91,7 +91,14 @@
                 return false;
             }
 
-            switch (Type.GetTypeCode(source))
+            var underlyingType = Nullable.GetUnderlyingType(source) ?? source;
+
+            if (underlyingType.IsEnum)
+            {
+                return false;
+            }
+
+            switch (Type.GetTypeCode(underlyingType))
             {
                 case TypeCode.Byte:
                 case TypeCode.Decimal:
@@ -105,14 +112,9 @@
                 case TypeCode.UInt32:
                 case TypeCode.UInt64:
                     return true;
-                case TypeCode.Object:
-                    if (source.IsGenericType && source.GetGenericTypeDefinition() == typeof(Nullable<>))
-                    {
-                        return IsNumeric(Nullable.GetUnderlyingType(source));
-                    }
+                default:
                     return false;
             }
-            return false;
         }
 
         /// <summary>
