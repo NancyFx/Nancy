@@ -10,19 +10,6 @@
     public static class TypeExtensions
     {
         /// <summary>
-        /// Gets the path of the assembly that contains the provided type.
-        /// </summary>
-        /// <param name="source">The <see cref="Type"/> to look up the assembly path for.</param>
-        /// <returns>A string containing the path of the assembly that contains the type.</returns>
-        public static string GetAssemblyPath(this Type source)
-        {
-            var assemblyUri =
-                new Uri(source.Assembly.EscapedCodeBase);
-
-            return assemblyUri.LocalPath;
-        }
-
-        /// <summary>
         /// Checks if a type is an array or not
         /// </summary>
         /// <param name="source">The type to check.</param>
