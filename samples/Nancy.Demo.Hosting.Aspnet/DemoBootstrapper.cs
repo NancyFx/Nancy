@@ -30,6 +30,7 @@
         public override void Configure(INancyEnvironment environment)
         {
             environment.Diagnostics(
+                enabled: true,
                 password: "password",
                 path: "/_Nancy",
                 cookieName: "__custom_cookie",

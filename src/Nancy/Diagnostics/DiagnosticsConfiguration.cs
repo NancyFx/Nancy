@@ -12,6 +12,7 @@
         /// </summary>
         public static readonly DiagnosticsConfiguration Default = new DiagnosticsConfiguration
         {
+            Enabled = false,
             CookieName = "__ncd",
             CryptographyConfiguration = CryptographyConfiguration.Default,
             Password = null,
@@ -26,16 +27,18 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="DiagnosticsConfiguration"/> class
         /// </summary>
+        /// <param name="enabled"></param>
         /// <param name="password">Password used to secure the dashboard.</param>
         /// <param name="path">Relative path of the dashboard.</param>
         /// <param name="cookieName">Name of the cookie to store diagnostics information.</param>
         /// <param name="slidingTimeout">Number of minutes that expiry of the diagnostics dashboard.</param>
         /// <param name="cryptographyConfiguration">Cryptography config to use for securing the dashboard.</param>
-        public DiagnosticsConfiguration(string password, string path, string cookieName, int slidingTimeout, CryptographyConfiguration cryptographyConfiguration)
+        public DiagnosticsConfiguration(bool enabled, string password, string path, string cookieName, int slidingTimeout, CryptographyConfiguration cryptographyConfiguration)
         {
             this.Password = password ?? Default.Password;
             this.Path = GetNormalizedPath(path ?? Default.Path);
             this.CookieName = cookieName ?? Default.CookieName;
+            this.Enabled = enabled;
             this.SlidingTimeout = slidingTimeout;
             this.CryptographyConfiguration = cryptographyConfiguration ?? Default.CryptographyConfiguration;
         }
@@ -47,19 +50,24 @@
         public string CookieName { get; private set; }
 
         /// <summary>
-        /// Gets or sets the cryptography config to use for securing the diagnostics dashboard
+        /// Gets the cryptography config to use for securing the diagnostics dashboard
         /// </summary>
         /// <remarks>The default is <see cref="CryptographyConfiguration.Default"/></remarks>
         public CryptographyConfiguration CryptographyConfiguration { get; private set; }
 
         /// <summary>
-        /// Gets or sets password for accessing the diagnostics screen.
+        /// Gets a value indicating if diagnostics is enabled or not.
+        /// </summary>
+        public bool Enabled { get; private set; }
+
+        /// <summary>
+        /// Gets password for accessing the diagnostics screen.
         /// </summary>
         /// <remarks>The default value is <see langword="null" />.</remarks>
         public string Password { get; private set; }
 
         /// <summary>
-        /// Gets or sets the path that the diagnostics dashboard will be accessible on.
+        /// Gets the path that the diagnostics dashboard will be accessible on.
         /// </summary>
         /// <remarks>The default is /_Nancy.</remarks>
         public string Path { get; private set; }

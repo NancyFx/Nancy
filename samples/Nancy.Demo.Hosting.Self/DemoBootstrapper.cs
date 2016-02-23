@@ -8,8 +8,8 @@
         public override void Configure(Nancy.Configuration.INancyEnvironment environment)
         {
             environment.Diagnostics(
+                enabled: true,
                 password: "password");
         }
     }
 }
-

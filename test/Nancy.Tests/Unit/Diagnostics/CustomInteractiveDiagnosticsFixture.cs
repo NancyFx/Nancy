@@ -43,7 +43,6 @@
             private readonly IEnumerable<IRouteMetadataProvider> routeMetadataProviders;
             private readonly ITextResource textResource;
             private readonly INancyEnvironment environment;
-            private readonly IRuntimeEnvironmentInformation runtimeEnvironmentInformation;
             private readonly ITypeCatalog typeCatalog;
 
             public FakeDiagnostics(
@@ -58,7 +57,6 @@
                 IEnumerable<IRouteMetadataProvider> routeMetadataProviders,
                 ITextResource textResource,
                 INancyEnvironment environment,
-                IRuntimeEnvironmentInformation runtimeEnvironmentInformation,
                 ITypeCatalog typeCatalog)
             {
                 this.diagnosticProviders = (new IDiagnosticsProvider[] { new FakeDiagnosticsProvider() }).ToArray();
@@ -73,7 +71,6 @@
                 this.routeMetadataProviders = routeMetadataProviders;
                 this.textResource = textResource;
                 this.environment = environment;
-                this.runtimeEnvironmentInformation = runtimeEnvironmentInformation;
                 this.typeCatalog = typeCatalog;
             }
 
@@ -93,7 +90,6 @@
                     this.routeMetadataProviders,
                     this.textResource,
                     this.environment,
-                    this.runtimeEnvironmentInformation,
                     this.typeCatalog);
             }
         }
@@ -125,6 +121,7 @@
                 with.Configure(env =>
                 {
                     env.Diagnostics(
+                        enabled: true,
                         password: "password",
                         cryptographyConfiguration: this.cryptoConfig);
                 });

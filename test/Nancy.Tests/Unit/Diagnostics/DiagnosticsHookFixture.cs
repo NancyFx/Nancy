@@ -34,6 +34,7 @@
                 with.Configure(env =>
                 {
                     env.Diagnostics(
+                        enabled: true,
                         password: null,
                         cryptographyConfiguration: this.cryptoConfig);
                 });
@@ -60,6 +61,7 @@
                 with.Configure(env =>
                 {
                     env.Diagnostics(
+                        enabled: true,
                         password: string.Empty,
                         cryptographyConfiguration: this.cryptoConfig);
                 });
@@ -87,6 +89,7 @@
                 with.Configure(env =>
                 {
                     env.Diagnostics(
+                        enabled: true,
                         password: "password",
                         cryptographyConfiguration: this.cryptoConfig);
                 });
@@ -113,6 +116,7 @@
                 with.Configure(env =>
                 {
                     env.Diagnostics(
+                        enabled: true,
                         password: "password",
                         cryptographyConfiguration: this.cryptoConfig);
                 });
@@ -142,6 +146,7 @@
                 with.Configure(env =>
                 {
                     env.Diagnostics(
+                        enabled: true,
                         password: "password",
                         cryptographyConfiguration: this.cryptoConfig);
                 });
@@ -171,6 +176,7 @@
                 with.Configure(env =>
                 {
                     env.Diagnostics(
+                        enabled: true,
                         password: "password",
                         cryptographyConfiguration: this.cryptoConfig);
                 });
@@ -200,6 +206,7 @@
                 with.Configure(env =>
                 {
                     env.Diagnostics(
+                        enabled: true,
                         password: "password",
                         cryptographyConfiguration: this.cryptoConfig);
                 });
@@ -230,6 +237,7 @@
                 with.Configure(env =>
                 {
                     env.Diagnostics(
+                        enabled: true,
                         password: "password",
                         cryptographyConfiguration: this.cryptoConfig);
                 });
@@ -260,6 +268,7 @@
                 with.Configure(env =>
                 {
                     env.Diagnostics(
+                        enabled: true,
                         password: "password",
                         cryptographyConfiguration: this.cryptoConfig);
                 });
@@ -292,6 +301,7 @@
                 with.Configure(env =>
                 {
                     env.Diagnostics(
+                        enabled: true,
                         password: "password",
                         cryptographyConfiguration: this.cryptoConfig);
                 });
