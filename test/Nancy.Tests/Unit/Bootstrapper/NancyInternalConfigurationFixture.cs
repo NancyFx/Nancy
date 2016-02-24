@@ -12,7 +12,15 @@ namespace Nancy.Tests.Unit.Bootstrapper
 
         public NancyInternalConfigurationFixture()
         {
-            this.typeCatalog = new DefaultTypeCatalog(new AppDomainAssemblyCatalog());
+            IAssemblyCatalog assemblyCatalog;
+
+#if !DNX
+            assemblyCatalog = new AppDomainAssemblyCatalog();
+#else
+            assemblyCatalog = new LibraryManagerAssemblyCatalog();
+#endif
+
+            this.typeCatalog = new DefaultTypeCatalog(assemblyCatalog);
         }
 
         [Fact]
