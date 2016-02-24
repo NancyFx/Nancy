@@ -80,7 +80,7 @@ namespace Nancy.ViewEngines.Razor
 
             foreach (var assemblyDefinition in this.defaultAssemblyDefinitions)
             {
-                var assembly = AppDomain.CurrentDomain.GetAssemblies().SingleOrDefault(x => x.GetName().Name.Equals(assemblyDefinition));
+                var assembly = AppDomain.CurrentDomain.GetAssemblies().SingleOrDefault(x => x.GetName().Name.Equals(assemblyDefinition, StringComparison.OrdinalIgnoreCase));
 
                 if (assembly != null)
                 {
