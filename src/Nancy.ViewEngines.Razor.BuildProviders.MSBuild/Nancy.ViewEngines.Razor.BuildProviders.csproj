@@ -108,9 +108,6 @@
     <Compile Include="..\Nancy.ViewEngines.Razor.BuildProviders\NancyCSharpRazorBuildProvider.cs">
       <Link>NancyCSharpRazorBuildProvider.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy.ViewEngines.Razor.BuildProviders\NancyVisualBasicRazorBuildProvider.cs">
-      <Link>NancyVisualBasicRazorBuildProvider.cs</Link>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy.ViewEngines.Razor.MSBuild\Nancy.ViewEngines.Razor.csproj">

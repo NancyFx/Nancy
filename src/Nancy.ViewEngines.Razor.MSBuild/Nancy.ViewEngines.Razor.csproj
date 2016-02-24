@@ -186,6 +186,9 @@
     <Compile Include="..\Nancy.ViewEngines.Razor\NonEncodedHtmlString.cs">
       <Link>NonEncodedHtmlString.cs</Link>
     </Compile>
+    <Compile Include="..\Nancy.ViewEngines.Razor\RazorAssemblyProvider.cs">
+      <Link>RazorAssemblyProvider.cs</Link>
+    </Compile>
     <Compile Include="..\Nancy.ViewEngines.Razor\RazorConfigurationSection.cs">
       <Link>RazorConfigurationSection.cs</Link>
     </Compile>

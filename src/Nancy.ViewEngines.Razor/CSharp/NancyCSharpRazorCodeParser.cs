@@ -11,7 +11,7 @@
     /// </summary>
     public class NancyCSharpRazorCodeParser : CSharpCodeParser
     {
-        private readonly IAssemblyCatalog assemblyCatalog;
+        private readonly RazorAssemblyProvider razorAssemblyProvider;
         private bool modelStatementFound;
         private SourceLocation? endInheritsLocation;
         private readonly ClrTypeResolver<CSharpSymbolType, CSharpSymbol> clrTypeResolver;
@@ -19,13 +19,13 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyCSharpRazorCodeParser"/> class.
         /// </summary>
-        /// <param name="assemblyCatalog">An <see cref="IAssemblyCatalog"/> instance.</param>
-        public NancyCSharpRazorCodeParser(IAssemblyCatalog assemblyCatalog)
+        /// <param name="razorAssemblyProvider">An <see cref="RazorAssemblyProvider"/> instance.</param>
+        public NancyCSharpRazorCodeParser(RazorAssemblyProvider razorAssemblyProvider)
         {
-            this.assemblyCatalog = assemblyCatalog;
+            this.razorAssemblyProvider = razorAssemblyProvider;
             this.MapDirectives(this.ModelDirective, "model");
 
-            this.clrTypeResolver = new CSharpClrTypeResolver(assemblyCatalog);
+            this.clrTypeResolver = new CSharpClrTypeResolver(this.razorAssemblyProvider);
         }
 
         protected virtual void ModelDirective()
@@ -43,7 +43,7 @@
 
                 if (modelType == null)
                 {
-                    CodeParserHelper.ThrowTypeNotFound(this.assemblyCatalog, s);
+                    CodeParserHelper.ThrowTypeNotFound(this.razorAssemblyProvider, s);
                 }
 
                 return new ModelCodeGenerator(modelType, modelType.FullName);

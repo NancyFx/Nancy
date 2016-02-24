@@ -23,9 +23,9 @@
     public class RazorViewEngine : IViewEngine, IDisposable
     {
         private readonly IRazorConfiguration razorConfiguration;
-        private readonly IAssemblyCatalog assemblyCatalog;
         private readonly IRazorViewRenderer viewRenderer;
         private readonly TraceConfiguration traceConfiguration;
+        private readonly RazorAssemblyProvider razorAssemblyProvider;
 
         /// <summary>
         /// Gets the extensions file extensions that are supported by the view engine.
@@ -45,9 +45,9 @@
         /// <param name="assemblyCatalog">An <see cref="IAssemblyCatalog"/> instance.</param>
         public RazorViewEngine(IRazorConfiguration configuration, INancyEnvironment environment, IAssemblyCatalog assemblyCatalog)
         {
-            this.viewRenderer = new CSharpRazorViewRenderer(assemblyCatalog);
+            this.razorAssemblyProvider = new RazorAssemblyProvider(configuration, assemblyCatalog);
+            this.viewRenderer = new CSharpRazorViewRenderer(this.razorAssemblyProvider);
             this.razorConfiguration = configuration;
-            this.assemblyCatalog = assemblyCatalog;
             this.traceConfiguration = environment.GetValue<TraceConfiguration>();
             this.AddDefaultNameSpaces(this.viewRenderer.Host);
         }
@@ -216,7 +216,7 @@
                 renderer.Provider.GenerateCodeFromCompileUnit(generatorResults.GeneratedCode, writer, new CodeGeneratorOptions());
                 sourceCode = writer.ToString();
             }
-            
+
             var compilation = CSharpCompilation.Create(
                 assemblyName: string.Format("Temp_{0}.dll", Guid.NewGuid().ToString("N")),
                 syntaxTrees: new[] { CSharpSyntaxTree.ParseText(sourceCode) },
@@ -268,7 +268,7 @@
             {
                 var references  = new List<MetadataReference>();
 
-                var assemblyCatalogReferences = this.assemblyCatalog.GetAssemblies()
+                var assemblyCatalogReferences = this.razorAssemblyProvider.GetAssemblies()
                     .Where(x => !string.IsNullOrEmpty(x.Location))
                     .Select(x => MetadataReference.CreateFromFile(x.Location))
                     .ToList();
@@ -279,8 +279,10 @@
                 var libraryExporter =
                     Microsoft.Dnx.Compilation.CompilationServices.Default.LibraryExporter;
 
-                var services = 
+                var services =
                     Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default;
+
+                var q = libraryExporter.GetAllExports(services.Application.ApplicationName).MetadataReferences;
 
                 var projectReferences = libraryExporter.GetAllExports(services.Application.ApplicationName).MetadataReferences
                     .Where(x => x is Microsoft.Dnx.Compilation.IMetadataProjectReference)
@@ -324,7 +326,7 @@
 
         private static string BuildErrorMessages(IEnumerable<Diagnostic> errors, IList<string> templateLines, IReadOnlyList<string> compilationSource)
         {
-            return errors.Select(error =>
+            var messages = errors.Select(error =>
             {
                 var lineIndex = error.Location.GetLineSpan().StartLinePosition.Line - 1;
                 var lineNumber = GetLineNumber(lineIndex, compilationSource);
@@ -343,7 +345,11 @@
 
                 return null;
 
-            }).Where(x => x != null).Aggregate((s1, s2) => s1 + "<br/>" + s2);
+            }).Where(x => x != null).ToArray();
+
+            return (messages.Any())
+                ? messages.Aggregate((s1, s2) => s1 + "<br/>" + s2)
+                : string.Empty;
         }
 
         private static string[] GetViewBodyLines(ViewLocationResult viewLocationResult)

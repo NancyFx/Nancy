@@ -17,7 +17,7 @@
     internal abstract class ClrTypeResolver<TSymbolType, TSymbol>
         where TSymbol : SymbolBase<TSymbolType>
     {
-        private readonly IAssemblyCatalog assemblyCatalog;
+        private readonly RazorAssemblyProvider razorAssemblyProvider;
 
         private readonly TSymbolType identifier;
         private readonly TSymbolType keyword;
@@ -35,16 +35,16 @@
         /// Initializes new instance of ClrTypeResolver class.
         /// Provided parameters are used to recognized specific symbols in particular language
         /// </summary>
-        /// <param name="assemblyCatalog">An <see cref="IAssemblyCatalog"/> used to resolve model types from the available assemblies.</param>
+        /// <param name="razorAssemblyProvider">An <see cref="RazorAssemblyProvider"/> used to resolve model types from the available assemblies.</param>
         /// <param name="identifier">Symbol type for identifier</param>
         /// <param name="keyword">Symbol type for keyword</param>
         /// <param name="dot">Symbol type for dot ('.')</param>
         /// <param name="whiteSpace">Symbol type for whitespace</param>
         /// <param name="arrayBegin">Type of symbol that begins array</param>
         /// <param name="arrayEnd">Type of symbol that ends array</param>
-        protected ClrTypeResolver(IAssemblyCatalog assemblyCatalog, TSymbolType identifier, TSymbolType keyword, TSymbolType dot, TSymbolType whiteSpace, TSymbolType arrayBegin, TSymbolType arrayEnd)
+        protected ClrTypeResolver(RazorAssemblyProvider razorAssemblyProvider, TSymbolType identifier, TSymbolType keyword, TSymbolType dot, TSymbolType whiteSpace, TSymbolType arrayBegin, TSymbolType arrayEnd)
         {
-            this.assemblyCatalog = assemblyCatalog;
+            this.razorAssemblyProvider = razorAssemblyProvider;
             this.identifier = identifier;
             this.keyword = keyword;
             this.dot = dot;
@@ -185,13 +185,13 @@
         private Type ResolveTypeByName(string typeName)
         {
             return Type.GetType(typeName)
-                   ?? ResolvePrimitiveType(typeName)
+                   ?? this.ResolvePrimitiveType(typeName)
                    ?? this.ResolveTypeFromAssemblyCatalog(typeName);
         }
 
         private Type ResolveTypeFromAssemblyCatalog(string typeName)
         {
-            return this.assemblyCatalog.GetAssemblies().Select(assembly => assembly.GetType(typeName)).FirstOrDefault(type => type != null);
+            return this.razorAssemblyProvider.GetAssemblies().Select(assembly => assembly.GetType(typeName)).FirstOrDefault(type => type != null);
         }
 
         [DebuggerDisplay("{GenericTypeName}`{GenericArguments.Count}")]
