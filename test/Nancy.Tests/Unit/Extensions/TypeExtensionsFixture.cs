@@ -18,6 +18,7 @@
             Assert.False(typeof(char).IsNumeric());
             Assert.False(typeof(DateTime).IsNumeric());
             Assert.False(typeof(string).IsNumeric());
+            Assert.False(typeof(HttpStatusCode).IsNumeric());
         }
 
         [Fact]
@@ -40,6 +41,7 @@
             Assert.False(typeof(ushort[]).IsNumeric());
             Assert.False(typeof(uint[]).IsNumeric());
             Assert.False(typeof(ulong[]).IsNumeric());
+            Assert.False(typeof(HttpStatusCode[]).IsNumeric());
         }
 
         [Fact]
@@ -64,6 +66,7 @@
             Assert.False(typeof(bool?).IsNumeric());
             Assert.False(typeof(char?).IsNumeric());
             Assert.False(typeof(DateTime?).IsNumeric());
+            Assert.False(typeof(HttpStatusCode?).IsNumeric());
         }
 
         [Fact]
@@ -117,7 +120,7 @@
 
             char? nullableChar = ' ';
             Assert.False(nullableChar.GetType().IsNumeric());
-            
+
             DateTime? nullableDateTime = new DateTime(2009, 1, 1);
             Assert.False(nullableDateTime.GetType().IsNumeric());
         }
