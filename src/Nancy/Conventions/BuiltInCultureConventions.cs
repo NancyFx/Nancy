@@ -124,6 +124,26 @@
 
             return null;
         }
+        /// <summary>
+        /// Checks to see if a default culture has been set on <see cref="GlobalizationConfiguration"/>
+        /// </summary>
+        /// <param name="context">NancyContext</param>
+        /// <param name="configuration">Culture configuration that contains allowed cultures</param>
+        /// <returns>CultureInfo if found in <see cref="GlobalizationConfiguration"/> Default Culture else null</returns>
+        public static CultureInfo GlobalizationConfigurationCulture(NancyContext context, GlobalizationConfiguration configuration)
+        {
+            if (configuration.DefaultCulture != null)
+            {
+                if (!IsValidCultureInfoName(configuration.DefaultCulture, configuration))
+                {
+                    return null;
+                }
+
+                return new CultureInfo(configuration.DefaultCulture);
+            }
+
+            return null;
+        }
 
         /// <summary>
         /// Uses the Thread.CurrentThread.CurrentCulture
@@ -133,7 +153,7 @@
         /// <returns>CultureInfo from CurrentThread</returns>
         public static CultureInfo ThreadCulture(NancyContext context, GlobalizationConfiguration configuration)
         {
-            return Thread.CurrentThread.CurrentCulture;
+            return CultureInfo.CurrentCulture;
         }
 
         /// <summary>

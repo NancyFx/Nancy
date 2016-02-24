@@ -1379,6 +1379,9 @@
     <Compile Include="..\Nancy\Extensions\ObjectExtensions.cs">
       <Link>Extensions\ObjectExtensions.cs</Link>
     </Compile>
+    <Compile Include="..\Nancy\Configuration\ConfigurationException.cs">
+      <Link>Configuration\ConfigurationException.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\Nancy\Diagnostics\Views\Dashboard.sshtml">
