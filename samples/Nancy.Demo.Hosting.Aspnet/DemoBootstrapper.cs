@@ -114,7 +114,7 @@
 
         public IEnumerable<Assembly> GetAssembliesToScan()
         {
-            return (this.filteredAssemblies ?? (this.filteredAssemblies = this.assemblyCatalog.GetAssemblies(AssemblyResolveStrategies.NancyReferencing)));
+            return (this.filteredAssemblies ?? (this.filteredAssemblies = this.assemblyCatalog.GetAssemblies()));
         }
     }
 }

@@ -46,7 +46,7 @@ namespace Nancy.ViewEngines.Razor
 
         private IReadOnlyCollection<Assembly> GetAllAssemblies()
         {
-            return this.assemblyCatalog.GetAssemblies(AssemblyResolveStrategies.NancyReferencing)
+            return this.assemblyCatalog.GetAssemblies()
                        .Union(this.LoadAssembliesInConfiguration())
                        .Union(this.GetDefaultAssemblies())
                        .ToArray();
