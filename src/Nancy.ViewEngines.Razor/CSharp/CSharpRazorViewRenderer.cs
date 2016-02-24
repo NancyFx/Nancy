@@ -4,10 +4,7 @@
     using System.CodeDom.Compiler;
     using System.Collections.Generic;
     using System.Web.Razor;
-    using Microsoft.CSharp;
     using Microsoft.CSharp.RuntimeBinder;
-
-    using Nancy.Extensions;
 
     /// <summary>
     /// Renderer for CSharp razor files.
@@ -50,7 +47,7 @@
         {
             this.Assemblies = new List<string>
             {
-                typeof(Binder).GetAssemblyPath()
+                typeof(Binder).Assembly.Location
             };
 
             this.ModelCodeGenerator = typeof(ModelCodeGenerator);
@@ -65,7 +62,6 @@
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
-        /// <filterpriority>2</filterpriority>
         public void Dispose()
         {
             if (this.Provider != null)
