@@ -35,7 +35,7 @@ namespace Nancy
             return this.assemblies.Value;
         }
 
-        public IReadOnlyCollection<Assembly> LoadAllNancyReferencingAssemblies()
+        private IReadOnlyCollection<Assembly> LoadAllNancyReferencingAssemblies()
         {
             var results = new HashSet<Assembly>
             {
