@@ -19,7 +19,7 @@ namespace Nancy
             this.assemblies = new Lazy<IReadOnlyCollection<Assembly>>(this.LoadAllNancyReferencingAssemblies);
         }
 
-        public IReadOnlyCollection<Assembly> GetAssemblies(AssemblyResolveStrategy strategy)
+        public IReadOnlyCollection<Assembly> GetAssemblies()
         {
             return this.assemblies.Value;
         }
