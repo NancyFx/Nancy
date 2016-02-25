@@ -1,7 +1,7 @@
 namespace Nancy.Demo.Authentication.Stateless
 {
-  using System;
-  using Nancy.Demo.Authentication.Stateless.Models;
+    using System;
+    using Nancy.Demo.Authentication.Stateless.Models;
     using Nancy.Security;
 
     public class SecureModule : LegacyNancyModule
