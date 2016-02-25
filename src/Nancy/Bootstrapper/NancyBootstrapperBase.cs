@@ -89,7 +89,15 @@
         /// <value>An <see cref="IAssemblyCatalog"/> instance.</value>
         protected virtual IAssemblyCatalog AssemblyCatalog
         {
-            get { return this.assemblyCatalog ?? (this.assemblyCatalog = new AppDomainAssemblyCatalog()); }
+            get {
+                return this.assemblyCatalog ?? (
+#if !DNX
+                    this.assemblyCatalog = new AppDomainAssemblyCatalog()
+#else
+                    this.assemblyCatalog = new LibraryManagerAssemblyCatalog()
+#endif
+                );
+            }
         }
 
         /// <summary>

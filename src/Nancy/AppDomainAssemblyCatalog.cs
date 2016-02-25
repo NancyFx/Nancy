@@ -1,3 +1,4 @@
+#if !DNX
 namespace Nancy
 {
     using System;
@@ -147,3 +148,4 @@ namespace Nancy
         }
     }
 }
+#endif

@@ -24,15 +24,22 @@
 
         public RazorViewEngineFixture()
         {
+            IAssemblyCatalog assemblyCatalog;
+
+#if !DNX
+            assemblyCatalog = new AppDomainAssemblyCatalog();
+#else
+            assemblyCatalog = new LibraryManagerAssemblyCatalog();
+#endif
+
             var environment = new DefaultNancyEnvironment();
             environment.Tracing(
                 enabled: true,
                 displayErrorTraces: true);
 
             this.configuration = A.Fake<IRazorConfiguration>();
+            this.engine = new RazorViewEngine(this.configuration, environment, assemblyCatalog);
             A.CallTo(() => this.configuration.GetAssemblyNames()).Returns(new[] { "Nancy.ViewEngines.Razor.Tests.Models" });
-
-            this.engine = new RazorViewEngine(this.configuration, environment, new AppDomainAssemblyCatalog());
 
             var cache = A.Fake<IViewCache>();
             A.CallTo(() => cache.GetOrAdd(A<ViewLocationResult>.Ignored, A<Func<ViewLocationResult, Func<INancyRazorView>>>.Ignored))
