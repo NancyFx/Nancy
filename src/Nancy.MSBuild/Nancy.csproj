@@ -371,6 +371,12 @@
     <Compile Include="..\Nancy\ITypeCatalog.cs">
       <Link>ITypeCatalog.cs</Link>
     </Compile>
+    <Compile Include="..\Nancy\Json\Simple\NancySerializationStrategy.cs">
+      <Link>Json\Simple\NancySerializationStrategy.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy\Json\Simple\SimpleJson.cs">
+      <Link>Json\Simple\SimpleJson.cs</Link>
+    </Compile>
     <Compile Include="..\Nancy\Properties\InternalsVisibleTo.cs">
       <Link>Properties\InternalsVisibleTo.cs</Link>
     </Compile>
@@ -1025,17 +1031,8 @@
     <Compile Include="..\Nancy\Json\JavaScriptSerializer.cs">
       <Link>Json\JavaScriptSerializer.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy\Json\JavaScriptTypeResolver.cs">
-      <Link>Json\JavaScriptTypeResolver.cs</Link>
-    </Compile>
     <Compile Include="..\Nancy\Json\Json.cs">
       <Link>Json\Json.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy\Json\JsonDeserializer.cs">
-      <Link>Json\JsonDeserializer.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy\Json\JsonSerializer.cs">
-      <Link>Json\JsonSerializer.cs</Link>
     </Compile>
     <Compile Include="..\Nancy\Helpers\ReflectionUtils.cs">
       <Link>Helpers\ReflectionUtils.cs</Link>
@@ -1363,7 +1360,7 @@
     <Compile Include="..\Nancy\DefaultGlobalizationConfigurationProvider.cs" />
     <Compile Include="..\Nancy\Configuration\ConfigurationException.cs">
       <Link>Configuration\ConfigurationException.cs</Link>
-    </Compile>  
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\Nancy\Diagnostics\Views\Dashboard.sshtml">
