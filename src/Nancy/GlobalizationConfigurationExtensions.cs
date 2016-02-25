@@ -13,10 +13,13 @@
         /// </summary>
         /// <param name="environment">An <see cref="INancyEnvironment"/> that should be configured.</param>
         /// <param name="supportedCultureNames">Cultures that the application can accept</param>
-        public static void Cultures(this INancyEnvironment environment, IEnumerable<string> supportedCultureNames)
+        /// <param name="defaultCulture">Used to set a default culture for the application</param>
+        /// <remarks>If defaultCulture not specified the first supported culture is used</remarks>
+        public static void Cultures(this INancyEnvironment environment, IEnumerable<string> supportedCultureNames, string defaultCulture = null)
         {
             environment.AddValue(new GlobalizationConfiguration(
-                supportedCultureNames: supportedCultureNames));
+                supportedCultureNames: supportedCultureNames,
+                defaultCulture: defaultCulture));
         }
     }
 }

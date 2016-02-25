@@ -4,6 +4,9 @@
     using System.Collections.Generic;
     using System.Globalization;
 
+    /// <summary>
+    /// Default implementation of <see cref="IConvention"/>
+    /// </summary>
     public class DefaultCultureConventions : IConvention
     {
         /// <summary>
@@ -44,7 +47,7 @@
                 BuiltInCultureConventions.HeaderCulture,
                 BuiltInCultureConventions.SessionCulture,
                 BuiltInCultureConventions.CookieCulture,
-                BuiltInCultureConventions.ThreadCulture
+                BuiltInCultureConventions.GlobalizationConfigurationCulture,
             };
         }
     }
