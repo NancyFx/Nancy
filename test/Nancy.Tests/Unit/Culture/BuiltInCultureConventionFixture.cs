@@ -289,20 +289,6 @@
         }
 
         [Fact]
-        public void Should_return_culture_from_current_thread()
-        {
-            //Given
-            var context = CreateContextRequest("/");
-            var expectedCultureName = CultureInfo.CurrentCulture.Name;
-
-            //When
-            var culture = BuiltInCultureConventions.ThreadCulture(context, context.Environment.GetValue<GlobalizationConfiguration>());
-
-            //Then
-            culture.Name.ShouldEqual(expectedCultureName);
-        }
-
-        [Fact]
         public void Should_return_culture_from_default_culture_on_globalization_configuration()
         {
             //Given
@@ -316,14 +302,14 @@
         }
 
         [Fact]
-        public void Should_return_first_culture_from_default_culture_on_globalization_configuration()
+        public void Should_return_first_supported_culture_for_default_culture_on_globalization_configuration()
         {
             //Given
             var context = CreateContextRequest("/");
 
             //When
             var environment = new DefaultNancyEnvironment();
-            environment.Cultures(GlobalizationConfiguration.Default.SupportedCultureNames, defaultCulture: null);
+            environment.Cultures(new[] { "en-US" }, defaultCulture: null);
             var culture = BuiltInCultureConventions.GlobalizationConfigurationCulture(context, environment.GetValue<GlobalizationConfiguration>());
 
             //Then
@@ -345,6 +331,39 @@
         }
 
         [Fact]
+        public void Should_throw_configuration_exception_if_empty_list_of_supported_culutres_passed_to_globalization_configuration()
+        {
+            //Given, When
+            var environment = new DefaultNancyEnvironment();
+            var exception = Record.Exception(() => environment.Cultures(Enumerable.Empty<string>()));
+
+            //Then
+            exception.ShouldBeOfType<ConfigurationException>();
+        }
+
+        [Fact]
+        public void Should_throw_configuration_exception_if_list_of_blank_strings_used_for_supported_culutres_passed_to_globalization_configuration()
+        {
+            //Given, When
+            var environment = new DefaultNancyEnvironment();
+            var exception = Record.Exception(() => environment.Cultures(new []{""}));
+
+            //Then
+            exception.ShouldBeOfType<ConfigurationException>();
+        }
+
+        [Fact]
+        public void Should_throw_configuration_exception_if_null_value_used_for_supported_culutres_passed_to_globalization_configuration()
+        {
+            //Given, When
+            var environment = new DefaultNancyEnvironment();
+            var exception = Record.Exception(() => environment.Cultures(null));
+
+            //Then
+            exception.ShouldBeOfType<ConfigurationException>();
+        }
+
+        [Fact]
         public void Validation_should_return_false_if_null_culture_name()
         {
             //Given/When
@@ -360,7 +379,7 @@
         public void Validation_should_return_false_if_invalid_culture_name(string cultureName)
         {
             //Given/When
-            var configuration = new GlobalizationConfiguration(Enumerable.Empty<string>(), null);
+            var configuration = new GlobalizationConfiguration(new []{"en-US"});
             var result = BuiltInCultureConventions.IsValidCultureInfoName(cultureName, configuration);
 
             //Then
@@ -413,7 +432,7 @@
             var request = new Request("GET", new Url { Path = path, Scheme = "http" }, null, cultureHeaders);
             context.Request = request;
             var environment = new DefaultNancyEnvironment();
-            environment.Cultures(GlobalizationConfiguration.Default.SupportedCultureNames, GlobalizationConfiguration.Default.SupportedCultureNames.First());
+            environment.Cultures(new[] { "en-US" }, "en-US");
             context.Environment = environment;
             return context;
         }

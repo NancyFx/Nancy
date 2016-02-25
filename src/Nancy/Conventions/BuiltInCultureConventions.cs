@@ -146,17 +146,6 @@
         }
 
         /// <summary>
-        /// Uses the Thread.CurrentThread.CurrentCulture
-        /// </summary>
-        /// <param name="context">NancyContext</param>
-        /// <param name="configuration">Culture configuration that contains allowed cultures</param>
-        /// <returns>CultureInfo from CurrentThread</returns>
-        public static CultureInfo ThreadCulture(NancyContext context, GlobalizationConfiguration configuration)
-        {
-            return CultureInfo.CurrentCulture;
-        }
-
-        /// <summary>
         /// Validates culture name
         /// </summary>
         /// <param name="name">Culture name eg\en-GB</param>

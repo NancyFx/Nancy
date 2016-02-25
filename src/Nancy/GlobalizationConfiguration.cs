@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
 
     /// <summary>
@@ -12,7 +13,7 @@
         /// <summary>
         /// A default instance of the <see cref="GlobalizationConfiguration"/> class
         /// </summary>
-        public static readonly GlobalizationConfiguration Default = new GlobalizationConfiguration(supportedCultureNames: new[] { "en-US" }, defaultCulture: "en-US");
+        public static readonly GlobalizationConfiguration Default = new GlobalizationConfiguration(supportedCultureNames: new[] { CultureInfo.CurrentCulture.Name }, defaultCulture: CultureInfo.CurrentCulture.Name);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GlobalizationConfiguration"/> class
@@ -21,12 +22,24 @@
         /// <param name="defaultCulture">The default culture of the application</param>
         public GlobalizationConfiguration(IEnumerable<string> supportedCultureNames, string defaultCulture = null)
         {
-            if (supportedCultureNames != null && supportedCultureNames.Any() && defaultCulture == null)
+            if (supportedCultureNames == null)
             {
-                defaultCulture = supportedCultureNames.FirstOrDefault();
+                throw new ConfigurationException("Invalid Globalization configuration. You must support at least one culture");
             }
 
-            if (!string.IsNullOrEmpty(defaultCulture) && !supportedCultureNames.Contains(defaultCulture, StringComparer.OrdinalIgnoreCase))
+            supportedCultureNames = supportedCultureNames.Where(cultureName => !string.IsNullOrEmpty(cultureName));
+
+            if (!supportedCultureNames.Any())
+            {
+                throw new ConfigurationException("Invalid Globalization configuration. You must support at least one culture");
+            }
+
+            if (string.IsNullOrEmpty(defaultCulture))
+            {
+                defaultCulture = supportedCultureNames.First();
+            }
+
+            if (!supportedCultureNames.Contains(defaultCulture, StringComparer.OrdinalIgnoreCase))
             {
                 throw new ConfigurationException("Invalid Globalization configuration. " + defaultCulture + " does not exist in the supported culture names");
             }
