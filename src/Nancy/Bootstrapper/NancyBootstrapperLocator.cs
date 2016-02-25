@@ -44,7 +44,7 @@
         private static IReadOnlyCollection<Type> GetAvailableBootstrapperTypes()
         {
             var assemblies = GetNancyReferencingAssemblies()
-                .Where(x => !x.IsDynamic && !x.ReflectionOnly)
+                .Where(x => !x.IsDynamic)
                 .ToArray();
 
             return assemblies
@@ -61,7 +61,7 @@
 
             var results = new HashSet<Assembly>
             {
-                typeof (INancyEngine).Assembly
+                typeof (INancyEngine).GetAssembly()
             };
 
             var referencingLibraries = libraryManager.GetReferencingLibraries(NancyAssemblyName.Name);
@@ -79,7 +79,7 @@
 
             return results.ToArray();
 #else
-            return AppDomain.CurrentDomain.GetAssemblies().Where(IsNancyReferencing);
+            return AppDomain.CurrentDomain.GetAssemblies().Where(IsNancyReferencing).Where(assembly => !assembly.ReflectionOnly);
 #endif
         }
 

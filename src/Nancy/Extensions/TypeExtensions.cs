@@ -91,12 +91,12 @@
 
             var underlyingType = Nullable.GetUnderlyingType(source) ?? source;
 
-            if (underlyingType.IsEnum)
+            if (underlyingType.GetTypeInfo().IsEnum)
             {
                 return false;
             }
 
-            switch (Type.GetTypeCode(underlyingType))
+            switch (underlyingType.GetTypeCode())
             {
                 case TypeCode.Byte:
                 case TypeCode.Decimal:
