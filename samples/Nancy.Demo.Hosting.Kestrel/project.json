@@ -1,0 +1,22 @@
+﻿{
+  "compilationOptions": {
+    "emitEntryPoint": true
+  },
+  
+  "dependencies": {
+    "Nancy": { "target": "project" }
+  },
+
+  "commands": {
+    "Nancy.Demo.Hosting.Kestrel": "Nancy.Demo.Hosting.Kestrel --server Microsoft.AspNet.Server.Kestrel --server.urls http://127.0.0.1:5001"
+  },
+
+  "frameworks": {
+    "dnxcore50": {
+      "dependencies": {
+        "Microsoft.AspNet.Server.Kestrel": "1.0.0-rc1-final",
+        "Microsoft.AspNet.Owin": "1.0.0-rc1-final"
+      }
+    }
+  }
+}
