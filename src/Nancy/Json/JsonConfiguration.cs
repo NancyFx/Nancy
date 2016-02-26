@@ -88,7 +88,7 @@ namespace Nancy.Json
         /// <summary>
         /// Gets or sets if ISO-860 date formats should be used or not.
         /// </summary>
-        /// <remarks>The default is <see langword="false"/>.</remarks>
+        /// <remarks>The default is <see langword="true"/>.</remarks>
         public bool UseISO8601DateFormat { get; private set; }
     }
 }
