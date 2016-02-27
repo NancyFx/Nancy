@@ -18,6 +18,7 @@
         {
             return Serialize(obj, null);
         }
+
         public abstract object Serialize(object obj, JavaScriptSerializer serializer);
     }
 }

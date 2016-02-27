@@ -55,7 +55,9 @@ namespace Nancy.Json.Converters
             }
 
             if (value is long)
+            {
                 return Convert.ToInt32((long)value);
+            }
 
             var valueString = value as string;
             if (valueString == null)
