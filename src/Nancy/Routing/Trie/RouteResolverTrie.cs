@@ -62,19 +62,15 @@ namespace Nancy.Routing.Trie
         /// <returns>An array of <see cref="MatchResult"/> elements</returns>
         public MatchResult[] GetMatches(string method, string path, NancyContext context)
         {
-            if (string.IsNullOrEmpty(path))
+            TrieNode result;
+
+            if (!this.routeTries.TryGetValue(method, out result))
             {
                 return MatchResult.NoMatches;
             }
 
-            // TODO -concurrent if allowing updates?
-            if (!this.routeTries.ContainsKey(method))
-            {
-                return MatchResult.NoMatches;
-            }
-
-            return this.routeTries[method].GetMatches(path.Split(splitSeparators, StringSplitOptions.RemoveEmptyEntries), context)
-                                          .ToArray();
+            return result.GetMatches(path.Split(splitSeparators, StringSplitOptions.RemoveEmptyEntries), context)
+                         .ToArray();
         }
 
         /// <summary>
