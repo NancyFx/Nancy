@@ -6,23 +6,34 @@
     using System.Linq;
     using Nancy.Extensions;
 
-    internal class NancySerializationStrategy : PocoJsonSerializerStrategy
+    /// <summary>
+    /// Nancy serialization stategy for SimpleJson
+    /// </summary>
+    public class NancySerializationStrategy : PocoJsonSerializerStrategy
     {
         private readonly bool retainCasing;
-
         private readonly bool useIso8601;
-
         private readonly List<JavaScriptConverter> converters = new List<JavaScriptConverter>();
         private readonly List<JavaScriptPrimitiveConverter> primitiveConverters = new List<JavaScriptPrimitiveConverter>();
-        internal static readonly long InitialJavaScriptDateTicks = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).Ticks;
-        static readonly DateTime MinimumJavaScriptDate = new DateTime(100, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        private static readonly long InitialJavaScriptDateTicks = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).Ticks;
+        private static readonly DateTime MinimumJavaScriptDate = new DateTime(100, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NancySerializationStrategy"/> class.
+        /// </summary>
         public NancySerializationStrategy() : this(false)
         {
 
         }
 
+        /// <summary>
+        ///  Initializes a new instance of the <see cref="NancySerializationStrategy"/> class.
+        /// </summary>
+        /// <param name="retainCasing">Retain C# casing of objects when serialized</param>
+        /// <param name="registerConverters">Register Javascript converters</param>
+        /// <param name="useIso8601">Use ISO8601 format when serializing date objects</param>
+        /// <param name="converters">An array of <see cref="JavaScriptConverter"/></param>
+        /// <param name="primitiveConverters">An array of <see cref="JavaScriptPrimitiveConverter"/></param>
         public NancySerializationStrategy(
             bool retainCasing,
             bool registerConverters = true,
@@ -52,11 +63,19 @@
             }
         }
 
+        /// <summary>
+        /// Register custom <see cref="JavaScriptConverter"/> converters
+        /// </summary>
+        /// <param name="javaScriptConverters">An array of <see cref="JavaScriptConverter"/></param>
         public void RegisterConverters(IEnumerable<JavaScriptConverter> javaScriptConverters)
         {
             this.converters.AddRange(javaScriptConverters);
         }
 
+        /// <summary>
+        /// Register custom <see cref="JavaScriptPrimitiveConverter"/>
+        /// </summary>
+        /// <param name="javaScriptPrimitiveConverters">An array of <see cref="JavaScriptPrimitiveConverter"/></param>
         public void RegisterConverters(IEnumerable<JavaScriptPrimitiveConverter> javaScriptPrimitiveConverters)
         {
             this.primitiveConverters.AddRange(javaScriptPrimitiveConverters);
@@ -69,6 +88,12 @@
                 : clrPropertyName.ToCamelCase();
         }
 
+        /// <summary>
+        /// Deserialize an object
+        /// </summary>
+        /// <param name="value">The object to deserialize</param>
+        /// <param name="type">The type of object to deserialize</param>
+        /// <returns></returns>
         public override object DeserializeObject(object value, Type type)
         {
             if (type.IsEnum || (ReflectionUtils.IsNullableType(type) && Nullable.GetUnderlyingType(type).IsEnum))
