@@ -46,7 +46,6 @@ namespace Nancy.ModelBinding.DefaultBodyDeserializers
         {
             var serializer = new JavaScriptSerializer(
                 false,
-                this.configuration.MaxJsonLength,
                 this.configuration.RetainCasing,
                 this.configuration.Converters,
                 this.configuration.PrimitiveConverters);

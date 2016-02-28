@@ -37,31 +37,29 @@ namespace Nancy.Json
     {
         internal const string SerializedTypeNameKey = "__type";
 
-        int _maxJsonLength;
-        bool _retainCasing;
+        bool retainCasing;
 
-        readonly NancySerializationStrategy _serializerStrategy;
+        readonly NancySerializationStrategy serializerStrategy;
 
 #if NET_3_5
-        internal static readonly JavaScriptSerializer DefaultSerializer = new JavaScriptSerializer(false, 2097152);
+        internal static readonly JavaScriptSerializer DefaultSerializer = new JavaScriptSerializer(false);
 
         public JavaScriptSerializer()
-            : this(false, 2097152)
+            : this(false)
         {
         }
 #else
-        internal static readonly JavaScriptSerializer DefaultSerializer = new JavaScriptSerializer(false, 102400, false, null, null);
+        internal static readonly JavaScriptSerializer DefaultSerializer = new JavaScriptSerializer(false, false, null, null);
 
         public JavaScriptSerializer()
-            : this(false, 102400, false, null, null)
+            : this(false, false, null, null)
         {
         }
 
 #endif
-        public JavaScriptSerializer(bool registerConverters, int maxJsonLength, bool retainCasing, IEnumerable<JavaScriptConverter> converters, IEnumerable<JavaScriptPrimitiveConverter> primitiveConverters)
+        public JavaScriptSerializer(bool registerConverters, bool retainCasing, IEnumerable<JavaScriptConverter> converters, IEnumerable<JavaScriptPrimitiveConverter> primitiveConverters)
         {
-            _serializerStrategy = new NancySerializationStrategy(retainCasing);
-            _maxJsonLength = maxJsonLength;
+            this.serializerStrategy = new NancySerializationStrategy(retainCasing);
 
             this.RetainCasing = retainCasing;
 
@@ -69,33 +67,20 @@ namespace Nancy.Json
                 RegisterConverters(converters, primitiveConverters);
         }
 
-
-        public int MaxJsonLength
-        {
-            get
-            {
-                return _maxJsonLength;
-            }
-            set
-            {
-                _maxJsonLength = value;
-            }
-        }
-
         public bool RetainCasing
         {
-            get { return this._retainCasing; }
-            set { this._retainCasing = value; }
+            get { return this.retainCasing; }
+            set { this.retainCasing = value; }
         }
 
         public T Deserialize<T>(string input)
         {
-            return SimpleJson.DeserializeObject<T>(input, _serializerStrategy);
+            return SimpleJson.DeserializeObject<T>(input, this.serializerStrategy);
         }
 
         public object DeserializeObject(string input)
         {
-            return SimpleJson.DeserializeObject(input, null, _serializerStrategy);
+            return SimpleJson.DeserializeObject(input, null, this.serializerStrategy);
         }
 
         public void RegisterConverters(IEnumerable<JavaScriptConverter> converters)
@@ -103,7 +88,7 @@ namespace Nancy.Json
             if (converters == null)
                 throw new ArgumentNullException("converters");
 
-            _serializerStrategy.RegisterConverters(converters);
+            this.serializerStrategy.RegisterConverters(converters);
         }
 
         public void RegisterConverters(IEnumerable<JavaScriptPrimitiveConverter> primitiveConverters)
@@ -111,7 +96,7 @@ namespace Nancy.Json
             if (primitiveConverters == null)
                 throw new ArgumentNullException("primitiveConverters");
 
-            _serializerStrategy.RegisterConverters(primitiveConverters);
+            this.serializerStrategy.RegisterConverters(primitiveConverters);
         }
 
         public void RegisterConverters(IEnumerable<JavaScriptConverter> converters, IEnumerable<JavaScriptPrimitiveConverter> primitiveConverters)
@@ -125,7 +110,7 @@ namespace Nancy.Json
 
         public string Serialize(object obj)
         {
-            return SimpleJson.SerializeObject(obj, _serializerStrategy);
+            return SimpleJson.SerializeObject(obj, this.serializerStrategy);
         }
 
         internal void Serialize(object obj, TextWriter output)

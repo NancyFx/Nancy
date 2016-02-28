@@ -16,7 +16,6 @@ namespace Nancy.Json
         {
             Converters = new List<JavaScriptConverter> { new TimeSpanConverter(), new TupleConverter() },
             DefaultEncoding = Encoding.UTF8,
-            MaxJsonLength = 102400,
             PrimitiveConverters = new List<JavaScriptPrimitiveConverter>(),
             RetainCasing = false
         };
@@ -28,25 +27,17 @@ namespace Nancy.Json
         /// <summary>
         /// Initializes a new instance of the <see cref="JsonConfiguration"/> class.
         /// </summary>
-        /// <param name="maxJsonLength">The maximum allowed lenght for the JSON output.</param>
         /// <param name="defaultEncoding">The default <see cref="Encoding"/> that should be used by the serializer.</param>
         /// <param name="converters">List of <see cref="JavaScriptConverter"/> instances.</param>
         /// <param name="primitiveConverters">List of <see cref="JavaScriptPrimitiveConverter"/> instances.</param>
         /// <param name="retainCasing"><see langword="true"/> if the name casing should be retained during serialization, otherwise <see langword="false"/>.</param>
-        public JsonConfiguration(int? maxJsonLength, Encoding defaultEncoding, IList<JavaScriptConverter> converters, IList<JavaScriptPrimitiveConverter> primitiveConverters, bool? retainCasing)
+        public JsonConfiguration(Encoding defaultEncoding, IList<JavaScriptConverter> converters, IList<JavaScriptPrimitiveConverter> primitiveConverters, bool? retainCasing)
         {
-            this.MaxJsonLength = maxJsonLength ?? Default.MaxJsonLength;
             this.DefaultEncoding = defaultEncoding ?? Default.DefaultEncoding;
             this.Converters = converters ?? Default.Converters;
             this.PrimitiveConverters = primitiveConverters ?? Default.PrimitiveConverters;
             this.RetainCasing = retainCasing ?? Default.RetainCasing;
         }
-
-        /// <summary>
-        /// Max length of JSON output.
-        /// </summary>
-        /// <remarks>The default is 102400.</remarks>
-        public int MaxJsonLength { get; private set; }
 
         /// <summary>
         /// Gets the default <see cref="Encoding"/> for JSON responses.

@@ -18,7 +18,6 @@
             // When
             var serializer = new JavaScriptSerializer(
                 registerConverters: true,
-                maxJsonLength: defaultSerializer.MaxJsonLength,
                 retainCasing: defaultSerializer.RetainCasing,
                 converters: new[] { new TestConverter() },
                 primitiveConverters: new[] { new TestPrimitiveConverter() });
@@ -56,7 +55,6 @@
             // When
             var serializer = new JavaScriptSerializer(
                 registerConverters: false,
-                maxJsonLength: defaultSerializer.MaxJsonLength,
                 retainCasing: defaultSerializer.RetainCasing,
                 converters: new[] { new TestConverter() },
                 primitiveConverters: new[] { new TestPrimitiveConverter() });

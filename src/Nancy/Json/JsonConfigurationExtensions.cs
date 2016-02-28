@@ -23,7 +23,6 @@ namespace Nancy.Json
         public static void Json(this INancyEnvironment environment, int? maxJsonLength = null, Encoding defaultEncoding = null, IList<JavaScriptConverter> converters = null, IList<JavaScriptPrimitiveConverter> primitiveConverters = null, bool? retainCasing = null)
         {
             environment.AddValue(new JsonConfiguration(
-                maxJsonLength ?? JsonConfiguration.Default.MaxJsonLength,
                 defaultEncoding ?? JsonConfiguration.Default.DefaultEncoding,
                 converters ?? JsonConfiguration.Default.Converters,
                 primitiveConverters ?? JsonConfiguration.Default.PrimitiveConverters,
