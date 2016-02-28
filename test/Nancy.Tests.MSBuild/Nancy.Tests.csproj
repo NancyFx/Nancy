@@ -288,6 +288,9 @@
     <Compile Include="..\Nancy.Tests\Unit\Json\SimpleJsonFixture.cs">
       <Link>Unit\Json\SimpleJsonFixture.cs</Link>
     </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Json\Simple\NancySerializationStrategyFixture.cs">
+      <Link>Unit\Json\Simple\NancySerializationStrategyFixture.cs</Link>
+    </Compile>
     <Compile Include="..\Nancy.Tests\Unit\Json\TestConverter.cs">
       <Link>Unit\Json\TestConverter.cs</Link>
     </Compile>

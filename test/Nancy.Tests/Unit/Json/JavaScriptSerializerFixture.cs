@@ -21,7 +21,6 @@
                 maxJsonLength: defaultSerializer.MaxJsonLength,
                 recursionLimit: defaultSerializer.RecursionLimit,
                 retainCasing: defaultSerializer.RetainCasing,
-                iso8601DateFormat: defaultSerializer.ISO8601DateFormat,
                 converters: new[] { new TestConverter() },
                 primitiveConverters: new[] { new TestPrimitiveConverter() });
 
@@ -61,7 +60,6 @@
                 maxJsonLength: defaultSerializer.MaxJsonLength,
                 recursionLimit: defaultSerializer.RecursionLimit,
                 retainCasing: defaultSerializer.RetainCasing,
-                iso8601DateFormat: defaultSerializer.ISO8601DateFormat,
                 converters: new[] { new TestConverter() },
                 primitiveConverters: new[] { new TestPrimitiveConverter() });
 

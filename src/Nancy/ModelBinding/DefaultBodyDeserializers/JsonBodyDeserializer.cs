@@ -49,7 +49,6 @@ namespace Nancy.ModelBinding.DefaultBodyDeserializers
                 this.configuration.MaxJsonLength,
                 this.configuration.MaxRecursions,
                 this.configuration.RetainCasing,
-                this.configuration.UseISO8601DateFormat,
                 this.configuration.Converters,
                 this.configuration.PrimitiveConverters);
 

@@ -40,7 +40,6 @@ namespace Nancy.Json
         int _maxJsonLength;
         int _recursionLimit;
         bool _retainCasing;
-        bool _iso8601DateFormat;
 
         readonly NancySerializationStrategy _serializerStrategy;
 
@@ -52,27 +51,24 @@ namespace Nancy.Json
         {
         }
 #else
-        internal static readonly JavaScriptSerializer DefaultSerializer = new JavaScriptSerializer(false, 102400, 100, false, true, null, null);
+        internal static readonly JavaScriptSerializer DefaultSerializer = new JavaScriptSerializer(false, 102400, 100, false, null, null);
 
         public JavaScriptSerializer()
-            : this(false, 102400, 100, false, true, null, null)
+            : this(false, 102400, 100, false, null, null)
         {
         }
 
 #endif
-        public JavaScriptSerializer(bool registerConverters, int maxJsonLength, int recursionLimit, bool retainCasing, bool iso8601DateFormat, IEnumerable<JavaScriptConverter> converters, IEnumerable<JavaScriptPrimitiveConverter> primitiveConverters)
+        public JavaScriptSerializer(bool registerConverters, int maxJsonLength, int recursionLimit, bool retainCasing, IEnumerable<JavaScriptConverter> converters, IEnumerable<JavaScriptPrimitiveConverter> primitiveConverters)
         {
-            _serializerStrategy = new NancySerializationStrategy(retainCasing, registerConverters, iso8601DateFormat, converters, primitiveConverters);
+            _serializerStrategy = new NancySerializationStrategy(retainCasing, registerConverters, converters, primitiveConverters);
             _maxJsonLength = maxJsonLength;
             _recursionLimit = recursionLimit;
 
             this.RetainCasing = retainCasing;
 
-            _iso8601DateFormat = iso8601DateFormat;
-
             if (registerConverters)
                 RegisterConverters(converters, primitiveConverters);
-
         }
 
 
@@ -98,12 +94,6 @@ namespace Nancy.Json
             {
                 _recursionLimit = value;
             }
-        }
-
-        public bool ISO8601DateFormat
-        {
-            get { return _iso8601DateFormat; }
-            set { _iso8601DateFormat = value; }
         }
 
         public bool RetainCasing
