@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
+    using System.Reflection;
     using Nancy.Extensions;
 
     /// <summary>
@@ -81,6 +82,11 @@
             this.primitiveConverters.AddRange(javaScriptPrimitiveConverters);
         }
 
+        /// <summary>
+        /// Formats a property name to a JSON field name
+        /// </summary>
+        /// <param name="clrPropertyName">The property name to format</param>
+        /// <returns></returns>
         protected override string MapClrMemberNameToJsonFieldName(string clrPropertyName)
         {
             return this.retainCasing
@@ -98,7 +104,9 @@
         {
             if (type.IsEnum || (ReflectionUtils.IsNullableType(type) && Nullable.GetUnderlyingType(type).IsEnum))
             {
-                var typeToParse = ReflectionUtils.IsNullableType(type) ? Nullable.GetUnderlyingType(type) : type;
+                var typeToParse = ReflectionUtils.IsNullableType(type) 
+                    ? Nullable.GetUnderlyingType(type) 
+                    : type;
 
                 return value == null
                     ? null
@@ -112,46 +120,56 @@
             }
 
             var valueDictionary = value as IDictionary<string, object>;
-            if (valueDictionary != null)
+            if (valueDictionary == null)
             {
-                var javascriptConverter = this.FindJavaScriptConverter(type);
-                if (javascriptConverter != null)
-                {
-                    return javascriptConverter.Deserialize(valueDictionary, type);
-                }
-
-                if (type.IsGenericType)
-                {
-                    var genericType = type.GetGenericTypeDefinition();
-                    var genericTypeConverter = this.FindJavaScriptConverter(genericType);
-
-                    if (genericTypeConverter != null)
-                    {
-                        var values = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
-                        var genericArguments = type.GetGenericArguments();
-
-                        for (var i = 0; i < genericArguments.Length; i++)
-                        {
-                            var deserializedObject = this.DeserializeObject(valueDictionary.Values.ElementAt(i),
-                                genericArguments[i]);
-
-                            values.Add(valueDictionary.Keys.ElementAt(i), deserializedObject);
-                        }
-
-                        return genericTypeConverter.Deserialize(values, type);
-                    }
-                }
+                return base.DeserializeObject(value, type);
             }
 
-            return base.DeserializeObject(value, type);
+            var javascriptConverter = this.FindJavaScriptConverter(type);
+            if (javascriptConverter != null)
+            {
+                return javascriptConverter.Deserialize(valueDictionary, type);
+            }
+
+            if (!type.IsGenericType)
+            {
+                return base.DeserializeObject(value, type);
+            }
+
+            var genericType = type.GetGenericTypeDefinition();
+            var genericTypeConverter = this.FindJavaScriptConverter(genericType);
+
+            if (genericTypeConverter == null)
+            {
+                return base.DeserializeObject(value, type);
+            }
+
+            var values = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+            var genericArguments = type.GetGenericArguments();
+
+            for (var i = 0; i < genericArguments.Length; i++)
+            {
+                var deserializedObject = this.DeserializeObject(valueDictionary.Values.ElementAt(i),
+                    genericArguments[i]);
+
+                values.Add(valueDictionary.Keys.ElementAt(i), deserializedObject);
+            }
+
+            return genericTypeConverter.Deserialize(values, type);
         }
 
+        /// <summary>
+        /// Serialize an object
+        /// </summary>
+        /// <param name="input">The object to serialize</param>
+        /// <param name="output">The serialized object</param>
+        /// <returns></returns>
         protected override bool TrySerializeKnownTypes(object input, out object output)
         {
             var type = input as Type;
             if (type != null)
             {
-                output = type.FullName;
+                output = type.GetTypeInfo().FullName;
                 return true;
             }
 
@@ -174,7 +192,7 @@
                 return true;
             }
 
-            var inputType = input.GetType();
+            var inputType = input.GetType().GetTypeInfo();
             if (this.TrySerializeJavaScriptConverter(input, out output, inputType))
             {
                 return true;
@@ -202,9 +220,9 @@
             }
             else
             {
-                DateTime time = input.ToUniversalTime();
+                var time = input.ToUniversalTime();
 
-                string suffix = "";
+                var suffix = "";
                 if (input.Kind != DateTimeKind.Utc)
                 {
                     TimeSpan localTzOffset;
@@ -227,21 +245,22 @@
                 }
 
                 var ticks = (time.Ticks - InitialJavaScriptDateTicks) / 10000;
-                output = "\\/Date(" + ticks + suffix + ")\\/";
+                output = string.Format("\\/Date({0}{1})\\/", ticks, suffix);
             }
+
             return true;
         }
 
         private bool TrySerializePrimitiveConverter(object input, ref object output, Type inputType)
         {
             var primitiveConverter = this.FindPrimitiveConverter(inputType);
-            if (primitiveConverter != null)
+            if (primitiveConverter == null)
             {
-                output = primitiveConverter.Serialize(input);
-                return true;
+                return false;
             }
 
-            return false;
+            output = primitiveConverter.Serialize(input);
+            return true;
         }
 
         private JavaScriptPrimitiveConverter FindPrimitiveConverter(Type inputType)
@@ -256,14 +275,13 @@
         {
             output = null;
             var converter = this.FindJavaScriptConverter(inputType);
-            if (converter != null)
+            if (converter == null)
             {
-                var result = converter.Serialize(input);
-                output = result.ToDictionary(kvp => this.MapClrMemberNameToJsonFieldName(kvp.Key), kvp => kvp.Value);
-                return true;
+                return false;
             }
-
-            return false;
+            var result = converter.Serialize(input);
+            output = result.ToDictionary(kvp => this.MapClrMemberNameToJsonFieldName(kvp.Key), kvp => kvp.Value);
+            return true;
         }
 
         private JavaScriptConverter FindJavaScriptConverter(Type inputType)
