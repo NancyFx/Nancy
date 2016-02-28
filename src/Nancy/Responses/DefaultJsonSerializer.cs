@@ -13,9 +13,11 @@
     /// </summary>
     public class DefaultJsonSerializer : ISerializer
     {
-        private bool? retainCasing;
         private readonly JsonConfiguration jsonConfiguration;
+
         private readonly TraceConfiguration traceConfiguration;
+
+        private bool? retainCasing;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultJsonSerializer"/> class,
@@ -48,17 +50,6 @@
         }
 
         /// <summary>
-        /// Set to true to retain the casing used in the C# code in produced JSON.
-        /// Set to false to use camelCasig in the produced JSON.
-        /// False by default.
-        /// </summary>
-        public bool RetainCasing
-        {
-            get { return retainCasing.HasValue ? retainCasing.Value : this.jsonConfiguration.RetainCasing; }
-            set { retainCasing = value; }
-        }
-
-        /// <summary>
         /// Serialize the given model with the given contentType
         /// </summary>
         /// <param name="mediaRange">Content type to serialize into</param>
@@ -69,13 +60,10 @@
         {
             using (var writer = new StreamWriter(new UnclosableStreamWrapper(outputStream)))
             {
-                var serializer = new JavaScriptSerializer(
-                    false,
-                    RetainCasing,
-                    this.jsonConfiguration.Converters,
-                    this.jsonConfiguration.PrimitiveConverters);
+                var serializer = new JavaScriptSerializer(false, this.jsonConfiguration);
 
-                serializer.RegisterConverters(this.jsonConfiguration.Converters, this.jsonConfiguration.PrimitiveConverters);
+                serializer.RegisterConverters(this.jsonConfiguration.Converters,
+                    this.jsonConfiguration.PrimitiveConverters);
 
                 try
                 {
@@ -111,10 +99,10 @@
             var contentMimeType = contentType.Split(';')[0];
 
             return contentMimeType.Equals("application/json", StringComparison.OrdinalIgnoreCase) ||
-            contentMimeType.StartsWith("application/json-", StringComparison.OrdinalIgnoreCase) ||
-            contentMimeType.Equals("text/json", StringComparison.OrdinalIgnoreCase) ||
-            (contentMimeType.StartsWith("application/vnd", StringComparison.OrdinalIgnoreCase) &&
-            contentMimeType.EndsWith("+json", StringComparison.OrdinalIgnoreCase));
+                contentMimeType.StartsWith("application/json-", StringComparison.OrdinalIgnoreCase) ||
+                contentMimeType.Equals("text/json", StringComparison.OrdinalIgnoreCase) ||
+                (contentMimeType.StartsWith("application/vnd", StringComparison.OrdinalIgnoreCase) &&
+                    contentMimeType.EndsWith("+json", StringComparison.OrdinalIgnoreCase));
         }
     }
 }

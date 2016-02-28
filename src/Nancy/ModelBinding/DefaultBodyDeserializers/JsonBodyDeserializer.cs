@@ -44,11 +44,7 @@ namespace Nancy.ModelBinding.DefaultBodyDeserializers
         /// <returns>Model instance</returns>
         public object Deserialize(MediaRange mediaRange, Stream bodyStream, BindingContext context)
         {
-            var serializer = new JavaScriptSerializer(
-                false,
-                this.configuration.RetainCasing,
-                this.configuration.Converters,
-                this.configuration.PrimitiveConverters);
+            var serializer = new JavaScriptSerializer(false, this.configuration);
 
             serializer.RegisterConverters(this.configuration.Converters, this.configuration.PrimitiveConverters);
 

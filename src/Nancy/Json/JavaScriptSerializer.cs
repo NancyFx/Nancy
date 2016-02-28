@@ -41,21 +41,21 @@ namespace Nancy.Json
 
         readonly NancySerializationStrategy serializerStrategy;
 
-        internal static readonly JavaScriptSerializer DefaultSerializer = new JavaScriptSerializer(false, false, null, null);
+        internal static readonly JavaScriptSerializer DefaultSerializer = new JavaScriptSerializer(false, JsonConfiguration.Default);
 
         public JavaScriptSerializer()
-            : this(false, false, null, null)
+            : this(false,JsonConfiguration.Default)
         {
         }
 
-        public JavaScriptSerializer(bool registerConverters, bool retainCasing, IEnumerable<JavaScriptConverter> converters, IEnumerable<JavaScriptPrimitiveConverter> primitiveConverters)
+        public JavaScriptSerializer(bool registerConverters, JsonConfiguration configuration)
         {
-            this.serializerStrategy = new NancySerializationStrategy(retainCasing);
+            this.serializerStrategy = new NancySerializationStrategy(configuration.RetainCasing);
 
-            this.RetainCasing = retainCasing;
+            this.RetainCasing = configuration.RetainCasing;
 
             if (registerConverters)
-                RegisterConverters(converters, primitiveConverters);
+                this.RegisterConverters(configuration.Converters, configuration.PrimitiveConverters);
         }
 
         public bool RetainCasing
