@@ -81,24 +81,6 @@
             actual.ShouldEqual("{\"FirstName\":\"Joe\",\"lastName\":\"Doe\"}");
         }
 
-        [Fact]
-        public void Should_camel_case_property_names_if_local_override_is_set()
-        {
-            // Given
-            var environment = GetTestableEnvironment(x => x.Json(retainCasing: true));
-            var serializer = new DefaultJsonSerializer(environment) { RetainCasing = false };
-
-            var input = new { FirstName = "Joe", lastName = "Doe" };
-
-            // When
-            var output = new MemoryStream();
-            serializer.Serialize("application/json", input, output);
-            var actual = Encoding.UTF8.GetString(output.ToArray());
-
-            // Then
-            actual.ShouldEqual("{\"firstName\":\"Joe\",\"lastName\":\"Doe\"}");
-        }
-
         public class PersonWithFields
         {
             public string FirstName;
