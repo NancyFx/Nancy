@@ -19,7 +19,6 @@
             var serializer = new JavaScriptSerializer(
                 registerConverters: true,
                 maxJsonLength: defaultSerializer.MaxJsonLength,
-                recursionLimit: defaultSerializer.RecursionLimit,
                 retainCasing: defaultSerializer.RetainCasing,
                 converters: new[] { new TestConverter() },
                 primitiveConverters: new[] { new TestPrimitiveConverter() });
@@ -58,7 +57,6 @@
             var serializer = new JavaScriptSerializer(
                 registerConverters: false,
                 maxJsonLength: defaultSerializer.MaxJsonLength,
-                recursionLimit: defaultSerializer.RecursionLimit,
                 retainCasing: defaultSerializer.RetainCasing,
                 converters: new[] { new TestConverter() },
                 primitiveConverters: new[] { new TestPrimitiveConverter() });

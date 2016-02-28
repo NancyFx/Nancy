@@ -72,7 +72,6 @@
                 var serializer = new JavaScriptSerializer(
                     false,
                     this.jsonConfiguration.MaxJsonLength,
-                    this.jsonConfiguration.MaxRecursions,
                     RetainCasing,
                     this.jsonConfiguration.Converters,
                     this.jsonConfiguration.PrimitiveConverters);

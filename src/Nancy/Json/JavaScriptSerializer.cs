@@ -38,32 +38,30 @@ namespace Nancy.Json
         internal const string SerializedTypeNameKey = "__type";
 
         int _maxJsonLength;
-        int _recursionLimit;
         bool _retainCasing;
 
         readonly NancySerializationStrategy _serializerStrategy;
 
 #if NET_3_5
-        internal static readonly JavaScriptSerializer DefaultSerializer = new JavaScriptSerializer(false, 2097152, 100);
+        internal static readonly JavaScriptSerializer DefaultSerializer = new JavaScriptSerializer(false, 2097152);
 
         public JavaScriptSerializer()
-            : this(null, false, 2097152, 100)
+            : this(false, 2097152)
         {
         }
 #else
-        internal static readonly JavaScriptSerializer DefaultSerializer = new JavaScriptSerializer(false, 102400, 100, false, null, null);
+        internal static readonly JavaScriptSerializer DefaultSerializer = new JavaScriptSerializer(false, 102400, false, null, null);
 
         public JavaScriptSerializer()
-            : this(false, 102400, 100, false, null, null)
+            : this(false, 102400, false, null, null)
         {
         }
 
 #endif
-        public JavaScriptSerializer(bool registerConverters, int maxJsonLength, int recursionLimit, bool retainCasing, IEnumerable<JavaScriptConverter> converters, IEnumerable<JavaScriptPrimitiveConverter> primitiveConverters)
+        public JavaScriptSerializer(bool registerConverters, int maxJsonLength, bool retainCasing, IEnumerable<JavaScriptConverter> converters, IEnumerable<JavaScriptPrimitiveConverter> primitiveConverters)
         {
             _serializerStrategy = new NancySerializationStrategy(retainCasing, registerConverters, converters, primitiveConverters);
             _maxJsonLength = maxJsonLength;
-            _recursionLimit = recursionLimit;
 
             this.RetainCasing = retainCasing;
 
@@ -81,18 +79,6 @@ namespace Nancy.Json
             set
             {
                 _maxJsonLength = value;
-            }
-        }
-
-        public int RecursionLimit
-        {
-            get
-            {
-                return _recursionLimit;
-            }
-            set
-            {
-                _recursionLimit = value;
             }
         }
 
