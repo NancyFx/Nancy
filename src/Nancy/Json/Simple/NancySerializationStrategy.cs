@@ -28,34 +28,9 @@
         ///  Initializes a new instance of the <see cref="NancySerializationStrategy"/> class.
         /// </summary>
         /// <param name="retainCasing">Retain C# casing of objects when serialized</param>
-        /// <param name="registerConverters">Register Javascript converters</param>
-        /// <param name="converters">An array of <see cref="JavaScriptConverter"/></param>
-        /// <param name="primitiveConverters">An array of <see cref="JavaScriptPrimitiveConverter"/></param>
-        public NancySerializationStrategy(
-            bool retainCasing,
-            bool registerConverters = true,
-            IEnumerable<JavaScriptConverter> converters = null,
-            IEnumerable<JavaScriptPrimitiveConverter> primitiveConverters = null)
+        public NancySerializationStrategy(bool retainCasing)
         {
             this.retainCasing = retainCasing;
-
-            if (registerConverters)
-            {
-                this.RegisterConverters(converters, primitiveConverters);
-            }
-        }
-
-        private void RegisterConverters(IEnumerable<JavaScriptConverter> javaScriptConverters, IEnumerable<JavaScriptPrimitiveConverter> javaScriptPrimitiveConverters)
-        {
-            if (javaScriptConverters != null)
-            {
-                this.RegisterConverters(javaScriptConverters);
-            }
-
-            if (javaScriptPrimitiveConverters != null)
-            {
-                this.RegisterConverters(javaScriptPrimitiveConverters);
-            }
         }
 
         /// <summary>

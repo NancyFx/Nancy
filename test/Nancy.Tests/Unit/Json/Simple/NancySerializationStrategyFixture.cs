@@ -13,7 +13,7 @@ namespace Nancy.Tests.Unit.Json.Simple
         public void Should_retain_casing_of_properties_when_asked()
         {
             // Given
-            var strategy = CreateStrategy(retainCasing: true);
+            var strategy = CreateStrategy(true);
             const string propertyName = "SomeMixedCase";
 
             // When
@@ -28,7 +28,7 @@ namespace Nancy.Tests.Unit.Json.Simple
         public void Should_camel_case_property_name_when_retain_casing_is_off()
         {
             // Given
-            var strategy = CreateStrategy(retainCasing: false);
+            var strategy = CreateStrategy();
             const string propertyName = "SomeMixedCase";
 
             // When
@@ -52,7 +52,7 @@ namespace Nancy.Tests.Unit.Json.Simple
             strategy.TrySerializeKnownTypes(expectedValue, out serialized);
             
             //Then
-            var result = serialized as IDictionary<string, object>;
+            var result = (IDictionary<string, object>)serialized;
             result.ShouldNotBeNull();
             result.ShouldHaveCount(1);
             result["serializedValue"].ShouldEqual(expectedValue);
@@ -79,16 +79,15 @@ namespace Nancy.Tests.Unit.Json.Simple
 
         private NancySerializationStrategyTestWrapper CreateStrategy(bool retainCasing = false)
         {
-            return new NancySerializationStrategyTestWrapper(retainCasing: retainCasing);
+            return new NancySerializationStrategyTestWrapper(retainCasing);
         }
     }
 
     public class NancySerializationStrategyTestWrapper : NancySerializationStrategy
     {
         public NancySerializationStrategyTestWrapper(
-            bool retainCasing = false,
-            bool registerConverters = true) 
-            : base(retainCasing, registerConverters)
+            bool retainCasing = false) 
+            : base(retainCasing)
         {
             
         }

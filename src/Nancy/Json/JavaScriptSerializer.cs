@@ -60,7 +60,7 @@ namespace Nancy.Json
 #endif
         public JavaScriptSerializer(bool registerConverters, int maxJsonLength, bool retainCasing, IEnumerable<JavaScriptConverter> converters, IEnumerable<JavaScriptPrimitiveConverter> primitiveConverters)
         {
-            _serializerStrategy = new NancySerializationStrategy(retainCasing, registerConverters, converters, primitiveConverters);
+            _serializerStrategy = new NancySerializationStrategy(retainCasing);
             _maxJsonLength = maxJsonLength;
 
             this.RetainCasing = retainCasing;
