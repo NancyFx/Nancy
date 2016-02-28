@@ -41,14 +41,6 @@ namespace Nancy.Json
 
         readonly NancySerializationStrategy serializerStrategy;
 
-#if NET_3_5
-        internal static readonly JavaScriptSerializer DefaultSerializer = new JavaScriptSerializer(false);
-
-        public JavaScriptSerializer()
-            : this(false)
-        {
-        }
-#else
         internal static readonly JavaScriptSerializer DefaultSerializer = new JavaScriptSerializer(false, false, null, null);
 
         public JavaScriptSerializer()
@@ -56,7 +48,6 @@ namespace Nancy.Json
         {
         }
 
-#endif
         public JavaScriptSerializer(bool registerConverters, bool retainCasing, IEnumerable<JavaScriptConverter> converters, IEnumerable<JavaScriptPrimitiveConverter> primitiveConverters)
         {
             this.serializerStrategy = new NancySerializationStrategy(retainCasing);

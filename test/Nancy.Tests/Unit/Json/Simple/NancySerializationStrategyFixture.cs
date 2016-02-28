@@ -77,9 +77,110 @@ namespace Nancy.Tests.Unit.Json.Simple
             result.ShouldEqual(expectedValue);
         }
 
+        [Fact]
+        public void Should_serialize_unspecified_datetime_object()
+        {
+            // Given
+            var unspecifiedDateTime = new DateTime(2014, 3, 9, 17, 03, 25).AddMilliseconds(234);
+            var strategy = this.CreateStrategy();
+            object serializedObject;
+
+            // When
+            var canSerialize = strategy.TrySerializeKnownTypes(unspecifiedDateTime, out serializedObject);
+
+            //Then
+            canSerialize.ShouldBeTrue();
+            serializedObject.ShouldEqual(string.Format("2014-03-09T17:03:25.2340000{0}", GetTimezoneSuffix(":")));
+        }
+
+        [Fact]
+        public void Should_serialize_local_datetime_object()
+        {
+            // Given
+            var unspecifiedDateTime = new DateTime(2014, 3, 9, 17, 03, 25, DateTimeKind.Local).AddMilliseconds(234);
+            var strategy = this.CreateStrategy();
+            object serializedObject;
+
+            // When
+            var canSerialize = strategy.TrySerializeKnownTypes(unspecifiedDateTime, out serializedObject);
+
+            //Then
+            canSerialize.ShouldBeTrue();
+            serializedObject.ShouldEqual(string.Format("2014-03-09T17:03:25.2340000{0}", GetTimezoneSuffix(":")));
+        }
+
+        [Fact]
+        public void Should_serialize_utc_datetime_object()
+        {
+            // Given
+            var unspecifiedDateTime = new DateTime(2014, 3, 9, 16, 03, 25, DateTimeKind.Utc).AddMilliseconds(234);
+            var strategy = this.CreateStrategy();
+            object serializedObject;
+
+            // When
+            var canSerialize = strategy.TrySerializeKnownTypes(unspecifiedDateTime, out serializedObject);
+
+            //Then
+            canSerialize.ShouldBeTrue();
+            serializedObject.ShouldEqual("2014-03-09T16:03:25.2340000Z");
+        }
+
+        [Fact]
+        public void Should_serialize_utc_datetimeoffset_object()
+        {
+            // Given
+            const string expectedValue = "2016-02-27T12:12:12.0000000+00:00";
+            var objectToSerialize = new DateTimeOffset(2016, 2, 27, 12, 12, 12, TimeSpan.Zero);
+            var strategy = this.CreateStrategy();
+            object serializedObject;
+
+            // When
+            var canSerialize = strategy.TrySerializeKnownTypes(objectToSerialize, out serializedObject);
+
+            //Then
+            canSerialize.ShouldBeTrue();
+            serializedObject.ShouldEqual(expectedValue);
+        }
+
+        [Fact]
+        public void Should_serialize_offset_datetimeoffset_object()
+        {
+            // Given
+            const string expectedValue = "2016-02-27T12:12:12.0000000-06:00";
+            var objectToSerialize = new DateTimeOffset(2016, 2, 27, 12, 12, 12, TimeSpan.FromHours(-6));
+            var strategy = this.CreateStrategy();
+            object serializedObject;
+
+            // When
+            var canSerialize = strategy.TrySerializeKnownTypes(objectToSerialize, out serializedObject);
+
+            //Then
+            canSerialize.ShouldBeTrue();
+            serializedObject.ShouldEqual(expectedValue);
+        }
+
         private NancySerializationStrategyTestWrapper CreateStrategy(bool retainCasing = false)
         {
             return new NancySerializationStrategyTestWrapper(retainCasing);
+        }
+
+        private static string GetTimezoneSuffix(string separator = "")
+        {
+            var value = DateTime.Now;
+            string suffix;
+            var time = value.ToUniversalTime();
+            TimeSpan localTzOffset;
+            if (value >= time)
+            {
+                localTzOffset = value - time;
+                suffix = "+";
+            }
+            else
+            {
+                localTzOffset = time - value;
+                suffix = "-";
+            }
+            return string.Concat(suffix, localTzOffset.ToString("hh"), separator, localTzOffset.ToString("mm"));
         }
     }
 
