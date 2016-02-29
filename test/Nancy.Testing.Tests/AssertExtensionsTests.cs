@@ -2,9 +2,7 @@ namespace Nancy.Testing.Tests
 {
     using System;
     using System.Linq;
-
-    using CsQuery;
-
+    using AngleSharp.Parser.Html;
     using Xunit;
 
     public class AssertExtensionsTests
@@ -16,11 +14,13 @@ namespace Nancy.Testing.Tests
         /// </summary>
         public AssertExtensionsTests()
         {
+            var parser = new HtmlParser();
+
             var document =
-                CQ.Create(@"<html><head></head><body><div id='testId' class='myClass' attribute1 attribute2='value2'>Test</div><div class='anotherClass'>Tes</div><span class='class'>some contents</span><span class='class'>This has contents</span></body></html>");
+                parser.Parse(@"<html><head></head><body><div id='testId' class='myClass' attribute1 attribute2='value2'>Test</div><div class='anotherClass'>Tes</div><span class='class'>some contents</span><span class='class'>This has contents</span></body></html>");
 
             this.query =
-                new QueryWrapper(document);
+                new QueryWrapper(new[] { document.DocumentElement });
         }
 
         [Fact]
@@ -333,7 +333,7 @@ namespace Nancy.Testing.Tests
             // Then
             Assert.IsAssignableFrom<AssertException>(result);
         }
-        
+
         [Fact]
         public void ShouldContainAttribute_SingleElementNotContainingAttributeAndValue_ShouldThrowAssert()
         {
@@ -398,7 +398,7 @@ namespace Nancy.Testing.Tests
             // Then
             Assert.Null(result);
         }
-        
+
         [Fact]
         public void ShouldContainAttribute_SingleElementContainingAttributeAndValue_ShouldNotThrowAssert()
         {

@@ -1,33 +1,38 @@
 namespace Nancy.Testing.Tests
 {
     using System.Linq;
-
-    using CsQuery;
-    using CsQuery.Implementation;
-
+    using AngleSharp.Dom;
+    using AngleSharp.Parser.Html;
     using Xunit;
 
     public class QueryWrapperTests
     {
+        private readonly HtmlParser parser;
+
+        public QueryWrapperTests()
+        {
+            this.parser = new HtmlParser();
+        }
+
         [Fact]
         public void Should_use_cq_find_when_indexer_invoked()
         {
             // Given
             var document =
-                CQ.Create(@"<html><head></head><body><div id='testId' class='myClass'>Test</div></body></html>");
+                this.parser.Parse(@"<html><head></head><body><div id='testId' class='myClass'>Test</div></body></html>");
 
             var queryResult =
-                document.Find("#testId").FirstOrDefault();
+                document.QuerySelectorAll("#testId").FirstOrDefault();
 
             var wrapper =
-                new QueryWrapper(document);
+                new QueryWrapper(new[] { document.DocumentElement });
 
             // When
-            var result = (DomElement)wrapper["#testId"].FirstOrDefault();
+            var result = wrapper["#testId"].FirstOrDefault();
 
             // Then
             Assert.NotNull(result);
-            Assert.Same(queryResult, result);
+            Assert.Equal(queryResult.InnerHtml, result.InnerText);
         }
 
         [Fact]
@@ -35,12 +40,11 @@ namespace Nancy.Testing.Tests
         {
             // Given
             var document =
-                CQ.Create(
-                    @"<html><head></head><body><table><tr><td></td><td></td></tr><tr><td></td><td></td></tr></body></html>");
+                this.parser.Parse(@"<html><head></head><body><table><tr><td></td><td></td></tr><tr><td></td><td></td></tr></table></body></html>");
 
-            var wrapper = new QueryWrapper(document);
+            var wrapper = new QueryWrapper(new[] { document.DocumentElement });
 
-            var row = wrapper["tr:first"];
+            var row = wrapper["tr:first-child"];
 
             // When
             var cells = row["td"];

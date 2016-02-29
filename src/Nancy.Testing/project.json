@@ -9,8 +9,8 @@
     "iconUrl": "http://nancyfx.org/nancy-nuget.png",
 
     "dependencies": {
-        "Nancy.Authentication.Forms": { "target": "project" },
-        "CsQuery": "1.3.3"
+        "AngleSharp": "0.9.4",
+        "Nancy.Authentication.Forms": { "target": "project" }
     },
 
     "resource": [
@@ -20,6 +20,8 @@
     "frameworks": {
         "net451": {
             "frameworkAssemblies": {
+                "System.IO": "4.0.0.0",
+                "System.Runtime": "4.0.10.0",
                 "System.Xml.Linq": "4.0.0.0"
             }
         }
