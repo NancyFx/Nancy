@@ -18,7 +18,7 @@
             var configuration = new JsonConfiguration(Encoding.UTF8, new[] { new TestConverter() }, new[] { new TestPrimitiveConverter() }, false);
 
             // When
-            var serializer = new JavaScriptSerializer(true, configuration);
+            var serializer = new JavaScriptSerializer(configuration, true);
 
             var data =
                 new TestData()
@@ -51,7 +51,7 @@
             var defaultSerializer = new JavaScriptSerializer();
 
             // When
-            var serializer = new JavaScriptSerializer(false, JsonConfiguration.Default);
+            var serializer = new JavaScriptSerializer(JsonConfiguration.Default);
 
             var data =
                 new TestData()
