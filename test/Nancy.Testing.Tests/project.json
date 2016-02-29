@@ -1,6 +1,6 @@
 {
     "dependencies": {
-        "CsQuery": "1.3.3",
+        "AngleSharp": "0.9.4",
         "FakeItEasy": "2.0.0-beta011",
         "Nancy": { "target": "project" },
         "Nancy.Testing": { "target": "project" },

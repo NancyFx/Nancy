@@ -6,17 +6,17 @@ namespace Nancy.Testing.Tests
     using System.Linq;
     using System.Security.Cryptography.X509Certificates;
     using System.Text;
+    using System.Collections.ObjectModel;
+    using System.Threading.Tasks;
     using Nancy.Extensions;
     using Nancy.Helpers;
     using Nancy.Session;
     using Nancy.Tests;
-    using Xunit;
-    using FakeItEasy;
     using Nancy.Authentication.Forms;
-    using System.Collections.ObjectModel;
-    using System.Threading.Tasks;
     using Nancy.Configuration;
     using Nancy.Tests.xUnitExtensions;
+    using Xunit;
+    using FakeItEasy;
 
     public class BrowserFixture
     {
