@@ -116,8 +116,13 @@
     </Compile>
     <Compile Include="LoginFixture.cs" />
     <Compile Include="TestBootstrapper.cs" />
+    <Compile Include="TestRootPathProvider.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Nancy.Testing.MSBuild\Nancy.Testing.csproj">
+      <Project>{d79203c0-b672-4751-9c95-c3ab7d3fefbe}</Project>
+      <Name>Nancy.Testing</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Nancy.Demo.Authentication.Forms\Nancy.Demo.Authentication.Forms.csproj">
       <Project>{98940A30-1B48-4F71-A6BA-85F0AAF31A2F}</Project>
       <Name>Nancy.Demo.Authentication.Forms</Name>
@@ -125,10 +130,6 @@
     <ProjectReference Include="..\..\src\Nancy.Hosting.Aspnet.MSBuild\Nancy.Hosting.Aspnet.csproj">
       <Project>{15B7F794-0BB2-4B66-AD78-4A951F1209B2}</Project>
       <Name>Nancy.Hosting.Aspnet</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\Nancy.Testing.MSBuild\Nancy.Testing.csproj">
-      <Project>{D79203C0-B672-4751-9C95-C3AB7D3FEFBE}</Project>
-      <Name>Nancy.Testing</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\src\Nancy.ViewEngines.Razor.MSBuild\Nancy.ViewEngines.Razor.csproj">
       <Project>{2C6F51DF-015C-4DB6-B44C-0E5E4F25E2A9}</Project>

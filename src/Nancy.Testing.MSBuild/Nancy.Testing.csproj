@@ -166,9 +166,6 @@
     <Compile Include="..\Nancy.Testing\NancyContextExtensions.cs">
       <Link>NancyContextExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy.Testing\Fakes\FakeRootPathProvider.cs">
-      <Link>Fakes\FakeRootPathProvider.cs</Link>
-    </Compile>
     <Compile Include="..\Nancy.Testing\ConfigurableNancyModule.cs">
       <Link>ConfigurableNancyModule.cs</Link>
     </Compile>
