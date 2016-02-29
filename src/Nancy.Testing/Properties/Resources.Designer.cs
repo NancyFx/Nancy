@@ -14,8 +14,10 @@ namespace Nancy.Testing.Properties {
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
+    using System.Reflection;
     using System.Resources;
     using System.Runtime.CompilerServices;
+    using System.Text;
 
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
@@ -44,7 +46,7 @@ namespace Nancy.Testing.Properties {
         internal static ResourceManager ResourceManager {
             get {
                 if (ReferenceEquals(resourceMan, null)) {
-                    ResourceManager temp = new ResourceManager("Nancy.Testing.Properties.Resources", typeof(Resources).Assembly);
+                    ResourceManager temp = new ResourceManager("Nancy.Testing.Properties.Resources", typeof(Resources).GetTypeInfo().Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -70,8 +72,8 @@ namespace Nancy.Testing.Properties {
         /// </summary>
         internal static byte[] NancyTestingCert {
             get {
-                object obj = ResourceManager.GetObject("NancyTestingCert", resourceCulture);
-                return ((byte[])(obj));
+                var cert = ResourceManager.GetString("NancyCert");
+                return Encoding.UTF8.GetBytes(cert);
             }
         }
     }

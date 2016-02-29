@@ -10,6 +10,7 @@
 
     "dependencies": {
         "AngleSharp": "0.9.5",
+        "Nancy": { "target": "project" },
         "Nancy.Authentication.Forms": { "target": "project" }
     },
 
@@ -18,6 +19,12 @@
     ],
 
     "frameworks": {
+        "dotnet5.4": {
+            "dependencies": {
+                "System.Xml.XmlDocument": "4.0.1-beta-23516",
+                "System.Xml.XDocument": "4.0.11-beta-23516"
+            }
+        },
         "net451": {
             "frameworkAssemblies": {
                 "System.IO": "4.0.0.0",

@@ -3,7 +3,7 @@
     using System;
     using System.IO;
 
-    internal static class MemoryStreamExtensions
+    public static class MemoryStreamExtensions
     {
         public static ArraySegment<byte> GetBufferSegment(this MemoryStream stream)
         {
