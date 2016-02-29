@@ -14,10 +14,7 @@
     public class DefaultJsonSerializer : ISerializer
     {
         private readonly JsonConfiguration jsonConfiguration;
-
         private readonly TraceConfiguration traceConfiguration;
-
-        private bool? retainCasing;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultJsonSerializer"/> class,
@@ -60,7 +57,7 @@
         {
             using (var writer = new StreamWriter(new UnclosableStreamWrapper(outputStream)))
             {
-                var serializer = new JavaScriptSerializer(false, this.jsonConfiguration);
+                var serializer = new JavaScriptSerializer(this.jsonConfiguration);
 
                 serializer.RegisterConverters(this.jsonConfiguration.Converters,
                     this.jsonConfiguration.PrimitiveConverters);
