@@ -82,6 +82,8 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Nancy.ViewEngines.Razor.Tes
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Nancy.ViewEngines.Razor.Tests.Models", "test\Nancy.ViewEngines.Razor.Tests.Models\Nancy.ViewEngines.Razor.Tests.Models.xproj", "{31FA18D3-24AD-4AB0-B297-5A2FD871989E}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Nancy.Tests.Functional", "test\Nancy.Tests.Functional\Nancy.Tests.Functional.xproj", "{742AC687-FC9A-4534-BB50-3D91738563A7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -228,6 +230,10 @@ Global
 		{31FA18D3-24AD-4AB0-B297-5A2FD871989E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{31FA18D3-24AD-4AB0-B297-5A2FD871989E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{31FA18D3-24AD-4AB0-B297-5A2FD871989E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{742AC687-FC9A-4534-BB50-3D91738563A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{742AC687-FC9A-4534-BB50-3D91738563A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{742AC687-FC9A-4534-BB50-3D91738563A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{742AC687-FC9A-4534-BB50-3D91738563A7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -268,5 +274,6 @@ Global
 		{C46BFAA7-F471-45A6-A5AC-FCF9390408EE} = {F44224E5-8E58-4D52-A0F0-BCBA2ADC0A0B}
 		{A24271FA-E058-42E0-BB7D-3C8C43DF4B04} = {F44224E5-8E58-4D52-A0F0-BCBA2ADC0A0B}
 		{31FA18D3-24AD-4AB0-B297-5A2FD871989E} = {F44224E5-8E58-4D52-A0F0-BCBA2ADC0A0B}
+		{742AC687-FC9A-4534-BB50-3D91738563A7} = {F44224E5-8E58-4D52-A0F0-BCBA2ADC0A0B}
 	EndGlobalSection
 EndGlobal
