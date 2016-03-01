@@ -1,0 +1,25 @@
+{
+    "dependencies": {
+        "Nancy": { "target": "project" },
+        "Nancy.Testing": { "target": "project" },
+        "Nancy.ViewEngines.Razor": { "target": "project" },
+        "xunit": "2.1.0",
+        "xunit.runner.dnx": "2.1.0-*"
+    },
+
+    "commands": {
+        "test": "xunit.runner.dnx"
+    },
+
+    "compilationOptions": {
+        "define": [ "DNX" ]
+    },
+
+    "compileFiles": [
+        "../Nancy.Tests/xUnitExtensions/RecordAsync.cs"
+    ],
+
+    "frameworks": {
+        "dnx451": { }
+    }
+}
