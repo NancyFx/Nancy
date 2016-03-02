@@ -28,19 +28,13 @@ function Get-DnxVersion
 function Restore-Packages
 {
     param([string] $DirectoryName)
-    & dnu restore ("""" + $DirectoryName + """")
-}
-
-function Build-Projects
-{
-    param([string] $DirectoryName, [string] $Configuration)
-    & dnu build ("""" + $DirectoryName + """") --configuration $Configuration --out .\artifacts\bin; if($LASTEXITCODE -ne 0) { exit 1 }
+    & dnu restore --quiet ("""" + $DirectoryName + """")
 }
 
 function Pack-Projects
 {
     param([string] $DirectoryName, [string] $Configuration)
-    & dnu pack ("""" + $DirectoryName + """") --configuration $Configuration --out .\artifacts\packages; if($LASTEXITCODE -ne 0) { exit 2 }
+    & dnu pack --quiet ("""" + $DirectoryName + """") --configuration $Configuration --out .\artifacts\packages; if($LASTEXITCODE -ne 0) { exit 2 }
 }
 
 function Test-Projects
@@ -85,6 +79,8 @@ Install-Dnvm
 # Install DNX
 dnvm install $dnxVersion -r CoreCLR -NoNative
 dnvm install $dnxVersion -r CLR -NoNative
+
+# Start with regular CLR
 dnvm use $dnxVersion -r CLR
 
 # Package restore
@@ -97,8 +93,8 @@ Write-Host "Build number: " $env:DNX_BUILD_VERSION
 # Package
 Get-ChildItem -Path .\src -Filter *.xproj -Recurse | ForEach-Object { Pack-Projects $_.DirectoryName $env:CONFIGURATION }
 
-# Test - Skipping tests until properly migrated to new xUnit
-Get-ChildItem -Path .\test -Filter *Tests.xproj -Recurse | ForEach-Object {
+# Test
+Get-ChildItem -Path .\test -Filter *.xproj -Exclude Nancy.ViewEngines.Razor.Tests.Models.xproj -Recurse | ForEach-Object {
     Push-Location $_.DirectoryName
     Test-Projects $_.DirectoryName
     Pop-Location
