@@ -28,6 +28,7 @@ namespace Nancy.Helpers
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Reflection;
 
     internal static class ReflectionUtils
@@ -37,8 +38,10 @@ namespace Nancy.Helpers
             if (t == null)
                 throw new ArgumentNullException("t");
 
-
             if (t.GetTypeInfo().IsAbstract || t.GetTypeInfo().IsInterface || t.IsArray)
+                return false;
+
+            if (t.GetTypeInfo().IsGenericType)
                 return false;
 
             if (!HasDefaultConstructor(t))
@@ -53,12 +56,11 @@ namespace Nancy.Helpers
             {
                 throw new ArgumentNullException("t");
             }
-#if DOTNET5_4
-            return (t.GetConstructor(Type.EmptyTypes) != null);
-#else
-            return (t.GetConstructor(BindingFlags.Instance, null, Type.EmptyTypes, null) != null);
-#endif
 
+            var hasDefaultConstructor =
+                t.GetTypeInfo().DeclaredConstructors.Any(ctor => !ctor.GetParameters().Any());
+
+            return hasDefaultConstructor;
         }
 
         public static bool IsAssignable(Type to, Type from)

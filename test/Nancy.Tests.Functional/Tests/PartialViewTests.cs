@@ -1,4 +1,5 @@
-﻿namespace Nancy.Tests.Functional.Tests
+﻿#if !DNXCORE50
+namespace Nancy.Tests.Functional.Tests
 {
     using System;
     using System.Threading.Tasks;
@@ -59,3 +60,5 @@
         }
     }
 }
+
+#endif
