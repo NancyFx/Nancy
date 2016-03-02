@@ -31,12 +31,6 @@ function Restore-Packages
     & dnu restore --quiet ("""" + $DirectoryName + """")
 }
 
-function Build-Projects
-{
-    param([string] $DirectoryName, [string] $Configuration)
-    & dnu build ("""" + $DirectoryName + """") --configuration $Configuration --out .\artifacts\bin; if($LASTEXITCODE -ne 0) { exit 1 }
-}
-
 function Pack-Projects
 {
     param([string] $DirectoryName, [string] $Configuration)
@@ -85,6 +79,8 @@ Install-Dnvm
 # Install DNX
 dnvm install $dnxVersion -r CoreCLR -NoNative
 dnvm install $dnxVersion -r CLR -NoNative
+
+# Start with regular CLR
 dnvm use $dnxVersion -r CLR
 
 # Package restore
