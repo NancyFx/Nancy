@@ -125,7 +125,7 @@ namespace Nancy.ModelBinding
                         }
                         else
                         {
-                            genericinstance = Activator.CreateInstance(bindingContext.GenericType);
+                            genericinstance = bindingContext.GenericType.CreateInstance();
                             model.Add(genericinstance);
                         }
 
@@ -437,11 +437,11 @@ namespace Nancy.ModelBinding
 
             if (instance == null)
             {
-                return Activator.CreateInstance(modelType);
+                return modelType.CreateInstance(true);
             }
 
             return !modelType.IsInstanceOfType(instance) ?
-                Activator.CreateInstance(modelType) :
+                modelType.CreateInstance(true) :
                 instance;
         }
 

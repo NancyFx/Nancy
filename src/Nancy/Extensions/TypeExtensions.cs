@@ -11,6 +11,31 @@
     public static class TypeExtensions
     {
         /// <summary>
+        /// Creates an instance of <paramref name="type"/> and cast it to <typeparamref name="T"/>.
+        /// </summary>
+        /// <param name="type">The type to create an instance of.</param>
+        /// <param name="nonPublic"><see langword="true"/> if a non-public constructor can be used, otherwise <see langword="false"/>.</param>
+        public static T CreateInstance<T>(this Type type, bool nonPublic = false)
+        {
+            if (!typeof(T).GetTypeInfo().IsAssignableFrom(type.GetTypeInfo()))
+            {
+                throw new InvalidOperationException("Unable to create instance of " + type.GetTypeInfo().FullName + "since it can't be cast to " + typeof(T).GetTypeInfo().FullName);
+            }
+
+            return (T)CreateInstance(type, nonPublic);
+        }
+
+        /// <summary>
+        /// Creates an instance of <paramref name="type"/>.
+        /// </summary>
+        /// <param name="type">The type to create an instance of.</param>
+        /// <param name="nonPublic"><see langword="true"/> if a non-public constructor can be used, otherwise <see langword="false"/>.</param>
+        public static object CreateInstance(this Type type, bool nonPublic = false)
+        {
+            return CreateInstanceInternal(type, nonPublic);
+        }
+
+        /// <summary>
         /// returns the assembly that the type belongs to
         /// </summary>
         /// <param name="source"></param>
@@ -178,5 +203,46 @@
             else
                 return TypeCode.Object;
         }
+
+        private static object CreateInstanceInternal(Type type, bool nonPublic = false)
+        {
+#if !DOTNET5_4
+            return Activator.CreateInstance(type, nonPublic);
+        }
+#else
+            var constructor = type.GetDefaultConstructor(nonPublic);
+
+            if (constructor == null)
+            {
+                throw new MissingMethodException("No parameterless constructor defined for this object.");
+            }
+
+            return constructor.Invoke(Array.Empty<object>());
+        }
+
+        private static ConstructorInfo GetDefaultConstructor(this Type type, bool nonPublic = false)
+        {
+            var typeInfo = type.GetTypeInfo();
+
+            var constructors = typeInfo.DeclaredConstructors;
+
+            foreach (var constructor in constructors)
+            {
+                var parameters = constructor.GetParameters();
+
+                if (parameters.Length > 0)
+                {
+                    continue;
+                }
+
+                if (!constructor.IsPrivate || nonPublic)
+                {
+                    return constructor;
+                }
+            }
+
+            return null;
+        }
+#endif
     }
 }

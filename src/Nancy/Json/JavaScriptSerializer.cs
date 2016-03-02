@@ -33,7 +33,7 @@ namespace Nancy.Json
     using System.Collections.Generic;
     using System.IO;
     using Nancy.Json.Simple;
-
+    using Nancy.Extensions;
     /// <summary>
     /// JavaScriptSerializer responsible for serializing objects
     /// </summary>
