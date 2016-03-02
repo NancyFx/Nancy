@@ -28,7 +28,7 @@ function Get-DnxVersion
 function Restore-Packages
 {
     param([string] $DirectoryName)
-    & dnu restore ("""" + $DirectoryName + """")
+    & dnu restore --quiet ("""" + $DirectoryName + """")
 }
 
 function Build-Projects
@@ -40,7 +40,7 @@ function Build-Projects
 function Pack-Projects
 {
     param([string] $DirectoryName, [string] $Configuration)
-    & dnu pack ("""" + $DirectoryName + """") --configuration $Configuration --out .\artifacts\packages; if($LASTEXITCODE -ne 0) { exit 2 }
+    & dnu pack --quiet ("""" + $DirectoryName + """") --configuration $Configuration --out .\artifacts\packages; if($LASTEXITCODE -ne 0) { exit 2 }
 }
 
 function Test-Projects
