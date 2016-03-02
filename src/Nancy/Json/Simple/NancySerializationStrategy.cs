@@ -19,6 +19,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="NancySerializationStrategy"/> class.
         /// </summary>
+        /// <remarks>Casing of C# objects will be defaulted to camelCase</remarks>
         public NancySerializationStrategy() : this(false)
         {
 
@@ -68,7 +69,7 @@
         /// </summary>
         /// <param name="value">The object to deserialize</param>
         /// <param name="type">The type of object to deserialize</param>
-        /// <returns></returns>
+        /// <returns>A instance of <paramref name="type" /> deserialized from <paramref name="value"/></returns>
         public override object DeserializeObject(object value, Type type)
         {
             if (type.IsEnum || (ReflectionUtils.IsNullableType(type) && Nullable.GetUnderlyingType(type).IsEnum))
@@ -132,7 +133,7 @@
         /// </summary>
         /// <param name="input">The object to serialize</param>
         /// <param name="output">The serialized object</param>
-        /// <returns></returns>
+        /// <returns>true if <paramref name="input"/> was converted successfully; otherwise, false</returns>
         protected override bool TrySerializeKnownTypes(object input, out object output)
         {
             var dynamicValue = input as DynamicDictionaryValue;

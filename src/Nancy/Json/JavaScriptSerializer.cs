@@ -79,7 +79,7 @@ namespace Nancy.Json
         /// </summary>
         /// <param name="input">JSON representation</param>
         /// <typeparam name="T">The <see cref="Type"/> to deserialize into</typeparam>
-        /// <returns></returns>
+        /// <returns>An instance of type <typeparamref name="T"/> representing <paramref name="input"/> as an object</returns>
         public T Deserialize<T>(string input)
         {
             return SimpleJson.DeserializeObject<T>(input, this.serializerStrategy);
@@ -89,7 +89,7 @@ namespace Nancy.Json
         /// Deserialize JSON
         /// </summary>
         /// <param name="input">JSON representation</param>
-        /// <returns></returns>
+        /// <returns>An object representing <paramref name="input"/></returns>
         public object DeserializeObject(string input)
         {
             return SimpleJson.DeserializeObject(input, null, this.serializerStrategy);
@@ -148,7 +148,7 @@ namespace Nancy.Json
         /// Serialize an object to JSON
         /// </summary>
         /// <param name="obj">The object to serialize</param>
-        /// <returns></returns>
+        /// <returns>A JSON string representation of <paramref name="obj"/></returns>
         public string Serialize(object obj)
         {
             return SimpleJson.SerializeObject(obj, this.serializerStrategy);
