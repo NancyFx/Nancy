@@ -97,8 +97,8 @@ Write-Host "Build number: " $env:DNX_BUILD_VERSION
 # Package
 Get-ChildItem -Path .\src -Filter *.xproj -Recurse | ForEach-Object { Pack-Projects $_.DirectoryName $env:CONFIGURATION }
 
-# Test - Skipping tests until properly migrated to new xUnit
-Get-ChildItem -Path .\test -Filter *Tests.xproj -Recurse | ForEach-Object {
+# Test
+Get-ChildItem -Path .\test -Filter *.xproj -Exclude Nancy.ViewEngines.Razor.Tests.Models.xproj -Recurse | ForEach-Object {
     Push-Location $_.DirectoryName
     Test-Projects $_.DirectoryName
     Pop-Location
