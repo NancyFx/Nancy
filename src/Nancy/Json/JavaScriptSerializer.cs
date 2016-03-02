@@ -99,7 +99,7 @@ namespace Nancy.Json
         /// Register custom JSON converters
         /// </summary>
         /// <param name="converters">An array of <see cref="JavaScriptConverter"/> to register</param>
-        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentNullException"><paramref name="converters"/> is null</exception>
         public void RegisterConverters(IEnumerable<JavaScriptConverter> converters)
         {
             if (converters == null)
@@ -114,7 +114,7 @@ namespace Nancy.Json
         /// Register custom JSON converters
         /// </summary>
         /// <param name="primitiveConverters">An array of <see cref="JavaScriptPrimitiveConverter"/></param>
-        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentNullException"><paramref name="primitiveConverters"/> is null</exception>
         public void RegisterConverters(IEnumerable<JavaScriptPrimitiveConverter> primitiveConverters)
         {
             if (primitiveConverters == null)

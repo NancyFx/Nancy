@@ -19,7 +19,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="NancySerializationStrategy"/> class.
         /// </summary>
-        /// <remarks>Casing of C# objects will be defaulted to camelCase</remarks>
+        /// <remarks>C# casing of objects will be defaulted to camelCase</remarks>
         public NancySerializationStrategy() : this(false)
         {
 
@@ -56,7 +56,7 @@
         /// Formats a property name to a JSON field name
         /// </summary>
         /// <param name="clrPropertyName">The property name to format</param>
-        /// <returns></returns>
+        /// <returns>camelCase <paramref name="clrPropertyName"/> if retainCasing is false, otherwise <paramref name="clrPropertyName"/></returns>
         protected override string MapClrMemberNameToJsonFieldName(string clrPropertyName)
         {
             return this.retainCasing
