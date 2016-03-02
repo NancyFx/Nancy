@@ -1,6 +1,7 @@
 ﻿namespace Nancy.Json.Simple
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
@@ -15,6 +16,8 @@
         private readonly bool retainCasing;
         private readonly List<JavaScriptConverter> converters = new List<JavaScriptConverter>();
         private readonly List<JavaScriptPrimitiveConverter> primitiveConverters = new List<JavaScriptPrimitiveConverter>();
+        private readonly ConcurrentDictionary<Type, JavaScriptConverter> converterCache = new ConcurrentDictionary<Type, JavaScriptConverter>(); 
+        private readonly ConcurrentDictionary<Type, JavaScriptPrimitiveConverter> primitiveConverterCache = new ConcurrentDictionary<Type, JavaScriptPrimitiveConverter>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancySerializationStrategy"/> class.
@@ -72,7 +75,8 @@
         /// <returns>A instance of <paramref name="type" /> deserialized from <paramref name="value"/></returns>
         public override object DeserializeObject(object value, Type type)
         {
-            if (type.IsEnum || (ReflectionUtils.IsNullableType(type) && Nullable.GetUnderlyingType(type).IsEnum))
+            var typeInfo = type.GetTypeInfo();
+            if (typeInfo.IsEnum || (ReflectionUtils.IsNullableType(type) && Nullable.GetUnderlyingType(type).GetTypeInfo().IsEnum))
             {
                 var typeToParse = ReflectionUtils.IsNullableType(type) 
                     ? Nullable.GetUnderlyingType(type) 
@@ -101,12 +105,12 @@
                 return javascriptConverter.Deserialize(valueDictionary, type);
             }
 
-            if (!type.IsGenericType)
+            if (!typeInfo.IsGenericType)
             {
                 return base.DeserializeObject(value, type);
             }
 
-            var genericType = type.GetGenericTypeDefinition();
+            var genericType = typeInfo.GetGenericTypeDefinition();
             var genericTypeConverter = this.FindJavaScriptConverter(genericType);
 
             if (genericTypeConverter == null)
@@ -115,7 +119,7 @@
             }
 
             var values = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
-            var genericArguments = type.GetGenericArguments();
+            var genericArguments = typeInfo.GetGenericArguments();
 
             for (var i = 0; i < genericArguments.Length; i++)
             {
@@ -203,10 +207,7 @@
 
         private JavaScriptPrimitiveConverter FindPrimitiveConverter(Type inputType)
         {
-            var primitiveConverter =
-                this.primitiveConverters.FirstOrDefault(x => x.SupportedTypes.Any(st => st.IsAssignableFrom(inputType)));
-
-            return primitiveConverter;
+            return this.primitiveConverterCache.GetOrAdd(inputType, typeToConvert => this.primitiveConverters.FirstOrDefault(converter => converter.SupportedTypes.Any(supportedType => supportedType.IsAssignableFrom(typeToConvert))));
         }
 
         private bool TrySerializeJavaScriptConverter(object input, out object output, Type inputType)
@@ -224,9 +225,7 @@
 
         private JavaScriptConverter FindJavaScriptConverter(Type inputType)
         {
-            var converter = this.converters.FirstOrDefault(x => x.SupportedTypes.Any(st => st.IsAssignableFrom(inputType)));
-
-            return converter;
+            return this.converterCache.GetOrAdd(inputType, typeToConvert => this.converters.FirstOrDefault(converter => converter.SupportedTypes.Any(supportedType => supportedType.IsAssignableFrom(typeToConvert))));
         }
     }
 }
