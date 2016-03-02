@@ -39,10 +39,6 @@ namespace Nancy.Json
     /// </summary>
     public class JavaScriptSerializer
     {
-        internal const string SerializedTypeNameKey = "__type";
-
-        internal static readonly JavaScriptSerializer DefaultSerializer = new JavaScriptSerializer(JsonConfiguration.Default);
-
         private readonly NancySerializationStrategy serializerStrategy;
 
         /// <summary>
@@ -135,12 +131,12 @@ namespace Nancy.Json
         {
             if (converters != null)
             {
-                RegisterConverters(converters);
+                this.RegisterConverters(converters);
             }
 
             if (primitiveConverters != null)
             {
-                RegisterConverters(primitiveConverters);
+                this.RegisterConverters(primitiveConverters);
             }
         }
 
@@ -154,9 +150,14 @@ namespace Nancy.Json
             return SimpleJson.SerializeObject(obj, this.serializerStrategy);
         }
 
-        internal void Serialize(object obj, TextWriter output)
+        /// <summary>
+        /// Serialize an object to JSON and write result to <paramref name="output"/>
+        /// </summary>
+        /// <param name="obj">The object to serialize</param>
+        /// <param name="output">An instance of <see cref="TextWriter" /> to write the serialized <paramref name="obj"/></param>
+        public void Serialize(object obj, TextWriter output)
         {
-            output.Write(Serialize(obj));
+            output.Write(this.Serialize(obj));
         }
     }
 }
