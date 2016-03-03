@@ -81,24 +81,6 @@
             actual.ShouldEqual("{\"FirstName\":\"Joe\",\"lastName\":\"Doe\"}");
         }
 
-        [Fact]
-        public void Should_camel_case_property_names_if_local_override_is_set()
-        {
-            // Given
-            var environment = GetTestableEnvironment(x => x.Json(retainCasing: true));
-            var serializer = new DefaultJsonSerializer(environment) { RetainCasing = false };
-
-            var input = new { FirstName = "Joe", lastName = "Doe" };
-
-            // When
-            var output = new MemoryStream();
-            serializer.Serialize("application/json", input, output);
-            var actual = Encoding.UTF8.GetString(output.ToArray());
-
-            // Then
-            actual.ShouldEqual("{\"firstName\":\"Joe\",\"lastName\":\"Doe\"}");
-        }
-
         public class PersonWithFields
         {
             public string FirstName;
@@ -127,54 +109,6 @@
                 GetTimezoneSuffix(input.LocalDateTime, ":")));
         }
 
-        [Fact]
-        public void Should_use_wcf_datetimeformat_when_iso8601dateformat_is_false()
-        {
-            // Given
-            var environment = GetTestableEnvironment(x => x.Json(useIso8601DateFormat: false));
-            var serializer = new DefaultJsonSerializer(environment);
-            var input = new
-            {
-                UnspecifiedDateTime = new DateTime(2014, 3, 9, 17, 03, 25).AddMilliseconds(234),
-                LocalDateTime = new DateTime(2014, 3, 9, 17, 03, 25, DateTimeKind.Local).AddMilliseconds(234),
-                UtcDateTime = new DateTime(2014, 3, 9, 16, 03, 25, DateTimeKind.Utc).AddMilliseconds(234)
-            };
-
-            // When
-            var output = new MemoryStream();
-            serializer.Serialize("application/json", input, output);
-            var actual = Encoding.UTF8.GetString(output.ToArray());
-
-            // Then
-		    var ticks = (input.LocalDateTime.ToUniversalTime().Ticks - InitialJavaScriptDateTicks)/(long)10000;
-            actual.ShouldEqual(string.Format(@"{{""unspecifiedDateTime"":""\/Date({0}{1})\/"",""localDateTime"":""\/Date({0}{1})\/"",""utcDateTime"":""\/Date(1394381005234)\/""}}",
-                ticks, GetTimezoneSuffix(input.LocalDateTime)));
-        }
-
-        [Fact]
-        public void Should_use_wcf_datetimeformat_when_iso8601dateformat_local_override_is_false()
-        {
-            // Given
-            var environment = GetTestableEnvironment(x => x.Json());
-            var sut = new DefaultJsonSerializer(environment) { ISO8601DateFormat = false };
-            var input = new
-            {
-                UnspecifiedDateTime = new DateTime(2014, 3, 9, 17, 03, 25).AddMilliseconds(234),
-                LocalDateTime = new DateTime(2014, 3, 9, 17, 03, 25, DateTimeKind.Local).AddMilliseconds(234),
-                UtcDateTime = new DateTime(2014, 3, 9, 16, 03, 25, DateTimeKind.Utc).AddMilliseconds(234)
-            };
-
-            // When
-            var output = new MemoryStream();
-            sut.Serialize("application/json", input, output);
-            var actual = Encoding.UTF8.GetString(output.ToArray());
-
-            // Then
-            var ticks = (input.LocalDateTime.ToUniversalTime().Ticks - InitialJavaScriptDateTicks) / (long)10000;
-            actual.ShouldEqual(string.Format(@"{{""unspecifiedDateTime"":""\/Date({0}{1})\/"",""localDateTime"":""\/Date({0}{1})\/"",""utcDateTime"":""\/Date(1394381005234)\/""}}",
-                ticks, GetTimezoneSuffix(input.LocalDateTime)));
-        }
-
         private static INancyEnvironment GetTestableEnvironment()
         {
             return GetTestableEnvironment(env =>
@@ -196,8 +130,6 @@
 
             return environment;
         }
-
-        private static readonly long InitialJavaScriptDateTicks = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).Ticks;
 
         private static string GetTimezoneSuffix(DateTime value, string separator = "")
         {

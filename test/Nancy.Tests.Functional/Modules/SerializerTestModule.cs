@@ -17,7 +17,7 @@
 
             Post["/serializer"] = _ =>
             {
-                var model = new FakeSerializerModel { CreatedOn = new DateTime(2014, 01, 30) };
+                var model = new FakeSerializerModel { CreatedOn = new DateTime(2014, 01, 30, 0, 0, 0, DateTimeKind.Utc) };
                 this.BindTo(model);
                 return model;
             };

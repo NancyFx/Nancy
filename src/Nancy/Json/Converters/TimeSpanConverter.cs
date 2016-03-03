@@ -54,6 +54,11 @@ namespace Nancy.Json.Converters
                 return (int)value;
             }
 
+            if (value is long)
+            {
+                return Convert.ToInt32((long)value);
+            }
+
             var valueString = value as string;
             if (valueString == null)
             {

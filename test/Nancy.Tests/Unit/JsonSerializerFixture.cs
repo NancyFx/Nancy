@@ -1,7 +1,6 @@
 ﻿namespace Nancy.Tests.Unit
 {
     using System;
-    using System.Text;
 
     using Nancy.Json;
 
@@ -14,14 +13,13 @@
         {
             // Given
             var serializer = new JavaScriptSerializer();
-            var sb = new StringBuilder();
             var offset = new DateTimeOffset(2014, 12, 1, 17, 0, 0, new TimeSpan(0, 6, 0, 0));
 
             // When
-            serializer.Serialize(offset, sb);
+            var result = serializer.Serialize(offset);
             
             // Then
-            sb.ToString().ShouldEqual(@"""2014-12-01T17:00:00.0000000+06:00""");
+            result.ShouldEqual(@"""2014-12-01T17:00:00.0000000+06:00""");
         }
 
         [Fact]
@@ -43,13 +41,13 @@
         {
             // Given
             var serializer = new JavaScriptSerializer();
-            var sb = new StringBuilder();
             var offset = new DateTimeOffset(2014, 12, 1, 17, 0, 0, new TimeSpan(0, 6, 0, 0));
 
             // When
-            serializer.Serialize(offset, sb);
-            Console.WriteLine(sb.ToString());
-            var actual = serializer.Deserialize<DateTimeOffset>(sb.ToString());
+            var result = serializer.Serialize(offset);
+
+            Console.WriteLine(result);
+            var actual = serializer.Deserialize<DateTimeOffset>(result);
 
             // Then
             actual.ShouldEqual(offset);

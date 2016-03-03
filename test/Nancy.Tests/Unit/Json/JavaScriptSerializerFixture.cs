@@ -1,6 +1,7 @@
 ﻿namespace Nancy.Tests.Unit.Json
 {
     using System;
+    using System.Text;
     using Nancy.Configuration;
     using Nancy.Json;
     using Nancy.Json.Converters;
@@ -14,17 +15,10 @@
         {
             // Given
             var defaultSerializer = new JavaScriptSerializer();
+            var configuration = new JsonConfiguration(Encoding.UTF8, new[] { new TestConverter() }, new[] { new TestPrimitiveConverter() }, false);
 
             // When
-            var serializer = new JavaScriptSerializer(
-                registerConverters: true,
-                resolver: null,
-                maxJsonLength: defaultSerializer.MaxJsonLength,
-                recursionLimit: defaultSerializer.RecursionLimit,
-                retainCasing: defaultSerializer.RetainCasing,
-                iso8601DateFormat: defaultSerializer.ISO8601DateFormat,
-                converters: new[] { new TestConverter() },
-                primitiveConverters: new[] { new TestPrimitiveConverter() });
+            var serializer = new JavaScriptSerializer(configuration, true);
 
             var data =
                 new TestData()
@@ -57,15 +51,7 @@
             var defaultSerializer = new JavaScriptSerializer();
 
             // When
-            var serializer = new JavaScriptSerializer(
-                registerConverters: false,
-                resolver: null,
-                maxJsonLength: defaultSerializer.MaxJsonLength,
-                recursionLimit: defaultSerializer.RecursionLimit,
-                retainCasing: defaultSerializer.RetainCasing,
-                iso8601DateFormat: defaultSerializer.ISO8601DateFormat,
-                converters: new[] { new TestConverter() },
-                primitiveConverters: new[] { new TestPrimitiveConverter() });
+            var serializer = new JavaScriptSerializer(JsonConfiguration.Default);
 
             var data =
                 new TestData()
