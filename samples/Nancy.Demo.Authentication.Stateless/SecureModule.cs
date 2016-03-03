@@ -1,5 +1,6 @@
 namespace Nancy.Demo.Authentication.Stateless
 {
+    using System;
     using Nancy.Demo.Authentication.Stateless.Models;
     using Nancy.Security;
 
@@ -24,6 +25,12 @@ namespace Nancy.Demo.Authentication.Stateless
                             User = userModel
                         });
                 };
+
+          Post["secure/create_user"] = x =>
+          {
+              Tuple<string, string> user = UserDatabase.CreateUser(this.Context.Request.Form["username"], this.Context.Request.Form["password"]);
+              return this.Response.AsJson(new { username = user.Item1 });
+          };
         }
     }
 }

@@ -51,5 +51,12 @@ namespace Nancy.Demo.Authentication.Stateless
             var apiKeyToRemove = ActiveApiKeys.First(x => x.Item2 == apiKey);
             ActiveApiKeys.Remove(apiKeyToRemove);
         }
+
+        public static Tuple<string, string> CreateUser(string username, string password)
+        {
+            var user = new Tuple<string, string>(username, password);
+            Users.Add(user);
+            return user;
+        }
     }
 }

@@ -16,6 +16,13 @@
 
             <h1>Secure Zone</h1>
             <div>Secure Content: <span id="secureContent" class='secure'></span></div>
+
+            <div>
+                Username <input type="text" id="newusername"/><br/>
+                Password <input id="newpassword" type="password"/><br/>
+                <input type="button" onclick="createUser()"/>
+                <div id="createuserresult"></div>
+            </div>
         </div>
 
         <script type="text/javascript">
@@ -89,6 +96,46 @@
                     });
                 }
             });
+
+            function createUser() {
+                var apiToken = ApiToken.Get();
+                if (apiToken.IsValid) {
+                    //user is logged in
+                    var request = {
+                        username: $("#newusername").val(),
+                        password: $("#newpassword").val()
+                    };
+
+                    //populate the view on success
+                    var success = function (response) {
+                        $("#createuserresult").html("User " + response.username + " has been created");
+                    };
+
+                    //redirect the user to the login page on 401 (or display an alert if it's something worse)
+                    var error = function (response) {
+                      if (response.status == 401) {
+                        window.location = "login.html";
+                        return;
+                      }
+
+                      alert("Something went wrong. " + response.error);
+                    };
+
+                    $.ajax({
+                      type: 'POST',
+                      url: api.create_user + "?ApiKey=" + apiToken.Key,
+                      data: request,
+                      success: success,
+                      error: error,
+                      dataType: "json"
+                    });
+                }
+                else {
+                    //if we don't have the apiToken saved, it means the user has not logged in yet
+                    //send 'em packing to the login page
+                    window.location = "login.html";
+                }
+            }
         </script>
     </body>
 </html>
