@@ -4,12 +4,11 @@ sudo: false
 install:
   - gem install bundle
   - bundle
-  - mono tools/nuget/NuGet.exe restore Nancy.sln
   - echo \#\!/bin/bash >> ./travis.sh
   - echo set -e >> ./travis.sh
   - echo set -x >> ./travis.sh
   - echo set -o pipefail >> ./travis.sh
-  - echo echo Running on Mono 3.x >> ./travis.sh
+  - echo echo Running on latest Mono >> ./travis.sh
   - echo rake mono >> ./travis.sh
   - chmod +x ./travis.sh
   - cat travis.sh
