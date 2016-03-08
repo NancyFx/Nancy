@@ -17,13 +17,13 @@ Albacore.configure do |config|
 end
 
 desc "Compiles solution and runs unit tests"
-task :default => [:clean, :assembly_info, :compile, :test, :publish, :package]
+task :default => [:clean, :assembly_info, :nuget_restore, :compile, :test, :publish, :package]
 
 desc "Executes all Xunit tests"
 task :test => [:xunit]
 
 desc "Compiles solution and runs unit tests for Mono"
-task :mono => [:clean, :assembly_info, :compilemono, :testmono]
+task :mono => [:clean, :assembly_info, :nuget_restore_mono, :compilemono, :testmono]
 
 desc "Executes all tests with Mono"
 task :testmono => [:xunitmono]
@@ -77,6 +77,18 @@ xunit :xunit => [:compile] do |xunit|
 
     xunit.command = "tools/xunit/xunit.console.x86.exe"
     xunit.assemblies = tests
+end
+
+desc "Restore NuGet packages"
+exec :nuget_restore do |cmd|
+  cmd.command = "tools/nuget/NuGet.exe"
+  cmd.parameters = ["restore #{SOLUTION_FILE}"]
+end
+
+desc "Restore NuGet packages on Mono"
+exec :nuget_restore_mono do |cmd|
+  cmd.command = "mono"
+  cmd.parameters = ["tools/nuget/NuGet.exe restore #{SOLUTION_FILE}"]
 end
 
 desc "Executes xUnit tests using Mono"
@@ -142,7 +154,7 @@ task :nuget_package => [:publish] do
     # Generate the NuGet packages from the newly edited nuspec fileiles
     nuspecs.each do |nuspec|
         nuget = NuGetPack.new
-        nuget.command = "tools/nuget/nuget.exe"
+        nuget.command = "tools/nuget/NuGet.exe"
         nuget.nuspec = "\"" + root + '/' + nuspec + "\""
         nuget.output = "#{OUTPUT}/nuget"
         nuget.parameters = "-Symbols", "-BasePath \"#{root}\""     #using base_folder throws as there are two options that begin with b in nuget 1.4
@@ -157,7 +169,7 @@ task :nuget_publish, :api_key do |task, args|
         puts "Pushing #{nupkg}"
         nuget_push = NuGetPush.new
 	nuget_push.apikey = args.api_key if !args.empty?
-        nuget_push.command = "tools/nuget/nuget.exe"
+        nuget_push.command = "tools/nuget/NuGet.exe"
         nuget_push.package = "\"" + nupkg + "\""
         nuget_push.create_only = false
         nuget_push.execute
@@ -172,7 +184,7 @@ task :nuget_publish_alt, :api_key, :source do |task, args|
         puts "Pushing #{nupkg} to {#args.source}"
         nuget_push = NuGetPush.new
         nuget_push.apikey = args.api_key if !args.empty?
-        nuget_push.command = "tools/nuget/nuget.exe"
+        nuget_push.command = "tools/nuget/NuGet.exe"
         nuget_push.package = "\"" + nupkg + "\""
         nuget_push.source = args.source
         nuget_push.create_only = false
@@ -250,19 +262,3 @@ end
 
 $nancy_version = get_assembly_version SHARED_ASSEMBLY_INFO
 puts "Version: #{$nancy_version}"
-
-#TODO:
-#-----
-#  8. Git info into shared assemby info (see fubumvc sample, also psake sample in mefcontrib)
-#  9. Documentation (docu?) - Started, seems to have trouble with .NET 4 assembilies. Needs investigation and probably new build of docu for .NET 4.
-# 10. Test coverage report (NCover?)
-
-#DONE:
-#-----
-#  1. Copy dlls to build folder (not tests or demo files) - DONE
-#  2. Fix test tasks - DONE
-#  3. Set task dependencies - DONE
-#  4. Zip binaries with docs (named with version number) - DONE
-#  5. Create a how to build file - DONE
-#  6. TeamCity integration - DONE
-#  7. NuGet task - DONE
