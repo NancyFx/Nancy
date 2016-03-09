@@ -14,7 +14,7 @@
     <projectUrl>http://nancyfx.org</projectUrl>
     <dependencies>
       <dependency id="Nancy" />
-      <dependency id="OWIN" version="1.0" />
+      <dependency id="Owin" version="1.0" />
     </dependencies> 
     <tags>Nancy OWIN</tags>
   </metadata>
