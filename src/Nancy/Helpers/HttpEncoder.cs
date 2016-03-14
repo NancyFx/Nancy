@@ -237,7 +237,7 @@ namespace Nancy.Helpers
 
             int blen = bytes.Length;
             if (blen == 0)
-                return new byte[0];
+                return ArrayCache.Empty<byte>();
 
             if (offset < 0 || offset >= blen)
                 throw new ArgumentOutOfRangeException("offset");

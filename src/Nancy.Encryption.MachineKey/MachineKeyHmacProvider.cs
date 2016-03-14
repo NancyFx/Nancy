@@ -86,7 +86,7 @@
         {
             if (string.IsNullOrEmpty(data) || data.Length % 2 != 0)
             {
-                return new byte[] { };
+                return ArrayCache.Empty<byte>();
             }
 
             var output = new byte[data.Length / 2];

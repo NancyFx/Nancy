@@ -15,7 +15,7 @@
         public DefaultStaticContentsConventionsFixture()
         {
             var typeCatalog = A.Fake<ITypeCatalog>();
-            A.CallTo(() => typeCatalog.GetTypesAssignableTo(A<Type>._, A<TypeResolveStrategy>._)).Returns(new Type[] { });
+            A.CallTo(() => typeCatalog.GetTypesAssignableTo(A<Type>._, A<TypeResolveStrategy>._)).Returns(ArrayCache.Empty<Type>());
 
             this.conventions = new NancyConventions(typeCatalog);
             this.staticContentsConventions = new DefaultStaticContentsConventions();

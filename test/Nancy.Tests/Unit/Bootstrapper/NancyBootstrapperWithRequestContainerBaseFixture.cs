@@ -158,8 +158,8 @@
         public void Should_not_ask_to_resolve_request_startups_if_none_registered()
         {
             // Given
-            this.bootstrapper.RequestStartupTypes = new Type[] { };
-            this.bootstrapper.OverriddenRequestStartupTasks = new IRequestStartup[] { };
+            this.bootstrapper.RequestStartupTypes = ArrayCache.Empty<Type>();
+            this.bootstrapper.OverriddenRequestStartupTasks = ArrayCache.Empty<IRequestStartup>();
             this.bootstrapper.Initialise();
 
             // When
@@ -271,7 +271,7 @@
             /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IApplicationStartup"/> instances. </returns>
             protected override IEnumerable<IApplicationStartup> GetApplicationStartupTasks()
             {
-                return this.OverriddenApplicationStartupTasks ?? new IApplicationStartup[] { };
+                return this.OverriddenApplicationStartupTasks ?? ArrayCache.Empty<IApplicationStartup>();
             }
 
             protected override IEnumerable<IRequestStartup> RegisterAndGetRequestStartupTasks(FakeContainer container, Type[] requestStartupTypes)
@@ -280,7 +280,7 @@
 
                 this.GetRequestStartupTasksCalled = true;
 
-                return this.OverriddenRequestStartupTasks ?? new IRequestStartup[] { };
+                return this.OverriddenRequestStartupTasks ?? ArrayCache.Empty<IRequestStartup>();
             }
 
             /// <summary>
@@ -289,7 +289,7 @@
             /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IRegistrations"/> instances.</returns>
             protected override IEnumerable<IRegistrations> GetRegistrationTasks()
             {
-                return this.OverriddenRegistrationTasks ?? new IRegistrations[] { };
+                return this.OverriddenRegistrationTasks ?? ArrayCache.Empty<IRegistrations>();
             }
 
             public override INancyEnvironment GetEnvironment()

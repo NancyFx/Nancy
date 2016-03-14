@@ -348,7 +348,7 @@ namespace Nancy.Helpers
             if (bytes == null)
                 return null;
             if (count == 0)
-                return new byte[0];
+                return ArrayCache.Empty<byte>();
 
             int len = bytes.Length;
             if (offset < 0 || offset >= len)
@@ -451,7 +451,7 @@ namespace Nancy.Helpers
                 return null;
 
             if (str.Length == 0)
-                return new byte[0];
+                return ArrayCache.Empty<byte>();
 
             byte[] bytes = e.GetBytes(str);
             return UrlEncodeToBytes(bytes, 0, bytes.Length);
@@ -463,7 +463,7 @@ namespace Nancy.Helpers
                 return null;
 
             if (bytes.Length == 0)
-                return new byte[0];
+                return ArrayCache.Empty<byte>();
 
             return UrlEncodeToBytes(bytes, 0, bytes.Length);
         }
@@ -493,7 +493,7 @@ namespace Nancy.Helpers
                 return null;
 
             if (str.Length == 0)
-                return new byte[0];
+                return ArrayCache.Empty<byte>();
 
             MemoryStream result = new MemoryStream(str.Length);
             foreach (char c in str)

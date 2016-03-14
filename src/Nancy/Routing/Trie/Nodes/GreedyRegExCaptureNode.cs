@@ -47,7 +47,7 @@
 
             if (!match.Success)
             {
-                return new MatchResult[] {};
+                return ArrayCache.Empty<MatchResult>();
             }
 
             foreach (var groupName in this.groupNames)

@@ -25,7 +25,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             var bindingDefaults =
                 new BindingDefaults(environment);
 
-            this.defaultBinder = new DefaultBinder(new ITypeConverter[] { }, new IBodyDeserializer[] { }, A.Fake<IFieldNameConverter>(), bindingDefaults);
+            this.defaultBinder = new DefaultBinder(ArrayCache.Empty<ITypeConverter>(), ArrayCache.Empty<IBodyDeserializer>(), A.Fake<IFieldNameConverter>(), bindingDefaults);
         }
 
         [Fact]

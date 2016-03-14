@@ -1239,7 +1239,7 @@ namespace Nancy.Json.Simple
         internal static IDictionary<Type, IDictionary<string, ReflectionUtils.GetDelegate>> GetCache;
         internal static IDictionary<Type, IDictionary<string, KeyValuePair<Type, ReflectionUtils.SetDelegate>>> SetCache;
 
-        internal static readonly Type[] EmptyTypes = new Type[0];
+        internal static readonly Type[] EmptyTypes = ArrayCache.Empty<Type>();
         internal static readonly Type[] ArrayConstructorParameterTypes = new Type[] { typeof(int) };
         protected static string FullDateTimeWithOffset = @"yyyy-MM-dd\THH:mm:ss.fffffffzzz";
         protected static string FullDateTimeUtc = @"yyyy-MM-dd\THH:mm:ss.fffffff\Z";

@@ -148,7 +148,7 @@
         public void Should_register_application_registration_type_registrations_into_container()
         {
             // Given
-            var typeRegistrations = new TypeRegistration[] { };
+            var typeRegistrations = ArrayCache.Empty<TypeRegistration>();
             var startupStub = A.Fake<IRegistrations>();
             A.CallTo(() => startupStub.TypeRegistrations).Returns(typeRegistrations);
             this.bootstrapper.OverriddenRegistrationTasks = new[] { startupStub };
@@ -164,7 +164,7 @@
         public void Should_register_application_registration_task_collection_registrations_into_container()
         {
             // Given
-            var collectionTypeRegistrations = new CollectionTypeRegistration[] { };
+            var collectionTypeRegistrations = ArrayCache.Empty<CollectionTypeRegistration>();
             var startupStub = A.Fake<IRegistrations>();
             A.CallTo(() => startupStub.CollectionTypeRegistrations).Returns(collectionTypeRegistrations);
             this.bootstrapper.OverriddenRegistrationTasks = new[] { startupStub };
@@ -180,7 +180,7 @@
         public void Should_register_application_registration_instance_registrations_into_container()
         {
             // Given
-            var instanceRegistrations = new InstanceRegistration[] { };
+            var instanceRegistrations = ArrayCache.Empty<InstanceRegistration>();
             var startupStub = A.Fake<IRegistrations>();
             A.CallTo(() => startupStub.InstanceRegistrations).Returns(instanceRegistrations);
             this.bootstrapper.OverriddenRegistrationTasks = new[] { startupStub };
@@ -274,7 +274,7 @@
         {
             // Given
             var uninitialiedBootstrapper = new FakeBootstrapperBaseImplementation();
-            uninitialiedBootstrapper.RequestStartupTypes = new Type[] { };
+            uninitialiedBootstrapper.RequestStartupTypes = ArrayCache.Empty<Type>();
             uninitialiedBootstrapper.Initialise();
 
             // When
@@ -359,7 +359,7 @@
         /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IApplicationStartup"/> instances. </returns>
         protected override IEnumerable<IApplicationStartup> GetApplicationStartupTasks()
         {
-            return this.OverriddenApplicationStartupTasks ?? new IApplicationStartup[] { };
+            return this.OverriddenApplicationStartupTasks ?? ArrayCache.Empty<IApplicationStartup>();
         }
 
         protected override IEnumerable<IRequestStartup> RegisterAndGetRequestStartupTasks(FakeContainer container, Type[] requestStartupTypes)
@@ -375,7 +375,7 @@
         /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IRegistrations"/> instances.</returns>
         protected override IEnumerable<IRegistrations> GetRegistrationTasks()
         {
-            return this.OverriddenRegistrationTasks ?? new IRegistrations[] { };
+            return this.OverriddenRegistrationTasks ?? ArrayCache.Empty<IRegistrations>();
         }
 
         /// <summary>
@@ -526,12 +526,12 @@
         /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IApplicationStartup"/> instances. </returns>
         protected override IEnumerable<IApplicationStartup> GetApplicationStartupTasks()
         {
-            return new IApplicationStartup[] { };
+            return ArrayCache.Empty<IApplicationStartup>();
         }
 
         protected override IEnumerable<IRequestStartup> RegisterAndGetRequestStartupTasks(object container, Type[] requestStartupTypes)
         {
-            return new IRequestStartup[] { };
+            return ArrayCache.Empty<IRequestStartup>();
         }
 
         /// <summary>
@@ -540,7 +540,7 @@
         /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IRegistrations"/> instances.</returns>
         protected override IEnumerable<IRegistrations> GetRegistrationTasks()
         {
-            return new IRegistrations[] { };
+            return ArrayCache.Empty<IRegistrations>();
         }
 
         /// <summary>
