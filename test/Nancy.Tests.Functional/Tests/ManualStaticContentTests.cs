@@ -19,7 +19,7 @@
                     configuration =>
                         {
                             configuration.ApplicationStartup((c, p) => StaticContent.Enable(p));
-                            configuration.Modules(new Type[] { });
+                            configuration.Modules(ArrayCache.Empty<Type>());
                         });
 
             this.browser = new Browser(bootstrapper);

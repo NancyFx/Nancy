@@ -9,7 +9,7 @@ namespace Nancy.ModelBinding
 
     public static class ModuleExtensions
     {
-        private static readonly string[] NoBlacklistedProperties = new string[0];
+        private static readonly string[] NoBlacklistedProperties = ArrayCache.Empty<string>();
 
         /// <summary>
         /// Parses an array of expressions like <code>t =&gt; t.Property</code> to a list of strings containing the property names;

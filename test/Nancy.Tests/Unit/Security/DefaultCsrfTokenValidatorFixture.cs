@@ -67,8 +67,8 @@
         public void Should_return_token_mismatch_if_random_bytes_empty()
         {
             DateTime date = DateTime.Now;
-            var tokenOne = new CsrfToken { CreatedDate = date, RandomBytes = new byte[] { } };
-            var tokenTwo = new CsrfToken { CreatedDate = date, RandomBytes = new byte[] { } };
+            var tokenOne = new CsrfToken { CreatedDate = date, RandomBytes = ArrayCache.Empty<byte>() };
+            var tokenTwo = new CsrfToken { CreatedDate = date, RandomBytes = ArrayCache.Empty<byte>() };
             tokenOne.CreateHmac(this.hmacProvider);
             tokenTwo.CreateHmac(this.hmacProvider);
 

@@ -40,15 +40,15 @@ namespace Nancy.Tests.Unit.ModelBinding
             this.bindingDefaults = new BindingDefaults(environment);
 
             this.emptyDefaults = A.Fake<BindingDefaults>(options => options.WithArgumentsForConstructor(new[] { environment }));
-            A.CallTo(() => this.emptyDefaults.DefaultBodyDeserializers).Returns(new IBodyDeserializer[] { });
-            A.CallTo(() => this.emptyDefaults.DefaultTypeConverters).Returns(new ITypeConverter[] { });
+            A.CallTo(() => this.emptyDefaults.DefaultBodyDeserializers).Returns(ArrayCache.Empty<IBodyDeserializer>());
+            A.CallTo(() => this.emptyDefaults.DefaultTypeConverters).Returns(ArrayCache.Empty<ITypeConverter>());
         }
 
         [Fact]
         public void Should_throw_if_type_converters_is_null()
         {
             // Given, When
-            var result = Record.Exception(() => new DefaultBinder(null, new IBodyDeserializer[] { }, A.Fake<IFieldNameConverter>(), this.bindingDefaults));
+            var result = Record.Exception(() => new DefaultBinder(null, ArrayCache.Empty<IBodyDeserializer>(), A.Fake<IFieldNameConverter>(), this.bindingDefaults));
 
             // Then
             result.ShouldBeOfType(typeof(ArgumentNullException));
@@ -58,7 +58,7 @@ namespace Nancy.Tests.Unit.ModelBinding
         public void Should_throw_if_body_deserializers_is_null()
         {
             // Given, When
-            var result = Record.Exception(() => new DefaultBinder(new ITypeConverter[] { }, null, A.Fake<IFieldNameConverter>(), this.bindingDefaults));
+            var result = Record.Exception(() => new DefaultBinder(ArrayCache.Empty<ITypeConverter>(), null, A.Fake<IFieldNameConverter>(), this.bindingDefaults));
 
             // Then
             result.ShouldBeOfType(typeof(ArgumentNullException));
@@ -102,7 +102,7 @@ namespace Nancy.Tests.Unit.ModelBinding
         public void Should_throw_if_field_name_converter_is_null()
         {
             // Given, When
-            var result = Record.Exception(() => new DefaultBinder(new ITypeConverter[] { }, new IBodyDeserializer[] { }, null, this.bindingDefaults));
+            var result = Record.Exception(() => new DefaultBinder(ArrayCache.Empty<ITypeConverter>(), ArrayCache.Empty<IBodyDeserializer>(), null, this.bindingDefaults));
 
             // Then
             result.ShouldBeOfType(typeof(ArgumentNullException));
@@ -112,7 +112,7 @@ namespace Nancy.Tests.Unit.ModelBinding
         public void Should_throw_if_defaults_is_null()
         {
             // Given, When
-            var result = Record.Exception(() => new DefaultBinder(new ITypeConverter[] { }, new IBodyDeserializer[] { }, A.Fake<IFieldNameConverter>(), null));
+            var result = Record.Exception(() => new DefaultBinder(ArrayCache.Empty<ITypeConverter>(), ArrayCache.Empty<IBodyDeserializer>(), A.Fake<IFieldNameConverter>(), null));
 
             // Then
             result.ShouldBeOfType(typeof(ArgumentNullException));
@@ -499,7 +499,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             A.CallTo(() => typeConverter.CanConvertTo(typeof(string), null)).WithAnyArguments().Returns(true);
             A.CallTo(() => typeConverter.Convert(null, null, null)).WithAnyArguments().Returns(null);
             A.CallTo(() => this.emptyDefaults.DefaultTypeConverters).Returns(new[] { typeConverter });
-            var binder = this.GetBinder(new ITypeConverter[] { });
+            var binder = this.GetBinder(ArrayCache.Empty<ITypeConverter>());
             var context = new NancyContext { Request = new FakeRequest("GET", "/") };
             context.Request.Form["StringProperty"] = "Test";
 
@@ -1515,7 +1515,7 @@ namespace Nancy.Tests.Unit.ModelBinding
         private IBinder GetBinder(IEnumerable<ITypeConverter> typeConverters = null, IEnumerable<IBodyDeserializer> bodyDeserializers = null, IFieldNameConverter nameConverter = null, BindingDefaults bindingDefaults = null)
         {
             var converters = typeConverters ?? new ITypeConverter[] { new DateTimeConverter(), new NumericConverter(), new FallbackConverter() };
-            var deserializers = bodyDeserializers ?? new IBodyDeserializer[] { };
+            var deserializers = bodyDeserializers ?? ArrayCache.Empty<IBodyDeserializer>();
             var converter = nameConverter ?? this.passthroughNameConverter;
             var defaults = bindingDefaults ?? this.emptyDefaults;
 

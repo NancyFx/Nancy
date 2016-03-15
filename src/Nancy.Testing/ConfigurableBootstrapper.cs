@@ -241,7 +241,7 @@ namespace Nancy.Testing
                     return moduleRegistrations;
                 }
 
-                return this.allDiscoveredModules ? base.Modules : new ModuleRegistration[] { };
+                return this.allDiscoveredModules ? base.Modules : ArrayCache.Empty<ModuleRegistration>();
             }
         }
 

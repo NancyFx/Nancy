@@ -19,7 +19,7 @@ namespace Nancy.Tests.Unit.Routing
         public void Should_not_trim_trailing_slash_if_requesting_root()
         {
             // Given, When
-            var results = this.matcher.Match("/", "/", new string[] { }, null);
+            var results = this.matcher.Match("/", "/", ArrayCache.Empty<string>(), null);
 
             // Then
             results.IsMatch.ShouldBeTrue();

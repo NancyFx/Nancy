@@ -48,7 +48,7 @@ namespace Nancy.Tests.Unit.ViewEngines
         {
             if (viewEngines == null)
             {
-                viewEngines = new IViewEngine[] { };
+                viewEngines = ArrayCache.Empty<IViewEngine>();
             }
 
             return new DefaultViewFactory(this.resolver, viewEngines, this.renderContextFactory, this.conventions, this.rootPathProvider);
