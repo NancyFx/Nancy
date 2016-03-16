@@ -27,7 +27,7 @@
         private readonly IRequestDispatcher dispatcher;
         private readonly INancyContextFactory contextFactory;
         private readonly IRequestTracing requestTracing;
-        private readonly IEnumerable<IStatusCodeHandler> statusCodeHandlers;
+        private readonly IReadOnlyCollection<IStatusCodeHandler> statusCodeHandlers;
         private readonly IStaticContentProvider staticContentProvider;
         private readonly IResponseNegotiator negotiator;
         private readonly CancellationTokenSource engineDisposedCts;
@@ -83,7 +83,7 @@
 
             this.dispatcher = dispatcher;
             this.contextFactory = contextFactory;
-            this.statusCodeHandlers = statusCodeHandlers;
+            this.statusCodeHandlers = statusCodeHandlers.ToArray();
             this.requestTracing = requestTracing;
             this.staticContentProvider = staticContentProvider;
             this.negotiator = negotiator;
@@ -217,17 +217,36 @@
                 return;
             }
 
-            var handlers = this.statusCodeHandlers
-                .Where(x => x.HandlesStatusCode(context.Response.StatusCode, context))
-                .ToList();
+            IStatusCodeHandler defaultHandler = null;
+            IStatusCodeHandler customHandler = null;
 
-            var defaultHandler = handlers
-                .FirstOrDefault(x => x is DefaultStatusCodeHandler);
+            foreach (var statusCodeHandler in this.statusCodeHandlers)
+            {
+                if (!statusCodeHandler.HandlesStatusCode(context.Response.StatusCode, context))
+                {
+                    continue;
+                }
 
-            var customHandler = handlers
-                .FirstOrDefault(x => !(x is DefaultStatusCodeHandler));
+                if (defaultHandler == null && (statusCodeHandler is DefaultStatusCodeHandler))
+                {
+                    defaultHandler = statusCodeHandler;
+                    continue;
+                }
+
+                if (customHandler == null && !(statusCodeHandler is DefaultStatusCodeHandler))
+                {
+                    customHandler = statusCodeHandler;
+                    continue;
+                }
+
+                if ((defaultHandler != null) && (customHandler != null))
+                {
+                    break;
+                }
+            }
 
             var handler = customHandler ?? defaultHandler;
+
             if (handler == null)
             {
                 return;
@@ -249,7 +268,7 @@
 
                 await response.PreExecute(context).ConfigureAwait(false);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 this.InvokeOnErrorHook(context, pipelines.OnError, ex);
             }
