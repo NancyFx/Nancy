@@ -17,13 +17,13 @@ Albacore.configure do |config|
 end
 
 desc "Compiles solution and runs unit tests"
-task :default => [:clean, :assembly_info, :nuget_restore, :compile, :test, :publish, :package]
+task :default => [:clean, :assembly_info, :compile, :test, :publish, :package]
 
 desc "Executes all Xunit tests"
 task :test => [:xunit]
 
 desc "Compiles solution and runs unit tests for Mono"
-task :mono => [:clean, :assembly_info, :nuget_restore_mono, :compilemono, :testmono]
+task :mono => [:clean, :assembly_info, :compilemono, :testmono]
 
 desc "Executes all tests with Mono"
 task :testmono => [:xunitmono]
@@ -48,14 +48,14 @@ task :assembly_info do
 end
 
 desc "Compile solution file"
-msbuild :compile => [:assembly_info] do |msb|
+msbuild :compile => [:nuget_restore, :assembly_info] do |msb|
     msb.properties = { :configuration => CONFIGURATION, "VisualStudioVersion" => get_vs_version() }
     msb.targets :Clean, :Build
     msb.solution = SOLUTION_FILE
 end
 
 desc "Compile solution file for Mono"
-xbuild :compilemono => [:assembly_info] do |xb|
+xbuild :compilemono => [:nuget_restore_mono, :assembly_info] do |xb|
     xb.solution = SOLUTION_FILE
     xb.properties = { :configuration => CONFIGURATIONMONO, "TargetFrameworkProfile" => "", "TargetFrameworkVersion" => "v4.5" }
 end
@@ -168,7 +168,7 @@ task :nuget_publish, :api_key do |task, args|
     nupkgs.each do |nupkg|
         puts "Pushing #{nupkg}"
         nuget_push = NuGetPush.new
-	nuget_push.apikey = args.api_key if !args.empty?
+        nuget_push.apikey = args.api_key if !args.empty?
         nuget_push.command = "tools/nuget/NuGet.exe"
         nuget_push.package = "\"" + nupkg + "\""
         nuget_push.create_only = false
@@ -252,8 +252,6 @@ def get_assembly_version(file)
       return result[1] if !result.nil?
     end
   end
-
-  ''
 end
 
 def get_vs_version()
