@@ -58,15 +58,19 @@
             return environment;
         }
 
-        private static object SafeGetDefaultConfiguration(INancyDefaultConfigurationProvider configurationProviders)
+        private static object SafeGetDefaultConfiguration(INancyDefaultConfigurationProvider configurationProvider)
         {
             try
             {
-                return configurationProviders.GetDefaultConfiguration();
+                return configurationProvider.GetDefaultConfiguration();
             }
-            catch (Exception)
+            catch(ConfigurationException)
             {
-                return null;
+                throw;
+            }
+            catch (Exception ex)
+            {
+                throw new ConfigurationException(string.Format("Error loading default confguration for {0}", configurationProvider.Key), ex);
             }
         }
     }
