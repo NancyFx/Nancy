@@ -294,7 +294,11 @@
             var linkProcessors = GetLinkProcessors(compatibleHeaders, response.ContentType);
             if (linkProcessors.Any())
             {
-                response.Headers["Link"] = CreateLinkHeader(requestUrl, linkProcessors);
+                var existingLinkHeader = response.Headers.ContainsKey("Link")
+                    ? response.Headers["Link"]
+                    : null;
+
+                response.Headers["Link"] = CreateLinkHeader(requestUrl, linkProcessors, existingLinkHeader);
             }
         }
 
@@ -328,16 +332,27 @@
         /// </summary>
         /// <param name="requestUrl">The request URL.</param>
         /// <param name="linkProcessors">The link processors.</param>
-        /// <returns>The link header.</returns>
-        private static string CreateLinkHeader(Url requestUrl, IEnumerable<KeyValuePair<string, MediaRange>> linkProcessors)
+        /// <param name="linkHeaderString">The existing Link HTTP Header string.</param>
+        /// <returns>
+        /// The link header.
+        /// </returns>
+        private static string CreateLinkHeader(Url requestUrl, IEnumerable<KeyValuePair<string, MediaRange>> linkProcessors, string linkHeaderString)
         {
             var fileName = Path.GetFileNameWithoutExtension(requestUrl.Path);
             var baseUrl = string.Concat(requestUrl.BasePath, "/", fileName);
 
-            var links = linkProcessors
-                .Select(lp => string.Format("<{0}.{1}>; rel=\"{2}\"", baseUrl, lp.Key, lp.Value));
+            var linkHeader = string.IsNullOrWhiteSpace(linkHeaderString)
+                ? new HttpLinkHeader()
+                : HttpLinkHeader.Parse(linkHeaderString);
 
-            return string.Join(",", links);
+            foreach (var linkProcessor in linkProcessors)
+            {
+                var uri = string.Concat(baseUrl, '.', linkProcessor.Key);
+                var link = new HttpLink(uri, "alternate", linkProcessor.Value);
+                linkHeader.Add(link);
+            }
+
+            return linkHeader.ToString();
         }
 
         /// <summary>
