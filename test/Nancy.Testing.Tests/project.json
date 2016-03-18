@@ -1,6 +1,6 @@
 {
     "dependencies": {
-        "AngleSharp": "0.9.4",
+        "AngleSharp": "0.9.5",
         "FakeItEasy": "2.0.0-beta011",
         "Nancy": { "target": "project" },
         "Nancy.Testing": { "target": "project" },
