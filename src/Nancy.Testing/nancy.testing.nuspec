@@ -14,8 +14,8 @@
     <projectUrl>http://nancyfx.org</projectUrl>
     <dependencies>
       <dependency id="Nancy" />
-      <dependency id="AngleSharp" version="0.9.4" />
-    </dependencies> 
+      <dependency id="AngleSharp" version="0.9.5" />
+    </dependencies>
     <tags>Nancy Testing</tags>
   </metadata>
   <files>
