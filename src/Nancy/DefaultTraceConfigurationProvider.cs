@@ -3,7 +3,7 @@ namespace Nancy
     using Nancy.Configuration;
 
     /// <summary>
-    /// Provides the default configuration for <see cref="ViewConfiguration"/>.
+    /// Provides the default configuration for <see cref="TraceConfiguration"/>.
     /// </summary>
     public class DefaultTraceConfigurationProvider : NancyDefaultConfigurationProvider<TraceConfiguration>
     {
@@ -27,7 +27,7 @@ namespace Nancy
                 this.runtimeEnvironmentInformation.IsDebug;
 
             return new TraceConfiguration(
-                enabled: isDebugMode,
+                enabled: false,
                 displayErrorTraces: isDebugMode);
         }
     }
