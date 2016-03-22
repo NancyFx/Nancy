@@ -233,10 +233,9 @@
         /// <param name="negotiationContext">The negotiation context.</param>
         /// <param name="context">The context.</param>
         /// <returns>A <see cref="Response"/>.</returns>
-        private static Response CreateResponse(
-            IList<CompatibleHeader> compatibleHeaders,
-            NegotiationContext negotiationContext,
-            NancyContext context)
+        private Response CreateResponse(IList<CompatibleHeader> compatibleHeaders,
+                                        NegotiationContext negotiationContext,
+                                        NancyContext context)
         {
             var response = NegotiateResponse(compatibleHeaders, negotiationContext, context);
 
@@ -250,7 +249,7 @@
 
             response.WithHeader("Vary", "Accept");
 
-            AddLinkHeader(compatibleHeaders, response, context.Request.Url);
+            this.AddLinkHeader(compatibleHeaders, response, context.Request.Url);
             SetStatusCode(negotiationContext, response);
             SetReasonPhrase(negotiationContext, response);
             AddCookies(negotiationContext, response);
@@ -353,7 +352,7 @@
         /// <param name="linkProcessors">The link processors.</param>
         /// <param name="existingLinkHeader">The existing Link HTTP Header.</param>
         /// <returns>The link header.</returns>
-        private static string CreateLinkHeader(Url requestUrl, IEnumerable<KeyValuePair<string, MediaRange>> linkProcessors, string existingLinkHeader)
+        protected virtual string CreateLinkHeader(Url requestUrl, IEnumerable<KeyValuePair<string, MediaRange>> linkProcessors, string existingLinkHeader)
         {
             var fileName = Path.GetFileNameWithoutExtension(requestUrl.Path);
             var baseUrl = string.Concat(requestUrl.BasePath, "/", fileName);
