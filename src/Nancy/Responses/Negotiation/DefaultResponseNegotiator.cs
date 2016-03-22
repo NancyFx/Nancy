@@ -359,7 +359,7 @@
             var baseUrl = string.Concat(requestUrl.BasePath, "/", fileName);
 
             var links = linkProcessors
-                .Select(lp => string.Format("<{0}.{1}>; rel=\"{2}\"", baseUrl, lp.Key, lp.Value));
+                .Select(lp => string.Format("<{0}.{1}>; rel=\"alternate\"; type=\"{2}\"", baseUrl, lp.Key, lp.Value));
 
             return string.Join(",", links);
         }
