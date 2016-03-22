@@ -94,6 +94,9 @@
     <Compile Include="..\Nancy.Tests.Functional\Properties\AssemblyInfo.cs">
       <Link>Properties\AssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Tests\JsonLdProcessor.cs">
+      <Link>Tests\JsonLdProcessor.cs</Link>
+    </Compile>
     <Compile Include="..\Nancy.Tests\xUnitExtensions\RecordAsync.cs">
       <Link>RecordAsync.cs</Link>
     </Compile>

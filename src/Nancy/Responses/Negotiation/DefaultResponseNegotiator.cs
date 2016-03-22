@@ -310,15 +310,14 @@
         /// <param name="compatibleHeaders">The compatible headers.</param>
         /// <param name="response">The response.</param>
         /// <param name="requestUrl">The request URL.</param>
-        private static void AddLinkHeader(
-            IEnumerable<CompatibleHeader> compatibleHeaders,
-            Response response,
-            Url requestUrl)
+        private void AddLinkHeader(IEnumerable<CompatibleHeader> compatibleHeaders, Response response, Url requestUrl)
         {
             var linkProcessors = GetLinkProcessors(compatibleHeaders, response.ContentType);
             if (linkProcessors.Any())
             {
-                response.Headers["Link"] = CreateLinkHeader(requestUrl, linkProcessors);
+                string existingLinkHeader;
+                response.Headers.TryGetValue("Link", out existingLinkHeader);
+                response.Headers["Link"] = this.CreateLinkHeader(requestUrl, linkProcessors, existingLinkHeader);
             }
         }
 
@@ -352,8 +351,9 @@
         /// </summary>
         /// <param name="requestUrl">The request URL.</param>
         /// <param name="linkProcessors">The link processors.</param>
+        /// <param name="existingLinkHeader">The existing Link HTTP Header.</param>
         /// <returns>The link header.</returns>
-        private static string CreateLinkHeader(Url requestUrl, IEnumerable<KeyValuePair<string, MediaRange>> linkProcessors)
+        private static string CreateLinkHeader(Url requestUrl, IEnumerable<KeyValuePair<string, MediaRange>> linkProcessors, string existingLinkHeader)
         {
             var fileName = Path.GetFileNameWithoutExtension(requestUrl.Path);
             var baseUrl = string.Concat(requestUrl.BasePath, "/", fileName);
@@ -361,7 +361,12 @@
             var links = linkProcessors
                 .Select(lp => string.Format("<{0}.{1}>; rel=\"alternate\"; type=\"{2}\"", baseUrl, lp.Key, lp.Value));
 
-            return string.Join(",", links);
+            if (!string.IsNullOrEmpty(existingLinkHeader))
+            {
+                links = links.Concat(new[] { existingLinkHeader });
+            }
+
+            return string.Join(", ", links);
         }
 
         /// <summary>
