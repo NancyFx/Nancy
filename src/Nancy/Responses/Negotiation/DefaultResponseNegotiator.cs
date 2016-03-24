@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Reflection;
     using System.Text;
 
     using Nancy.Conventions;
@@ -75,18 +76,41 @@
         /// <returns><c>true</c> if the result is a <see cref="Response"/>, <c>false</c> otherwise.</returns>
         private static bool TryCastResultToResponse(dynamic routeResult, out Response response)
         {
-            // This code has to be designed this way in order for the cast operator overloads
-            // to be called in the correct way. It cannot be replaced by the as-operator.
-            try
+            var targetType = routeResult.GetType();
+            var responseType = typeof(Response);
+
+            var methods = responseType.GetMethods(BindingFlags.Public | BindingFlags.Static);
+
+            foreach (var method in methods)
             {
-                response = (Response) routeResult;
+                if (!method.Name.Equals("op_Implicit", StringComparison.Ordinal))
+                {
+                    continue;
+                }
+
+                if (method.ReturnType != responseType)
+                {
+                    continue;
+                }
+
+                var parameters = method.GetParameters();
+
+                if (parameters.Length != 1)
+                {
+                    continue;
+                }
+
+                if (parameters[0].ParameterType != targetType)
+                {
+                    continue;
+                }
+
+                response = (Response)routeResult;
                 return true;
             }
-            catch
-            {
-                response = null;
-                return false;
-            }
+
+            response = null;
+            return false;
         }
 
         /// <summary>
