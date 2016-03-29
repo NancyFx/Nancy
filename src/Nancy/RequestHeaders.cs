@@ -8,6 +8,7 @@ namespace Nancy
     using System.Linq;
 
     using Nancy.Cookies;
+    using Nancy.Responses.Negotiation;
 
     /// <summary>
     /// Provides strongly-typed access to HTTP request headers.
@@ -119,11 +120,11 @@ namespace Nancy
         /// <summary>
         /// The mime type of the body of the request (used with POST and PUT requests).
         /// </summary>
-        /// <value>A <see cref="string"/> containing the header value if it is available; otherwise <see langword="string.Empty"/>.</value>
-        public string ContentType
+        /// <value>A <see cref="MediaRange"/> containing the header value if it is available; otherwise <see langword="null"/>.</value>
+        public MediaRange ContentType
         {
-            get { return this.GetValue("Content-Type", x => x.First(), string.Empty); }
-            set { this.SetHeaderValues("Content-Type", value, x => new[] { x }); }
+            get { return this.GetValue("Content-Type", x => new MediaRange(x.First()), null); }
+            set { this.SetHeaderValues("Content-Type", value, x => new[] { x.ToString() }); }
         }
 
         /// <summary>

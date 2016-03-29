@@ -5,7 +5,7 @@
     using System.Linq;
 
     using Nancy.Cookies;
-
+    using Nancy.Responses.Negotiation;
     using Xunit;
     using Xunit.Extensions;
 
@@ -39,7 +39,7 @@
         public void Should_return_all_header_names_when_keys_are_retrieved()
         {
             // Given
-            var rawHeaders = 
+            var rawHeaders =
                 new Dictionary<string, IEnumerable<string>>
                 {
                     {"accept", null},
@@ -65,7 +65,7 @@
 
             // When
             var headers = new RequestHeaders(rawHeaders);
-            
+
             // Then
             headers.Accept.ShouldHaveCount(0);
         }
@@ -74,7 +74,7 @@
         public void Should_return_all_accept_headers_when_multiple_are_available()
         {
             // Given
-            var rawHeaders = 
+            var rawHeaders =
                 new Dictionary<string, IEnumerable<string>>
                 {
                     { "Accept", new[] { "text/plain", "text/ninja" } }
@@ -167,7 +167,7 @@
             headers.ShouldHaveCount(2);
             headers.ShouldHave(t => t.Item1 == "text/plain" && t.Item2 == 1.0m);
             headers.ShouldHave(t => t.Item1 == "text/ninja;a=1;b=2" && t.Item2 == 0.3m);
-         }
+        }
 
         [Fact]
         public void Should_sort_accept_header_values_decending_based_on_quality()
@@ -518,7 +518,7 @@
             // Then
             headers.ShouldHaveCount(2);
         }
-        
+
         [Fact]
         public void Should_return_empty_string_when_authorization_headers_are_not_available()
         {
@@ -701,7 +701,7 @@
             var headers = new RequestHeaders(rawHeaders);
 
             // Then
-            headers.ContentType.ShouldBeEmpty();
+            headers.ContentType.ShouldBeNull();
         }
 
         [Fact]
@@ -715,7 +715,7 @@
             var headers = new RequestHeaders(rawHeaders);
 
             // Then
-            headers.ContentType.ShouldEqual("text/ninja");
+            headers.ContentType.Matches("text/ninja").ShouldBeTrue();
         }
 
         [Theory]
@@ -731,7 +731,7 @@
             var headers = new RequestHeaders(rawHeaders);
 
             // Then
-            headers.ContentType.ShouldEqual("text/ninja");
+            headers.ContentType.Matches("text/ninja").ShouldBeTrue();
         }
 
         [Fact]
@@ -744,9 +744,8 @@
             var headers = new RequestHeaders(rawHeaders);
 
             // Then
-            headers.Date.ShouldBeNull();;
+            headers.Date.ShouldBeNull();
         }
-
 
         [Fact]
         public void Should_return_date_when_date_headers_available()
@@ -808,17 +807,17 @@
         [Fact]
         public void Should_parse_cookie_headers_when_delimited_by_semicolon()
         {
-          // Given
-          var rawValues = new[] { "foo=bar", "name=value ; third=  something=stuff  " };
-          var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Cookie", rawValues } };
+            // Given
+            var rawValues = new[] { "foo=bar", "name=value ; third=  something=stuff  " };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Cookie", rawValues } };
 
-          // When
-          var headers = new RequestHeaders(rawHeaders);
+            // When
+            var headers = new RequestHeaders(rawHeaders);
 
-          // Then
-          ValidateCookie(headers.Cookie.ElementAt(0), "foo", "bar");
-          ValidateCookie(headers.Cookie.ElementAt(1), "name", "value");
-          ValidateCookie(headers.Cookie.ElementAt(2), "third", "  something=stuff");
+            // Then
+            ValidateCookie(headers.Cookie.ElementAt(0), "foo", "bar");
+            ValidateCookie(headers.Cookie.ElementAt(1), "name", "value");
+            ValidateCookie(headers.Cookie.ElementAt(2), "third", "  something=stuff");
         }
 
         [Theory]
@@ -1355,15 +1354,15 @@
         {
             // Given
             var expectedValues = new[] {
-                new Tuple<string, decimal>("text/plain", 0.8m), 
-                new Tuple<string, decimal>("text/ninja", 0.5m), 
+                new Tuple<string, decimal>("text/plain", 0.8m),
+                new Tuple<string, decimal>("text/ninja", 0.5m),
             };
 
-            var rawHeaders = 
-                new Dictionary<string, IEnumerable<string>> { { "Accept", new [] { "initial value" } } };
+            var rawHeaders =
+                new Dictionary<string, IEnumerable<string>> { { "Accept", new[] { "initial value" } } };
 
-            var headers = 
-                new RequestHeaders(rawHeaders) {Accept = expectedValues};
+            var headers =
+                new RequestHeaders(rawHeaders) { Accept = expectedValues };
 
             // When
             var values = headers.Accept.ToList();
@@ -1397,8 +1396,8 @@
         {
             // Given
             var expectedValues = new[] {
-                new Tuple<string, decimal>("utf-8", 0.7m), 
-                new Tuple<string, decimal>("iso-8859-5", 0.3m), 
+                new Tuple<string, decimal>("utf-8", 0.7m),
+                new Tuple<string, decimal>("iso-8859-5", 0.3m),
             };
 
             var rawHeaders =
@@ -1439,8 +1438,8 @@
         {
             // Given
             var expectedValues = new[] {
-                "compress", 
-                "gzip", 
+                "compress",
+                "gzip",
             };
 
             var rawHeaders =
@@ -1479,7 +1478,7 @@
         {
             // Given
             var expectedValues = new[] {
-                new Tuple<string, decimal>("en-US", 0.7m), 
+                new Tuple<string, decimal>("en-US", 0.7m),
                 new Tuple<string, decimal>("sv-SE", 0.3m)
             };
 
@@ -1555,8 +1554,8 @@
         {
             // Given
             var expectedValues = new[] {
-                "public", 
-                "max-age=123445", 
+                "public",
+                "max-age=123445",
             };
 
             var rawHeaders =
@@ -1659,40 +1658,6 @@
         }
 
         [Fact]
-        public void Should_allow_content_type_to_be_overwritten()
-        {
-            // Given
-            var rawHeaders =
-                new Dictionary<string, IEnumerable<string>> { { "Content-Type", new[] { "application/json" } } };
-
-            var headers =
-                new RequestHeaders(rawHeaders) { ContentType = "text/html" };
-
-            // When
-            var values = headers.ContentType;
-
-            // Then
-            values.ShouldEqual("text/html");
-        }
-
-        [Fact]
-        public void Should_remove_content_type_if_assigned_null()
-        {
-            // Given
-            var rawHeaders =
-                new Dictionary<string, IEnumerable<string>> { { "Content-Type", new[] { "text/plain" } } };
-
-            var headers =
-                new RequestHeaders(rawHeaders) { ContentType = null };
-
-            // When
-            var values = headers.Keys;
-
-            // Then
-            values.Contains("Content-Type").ShouldBeFalse();
-        }
-
-        [Fact]
         public void Should_allow_date_to_be_overwritten()
         {
             // Given
@@ -1770,7 +1735,7 @@
         {
             // Given
             var expectedValues = new[] {
-                "fsdfsd", "c3pdfgdfgjiozzzz" 
+                "fsdfsd", "c3pdfgdfgjiozzzz"
             };
 
             var rawHeaders =
@@ -1845,7 +1810,7 @@
         {
             // Given
             var expectedValues = new[] {
-                "fsdfsd", "c3pdfgdfgjiozzzz" 
+                "fsdfsd", "c3pdfgdfgjiozzzz"
             };
 
             var rawHeaders =

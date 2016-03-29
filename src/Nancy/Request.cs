@@ -234,21 +234,20 @@ namespace Nancy
 
         private void ParseFormData()
         {
-            if (string.IsNullOrEmpty(this.Headers.ContentType))
+            if (this.Headers.ContentType == null)
             {
                 return;
             }
 
-            var contentType = this.Headers["content-type"].First();
-            var mimeType = contentType.Split(';').First();
-            if (mimeType.Equals("application/x-www-form-urlencoded", StringComparison.OrdinalIgnoreCase))
+            var contentType = this.Headers.ContentType;
+            if (contentType.Matches("application/x-www-form-urlencoded"))
             {
                 var reader = new StreamReader(this.Body);
                 this.form = reader.ReadToEnd().AsQueryDictionary();
                 this.Body.Position = 0;
             }
 
-            if (!mimeType.Equals("multipart/form-data", StringComparison.OrdinalIgnoreCase))
+            if (!contentType.Matches("multipart/form-data"))
             {
                 return;
             }

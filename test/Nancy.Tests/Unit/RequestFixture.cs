@@ -156,14 +156,14 @@ namespace Nancy.Tests.Unit
             // Given
             var headers = new Dictionary<string, IEnumerable<string>>()
                 {
-                    { "content-type", new[] {"foo"} }
+                    { "content-type", new[] {"foo/bar"} }
                 };
 
             // When
             var request = new Request("GET", new Url { Path = "/", Scheme = "http" }, CreateRequestStream(), headers);
 
             // Then
-            request.Headers.ContentType.ShouldNotBeEmpty();
+            request.Headers.ContentType.ShouldNotBeNull();
         }
 
         [Fact]
@@ -495,7 +495,7 @@ namespace Nancy.Tests.Unit
 
             // When
             var request = new Request("POST", new Url { Path = "/", Scheme = "http" }, CreateRequestStream(memory), headers);
-            
+
             // Then
             ((string)request.Form.name).ShouldEqual("John Doe");
         }
@@ -571,7 +571,7 @@ namespace Nancy.Tests.Unit
             var request = new Request("GET", newUrl, null, headers);
 
             // Then
-            request.Cookies[cookieName].ShouldEqual(cookieData);            
+            request.Cookies[cookieName].ShouldEqual(cookieData);
         }
 
         [Fact]
@@ -798,7 +798,7 @@ namespace Nancy.Tests.Unit
 
             // Then
             ((bool)request.Query.key1).ShouldBeTrue();
-            ((string)request.Query.key1).ShouldEqual("key1"); 
+            ((string)request.Query.key1).ShouldEqual("key1");
         }
 
         [Fact]

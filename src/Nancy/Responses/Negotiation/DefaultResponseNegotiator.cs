@@ -1,6 +1,7 @@
 ﻿namespace Nancy.Responses.Negotiation
 {
     using System;
+    using System.CodeDom.Compiler;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -15,7 +16,7 @@
     /// </summary>
     public class DefaultResponseNegotiator : IResponseNegotiator
     {
-        private readonly IEnumerable<IResponseProcessor> processors;
+        private readonly IReadOnlyCollection<IResponseProcessor> processors;
         private readonly AcceptHeaderCoercionConventions coercionConventions;
 
         /// <summary>
@@ -25,7 +26,7 @@
         /// <param name="coercionConventions">The Accept header coercion conventions.</param>
         public DefaultResponseNegotiator(IEnumerable<IResponseProcessor> processors, AcceptHeaderCoercionConventions coercionConventions)
         {
-            this.processors = processors;
+            this.processors = processors.ToArray();
             this.coercionConventions = coercionConventions;
         }
 
@@ -332,14 +333,18 @@
         {
             var linkProcessors = new Dictionary<string, MediaRange>();
 
-            var compatibleHeaderMappings = compatibleHeaders
-                .SelectMany(header => header.Processors)
-                .SelectMany(processor => processor.Item1.ExtensionMappings)
-                .Where(mapping => !mapping.Item2.Matches(contentType));
-
-            foreach (var compatibleHeaderMapping in compatibleHeaderMappings)
+            foreach (var header in compatibleHeaders)
             {
-                linkProcessors[compatibleHeaderMapping.Item1] = compatibleHeaderMapping.Item2;
+                foreach (var processor in header.Processors)
+                {
+                    foreach (var mapping in processor.Item1.ExtensionMappings)
+                    {
+                        if (!mapping.Item2.Matches(contentType))
+                        {
+                            linkProcessors[mapping.Item1] = mapping.Item2;
+                        }
+                    }
+                }
             }
 
             return linkProcessors;
@@ -357,15 +362,35 @@
             var fileName = Path.GetFileNameWithoutExtension(requestUrl.Path);
             var baseUrl = string.Concat(requestUrl.BasePath, "/", fileName);
 
-            var links = linkProcessors
-                .Select(lp => string.Format("<{0}.{1}>; rel=\"alternate\"; type=\"{2}\"", baseUrl, lp.Key, lp.Value));
+            var result = new StringBuilder();
+
+            foreach (var linkProcessor in linkProcessors)
+            {
+                if (result.Length > 0)
+                {
+                    result.Append(", ");
+                }
+
+                result.Append("<");
+                result.Append(baseUrl);
+                result.Append(".");
+                result.Append(linkProcessor.Key);
+                result.Append(">; rel=\"alternate\"; type=\"");
+                result.Append(linkProcessor.Value);
+                result.Append("\"");
+            }
 
             if (!string.IsNullOrEmpty(existingLinkHeader))
             {
-                links = links.Concat(new[] { existingLinkHeader });
+                if (result.Length > 0)
+                {
+                    result.Append(", ");
+                }
+
+                result.Append(existingLinkHeader);
             }
 
-            return string.Join(", ", links);
+            return result.ToString();
         }
 
         /// <summary>
