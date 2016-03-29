@@ -461,9 +461,31 @@ namespace Nancy.Tests.Functional.Tests
             var response = await browser.Get("/");
 
             // Then
-            Assert.True(response.Headers["Link"].Contains(@"</.foo>; rel=""foo/bar"""));
-            Assert.True(response.Headers["Link"].Contains(@"</.json>; rel=""application/json"""));
-            Assert.True(response.Headers["Link"].Contains(@"</.xml>; rel=""application/xml"""));
+            Assert.True(response.Headers["Link"].Contains(@"</.foo>; rel=""alternate""; type=""foo/bar"""));
+            Assert.True(response.Headers["Link"].Contains(@"</.json>; rel=""alternate""; type=""application/json"""));
+            Assert.True(response.Headers["Link"].Contains(@"</.xml>; rel=""alternate""; type=""application/xml"""));
+        }
+
+        [Fact]
+        public async Task Should_preserve_existing_link_header()
+        {
+            // Given
+            var browser = new Browser(with =>
+            {
+                with.ResponseProcessors(typeof(XmlProcessor), typeof(JsonLdProcessor));
+
+                with.Module(new ConfigurableNancyModule(x =>
+                {
+                    x.Get("/", CreateNegotiatedResponse());
+                }));
+            });
+
+            // When
+            var response = await browser.Get("/");
+
+            // Then
+            Assert.True(response.Headers["Link"].Contains(@"</context.jsonld>; rel=""http://www.w3.org/ns/json-ld#context""; type=""application/ld+json"""));
+            Assert.True(response.Headers["Link"].Contains(@"</.xml>; rel=""alternate""; type=""application/xml"""));
         }
 
         [Fact]
