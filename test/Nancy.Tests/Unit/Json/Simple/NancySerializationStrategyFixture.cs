@@ -44,13 +44,13 @@ namespace Nancy.Tests.Unit.Json.Simple
         {
             // Given
             var strategy = CreateStrategy();
-            strategy.RegisterConverters(new [] { new DateTimeJavaScriptConverter() });
+            strategy.RegisterConverters(new[] { new DateTimeJavaScriptConverter() });
             var expectedValue = new DateTime(2016, 2, 27);
             object serialized;
 
             // When
             strategy.TrySerializeKnownTypes(expectedValue, out serialized);
-            
+
             //Then
             var result = (IDictionary<string, object>)serialized;
             result.ShouldNotBeNull();
@@ -68,7 +68,7 @@ namespace Nancy.Tests.Unit.Json.Simple
                 {"serializedValue", expectedValue}
             };
             var strategy = this.CreateStrategy();
-            strategy.RegisterConverters(new [] { new DateTimeJavaScriptConverter() });
+            strategy.RegisterConverters(new[] { new DateTimeJavaScriptConverter() });
 
             // When
             var result = (DateTime)strategy.DeserializeObject(objectToDeserialize, typeof(DateTime));
@@ -81,32 +81,34 @@ namespace Nancy.Tests.Unit.Json.Simple
         public void Should_serialize_unspecified_datetime_object()
         {
             // Given
-            var unspecifiedDateTime = new DateTime(2014, 3, 9, 17, 03, 25).AddMilliseconds(234);
+            var unspecifiedDateTime = new DateTime(2014, 3, 9, 17, 03, 25, DateTimeKind.Unspecified).AddMilliseconds(234);
             var strategy = this.CreateStrategy();
             object serializedObject;
+            var offset = TimeZoneInfo.Local.GetUtcOffset(unspecifiedDateTime);
 
             // When
             var canSerialize = strategy.TrySerializeKnownTypes(unspecifiedDateTime, out serializedObject);
 
             //Then
             canSerialize.ShouldBeTrue();
-            serializedObject.ShouldEqual(string.Format("2014-03-09T17:03:25.2340000{0}", GetTimezoneSuffix(":")));
+            serializedObject.ShouldEqual(string.Format("2014-03-09T17:03:25.2340000+{0}", offset.Hours.ToString("00") + ":" + offset.Minutes.ToString("00")));
         }
 
         [Fact]
         public void Should_serialize_local_datetime_object()
         {
             // Given
-            var unspecifiedDateTime = new DateTime(2014, 3, 9, 17, 03, 25, DateTimeKind.Local).AddMilliseconds(234);
+            var localDateTime = new DateTime(2014, 3, 9, 17, 03, 25, DateTimeKind.Local).AddMilliseconds(234);
             var strategy = this.CreateStrategy();
             object serializedObject;
+            var offset = TimeZoneInfo.Local.GetUtcOffset(localDateTime);
 
             // When
-            var canSerialize = strategy.TrySerializeKnownTypes(unspecifiedDateTime, out serializedObject);
+            var canSerialize = strategy.TrySerializeKnownTypes(localDateTime, out serializedObject);
 
             //Then
             canSerialize.ShouldBeTrue();
-            serializedObject.ShouldEqual(string.Format("2014-03-09T17:03:25.2340000{0}", GetTimezoneSuffix(":")));
+            serializedObject.ShouldEqual(string.Format("2014-03-09T17:03:25.2340000+{0}", offset.Hours.ToString("00") + ":" + offset.Minutes.ToString("00")));
         }
 
         [Fact]
@@ -163,34 +165,15 @@ namespace Nancy.Tests.Unit.Json.Simple
         {
             return new NancySerializationStrategyTestWrapper(retainCasing);
         }
-
-        private static string GetTimezoneSuffix(string separator = "")
-        {
-            var value = DateTime.Now;
-            string suffix;
-            var time = value.ToUniversalTime();
-            TimeSpan localTzOffset;
-            if (value >= time)
-            {
-                localTzOffset = value - time;
-                suffix = "+";
-            }
-            else
-            {
-                localTzOffset = time - value;
-                suffix = "-";
-            }
-            return string.Concat(suffix, localTzOffset.ToString("hh"), separator, localTzOffset.ToString("mm"));
-        }
     }
 
     public class NancySerializationStrategyTestWrapper : NancySerializationStrategy
     {
         public NancySerializationStrategyTestWrapper(
-            bool retainCasing = false) 
+            bool retainCasing = false)
             : base(retainCasing)
         {
-            
+
         }
 
         public new string MapClrMemberNameToJsonFieldName(string clrPropertyName)
