@@ -70,7 +70,7 @@
             }
             catch (Exception ex)
             {
-                throw new ConfigurationException(string.Format("Error loading default confguration for {0}", configurationProvider.Key), ex);
+                throw new ConfigurationException(string.Format("Error loading default configuration for {0}", configurationProvider.Key), ex);
             }
         }
     }
