@@ -2,6 +2,11 @@
 
 First of all, thank you for wanting to contribute to Nancy! We really appreciate all the awesome support we get from our community. We want to keep it as easy as possible to contribute changes that get things working in your environment. There are a few guidelines that we need contributors to follow so that we have a chance of keeping on top of things.
 
+- [Making Changes](#making-changes)
+  - [Handling Updates from Upstream/Master](#handling-updates-from-upstreammaster)
+  - [Sending a Pull Request](#sending-a-pull-request)
+- [Style Guidelines](#style-guidelines)
+
 ## Making Changes
 
 1. [Fork](http://help.github.com/forking/) on GitHub
@@ -15,7 +20,7 @@ First of all, thank you for wanting to contribute to Nancy! We really appreciate
 
 You should **never** work on a clone of master, and you should **never** send a pull request from master - always from a branch. The reasons for this are detailed below.
 
-## Handling Updates from Upstream/Master
+### Handling Updates from Upstream/Master
 
 While you're working away in your branch it's quite possible that your upstream master (most likely the canonical NancyFx version) may be updated. If this happens you should:
 
@@ -30,7 +35,7 @@ This ensures that your history is "clean" i.e. you have one branch off from mast
 
 If you're working on a long running feature then you may want to do this quite often, rather than run the risk of potential merge issues further down the line.
 
-## Sending a Pull Request
+### Sending a Pull Request
 
 While working on your feature you may well create several branches, which is fine, but before you send a pull request you should ensure that you have rebased back to a single "Feature branch". We care about your commits, and we care about your feature branch; but we don't care about how many or which branches you created while you were working on it :smile:.
 
@@ -54,3 +59,5 @@ And remember; **A pull-request with tests is a pull-request that's likely to be 
 - Put `using` statements inside namespace.
 - Pay attention to whitespace and extra blank lines
 - Absolutely **no** regions
+
+> If you are a ReSharper user, you can make use of our `.DotSettings` file to ensure you cover as many of our style guidelines as possible. There may be some style guidelines which are not covered by the file, so please pay attention to the style of existing code.
