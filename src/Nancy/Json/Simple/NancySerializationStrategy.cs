@@ -16,7 +16,7 @@
         private readonly bool retainCasing;
         private readonly List<JavaScriptConverter> converters = new List<JavaScriptConverter>();
         private readonly List<JavaScriptPrimitiveConverter> primitiveConverters = new List<JavaScriptPrimitiveConverter>();
-        private readonly ConcurrentDictionary<Type, JavaScriptConverter> converterCache = new ConcurrentDictionary<Type, JavaScriptConverter>(); 
+        private readonly ConcurrentDictionary<Type, JavaScriptConverter> converterCache = new ConcurrentDictionary<Type, JavaScriptConverter>();
         private readonly ConcurrentDictionary<Type, JavaScriptPrimitiveConverter> primitiveConverterCache = new ConcurrentDictionary<Type, JavaScriptPrimitiveConverter>();
 
         /// <summary>
@@ -78,8 +78,8 @@
             var typeInfo = type.GetTypeInfo();
             if (typeInfo.IsEnum || (ReflectionUtils.IsNullableType(type) && Nullable.GetUnderlyingType(type).GetTypeInfo().IsEnum))
             {
-                var typeToParse = ReflectionUtils.IsNullableType(type) 
-                    ? Nullable.GetUnderlyingType(type) 
+                var typeToParse = ReflectionUtils.IsNullableType(type)
+                    ? Nullable.GetUnderlyingType(type)
                     : type;
 
                 return value == null
@@ -119,7 +119,7 @@
             }
 
             var values = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
-            var genericArguments = typeInfo.GetGenericArguments();
+            var genericArguments = type.GetGenericArguments();
 
             for (var i = 0; i < genericArguments.Length; i++)
             {
@@ -147,7 +147,8 @@
                 return true;
             }
 
-            var inputType = input.GetType().GetTypeInfo();
+            var inputType = input.GetType();
+
             if (this.TrySerializeJavaScriptConverter(input, out output, inputType))
             {
                 return true;
@@ -159,6 +160,7 @@
             }
 
             var type = input as Type;
+
             if (type != null)
             {
                 output = type.GetTypeInfo().FullName;
