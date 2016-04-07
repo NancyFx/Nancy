@@ -35,6 +35,8 @@ namespace Nancy
                 asm => asm.FullName.StartsWith("SMDiagnostics", StringComparison.Ordinal),
                 asm => asm.FullName.StartsWith("CppCodeProvider", StringComparison.Ordinal),
                 asm => asm.FullName.StartsWith("WebDev.WebHost40", StringComparison.Ordinal),
+                asm => asm.FullName.StartsWith("nunit", StringComparison.Ordinal),
+                asm => asm.FullName.StartsWith("nCrunch", StringComparison.Ordinal),
             };
 
         /// <summary>
