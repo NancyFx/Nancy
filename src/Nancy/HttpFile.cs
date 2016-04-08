@@ -9,16 +9,6 @@
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="HttpFile"/> class,
-        /// using the provided <paramref name="boundary"/>.
-        /// </summary>
-        /// <param name="boundary">The <see cref="HttpMultipartBoundary"/> that contains the file information.</param>
-        public HttpFile(HttpMultipartBoundary boundary)
-            : this(boundary.ContentType, boundary.Filename, boundary.Value, boundary.Name)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="HttpFile"/> class,
         /// using the provided values
         /// </summary>
         /// <paramref name="contentType">The content type of the file.</paramref>
