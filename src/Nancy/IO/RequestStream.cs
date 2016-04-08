@@ -170,7 +170,7 @@
             }
         }
 
-#if !DOTNET5_4
+#if !NETSTANDARD1_3
         /// <summary>
         /// Begins an asynchronous read operation.
         /// </summary>
@@ -215,7 +215,7 @@
 
             base.Dispose(disposing);
         }
-#if !DOTNET5_4
+#if !NETSTANDARD1_3
         /// <summary>
         /// Waits for the pending asynchronous read to complete.
         /// </summary>
@@ -343,7 +343,7 @@
                 // in NancyWcfGenericService - webRequest.UriTemplateMatch
                 var old = this.stream;
                 this.MoveStreamContentsToFileStream();
-#if DOTNET5_4
+#if NETSTANDARD1_3
                 old.Dispose();
 #else
                 old.Close();
@@ -436,7 +436,7 @@
 
             if (this.stream.CanSeek && this.stream.Length == 0)
             {
-#if DOTNET5_4
+#if NETSTANDARD1_3
                 this.stream.Dispose();
 #else
                 this.stream.Close();

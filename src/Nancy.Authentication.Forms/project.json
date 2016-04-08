@@ -14,6 +14,6 @@
 
     "frameworks": {
         "net451": { },
-        "dotnet5.4": { }
+        "netstandard1.3": { }
     }
 }

@@ -175,7 +175,7 @@
                 this.baseStream.WriteTimeout = value;
             }
         }
-#if !DOTNET5_4
+#if !NETSTANDARD1_3
         /// <summary>
         /// Closes the current stream and releases any resources (such as sockets and file handles) associated with the current stream.
         /// </summary>
@@ -244,7 +244,7 @@
             this.baseStream.Write(buffer, offset, count);
         }
 
-#if !DOTNET5_4
+#if !NETSTANDARD1_3
         /// <summary>
         /// Begins an asynchronous read operation.
         /// </summary>
