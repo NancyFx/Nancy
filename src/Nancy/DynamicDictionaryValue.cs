@@ -322,7 +322,7 @@
                     }
                 }
 
-#if !DOTNET5_4
+#if !NETSTANDARD1_5
                 result = Convert.ChangeType(value, typeCode);
 #else
                 result = Convert.ChangeType(value, binderType);

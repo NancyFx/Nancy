@@ -1,56 +1,64 @@
 ﻿{
     "version": "2.0.0-*",
-
     "description": "Nancy is a lightweight web framework for the .Net platform, inspired by Sinatra. Nancy aim at delivering a low ceremony approach to building light, fast web applications.",
     "authors": [ "Andreas Håkansson, Steven Robbins and contributors" ],
-    "tags": [ "Nancy" ],
-    "projectUrl": "http://nancyfx.org",
-    "licenseUrl": "https://github.com/NancyFx/Nancy/blob/master/license.txt",
-    "iconUrl": "http://nancyfx.org/nancy-nuget.png",
-    "compilationOptions": {
-        "define": [ "DNX" ]
+    
+    "packOptions": {
+        "tags": [ "Nancy" ],
+        "projectUrl": "http://nancyfx.org",
+        "licenseUrl": "https://github.com/NancyFx/Nancy/blob/master/license.txt",
+        "iconUrl": "http://nancyfx.org/nancy-nuget.png"
     },
 
     "dependencies": {
-      "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc1-final"
+        "Microsoft.Extensions.DependencyModel": "1.0.0-rc2-*"
     },
 
     "resource": [
-      "Diagnostics/Resources/**/*.*",
-      "Diagnostics/Views/**/*.*"
+        "Diagnostics/Resources/**/*.*",
+        "Diagnostics/Views/**/*.*"
     ],
 
     "frameworks": {
-        "dotnet5.4": {
-          "dependencies": {
-            "Microsoft.CSharp": "4.0.1-beta-23516",
-            "System.Collections.Concurrent": "4.0.11-beta-23516",
-            "System.Collections.Specialized": "4.0.1-beta-23516",
-            "System.ComponentModel.TypeConverter": "4.0.1-beta-23516",
-            "System.Console": "4.0.0-beta-23516",
-            "System.Data.Common": "4.0.1-beta-23516",
-            "System.Diagnostics.Tools": "4.0.1-beta-23516",
-            "System.Dynamic.Runtime": "4.0.11-beta-23516",
-            "System.IO": "4.0.11-beta-23516",
-            "System.IO.FileSystem": "4.0.1-beta-23516",
-            "System.Linq": "4.0.1-beta-23516",
-            "System.Net.NameResolution": "4.0.0-beta-23516",
-            "System.Net.Primitives": "4.0.11-beta-23516",
-            "System.Reflection.Extensions": "4.0.1-beta-23516",
-            "System.Reflection.TypeExtensions": "4.1.0-beta-23516",
-            "System.Runtime": "4.0.21-beta-23516",
-            "System.Runtime.Serialization.Primitives": "4.1.0-beta-23516",
-            "System.Security.Claims": "4.0.1-beta-23516",
-            "System.Security.Cryptography.Algorithms": "4.0.0-beta-23516",
-            "System.Security.Cryptography.X509Certificates": "4.0.0-beta-23516",
-            "System.Text.RegularExpressions": "4.0.11-beta-23516",
-            "System.Threading.Thread": "4.0.0-beta-23516",
-            "System.Xml.XmlSerializer": "4.0.11-beta-23516"
-          }
+        "netstandard1.5": {
+            "buildOptions": {
+                "define": [ "CORE" ]
+            },
+            "dependencies": {
+                "Microsoft.CSharp": "4.0.1-rc2-*",
+                "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc2-*",
+                "System.Collections.Concurrent": "4.0.12-rc2-*",
+                "System.Collections.Specialized": "4.0.1-rc2-*",
+                "System.ComponentModel.TypeConverter": "4.0.1-rc2-*",
+                "System.Console": "4.0.0-rc2-*",
+                "System.Data.Common": "4.0.1-rc2-*",
+                "System.Diagnostics.Tools": "4.0.1-rc2-*",
+                "System.Dynamic.Runtime": "4.0.11-rc2-*",
+                "System.IO": "4.1.0-rc2-*",
+                "System.IO.FileSystem": "4.0.1-rc2-*",
+                "System.Linq": "4.1.0-rc2-*",
+                "System.Net.NameResolution": "4.0.0-rc2-*",
+                "System.Net.Primitives": "4.0.11-rc2-*",
+                "System.Reflection.Extensions": "4.0.1-rc2-*",
+                "System.Reflection.TypeExtensions": "4.1.0-rc2-*",
+                "System.Runtime": "4.1.0-rc2-*",
+                "System.Runtime.Serialization.Primitives": "4.1.1-rc2-*",
+                "System.Security.Claims": "4.0.1-rc2-*",
+                "System.Security.Cryptography.Algorithms": "4.1.0-rc2-*",
+                "System.Security.Cryptography.X509Certificates": "4.1.0-rc2-*",
+                "System.Text.RegularExpressions": "4.0.12-rc2-*",
+                "System.Threading": "4.0.11-rc2-*",
+                "System.Threading.Thread": "4.0.0-rc2-*",
+                "System.Xml.XmlSerializer": "4.0.11-rc2-*"
+            },
+            "imports": [
+                "dotnet54",
+                "portable-net451+win8"
+            ]
         },
-        "net451": {
+        "net452": {
             "frameworkAssemblies": {
-                "System.Xml": "4.0.0.0"
+                "System.Xml": { "type": "build"}
             }
         }
     }

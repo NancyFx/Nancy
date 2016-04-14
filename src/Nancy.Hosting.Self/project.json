@@ -1,23 +1,26 @@
 ﻿{
     "version": "2.0.0-*",
-
     "description": "Enables hosting Nancy in any application.",
     "authors": [ "Andreas Håkansson, Steven Robbins and contributors" ],
-    "tags": [ "Nancy", "Host" ],
-    "projectUrl": "http://nancyfx.org",
-    "licenseUrl": "https://github.com/NancyFx/Nancy/blob/master/license.txt",
-    "iconUrl": "http://nancyfx.org/nancy-nuget.png",
+    
+    "packOptions": {
+        "tags": [ "Nancy", "Host" ],
+        "projectUrl": "http://nancyfx.org",
+        "licenseUrl": "https://github.com/NancyFx/Nancy/blob/master/license.txt",
+        "iconUrl": "http://nancyfx.org/nancy-nuget.png"
+    },
 
-    "compilationOptions": {
-        "define": [ "DNX" ]
+    "buildOptions": {
+        "define": [ "CORE" ]
     },
 
     "dependencies": {
-        "Nancy": { "target": "project" },
-        "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc1-final"
+        "Nancy": { "target": "project" }
     },
 
     "frameworks": {
-        "net451": { }
+        "net452": {
+            
+        }
     }
 }

@@ -25,7 +25,7 @@
 
         private string GetLocation()
         {
-#if DNX
+#if CORE
             return Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.Application.ApplicationBasePath;
 #else
             return Path.GetDirectoryName(this.GetType().Assembly.Location);
@@ -34,7 +34,7 @@
 
         private string GetFilePath()
         {
-#if DNX
+#if CORE
             return Path.Combine("Resources", "test.txt");
 #else
             return Path.GetFileName(this.GetType().Assembly.Location);

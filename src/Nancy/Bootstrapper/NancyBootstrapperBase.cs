@@ -91,10 +91,10 @@
         {
             get {
                 return this.assemblyCatalog ?? (
-#if !DNX
+#if !CORE
                     this.assemblyCatalog = new AppDomainAssemblyCatalog()
 #else
-                    this.assemblyCatalog = new LibraryManagerAssemblyCatalog()
+                    this.assemblyCatalog = new DependencyContextAssemblyCatalog()
 #endif
                 );
             }

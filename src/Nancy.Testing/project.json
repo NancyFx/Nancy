@@ -1,12 +1,14 @@
 ﻿{
     "version": "2.0.0-*",
-
     "description": "Test harness for Nancy applications.",
     "authors": [ "Andreas Håkansson, Steven Robbins and contributors" ],
-    "tags": [ "Nancy", "Testing" ],
-    "projectUrl": "http://nancyfx.org",
-    "licenseUrl": "https://github.com/NancyFx/Nancy/blob/master/license.txt",
-    "iconUrl": "http://nancyfx.org/nancy-nuget.png",
+    
+    "packOptions": {
+        "tags": [ "Nancy", "Testing" ],
+        "projectUrl": "http://nancyfx.org",
+        "licenseUrl": "https://github.com/NancyFx/Nancy/blob/master/license.txt",
+        "iconUrl": "http://nancyfx.org/nancy-nuget.png"
+    },
 
     "dependencies": {
         "AngleSharp": "0.9.5",
@@ -19,17 +21,21 @@
     ],
 
     "frameworks": {
-        "dotnet5.4": {
+        "netstandard1.5": {
             "dependencies": {
-                "System.Xml.XmlDocument": "4.0.1-beta-23516",
-                "System.Xml.XDocument": "4.0.11-beta-23516"
-            }
+                "System.Xml.XmlDocument": "4.0.1-rc2-*",
+                "System.Xml.XDocument": "4.0.11-rc2-*"
+            },
+            "imports": [
+                "dotnet54",
+                "portable-net451+win8"
+            ]
         },
-        "net451": {
+        "net452": {
             "frameworkAssemblies": {
-                "System.IO": "4.0.0.0",
-                "System.Runtime": "4.0.10.0",
-                "System.Xml.Linq": "4.0.0.0"
+                "System.IO": { "type": "build" },
+                "System.Runtime": { "type": "build" },
+                "System.Xml.Linq": { "type": "build" }
             }
         }
     }

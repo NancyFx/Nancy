@@ -1,30 +1,50 @@
 {
     "dependencies": {
+        "dotnet-test-xunit": "1.0.0-*",
+        "Microsoft.NETCore.Platforms": "1.0.1-rc2-*",
         "Nancy": { "target": "project" },
         "Nancy.Testing": { "target": "project" },
-        "xunit": "2.1.0",
-        "xunit.runner.dnx": "2.1.0-*"
-    },
-
-    "commands": {
-        "test": "xunit.runner.dnx",
-        "test-dnxcore50": "xunit.runner.dnx"
-    },
-
-    "compilationOptions": {
-        "define": [ "DNX" ]
+        "xunit": "2.1.0"
     },
 
     "compileFiles": [
         "../Nancy.Tests/xUnitExtensions/RecordAsync.cs"
     ],
+    
+    "content": [
+        "Content/**/*",
+        "Views/**/*"
+    ],
 
     "frameworks": {
-        "dnxcore50": { },
-        "dnx451": {
+        "netcoreapp1.0": {
+            "buildOptions": {
+                "define": [ "CORE" ]
+            },
+            "dependencies": {
+                "dotnet-test-xunit": "1.0.0-*",
+                "Microsoft.NETCore.App": {
+                    "type": "platform",
+                    "version": "1.0.0-rc2-*"
+                }
+            },
+
+            "imports": [
+                "dotnet",
+                "portable-net451+win8"
+            ]
+        },
+
+        "net452": {
             "dependencies": {
                 "Nancy.ViewEngines.Razor": { "target": "project" }
+            },
+            "frameworkAssemblies": {
+                "System.Runtime": { "type": "build" },
+                "System.Threading.Tasks": { "type": "build" }
             }
         }
-    }
+    },
+
+    "testRunner": "xunit"
 }

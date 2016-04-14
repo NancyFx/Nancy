@@ -32,7 +32,7 @@ namespace Nancy.Testing
         {
         }
 
-#if !DOTNET5_4
+#if !NETSTANDARD1_5
         /// <summary>
         /// Initializes a new instance of the <see cref="AssertException"/> class.
         /// </summary>

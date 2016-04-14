@@ -1,19 +1,25 @@
 ﻿{
     "version": "2.0.0-*",
-
     "description": "Nancy metadata modules to describe your APIs.",
     "authors": [ "Andreas Håkansson, Steven Robbins and contributors" ],
-    "tags": [ "Nancy", "Metadata" ],
-    "projectUrl": "http://nancyfx.org",
-    "licenseUrl": "https://github.com/NancyFx/Nancy/blob/master/license.txt",
-    "iconUrl": "http://nancyfx.org/nancy-nuget.png",
+    
+    "packOptions": {
+        "tags": [ "Nancy", "Metadata" ],
+        "projectUrl": "http://nancyfx.org",
+        "licenseUrl": "https://github.com/NancyFx/Nancy/blob/master/license.txt",
+        "iconUrl": "http://nancyfx.org/nancy-nuget.png"
+    },
 
     "dependencies": {
         "Nancy": { "target": "project" }
     },
 
     "frameworks": {
-        "dotnet5.4": { },
-        "net451": { }
+        "netstandard1.5": {
+            "imports": [
+                "portable-net451+win8"
+            ]
+         },
+        "net452": { }
     }
 }

@@ -266,41 +266,10 @@
         {
             return new Lazy<IReadOnlyCollection<MetadataReference>>(() =>
             {
-                var references  = new List<MetadataReference>();
-
-                var assemblyCatalogReferences = this.razorAssemblyProvider.GetAssemblies()
+                return this.razorAssemblyProvider.GetAssemblies()
                     .Where(x => !string.IsNullOrEmpty(x.Location))
                     .Select(x => MetadataReference.CreateFromFile(x.Location))
                     .ToList();
-
-                references.AddRange(assemblyCatalogReferences);
-
-#if DNX
-                var libraryExporter =
-                    Microsoft.Dnx.Compilation.CompilationServices.Default.LibraryExporter;
-
-                var services =
-                    Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default;
-
-                var q = libraryExporter.GetAllExports(services.Application.ApplicationName).MetadataReferences;
-
-                var projectReferences = libraryExporter.GetAllExports(services.Application.ApplicationName).MetadataReferences
-                    .Where(x => x is Microsoft.Dnx.Compilation.IMetadataProjectReference)
-                    .Cast<Microsoft.Dnx.Compilation.IMetadataProjectReference>()
-                    .Select(x =>
-                    {
-                        using (var ms = new MemoryStream())
-                        {
-                            x.EmitReferenceAssembly(ms);
-                            return MetadataReference.CreateFromImage(ms.ToArray());
-                        }
-                    })
-                    .ToArray();
-
-                references.AddRange(projectReferences);
-#endif
-
-                return references;
             });
         }
 

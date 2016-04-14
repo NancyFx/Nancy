@@ -52,7 +52,7 @@
             this.StoreProviderTypes(providerTypes);
         }
 
-#if !DOTNET5_4
+#if !NETSTANDARD1_5
         /// <summary>
         /// Initializes a new instance of the <see cref="MultipleRootPathProvidersLocatedException"/> class.
         /// </summary>

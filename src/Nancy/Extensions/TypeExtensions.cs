@@ -206,7 +206,7 @@
 
         private static object CreateInstanceInternal(Type type, bool nonPublic = false)
         {
-#if !DOTNET5_4
+#if !NETSTANDARD1_5
             return Activator.CreateInstance(type, nonPublic);
         }
 #else

@@ -4,7 +4,7 @@ namespace Nancy.Diagnostics
     using System.Security.Cryptography;
     using System.Text;
 
-#if !DOTNET5_4
+#if !NETSTANDARD1_5
     [Serializable]
 #endif
     public class DiagnosticsSession

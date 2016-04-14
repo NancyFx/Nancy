@@ -1,12 +1,14 @@
 ﻿{
     "version": "2.0.0-*",
-
     "description": "Enables using the Spark view engine with Nancy.",
     "authors": [ "Andreas Håkansson, Steven Robbins and contributors" ],
     "tags": [ "Nancy", "View Engine", "Spark" ],
-    "projectUrl": "http://nancyfx.org",
-    "licenseUrl": "https://github.com/NancyFx/Nancy/blob/master/license.txt",
-    "iconUrl": "http://nancyfx.org/nancy-nuget.png",
+    
+    "packOptions": {
+        "projectUrl": "http://nancyfx.org",
+        "licenseUrl": "https://github.com/NancyFx/Nancy/blob/master/license.txt",
+        "iconUrl": "http://nancyfx.org/nancy-nuget.png"
+    },
 
     "dependencies": {
         "Nancy": { "target": "project" },
@@ -14,10 +16,10 @@
     },
 
     "frameworks": {
-        "net451": {
+        "net452": {
             "frameworkAssemblies": {
-                "System.Configuration": "4.0.0.0",
-                "System.Web": "4.0.0.0"
+                "System.Configuration": { "type": "build" },
+                "System.Web": { "type": "build" }
             }
         }
     }

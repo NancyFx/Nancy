@@ -56,34 +56,17 @@
 
         private static IEnumerable<Assembly> GetNancyReferencingAssemblies()
         {
-#if DNX
-            var libraryManager = Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.LibraryManager;
+#if CORE
+            var assemblyCatalog =
+                new DependencyContextAssemblyCatalog();
 
-            var results = new HashSet<Assembly>
-            {
-                typeof (INancyEngine).GetAssembly()
-            };
-
-            var referencingLibraries = libraryManager.GetReferencingLibraries(NancyAssemblyName.Name);
-
-            foreach (var assemblyName in referencingLibraries.SelectMany(referencingLibrary => referencingLibrary.Assemblies))
-            {
-                try
-                {
-                    results.Add(Assembly.Load(assemblyName));
-                }
-                catch
-                {
-                }
-            }
-
-            return results.ToArray();
+            return assemblyCatalog.GetAssemblies();
 #else
             return AppDomain.CurrentDomain.GetAssemblies().Where(IsNancyReferencing).Where(assembly => !assembly.ReflectionOnly);
 #endif
         }
 
-#if !DNX
+#if !CORE
         private static bool IsNancyReferencing(Assembly assembly)
         {
             if (AssemblyName.ReferenceMatchesDefinition(assembly.GetName(), NancyAssemblyName))

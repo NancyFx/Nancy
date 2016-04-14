@@ -1,12 +1,14 @@
 ﻿{
     "version": "2.0.0-*",
-
     "description": "Enables using the Razor view engine with Nancy.",
     "authors": [ "Andreas Håkansson, Steven Robbins and contributors" ],
-    "tags": [ "Nancy", "View Engine", "Razor" ],
-    "projectUrl": "http://nancyfx.org",
-    "licenseUrl": "https://github.com/NancyFx/Nancy/blob/master/license.txt",
-    "iconUrl": "http://nancyfx.org/nancy-nuget.png",
+        
+    "packOptions": {
+        "tags": [ "Nancy", "View Engine", "Razor" ],
+        "projectUrl": "http://nancyfx.org",
+        "licenseUrl": "https://github.com/NancyFx/Nancy/blob/master/license.txt",
+        "iconUrl": "http://nancyfx.org/nancy-nuget.png"
+    },
 
     "dependencies": {
         "Nancy": { "target": "project" },
@@ -14,30 +16,23 @@
         "Microsoft.CodeAnalysis.CSharp": "1.1.0-rc1-20151109-01"
     },
 
-    "compilationOptions": {
-        "define": [ "DNX" ]
-    },
-
     "resource": "Resources/**/*.*",
 
     "frameworks": {
-        "net451": {
+        "net452": {
+            "buildOptions": {
+                "define": [ "DNX" ]
+            },
             "dependencies": {
-                "Microsoft.Dnx.Compilation.Abstractions": "1.0.0-rc1-final",
-                "Microsoft.CodeDom.Providers.DotNetCompilerPlatform": "1.0.1",
-                "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc1-final",
-                "Microsoft.Net.Compilers": {
-                    "version": "1.1.1",
-                    "type": "build"
-                }
+                "Microsoft.CodeDom.Providers.DotNetCompilerPlatform": "1.0.1"
             },
             "frameworkAssemblies": {
-                "System.Configuration": "4.0.0.0",
-                "System.IO": "4.0.0.0",
-                "System.Reflection": "4.0.0.0",
-                "System.Runtime": "4.0.10.0",
-                "System.Text.Encoding": "4.0.0.0",
-                "System.Threading.Tasks": "4.0.0.0"
+                "System.Configuration": { "type": "build" },
+                "System.IO": { "type": "build" },
+                "System.Reflection": { "type": "build" },
+                "System.Runtime": { "type": "build" },
+                "System.Text.Encoding": { "type": "build" },
+                "System.Threading.Tasks": { "type": "build" }
             }
         }
     }

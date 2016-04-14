@@ -1,19 +1,11 @@
 {
     "dependencies": {
-        "FakeItEasy": "2.0.0-beta011",
+        "dotnet-test-xunit": "1.0.0-*",
+        "Microsoft.NETCore.Platforms": "1.0.1-rc2-*",
         "FluentValidation": "3.4.0",
         "Nancy": { "target": "project" },
         "Nancy.Validation.FluentValidation": { "target": "project" },
-        "xunit": "2.1.0",
-        "xunit.runner.dnx": "2.1.0-*"
-    },
-
-    "commands": {
-        "test": "xunit.runner.dnx"
-    },
-
-    "compilationOptions": {
-        "define": [ "DNX" ]
+        "xunit": "2.1.0"
     },
 
     "compileFiles": [
@@ -21,6 +13,15 @@
     ],
 
     "frameworks": {
-        "dnx451": { }
-    }
+        "net452": {
+            "dependencies": {
+                "FakeItEasy": "2.0.0-beta011"
+            },
+            "frameworkAssemblies": {
+                "System.Runtime": { "type": "build" }
+            }
+        }
+    },
+
+    "testRunner": "xunit"
 }
