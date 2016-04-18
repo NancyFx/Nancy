@@ -14,7 +14,7 @@
     },
 
     "resource": [
-        "Resources/Nancy Testing Cert.pfx"
+        "Resources/NancyTestingCert.pfx"
     ],
 
     "frameworks": {
