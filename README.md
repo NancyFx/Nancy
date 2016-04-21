@@ -47,7 +47,7 @@ Above all, creating an application with Nancy should be a pleasure, and hopefull
 
 ## Community
 
-Nancy followers can be found in the JabbR [#NancyFX room](http://jabbr.net/#/rooms/nancyfx). You can also find Nancy on Twitter using the #NancyFx hashtag.	
+Nancy followers can be found on Slack [NancyFx team](http://nancyfx.slack.com). You can also find Nancy on Twitter using the #NancyFx hashtag.	
 	
 ## Help out
 
