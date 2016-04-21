@@ -9,6 +9,6 @@
 
   <Target Name="CopyRazorFiles" Condition="'$(Configuration)'=='DEBUG'">
      <Copy SourceFiles="$(MSBuildThisFileDirectory)..\BuildProviders\Nancy.ViewEngines.Razor.BuildProviders.dll" DestinationFolder="$(DestinationFolder)" ContinueOnError="true" />
-     <Copy SourceFiles="$(MSBuildThisFileDirectory)..\lib\net40\Nancy.ViewEngines.Razor.dll" DestinationFolder="$(DestinationFolder)" ContinueOnError="true" />
+     <Copy SourceFiles="$(MSBuildThisFileDirectory)..\lib\net45\Nancy.ViewEngines.Razor.dll" DestinationFolder="$(DestinationFolder)" ContinueOnError="true" />
    </Target>
 </Project>

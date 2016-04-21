@@ -208,8 +208,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\Nancy.Testing\Resources\Nancy Testing Cert.pfx">
-      <Link>Resources\Nancy Testing Cert.pfx</Link>
+    <EmbeddedResource Include="..\Nancy.Testing\Resources\NancyTestingCert.pfx">
+      <Link>Resources\NancyTestingCert.pfx</Link>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
