@@ -86,6 +86,11 @@
             this.stream.Position = 0;
         }
 
+        ~RequestStream()
+        {
+            this.Dispose(false);
+        }
+
         private Task MoveToWritableStream()
         {
             var sourceStream = this.stream;
@@ -200,7 +205,10 @@
         {
             if (this.isSafeToDisposeStream)
             {
-                ((IDisposable)this.stream).Dispose();
+                if (this.stream != null)
+                {
+                    this.stream.Dispose();
+                }
 
                 var fileStream = this.stream as FileStream;
                 if (fileStream != null)
