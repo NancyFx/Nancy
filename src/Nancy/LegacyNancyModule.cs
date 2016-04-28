@@ -154,9 +154,9 @@ namespace Nancy
         /// Renders a view from inside a route handler.
         /// </summary>
         /// <value>A <see cref="ViewRenderer"/> instance that is used to determine which view that should be rendered.</value>
-        public ViewRenderer View
+        public LegacyViewRenderer View
         {
-            get { return new ViewRenderer(this); }
+            get { return new LegacyViewRenderer(this); }
         }
 
         /// <summary>

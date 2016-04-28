@@ -1,7 +1,7 @@
 namespace Nancy
 {
     using System.IO;
-
+    using System.Threading.Tasks;
     using Nancy.Responses.Negotiation;
 
     /// <summary>
@@ -26,7 +26,7 @@ namespace Nancy
         /// <param name="model">The model that should be passed into the view.</param>
         /// <returns>A delegate that can be invoked with the <see cref="Stream"/> that the view should be rendered to.</returns>
         /// <remarks>The view name is model.GetType().Name with any Model suffix removed.</remarks>
-        public Negotiator this[dynamic model]
+        public Task<Negotiator> this[dynamic model]
         {
             get { return this.GetNegotiator(null, model); }
         }
@@ -37,7 +37,7 @@ namespace Nancy
         /// <param name="viewName">The name of the view to render.</param>
         /// <returns>A delegate that can be invoked with the <see cref="Stream"/> that the view should be rendered to.</returns>
         /// <remarks>The extension in the view name is optional. If it is omitted, then Nancy will try to resolve which of the available engines that should be used to render the view.</remarks>
-        public Negotiator this[string viewName]
+        public Task<Negotiator> this[string viewName]
         {
             get { return this.GetNegotiator(viewName, null); }
         }
@@ -49,12 +49,12 @@ namespace Nancy
         /// <param name="model">The model that should be passed into the view.</param>
         /// <returns>A delegate that can be invoked with the <see cref="Stream"/> that the view should be rendered to.</returns>
         /// <remarks>The extension in the view name is optional. If it is omitted, then Nancy will try to resolve which of the available engines that should be used to render the view.</remarks>
-        public Negotiator this[string viewName, dynamic model]
+        public Task<Negotiator> this[string viewName, dynamic model]
         {
             get { return this.GetNegotiator(viewName, model); }
         }
 
-        private Negotiator GetNegotiator(string viewName, object model)
+        private Task<Negotiator> GetNegotiator(string viewName, object model)
         {
             var negotiationContext = this.module.Context.NegotiationContext;
 
@@ -63,7 +63,7 @@ namespace Nancy
             negotiationContext.PermissableMediaRanges.Clear();
             negotiationContext.PermissableMediaRanges.Add("text/html");
 
-            return new Negotiator(this.module.Context);
+            return Task.FromResult(new Negotiator(this.module.Context));
         }
     }
 }

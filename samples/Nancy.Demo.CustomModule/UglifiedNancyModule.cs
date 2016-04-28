@@ -43,9 +43,9 @@
 
         public string ModulePath { get; private set; }
 
-        public ViewRenderer View
+        public LegacyViewRenderer View
         {
-            get { return new ViewRenderer(this); }
+            get { return new LegacyViewRenderer(this); }
         }
 
         public Negotiator Negotiate

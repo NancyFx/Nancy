@@ -1358,11 +1358,20 @@
     <Compile Include="..\Nancy\StaticContentConfigurationExtensions.cs">
       <Link>StaticContentConfigurationExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy\GlobalizationConfiguration.cs" />
-    <Compile Include="..\Nancy\GlobalizationConfigurationExtensions.cs" />
-    <Compile Include="..\Nancy\DefaultGlobalizationConfigurationProvider.cs" />
+    <Compile Include="..\Nancy\GlobalizationConfiguration.cs" >
+      <Link>StaticContentConfiguration.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy\GlobalizationConfigurationExtensions.cs" >
+      <Link>StaticContentConfiguration.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy\DefaultGlobalizationConfigurationProvider.cs" >
+      <Link>StaticContentConfiguration.cs</Link>
+    </Compile>
     <Compile Include="..\Nancy\Configuration\ConfigurationException.cs">
       <Link>Configuration\ConfigurationException.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy\LegacyViewRenderer.cs">
+      <Link>LegacyViewRenderer.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>

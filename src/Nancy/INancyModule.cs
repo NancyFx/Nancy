@@ -93,12 +93,6 @@ namespace Nancy
         dynamic Text { get; }
 
         /// <summary>
-        /// Renders a view from inside a route handler.
-        /// </summary>
-        /// <value>A <see cref="ViewRenderer"/> instance that is used to determine which view that should be rendered.</value>
-        ViewRenderer View { get; }
-
-        /// <summary>
         /// Used to negotiate the content returned based on Accepts header.
         /// </summary>
         /// <value>A <see cref="Negotiator"/> instance that is used to negotiate the content returned.</value>
