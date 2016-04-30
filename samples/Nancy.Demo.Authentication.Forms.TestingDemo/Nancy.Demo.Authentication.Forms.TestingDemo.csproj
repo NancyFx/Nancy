@@ -117,6 +117,45 @@
     <Compile Include="LoginFixture.cs" />
     <Compile Include="TestBootstrapper.cs" />
     <Compile Include="TestRootPathProvider.cs" />
+    <Compile Include="..\Nancy.Validation.DataAnnotatioins.Tests\BaseValidatorAdapterTestFixture.cs">
+      <Link>BaseValidatorAdapterTestFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotatioins.Tests\CompareValidatorAdapterFixture.cs">
+      <Link>CompareValidatorAdapterFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotatioins.Tests\CreditCardValidatorAdapterFixture.cs">
+      <Link>CreditCardValidatorAdapterFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotatioins.Tests\DataAnnotationsValidatorFixture.cs">
+      <Link>DataAnnotationsValidatorFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotatioins.Tests\DataAnnotationsValidatorFactoryFixture.cs">
+      <Link>DataAnnotationsValidatorFactoryFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotatioins.Tests\DefaultValidatableObjectAdapterFixture.cs">
+      <Link>DefaultValidatableObjectAdapterFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotatioins.Tests\EmailAddressValidatorAdapterFixture.cs">
+      <Link>EmailAddressValidatorAdapterFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotatioins.Tests\FileExtensionsValidatorAdapterFixture.cs">
+      <Link>FileExtensionsValidatorAdapterFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotatioins.Tests\MaxLengthValidatorAdapterFixture.cs">
+      <Link>MaxLengthValidatorAdapterFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotatioins.Tests\MinLengthValidatorAdapterFixture.cs">
+      <Link>MinLengthValidatorAdapterFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotatioins.Tests\PhoneValidatorAdapterFixture.cs">
+      <Link>PhoneValidatorAdapterFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotatioins.Tests\PropertyValidatorFixture.cs">
+      <Link>PropertyValidatorFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotatioins.Tests\UrlValidatorAdapterFixture.cs">
+      <Link>UrlValidatorAdapterFixture.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Nancy.Testing.MSBuild\Nancy.Testing.csproj">
