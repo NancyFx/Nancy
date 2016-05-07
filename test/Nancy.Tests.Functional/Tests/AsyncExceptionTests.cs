@@ -16,7 +16,7 @@
             this.browser = new Browser(config =>
             {
                 config.Module<MyModule>();
-                // explicitly declare the status code handler that throws, just 
+                // explicitly declare the status code handler that throws, just
                 // incase it's not there for some other reason.
                 config.StatusCodeHandlers(new[] { typeof(PassThroughStatusCodeHandler)});
             });
@@ -39,15 +39,22 @@
         }
     }
 
-    public class MyModule : LegacyNancyModule
+    public class MyModule : NancyModule
     {
         public MyModule()
         {
-            this.Get["/sync"] = _ => { throw new Exception("Derp"); };
+            Get("/sync", args =>
+            {
+                throw new Exception("Derp");
+                return 500;
+            });
 
-            this.Get["/async", true] = (_, __) =>
-                Task.Factory.StartNew(() => { }) // Force continuation on a worker thread
+            Get("/async", async args =>
+            {
+                return await Task.Factory
+                    .StartNew(() => { }) // Force continuation on a worker thread
                     .ContinueWith<dynamic>(t => { throw new Exception("Derp"); });
+            });
         }
     }
 }

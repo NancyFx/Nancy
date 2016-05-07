@@ -2,9 +2,8 @@ namespace Nancy.Tests.Unit
 {
     using System;
     using System.Linq;
-
+    using System.Threading.Tasks;
     using Nancy.Tests.Fakes;
-
     using Xunit;
 
     public class NancyModuleFixture
@@ -20,7 +19,7 @@ namespace Nancy.Tests.Unit
         public void Adds_route_when_get_indexer_used()
         {
             // Given, When
-            this.module.Get["/test"] = async (_, __) => null;
+            this.module.Get<object>("/test", (_, __) => null);
 
             // Then
             this.module.Routes.Count().ShouldEqual(1);
@@ -30,7 +29,7 @@ namespace Nancy.Tests.Unit
         public void Adds_route_when_put_indexer_used()
         {
             // Given, When
-            this.module.Put["/test"] = async (_, __) => null;
+            this.module.Put<object>("/test", (_, __) => null);
 
             // Then
             this.module.Routes.Count().ShouldEqual(1);
@@ -40,7 +39,7 @@ namespace Nancy.Tests.Unit
         public void Adds_route_when_post_indexer_used()
         {
             // Given, When
-            this.module.Post["/test"] = async (_, __) => null;
+            this.module.Post<object>("/test", (_, __) => null);
 
             // Then
             this.module.Routes.Count().ShouldEqual(1);
@@ -50,7 +49,7 @@ namespace Nancy.Tests.Unit
         public void Adds_route_when_delete_indexer_used()
         {
             // Given, When
-            this.module.Delete["/test"] = async (_, __) => null;
+            this.module.Delete<object>("/test", (_, __) => null);
 
             // Then
             this.module.Routes.Count().ShouldEqual(1);
@@ -60,7 +59,7 @@ namespace Nancy.Tests.Unit
         public void Adds_route_when_options_indexer_userd()
         {
             // Given, When
-            this.module.Options["/test"] = async (_, __) => null;
+            this.module.Options<object>("/test", (_, __) => null);
 
             // Then
             this.module.Routes.Count().ShouldEqual(1);
@@ -70,7 +69,7 @@ namespace Nancy.Tests.Unit
         public void Should_store_route_with_specified_path_when_route_indexer_is_invoked_with_a_path_but_no_condition()
         {
             // Given, When
-            this.module.Get["/test"] = async (_, __) => null;
+            this.module.Get<object>("/test", (_, __) => null);
 
             // Then
             module.Routes.First().Description.Path.ShouldEqual("/test");
@@ -83,7 +82,9 @@ namespace Nancy.Tests.Unit
             Func<NancyContext, bool> condition = r => true;
 
             // When
-            this.module.Get["/test", condition] = async (_, __) => null;
+            this.module.Get<object>("/test",
+                condition: condition,
+                action: (_, __) => null);
 
             // Then
             module.Routes.First().Description.Path.ShouldEqual("/test");
@@ -93,7 +94,7 @@ namespace Nancy.Tests.Unit
         public void Should_store_route_with_null_condition_when_route_indexer_is_invoked_without_a_condition()
         {
             // Given, When
-            this.module.Get["/test"] = async (_, __) => null;
+            this.module.Get<object>("/test", (_, __) => null);
 
             // Then
             module.Routes.First().Description.Condition.ShouldBeNull();
@@ -106,7 +107,9 @@ namespace Nancy.Tests.Unit
             Func<NancyContext, bool> condition = r => true;
 
             // When
-            this.module.Get["/test", condition] = async (_, __) => null;
+            this.module.Get<object>("/test",
+                condition: condition,
+                action: (_, __) => null);
 
             // Then
             module.Routes.First().Description.Condition.ShouldBeSameAs(condition);
@@ -116,7 +119,7 @@ namespace Nancy.Tests.Unit
         public void Should_add_route_with_get_method_when_added_using_get_indexer()
         {
             // Given, When
-            this.module.Get["/test"] = async (_, __) => null;
+            this.module.Get<object>("/test", (_, __) => null);
 
             // Then
             module.Routes.First().Description.Method.ShouldEqual("GET");
@@ -126,7 +129,7 @@ namespace Nancy.Tests.Unit
         public void Should_add_route_with_put_method_when_added_using_get_indexer()
         {
             // Given, When
-            this.module.Put["/test"] = async (_, __) => null;
+            this.module.Put<object>("/test", (_, __) => null);
 
             // Then
             module.Routes.First().Description.Method.ShouldEqual("PUT");
@@ -136,7 +139,7 @@ namespace Nancy.Tests.Unit
         public void Should_add_route_with_post_method_when_added_using_get_indexer()
         {
             // Given, When
-            this.module.Post["/test"] = async(_, __) => null;
+            this.module.Post<object>("/test", (_, __) => null);
 
             // Then
             module.Routes.First().Description.Method.ShouldEqual("POST");
@@ -146,7 +149,7 @@ namespace Nancy.Tests.Unit
         public void Should_add_route_with_delete_method_when_added_using_get_indexer()
         {
             // Given, When
-            this.module.Delete["/test"] = async (_, __) => null;
+            this.module.Delete<object>("/test", (_, __) => null);
 
             // Then
             module.Routes.First().Description.Method.ShouldEqual("DELETE");
@@ -159,7 +162,7 @@ namespace Nancy.Tests.Unit
             var moduleWithBasePath = new FakeNancyModuleWithBasePath();
 
             // When
-            moduleWithBasePath.Get["/NewRoute"] = d => null;
+            moduleWithBasePath.Get("/NewRoute", args => Task.FromResult<object>(null));
 
             // Then
             moduleWithBasePath.Routes.Last().Description.Path.ShouldEqual("/fake/NewRoute");
@@ -172,24 +175,10 @@ namespace Nancy.Tests.Unit
             var moduleWithBasePath = new FakeNancyModuleWithBasePath();
 
             // When
-            moduleWithBasePath.Get["test"] = d => null;
+            moduleWithBasePath.Get<object>("/test", (_, __) => null);
 
             // Then
             moduleWithBasePath.Routes.Last().Description.Path.ShouldEqual("/fake/test");
-        }
-
-        [Fact]
-        public void Should_store_two_routes_when_registering_single_get_method()
-        {
-            // Given
-            var moduleWithBasePath = new CustomNancyModule();
-
-            // When
-            moduleWithBasePath.Get["/Test1", "/Test2"] = d => null;
-
-            // Then
-            moduleWithBasePath.Routes.First().Description.Path.ShouldEqual("/Test1");
-            moduleWithBasePath.Routes.Last().Description.Path.ShouldEqual("/Test2");
         }
 
         [Fact]
@@ -199,7 +188,7 @@ namespace Nancy.Tests.Unit
             var moduleWithBasePath = new CustomNancyModule();
 
             // When
-            moduleWithBasePath.Post["/Test1"] = async (_, __) => null;
+            moduleWithBasePath.Post<object>("/Test1", (_, __) => null);
 
             // Then
             moduleWithBasePath.Routes.Last().Description.Path.ShouldEqual("/Test1");
@@ -212,17 +201,19 @@ namespace Nancy.Tests.Unit
             var moduleWithNullPath = new CustomModulePathModule(null);
 
             // When
-            var result = moduleWithNullPath.Post["/Test1"] = async (_, __) => null;
+            moduleWithNullPath.Post<object>("/Test1", (_, __) => null);
 
             // Then
-            Assert.NotNull(result);
+            moduleWithNullPath.Routes.Count().ShouldBeGreaterThan(0);
         }
 
         [Fact]
         public void Adds_named_route_when_named_indexer_used()
         {
             // Given, When
-            this.module.Get["Foo", "/test"] = async (_, __) => null;
+            this.module.Get<object>("/test",
+                name: "Foo",
+                action: (_, __) => null);
 
             // Then
             this.module.Routes.Count().ShouldEqual(1);
@@ -239,29 +230,6 @@ namespace Nancy.Tests.Unit
 
         private class CustomNancyModule : NancyModule
         {
-            public new CustomRouteBuilder Get
-            {
-                get { return new CustomRouteBuilder("GET", this); }
-            }
-
-            public class CustomRouteBuilder : RouteBuilder
-            {
-                public CustomRouteBuilder(string method, NancyModule parentModule)
-                    : base(method, parentModule)
-                {
-                }
-
-                public Func<dynamic, dynamic> this[params string[] paths]
-                {
-                    set
-                    {
-                        foreach (var path in paths)
-                        {
-                            this.AddRoute(String.Empty, path, null, async (p, __) => value.Invoke(p));
-                        }
-                    }
-                }
-            }
         }
     }
 }

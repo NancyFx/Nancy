@@ -56,15 +56,15 @@ namespace Nancy.ViewEngines.DotLiquid.Tests.Functional
         }
     }
 
-    public class PartialRenderingModule : LegacyNancyModule
+    public class PartialRenderingModule : NancyModule
     {
         public PartialRenderingModule()
         {
-            Get["/unquotedpartial"] = _ => View["unquotedpartial"];
+            Get("/unquotedpartial", args => View["unquotedpartial"]);
 
-            Get["/doublequotedpartial"] = _ => View["doublequotedpartial"];
+            Get("/doublequotedpartial", args => View["doublequotedpartial"]);
 
-            Get["/singlequotedpartial"] = _ => View["singlequotedpartial"];
+            Get("/singlequotedpartial", args => View["singlequotedpartial"]);
         }
     }
 }

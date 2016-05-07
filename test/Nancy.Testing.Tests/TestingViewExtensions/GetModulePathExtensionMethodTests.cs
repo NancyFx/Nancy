@@ -39,20 +39,20 @@ namespace Nancy.Testing.Tests.TestingViewExtensions
             Assert.Equal("", response.GetModulePath());
         }
 
-        internal class TestModuleWithLongModulePath : LegacyNancyModule
+        internal class TestModuleWithLongModulePath : NancyModule
         {
             public TestModuleWithLongModulePath()
                 : base("/a/long/path")
             {
-                this.Get["/getModulePath"] = _ => this.View["TestingViewExtensions/ViewFactoryTest.sshtml"];
+                Get("/getModulePath", args => this.View["TestingViewExtensions/ViewFactoryTest.sshtml"]);
             }
         }
 
-        internal class ModuleWithoutModulePath : LegacyNancyModule
+        internal class ModuleWithoutModulePath : NancyModule
         {
             public ModuleWithoutModulePath()
             {
-                this.Get["/getModulePath"] = _ => this.View["TestingViewExtensions/ViewFactoryTest.sshtml"];
+                Get("/getModulePath", args => this.View["TestingViewExtensions/ViewFactoryTest.sshtml"]);
             }
         }
     }

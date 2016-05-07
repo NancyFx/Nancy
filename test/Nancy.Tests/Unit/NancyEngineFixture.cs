@@ -66,11 +66,6 @@ namespace Nancy.Tests.Unit
 
             this.routeInvoker = A.Fake<IRouteInvoker>();
 
-            A.CallTo(() => this.routeInvoker.Invoke(A<Route>._, A<CancellationToken>._, A<DynamicDictionary>._, A<NancyContext>._)).ReturnsLazily(arg =>
-            {
-                return ((Route)arg.Arguments[0]).Action.Invoke((DynamicDictionary)arg.Arguments[1], A<CancellationToken>._).Result;
-            });
-
             this.engine =
                 new NancyEngine(this.requestDispatcher, this.contextFactory, new[] { this.statusCodeHandler }, A.Fake<IRequestTracing>(), new DisabledStaticContentProvider(), this.negotiator, this.environment)
                 {
@@ -401,7 +396,7 @@ namespace Nancy.Tests.Unit
             var testEx = new Exception();
 
             var errorRoute =
-                new Route("GET", "/", null, (x,c) => { throw testEx; });
+                new Route<object>("GET", "/", null, (x, c) => { throw testEx; });
 
             var resolvedRoute = new ResolveResult(
                 errorRoute,
@@ -450,7 +445,7 @@ namespace Nancy.Tests.Unit
         {
             // Given
             var routeUnderTest =
-                new Route("GET", "/", null, (x,c) => { throw new Exception(); });
+                new Route<object>("GET", "/", null, (x, c) => { throw new Exception(); });
 
             var resolved =
                 new ResolveResult(routeUnderTest, DynamicDictionary.Empty, null, null, null);

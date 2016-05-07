@@ -7,7 +7,7 @@ namespace Nancy.Demo.MarkdownViewEngine.Modules
 
     using Nancy.ViewEngines;
 
-    public class HomeModule : LegacyNancyModule
+    public class HomeModule : NancyModule
     {
         private readonly IViewLocationProvider viewLocationProvider;
 
@@ -15,7 +15,7 @@ namespace Nancy.Demo.MarkdownViewEngine.Modules
         {
             this.viewLocationProvider = viewLocationProvider;
 
-            Get["/"] = _ =>
+            Get("/", args =>
             {
                 var popularposts = GetModel();
 
@@ -24,19 +24,19 @@ namespace Nancy.Demo.MarkdownViewEngine.Modules
                 postModel.MetaData = popularposts;
 
                 return View["blogindex", postModel];
-            };
+            });
 
-            Get["/{viewname}"] = parameters =>
+            Get("/{viewname}", args =>
             {
                 var popularposts = GetModel();
 
                 dynamic postModel = new ExpandoObject();
                 postModel.PopularPosts = popularposts;
                 postModel.MetaData =
-                popularposts.FirstOrDefault(x => x.Slug == parameters.viewname);
+                popularposts.FirstOrDefault(x => x.Slug == args.viewname);
 
-                return View["Posts/" + parameters.viewname, postModel];
-            };
+                return View["Posts/" + args.viewname, postModel];
+            });
         }
 
         private IEnumerable<BlogModel> GetModel()

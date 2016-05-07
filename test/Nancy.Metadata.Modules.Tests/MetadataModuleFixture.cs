@@ -14,7 +14,7 @@
         public MetadataModuleFixture()
         {
             this.route = new RouteDescription("NamedDescription", "GET", "/things", ctx => true);
-            this.metadataModule = new FakeLegacyNancyMetadataModule();
+            this.metadataModule = new FakeNancyMetadataModule();
         }
 
         [Fact]
@@ -22,7 +22,7 @@
         {
             // Given
             const string Metadata = "metadata";
-            
+
             // When
             this.metadataModule.Describe[this.route.Name] = desc => { return Metadata; };
 

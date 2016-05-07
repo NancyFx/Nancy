@@ -8,160 +8,186 @@ namespace Nancy.Demo.Hosting.Aspnet
     using Nancy.Routing;
     using Nancy.Security;
 
-    public class MainModule : LegacyNancyModule
+    public class MainModule : NancyModule
     {
         public MainModule(IRouteCacheProvider routeCacheProvider, INancyEnvironment environment)
         {
-            Get["/"] = x => {
+            Get("/", args =>
+            {
                 return View["routes", routeCacheProvider.GetCache()];
-            };
+            });
 
-            Get["/texts"] = parameters => {
+            Get("/texts", args =>
+            {
                 return (string)this.Context.Text.Menu.Home;
-            };
+            });
 
-            Get["/env"] = _ =>
+            Get("/env", args =>
             {
                 return "From nancy environment: " + environment.GetValue<MyConfig>().Value;
-            };
+            });
 
-            Get["/meta"] = parameters =>
+            Get("/meta", args =>
             {
                 return Negotiate
                     .WithModel(routeCacheProvider.GetCache().RetrieveMetadata<MyRouteMetadata>())
                     .WithView("meta");
-            };
+            });
 
-            Get["/uber-meta"] = parameters =>
+            Get("/uber-meta", args =>
             {
                 return Negotiate
                     .WithModel(routeCacheProvider.GetCache().RetrieveMetadata<MyUberRouteMetadata>().OfType<MyUberRouteMetadata>())
                     .WithView("uber-meta");
-            };
+            });
 
-            Get["/text"] = x =>
+            Get("/text", args =>
             {
                 var value = (string)this.Context.Text.Menu.Home;
                 return string.Concat("Value of 'Home' resource key in the Menu resource file: ", value);
-            };
+            });
 
-            Get["/negotiated"] = parameters => {
+            Get("/negotiated", args =>
+            {
                 return Negotiate
-                    .WithModel(new RatPack {FirstName = "Nancy "})
-                    .WithMediaRangeModel("text/html", new RatPack {FirstName = "Nancy fancy pants"})
+                    .WithModel(new RatPack { FirstName = "Nancy " })
+                    .WithMediaRangeModel("text/html", new RatPack { FirstName = "Nancy fancy pants" })
                     .WithView("negotiatedview")
                     .WithHeader("X-Custom", "SomeValue");
-            };
+            });
 
-            Get["/user/{name}"] = parameters =>
+            Get("/user/{name}", args =>
             {
-                return (string)parameters.name;
-            };
+                return (string)args.name;
+            });
 
-            Get["/filtered", r => true] = x => {
-                return "This is a route with a filter that always returns true.";
-            };
+            Get("/filtered",
+                condition: r => true,
+                action: args =>
+                {
+                    return "This is a route with a filter that always returns true.";
+                }
+            );
 
-            Get["/filtered", r => false] = x => {
-                return "This is also a route, but filtered out so should never be hit.";
-            };
+            Get("/filtered",
+                condition: r => false,
+                action: args =>
+                {
+                    return "This is also a route, but filtered out so should never be hit.";
+                }
+            );
 
-            Get[@"/(?<foo>\d{2,4})/{bar}"] = x => {
-                return string.Format("foo: {0}<br/>bar: {1}", x.foo, x.bar);
-            };
+            Get(@"/(?<foo>\d{2,4})/{bar}", args =>
+            {
+                return string.Format("foo: {0}<br/>bar: {1}", args.foo, args.bar);
+            });
 
-            Get["/test"] = x => {
+            Get("/test", args =>
+            {
                 return "Test";
-            };
+            });
 
-            Get["/nustache"] = parameters => {
+            Get("/nustache", args =>
+            {
                 return View["nustache", new { name = "Nancy", value = 1000000 }];
-            };
+            });
 
-            Get["/dotliquid"] = parameters => {
+            Get("/dotliquid", args =>
+            {
                 return View["dot", new { name = "dot" }];
-            };
+            });
 
-            Get["/javascript"] = x => {
+            Get("/javascript", args =>
+            {
                 return View["javascript.html"];
-            };
+            });
 
-            Get["/static"] = x => {
+            Get("/static", args =>
+            {
                 return View["static"];
-            };
+            });
 
-            Get["/razor"] = x => {
+            Get("/razor", args =>
+            {
                 var model = new RatPack { FirstName = "Frank" };
                 return View["razor.cshtml", model];
-            };
+            });
 
-            Get["/razor-divzero"] = x =>
+            Get("/razor-divzero", args =>
             {
                 var model = new { FirstName = "Frank", Number = 22 };
                 return View["razor-divzero.cshtml", model];
-            };
+            });
 
-            Get["/razorError"] = x =>
+            Get("/razorError", args =>
             {
                 var model = new RatPack { FirstName = "Frank" };
                 return View["razor-error.cshtml", model];
-            };
+            });
 
-            Get["/razor-simple"] = x =>
+            Get("/razor-simple", args =>
             {
                 var model = new RatPack { FirstName = "Frank" };
                 return View["razor-simple.cshtml", model];
-            };
+            });
 
-            Get["/razor-dynamic"] = x =>
+            Get("/razor-dynamic", args =>
             {
                 return View["razor.cshtml", new { FirstName = "Frank" }];
-            };
+            });
 
-            Get["/razor-cs-strong"] = x =>
+            Get("/razor-cs-strong", args =>
             {
                 return View["razor-strong.cshtml", new RatPack { FirstName = "Frank" }];
-            };
+            });
 
-            Get["/razor-vb-strong"] = x =>
+            Get("/razor-vb-strong", args =>
             {
                 return View["razor-strong.vbhtml", new RatPack { FirstName = "Frank" }];
-            };
+            });
 
-            Get["/razor2"] = _ => new Razor2();
+            Get("/razor2", args =>
+            {
+                return new Razor2();
+            });
 
-            Get["/ssve"] = x =>
+            Get("/ssve", args =>
             {
                 var model = new RatPack { FirstName = "You" };
                 return View["ssve.sshtml", model];
-            };
+            });
 
-            Get["/viewmodelconvention"] = x => {
+            Get("/viewmodelconvention", args =>
+            {
                 return View[new SomeViewModel()];
-            };
+            });
 
-            Get["/spark"] = x => {
+            Get("/spark", args =>
+            {
                 var model = new RatPack { FirstName = "Bright" };
                 return View["spark.spark", model];
-            };
+            });
 
-            Get["/spark-anon"] = x =>
+            Get("/spark-anon", args =>
             {
                 var model = new { FirstName = "Anonymous" };
                 return View["anon.spark", model];
-            };
+            });
 
-            Get["/json"] = x => {
+            Get("/json", args =>
+            {
                 var model = new RatPack { FirstName = "Andy" };
                 return this.Response.AsJson(model);
-            };
+            });
 
-            Get["/xml"] = x => {
+            Get("/xml", args =>
+            {
                 var model = new RatPack { FirstName = "Andy" };
                 return this.Response.AsXml(model);
-            };
+            });
 
-            Get["/session"] = x => {
+            Get("/session", args =>
+            {
                 var value = Session["moo"] ?? "";
 
                 var output = "Current session value is: " + value;
@@ -172,9 +198,10 @@ namespace Nancy.Demo.Hosting.Aspnet
                 }
 
                 return output;
-            };
+            });
 
-            Get["/sessionObject"] = x => {
+            Get("/sessionObject", args =>
+            {
                 var value = Session["baa"] ?? "null";
 
                 var output = "Current session value is: " + value;
@@ -185,47 +212,56 @@ namespace Nancy.Demo.Hosting.Aspnet
                 }
 
                 return output;
-            };
+            });
 
-            Get["/error"] = x =>
-                {
-                    throw new NotSupportedException("This is an exception thrown in a route.");
-                };
+            Get("/error", args =>
+            {
+                throw new NotSupportedException("This is an exception thrown in a route.");
+                return 500;
+            });
 
-            Get["/customErrorHandler"] = _ => HttpStatusCode.ImATeapot;
+            Get("/customErrorHandler", args =>
+            {
+                return HttpStatusCode.ImATeapot;
+            });
 
-            Get["/csrf"] = x => this.View["csrf", new { Blurb = "CSRF without an expiry using the 'session' token" }];
+            Get("/csrf", args =>
+            {
+                return this.View["csrf", new { Blurb = "CSRF without an expiry using the 'session' token" }];
+            });
 
-            Post["/csrf"] = x =>
+            Post("/csrf", args =>
             {
                 this.ValidateCsrfToken();
 
                 return string.Format("Hello {0}!", this.Request.Form.Name);
-            };
+            });
 
-            Get["/csrfWithExpiry"] = x =>
-                {
-                    // Create a new one because we have an expiry to check
-                    this.CreateNewCsrfToken();
+            Get("/csrfWithExpiry", args =>
+            {
+                // Create a new one because we have an expiry to check
+                this.CreateNewCsrfToken();
 
-                    return this.View["csrf", new { Blurb = "You have 20 seconds to submit the page.. TICK TOCK :-)" }];
-                };
+                return this.View["csrf", new { Blurb = "You have 20 seconds to submit the page.. TICK TOCK :-)" }];
+            });
 
-            Post["/csrfWithExpiry"] = x =>
-                {
-                    this.ValidateCsrfToken(TimeSpan.FromSeconds(20));
+            Post("/csrfWithExpiry", args =>
+            {
+                this.ValidateCsrfToken(TimeSpan.FromSeconds(20));
 
-                    return string.Format("Hello {0}!", this.Request.Form.Name);
-                };
+                return string.Format("Hello {0}!", this.Request.Form.Name);
+            });
 
-            Get["/viewNotFound"] = _ => View["I-do-not-exist"];
+            Get("/viewNotFound", args => {
+                return View["I-do-not-exist"];
+            });
 
-            Get["/fileupload"] = x =>
+            Get("/fileupload", args =>
             {
                 return View["FileUpload", new { Posted = "Nothing" }];
-            };
+            });
 
-            Post["/fileupload"] = x =>
+            Post("/fileupload", args =>
             {
                 var file = this.Request.Files.FirstOrDefault();
 
@@ -237,9 +273,15 @@ namespace Nancy.Demo.Hosting.Aspnet
                 }
 
                 return View["FileUpload", new { Posted = fileDetails }];
-            };
+            });
 
-            Get["NamedRoute", "/namedRoute"] = _ => "I am a named route!";
+            Get(
+                name: "NamedRoute",
+                path: "/namedRoute",
+                action: args =>
+                {
+                    return "I am a named route!";
+                });
         }
     }
 }

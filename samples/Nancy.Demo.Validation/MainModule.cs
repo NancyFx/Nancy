@@ -1,13 +1,13 @@
 ﻿namespace Nancy.Demo.Validation
 {
-    public class MainModule : LegacyNancyModule
+    public class MainModule : NancyModule
     {
         public MainModule()
         {
-            Get["/"] = x =>
+            Get("/", args =>
             {
                 return "<a href='/customers'>Customers</a><br><a href='/products'>Products</a>";
-            };
+            });
         }
     }
 }

@@ -10,7 +10,7 @@
     {
         private readonly string expected;
         private readonly CaptureRequestModule captureRequestModule;
- 
+
         public BrowserDefaultsFixture()
         {
             // Given
@@ -23,10 +23,10 @@
         {
             // Given
             var sut = new Browser(with => with.Module(this.captureRequestModule), defaults: to => to.Accept(this.expected));
-            
+
             // When
             await sut.Get("/");
-            
+
             // Then
             this.captureRequestModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(this.expected);
         }
@@ -36,10 +36,10 @@
         {
             // Given
             var sut = new Browser(with => with.Module(this.captureRequestModule), defaults: to => to.Accept(this.expected));
-            
+
             // When
             await sut.Post("/");
-            
+
             // Then
             this.captureRequestModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(this.expected);
         }
@@ -49,10 +49,10 @@
         {
             // Given
             var sut = new Browser(with => with.Module(this.captureRequestModule), defaults: to => to.Accept(this.expected));
-            
+
             // When
             await sut.Put("/");
-            
+
             // Then
             this.captureRequestModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(this.expected);
         }
@@ -62,10 +62,10 @@
         {
             // Given
             var sut = new Browser(with => with.Module(this.captureRequestModule), defaults: to => to.Accept(this.expected));
-            
+
             // When
             await sut.Patch("/");
-            
+
             // Then
             this.captureRequestModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(this.expected);
         }
@@ -75,10 +75,10 @@
         {
             // Given
             var sut = new Browser(with => with.Module(this.captureRequestModule), defaults: to => to.Accept(this.expected));
-            
+
             // When
             await sut.Delete("/");
-            
+
             // Then
             this.captureRequestModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(this.expected);
         }
@@ -89,10 +89,10 @@
             // Given
             var bootstrapper = new ConfigurableBootstrapper(with => with.Module(this.captureRequestModule));
             var sut = new Browser(bootstrapper, defaults: to => to.Accept(this.expected));
-            
+
             // When
             await sut.Get("/");
-            
+
             // Then
             this.captureRequestModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(this.expected);
         }
@@ -103,10 +103,10 @@
             // Given
             var bootstrapper = new ConfigurableBootstrapper(with => with.Module(this.captureRequestModule));
             var sut = new Browser(bootstrapper, defaults: to => to.Accept(this.expected));
-            
+
             // When
             await sut.Post("/");
-            
+
             // Then
             this.captureRequestModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(this.expected);
         }
@@ -117,10 +117,10 @@
             // Given
             var bootstrapper = new ConfigurableBootstrapper(with => with.Module(this.captureRequestModule));
             var sut = new Browser(bootstrapper, defaults: to => to.Accept(this.expected));
-            
+
             // When
             await sut.Put("/");
-            
+
             // Then
             this.captureRequestModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(this.expected);
         }
@@ -131,10 +131,10 @@
             // Given
             var bootstrapper = new ConfigurableBootstrapper(with => with.Module(this.captureRequestModule));
             var sut = new Browser(bootstrapper, defaults: to => to.Accept(this.expected));
-            
+
             // When
             await sut.Patch("/");
-            
+
             // Then
             this.captureRequestModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(this.expected);
         }
@@ -145,10 +145,10 @@
             // Given
             var bootstrapper = new ConfigurableBootstrapper(with => with.Module(this.captureRequestModule));
             var sut = new Browser(bootstrapper, defaults: to => to.Accept(this.expected));
-            
+
             // When
             await sut.Delete("/");
-            
+
             // Then
             this.captureRequestModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(this.expected);
         }
@@ -158,26 +158,26 @@
         {
             // Given
             var sut = new Browser(with => with.Module(this.captureRequestModule), defaults: to => to.Accept(this.expected));
-            
+
             // When
             await sut.Get("/", with => with.Query("testKey", "testValue"));
-            
+
             // Then
-            this.captureRequestModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(this.expected);            
+            this.captureRequestModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(this.expected);
             Assert.Equal(this.captureRequestModule.CapturedRequest.Query.testKey.Value, "testValue");
         }
 
-        public class CaptureRequestModule : LegacyNancyModule
+        public class CaptureRequestModule : NancyModule
         {
             public Request CapturedRequest;
 
             public CaptureRequestModule()
             {
-                Get["/"] = _ => this.CaptureRequest();
-                Post["/"] = _ => this.CaptureRequest();
-                Put["/"] = _ => this.CaptureRequest();
-                Delete["/"] = _ => this.CaptureRequest();
-                Patch["/"] = _ => this.CaptureRequest();
+                Get("/", args => this.CaptureRequest());
+                Post("/", args => this.CaptureRequest());
+                Put("/", args => this.CaptureRequest());
+                Delete("/", args => this.CaptureRequest());
+                Patch("/", args => this.CaptureRequest());
             }
 
             private dynamic CaptureRequest()

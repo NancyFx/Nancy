@@ -2,32 +2,32 @@
 {
     using Nancy.Security;
 
-    public class PerRouteAuthModule : LegacyNancyModule
+    public class PerRouteAuthModule : NancyModule
     {
         public PerRouteAuthModule()
         {
-            Get["/nonsecured"] = _ => 200;
+            Get("/nonsecured", args => 200);
 
-            Get["/secured"] = _ =>
+            Get("/secured", args =>
             {
                 this.RequiresAuthentication();
 
                 return 200;
-            };
+            });
 
-            Get["/requiresclaims"] = _ =>
+            Get("/requiresclaims", args =>
             {
                 this.RequiresClaims(c => c.Type == "test", c => c.Type == "test2");
 
                 return 200;
-            };
+            });
 
-            Get["/requiresanyclaims"] = _ =>
+            Get("/requiresanyclaims", args =>
             {
                 this.RequiresAnyClaim(c => c.Type == "test", c => c.Type == "test2");
 
                 return 200;
-            };
+            });
         }
     }
 }

@@ -15,7 +15,7 @@
 
         public ModelBindingFixture()
         {
-            this.bootstrapper = 
+            this.bootstrapper =
                 new ConfigurableBootstrapper(with => with.Modules(new[] { typeof(ModelBindingModule), typeof(MixedSourceModelBindingModule) }));
 
             this.browser = new Browser(bootstrapper);
@@ -48,26 +48,26 @@
         }
     }
 
-    public class ModelBindingModule : LegacyNancyModule
+    public class ModelBindingModule : NancyModule
     {
         public ModelBindingModule()
         {
-            Post["/jsonlist"] = _ =>
+            Post("/jsonlist", args =>
             {
                 var model = this.Bind<List<MyModel>>();
 
-                return (model.Count == 3) ? 
-                    HttpStatusCode.OK : 
+                return (model.Count == 3) ?
+                    HttpStatusCode.OK :
                     HttpStatusCode.InternalServerError;
-            };
+            });
         }
     }
 
-    public class MixedSourceModelBindingModule : LegacyNancyModule
+    public class MixedSourceModelBindingModule : NancyModule
     {
         public MixedSourceModelBindingModule()
         {
-            Put["/foo/{key1}"] = _ =>
+            Put("/foo/{key1}", args =>
             {
                 var bodyModel = this.Bind<MyModel>(new BindingConfig { BodyOnly = true });
                 var paramModel = this.Bind<ParamModel>();
@@ -75,7 +75,7 @@
                 return (bodyModel.key1 != paramModel.key1) ?
                     HttpStatusCode.OK :
                     HttpStatusCode.InternalServerError;
-            };
+            });
         }
     }
 

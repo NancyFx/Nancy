@@ -100,14 +100,14 @@ namespace Nancy.Tests.Functional.Tests
         }
     }
 
-    public class MethodRewriteModule : LegacyNancyModule
+    public class MethodRewriteModule : NancyModule
     {
         public MethodRewriteModule()
         {
-            Delete["/"] = x =>
+            Delete("/", args =>
             {
                 return "Delete route";
-            };
+            });
         }
     }
 }

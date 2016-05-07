@@ -2,7 +2,7 @@
 {
     using Nancy.Demo.Bootstrapping.Aspnet.Models;
 
-    public class DependencyModule : LegacyNancyModule
+    public class DependencyModule : NancyModule
     {
         private readonly IApplicationDependency applicationDependency;
         private readonly IRequestDependency requestDependency;
@@ -12,7 +12,7 @@
             this.applicationDependency = applicationDependency;
             this.requestDependency = requestDependency;
 
-            Get["/"] = x => {
+            Get("/", args => {
                 var model =
                     new RatPackWithDependencyText
                     {
@@ -22,7 +22,7 @@
                     };
 
                 return View["razor-dependency", model];
-            };
+            });
         }
     }
 }

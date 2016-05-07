@@ -3,16 +3,16 @@ namespace Nancy.Demo.Authentication
     using Nancy.Demo.Authentication.Models;
     using Nancy.Security;
 
-    public class SecureModule : LegacyNancyModule
+    public class SecureModule : NancyModule
     {
         public SecureModule() : base("/secure")
         {
             this.RequiresAuthentication();
 
-            Get["/"] = x => {
+            Get("/", args => {
                 var model = new UserModel(this.Context.CurrentUser.Identity.Name);
                 return View["secure.cshtml", model];
-            };
+            });
         }
     }
 }

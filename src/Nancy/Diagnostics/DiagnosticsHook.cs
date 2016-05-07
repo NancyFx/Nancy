@@ -168,10 +168,10 @@ namespace Nancy.Diagnostics
 
             if (ctx.Response == null)
             {
-                // Don't care about async here, so just get the result
-                var task = resolveResult.Route.Invoke(resolveResult.Parameters, CancellationToken);
-                task.Wait();
-                ctx.Response = task.Result;
+                var routeResult = resolveResult.Route.Invoke(resolveResult.Parameters, CancellationToken);
+                routeResult.Wait();
+
+                ctx.Response = (Response)routeResult.Result;
             }
 
             if (ctx.Request.Method.Equals("HEAD", StringComparison.OrdinalIgnoreCase))

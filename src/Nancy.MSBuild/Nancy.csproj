@@ -428,9 +428,6 @@
     <Compile Include="..\Nancy\NancyEngineExtensions.cs">
       <Link>NancyEngineExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy\LegacyNancyModule.cs">
-      <Link>LegacyNancyModule.cs</Link>
-    </Compile>
     <Compile Include="..\Nancy\NegotiatorExtensions.cs">
       <Link>NegotiatorExtensions.cs</Link>
     </Compile>
@@ -1235,9 +1232,6 @@
     <Compile Include="..\Nancy\Routing\NotFoundRoute.cs">
       <Link>Routing\NotFoundRoute.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy\Routing\Route.cs">
-      <Link>Routing\Route.cs</Link>
-    </Compile>
     <Compile Include="..\Nancy\DynamicDictionary.cs">
       <Link>DynamicDictionary.cs</Link>
     </Compile>
@@ -1363,6 +1357,9 @@
     <Compile Include="..\Nancy\DefaultGlobalizationConfigurationProvider.cs" />
     <Compile Include="..\Nancy\Configuration\ConfigurationException.cs">
       <Link>Configuration\ConfigurationException.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy\Routing\Route.cs">
+      <Link>Routing\Route.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>

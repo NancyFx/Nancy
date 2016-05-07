@@ -108,11 +108,11 @@
             }
         }
 
-        public class NoAppStartupsModule : LegacyNancyModule
+        public class NoAppStartupsModule : NancyModule
         {
             public NoAppStartupsModule(INoAppStartupsTestDependency dependency)
             {
-                this.Get["/"] = _ => dependency.GetStuff();
+                Get("/", args => dependency.GetStuff());
             }
         }
     }

@@ -5,7 +5,6 @@ namespace Nancy
     using System.ComponentModel;
     using System.Threading;
     using System.Threading.Tasks;
-    using Nancy.Configuration;
     using Nancy.ModelBinding;
     using Nancy.Responses.Negotiation;
     using Nancy.Routing;
@@ -24,7 +23,7 @@ namespace Nancy
         /// Initializes a new instance of the <see cref="NancyModule"/> class.
         /// </summary>
         protected NancyModule()
-            : this(String.Empty)
+            : this(string.Empty)
         {
         }
 
@@ -47,78 +46,540 @@ namespace Nancy
         /// </summary>
         public dynamic ViewBag
         {
-            get
-            {
-                return this.Context == null ? null : this.Context.ViewBag;
-            }
+            get { return this.Context == null ? null : this.Context.ViewBag; }
         }
 
+        /// <summary>
+        /// Dynamic access to text resources.
+        /// </summary>
         public dynamic Text
         {
             get { return this.Context.Text; }
         }
 
         /// <summary>
-        /// Gets <see cref="RouteBuilder"/> for declaring actions for DELETE requests.
+        /// Declares a route for DELETE requests.
         /// </summary>
-        /// <value>A <see cref="RouteBuilder"/> instance.</value>
-        public RouteBuilder Delete
+        /// <param name="path">The path that the route will respond to</param>
+        /// <param name="action">Action that will be invoked when the route it hit</param>
+        /// <param name="name">Name of the route</param>
+        /// <param name="condition">A condition to determine if the route can be hit</param>
+        public virtual void Delete(string path, Func<dynamic, object> action, Func<NancyContext, bool> condition = null, string name = null)
         {
-            get { return new RouteBuilder("DELETE", this); }
+            this.Delete<object>(path, action, condition, name);
         }
 
         /// <summary>
-        /// Gets <see cref="RouteBuilder"/> for declaring actions for GET requests.
+        /// Declares a route for DELETE requests.
         /// </summary>
-        /// <value>A <see cref="RouteBuilder"/> instance.</value>
-        public RouteBuilder Get
+        /// <typeparam name="T">The return type of the <paramref name="action"/></typeparam>
+        /// <param name="path">The path that the route will respond to</param>
+        /// <param name="action">Action that will be invoked when the route it hit</param>
+        /// <param name="name">Name of the route</param>
+        /// <param name="condition">A condition to determine if the route can be hit</param>
+        public virtual void Delete<T>(string path, Func<dynamic, T> action, Func<NancyContext, bool> condition = null, string name = null)
         {
-            get { return new RouteBuilder("GET", this); }
+            this.Delete(path, args => Task.FromResult(action((DynamicDictionary)args)), condition, name);
         }
 
         /// <summary>
-        /// Gets <see cref="RouteBuilder"/> for declaring actions for HEAD requests.
+        /// Declares a route for DELETE requests.
         /// </summary>
-        /// <value>A <see cref="RouteBuilder"/> instance.</value>
-        public RouteBuilder Head
+        /// <param name="path">The path that the route will respond to</param>
+        /// <param name="action">Action that will be invoked when the route it hit</param>
+        /// <param name="name">Name of the route</param>
+        /// <param name="condition">A condition to determine if the route can be hit</param>
+        public virtual void Delete(string path, Func<dynamic, Task<object>> action, Func<NancyContext, bool> condition = null, string name = null)
         {
-            get { return new RouteBuilder("HEAD", this); }
+            this.Delete<object>(path, action, condition, name);
         }
 
         /// <summary>
-        /// Gets <see cref="RouteBuilder"/> for declaring actions for OPTIONS requests.
+        /// Declares a route for DELETE requests.
         /// </summary>
-        /// <value>A <see cref="RouteBuilder"/> instance.</value>
-        public RouteBuilder Options
+        /// <typeparam name="T">The return type of the <paramref name="action"/></typeparam>
+        /// <param name="path">The path that the route will respond to</param>
+        /// <param name="action">Action that will be invoked when the route it hit</param>
+        /// <param name="name">Name of the route</param>
+        /// <param name="condition">A condition to determine if the route can be hit</param>
+        public virtual void Delete<T>(string path, Func<dynamic, Task<T>> action, Func<NancyContext, bool> condition = null, string name = null)
         {
-            get { return new RouteBuilder("OPTIONS", this); }
+            this.Delete(path, (args, ct) => action((DynamicDictionary)args), condition, name);
         }
 
         /// <summary>
-        /// Gets <see cref="RouteBuilder"/> for declaring actions for PATCH requests.
+        /// Declares a route for DELETE requests.
         /// </summary>
-        /// <value>A <see cref="RouteBuilder"/> instance.</value>
-        public RouteBuilder Patch
+        /// <param name="path">The path that the route will respond to</param>
+        /// <param name="action">Action that will be invoked when the route it hit</param>
+        /// <param name="name">Name of the route</param>
+        /// <param name="condition">A condition to determine if the route can be hit</param>
+        public virtual void Delete(string path, Func<dynamic, CancellationToken, Task<object>> action, Func<NancyContext, bool> condition = null, string name = null)
         {
-            get { return new RouteBuilder("PATCH", this); }
+            this.Delete<object>(path, action, condition, name);
         }
 
         /// <summary>
-        /// Gets <see cref="RouteBuilder"/> for declaring actions for POST requests.
+        /// Declares a route for DELETE requests.
         /// </summary>
-        /// <value>A <see cref="RouteBuilder"/> instance.</value>
-        public RouteBuilder Post
+        /// <typeparam name="T">The return type of the <paramref name="action"/></typeparam>
+        /// <param name="path">The path that the route will respond to</param>
+        /// <param name="action">Action that will be invoked when the route it hit</param>
+        /// <param name="name">Name of the route</param>
+        /// <param name="condition">A condition to determine if the route can be hit</param>
+        public virtual void Delete<T>(string path, Func<dynamic, CancellationToken, Task<T>> action, Func<NancyContext, bool> condition = null, string name = null)
         {
-            get { return new RouteBuilder("POST", this); }
+            this.AddRoute("DELETE", path, action, condition, name);
         }
 
         /// <summary>
-        /// Gets <see cref="RouteBuilder"/> for declaring actions for PUT requests.
+        /// Declares a route for GET requests.
         /// </summary>
-        /// <value>A <see cref="RouteBuilder"/> instance.</value>
-        public RouteBuilder Put
+        /// <param name="path">The path that the route will respond to</param>
+        /// <param name="action">Action that will be invoked when the route it hit</param>
+        /// <param name="name">Name of the route</param>
+        /// <param name="condition">A condition to determine if the route can be hit</param>
+        public virtual void Get(string path, Func<dynamic, object> action, Func<NancyContext, bool> condition = null, string name = null)
         {
-            get { return new RouteBuilder("PUT", this); }
+            this.Get<object>(path, action, condition, name);
+        }
+
+        /// <summary>
+        /// Declares a route for GET requests.
+        /// </summary>
+        /// <typeparam name="T">The return type of the <paramref name="action"/></typeparam>
+        /// <param name="path">The path that the route will respond to</param>
+        /// <param name="action">Action that will be invoked when the route it hit</param>
+        /// <param name="name">Name of the route</param>
+        /// <param name="condition">A condition to determine if the route can be hit</param>
+        public virtual void Get<T>(string path, Func<dynamic, T> action, Func<NancyContext, bool> condition = null, string name = null)
+        {
+            this.Get(path, args => Task.FromResult(action((DynamicDictionary)args)), condition, name);
+        }
+
+        /// <summary>
+        /// Declares a route for GET requests.
+        /// </summary>
+        /// <param name="path">The path that the route will respond to</param>
+        /// <param name="action">Action that will be invoked when the route it hit</param>
+        /// <param name="name">Name of the route</param>
+        /// <param name="condition">A condition to determine if the route can be hit</param>
+        public virtual void Get(string path, Func<dynamic, Task<object>> action, Func<NancyContext, bool> condition = null, string name = null)
+        {
+            this.Get<object>(path, action, condition, name);
+        }
+
+        /// <summary>
+        /// Declares a route for GET requests.
+        /// </summary>
+        /// <typeparam name="T">The return type of the <paramref name="action"/></typeparam>
+        /// <param name="path">The path that the route will respond to</param>
+        /// <param name="action">Action that will be invoked when the route it hit</param>
+        /// <param name="name">Name of the route</param>
+        /// <param name="condition">A condition to determine if the route can be hit</param>
+        public virtual void Get<T>(string path, Func<dynamic, Task<T>> action, Func<NancyContext, bool> condition = null, string name = null)
+        {
+            this.Get(path, (args, ct) => action((DynamicDictionary)args), condition, name);
+        }
+
+        /// <summary>
+        /// Declares a route for GET requests.
+        /// </summary>
+        /// <param name="path">The path that the route will respond to</param>
+        /// <param name="action">Action that will be invoked when the route it hit</param>
+        /// <param name="name">Name of the route</param>
+        /// <param name="condition">A condition to determine if the route can be hit</param>
+        public virtual void Get(string path, Func<dynamic, CancellationToken, Task<object>> action, Func<NancyContext, bool> condition = null, string name = null)
+        {
+            this.Get<object>(path, action, condition, name);
+        }
+
+        /// <summary>
+        /// Declares a route for GET requests.
+        /// </summary>
+        /// <typeparam name="T">The return type of the <paramref name="action"/></typeparam>
+        /// <param name="path">The path that the route will respond to</param>
+        /// <param name="action">Action that will be invoked when the route it hit</param>
+        /// <param name="name">Name of the route</param>
+        /// <param name="condition">A condition to determine if the route can be hit</param>
+        public virtual void Get<T>(string path, Func<dynamic, CancellationToken, Task<T>> action, Func<NancyContext, bool> condition = null, string name = null)
+        {
+            this.AddRoute("GET", path, action, condition, name);
+        }
+
+        /// <summary>
+        /// Declares a route for HEAD requests.
+        /// </summary>
+        /// <param name="path">The path that the route will respond to</param>
+        /// <param name="action">Action that will be invoked when the route it hit</param>
+        /// <param name="name">Name of the route</param>
+        /// <param name="condition">A condition to determine if the route can be hit</param>
+        public virtual void Head(string path, Func<dynamic, object> action, Func<NancyContext, bool> condition = null, string name = null)
+        {
+            this.Head<object>(path, action, condition, name);
+        }
+
+        /// <summary>
+        /// Declares a route for HEAD requests.
+        /// </summary>
+        /// <typeparam name="T">The return type of the <paramref name="action"/></typeparam>
+        /// <param name="path">The path that the route will respond to</param>
+        /// <param name="action">Action that will be invoked when the route it hit</param>
+        /// <param name="name">Name of the route</param>
+        /// <param name="condition">A condition to determine if the route can be hit</param>
+        public virtual void Head<T>(string path, Func<dynamic, T> action, Func<NancyContext, bool> condition = null, string name = null)
+        {
+            this.Head(path, args => Task.FromResult(action((DynamicDictionary)args)), condition, name);
+        }
+
+        /// <summary>
+        /// Declares a route for HEAD requests.
+        /// </summary>
+        /// <param name="path">The path that the route will respond to</param>
+        /// <param name="action">Action that will be invoked when the route it hit</param>
+        /// <param name="name">Name of the route</param>
+        /// <param name="condition">A condition to determine if the route can be hit</param>
+        public virtual void Head(string path, Func<dynamic, Task<object>> action, Func<NancyContext, bool> condition = null, string name = null)
+        {
+            this.Head<object>(path, action, condition, name);
+        }
+
+        /// <summary>
+        /// Declares a route for HEAD requests.
+        /// </summary>
+        /// <typeparam name="T">The return type of the <paramref name="action"/></typeparam>
+        /// <param name="path">The path that the route will respond to</param>
+        /// <param name="action">Action that will be invoked when the route it hit</param>
+        /// <param name="name">Name of the route</param>
+        /// <param name="condition">A condition to determine if the route can be hit</param>
+        public virtual void Head<T>(string path, Func<dynamic, Task<T>> action, Func<NancyContext, bool> condition = null, string name = null)
+        {
+            this.Head(path, (args, ct) => action((DynamicDictionary)args), condition, name);
+        }
+
+        /// <summary>
+        /// Declares a route for HEAD requests.
+        /// </summary>
+        /// <param name="path">The path that the route will respond to</param>
+        /// <param name="action">Action that will be invoked when the route it hit</param>
+        /// <param name="name">Name of the route</param>
+        /// <param name="condition">A condition to determine if the route can be hit</param>
+        public virtual void Head(string path, Func<dynamic, CancellationToken, Task<object>> action, Func<NancyContext, bool> condition = null, string name = null)
+        {
+            this.Head<object>(path, action, condition, name);
+        }
+
+        /// <summary>
+        /// Declares a route for HEAD requests.
+        /// </summary>
+        /// <typeparam name="T">The return type of the <paramref name="action"/></typeparam>
+        /// <param name="path">The path that the route will respond to</param>
+        /// <param name="action">Action that will be invoked when the route it hit</param>
+        /// <param name="name">Name of the route</param>
+        /// <param name="condition">A condition to determine if the route can be hit</param>
+        public virtual void Head<T>(string path, Func<dynamic, CancellationToken, Task<T>> action, Func<NancyContext, bool> condition = null, string name = null)
+        {
+            this.AddRoute("HEAD", path, action, condition, name);
+        }
+
+        /// <summary>
+        /// Declares a route for OPTIONS requests.
+        /// </summary>
+        /// <param name="path">The path that the route will respond to</param>
+        /// <param name="action">Action that will be invoked when the route it hit</param>
+        /// <param name="name">Name of the route</param>
+        /// <param name="condition">A condition to determine if the route can be hit</param>
+        public virtual void Options(string path, Func<dynamic, object> action, Func<NancyContext, bool> condition = null, string name = null)
+        {
+            this.Options<object>(path, action, condition, name);
+        }
+
+        /// <summary>
+        /// Declares a route for OPTIONS requests.
+        /// </summary>
+        /// <typeparam name="T">The return type of the <paramref name="action"/></typeparam>
+        /// <param name="path">The path that the route will respond to</param>
+        /// <param name="action">Action that will be invoked when the route it hit</param>
+        /// <param name="name">Name of the route</param>
+        /// <param name="condition">A condition to determine if the route can be hit</param>
+        public virtual void Options<T>(string path, Func<dynamic, T> action, Func<NancyContext, bool> condition = null, string name = null)
+        {
+            this.Options(path, args => Task.FromResult(action((DynamicDictionary)args)), condition, name);
+        }
+
+        /// <summary>
+        /// Declares a route for OPTIONS requests.
+        /// </summary>
+        /// <param name="path">The path that the route will respond to</param>
+        /// <param name="action">Action that will be invoked when the route it hit</param>
+        /// <param name="name">Name of the route</param>
+        /// <param name="condition">A condition to determine if the route can be hit</param>
+        public virtual void Options(string path, Func<dynamic, Task<object>> action, Func<NancyContext, bool> condition = null, string name = null)
+        {
+            this.Options<object>(path, action, condition, name);
+        }
+
+        /// <summary>
+        /// Declares a route for OPTIONS requests.
+        /// </summary>
+        /// <typeparam name="T">The return type of the <paramref name="action"/></typeparam>
+        /// <param name="path">The path that the route will respond to</param>
+        /// <param name="action">Action that will be invoked when the route it hit</param>
+        /// <param name="name">Name of the route</param>
+        /// <param name="condition">A condition to determine if the route can be hit</param>
+        public virtual void Options<T>(string path, Func<dynamic, Task<T>> action, Func<NancyContext, bool> condition = null, string name = null)
+        {
+            this.Options(path, (args, ct) => action((DynamicDictionary)args), condition, name);
+        }
+
+        /// <summary>
+        /// Declares a route for OPTIONS requests.
+        /// </summary>
+        /// <param name="path">The path that the route will respond to</param>
+        /// <param name="action">Action that will be invoked when the route it hit</param>
+        /// <param name="name">Name of the route</param>
+        /// <param name="condition">A condition to determine if the route can be hit</param>
+        public virtual void Options(string path, Func<dynamic, CancellationToken, Task<object>> action, Func<NancyContext, bool> condition = null, string name = null)
+        {
+            this.Options<object>(path, action, condition, name);
+        }
+
+        /// <summary>
+        /// Declares a route for OPTIONS requests.
+        /// </summary>
+        /// <typeparam name="T">The return type of the <paramref name="action"/></typeparam>
+        /// <param name="path">The path that the route will respond to</param>
+        /// <param name="action">Action that will be invoked when the route it hit</param>
+        /// <param name="name">Name of the route</param>
+        /// <param name="condition">A condition to determine if the route can be hit</param>
+        public virtual void Options<T>(string path, Func<dynamic, CancellationToken, Task<T>> action, Func<NancyContext, bool> condition = null, string name = null)
+        {
+            this.AddRoute("OPTIONS", path, action, condition, name);
+        }
+
+        /// <summary>
+        /// Declares a route for PATCH requests.
+        /// </summary>
+        /// <param name="path">The path that the route will respond to</param>
+        /// <param name="action">Action that will be invoked when the route it hit</param>
+        /// <param name="name">Name of the route</param>
+        /// <param name="condition">A condition to determine if the route can be hit</param>
+        public virtual void Patch(string path, Func<dynamic, object> action, Func<NancyContext, bool> condition = null, string name = null)
+        {
+            this.Patch<object>(path, action, condition, name);
+        }
+
+        /// <summary>
+        /// Declares a route for PATCH requests.
+        /// </summary>
+        /// <typeparam name="T">The return type of the <paramref name="action"/></typeparam>
+        /// <param name="path">The path that the route will respond to</param>
+        /// <param name="action">Action that will be invoked when the route it hit</param>
+        /// <param name="name">Name of the route</param>
+        /// <param name="condition">A condition to determine if the route can be hit</param>
+        public virtual void Patch<T>(string path, Func<dynamic, T> action, Func<NancyContext, bool> condition = null, string name = null)
+        {
+            this.Patch(path, args => Task.FromResult(action((DynamicDictionary)args)), condition, name);
+        }
+
+        /// <summary>
+        /// Declares a route for PATCH requests.
+        /// </summary>
+        /// <param name="path">The path that the route will respond to</param>
+        /// <param name="action">Action that will be invoked when the route it hit</param>
+        /// <param name="name">Name of the route</param>
+        /// <param name="condition">A condition to determine if the route can be hit</param>
+        public virtual void Patch(string path, Func<dynamic, Task<object>> action, Func<NancyContext, bool> condition = null, string name = null)
+        {
+            this.Patch<object>(path, action, condition, name);
+        }
+
+        /// <summary>
+        /// Declares a route for PATCH requests.
+        /// </summary>
+        /// <typeparam name="T">The return type of the <paramref name="action"/></typeparam>
+        /// <param name="path">The path that the route will respond to</param>
+        /// <param name="action">Action that will be invoked when the route it hit</param>
+        /// <param name="name">Name of the route</param>
+        /// <param name="condition">A condition to determine if the route can be hit</param>
+        public virtual void Patch<T>(string path, Func<dynamic, Task<T>> action, Func<NancyContext, bool> condition = null, string name = null)
+        {
+            this.Patch(path, (args, ct) => action((DynamicDictionary)args), condition, name);
+        }
+
+        /// <summary>
+        /// Declares a route for PATCH requests.
+        /// </summary>
+        /// <param name="path">The path that the route will respond to</param>
+        /// <param name="action">Action that will be invoked when the route it hit</param>
+        /// <param name="name">Name of the route</param>
+        /// <param name="condition">A condition to determine if the route can be hit</param>
+        public virtual void Patch(string path, Func<dynamic, CancellationToken, Task<object>> action, Func<NancyContext, bool> condition = null, string name = null)
+        {
+            this.Patch<object>(path, action, condition, name);
+        }
+
+        /// <summary>
+        /// Declares a route for PATCH requests.
+        /// </summary>
+        /// <typeparam name="T">The return type of the <paramref name="action"/></typeparam>
+        /// <param name="path">The path that the route will respond to</param>
+        /// <param name="action">Action that will be invoked when the route it hit</param>
+        /// <param name="name">Name of the route</param>
+        /// <param name="condition">A condition to determine if the route can be hit</param>
+        public virtual void Patch<T>(string path, Func<dynamic, CancellationToken, Task<T>> action, Func<NancyContext, bool> condition = null, string name = null)
+        {
+            this.AddRoute("PATCH", path, action, condition, name);
+        }
+
+        /// <summary>
+        /// Declares a route for POST requests.
+        /// </summary>
+        /// <param name="path">The path that the route will respond to</param>
+        /// <param name="action">Action that will be invoked when the route it hit</param>
+        /// <param name="name">Name of the route</param>
+        /// <param name="condition">A condition to determine if the route can be hit</param>
+        public virtual void Post(string path, Func<dynamic, object> action, Func<NancyContext, bool> condition = null, string name = null)
+        {
+            this.Post<object>(path, action, condition, name);
+        }
+
+        /// <summary>
+        /// Declares a route for POST requests.
+        /// </summary>
+        /// <typeparam name="T">The return type of the <paramref name="action"/></typeparam>
+        /// <param name="path">The path that the route will respond to</param>
+        /// <param name="action">Action that will be invoked when the route it hit</param>
+        /// <param name="name">Name of the route</param>
+        /// <param name="condition">A condition to determine if the route can be hit</param>
+        public virtual void Post<T>(string path, Func<dynamic, T> action, Func<NancyContext, bool> condition = null, string name = null)
+        {
+            this.Post(path, args => Task.FromResult(action((DynamicDictionary)args)), condition, name);
+        }
+
+        /// <summary>
+        /// Declares a route for POST requests.
+        /// </summary>
+        /// <param name="path">The path that the route will respond to</param>
+        /// <param name="action">Action that will be invoked when the route it hit</param>
+        /// <param name="name">Name of the route</param>
+        /// <param name="condition">A condition to determine if the route can be hit</param>
+        public virtual void Post(string path, Func<dynamic, Task<object>> action, Func<NancyContext, bool> condition = null, string name = null)
+        {
+            this.Post<object>(path, action, condition, name);
+        }
+
+        /// <summary>
+        /// Declares a route for POST requests.
+        /// </summary>
+        /// <typeparam name="T">The return type of the <paramref name="action"/></typeparam>
+        /// <param name="path">The path that the route will respond to</param>
+        /// <param name="action">Action that will be invoked when the route it hit</param>
+        /// <param name="name">Name of the route</param>
+        /// <param name="condition">A condition to determine if the route can be hit</param>
+        public virtual void Post<T>(string path, Func<dynamic, Task<T>> action, Func<NancyContext, bool> condition = null, string name = null)
+        {
+            this.Post(path, (args, ct) => action((DynamicDictionary)args), condition, name);
+        }
+
+        /// <summary>
+        /// Declares a route for POST requests.
+        /// </summary>
+        /// <param name="path">The path that the route will respond to</param>
+        /// <param name="action">Action that will be invoked when the route it hit</param>
+        /// <param name="name">Name of the route</param>
+        /// <param name="condition">A condition to determine if the route can be hit</param>
+        public virtual void Post(string path, Func<dynamic, CancellationToken, Task<object>> action, Func<NancyContext, bool> condition = null, string name = null)
+        {
+            this.Post<object>(path, action, condition, name);
+        }
+
+        /// <summary>
+        /// Declares a route for POST requests.
+        /// </summary>
+        /// <typeparam name="T">The return type of the <paramref name="action"/></typeparam>
+        /// <param name="path">The path that the route will respond to</param>
+        /// <param name="action">Action that will be invoked when the route it hit</param>
+        /// <param name="name">Name of the route</param>
+        /// <param name="condition">A condition to determine if the route can be hit</param>
+        public virtual void Post<T>(string path, Func<dynamic, CancellationToken, Task<T>> action, Func<NancyContext, bool> condition = null, string name = null)
+        {
+            this.AddRoute("POST", path, action, condition, name);
+        }
+
+        /// <summary>
+        /// Declares a route for PUT requests.
+        /// </summary>
+        /// <param name="path">The path that the route will respond to</param>
+        /// <param name="action">Action that will be invoked when the route it hit</param>
+        /// <param name="name">Name of the route</param>
+        /// <param name="condition">A condition to determine if the route can be hit</param>
+        public virtual void Put(string path, Func<dynamic, object> action, Func<NancyContext, bool> condition = null, string name = null)
+        {
+            this.Put<object>(path, action, condition, name);
+        }
+
+        /// <summary>
+        /// Declares a route for PUT requests.
+        /// </summary>
+        /// <typeparam name="T">The return type of the <paramref name="action"/></typeparam>
+        /// <param name="path">The path that the route will respond to</param>
+        /// <param name="action">Action that will be invoked when the route it hit</param>
+        /// <param name="name">Name of the route</param>
+        /// <param name="condition">A condition to determine if the route can be hit</param>
+        public virtual void Put<T>(string path, Func<dynamic, T> action, Func<NancyContext, bool> condition = null, string name = null)
+        {
+            this.Put(path, args => Task.FromResult(action((DynamicDictionary)args)), condition, name);
+        }
+
+        /// <summary>
+        /// Declares a route for PUT requests.
+        /// </summary>
+        /// <param name="path">The path that the route will respond to</param>
+        /// <param name="action">Action that will be invoked when the route it hit</param>
+        /// <param name="name">Name of the route</param>
+        /// <param name="condition">A condition to determine if the route can be hit</param>
+        public virtual void Put(string path, Func<dynamic, Task<object>> action, Func<NancyContext, bool> condition = null, string name = null)
+        {
+            this.Put<object>(path, action, condition, name);
+        }
+
+        /// <summary>
+        /// Declares a route for PUT requests.
+        /// </summary>
+        /// <typeparam name="T">The return type of the <paramref name="action"/></typeparam>
+        /// <param name="path">The path that the route will respond to</param>
+        /// <param name="action">Action that will be invoked when the route it hit</param>
+        /// <param name="name">Name of the route</param>
+        /// <param name="condition">A condition to determine if the route can be hit</param>
+        public virtual void Put<T>(string path, Func<dynamic, Task<T>> action, Func<NancyContext, bool> condition = null, string name = null)
+        {
+            this.Put(path, (args, ct) => action((DynamicDictionary)args), condition, name);
+        }
+
+        /// <summary>
+        /// Declares a route for PUT requests.
+        /// </summary>
+        /// <param name="path">The path that the route will respond to</param>
+        /// <param name="action">Action that will be invoked when the route it hit</param>
+        /// <param name="name">Name of the route</param>
+        /// <param name="condition">A condition to determine if the route can be hit</param>
+        public virtual void Put(string path, Func<dynamic, CancellationToken, Task<object>> action, Func<NancyContext, bool> condition = null, string name = null)
+        {
+            this.Put<object>(path, action, condition, name);
+        }
+
+        /// <summary>
+        /// Declares a route for PUT requests.
+        /// </summary>
+        /// <typeparam name="T">The return type of the <paramref name="action"/></typeparam>
+        /// <param name="path">The path that the route will respond to</param>
+        /// <param name="action">Action that will be invoked when the route it hit</param>
+        /// <param name="name">Name of the route</param>
+        /// <param name="condition">A condition to determine if the route can be hit</param>
+        public virtual void Put<T>(string path, Func<dynamic, CancellationToken, Task<T>> action, Func<NancyContext, bool> condition = null, string name = null)
+        {
+            this.AddRoute("PUT", path, action, condition, name);
         }
 
         /// <summary>
@@ -263,80 +724,35 @@ namespace Nancy
         }
 
         /// <summary>
-        /// Helper class for configuring a route handler in a module.
+        /// Declares a route for the module
         /// </summary>
-        public class RouteBuilder : IHideObjectMembers
+        /// <typeparam name="T"></typeparam>
+        /// <param name="name">Name of the route</param>
+        /// <param name="method">The HTTP method that the route will response to</param>
+        /// <param name="path">The path that the route will respond to</param>
+        /// <param name="action">Action that will be invoked when the route it hit</param>
+        /// <param name="condition">A condition to determine if the route can be hit</param>
+        protected void AddRoute<T>(string method, string path, Func<dynamic, CancellationToken, Task<T>> action, Func<NancyContext, bool> condition, string name)
         {
-            private readonly string method;
-            private readonly NancyModule parentModule;
+            this.routes.Add(new Route<T>(name ?? string.Empty, method, this.GetFullPath(path), condition, action));
+        }
 
-            /// <summary>
-            /// Initializes a new instance of the <see cref="RouteBuilder"/> class.
-            /// </summary>
-            /// <param name="method">The HTTP request method that the route should be available for.</param>
-            /// <param name="parentModule">The <see cref="INancyModule"/> that the route is being configured for.</param>
-            public RouteBuilder(string method, NancyModule parentModule)
+        private string GetFullPath(string path)
+        {
+            var relativePath = (path ?? string.Empty).Trim('/');
+            var parentPath = (this.ModulePath ?? string.Empty).Trim('/');
+
+            if (string.IsNullOrEmpty(parentPath))
             {
-                this.method = method;
-                this.parentModule = parentModule;
+                return string.Concat("/", relativePath);
             }
 
-            /// <summary>
-            /// Defines an async route for the specified <paramref name="path"/>
-            /// </summary>
-            public Func<dynamic, CancellationToken, Task<dynamic>> this[string path]
+            if (string.IsNullOrEmpty(relativePath))
             {
-                set { this.AddRoute(string.Empty, path, null, value); }
+                return string.Concat("/", parentPath);
             }
 
-            /// <summary>
-            /// Defines an async route for the specified <paramref name="path"/> and <paramref name="condition"/>.
-            /// </summary>
-            public Func<dynamic, CancellationToken, Task<dynamic>> this[string path, Func<NancyContext, bool> condition]
-            {
-                set { this.AddRoute(string.Empty, path, condition, value); }
-            }
-
-            /// <summary>
-            /// Defines an async route for the specified <paramref name="path"/> and <paramref name="name"/>
-            /// </summary>
-            public Func<dynamic, CancellationToken, Task<dynamic>> this[string name, string path]
-            {
-                set { this.AddRoute(name, path, null, value); }
-            }
-
-            /// <summary>
-            /// Defines an async route for the specified <paramref name="path"/>, <paramref name="condition"/> and <paramref name="name"/>
-            /// </summary>
-            public Func<dynamic, CancellationToken, Task<dynamic>> this[string name, string path, Func<NancyContext, bool> condition]
-            {
-                set { this.AddRoute(name, path, condition, value); }
-            }
-
-            protected void AddRoute(string name, string path, Func<NancyContext, bool> condition, Func<dynamic, CancellationToken, Task<dynamic>> value)
-            {
-                var fullPath = GetFullPath(path);
-
-                this.parentModule.routes.Add(new Route(name, this.method, fullPath, condition, value));
-            }
-
-            private string GetFullPath(string path)
-            {
-                var relativePath = (path ?? string.Empty).Trim('/');
-                var parentPath = (this.parentModule.ModulePath ?? string.Empty).Trim('/');
-
-                if (string.IsNullOrEmpty(parentPath))
-                {
-                    return string.Concat("/", relativePath);
-                }
-
-                if (string.IsNullOrEmpty(relativePath))
-                {
-                    return string.Concat("/", parentPath);
-                }
-
-                return string.Concat("/", parentPath, "/", relativePath);
-            }
+            return string.Concat("/", parentPath, "/", relativePath);
         }
     }
 }

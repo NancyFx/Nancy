@@ -1,9 +1,7 @@
 ﻿namespace Nancy.Metadata.Modules.Tests
 {
     using System.Linq;
-
     using Nancy.Tests;
-
     using Xunit;
 
     public class DefaultMetadataModuleConventionsFixture
@@ -20,8 +18,8 @@
         {
             // Given
             var convention = this.conventions.ElementAt(0);
-            var module = new FakeLegacyNancyModule();
-            var metadataModules = new[] { new FakeLegacyNancyMetadataModule() };
+            var module = new FakeNancyModule();
+            var metadataModules = new[] { new FakeNancyMetadataModule() };
 
             // When
             var result = convention.Invoke(
@@ -37,8 +35,8 @@
         {
             // Given
             var convention = this.conventions.ElementAt(1);
-            var module = new FakeLegacyNancyModule();
-            var metadataModules = new[] { new Metadata.FakeLegacyNancyMetadataModule() };
+            var module = new FakeNancyModule();
+            var metadataModules = new[] { new Metadata.FakeNancyMetadataModule() };
 
             // When
             var result = convention.Invoke(
@@ -54,8 +52,8 @@
         {
             // Given
             var convention = this.conventions.ElementAt(2);
-            var module = new Modules.FakeLegacyNancyModule();
-            var metadataModules = new[] { new Metadata.FakeLegacyNancyMetadataModule() };
+            var module = new Modules.FakeNancyModule();
+            var metadataModules = new[] { new Metadata.FakeNancyMetadataModule() };
 
             // When
             var result = convention.Invoke(

@@ -5,9 +5,7 @@ namespace Nancy.Tests.Unit.Routing
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-
     using FakeItEasy;
-
     using Nancy.Helpers;
     using Nancy.Responses.Negotiation;
     using Nancy.Routing;
@@ -33,9 +31,10 @@ namespace Nancy.Tests.Unit.Routing
             A.CallTo(() => this.routeInvoker.Invoke(A<Route>._, A<CancellationToken>._, A<DynamicDictionary>._, A<NancyContext>._))
                 .ReturnsLazily(async arg =>
                 {
-                    var actionResult = await ((Route)arg.Arguments[0]).Action.Invoke(arg.Arguments[2], new CancellationToken());
+                    var routeResult = ((Route)arg.Arguments[0]).Invoke((DynamicDictionary)arg.Arguments[2], new CancellationToken()).ConfigureAwait(false);
+                    var x = await routeResult;
 
-                    return actionResult;
+                    return (Response)x;
                 });
 
             this.requestDispatcher =
@@ -63,24 +62,24 @@ namespace Nancy.Tests.Unit.Routing
             var route = new FakeRoute
             {
                 Action = (parameters, token) =>
-                             {
-                                 capturedExecutionOrder.Add("RouteInvoke");
-                                 return CreateResponseTask(null);
-                             }
+                {
+                    capturedExecutionOrder.Add("RouteInvoke");
+                    return Task.FromResult<object>(null);
+                }
             };
 
             var before = new BeforePipeline();
             before += (ctx) =>
-                          {
-                              capturedExecutionOrder.Add("Prehook");
-                              return null;
-                          };
+            {
+                capturedExecutionOrder.Add("Prehook");
+                return null;
+            };
 
             var after = new AfterPipeline();
             after += (ctx) =>
-                         {
-                             capturedExecutionOrder.Add("Posthook");
-                         };
+            {
+                capturedExecutionOrder.Add("Posthook");
+            };
 
             var resolvedRoute = new ResolveResult
             {
@@ -756,7 +755,7 @@ namespace Nancy.Tests.Unit.Routing
             var route = new FakeRoute((parameters, ct) =>
             {
                 capturedExecutionOrder.Add("RouteInvoke");
-                return CreateResponseTask(null);
+                return null;
             });
 
             var resolvedRoute = new ResolveResult(
@@ -830,7 +829,7 @@ namespace Nancy.Tests.Unit.Routing
 
             var route = new FakeRoute
             {
-                Action = (parameters, ct) => CreateResponseTask(null)
+                Action = (parameters, ct) => Task.FromResult<object>(null)
             };
 
             var before = new BeforePipeline();
@@ -903,7 +902,7 @@ namespace Nancy.Tests.Unit.Routing
             // Given
             var route = new FakeRoute
             {
-                Action = (parameters,ct) => TaskHelpers.GetFaultedTask<dynamic>(new Exception())
+                Action = (parameters, ct) => TaskHelpers.GetFaultedTask<dynamic>(new Exception())
             };
 
             var before = new BeforePipeline();
@@ -938,7 +937,7 @@ namespace Nancy.Tests.Unit.Routing
             // Given
             var route = new FakeRoute
             {
-                Action = (o,ct) => BrokenMethod()
+                Action = (o, ct) => BrokenMethod()
             };
 
             var before = new BeforePipeline();

@@ -1,15 +1,15 @@
 ﻿namespace Nancy.Tests.Functional.Modules
 {
-    public class RazorWithTracingTestModule : LegacyNancyModule
+    public class RazorWithTracingTestModule : NancyModule
     {
         public RazorWithTracingTestModule()
         {
-            Get["/tracing/razor-viewbag"] = _ =>
-                {
-                    this.ViewBag.Name = "Bob";
+            Get("/tracing/razor-viewbag", args =>
+            {
+                this.ViewBag.Name = "Bob";
 
-                    return View["RazorPage"];
-                };
+                return View["RazorPage"];
+            });
         }
     }
 }

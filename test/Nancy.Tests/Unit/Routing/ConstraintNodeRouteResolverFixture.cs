@@ -380,42 +380,42 @@
             // Then
             result.Body.AsString().ShouldEqual("CaseInsensitive");
         }
-        
-        private class TestModule : LegacyNancyModule
+
+        private class TestModule : NancyModule
         {
             public TestModule()
             {
-                Get["/intConstraint/{value:int}"] = _ => "IntConstraint";
+                Get("/intConstraint/{value:int}", args => "IntConstraint");
 
-                Get["/longConstraint/{value:long}"] = _ => "LongConstraint";
+                Get("/longConstraint/{value:long}", args => "LongConstraint");
 
-                Get["/decimalConstraint/{value:decimal}"] = _ => "DecimalConstraint";
+                Get("/decimalConstraint/{value:decimal}", args => "DecimalConstraint");
 
-                Get["/guidConstraint/{value:guid}"] = _ => "GuidConstraint";
+                Get("/guidConstraint/{value:guid}", args => "GuidConstraint");
 
-                Get["/boolConstraint/{value:bool}"] = _ => "BoolConstraint";
+                Get("/boolConstraint/{value:bool}", args => "BoolConstraint");
 
-                Get["/alphaConstraint/{value:alpha}"] = _ => "AlphaConstraint";
+                Get("/alphaConstraint/{value:alpha}", args => "AlphaConstraint");
 
-                Get["/datetimeConstraint/{value:datetime}"] = _ => DateTime.Parse(_.value).ToString("yyyy-MM-dd hh:mm:ss", CultureInfo.InvariantCulture);
+                Get("/datetimeConstraint/{value:datetime}", args => DateTime.Parse(args.value).ToString("yyyy-MM-dd hh:mm:ss", CultureInfo.InvariantCulture));
 
-                Get["/customDatetimeConstraint/{value:datetime(yyyy-MM-dd)}"] = _ => "CustomDateTimeConstraint";
+                Get("/customDatetimeConstraint/{value:datetime(yyyy-MM-dd)}", args => "CustomDateTimeConstraint");
 
-                Get["/minConstraint/{value:min(4)}"] = _ => "MinConstraint";
+                Get("/minConstraint/{value:min(4)}", args => "MinConstraint");
 
-                Get["/maxConstraint/{value:max(6)}"] = _ => "MaxConstraint";
+                Get("/maxConstraint/{value:max(6)}", args => "MaxConstraint");
 
-                Get["/rangeConstraint/{value:range(10, 20)}"] = _ => "RangeConstraint";
+                Get("/rangeConstraint/{value:range(10, 20)}", args => "RangeConstraint");
 
-                Get["/minlengthConstraint/{value:minlength(4)}"] = _ => "MinLengthConstraint";
+                Get("/minlengthConstraint/{value:minlength(4)}", args => "MinLengthConstraint");
 
-                Get["/maxlengthConstraint/{value:maxlength(10)}"] = _ => "MaxLengthConstraint";
+                Get("/maxlengthConstraint/{value:maxlength(10)}", args => "MaxLengthConstraint");
 
-                Get["/lengthMaxOnlyConstraint/{value:length(20)}"] = _ => "LengthMaxOnlyConstraint";
+                Get("/lengthMaxOnlyConstraint/{value:length(20)}", args => "LengthMaxOnlyConstraint");
 
-                Get["/lengthConstraint/{value:length(5, 20)}"] = _ => "LengthConstraint";
+                Get("/lengthConstraint/{value:length(5, 20)}", args => "LengthConstraint");
 
-                Get["/caseInsensitive/{vAlUe:LeNgTh(5, 20)}"] = _ => "CaseInsensitive";
+                Get("/caseInsensitive/{vAlUe:LeNgTh(5, 20)}", args => "CaseInsensitive");
             }
         }
     }

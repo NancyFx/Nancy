@@ -6,24 +6,24 @@ namespace Nancy.Tests.Fakes
 
     public class FakeModuleCatalog : INancyModuleCatalog
     {
-        private Dictionary<Type, INancyModule> _Modules;
+        private Dictionary<Type, INancyModule> modules;
 
         /// <summary>
         /// Initializes a new instance of the FakeModuleCatalog class.
         /// </summary>
         public FakeModuleCatalog()
         {
-            _Modules = new Dictionary<Type, INancyModule>() { { typeof(FakeNancyModuleWithBasePath), new FakeNancyModuleWithBasePath() }, { typeof(FakeNancyModuleWithoutBasePath), new FakeNancyModuleWithoutBasePath() } };
+            this.modules = new Dictionary<Type, INancyModule>() { { typeof(FakeNancyModuleWithBasePath), new FakeNancyModuleWithBasePath() }, { typeof(FakeNancyModuleWithoutBasePath), new FakeNancyModuleWithoutBasePath() } };
         }
 
         public IEnumerable<INancyModule> GetAllModules(NancyContext context)
         {
-            return _Modules.Values.AsEnumerable();
+            return this.modules.Values.AsEnumerable();
         }
 
         public INancyModule GetModule(Type moduleType, NancyContext context)
         {
-            return _Modules[moduleType];
+            return this.modules[moduleType];
         }
     }
 }

@@ -2,13 +2,13 @@
 {
     using Nancy.Security;
 
-    public class SecureModule : LegacyNancyModule
+    public class SecureModule : NancyModule
     {
         public SecureModule() : base("/secure")
         {
             this.RequiresAuthentication();
 
-            Get["/"] = x => "Hello " + this.Context.CurrentUser.Identity.Name;
+            Get("/", args => "Hello " + this.Context.CurrentUser.Identity.Name);
         }
     }
 }

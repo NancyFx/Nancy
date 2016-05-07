@@ -30,12 +30,12 @@
             result.Body.AsString().ShouldEqual("capture");
         }
 
-        private class TestModule : LegacyNancyModule
+        private class TestModule : NancyModule
         {
             public TestModule()
             {
-                Get["{value:int}"] = _ => "constraint";
-                Get["{value}"] = _ => "capture";
+                Get("{value:int}", args => "constraint");
+                Get("{value}", args => "capture");
             }
         }
     }
