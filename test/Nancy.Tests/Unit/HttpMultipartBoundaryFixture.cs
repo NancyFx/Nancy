@@ -189,10 +189,7 @@
 
         private static HttpMultipartSubStream BuildStreamForSingleFile(string name, string filename, string contentType, string content)
         {
-            var memory = new MemoryStream(BuildBoundaryWithSingleFile(
-                BuildContentDispositionHeader(name, filename), contentType, content));
-
-            return new HttpMultipartSubStream(memory, 0, memory.Length);
+            return BuildStreamForSingleFile(BuildContentDispositionHeader(name, filename), contentType, content);
         }
 
         private static byte[] BuildBoundaryWithSingleFile(string contentDispositionHeader, string contentType, string content)
