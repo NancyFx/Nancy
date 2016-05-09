@@ -44,6 +44,30 @@
         }
 
         [Fact]
+        public void Should_handle_presence_of_filenamestar_param_in_content_disposition_header()
+        {
+            // Given
+            var contentDispositionHeader = BuildContentDispositionHeader(
+                "file_content",
+                "sample.txt",
+                "utf-8''foo-%c3%a4.html",
+                unquotedFilenameValue: true
+                );
+
+            var stream = BuildStreamForSingleFile(
+                contentDispositionHeader,
+                "application/octet-stream",
+                null
+                );
+
+            // When
+            var boundary = new HttpMultipartBoundary(stream);
+
+            // Then
+            boundary.Filename.ShouldEqual("sample.txt");
+        }
+
+        [Fact]
         public void Should_set_file_name_to_empty_when_it_could_not_be_found_in_header()
         {
             // Given
@@ -156,22 +180,26 @@
             return new StreamReader(value, Encoding.UTF8).ReadToEnd();
         }
 
-        private static HttpMultipartSubStream BuildStreamForSingleFile(string name, string filename, string contentType, string content)
+        private static HttpMultipartSubStream BuildStreamForSingleFile(string contentDispositionHeader, string contentType, string content)
         {
-            var memory = new MemoryStream(BuildBoundaryWithSingleFile(name, filename, contentType, content));
+            var memory = new MemoryStream(BuildBoundaryWithSingleFile(contentDispositionHeader, contentType, content));
 
             return new HttpMultipartSubStream(memory, 0, memory.Length);
         }
 
-        private static byte[] BuildBoundaryWithSingleFile(string name, string filename, string contentType, string content)
+        private static HttpMultipartSubStream BuildStreamForSingleFile(string name, string filename, string contentType, string content)
+        {
+            var memory = new MemoryStream(BuildBoundaryWithSingleFile(
+                BuildContentDispositionHeader(name, filename), contentType, content));
+
+            return new HttpMultipartSubStream(memory, 0, memory.Length);
+        }
+
+        private static byte[] BuildBoundaryWithSingleFile(string contentDispositionHeader, string contentType, string content)
         {
             var boundaryBuilder = new StringBuilder();
 
-            boundaryBuilder.AppendFormat(
-                !string.IsNullOrEmpty(filename)
-                    ? "Content-Disposition: form-data; name=\"{0}\"; filename=\"{1}\")"
-                    : "Content-Disposition: form-data; name=\"{0}\")", name, filename);
-
+            boundaryBuilder.Append(contentDispositionHeader);
             boundaryBuilder.Append('\r');
             boundaryBuilder.Append('\n');
 
@@ -190,6 +218,27 @@
             }
 
             return Encoding.UTF8.GetBytes(boundaryBuilder.ToString());
+        }
+
+        private static string BuildContentDispositionHeader(string name, string filename = null, string filenamestar = null,
+         bool unquotedFilenameValue = false)
+        {
+            var headerBuilder = new StringBuilder();
+
+            headerBuilder.AppendFormat("Content-Disposition: form-data; name=\"{0}\"", name);
+
+            if (!string.IsNullOrEmpty(filename))
+            {
+                headerBuilder.AppendFormat("; filename={0}",
+                    string.Format(unquotedFilenameValue ? "{0}" : "\"{0}\"", filename));
+            }
+
+            if (!string.IsNullOrEmpty(filenamestar))
+            {
+                headerBuilder.AppendFormat("; filename*={0}", filenamestar);
+            }
+
+            return headerBuilder.ToString();
         }
     }
 }
