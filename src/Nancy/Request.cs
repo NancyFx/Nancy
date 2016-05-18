@@ -1,3 +1,5 @@
+using Nancy.HttpMultipart;
+
 namespace Nancy
 {
     using System;
@@ -230,6 +232,9 @@ namespace Nancy
         public void Dispose()
         {
             ((IDisposable)this.Body).Dispose();
+            foreach (var item in this.Files) {
+                item.Value.Close ();
+            }
         }
 
         private void ParseFormData()
@@ -253,26 +258,26 @@ namespace Nancy
                 return;
             }
 
-            var boundary = Regex.Match(contentType, @"boundary=""?(?<token>[^\n\;\"" ]*)").Groups["token"].Value;
-            var multipart = new HttpMultipart(this.Body, boundary);
-
-            var formValues =
+          var formValues =
                 new NameValueCollection(StaticConfiguration.CaseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase);
 
-            foreach (var httpMultipartBoundary in multipart.GetBoundaries())
-            {
-                if (string.IsNullOrEmpty(httpMultipartBoundary.Filename))
-                {
-                    var reader =
-                        new StreamReader(httpMultipartBoundary.Value);
-                    formValues.Add(httpMultipartBoundary.Name, reader.ReadToEnd());
+            var filestreamsByName = new Dictionary<string, FileStream> ();
 
-                }
-                else
+            var parser = new StreamingMultipartFormDataParser(this.Body);
+            parser.FileHandler += (string name, string fileName, string _contentType, string contentDisposition, byte[] buffer, int bytes) => {
+                if (!filestreamsByName.ContainsKey(fileName))
                 {
-                    this.files.Add(new HttpFile(httpMultipartBoundary));
+                    string f = System.IO.Path.GetTempFileName();
+                    var fs = System.IO.File.Create (f, bytes, System.IO.FileOptions.DeleteOnClose);
+                    filestreamsByName.Add(fileName, fs);
+                    this.files.Add(new HttpFile(contentType, fileName, fs, name));
                 }
-            }
+                filestreamsByName[fileName].Write(buffer, 0, bytes);
+            };
+            parser.ParameterHandler += (ParameterPart part) => {
+                formValues.Add(part.Name, part.Data);
+            };
+            parser.Run();
 
             foreach (var key in formValues.AllKeys.Where(key => key != null))
             {

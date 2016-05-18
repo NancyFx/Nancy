@@ -1004,15 +1004,6 @@
     <Compile Include="..\Nancy\HttpFile.cs">
       <Link>HttpFile.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy\HttpMultipart.cs">
-      <Link>HttpMultipart.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy\HttpMultipartBoundary.cs">
-      <Link>HttpMultipartBoundary.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy\HttpMultipartBuffer.cs">
-      <Link>HttpMultipartBuffer.cs</Link>
-    </Compile>
     <Compile Include="..\Nancy\HttpStatusCode.cs">
       <Link>HttpStatusCode.cs</Link>
     </Compile>
@@ -1205,9 +1196,6 @@
     <Compile Include="..\Nancy\Session\Session.cs">
       <Link>Session\Session.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy\HttpMultipartSubStream.cs">
-      <Link>HttpMultipartSubStream.cs</Link>
-    </Compile>
     <Compile Include="..\Nancy\TinyIoc\TinyIoC.cs">
       <Link>TinyIoc\TinyIoC.cs</Link>
     </Compile>
@@ -1363,6 +1351,33 @@
     <Compile Include="..\Nancy\DefaultGlobalizationConfigurationProvider.cs" />
     <Compile Include="..\Nancy\Configuration\ConfigurationException.cs">
       <Link>Configuration\ConfigurationException.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy\HttpMultipart\BinaryStreamStack.cs">
+      <Link>HttpMultipart\BinaryStreamStack.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy\HttpMultipart\FilePart.cs">
+      <Link>HttpMultipart\FilePart.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy\HttpMultipart\MultipartFormDataParser.cs">
+      <Link>HttpMultipart\MultipartFormDataParser.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy\HttpMultipart\MultipartParseException.cs">
+      <Link>HttpMultipart\MultipartParseException.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy\HttpMultipart\MultipartStreamPart.cs">
+      <Link>HttpMultipart\MultipartStreamPart.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy\HttpMultipart\ParameterPart.cs">
+      <Link>HttpMultipart\ParameterPart.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy\HttpMultipart\RebufferableBinaryReader.cs">
+      <Link>HttpMultipart\RebufferableBinaryReader.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy\HttpMultipart\StreamingMultipartFormDataParser.cs">
+      <Link>HttpMultipart\StreamingMultipartFormDataParser.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy\HttpMultipart\SubsequenceFinder.cs">
+      <Link>HttpMultipart\SubsequenceFinder.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>
