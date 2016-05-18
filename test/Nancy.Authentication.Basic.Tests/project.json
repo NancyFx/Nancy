@@ -1,16 +1,18 @@
 {
     "dependencies": {
-        "dotnet-test-xunit": "1.0.0-*",
-        "Microsoft.NETCore.Platforms": "1.0.1-rc2-*",
+        "dotnet-test-xunit": "1.0.0-rc3-build10019",
+        "Microsoft.NETCore.Platforms": "1.0.1-rc2-24027",
         "Nancy": { "target": "project" },
         "Nancy.Authentication.Basic": { "target": "project" },
         "xunit": "2.1.0"
     },
 
-    "compileFiles": [
-        "../Nancy.Tests/Fakes/FakeRequest.cs",
-        "../Nancy.Tests/ShouldExtensions.cs"
-    ],
+    "buildOptions": {
+        "compile": [
+            "../Nancy.Tests/Fakes/FakeRequest.cs",
+            "../Nancy.Tests/ShouldExtensions.cs"
+        ]
+    },
 
     "frameworks": {
         "net452": {

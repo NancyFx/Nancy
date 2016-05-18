@@ -2,7 +2,7 @@
     "version": "2.0.0-*",
     "description": "Adds Fluent Validation support to Nancy.",
     "authors": [ "Andreas Håkansson, Steven Robbins and contributors" ],
-    
+
     "packOptions": {
         "tags": [ "Nancy", "Validation", "FluentValidation" ],
         "projectUrl": "http://nancyfx.org",

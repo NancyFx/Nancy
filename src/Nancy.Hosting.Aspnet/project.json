@@ -2,7 +2,7 @@
     "version": "2.0.0-*",
     "description": "Enables hosting Nancy on ASP.NET.",
     "authors": [ "Andreas Håkansson, Steven Robbins and contributors" ],
-    
+
     "packOptions": {
         "tags": [ "Nancy", "Host" ],
         "projectUrl": "http://nancyfx.org",

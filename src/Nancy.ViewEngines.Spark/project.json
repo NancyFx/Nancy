@@ -2,9 +2,9 @@
     "version": "2.0.0-*",
     "description": "Enables using the Spark view engine with Nancy.",
     "authors": [ "Andreas Håkansson, Steven Robbins and contributors" ],
-    "tags": [ "Nancy", "View Engine", "Spark" ],
-    
+
     "packOptions": {
+        "tags": [ "Nancy", "View Engine", "Spark" ],
         "projectUrl": "http://nancyfx.org",
         "licenseUrl": "https://github.com/NancyFx/Nancy/blob/master/license.txt",
         "iconUrl": "http://nancyfx.org/nancy-nuget.png"

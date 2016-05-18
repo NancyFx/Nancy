@@ -1,20 +1,21 @@
 {
     "dependencies": {
-        "dotnet-test-xunit": "1.0.0-*",
-        "Microsoft.NETCore.Platforms": "1.0.1-rc2-*",
+        "dotnet-test-xunit": "1.0.0-rc3-build10019",
+        "Microsoft.NETCore.Platforms": "1.0.1-rc2-24027",
         "Nancy": { "target": "project" },
         "Nancy.Testing": { "target": "project" },
         "xunit": "2.1.0"
     },
 
-    "compileFiles": [
-        "../Nancy.Tests/xUnitExtensions/RecordAsync.cs"
-    ],
-    
-    "content": [
-        "Content/**/*",
-        "Views/**/*"
-    ],
+    "buildOptions": {
+        "compile": [
+            "../Nancy.Tests/xUnitExtensions/RecordAsync.cs"
+        ],
+        "copyToOutput": [
+            "Content/**/*",
+            "Views/**/*"
+        ]
+    },
 
     "frameworks": {
         "netcoreapp1.0": {
@@ -22,10 +23,9 @@
                 "define": [ "CORE" ]
             },
             "dependencies": {
-                "dotnet-test-xunit": "1.0.0-*",
                 "Microsoft.NETCore.App": {
                     "type": "platform",
-                    "version": "1.0.0-rc2-*"
+                    "version": "1.0.0-rc2-3002702"
                 }
             },
 

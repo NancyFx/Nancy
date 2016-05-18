@@ -1,17 +1,18 @@
 {
     "dependencies": {
-        "dotnet-test-xunit": "1.0.0-*",
-        "Microsoft.NETCore.Platforms": "1.0.1-rc2-*",
+        "dotnet-test-xunit": "1.0.0-rc3-build10019",
+        "Microsoft.NETCore.Platforms": "1.0.1-rc2-24027",
         "Nancy": { "target": "project" },
         "Nancy.Embedded": { "target": "project" },
         "xunit": "2.1.0"
     },
 
-    "compileFiles": [
-        "../Nancy.Tests/ShouldExtensions.cs"
-    ],
-
-    "resource": "Resources/**/*.*",
+    "buildOptions": {
+        "compile": [
+            "../Nancy.Tests/ShouldExtensions.cs"
+        ],
+        "embed": "Resources/**/*.*"
+    },
 
     "frameworks": {
         "net452": {

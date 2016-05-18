@@ -2,7 +2,7 @@
     "version": "2.0.0-*",
     "description": "Nancy is a lightweight web framework for the .Net platform, inspired by Sinatra. Nancy aim at delivering a low ceremony approach to building light, fast web applications.",
     "authors": [ "Andreas Håkansson, Steven Robbins and contributors" ],
-    
+
     "packOptions": {
         "tags": [ "Nancy" ],
         "projectUrl": "http://nancyfx.org",
@@ -11,13 +11,15 @@
     },
 
     "dependencies": {
-        "Microsoft.Extensions.DependencyModel": "1.0.0-rc2-*"
+        "Microsoft.Extensions.DependencyModel": "1.0.0-rc2-final"
     },
 
-    "resource": [
-        "Diagnostics/Resources/**/*.*",
-        "Diagnostics/Views/**/*.*"
-    ],
+    "buildOptions": {
+        "embed": [
+            "Diagnostics/Resources/**/*.*",
+            "Diagnostics/Views/**/*.*"
+        ]
+    },
 
     "frameworks": {
         "netstandard1.5": {
@@ -25,31 +27,31 @@
                 "define": [ "CORE" ]
             },
             "dependencies": {
-                "Microsoft.CSharp": "4.0.1-rc2-*",
-                "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc2-*",
-                "System.Collections.Concurrent": "4.0.12-rc2-*",
-                "System.Collections.Specialized": "4.0.1-rc2-*",
-                "System.ComponentModel.TypeConverter": "4.0.1-rc2-*",
-                "System.Console": "4.0.0-rc2-*",
-                "System.Data.Common": "4.0.1-rc2-*",
-                "System.Diagnostics.Tools": "4.0.1-rc2-*",
-                "System.Dynamic.Runtime": "4.0.11-rc2-*",
-                "System.IO": "4.1.0-rc2-*",
-                "System.IO.FileSystem": "4.0.1-rc2-*",
-                "System.Linq": "4.1.0-rc2-*",
-                "System.Net.NameResolution": "4.0.0-rc2-*",
-                "System.Net.Primitives": "4.0.11-rc2-*",
-                "System.Reflection.Extensions": "4.0.1-rc2-*",
-                "System.Reflection.TypeExtensions": "4.1.0-rc2-*",
-                "System.Runtime": "4.1.0-rc2-*",
-                "System.Runtime.Serialization.Primitives": "4.1.1-rc2-*",
-                "System.Security.Claims": "4.0.1-rc2-*",
-                "System.Security.Cryptography.Algorithms": "4.1.0-rc2-*",
-                "System.Security.Cryptography.X509Certificates": "4.1.0-rc2-*",
-                "System.Text.RegularExpressions": "4.0.12-rc2-*",
-                "System.Threading": "4.0.11-rc2-*",
-                "System.Threading.Thread": "4.0.0-rc2-*",
-                "System.Xml.XmlSerializer": "4.0.11-rc2-*"
+                "Microsoft.CSharp": "4.0.1-rc2-24027",
+                "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc2-final",
+                "System.Collections.Concurrent": "4.0.12-rc2-24027",
+                "System.Collections.Specialized": "4.0.1-rc2-24027",
+                "System.ComponentModel.TypeConverter": "4.0.1-rc2-24027",
+                "System.Console": "4.0.0-rc2-24027",
+                "System.Data.Common": "4.0.1-rc2-24027",
+                "System.Diagnostics.Tools": "4.0.1-rc2-24027",
+                "System.Dynamic.Runtime": "4.0.11-rc2-24027",
+                "System.IO": "4.1.0-rc2-24027",
+                "System.IO.FileSystem": "4.0.1-rc2-24027",
+                "System.Linq": "4.1.0-rc2-24027",
+                "System.Net.NameResolution": "4.0.0-rc2-24027",
+                "System.Net.Primitives": "4.0.11-rc2-24027",
+                "System.Reflection.Extensions": "4.0.1-rc2-24027",
+                "System.Reflection.TypeExtensions": "4.1.0-rc2-24027",
+                "System.Runtime": "4.1.0-rc2-24027",
+                "System.Runtime.Serialization.Primitives": "4.1.1-rc2-24027",
+                "System.Security.Claims": "4.0.1-rc2-24027",
+                "System.Security.Cryptography.Algorithms": "4.1.0-rc2-24027",
+                "System.Security.Cryptography.X509Certificates": "4.1.0-rc2-24027",
+                "System.Text.RegularExpressions": "4.0.12-rc2-24027",
+                "System.Threading": "4.0.11-rc2-24027",
+                "System.Threading.Thread": "4.0.0-rc2-24027",
+                "System.Xml.XmlSerializer": "4.0.11-rc2-24027"
             },
             "imports": [
                 "dotnet54",

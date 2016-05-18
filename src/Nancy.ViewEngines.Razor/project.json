@@ -2,7 +2,7 @@
     "version": "2.0.0-*",
     "description": "Enables using the Razor view engine with Nancy.",
     "authors": [ "Andreas Håkansson, Steven Robbins and contributors" ],
-        
+
     "packOptions": {
         "tags": [ "Nancy", "View Engine", "Razor" ],
         "projectUrl": "http://nancyfx.org",
@@ -16,13 +16,12 @@
         "Microsoft.CodeAnalysis.CSharp": "1.1.0-rc1-20151109-01"
     },
 
-    "resource": "Resources/**/*.*",
+    "buildOptions": {
+        "embed": "Resources/**/*.*"
+    },
 
     "frameworks": {
         "net452": {
-            "buildOptions": {
-                "define": [ "DNX" ]
-            },
             "dependencies": {
                 "Microsoft.CodeDom.Providers.DotNetCompilerPlatform": "1.0.1"
             },
