@@ -3,13 +3,10 @@ namespace Nancy.Tests.Fakes
     using System;
     using System.Threading;
     using System.Threading.Tasks;
-
     using Nancy.Routing;
 
-    public class FakeRoute : Route
+    public class FakeRoute : Route<object>
     {
-        private static Func<dynamic, CancellationToken, Task<dynamic>>DefaultAction = (parameters, token) => null;
-
         public bool ActionWasInvoked;
         public DynamicDictionary ParametersUsedToInvokeAction;
 
@@ -18,27 +15,24 @@ namespace Nancy.Tests.Fakes
         {
         }
 
-        public FakeRoute(dynamic response)
-            : base("GET", "/", null, (parametes, token) => null)
+        public FakeRoute(object response)
+            : base("GET", "/", null, (args, ct) => null)
         {
-            this.Action = Wrap(this, (parameters, token) => Task.FromResult<dynamic>(response));
-        }
-
-        public FakeRoute(Func<dynamic, CancellationToken, Task<dynamic>> action)
-            : base("GET", "/", null, (parametes, token) => null)
-        {
-            this.Action = Wrap(this, action);
-        }
-
-        private static Func<dynamic, CancellationToken, Task<dynamic>> Wrap(
-            FakeRoute route,
-            Func<dynamic, CancellationToken, Task<dynamic>> action)
-        {
-            return (parameters, token) =>
+            this.Action = (parameters, token) =>
             {
-                route.ParametersUsedToInvokeAction = parameters;
-                route.ActionWasInvoked = true;
+                this.ActionWasInvoked = true;
+                this.ParametersUsedToInvokeAction = (DynamicDictionary)parameters;
+                return Task.FromResult(response);
+            };
+        }
 
+        public FakeRoute(Func<object, CancellationToken, Task<object>> action)
+            : base("GET", "/", null, (args, ct) => null)
+        {
+            this.Action = (parameters, token) =>
+            {
+                this.ActionWasInvoked = true;
+                this.ParametersUsedToInvokeAction = (DynamicDictionary)parameters;
                 return action.Invoke(parameters, token);
             };
         }

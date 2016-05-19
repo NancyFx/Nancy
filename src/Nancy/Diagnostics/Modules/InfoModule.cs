@@ -19,16 +19,14 @@
         {
             this.typeCatalog = typeCatalog;
 
-            Get["/"] = async (_, __) =>
+            Get("/", _ =>
             {
                 return View["Info"];
-            };
+            });
 
-            Get["/data"] = async (_, __) =>
+            Get("/data", _ =>
             {
                 dynamic data = new ExpandoObject();
-
-
 
                 data.Nancy = new ExpandoObject();
                 data.Nancy.Version = string.Format("v{0}", this.GetType().Assembly.GetName().Version.ToString());
@@ -52,7 +50,7 @@
                 }
 
                 return this.Response.AsJson((object)data);
-            };
+            });
         }
 
         private string[] GetViewEngines()

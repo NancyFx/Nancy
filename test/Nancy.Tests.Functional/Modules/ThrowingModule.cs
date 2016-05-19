@@ -2,14 +2,15 @@
 {
     using System;
 
-    public class ThrowingModule : LegacyNancyModule
+    public class ThrowingModule : NancyModule
     {
         public ThrowingModule()
         {
-            this.Get["/"] = _ =>
+            Get("/", args =>
             {
                 throw new InvalidOperationException("Oh noes!");
-            };
+                return 500;
+            });
 
             this.OnError.AddItemToEndOfPipeline((context, ex) => new Error(ex.Message));
         }

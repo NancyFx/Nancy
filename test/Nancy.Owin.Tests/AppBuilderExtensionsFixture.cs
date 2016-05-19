@@ -32,11 +32,11 @@
         }
 #endif
 
-        public class TestModule : LegacyNancyModule
+        public class TestModule : NancyModule
         {
             public TestModule()
             {
-                Get["/"] = _ => HttpStatusCode.OK;
+                Get("/", args => HttpStatusCode.OK);
             }
         }
     }

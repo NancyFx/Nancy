@@ -1,30 +1,29 @@
 namespace Nancy.Demo.Hosting.Self
 {
     using System.Linq;
-
     using Nancy.Demo.Hosting.Self.Models;
 
-    public class TestModule : LegacyNancyModule
+    public class TestModule : NancyModule
     {
         public TestModule()
         {
-            Get["/"] = parameters => {
+            Get("/", args => {
                 return View["staticview", this.Request.Url];
-            };
+            });
 
-            Get["/testing"] = parameters =>
+            Get("/testing", args =>
             {
                 return View["staticview", this.Request.Url];
-            };
+            });
 
-            Get["/fileupload"] = x =>
+            Get("/fileupload", args =>
             {
                 var model = new Index() { Name = "Boss Hawg" };
 
                 return View["FileUpload", model];
-            };
+            });
 
-            Post["/fileupload"] = x =>
+            Post("/fileupload", args =>
             {
                 var model = new Index() { Name = "Boss Hawg" };
 
@@ -39,7 +38,7 @@ namespace Nancy.Demo.Hosting.Self
                 model.Posted = fileDetails;
 
                 return View["FileUpload", model];
-            };
+            });
         }
     }
 }

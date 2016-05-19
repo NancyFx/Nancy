@@ -611,11 +611,11 @@ namespace Nancy.Testing.Tests
             public Category Category { get; set; }
         }
 
-        public class EchoModule : LegacyNancyModule
+        public class EchoModule : NancyModule
         {
             public EchoModule()
             {
-                Get["/cyclical"] = ctx =>
+                Get("/cyclical", args =>
                 {
                     var category = new Category();
                     category.Name = "Electronics";
@@ -627,9 +627,9 @@ namespace Nancy.Testing.Tests
                     category.Products = new Collection<Product>(new List<Product>(new[] { product }));
 
                     return product;
-                };
+                });
 
-                Post["/"] = ctx =>
+                Post("/", args =>
                 {
                     var body = new StreamReader(this.Context.Request.Body).ReadToEnd();
                     return new Response
@@ -641,9 +641,9 @@ namespace Nancy.Testing.Tests
                             writer.Flush();
                         }
                     };
-                };
+                });
 
-                Get["/cookie"] = ctx =>
+                Get("/cookie", args =>
                 {
                     var response = (Response)"Cookies";
 
@@ -653,15 +653,15 @@ namespace Nancy.Testing.Tests
                     }
 
                     return response;
-                };
+                });
 
-                Get["/nothing"] = ctx => string.Empty;
+                Get("/nothing", args => string.Empty);
 
-                Get["/userHostAddress"] = ctx => this.Request.UserHostAddress;
+                Get("/userHostAddress", args => this.Request.UserHostAddress);
 
-                Get["/isLocal"] = _ => this.Request.IsLocal() ? "local" : "not-local";
+                Get("/isLocal", args => this.Request.IsLocal() ? "local" : "not-local");
 
-                Get["/session"] = ctx =>
+                Get("/session", args =>
                 {
                     var value = Session["moo"] ?? "";
 
@@ -675,31 +675,31 @@ namespace Nancy.Testing.Tests
                     var response = (Response)output;
 
                     return response;
-                };
+                });
 
-                Get["/useragent"] = _ => this.Request.Headers.UserAgent;
+                Get("/useragent", args => this.Request.Headers.UserAgent);
 
-                Get["/type"] = _ => this.Request.Url.Scheme.ToLower();
+                Get("/type", args => this.Request.Url.Scheme.ToLower());
 
-                Get["/ajax"] = _ => this.Request.IsAjaxRequest() ? "ajax" : "not-ajax";
+                Get("/ajax", args => this.Request.IsAjaxRequest() ? "ajax" : "not-ajax");
 
-                Post["/encoded"] = parameters => (string)this.Request.Form.name;
+                Post("/encoded", args => (string)this.Request.Form.name);
 
-                Post["/encodedquerystring"] = parameters => (string)this.Request.Query.name;
+                Post("/encodedquerystring", args => (string)this.Request.Query.name);
 
-                Post["/serializedform"] = _ =>
+                Post("/serializedform", args =>
                 {
                     var data = Request.Form.ToDictionary();
 
                     return data;
-                };
+                });
 
-                Get["/serializedquerystring"] = _ =>
+                Get("/serializedquerystring", args =>
                 {
                     var data = Request.Query.ToDictionary();
 
                     return data;
-                };
+                });
             }
         }
     }

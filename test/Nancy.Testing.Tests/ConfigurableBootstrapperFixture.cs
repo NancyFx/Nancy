@@ -136,7 +136,7 @@
         {
             var date = new DateTime(2112,10,31);
 
-            var bootstrapper = new ConfigurableBootstrapper(with => 
+            var bootstrapper = new ConfigurableBootstrapper(with =>
             {
                 with.ApplicationStartup((container, pipelines) =>
                 {
@@ -163,7 +163,7 @@
             var date = new DateTime(2112, 10, 31);
             var bootstrapper =
                 new ConfigurableBootstrapper(
-                    with => with.RequestStartup((container, pipelines, context) => 
+                    with => with.RequestStartup((container, pipelines, context) =>
                         context.Items.Add("date", date)));
 
             bootstrapper.Initialise();
@@ -212,11 +212,15 @@
             }
         }
 
-        private class BlowUpModule : LegacyNancyModule
+        private class BlowUpModule : NancyModule
         {
             public BlowUpModule()
             {
-                Get["/"] = _ => { throw new InvalidOperationException("Oh noes!"); };
+                Get("/", args =>
+                {
+                    throw new InvalidOperationException("Oh noes!");
+                    return 500;
+                });
             }
         }
 

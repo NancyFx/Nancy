@@ -1,14 +1,14 @@
 ﻿namespace Nancy.Testing.Tests.TestingViewExtensions
 {
-    public class TestingViewFactoryTestModule : LegacyNancyModule
+    public class TestingViewFactoryTestModule : NancyModule
     {
         private const string VIEW_PATH = "TestingViewExtensions/ViewFactoryTest.sshtml";
 
         public TestingViewFactoryTestModule()
         {
-            this.Get["/testingViewFactoryNoModel"] = _ => this.View[VIEW_PATH];
-            this.Get["/testingViewFactory"] = _ => this.View[VIEW_PATH, GetModel()];
-            this.Get["/testingViewFactoryNoViewName"] = _ => { return GetModel(); };
+            Get("/testingViewFactoryNoModel", args => this.View[VIEW_PATH]);
+            Get("/testingViewFactory", args => this.View[VIEW_PATH, GetModel()]);
+            Get("/testingViewFactoryNoViewName", args => { return GetModel(); });
         }
 
         private static ViewFactoryTestModel GetModel()

@@ -2,9 +2,8 @@
 {
     using System;
     using System.Threading;
-
+    using System.Threading.Tasks;
     using Nancy.Routing;
-
     using Xunit;
 
     public class RouteFixture
@@ -14,7 +13,10 @@
         {
             //Given, When
             var exception =
-                Record.Exception(() => new Route(null, "", null, (x, c) => null));
+                Record.Exception(() =>
+                {
+                    return new Route<object>(null, "", null, x => true, (args, ct) => null);
+                });
 
             // Then
             exception.ShouldBeOfType<ArgumentException>();
@@ -25,7 +27,10 @@
         {
             //Given, When
             var exception =
-                Record.Exception(() => new Route("", "/", null, (x,c) => null));
+                Record.Exception(() =>
+                {
+                    return new Route<object>("", "/", null, x => true, (args, ct) => null);
+                });
 
             // Then
             exception.ShouldBeOfType<ArgumentException>();
@@ -36,7 +41,10 @@
         {
             //Given, When
             var exception =
-                Record.Exception(() => new Route("GET", null, null, (x, c) => null));
+                Record.Exception(() =>
+                {
+                    return new Route<object>("GET", null, null, x => true, (args, ct) => null);
+                });
 
             // Then
             exception.ShouldBeOfType<ArgumentException>();
@@ -47,21 +55,13 @@
         {
             //Given, When
             var exception =
-                Record.Exception(() => new Route("GET", null, null, (x, c) => null));
+                Record.Exception(() =>
+                {
+                    new Route<object>("GET", null, null, x => true, (args, ct) => null);
+                });
 
             // Then
             exception.ShouldBeOfType<ArgumentException>();
-        }
-
-        [Fact]
-        public void Should_throw_argumentnullexception_when_instantiated_with_null_action()
-        {
-            //Given, When
-            var exception =
-                Record.Exception(() => new Route("GET", "/", null, null));
-
-            // Then
-            exception.ShouldBeOfType<ArgumentNullException>();
         }
 
         [Fact]
@@ -70,17 +70,17 @@
             //Given
             DynamicDictionary capturedParameters = null;
 
-            Func<dynamic, Response> action = x =>
+            Func<dynamic, CancellationToken, Task<object>> action = (args, ct) =>
             {
-                capturedParameters = x;
-                return null;
+                capturedParameters = args;
+                return Task.FromResult<object>(null);
             };
 
             dynamic parameters = new DynamicDictionary();
             parameters.foo = 10;
             parameters.bar = "value";
 
-            var route = Route.FromSync("GET", "/", null, action);
+            var route = new Route<object>("GET", "/", null, action);
 
             // When
             route.Invoke(parameters, new CancellationToken());
@@ -90,16 +90,16 @@
         }
 
         [Fact]
-        public void Should_return_response_from_action_when_invoked()
+        public async Task Should_return_response_from_action_when_invoked()
         {
             //Given
             var expectedResponse = new Response();
-            Func<object, Response> action = x => expectedResponse;
+            Func<dynamic, CancellationToken, Task<Response>> action = (args, ct) => Task.FromResult(expectedResponse);
 
-            var route = Route.FromSync("GET", "/", null, action);
+            var route = new Route<Response>("GET", "/", null, action);
 
             // When
-            var response = (Response)route.Invoke(new DynamicDictionary(), new CancellationToken()).Result;
+            var response = await route.Invoke(new DynamicDictionary(), new CancellationToken());
 
             // Then
             response.ShouldBeSameAs(expectedResponse);

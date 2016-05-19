@@ -2,9 +2,7 @@
 {
     using System.Threading.Tasks;
     using Nancy.Testing;
-
     using Xunit;
-    using Xunit.Extensions;
 
     public class DefaultRouteResolverFixture
     {
@@ -426,57 +424,57 @@
             return !caseSensitive || !isUpperCase;
         }
 
-        private class MethodNotAllowedModule : LegacyNancyModule
+        private class MethodNotAllowedModule : NancyModule
         {
             public MethodNotAllowedModule()
             {
-                Delete["/"] = x => 200;
+                Delete("/", args => 200);
 
-                Post["/"] = x => 200;
+                Post("/", args => 200);
             }
         }
 
-        private class NoRootModule : LegacyNancyModule
+        private class NoRootModule : NancyModule
         {
             public NoRootModule()
             {
-                Get["/notroot"] = _ => "foo";
+                Get("/notroot", args => "foo");
             }
         }
 
-        private class TestModule : LegacyNancyModule
+        private class TestModule : NancyModule
         {
             public TestModule()
             {
-                Get["/"] = _ => "Root";
+                Get("/", args => "Root");
 
-                Post["/"] = _ => "PostRoot";
+                Post("/", args => "PostRoot");
 
-                Get["/foo"] = _ => "SingleLiteral";
+                Get("/foo", args => "SingleLiteral");
 
-                Get["/foo/bar/baz"] = _ => "MultipleLiteral";
+                Get("/foo/bar/baz", args => "MultipleLiteral");
 
-                Get["/foo/{bar}/plop"] = _ => "Captured " + _.bar;
+                Get("/foo/{bar}/plop", args => "Captured " + args.bar);
 
-                Get["/moo/baa"] = _ => "Dummy";
+                Get("/moo/baa", args => "Dummy");
 
-                Get["/moo/baa/cheese"] = _ => "Dummy";
+                Get("/moo/baa/cheese", args => "Dummy");
 
-                Get["/moo/{test?}/moo"] = _ => "OptionalCapture " + _.test.Default("default");
+                Get("/moo/{test?}/moo", args => "OptionalCapture " + args.test.Default("default"));
 
-                Get["/boo/{woo?test}/laa"] = _ => "OptionalCaptureWithDefault " + _.woo;
+                Get("/boo/{woo?test}/laa", args => "OptionalCaptureWithDefault " + args.woo);
 
-                Get["/bleh/{test*}"] = _ => "GreedyOnEnd " + _.test;
+                Get("/bleh/{test*}", args => "GreedyOnEnd " + args.test);
 
-                Get["/bleh/{test*}/bar"] = _ => "GreedyInMiddle " + _.test;
+                Get("/bleh/{test*}/bar", args => "GreedyInMiddle " + args.test);
 
-                Get["/greedy/{test*}/badger/{woo}"] = _ => "GreedyAndCapture " + _.test + " " + _.woo;
+                Get("/greedy/{test*}/badger/{woo}", args => "GreedyAndCapture " + args.test + " " + args.woo);
 
-                Get["/multipleparameters/{file}.{extension}"] = _ => "Multiple parameters " + _.file + "." + _.extension;
+                Get("/multipleparameters/{file}.{extension}", args => "Multiple parameters " + args.file + "." + args.extension);
 
-                Get["/capturenodewithliteral/{file}.html"] = _ => "CaptureNodeWithLiteral " + _.file + ".html";
+                Get("/capturenodewithliteral/{file}.html", args => "CaptureNodeWithLiteral " + args.file + ".html");
 
-                Get[@"/regex/(?<foo>\d{2,4})/{bar}"] = x => string.Format("RegEx {0} {1}", x.foo, x.bar);
+                Get(@"/regex/(?<foo>\d{2,4})/{bar}", args => string.Format("RegEx {0} {1}", args.foo, args.bar));
             }
         }
     }

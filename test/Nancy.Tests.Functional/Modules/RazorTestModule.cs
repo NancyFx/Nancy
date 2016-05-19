@@ -1,31 +1,31 @@
 ﻿namespace Nancy.Tests.Functional.Modules
 {
-    public class RazorTestModule : LegacyNancyModule
+    public class RazorTestModule : NancyModule
     {
         public RazorTestModule()
         {
-            Get["/razor-viewbag"] = _ =>
-                {
-                    this.ViewBag.Name = "Bob";
+            Get("/razor-viewbag", args =>
+            {
+                this.ViewBag.Name = "Bob";
 
-                    return View["RazorPage"];
-                };
+                return View["RazorPage"];
+            });
 
-            Get["/razor-viewbag-serialized"] = _ =>
+            Get("/razor-viewbag-serialized", args =>
             {
                 this.ViewBag.Name = "Bob";
 
                 var serialized = this.ViewBag.ToDictionary();
 
                 return serialized;
-            };
+            });
 
-            Get["/razor-partialnotfound"] = _ =>
+            Get("/razor-partialnotfound", args =>
             {
                 this.ViewBag.Name = "Bob";
 
                 return View["RazorPageWithUnknownPartial"];
-            };
+            });
         }
     }
 }

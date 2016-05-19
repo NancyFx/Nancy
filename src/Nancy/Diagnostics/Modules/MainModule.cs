@@ -4,12 +4,15 @@
     {
         public MainModule()
         {
-            Get["/"] = async (_, __) =>
+            Get("/", _ =>
             {
                 return View["Dashboard"];
-            };
+            });
 
-            Post["/"] = async (_, __) => this.Response.AsRedirect("~/");
+            Post("/", _ =>
+            {
+                return this.Response.AsRedirect("~/");
+            });
         }
     }
 }

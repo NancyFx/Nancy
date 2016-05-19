@@ -93,11 +93,11 @@
     <Compile Include="..\Nancy.Metadata.Modules.Tests\DefaultMetadataModuleConventionsFixture.cs">
       <Link>DefaultMetadataModuleConventionsFixture.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy.Metadata.Modules.Tests\FakeLegacyNancyMetadataModule.cs">
-      <Link>FakeLegacyNancyMetadataModule.cs</Link>
+    <Compile Include="..\Nancy.Metadata.Modules.Tests\FakeNancyMetadataModule.cs">
+      <Link>FakeNancyMetadataModule.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy.Metadata.Modules.Tests\FakeLegacyNancyModule.cs">
-      <Link>FakeLegacyNancyModule.cs</Link>
+    <Compile Include="..\Nancy.Metadata.Modules.Tests\FakeNancyModule.cs">
+      <Link>FakeNancyModule.cs</Link>
     </Compile>
     <Compile Include="..\Nancy.Metadata.Modules.Tests\MetadataModuleFixture.cs">
       <Link>MetadataModuleFixture.cs</Link>
@@ -105,11 +105,11 @@
     <Compile Include="..\Nancy.Metadata.Modules.Tests\MetadataModuleRouteMetadataProviderFixture.cs">
       <Link>MetadataModuleRouteMetadataProviderFixture.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy.Metadata.Modules.Tests\Metadata\FakeLegacyNancyMetadataModule.cs">
-      <Link>Metadata\FakeLegacyNancyMetadataModule.cs</Link>
+    <Compile Include="..\Nancy.Metadata.Modules.Tests\Modules\FakeNancyModule.cs">
+      <Link>Modules\FakeNancyModule.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy.Metadata.Modules.Tests\Modules\FakeLegacyNancyModule.cs">
-      <Link>Modules\FakeLegacyNancyModule.cs</Link>
+    <Compile Include="..\Nancy.Metadata.Modules.Tests\Metadata\FakeNancyMetadataModule.cs">
+      <Link>Metadata\FakeNancyMetadataModule.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -135,7 +135,7 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props'))" />
   </Target>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

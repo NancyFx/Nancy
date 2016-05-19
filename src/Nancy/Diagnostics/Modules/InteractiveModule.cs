@@ -15,12 +15,12 @@
         {
             this.interactiveDiagnostics = interactiveDiagnostics;
 
-            Get["/"] = async (_, __) =>
+            Get("/", _ =>
             {
                 return View["InteractiveDiagnostics"];
-            };
+            });
 
-            Get["/providers"] = async (_, __) =>
+            Get("/providers", _ =>
             {
                 var providers = this.interactiveDiagnostics
                     .AvailableDiagnostics
@@ -35,9 +35,9 @@
                     .ToArray();
 
                 return this.Response.AsJson(providers);
-            };
+            });
 
-            Get["/providers/{providerName}"] = async (ctx, __) =>
+            Get("/providers/{providerName}", ctx =>
             {
                 var providerName =
                     HttpUtility.UrlDecode((string)ctx.providerName);
@@ -65,9 +65,9 @@
                     .ToArray();
 
                 return this.Response.AsJson(methods);
-            };
+            });
 
-            Get["/providers/{providerName}/{methodName}"] = async (ctx, __) =>
+            Get("/providers/{providerName}/{methodName}", ctx =>
             {
                 var providerName =
                     HttpUtility.UrlDecode((string)ctx.providerName);
@@ -87,9 +87,9 @@
                     GetArguments(method, this.Request.Query);
 
                 return this.Response.AsJson(new { Result = this.interactiveDiagnostics.ExecuteDiagnostic(method, arguments) });
-            };
+            });
 
-            Get["/templates/{providerName}/{methodName}"] = async (ctx, __) =>
+            Get<Response>("/templates/{providerName}/{methodName}", ctx =>
             {
                 var providerName =
                     HttpUtility.UrlDecode((string)ctx.providerName);
@@ -114,7 +114,7 @@
                 }
 
                 return template;
-            };
+            });
         }
 
         private static object[] GetArguments(InteractiveDiagnosticMethod method, dynamic query)

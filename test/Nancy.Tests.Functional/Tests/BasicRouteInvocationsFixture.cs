@@ -134,49 +134,49 @@
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
-        public class BasicRouteInvocationsModule : LegacyNancyModule
+        public class BasicRouteInvocationsModule : NancyModule
         {
             public BasicRouteInvocationsModule()
             {
-                Delete["/"] = parameters =>
+                Delete("/", args =>
                 {
                     return "Default delete root";
-                };
+                });
 
-                Get["/"] = parameters =>
+                Get("/", args =>
                 {
                     return "Default get root";
-                };
+                });
 
-                Post["/"] = parameters =>
+                Post("/", args =>
                 {
                     return "Default post root";
-                };
+                });
 
-                Put["/"] = parameters =>
+                Put("/", args =>
                 {
                     return "Default put root";
-                };
+                });
             }
         }
 
-        public class BasicRouteInvocationsModuleWithHead : LegacyNancyModule
+        public class BasicRouteInvocationsModuleWithHead : NancyModule
         {
             public BasicRouteInvocationsModuleWithHead()
             {
-                Get["/"] = parameters =>
+                Get("/", args =>
                 {
                     return "Default get root";
-                };
+                });
 
-                Head["/"] = parameters =>
+                Head("/", args =>
                 {
                     return new Response()
                     {
                         StatusCode = HttpStatusCode.OK,
                         ReasonPhrase = "HEAD!"
                     };
-                };
+                });
             }
         }
 

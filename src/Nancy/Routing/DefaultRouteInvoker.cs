@@ -3,10 +3,8 @@ namespace Nancy.Routing
     using System;
     using System.Threading;
     using System.Threading.Tasks;
-
     using Nancy.ErrorHandling;
     using Nancy.Extensions;
-    using Nancy.Helpers;
     using Nancy.Responses.Negotiation;
 
     /// <summary>
@@ -35,7 +33,7 @@ namespace Nancy.Routing
         /// <returns>A <see cref="Response"/> instance that represents the result of the invoked route.</returns>
         public async Task<Response> Invoke(Route route, CancellationToken cancellationToken, DynamicDictionary parameters, NancyContext context)
         {
-            dynamic result;
+            object result;
 
             try
             {

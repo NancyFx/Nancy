@@ -93,23 +93,26 @@
             }
         }
     }
-    public class RouteConstraintsModule : LegacyNancyModule
+    public class RouteConstraintsModule : NancyModule
     {
         public RouteConstraintsModule()
         {
-            this.Get["/{left:correctanswer}...{right:correctanswer}"] = _ =>
+            Get("/{left:correctanswer}...{right:correctanswer}", args =>
             {
                 return HttpStatusCode.OK;
-            };
+            });
+
             // For testing VersionSegmentRouteConstraint
-            this.Get["/{left:version}...{right:version}"] = _ =>
+            Get("/{left:version}...{right:version}", args =>
             {
-                return new {_.left, _.right};
-            };
+                return new { args.left, args.right};
+            });
+
             // For testing VersionSegmentRouteConstraint
-            this.Get["/version/{versionNumber:version}"] = _ => new { versionNumber = _.versionNumber.ToString()};
+            Get("/version/{versionNumber:version}", args => new { versionNumber = args.versionNumber.ToString() });
+
             // For testing VersionSegmentRouteConstraint - fallback for invalid version number
-            this.Get["/version/{invalidVersionNumber}"] = _ => new { _.invalidVersionNumber };
+            Get("/version/{invalidVersionNumber}", args => new { args.invalidVersionNumber });
         }
     }
 }

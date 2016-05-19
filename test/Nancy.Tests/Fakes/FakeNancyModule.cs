@@ -2,7 +2,7 @@
 {
     using System;
 
-    public class FakeNancyModule : LegacyNancyModule
+    public class FakeNancyModule : NancyModule
     {
         public FakeNancyModule()
         {
@@ -10,7 +10,7 @@
 
         public FakeNancyModule(Action<FakeNancyModuleConfigurator> closure)
         {
-            var configurator = 
+            var configurator =
                 new FakeNancyModuleConfigurator(this);
 
             closure.Invoke(configurator);
@@ -18,18 +18,18 @@
 
         public class FakeNancyModuleConfigurator
         {
-            private readonly LegacyNancyModule module;
+            private readonly NancyModule module;
 
-            public FakeNancyModuleConfigurator(LegacyNancyModule module)
+            public FakeNancyModuleConfigurator(NancyModule module)
             {
                 this.module = module;
             }
 
             public FakeNancyModuleConfigurator AddDeleteRoute(string path)
             {
-                this.module.Delete[path] = parameters => {
+                this.module.Delete(path, args => {
                     return HttpStatusCode.OK;
-                };
+                });
 
                 return this;
             }
@@ -41,24 +41,28 @@
 
             public FakeNancyModuleConfigurator AddGetRoute(string path, Func<object, Response> action)
             {
-                this.module.Get[path] = action;
+                this.module.Get(path, args =>
+                {
+                    return action.Invoke(args);
+                });
+
                 return this;
             }
 
             public FakeNancyModuleConfigurator AddPostRoute(string path)
             {
-                this.module.Post[path] = parameters => {
+                this.module.Post(path, args => {
                     return HttpStatusCode.OK;
-                };
+                });
 
                 return this;
             }
 
             public FakeNancyModuleConfigurator AddPutRoute(string path)
             {
-                this.module.Put[path] = parameters => {
+                this.module.Put(path, args => {
                     return HttpStatusCode.OK;
-                };
+                });
 
                 return this;
             }

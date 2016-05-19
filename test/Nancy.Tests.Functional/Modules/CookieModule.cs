@@ -1,14 +1,12 @@
-﻿using System;
-
-namespace Nancy.Tests.Functional.Modules
+﻿namespace Nancy.Tests.Functional.Modules
 {
     using Nancy.Cookies;
 
-    public class CookieModule : LegacyNancyModule
+    public class CookieModule : NancyModule
     {
         public CookieModule()
         {
-            Get["/setcookie"] = _ =>
+            Get("/setcookie", args =>
             {
                 const string value = "HakLqr1OEdi+kQ/s92Rzz9hV1w/vzGZKqWeMQRHRJlwhbbgP87UELJZlYDfbVVLo";
 
@@ -19,18 +17,18 @@ namespace Nancy.Tests.Functional.Modules
                 response.StatusCode = HttpStatusCode.OK;
 
                 return response;
-            };
+            });
 
-            Get["/getcookie"] = _ =>
+            Get("/getcookie", args =>
             {
                 const string value = "HakLqr1OEdi+kQ/s92Rzz9hV1w/vzGZKqWeMQRHRJlwhbbgP87UELJZlYDfbVVLo";
 
                 var cookie = Context.Request.Cookies["testcookie"];
 
-                return String.Equals(cookie, value) ?
+                return string.Equals(cookie, value) ?
                     HttpStatusCode.OK :
                     HttpStatusCode.InternalServerError;
-            };
+            });
         }
     }
 }

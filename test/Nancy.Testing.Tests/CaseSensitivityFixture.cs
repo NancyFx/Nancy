@@ -128,27 +128,27 @@
             }
         }
 
-        public class MainModule : LegacyNancyModule
+        public class MainModule : NancyModule
         {
             public MainModule()
             {
-                Get["/"] = _ =>
+                Get("/", args =>
                 {
                     var name = this.Request.Query.animal.HasValue ? this.Request.Query.animal : "";
                     return name;
-                };
+                });
 
-                Get["/{ANIMAL}"] = args =>
+                Get("/{ANIMAL}", args =>
                 {
                     var name = args.animal.HasValue ? args.animal : "";
                     return name;
-                };
+                });
 
-                Get["/animal"] = _ =>
+                Get("/animal", args =>
                 {
                     var animal = this.Bind<Animal>();
                     return (animal.Type == null) ? HttpStatusCode.NoContent : HttpStatusCode.Accepted;
-                };
+                });
             }
         }
 

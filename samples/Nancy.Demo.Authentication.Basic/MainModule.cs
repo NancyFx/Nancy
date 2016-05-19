@@ -1,10 +1,10 @@
 ﻿namespace Nancy.Demo.Authentication.Basic
 {
-    public class MainModule : LegacyNancyModule
+    public class MainModule : NancyModule
     {
         public MainModule()
         {
-            Get["/"] = _ => "<a href='/secure'>Enter</a>";
+            Get("/", args => "<a href='/secure'>Enter</a>");
         }
     }
 }

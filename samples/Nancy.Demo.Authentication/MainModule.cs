@@ -1,16 +1,16 @@
 namespace Nancy.Demo.Authentication
 {
-    public class MainModule : LegacyNancyModule
+    public class MainModule : NancyModule
     {
         public MainModule()
         {
-            Get["/"] = x => {
+            Get("/", args => {
                 return View["Index.cshtml"];
-            };
+            });
 
-            Get["/login"] = x => {
+            Get("/login", args => {
                 return View["Login.cshtml", this.Request.Query.returnUrl];
-            };
+            });
         }
     }
 }

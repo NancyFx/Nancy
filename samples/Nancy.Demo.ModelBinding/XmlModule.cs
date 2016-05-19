@@ -5,16 +5,16 @@ namespace Nancy.Demo.ModelBinding
     using Nancy.Demo.ModelBinding.Models;
     using Nancy.ModelBinding;
 
-    public class XmlModule : LegacyNancyModule
+    public class XmlModule : NancyModule
     {
         public XmlModule()
         {
-            Get["/bindxml"] = x =>
+            Get("/bindxml", args =>
             {
                 return View["PostXml"];
-            };
+            });
 
-            Post["/bindxml"] = x =>
+            Post("/bindxml", args =>
             {
                 var model = this.Bind<User>(u => u.Name);
 
@@ -29,7 +29,7 @@ namespace Nancy.Demo.ModelBinding
                 sb.AppendLine(model.Address);
 
                 return sb.ToString();
-            };
+            });
         }
     }
 }

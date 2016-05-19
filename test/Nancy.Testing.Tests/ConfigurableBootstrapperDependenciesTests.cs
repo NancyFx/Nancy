@@ -161,27 +161,27 @@
             Assert.Contains(_dataFromFake2, bodyAsString);
         }
 
-        public class ModuleWithOneDependency : LegacyNancyModule
+        public class ModuleWithOneDependency : NancyModule
         {
             public ModuleWithOneDependency(ITestDependency dependency)
                 : base("/1dependency")
             {
-                Get["/"] = _ =>
+                Get("/", args =>
                 {
                     return string.Format("Data of dependency: {0}", dependency.GetData());
-                };
+                });
             }
         }
 
-        public class ModuleWithTwoDependencies : LegacyNancyModule
+        public class ModuleWithTwoDependencies : NancyModule
         {
             public ModuleWithTwoDependencies(ITestDependency dependency, ITestDependency2 dependency2)
                 : base("/2dependencies")
             {
-                Get["/"] = _ =>
+                Get("/", args =>
                 {
                     return string.Format("Data of dependencies: {0}, {1}", dependency.GetData(), dependency2.GetData());
-                };
+                });
             }
         }
 

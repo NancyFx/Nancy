@@ -1,13 +1,12 @@
 ﻿namespace Nancy.Tests.Functional.Modules
 {
-    public class AbsoluteUrlTestModule : LegacyNancyModule
+    public class AbsoluteUrlTestModule : NancyModule
     {
         public AbsoluteUrlTestModule()
         {
-            Get["/"] = _ => "hi";
+            Get("/", args => "hi");
 
-            Get["/querystring"] = _ => this.Request.Query.myKey;
+            Get("/querystring", args => this.Request.Query.myKey);
         }
-
     }
 }

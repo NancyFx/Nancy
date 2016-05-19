@@ -117,9 +117,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Nancy.Tests\Fakes\FakeLegacyNancyModuleNoRoutes.cs">
-      <Link>Fakes\FakeLegacyNancyModuleNoRoutes.cs</Link>
-    </Compile>
     <Compile Include="..\Nancy.Tests\Fakes\PersonWithAgeField.cs">
       <Link>Fakes\PersonWithAgeField.cs</Link>
     </Compile>
@@ -434,9 +431,6 @@
     </Compile>
     <Compile Include="..\Nancy.Tests\Unit\NancyMiddlewareFixture.cs">
       <Link>Unit\NancyMiddlewareFixture.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Tests\Unit\LegacyNancyModuleFixture.cs">
-      <Link>Unit\LegacyNancyModuleFixture.cs</Link>
     </Compile>
     <Compile Include="..\Nancy.Tests\Unit\NancyModuleFixture.cs">
       <Link>Unit\NancyModuleFixture.cs</Link>

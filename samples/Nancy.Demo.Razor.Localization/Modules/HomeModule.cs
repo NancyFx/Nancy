@@ -2,20 +2,19 @@
 {
     using System.Globalization;
 
-    public class HomeModule : LegacyNancyModule
+    public class HomeModule : NancyModule
     {
         public HomeModule()
         {
+            Get("/", args => View["Index"]);
 
-            Get["/"] = parameters => View["Index"];
+            Get("/cultureview", args => View["CultureView"]);
 
-            Get["/cultureview"] = parameters => View["CultureView"];
-
-            Get["/cultureviewgerman"] = parameters =>
-                                        {
-                                            this.Context.Culture = new CultureInfo("de-DE");
-                                            return View["CultureView"];
-                                        };
+            Get("/cultureviewgerman", args =>
+            {
+                this.Context.Culture = new CultureInfo("de-DE");
+                return View["CultureView"];
+            });
         }
     }
 }

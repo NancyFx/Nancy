@@ -3,11 +3,11 @@
     using System.Collections.Generic;
     using Nancy.Owin;
 
-    public class MainModule : LegacyNancyModule
+    public class MainModule : NancyModule
     {
         public MainModule()
         {
-            Get[""] = Root;
+            Get("", args => Root(args));
         }
 
         private object Root(dynamic o)

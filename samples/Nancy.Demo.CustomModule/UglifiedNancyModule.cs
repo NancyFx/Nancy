@@ -6,7 +6,6 @@
     using System.Reflection;
     using System.Threading;
     using System.Threading.Tasks;
-
     using Nancy.ModelBinding;
     using Nancy.Responses.Negotiation;
     using Nancy.Routing;
@@ -101,9 +100,9 @@
 
                 var filter = this.GetFilter(method.Name);
 
-                var fullPath = String.Concat(this.ModulePath, attribute.Path);
+                var fullPath = string.Concat(this.ModulePath, attribute.Path);
 
-                routes.Add(new Route(attribute.Method.ToUpper(), fullPath, filter, routeDelegate));
+                routes.Add(new Route<object>(attribute.Method.ToUpper(), fullPath, filter, routeDelegate));
             }
 
             return routes.AsReadOnly();
