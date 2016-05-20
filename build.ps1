@@ -17,10 +17,7 @@ function Restore-Packages
 
 function Test-Projects
 {
-    param([string] $framework)
     & dotnet test;
-    #& dotnet test -f $framework;
-
     if($LASTEXITCODE -ne 0)
     {
       exit 3
@@ -44,7 +41,7 @@ Get-ChildItem -Path . -Filter *.xproj -Recurse | ForEach-Object { Restore-Packag
 Write-Host "Running tests"
 Get-ChildItem -Path .\test -Filter *.xproj -Exclude Nancy.ViewEngines.Razor.Tests.Models.xproj -Recurse | ForEach-Object {
     Push-Location $_.DirectoryName
-    Test-Projects "netcoreapp1.0"
+    Test-Projects
     Pop-Location
 }
 
