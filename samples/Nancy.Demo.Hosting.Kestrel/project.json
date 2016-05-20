@@ -14,6 +14,8 @@
                 "Microsoft.AspNetCore.Hosting": "1.0.0-rc2-final",
                 "Microsoft.AspNetCore.Server.Kestrel": "1.0.0-rc2-final",
                 "Microsoft.AspNetCore.Owin": "1.0.0-rc2-final",
+                "Microsoft.Extensions.Configuration.Binder":"1.0.0-rc2-final",
+                "Microsoft.Extensions.Configuration.Json":"1.0.0-rc2-final",
                 "Microsoft.NETCore.App": {
                     "type": "platform",
                     "version": "1.0.0-rc2-3002702"

@@ -1,17 +1,17 @@
 namespace Nancy.Demo.Hosting.Kestrel
 {
+    using System.IO;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
-    using Microsoft.AspNetCore.Http;
-    using Nancy.Owin;
     
     public class Program
     {
         public static void Main(string[] args)
         {
             var host = new WebHostBuilder()
+                .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseKestrel()
-                .Configure(app => app.UseOwin(x => x.UseNancy()))
+                .UseStartup<Startup>()
                 .Build();
 
             host.Run();
