@@ -70,22 +70,7 @@
         /// <returns>Async pipeline item instance</returns>
         protected override PipelineItem<Func<NancyContext, CancellationToken, Task<Response>>> Wrap(PipelineItem<Func<NancyContext, Response>> pipelineItem)
         {
-            var syncDelegate = pipelineItem.Delegate;
-            Func<NancyContext, CancellationToken, Task<Response>> asyncDelegate = (ctx, ct) =>
-            {
-                var tcs = new TaskCompletionSource<Response>();
-                try
-                {
-                    var result = syncDelegate.Invoke(ctx);
-                    tcs.SetResult(result);
-                }
-                catch (Exception e)
-                {
-                    tcs.SetException(e);
-                }
-                return tcs.Task;
-            };
-            return new PipelineItem<Func<NancyContext, CancellationToken, Task<Response>>>(pipelineItem.Name, asyncDelegate);
+            return new PipelineItem<Func<NancyContext, CancellationToken, Task<Response>>>(pipelineItem.Name, (ctx, ct) => Task.FromResult(pipelineItem.Delegate(ctx)));
         }
     }
 }
