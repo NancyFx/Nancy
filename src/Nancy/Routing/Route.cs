@@ -102,7 +102,15 @@
         /// <returns>A (hot) task of <see cref="Response"/> instance.</returns>
         public override Task<object> Invoke(DynamicDictionary parameters, CancellationToken cancellationToken)
         {
-            return this.Action.Invoke(parameters, cancellationToken).ContinueWith<object>(t => t.Result, TaskContinuationOptions.OnlyOnRanToCompletion);
+            var task = this.Action.Invoke(parameters, cancellationToken);
+
+            var tcs = new TaskCompletionSource<object>();
+
+            task.ContinueWith(t => tcs.SetResult(t.Result), TaskContinuationOptions.OnlyOnRanToCompletion);
+            task.ContinueWith(t => tcs.SetException(t.Exception.InnerExceptions), TaskContinuationOptions.OnlyOnFaulted);
+            task.ContinueWith(t => tcs.SetCanceled(), TaskContinuationOptions.OnlyOnCanceled);
+
+            return tcs.Task;
         }
     }
 }

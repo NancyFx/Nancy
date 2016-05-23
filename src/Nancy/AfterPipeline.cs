@@ -67,22 +67,11 @@ namespace Nancy
         /// <returns>Async pipeline item instance</returns>
         protected override PipelineItem<Func<NancyContext, CancellationToken, Task>> Wrap(PipelineItem<Action<NancyContext>> pipelineItem)
         {
-            var syncDelegate = pipelineItem.Delegate;
-            Func<NancyContext, CancellationToken, Task> asyncDelegate = (ctx, ct) =>
+            return new PipelineItem<Func<NancyContext, CancellationToken, Task>>(pipelineItem.Name, (ctx, ct) =>
             {
-                try
-                {
-                    syncDelegate.Invoke(ctx);
-                    return completeTask;
-                }
-                catch (Exception e)
-                {
-                    var tcs = new TaskCompletionSource<object>();
-                    tcs.SetException(e);
-                    return tcs.Task;
-                }
-            };
-            return new PipelineItem<Func<NancyContext, CancellationToken, Task>>(pipelineItem.Name, asyncDelegate);
+                pipelineItem.Delegate(ctx);
+                return TaskHelpers.CompletedTask;
+            });
         }
     }
 }
