@@ -5,7 +5,7 @@ function Install-Dotnet
   if(($LASTEXITCODE -ne 0) -Or ((Test-Path Env:\APPVEYOR) -eq $true))
   {
     Write-Host "Dotnet CLI not found - downloading latest version"
-    & { iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/scripts/obtain/install.ps1')) }
+    & { iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/scripts/obtain/dotnet-install.ps1')) }
   }
 }
 
