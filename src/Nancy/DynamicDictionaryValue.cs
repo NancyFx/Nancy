@@ -7,11 +7,24 @@
     using System.Linq.Expressions;
 
     using Microsoft.CSharp.RuntimeBinder;
+    using Nancy.Json;
     using Nancy.Routing.Trie.Nodes;
 
     public class DynamicDictionaryValue : DynamicObject, IEquatable<DynamicDictionaryValue>, IHideObjectMembers, IConvertible
     {
         private readonly object value;
+
+        protected static string FullDateTimeWithOffset = @"yyyy-MM-dd\THH:mm:ss.fffffffzzz";
+        protected static string FullDateTimeUtc = @"yyyy-MM-dd\THH:mm:ss.fffffff\Z";
+
+        private static readonly string[] Iso8601Format = new string[]
+        {
+            FullDateTimeWithOffset,
+            @"yyyy-MM-dd\THH:mm:ss.FFFFFFFK",
+            FullDateTimeUtc,
+            @"yyyy-MM-dd\THH:mm:ss\Z",
+            @"yyyy-MM-dd\THH:mm:ssK"
+        };
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DynamicDictionaryValue"/> class.
@@ -72,8 +85,9 @@
         /// </summary>
         /// <typeparam name="T">When no default value is supplied, required to supply the default type</typeparam>
         /// <param name="defaultValue">Optional parameter for default value, if not given it returns default of type T</param>
+        /// <param name="jsonConfiguration">The <see cref="JsonConfiguration"/> to use to read how to parse <see cref="DateTime"/></param>
         /// <returns>If value is not null, value is returned, else default value is returned</returns>
-        public T TryParse<T>(T defaultValue = default (T))
+        public T TryParse<T>(T defaultValue = default (T), JsonConfiguration jsonConfiguration = null)
         {
             if (this.HasValue)
             {
@@ -91,14 +105,8 @@
                     var stringValue = value as string;
                     if (parseType == typeof(DateTime))
                     {
-                        DateTime result;
-
-                        if (DateTime.TryParse(stringValue, CultureInfo.InvariantCulture, DateTimeStyles.None, out result))
-                        {
-                            return (T)((object)result);
-                        }
-
-                        return defaultValue;
+                        jsonConfiguration = jsonConfiguration ?? JsonConfiguration.Default;
+                        return (T)(object)DateTime.ParseExact(stringValue, Iso8601Format, CultureInfo.InvariantCulture, jsonConfiguration.DateTimeStyleConversion);
                     }
 
                     if (stringValue != null)
