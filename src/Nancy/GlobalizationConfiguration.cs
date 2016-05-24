@@ -13,21 +13,31 @@
         /// <summary>
         /// A default instance of the <see cref="GlobalizationConfiguration"/> class
         /// </summary>
-        public static readonly GlobalizationConfiguration Default = new GlobalizationConfiguration(supportedCultureNames: new[] { CultureInfo.CurrentCulture.Name }, defaultCulture: CultureInfo.CurrentCulture.Name);
+        public static readonly GlobalizationConfiguration Default = new GlobalizationConfiguration
+        {
+            SupportedCultureNames = new[] { CultureInfo.CurrentCulture.Name },
+            DefaultCulture = CultureInfo.CurrentCulture.Name,
+            DateTimeStyles = DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal
+        };
+
+        private GlobalizationConfiguration()
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GlobalizationConfiguration"/> class
         /// </summary>
         /// <param name="supportedCultureNames">An array of supported cultures</param>
         /// <param name="defaultCulture">The default culture of the application</param>
-        public GlobalizationConfiguration(IEnumerable<string> supportedCultureNames, string defaultCulture = null)
+        /// <param name="dateTimeStyles">The <see cref="DateTimeStyles"/> that should be used for date parsing.</param>
+        public GlobalizationConfiguration(IEnumerable<string> supportedCultureNames, string defaultCulture = null, DateTimeStyles? dateTimeStyles = null)
         {
             if (supportedCultureNames == null)
             {
                 throw new ConfigurationException("Invalid Globalization configuration. You must support at least one culture");
             }
 
-            supportedCultureNames = supportedCultureNames.Where(cultureName => !string.IsNullOrEmpty(cultureName));
+            supportedCultureNames = supportedCultureNames.Where(cultureName => !string.IsNullOrEmpty(cultureName)).ToArray();
 
             if (!supportedCultureNames.Any())
             {
@@ -44,18 +54,24 @@
                 throw new ConfigurationException("Invalid Globalization configuration. " + defaultCulture + " does not exist in the supported culture names");
             }
 
-            this.SupportedCultureNames = supportedCultureNames;
+            this.DateTimeStyles = dateTimeStyles ?? Default.DateTimeStyles;
             this.DefaultCulture = defaultCulture;
+            this.SupportedCultureNames = supportedCultureNames;
         }
 
         /// <summary>
-        /// A set of supported cultures
+        /// The <see cref="DateTimeStyles"/> that should be used for date parsing.
         /// </summary>
-        public IEnumerable<string> SupportedCultureNames { get; private set; }
+        public DateTimeStyles DateTimeStyles { get; private set; }
 
         /// <summary>
         /// The default culture for the application
         /// </summary>
         public string DefaultCulture { get; private set; }
+
+        /// <summary>
+        /// A set of supported cultures
+        /// </summary>
+        public IEnumerable<string> SupportedCultureNames { get; private set; }
     }
 }

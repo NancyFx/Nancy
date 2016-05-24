@@ -3,11 +3,8 @@
     using System;
     using System.Dynamic;
     using System.Globalization;
-
     using FakeItEasy;
-
     using Xunit;
-    using Xunit.Extensions;
 
     public class DynamicDictionaryValueFixture
     {
@@ -984,6 +981,38 @@
 
             //Then
             Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_adjust_to_universal_time_when_globalizationconfiguration_datetimestyles_requires_it()
+        {
+            // Given
+            var expected = new DateTime(2016, 05, 24, 08, 41, 37, DateTimeKind.Utc);
+
+            var config = new GlobalizationConfiguration(new [] {"en-US"}, dateTimeStyles: DateTimeStyles.AdjustToUniversal);
+            var value = new DynamicDictionaryValue("2016-05-24T10:41:37+02:00", config);
+
+            // When
+            DateTime actual = value;
+
+            // Then
+            actual.ShouldEqual(expected);
+        }
+
+        [Fact]
+        public void Should_assume_local_time_when_globalizationconfiguration_datetimestyles_requires_it()
+        {
+            // Given
+            var expected = DateTime.Now;
+
+            var config = new GlobalizationConfiguration(new[] { "en-US" }, dateTimeStyles: DateTimeStyles.AssumeLocal);
+            var value = new DynamicDictionaryValue(expected.ToString("O"), config);
+
+            // When
+            DateTime actual = value;
+
+            // Then
+            actual.ShouldEqual(expected);
         }
 
         [Fact]
