@@ -30,6 +30,7 @@ namespace Nancy.Tests.Unit.ModelBinding
         {
             var environment = new DefaultNancyEnvironment();
             environment.AddValue(JsonConfiguration.Default);
+            environment.AddValue(GlobalizationConfiguration.Default);
 
             this.passthroughNameConverter = A.Fake<IFieldNameConverter>();
             A.CallTo(() => this.passthroughNameConverter.Convert(null)).WithAnyArguments()
@@ -1559,7 +1560,7 @@ namespace Nancy.Tests.Unit.ModelBinding
                 new DefaultNancyEnvironment();
 
             envionment.AddValue(JsonConfiguration.Default);
-
+            envionment.AddValue(GlobalizationConfiguration.Default);
             return envionment;
         }
 

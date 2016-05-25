@@ -561,27 +561,27 @@ namespace Nancy.Json.Simple
             return success;
         }
 
-        public static object DeserializeObject(string json, Type type, IJsonSerializerStrategy jsonSerializerStrategy)
+        public static object DeserializeObject(string json, Type type, IJsonSerializerStrategy jsonSerializerStrategy, DateTimeStyles dateTimeStyles)
         {
             object jsonObject = DeserializeObject(json);
             return type == null || jsonObject != null && ReflectionUtils.IsAssignableFrom(jsonObject.GetType(), type)
                 ? jsonObject
-                : (jsonSerializerStrategy ?? CurrentJsonSerializerStrategy).DeserializeObject(jsonObject, type);
+                : (jsonSerializerStrategy ?? CurrentJsonSerializerStrategy).DeserializeObject(jsonObject, type, dateTimeStyles);
         }
 
-        public static object DeserializeObject(string json, Type type)
+        public static object DeserializeObject(string json, Type type, DateTimeStyles dateTimeStyles)
         {
-            return DeserializeObject(json, type, null);
+            return DeserializeObject(json, type, null, dateTimeStyles);
         }
 
-        public static T DeserializeObject<T>(string json, IJsonSerializerStrategy jsonSerializerStrategy)
+        public static T DeserializeObject<T>(string json, IJsonSerializerStrategy jsonSerializerStrategy, DateTimeStyles dateTimeStyles)
         {
-            return (T)DeserializeObject(json, typeof(T), jsonSerializerStrategy);
+            return (T)DeserializeObject(json, typeof(T), jsonSerializerStrategy, dateTimeStyles);
         }
 
         public static T DeserializeObject<T>(string json)
         {
-            return (T)DeserializeObject(json, typeof(T), null);
+            return (T)DeserializeObject(json, typeof(T), null, DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal);
         }
 
         /// <summary>
@@ -1222,7 +1222,7 @@ namespace Nancy.Json.Simple
     {
         [SuppressMessage("Microsoft.Design", "CA1007:UseGenericsWhereAppropriate", Justification="Need to support .NET 2")]
         bool TrySerializeNonPrimitiveObject(object input, out object output);
-        object DeserializeObject(object value, Type type);
+        object DeserializeObject(object value, Type type, DateTimeStyles dateTimeStyles);
 
         string MapDictionaryKeyToFieldName(string stringKey);
     }
@@ -1326,7 +1326,7 @@ namespace Nancy.Json.Simple
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        public virtual object DeserializeObject(object value, Type type)
+        public virtual object DeserializeObject(object value, Type type, DateTimeStyles dateTimeStyles)
         {
             if (type == null) throw new ArgumentNullException("type");
             string str = value as string;
@@ -1344,9 +1344,9 @@ namespace Nancy.Json.Simple
                 if (str.Length != 0) // We know it can't be null now.
                 {
                     if (type == typeof(DateTime) || (ReflectionUtils.IsNullableType(type) && Nullable.GetUnderlyingType(type) == typeof(DateTime)))
-                        return DateTime.ParseExact(str, Iso8601Format, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal);
+                        return DateTime.ParseExact(str, Iso8601Format, CultureInfo.InvariantCulture, dateTimeStyles);
                     if (type == typeof(DateTimeOffset) || (ReflectionUtils.IsNullableType(type) && Nullable.GetUnderlyingType(type) == typeof(DateTimeOffset)))
-                        return DateTimeOffset.ParseExact(str, Iso8601Format, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal);
+                        return DateTimeOffset.ParseExact(str, Iso8601Format, CultureInfo.InvariantCulture, dateTimeStyles);
                     if (type == typeof(Guid) || (ReflectionUtils.IsNullableType(type) && Nullable.GetUnderlyingType(type) == typeof(Guid)))
                         return new Guid(str);
                     if (type == typeof(Uri))
@@ -1410,7 +1410,7 @@ namespace Nancy.Json.Simple
                         IDictionary dict = (IDictionary)ConstructorCache[genericType]();
 
                         foreach (KeyValuePair<string, object> kvp in jsonObject)
-                            dict.Add(kvp.Key, this.DeserializeObject(kvp.Value, valueType));
+                            dict.Add(kvp.Key, this.DeserializeObject(kvp.Value, valueType, dateTimeStyles));
 
                         obj = dict;
                     }
@@ -1426,7 +1426,7 @@ namespace Nancy.Json.Simple
                                 object jsonValue;
                                 if (jsonObject.TryGetValue(setter.Key, out jsonValue))
                                 {
-                                    jsonValue = this.DeserializeObject(jsonValue, setter.Value.Key);
+                                    jsonValue = this.DeserializeObject(jsonValue, setter.Value.Key, dateTimeStyles);
                                     setter.Value.Value(obj, jsonValue);
                                 }
                             }
@@ -1446,14 +1446,14 @@ namespace Nancy.Json.Simple
                             list = (IList)ConstructorCache[type](jsonObject.Count);
                             int i = 0;
                             foreach (object o in jsonObject)
-                                list[i++] = this.DeserializeObject(o, type.GetElementType());
+                                list[i++] = this.DeserializeObject(o, type.GetElementType(), dateTimeStyles);
                         }
                         else if (ReflectionUtils.IsTypeGenericeCollectionInterface(type) || ReflectionUtils.IsAssignableFrom(typeof(IList), type))
                         {
                             Type innerType = ReflectionUtils.GetGenericListElementType(type);
                             list = (IList)(ConstructorCache[type] ?? ConstructorCache[typeof(List<>).MakeGenericType(innerType)])(jsonObject.Count);
                             foreach (object o in jsonObject)
-                                list.Add(this.DeserializeObject(o, innerType));
+                                list.Add(this.DeserializeObject(o, innerType, dateTimeStyles));
                         }
                         obj = list;
                     }

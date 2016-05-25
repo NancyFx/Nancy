@@ -141,6 +141,7 @@ namespace Nancy.Testing.Tests
                 displayErrorTraces: true);
 
             environment.Json();
+            environment.Cultures(new []{"en-US"});
 
             return environment;
         }
