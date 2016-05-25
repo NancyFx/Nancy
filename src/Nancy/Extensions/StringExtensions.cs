@@ -62,7 +62,7 @@ namespace Nancy.Extensions
         public static DynamicDictionary AsQueryDictionary(this string queryString)
         {
             var coll = HttpUtility.ParseQueryString(queryString);
-            var ret = new DynamicDictionary();
+            var ret = new DynamicDictionary(GlobalizationConfiguration.Default);
 
             var found = 0;
             foreach (var key in coll.AllKeys.Where(key => key != null))

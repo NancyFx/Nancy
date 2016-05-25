@@ -17,6 +17,7 @@
         private readonly IRouteCache routeCache;
         private readonly IRouteResolverTrie trie;
         private readonly Lazy<RouteConfiguration> configuration;
+        private readonly GlobalizationConfiguration globalizationConfiguraton;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultRouteResolver"/> class, using
@@ -35,6 +36,7 @@
             this.routeCache = routeCache;
             this.trie = trie;
             this.configuration = new Lazy<RouteConfiguration>(environment.GetValue<RouteConfiguration>);
+            this.globalizationConfiguraton = environment.GetValue<GlobalizationConfiguration>();
 
             this.BuildTrie();
         }
@@ -127,7 +129,7 @@
             context.NegotiationContext.SetModule(associatedModule);
 
             var route = associatedModule.Routes.ElementAt(result.RouteIndex);
-            var parameters = DynamicDictionary.Create(result.Parameters);
+            var parameters = DynamicDictionary.Create(result.Parameters, this.globalizationConfiguraton);
 
             return new ResolveResult
             {

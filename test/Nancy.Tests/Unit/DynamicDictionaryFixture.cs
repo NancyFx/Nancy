@@ -32,7 +32,7 @@ namespace Nancy.Tests.Unit
             };
 
             // When
-            dynamic instance = DynamicDictionary.Create(values);
+            dynamic instance = DynamicDictionary.Create(values, GlobalizationConfiguration.Default);
 
             // Then
             ((int)GetIntegerValue(instance.foo)).ShouldEqual(10);
@@ -283,8 +283,8 @@ namespace Nancy.Tests.Unit
         public void Should_implicitly_cast_to_datetime_when_value_is_string_and_is_retrieved_as_member()
         {
             // Given
-            var date = DateTime.Now;
-            this.dictionary.value = date.ToString();
+            var date = new DateTime(2016, 05, 25, 10, 0, 05, DateTimeKind.Utc);
+            this.dictionary.value = date.ToString("O");
 
             // When
             DateTime result = GetDateTimeValue(this.dictionary.value);
@@ -297,8 +297,8 @@ namespace Nancy.Tests.Unit
         public void Should_implicitly_cast_to_datetime_when_value_is_string_and_is_retrieved_as_index()
         {
             // Given
-            var date = DateTime.Now;
-            this.dictionary.value = date.ToString();
+            var date = new DateTime(2016, 05, 25, 10, 0, 05, DateTimeKind.Utc);
+            this.dictionary.value = date.ToString("O");
 
             // When
             DateTime result = GetDateTimeValue(this.dictionary["value"]);
@@ -795,7 +795,7 @@ namespace Nancy.Tests.Unit
         public void String_dictionary_values_are_Json_serialized_as_strings()
         {
             dynamic value = "42";
-            var input = new DynamicDictionaryValue(value);
+            var input = new DynamicDictionaryValue(value, GlobalizationConfiguration.Default);
 
             var sut = new JavaScriptSerializer();
             var actual = sut.Serialize(input);
@@ -807,7 +807,7 @@ namespace Nancy.Tests.Unit
         public void Integer_dictionary_values_are_Json_serialized_as_integers()
         {
             dynamic value = 42;
-            var input = new DynamicDictionaryValue(value);
+            var input = new DynamicDictionaryValue(value, GlobalizationConfiguration.Default);
 
             var sut = new JavaScriptSerializer();
             var actual = sut.Serialize(input);
@@ -1120,7 +1120,7 @@ namespace Nancy.Tests.Unit
             input.Remove("a-b-c");
 
             //then
-            input.ContainsKey("abc").ShouldBeFalse();           
+            input.ContainsKey("abc").ShouldBeFalse();
         }
 
         [Fact]
