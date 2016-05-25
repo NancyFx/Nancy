@@ -72,7 +72,7 @@
             var environment = GetTestableEnvironment(x =>
             {
                 x.Json(retainCasing: true);
-                x.Cultures(new []{ "en-US" });
+                x.Globalization(new []{ "en-US" });
             });
             var serializer = new DefaultJsonSerializer(environment);
 
@@ -118,7 +118,7 @@
             return GetTestableEnvironment(env =>
             {
                 env.Json();
-                env.Cultures(new []{"en-US"});
+                env.Globalization(new []{"en-US"});
             });
         }
 

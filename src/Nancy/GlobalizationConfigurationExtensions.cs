@@ -17,7 +17,7 @@
         /// <param name="defaultCulture">Used to set a default culture for the application</param>
         /// <param name="dateTimeStyles">The <see cref="DateTimeStyles"/> that should be used for date parsing.</param>
         /// <remarks>If defaultCulture not specified the first supported culture is used</remarks>
-        public static void Cultures(this INancyEnvironment environment, IEnumerable<string> supportedCultureNames, string defaultCulture = null, DateTimeStyles? dateTimeStyles = null)
+        public static void Globalization(this INancyEnvironment environment, IEnumerable<string> supportedCultureNames, string defaultCulture = null, DateTimeStyles? dateTimeStyles = null)
         {
             environment.AddValue(new GlobalizationConfiguration(
                 supportedCultureNames: supportedCultureNames,

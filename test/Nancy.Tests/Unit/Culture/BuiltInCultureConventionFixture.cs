@@ -309,7 +309,7 @@
 
             //When
             var environment = new DefaultNancyEnvironment();
-            environment.Cultures(new[] { "en-US" }, defaultCulture: null);
+            environment.Globalization(new[] { "en-US" }, defaultCulture: null);
             var culture = BuiltInCultureConventions.GlobalizationConfigurationCulture(context, environment.GetValue<GlobalizationConfiguration>());
 
             //Then
@@ -324,7 +324,7 @@
 
             //When
             var environment = new DefaultNancyEnvironment();
-            var exception = Record.Exception(() => environment.Cultures(new[] { "en-GB" }, defaultCulture: "quz-EC"));
+            var exception = Record.Exception(() => environment.Globalization(new[] { "en-GB" }, defaultCulture: "quz-EC"));
 
             //Then
             exception.ShouldBeOfType<ConfigurationException>();
@@ -335,7 +335,7 @@
         {
             //Given, When
             var environment = new DefaultNancyEnvironment();
-            var exception = Record.Exception(() => environment.Cultures(Enumerable.Empty<string>()));
+            var exception = Record.Exception(() => environment.Globalization(Enumerable.Empty<string>()));
 
             //Then
             exception.ShouldBeOfType<ConfigurationException>();
@@ -346,7 +346,7 @@
         {
             //Given, When
             var environment = new DefaultNancyEnvironment();
-            var exception = Record.Exception(() => environment.Cultures(new []{""}));
+            var exception = Record.Exception(() => environment.Globalization(new []{""}));
 
             //Then
             exception.ShouldBeOfType<ConfigurationException>();
@@ -357,7 +357,7 @@
         {
             //Given, When
             var environment = new DefaultNancyEnvironment();
-            var exception = Record.Exception(() => environment.Cultures(null));
+            var exception = Record.Exception(() => environment.Globalization(null));
 
             //Then
             exception.ShouldBeOfType<ConfigurationException>();
@@ -432,7 +432,7 @@
             var request = new Request("GET", new Url { Path = path, Scheme = "http" }, null, cultureHeaders);
             context.Request = request;
             var environment = new DefaultNancyEnvironment();
-            environment.Cultures(new[] { "en-US" }, "en-US");
+            environment.Globalization(new[] { "en-US" }, "en-US");
             context.Environment = environment;
             return context;
         }

@@ -108,7 +108,7 @@
                 configuration =>
                 {
                     configuration.Configure(
-                        environment => environment.Cultures(supportedCultureNames: new[] { "en-US" }, dateTimeStyles: DateTimeStyles.AssumeLocal));
+                        environment => environment.Globalization(supportedCultureNames: new[] { "en-US" }, dateTimeStyles: DateTimeStyles.AssumeLocal));
                     configuration.Modules(new Type[] { typeof(SerializerTestModule) });
                 });
 
