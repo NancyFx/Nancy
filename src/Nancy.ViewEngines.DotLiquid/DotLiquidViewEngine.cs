@@ -51,7 +51,7 @@
         }
 
         /// <summary>
-        /// Initialise the view engine (if necessary)
+        /// Initialize the view engine (if necessary)
         /// </summary>
         /// <param name="viewEngineStartupContext">Startup context</param>
         public void Initialize(ViewEngineStartupContext viewEngineStartupContext)
@@ -100,13 +100,15 @@
                 status = HttpStatusCode.InternalServerError;
 
                 // Build the error message
-                String errorMessage = String.Format("Syntax error in liquid view '{0}':\r\n\r\n{1}",
-                    String.Format("{0}/{1}.{2}", viewLocationResult.Location, viewLocationResult.Name, viewLocationResult.Extension),
+                var errorMessage = string.Format("Syntax error in liquid view <strong>'{0}'</strong><br/><br/>{1}",
+                    string.Format("{0}/{1}.{2}", viewLocationResult.Location, viewLocationResult.Name, viewLocationResult.Extension),
                     syntaxException.Message);
 
                 // Create the error model with a Nancy DynamicDictionary because i can ;)
-                DynamicDictionary errorModel = new DynamicDictionary();
-                errorModel.Add(new KeyValuePair<string, dynamic>("ErrorMessage", errorMessage));
+                var errorModel = new DynamicDictionary
+                {
+                    new KeyValuePair<string, dynamic>("ErrorMessage", errorMessage)
+                };
 
                 // Hash up the Error model so DotLiquid will understand it
                 hashedModel =
@@ -116,18 +118,20 @@
                     });
 
                 // Grab the error HTML from the embedded resource and build up the DotLiquid template.
-                String errorHtml = LoadResource(@"500.liquid");
+                var errorHtml = LoadResource(@"500.liquid");
                 parsed = Template.Parse(errorHtml);
             }
             catch (Exception ex)
             {
                 status = HttpStatusCode.InternalServerError;
                 // Build the error message
-                String errorMessage = String.Format("Error: {0}", ex.Message);
+                var errorMessage = string.Format("Error: {0}", ex.Message);
 
                 // Create the error model with a Nancy DynamicDictionary because i can ;)
-                DynamicDictionary errorModel = new DynamicDictionary();
-                errorModel.Add(new KeyValuePair<string, dynamic>("ErrorMessage", errorMessage));
+                var errorModel = new DynamicDictionary
+                {
+                    new KeyValuePair<string, dynamic>("ErrorMessage", errorMessage)
+                };
 
                 // Hash up the Error model so DotLiquid will understand it
                 hashedModel =
@@ -137,7 +141,7 @@
                     });
 
                 // Grab the error HTML from the embedded resource
-                String errorHtml = LoadResource(@"500.liquid");
+                var errorHtml = LoadResource(@"500.liquid");
                 parsed = Template.Parse(errorHtml);
             }
 
@@ -154,7 +158,7 @@
 
         private static string LoadResource(string filename)
         {
-            var resourceStream = typeof(DotLiquidViewEngine).Assembly.GetManifestResourceStream(String.Format("Nancy.ViewEngines.DotLiquid.Resources.{0}", filename));
+            var resourceStream = typeof(DotLiquidViewEngine).Assembly.GetManifestResourceStream(string.Format("Nancy.ViewEngines.DotLiquid.Resources.{0}", filename));
 
             if (resourceStream == null)
             {

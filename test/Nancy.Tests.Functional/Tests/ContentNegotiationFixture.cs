@@ -586,7 +586,7 @@ namespace Nancy.Tests.Functional.Tests
 
             // Then
             Assert.NotNull(result);
-            Assert.Contains("Unable to locate view", result.ToString());
+            Assert.Contains("Unable to locate requested view", result.ToString());
         }
 
         [Fact]
@@ -653,7 +653,7 @@ namespace Nancy.Tests.Functional.Tests
             var result = await RecordAsync.Exception(() => browser.Get("/invalid-view-name"));
 
             // Then
-            Assert.True(result.ToString().Contains("Unable to locate view"));
+            Assert.True(result.ToString().Contains("Unable to locate requested view"));
         }
 
         [Fact]
