@@ -260,8 +260,8 @@
                 HostName = request.Url.Host,
                 Port = request.Url.IsDefaultPort ? null : (int?)request.Url.Port,
                 BasePath = baseUri.AbsolutePath.TrimEnd('/'),
-                Path = HttpUtility.UrlDecode(relativeUrl),
-                Query = request.Url.Query,
+                Path = relativeUrl,
+                Query = request.Url.Query
             };
 
             byte[] certificate = null;
