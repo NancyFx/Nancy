@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -252,7 +253,19 @@
                 return;
             }
 
-            handler.Handle(context.Response.StatusCode, context);
+            try
+            {
+                handler.Handle(context.Response.StatusCode, context);
+            }
+            catch (Exception ex)
+            {
+                if (defaultHandler == null)
+                {
+                    throw;
+                }
+
+                defaultHandler.Handle(context.Response.StatusCode, context);
+            }
         }
 
         private async Task<NancyContext> InvokeRequestLifeCycle(NancyContext context, CancellationToken cancellationToken, IPipelines pipelines)

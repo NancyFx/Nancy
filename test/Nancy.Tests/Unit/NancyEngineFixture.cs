@@ -340,6 +340,53 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
+        public async Task Should_catch_exception_inside_status_code_handler_and_return_default_error_response()
+        {
+            // Given
+            A.CallTo(() => this.requestDispatcher.Dispatch(A<NancyContext>.Ignored, A<CancellationToken>.Ignored))
+                .Returns(new Response() { StatusCode = HttpStatusCode.InternalServerError });
+
+            var statusCodeHandlers = new[]
+            {
+                this.statusCodeHandler,
+                new DefaultStatusCodeHandler(this.negotiator, this.environment),
+            };
+
+            var engine =
+                new NancyEngine(this.requestDispatcher, this.contextFactory, statusCodeHandlers,
+                    A.Fake<IRequestTracing>(),
+                    new DisabledStaticContentProvider(), this.negotiator, this.environment)
+                {
+                    RequestPipelinesFactory = ctx => new Pipelines()
+                };
+
+            var request = new Request("GET", "/", "http");
+
+            A.CallTo(() => this.statusCodeHandler.HandlesStatusCode(A<HttpStatusCode>.Ignored, A<NancyContext>.Ignored)).Returns(true);
+            A.CallTo(() => this.statusCodeHandler.Handle(A<HttpStatusCode>.Ignored, A<NancyContext>.Ignored))
+                .Throws<Exception>();
+
+            // When
+            await engine.HandleRequest(request);
+
+            // Then
+            this.context.Response.StatusCode.ShouldEqual(HttpStatusCode.InternalServerError);
+        }
+
+        [Fact]
+        public async Task Should_throw_exception_if_no_default_status_code_handler_present_when_custom_status_code_handler_throws()
+        {
+            // Given
+            var request = new Request("GET", "/", "http");
+            A.CallTo(() => this.statusCodeHandler.HandlesStatusCode(A<HttpStatusCode>.Ignored, A<NancyContext>.Ignored)).Returns(true);
+            A.CallTo(() => this.statusCodeHandler.Handle(A<HttpStatusCode>.Ignored, A<NancyContext>.Ignored))
+                .Throws<Exception>();
+
+            // When,Then
+            await AssertAsync.Throws<Exception>(async () => await this.engine.HandleRequest(request));
+        }
+
+        [Fact]
         public async Task Should_set_status_code_to_500_if_route_throws()
         {
             // Given
