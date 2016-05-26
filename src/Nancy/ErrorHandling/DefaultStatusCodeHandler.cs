@@ -15,7 +15,7 @@ namespace Nancy.ErrorHandling
     /// </summary>
     public class DefaultStatusCodeHandler : IStatusCodeHandler
     {
-        private const string DisplayErrorTracesFalseMessage = "Error details are currently disabled.<br />To enable it, please set <code>TraceConfiguration.DisplayErrorTraces</code> to true.<br />For example by overriding your Bootstrapper's <code>Configure</code> method and calling <code>environment.Tracing(enabled: false, displayErrorTraces: true);</code>.";
+        private const string DisplayErrorTracesFalseMessage = "Error details are currently disabled.<br />To enable it, please set <strong>TraceConfiguration.DisplayErrorTraces</strong> to <strong>true</strong>.<br />For example by overriding your Bootstrapper's <strong>Configure</strong> method and calling<br/> <strong>environment.Tracing(enabled: false, displayErrorTraces: true);</strong>.";
 
         private readonly IDictionary<HttpStatusCode, string> errorMessages;
         private readonly IDictionary<HttpStatusCode, string> errorPages;
@@ -86,7 +86,11 @@ namespace Nancy.ErrorHandling
             // from swapping a view model with a `DefaultStatusCodeHandlerResult`
             context.NegotiationContext = new NegotiationContext();
 
-            var result = new DefaultStatusCodeHandlerResult(statusCode, this.errorMessages[statusCode], !this.configuration.DisplayErrorTraces ? DisplayErrorTracesFalseMessage : context.GetExceptionDetails());
+            var details = !this.configuration.DisplayErrorTraces
+                ? DisplayErrorTracesFalseMessage
+                : string.Concat("<pre>", context.GetExceptionDetails().Replace("<", "&gt;").Replace(">", "&lt;"), "</pre>");
+
+            var result = new DefaultStatusCodeHandlerResult(statusCode, this.errorMessages[statusCode], details);
             try
             {
                 context.Response = this.responseNegotiator.NegotiateResponse(result, context);

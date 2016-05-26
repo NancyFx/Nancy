@@ -253,11 +253,11 @@
             var lineNumber = 1;
 
             var errorDetails = string.Format(
-                "Error compiling template: <strong>{0}</strong><br/><br/>Errors:<br/>{1}<br/><br/>Details:<br/>{2}<br/><br/>Compilation Source:<br/><pre><code>{3}</code></pre>",
+                "Template: <strong>{0}</strong><br/><br/>Errors:<ul>{1}</ul>Details:<br/><pre>{2}</pre><br/>Compilation Source:<br/><pre><code>{3}</code></pre>",
                 fullTemplateName,
                 errorMessages,
                 templateLines.Aggregate((s1, s2) => s1 + "<br/>" + s2),
-                compilationSource.Aggregate((s1, s2) => s1 + "<br/>Line " + lineNumber++ + ":\t" + s2));
+                compilationSource.Aggregate((s1, s2) => s1 + "<br/><span class='lineNumber'>Line " + lineNumber++ + ":</span>\t" + s2.Replace("<", "&gt;").Replace(">", "&lt;")));
 
             return errorDetails;
         }
@@ -333,10 +333,10 @@
 
                 if (lineNumber > 0)
                 {
-                    templateLines[lineNumber - 1] = string.Format("<span class='error'><a name='{0}' />{1}</span>", lineNumber, templateLines[lineNumber - 1]);
+                    templateLines[lineNumber - 1] = string.Format("<a name='{0}'><span class='error'>{1}</span></a>", lineNumber, templateLines[lineNumber - 1]);
 
                     return string.Format(
-                        "[{0}] Line: {1} Column: {2} - {3} (<a class='LineLink' href='#{1}'>show</a>)",
+                        "<li>[{0}] Line: {1} Column: {2} - {3} (<a href='#{1}'>show</a>)</li>",
                         error.Id,
                         lineNumber,
                         error.Location.GetLineSpan().StartLinePosition.Character,
@@ -348,7 +348,7 @@
             }).Where(x => x != null).ToArray();
 
             return (messages.Any())
-                ? messages.Aggregate((s1, s2) => s1 + "<br/>" + s2)
+                ? string.Join(string.Empty, messages)
                 : string.Empty;
         }
 
