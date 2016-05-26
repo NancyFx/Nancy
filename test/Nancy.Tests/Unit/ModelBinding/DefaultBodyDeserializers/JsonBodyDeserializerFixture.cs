@@ -25,6 +25,7 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
         {
             var environment = new DefaultNancyEnvironment();
             environment.AddValue(JsonConfiguration.Default);
+            environment.AddValue(GlobalizationConfiguration.Default);
 
             this.deserialize = new JsonBodyDeserializer(environment);
 

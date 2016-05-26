@@ -2,6 +2,7 @@ namespace Nancy.Tests.Unit.Json.Simple
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using Nancy.Extensions;
     using Nancy.Json;
     using Nancy.Json.Simple;
@@ -71,7 +72,7 @@ namespace Nancy.Tests.Unit.Json.Simple
             strategy.RegisterConverters(new[] { new DateTimeJavaScriptConverter() });
 
             // When
-            var result = (DateTime)strategy.DeserializeObject(objectToDeserialize, typeof(DateTime));
+            var result = (DateTime)strategy.DeserializeObject(objectToDeserialize, typeof(DateTime), DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal);
 
             // Then
             result.ShouldEqual(expectedValue);

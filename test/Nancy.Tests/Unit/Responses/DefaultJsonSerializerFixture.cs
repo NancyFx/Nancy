@@ -69,7 +69,11 @@
         {
             // Given
             var input = new {FirstName = "Joe", lastName = "Doe"};
-            var environment = GetTestableEnvironment(x => x.Json(retainCasing: true));
+            var environment = GetTestableEnvironment(x =>
+            {
+                x.Json(retainCasing: true);
+                x.Globalization(new []{ "en-US" });
+            });
             var serializer = new DefaultJsonSerializer(environment);
 
             // When
@@ -114,6 +118,7 @@
             return GetTestableEnvironment(env =>
             {
                 env.Json();
+                env.Globalization(new []{"en-US"});
             });
         }
 

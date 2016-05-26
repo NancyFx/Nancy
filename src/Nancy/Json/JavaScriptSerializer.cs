@@ -39,34 +39,44 @@ namespace Nancy.Json
     /// </summary>
     public class JavaScriptSerializer
     {
+        private readonly JsonConfiguration jsonConfiguration;
+
+        private readonly GlobalizationConfiguration globalizationConfiguration;
+
         private readonly NancySerializationStrategy serializerStrategy;
 
         /// <summary>
         /// Creates an instance of <see cref="JavaScriptSerializer"/>
         /// </summary>
-        public JavaScriptSerializer() : this(JsonConfiguration.Default)
+        public JavaScriptSerializer() : this(JsonConfiguration.Default, GlobalizationConfiguration.Default)
         {
         }
 
         /// <summary>
         /// Creates an instance of <see cref="JavaScriptSerializer"/>
         /// </summary>
-        /// <param name="configuration">A <see cref="JsonConfiguration"/> object to configure the serializer</param>
-        public JavaScriptSerializer(JsonConfiguration configuration)
+        /// <param name="jsonConfiguration">A <see cref="JsonConfiguration"/> object to configure the serializer</param>
+        /// <param name="globalizationConfiguration">A <see cref="GlobalizationConfiguration"/> object to configure the serializer</param>
+        public JavaScriptSerializer(JsonConfiguration jsonConfiguration, GlobalizationConfiguration globalizationConfiguration)
         {
-            this.serializerStrategy = new NancySerializationStrategy(configuration.RetainCasing);
+            this.jsonConfiguration = jsonConfiguration;
+            this.globalizationConfiguration = globalizationConfiguration;
+            this.serializerStrategy = new NancySerializationStrategy(jsonConfiguration.RetainCasing);
         }
 
         /// <summary>
         /// Creates an instance of <see cref="JavaScriptSerializer"/>
         /// </summary>
-        /// <param name="configuration">A <see cref="JsonConfiguration"/> object to configure the serializer</param>
+        /// <param name="jsonConfiguration">A <see cref="JsonConfiguration"/> object to configure the serializer</param>
         /// <param name="registerConverters">A boolean to determine whether to register custom converters</param>
-        public JavaScriptSerializer(JsonConfiguration configuration, bool registerConverters) : this(configuration)
+        /// <param name="globalizationConfiguration">A <see cref="GlobalizationConfiguration"/> object to configure the serializer</param>
+        public JavaScriptSerializer(JsonConfiguration jsonConfiguration, bool registerConverters, GlobalizationConfiguration globalizationConfiguration) : this(jsonConfiguration, globalizationConfiguration)
         {
+            this.jsonConfiguration = jsonConfiguration;
+            this.globalizationConfiguration = globalizationConfiguration;
             if (registerConverters)
             {
-                this.RegisterConverters(configuration.Converters, configuration.PrimitiveConverters);
+                this.RegisterConverters(jsonConfiguration.Converters, jsonConfiguration.PrimitiveConverters);
             }
         }
 
@@ -78,7 +88,7 @@ namespace Nancy.Json
         /// <returns>An instance of type <typeparamref name="T"/> representing <paramref name="input"/> as an object</returns>
         public T Deserialize<T>(string input)
         {
-            return SimpleJson.DeserializeObject<T>(input, this.serializerStrategy);
+            return SimpleJson.DeserializeObject<T>(input, this.serializerStrategy, this.globalizationConfiguration.DateTimeStyles);
         }
 
         /// <summary>
@@ -88,7 +98,7 @@ namespace Nancy.Json
         /// <returns>An object representing <paramref name="input"/></returns>
         public object DeserializeObject(string input)
         {
-            return SimpleJson.DeserializeObject(input, null, this.serializerStrategy);
+            return SimpleJson.DeserializeObject(input, null, this.serializerStrategy, this.globalizationConfiguration.DateTimeStyles);
         }
 
         /// <summary>

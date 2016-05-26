@@ -173,6 +173,7 @@
                 displayErrorTraces: true);
 
             environment.Json();
+            environment.Globalization(new []{"en-US"});
 
             return environment;
         }

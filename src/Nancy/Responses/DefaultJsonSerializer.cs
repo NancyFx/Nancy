@@ -15,6 +15,7 @@
     {
         private readonly JsonConfiguration jsonConfiguration;
         private readonly TraceConfiguration traceConfiguration;
+        private readonly GlobalizationConfiguration globalizationConfiguration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultJsonSerializer"/> class,
@@ -25,6 +26,7 @@
         {
             this.jsonConfiguration = environment.GetValue<JsonConfiguration>();
             this.traceConfiguration = environment.GetValue<TraceConfiguration>();
+            this.globalizationConfiguration = environment.GetValue<GlobalizationConfiguration>();
         }
 
         /// <summary>
@@ -57,7 +59,7 @@
         {
             using (var writer = new StreamWriter(new UnclosableStreamWrapper(outputStream)))
             {
-                var serializer = new JavaScriptSerializer(this.jsonConfiguration);
+                var serializer = new JavaScriptSerializer(this.jsonConfiguration, this.globalizationConfiguration);
 
                 serializer.RegisterConverters(this.jsonConfiguration.Converters,
                     this.jsonConfiguration.PrimitiveConverters);

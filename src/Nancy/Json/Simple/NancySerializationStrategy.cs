@@ -72,8 +72,9 @@
         /// </summary>
         /// <param name="value">The object to deserialize</param>
         /// <param name="type">The type of object to deserialize</param>
+        /// <param name="dateTimeStyles">The <see cref="DateTimeStyles"/> ton convert <see cref="DateTime"/> objects</param>
         /// <returns>A instance of <paramref name="type" /> deserialized from <paramref name="value"/></returns>
-        public override object DeserializeObject(object value, Type type)
+        public override object DeserializeObject(object value, Type type, DateTimeStyles dateTimeStyles)
         {
             var typeInfo = type.GetTypeInfo();
             if (typeInfo.IsEnum || (ReflectionUtils.IsNullableType(type) && Nullable.GetUnderlyingType(type).GetTypeInfo().IsEnum))
@@ -96,7 +97,7 @@
             var valueDictionary = value as IDictionary<string, object>;
             if (valueDictionary == null)
             {
-                return base.DeserializeObject(value, type);
+                return base.DeserializeObject(value, type, dateTimeStyles);
             }
 
             var javascriptConverter = this.FindJavaScriptConverter(type);
@@ -107,7 +108,7 @@
 
             if (!typeInfo.IsGenericType)
             {
-                return base.DeserializeObject(value, type);
+                return base.DeserializeObject(value, type, dateTimeStyles);
             }
 
             var genericType = typeInfo.GetGenericTypeDefinition();
@@ -115,7 +116,7 @@
 
             if (genericTypeConverter == null)
             {
-                return base.DeserializeObject(value, type);
+                return base.DeserializeObject(value, type, dateTimeStyles);
             }
 
             var values = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
@@ -124,7 +125,7 @@
             for (var i = 0; i < genericArguments.Length; i++)
             {
                 var deserializedObject = this.DeserializeObject(valueDictionary.Values.ElementAt(i),
-                    genericArguments[i]);
+                    genericArguments[i], dateTimeStyles);
 
                 values.Add(valueDictionary.Keys.ElementAt(i), deserializedObject);
             }

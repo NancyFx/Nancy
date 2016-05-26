@@ -21,6 +21,7 @@ namespace Nancy.Tests.Unit.ModelBinding
         {
             var environment = new DefaultNancyEnvironment();
             environment.AddValue(JsonConfiguration.Default);
+            environment.AddValue(GlobalizationConfiguration.Default);
 
             var bindingDefaults =
                 new BindingDefaults(environment);

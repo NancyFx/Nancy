@@ -88,6 +88,7 @@ namespace Nancy.Tests.Unit
                 new DefaultNancyEnvironment();
 
             envionment.AddValue(JsonConfiguration.Default);
+            envionment.AddValue(GlobalizationConfiguration.Default);
 
             envionment.Tracing(
                 enabled: true,

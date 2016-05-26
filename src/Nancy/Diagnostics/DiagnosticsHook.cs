@@ -118,6 +118,7 @@ namespace Nancy.Diagnostics
             var diagnosticsEnvironment =
                 new DefaultNancyEnvironment();
 
+            diagnosticsEnvironment.Globalization(new[] { "en-US" });
             diagnosticsEnvironment.Json(retainCasing: false);
             diagnosticsEnvironment.AddValue(ViewConfiguration.Default);
             diagnosticsEnvironment.Tracing(

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Globalization;
+    using Nancy.Extensions;
     using Nancy.ModelBinding;
 
     public class SerializerTestModule : NancyModule
@@ -19,6 +20,13 @@
             {
                 var model = new FakeSerializerModel { CreatedOn = new DateTime(2014, 01, 30, 0, 0, 0, DateTimeKind.Utc) };
                 this.BindTo(model);
+                return model;
+            });
+
+            Post("/serializer/date", args =>
+            {
+                var s = this.Request.Body.AsString();
+                var model = this.Bind<FakeSerializerModel>();
                 return model;
             });
         }
