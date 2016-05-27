@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
+    using System.Reflection;
     using global::FluentValidation;
 
     /// <summary>
@@ -47,7 +47,7 @@
                 CreateValidatorType(type);
 
             return this.validators
-                .SingleOrDefault(validator => fullType.IsAssignableFrom(validator.GetType()));
+                .SingleOrDefault(validator => fullType.GetTypeInfo().IsAssignableFrom(validator.GetType()));
         }
 
         private static Type CreateValidatorType(Type type)
