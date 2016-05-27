@@ -181,12 +181,6 @@
     <Compile Include="..\Nancy.Testing\PathHelper.cs">
       <Link>PathHelper.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy.Testing\Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <Link>Properties\Resources.Designer.cs</Link>
-    </Compile>
     <Compile Include="..\Nancy.Testing\QueryWrapper.cs">
       <Link>QueryWrapper.cs</Link>
     </Compile>
@@ -208,18 +202,6 @@
     <EmbeddedResource Include="..\Nancy.Testing\Resources\NancyTestingCert.pfx">
       <Link>Resources\NancyTestingCert.pfx</Link>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="..\Nancy.Testing\Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <Link>Properties\Resources.resx</Link>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

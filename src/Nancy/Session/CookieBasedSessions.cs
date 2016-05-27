@@ -23,10 +23,7 @@ namespace Nancy.Session
         /// <value>Cookie name</value>
         public string CookieName
         {
-            get
-            {
-                return this.currentConfiguration.CookieName;
-            }
+            get { return this.currentConfiguration.CookieName; }
         }
 
         /// <summary>
@@ -61,8 +58,6 @@ namespace Nancy.Session
             }
             this.currentConfiguration = configuration;
         }
-
-
 
         /// <summary>
         /// Initialise and add cookie based session hooks to the application pipeline

@@ -3,12 +3,48 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
+    using System.Reflection;
+    
     /// <summary>
     /// Containing extensions for the <see cref="Type"/> object.
     /// </summary>
     public static class TypeExtensions
     {
+        /// <summary>
+        /// Creates an instance of <paramref name="type"/> and cast it to <typeparamref name="T"/>.
+        /// </summary>
+        /// <param name="type">The type to create an instance of.</param>
+        /// <param name="nonPublic"><see langword="true"/> if a non-public constructor can be used, otherwise <see langword="false"/>.</param>
+        public static T CreateInstance<T>(this Type type, bool nonPublic = false)
+        {
+            if (!typeof(T).GetTypeInfo().IsAssignableFrom(type.GetTypeInfo()))
+            {
+                throw new InvalidOperationException("Unable to create instance of " + type.GetTypeInfo().FullName + "since it can't be cast to " + typeof(T).GetTypeInfo().FullName);
+            }
+
+            return (T)CreateInstance(type, nonPublic);
+        }
+
+        /// <summary>
+        /// Creates an instance of <paramref name="type"/>.
+        /// </summary>
+        /// <param name="type">The type to create an instance of.</param>
+        /// <param name="nonPublic"><see langword="true"/> if a non-public constructor can be used, otherwise <see langword="false"/>.</param>
+        public static object CreateInstance(this Type type, bool nonPublic = false)
+        {
+            return CreateInstanceInternal(type, nonPublic);
+        }
+
+        /// <summary>
+        /// returns the assembly that the type belongs to
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns> The assembly that contains the type </returns>
+        public static Assembly GetAssembly(this Type source)
+        {
+            return source.GetTypeInfo().Assembly;
+        }
+
         /// <summary>
         /// Checks if a type is an array or not
         /// </summary>
@@ -16,7 +52,8 @@
         /// <returns><see langword="true" /> if the type is an array, otherwise <see langword="false" />.</returns>
         public static bool IsArray(this Type source)
         {
-            return source.BaseType == typeof(Array);
+
+            return source.GetTypeInfo().BaseType == typeof(Array);
         }
 
         /// <summary>
@@ -32,11 +69,10 @@
             {
                 return false;
             }
-
             return givenType == genericType
                 || givenType.MapsToGenericTypeDefinition(genericType)
                 || givenType.HasInterfaceThatMapsToGenericTypeDefinition(genericType)
-                || givenType.BaseType.IsAssignableToGenericType(genericType);
+                || givenType.GetTypeInfo().BaseType.IsAssignableToGenericType(genericType);
         }
 
         /// <summary>
@@ -48,9 +84,9 @@
         {
             var collectionType = typeof(ICollection<>);
 
-            return source.IsGenericType && source
+            return source.GetTypeInfo().IsGenericType && source
                 .GetInterfaces()
-                .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == collectionType);
+                .Any(i => i.GetTypeInfo().IsGenericType && i.GetGenericTypeDefinition() == collectionType);
         }
 
         /// <summary>
@@ -62,7 +98,7 @@
         {
             var enumerableType = typeof(IEnumerable<>);
 
-            return source.IsGenericType && source.GetGenericTypeDefinition() == enumerableType;
+            return source.GetTypeInfo().IsGenericType && source.GetGenericTypeDefinition() == enumerableType;
         }
 
         /// <summary>
@@ -80,12 +116,12 @@
 
             var underlyingType = Nullable.GetUnderlyingType(source) ?? source;
 
-            if (underlyingType.IsEnum)
+            if (underlyingType.GetTypeInfo().IsEnum)
             {
                 return false;
             }
 
-            switch (Type.GetTypeCode(underlyingType))
+            switch (underlyingType.GetTypeCode())
             {
                 case TypeCode.Byte:
                 case TypeCode.Decimal:
@@ -119,15 +155,94 @@
         {
             return givenType
                 .GetInterfaces()
-                .Where(it => it.IsGenericType)
+                .Where(it => it.GetTypeInfo().IsGenericType)
                 .Any(it => it.GetGenericTypeDefinition() == genericType);
         }
 
         private static bool MapsToGenericTypeDefinition(this Type givenType, Type genericType)
         {
-            return genericType.IsGenericTypeDefinition
-                && givenType.IsGenericType
+            return genericType.GetTypeInfo().IsGenericTypeDefinition
+                && givenType.GetTypeInfo().IsGenericType
                 && givenType.GetGenericTypeDefinition() == genericType;
         }
+
+        public static TypeCode GetTypeCode(this Type type)
+        {
+            if (type == typeof(bool))
+                return TypeCode.Boolean;
+            else if (type == typeof(char))
+                return TypeCode.Char;
+            else if (type == typeof(sbyte))
+                return TypeCode.SByte;
+            else if (type == typeof(byte))
+                return TypeCode.Byte;
+            else if (type == typeof(short))
+                return TypeCode.Int16;
+            else if (type == typeof(ushort))
+                return TypeCode.UInt16;
+            else if (type == typeof(int))
+                return TypeCode.Int32;
+            else if (type == typeof(uint))
+                return TypeCode.UInt32;
+            else if (type == typeof(long))
+                return TypeCode.Int64;
+            else if (type == typeof(ulong))
+                return TypeCode.UInt64;
+            else if (type == typeof(float))
+                return TypeCode.Single;
+            else if (type == typeof(double))
+                return TypeCode.Double;
+            else if (type == typeof(decimal))
+                return TypeCode.Decimal;
+            else if (type == typeof(DateTime))
+                return TypeCode.DateTime;
+            else if (type == typeof(string))
+                return TypeCode.String;
+            else if (type.GetTypeInfo().IsEnum)
+                return GetTypeCode(Enum.GetUnderlyingType(type));
+            else
+                return TypeCode.Object;
+        }
+
+        private static object CreateInstanceInternal(Type type, bool nonPublic = false)
+        {
+#if !NETSTANDARD1_5
+            return Activator.CreateInstance(type, nonPublic);
+        }
+#else
+            var constructor = type.GetDefaultConstructor(nonPublic);
+
+            if (constructor == null)
+            {
+                throw new MissingMethodException("No parameterless constructor defined for this object.");
+            }
+
+            return constructor.Invoke(Array.Empty<object>());
+        }
+
+        private static ConstructorInfo GetDefaultConstructor(this Type type, bool nonPublic = false)
+        {
+            var typeInfo = type.GetTypeInfo();
+
+            var constructors = typeInfo.DeclaredConstructors;
+
+            foreach (var constructor in constructors)
+            {
+                var parameters = constructor.GetParameters();
+
+                if (parameters.Length > 0)
+                {
+                    continue;
+                }
+
+                if (!constructor.IsPrivate || nonPublic)
+                {
+                    return constructor;
+                }
+            }
+
+            return null;
+        }
+#endif
     }
 }

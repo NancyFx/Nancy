@@ -24,13 +24,7 @@
 
         public RazorViewEngineFixture()
         {
-            IAssemblyCatalog assemblyCatalog;
-
-#if !DNX
-            assemblyCatalog = new AppDomainAssemblyCatalog();
-#else
-            assemblyCatalog = new LibraryManagerAssemblyCatalog();
-#endif
+            var assemblyCatalog = new AppDomainAssemblyCatalog();
 
             var environment = new DefaultNancyEnvironment();
             environment.Tracing(

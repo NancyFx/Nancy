@@ -1,4 +1,4 @@
-#if !DNX
+#if !CORE
 namespace Nancy
 {
     using System;

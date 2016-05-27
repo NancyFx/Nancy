@@ -4,13 +4,13 @@ namespace Nancy.Tests.Unit.Cryptography
 
     using Xunit;
 
-    public class RijndaelEncryptionProviderFixture
+    public class AesEncryptionProviderFixture
     {
-        private RijndaelEncryptionProvider provider;
+        private AesEncryptionProvider provider;
 
-        public RijndaelEncryptionProviderFixture()
+        public AesEncryptionProviderFixture()
         {
-            this.provider = new RijndaelEncryptionProvider(new PassphraseKeyGenerator("Passphrase", new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 }));
+            this.provider = new AesEncryptionProvider(new PassphraseKeyGenerator("Passphrase", new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 }));
         }
 
         [Fact]
@@ -40,7 +40,7 @@ namespace Nancy.Tests.Unit.Cryptography
             var inputText = "this is some text";
             var encText = provider.Encrypt(inputText);
 
-            var result = new RijndaelEncryptionProvider(new PassphraseKeyGenerator("Wrong", new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 })).Decrypt(encText);
+            var result = new AesEncryptionProvider(new PassphraseKeyGenerator("Wrong", new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 })).Decrypt(encText);
 
             result.ShouldNotEqual(inputText);
         }

@@ -326,9 +326,7 @@ namespace Nancy.Testing
             var requestStream =
                 RequestStream.FromStream(contextValues.Body, 0, true);
 
-            var certBytes = (contextValues.ClientCertificate == null)
-                ? ArrayCache.Empty<byte>()
-                : contextValues.ClientCertificate.GetRawCertData();
+            var certBytes = contextValues.ClientCertificate ?? null;
 
             var requestUrl = url;
             requestUrl.Scheme = string.IsNullOrWhiteSpace(contextValues.Protocol) ? requestUrl.Scheme : contextValues.Protocol;

@@ -2,6 +2,7 @@ namespace Nancy.Diagnostics
 {
     using System.IO;
     using System.Linq;
+    using System.Reflection;
     using Configuration;
     using Nancy.Localization;
     using Nancy.Responses;
@@ -68,7 +69,7 @@ namespace Nancy.Diagnostics
 
         private static Stream GetBodyStream(string name)
         {
-            var view = new EmbeddedFileResponse(typeof(DiagnosticsViewRenderer).Assembly, "Nancy.Diagnostics.Views", name);
+            var view = new EmbeddedFileResponse(typeof(DiagnosticsViewRenderer).GetTypeInfo().Assembly, "Nancy.Diagnostics.Views", name);
 
             var stream = new MemoryStream();
 

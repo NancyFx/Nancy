@@ -2,7 +2,9 @@
 {
     using System;
     using System.Linq;
+    using System.Reflection;
     using System.Threading.Tasks;
+    using FakeItEasy;
     using Nancy.Cookies;
     using Nancy.Cryptography;
     using Nancy.Diagnostics;
@@ -13,9 +15,7 @@
     public class DiagnosticsHookFixture
     {
         private const string DiagsCookieName = "__ncd";
-
         private readonly CryptographyConfiguration cryptoConfig;
-
         private readonly IObjectSerializer objectSerializer;
 
         public DiagnosticsHookFixture()

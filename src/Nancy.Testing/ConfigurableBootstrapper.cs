@@ -34,7 +34,7 @@ namespace Nancy.Testing
         private bool enableAutoRegistration;
         private readonly List<Action<TinyIoCContainer, IPipelines>> applicationStartupActions;
         private readonly List<Action<TinyIoCContainer, IPipelines, NancyContext>> requestStartupActions;
-        private readonly Assembly nancyAssembly = typeof(NancyEngine).Assembly;
+        private readonly Assembly nancyAssembly = typeof(NancyEngine).GetTypeInfo().Assembly;
         private Action<INancyEnvironment> configure;
         private readonly IList<Action<NancyInternalConfiguration>> configurationOverrides;
 
@@ -290,7 +290,7 @@ namespace Nancy.Testing
 
                 if (this.disableAutoApplicationStartupRegistration || user.Any())
                 {
-                    tasks = tasks.Where(x => x.Assembly.GetName().Name.StartsWith("Nancy", StringComparison.OrdinalIgnoreCase));
+                    tasks = tasks.Where(x => x.GetTypeInfo().Assembly.GetName().Name.StartsWith("Nancy", StringComparison.OrdinalIgnoreCase));
                 }
 
                 return tasks.Union(user);
@@ -310,7 +310,7 @@ namespace Nancy.Testing
 
                 if (this.disableAutoRequestStartupRegistration || user.Any())
                 {
-                    tasks = tasks.Where(x => x.Assembly.GetName().Name.StartsWith("Nancy", StringComparison.OrdinalIgnoreCase));
+                    tasks = tasks.Where(x => x.GetTypeInfo().Assembly.GetName().Name.StartsWith("Nancy", StringComparison.OrdinalIgnoreCase));
                 }
 
                 return tasks.Union(user);
@@ -432,7 +432,7 @@ namespace Nancy.Testing
             }
 
             return this.ApplicationContainer.ResolveAll<IRegistrations>(false)
-                       .Where(x => x.GetType().Assembly == nancyAssembly);
+                       .Where(x => x.GetType().GetTypeInfo().Assembly == nancyAssembly);
         }
 
         /// <summary>

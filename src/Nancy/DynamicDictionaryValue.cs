@@ -5,7 +5,12 @@
     using System.Dynamic;
     using System.Globalization;
     using System.Linq.Expressions;
+    using System.Reflection;
+
     using Microsoft.CSharp.RuntimeBinder;
+    using Extensions;
+
+    using Binder = Microsoft.CSharp.RuntimeBinder.Binder;
 
     /// <summary>
     /// A value that is stored inside a <see cref="DynamicDictionary"/> instance.
@@ -117,7 +122,7 @@
                     {
                         var converter = TypeDescriptor.GetConverter(parseType);
 
-                        if (converter.IsValid(stringValue))
+                        if (converter.CanConvertFrom(typeof(string)))
                         {
                             return (T) converter.ConvertFromInvariantString(stringValue);
                         }
@@ -272,10 +277,10 @@
                     return true;
                 }
             }
-            else if (binderType.IsEnum)
+            else if (binderType.GetTypeInfo().IsEnum)
             {
                 // handles enum to enum assignments
-                if (this.value.GetType().IsEnum)
+                if (value.GetType().GetTypeInfo().IsEnum)
                 {
                     if (binderType == this.value.GetType())
                     {
@@ -297,12 +302,12 @@
             }
             else
             {
-                if (binderType.IsGenericType && binderType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                if (binderType.GetTypeInfo().IsGenericType && binderType.GetGenericTypeDefinition() == typeof(Nullable<>))
                 {
                     binderType = binderType.GetGenericArguments()[0];
                 }
 
-                var typeCode = Type.GetTypeCode(binderType);
+                var typeCode = binderType.GetTypeCode();
 
                 if (typeCode == TypeCode.Object)
                 {
@@ -317,7 +322,11 @@
                     }
                 }
 
-                result = Convert.ChangeType(this.value, typeCode);
+#if !NETSTANDARD1_5
+                result = Convert.ChangeType(value, typeCode);
+#else
+                result = Convert.ChangeType(value, binderType);
+#endif
 
                 return true;
             }
@@ -346,7 +355,7 @@
                 return false;
             }
 
-            if (dynamicValue.value.GetType().IsValueType)
+            if (dynamicValue.value.GetType().GetTypeInfo().IsValueType)
             {
                 return (Convert.ToBoolean(dynamicValue.value));
             }
@@ -384,7 +393,7 @@
                 return default(int);
             }
 
-            if (dynamicValue.value.GetType().IsValueType)
+            if (dynamicValue.value.GetType().GetTypeInfo().IsValueType)
             {
                 return Convert.ToInt32(dynamicValue.value);
             }
@@ -484,7 +493,7 @@
                 return default(long);
             }
 
-            if (dynamicValue.value.GetType().IsValueType)
+            if (dynamicValue.value.GetType().GetTypeInfo().IsValueType)
             {
                 return Convert.ToInt64(dynamicValue.value);
             }
@@ -509,7 +518,7 @@
                 return default(float);
             }
 
-            if (dynamicValue.value.GetType().IsValueType)
+            if (dynamicValue.value.GetType().GetTypeInfo().IsValueType)
             {
                 return Convert.ToSingle(dynamicValue.value);
             }
@@ -534,7 +543,7 @@
                 return default(decimal);
             }
 
-            if (dynamicValue.value.GetType().IsValueType)
+            if (dynamicValue.value.GetType().GetTypeInfo().IsValueType)
             {
                 return Convert.ToDecimal(dynamicValue.value);
             }
@@ -559,7 +568,7 @@
                 return default(double);
             }
 
-            if (dynamicValue.value.GetType().IsValueType)
+            if (dynamicValue.value.GetType().GetTypeInfo().IsValueType)
             {
                 return Convert.ToDouble(dynamicValue.value);
             }
@@ -567,7 +576,7 @@
             return double.Parse(dynamicValue.ToString());
         }
 
-        #region Implementation of IConvertible
+#region Implementation of IConvertible
 
         /// <summary>
         /// Returns the <see cref="T:System.TypeCode"/> for this instance.
@@ -579,7 +588,7 @@
         public TypeCode GetTypeCode()
         {
             if (value == null) return TypeCode.Empty;
-            return Type.GetTypeCode(value.GetType());
+            return value.GetType().GetTypeCode();
         }
 
         /// <summary>
@@ -774,6 +783,6 @@
             return Convert.ChangeType(value, conversionType, provider);
         }
 
-        #endregion
+#endregion
     }
 }

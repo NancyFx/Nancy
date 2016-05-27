@@ -93,8 +93,9 @@
             cryptographyConfiguration = cryptographyConfiguration ?? CsrfApplicationStartup.CryptographyConfiguration;
             var token = new CsrfToken
             {
-                CreatedDate = DateTime.Now,
+                CreatedDate = DateTimeOffset.Now,
             };
+
             token.CreateRandomBytes();
             token.CreateHmac(cryptographyConfiguration.HmacProvider);
             var tokenString = CsrfApplicationStartup.ObjectSerializer.Serialize(token);

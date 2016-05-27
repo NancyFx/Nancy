@@ -1,10 +1,15 @@
 namespace Nancy
 {
+    using Extensions;
     using System;
     using System.IO;
+    using System.Reflection;
     using System.Runtime.Serialization;
-    using System.Runtime.Serialization.Formatters.Binary;
+    using System.Text;
 
+    /// <summary>
+    /// Serializes/Deserializes objects for sessions
+    /// </summary>
     public class DefaultObjectSerializer : IObjectSerializer
     {
         /// <summary>
@@ -16,19 +21,25 @@ namespace Nancy
         {
             if (sourceObject == null)
             {
-                return String.Empty;
+                return string.Empty;
             }
 
-            var formatter = new BinaryFormatter();
+            dynamic serializedObject = (sourceObject is string)
+                ? sourceObject
+                : AddTypeInformation(sourceObject);
 
-            using (var outputStream = new MemoryStream())
-            {
-                formatter.Serialize(outputStream, sourceObject);
+            var json = SimpleJson.SerializeObject(serializedObject);
+            return Convert.ToBase64String(Encoding.UTF8.GetBytes(json));
+        }
 
-                var outputBytes = outputStream.GetBuffer();
+        private static dynamic AddTypeInformation(object sourceObject)
+        {
+            var assemblyQualifiedName = sourceObject.GetType().GetTypeInfo().AssemblyQualifiedName;
 
-                return Convert.ToBase64String(outputBytes, 0, (int)outputStream.Length);
-            }
+            dynamic serializedObject = sourceObject.ToDynamic();
+            serializedObject.TypeObject = assemblyQualifiedName;
+
+            return serializedObject;
         }
 
         /// <summary>
@@ -46,13 +57,16 @@ namespace Nancy
             try
             {
                 var inputBytes = Convert.FromBase64String(sourceString);
+                var json = Encoding.UTF8.GetString(inputBytes);
 
-                var formatter = new BinaryFormatter();
-
-                using (var inputStream = new MemoryStream(inputBytes, false))
+                if (!ContainsTypeDescription(json))
                 {
-                    return formatter.Deserialize(inputStream);
+                    return SimpleJson.DeserializeObject(json);
                 }
+
+                dynamic serializedObject = SimpleJson.DeserializeObject(json);
+
+                return SimpleJson.DeserializeObject(json, Type.GetType(serializedObject.TypeObject));
             }
             catch (FormatException)
             {
@@ -62,10 +76,15 @@ namespace Nancy
             {
                 return null;
             }
-	    catch (IOException)
-	    {
-		return null;
-	    }
+            catch (IOException)
+            {
+                return null;
+            }
+        }
+
+        private static bool ContainsTypeDescription(string json)
+        {
+            return json.Contains("TypeObject");
         }
     }
 }

@@ -14,10 +14,10 @@ namespace Nancy.Tests.Unit.Bootstrapper
         {
             IAssemblyCatalog assemblyCatalog;
 
-#if !DNX
+#if !CORE
             assemblyCatalog = new AppDomainAssemblyCatalog();
 #else
-            assemblyCatalog = new LibraryManagerAssemblyCatalog();
+            assemblyCatalog = new DependencyContextAssemblyCatalog();
 #endif
 
             this.typeCatalog = new DefaultTypeCatalog(assemblyCatalog);

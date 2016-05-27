@@ -18,19 +18,8 @@ namespace Nancy.Hosting.Self
             var assembly =
                 Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly();
 
-            var location = string.Empty;
+            var location = assembly.Location;
 
-#if DNX
-            var libraryManager =
-                Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.LibraryManager;
-
-            var library =
-                libraryManager.GetLibrary(assembly.GetName().Name);
-
-            location = library.Path;
-#else
-            location = assembly.Location;
-#endif
             return Path.GetDirectoryName(location);
         }
     }

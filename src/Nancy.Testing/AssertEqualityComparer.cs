@@ -2,12 +2,13 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Reflection;
 
     public class AssertEqualityComparer<T> : IEqualityComparer<T>
     {
         private static bool IsTypeNullable(Type type)
         {
-            return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
+            return type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
         }
 
         public bool Equals(T expected, T actual)
@@ -15,7 +16,7 @@
             var type =
                 typeof(T);
 
-            if (!type.IsValueType || IsTypeNullable(type))
+            if (!type.GetTypeInfo().IsValueType || IsTypeNullable(type))
             {
                 var actualIsNull =
                     (Object.Equals(actual, default(T)));

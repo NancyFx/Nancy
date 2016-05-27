@@ -31,3 +31,4 @@ Gemfile.lock
 packages/
 project.lock.json
 TestAssembly.dll
+.vscode/
