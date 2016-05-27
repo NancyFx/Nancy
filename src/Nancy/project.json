@@ -16,6 +16,7 @@
 
     "buildOptions": {
         "embed": [
+            "ErrorHandling/Resources/**/*.*",
             "Diagnostics/Resources/**/*.*",
             "Diagnostics/Views/**/*.*"
         ]

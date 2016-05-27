@@ -2,18 +2,12 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
-    using System.Reflection;
     using System.Security.Cryptography.X509Certificates;
     using System.Text;
     using global::Owin;
-
     using Microsoft.Owin.Testing;
-
     using Nancy.Testing;
-
     using Xunit;
-
     using HttpStatusCode = Nancy.HttpStatusCode;
 
     public class AppBuilderExtensionsFixture
@@ -41,7 +35,6 @@
             // Given
             var bootstrapper = new ConfigurableBootstrapper(config => config.Module<TestModule>());
 
-
             using (var server = TestServer.Create(app => app.UseNancy(opts =>
             {
                 opts.Bootstrapper = bootstrapper;
@@ -65,7 +58,7 @@
                             -----END CERTIFICATE-----
                             ";
 
-                byte[] embeddedCert = Encoding.UTF8.GetBytes(cert);
+                var embeddedCert = Encoding.UTF8.GetBytes(cert);
 
                 var env = new Dictionary<string, object>()
                 {
@@ -73,30 +66,25 @@
                     { "owin.RequestScheme", "http" },
                     { "owin.RequestHeaders", new Dictionary<string, string[]>() { { "Host", new[] { "localhost" } } } },
                     { "owin.RequestMethod", "GET" },
-                    {"ssl.ClientCertificate", new X509Certificate(embeddedCert) }
+                    { "owin.ResponseHeaders", new Dictionary<string, string[]>() },
+                    { "ssl.ClientCertificate", new X509Certificate(embeddedCert) }
                 };
-                server.Invoke(env);
 
+                var result = server.Invoke(env);
+                result.Wait();
 
                 // Then
                 Assert.Equal(env["owin.ResponseStatusCode"], 200);
             }
         }
 #endif
-
         public class TestModule : NancyModule
         {
             public TestModule()
             {
-                Get["/"] = _ =>
-                {
-                    return HttpStatusCode.OK;
-                };
+                Get("/", args => HttpStatusCode.OK);
 
-                Get("/ssl", args =>
-                {
-                    return this.Request.ClientCertificate != null ? 200 : 500;
-                });
+                Get("/ssl", args => this.Request.ClientCertificate != null ? 200 : 500);
             }
         }
     }
