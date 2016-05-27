@@ -11,9 +11,9 @@ public class Module : NancyModule
 {
     public Module()
     {
-        Get["/greet/{name}"] = x => {
+        Get("/greet/{name}", x => {
             return string.Concat("Hello ", x.name);
-        };
+        });
     }
 }
 ```
