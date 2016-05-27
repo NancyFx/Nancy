@@ -6,8 +6,9 @@ namespace Nancy
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
-
+    using System.Reflection;
     using Nancy.Cookies;
+
 
     /// <summary>
     /// Provides strongly-typed access to HTTP request headers.

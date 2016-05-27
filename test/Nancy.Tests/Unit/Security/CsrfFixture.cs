@@ -3,12 +3,9 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
-
     using FakeItEasy;
-
     using Nancy.Bootstrapper;
     using Nancy.Cryptography;
-    using Nancy.Helpers;
     using Nancy.Security;
     using Nancy.Tests.Fakes;
 
@@ -17,24 +14,17 @@
     public class CsrfFixture
     {
         private readonly IPipelines pipelines;
-                 
         private readonly Request request;
-
         private readonly FakeRequest optionsRequest;
-         
         private readonly Response response;
-
         private readonly CryptographyConfiguration cryptographyConfiguration;
-
         private readonly DefaultObjectSerializer objectSerializer;
-        
 
         public CsrfFixture()
         {
             this.pipelines = new MockPipelines();
 
             this.cryptographyConfiguration = CryptographyConfiguration.Default;
-
             this.objectSerializer = new DefaultObjectSerializer();
             var csrfStartup = new CsrfApplicationStartup(
                 this.cryptographyConfiguration,
@@ -87,7 +77,7 @@
         public void Should_not_generate_a_new_token_on_an_options_request_and_not_add_a_cookie()
         {
             this.optionsRequest.Cookies.Add(CsrfToken.DEFAULT_CSRF_KEY, "ValidToken");
-            
+
             var fakeValidator = A.Fake<ICsrfTokenValidator>();
             A.CallTo(() => fakeValidator.CookieTokenStillValid(A<CsrfToken>.Ignored)).Returns(true);
             var csrfStartup = new CsrfApplicationStartup(
@@ -179,7 +169,7 @@
             var token = Csrf.GenerateTokenString();
             var context = new NancyContext { Request = this.request };
             var module = new FakeNancyModule { Context = context };
-            
+
             // When
             context.Request.Form[CsrfToken.DEFAULT_CSRF_KEY] = token;
             context.Request.Cookies.Add(CsrfToken.DEFAULT_CSRF_KEY, token);
@@ -195,7 +185,7 @@
             var token = Csrf.GenerateTokenString();
             var context = new NancyContext();
             var module = new FakeNancyModule { Context = context };
-            
+
             // When
             context.Request = RequestWithHeader(CsrfToken.DEFAULT_CSRF_KEY, token);
             context.Request.Cookies.Add(CsrfToken.DEFAULT_CSRF_KEY, token);

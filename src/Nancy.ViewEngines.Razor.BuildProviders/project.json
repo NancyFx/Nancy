@@ -7,9 +7,9 @@
     },
 
     "frameworks": {
-        "net451": {
+        "net452": {
             "frameworkAssemblies": {
-                "System.Web": "4.0.0.0"
+                "System.Web": { "type": "build" }
             }
         }
     }

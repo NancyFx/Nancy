@@ -1,27 +1,31 @@
 {
     "dependencies": {
-        "FakeItEasy": "2.0.0-beta011",
+        "dotnet-test-xunit": "1.0.0-rc3-build10019",
+        "Microsoft.NETCore.Platforms": "1.0.1-rc2-24027",
         "Nancy": { "target": "project" },
         "Nancy.Hosting.Self": { "target": "project" },
-        "xunit": "2.1.0",
-        "xunit.runner.dnx": "2.1.0-*"
+        "xunit": "2.1.0"
     },
 
-    "commands": {
-        "test": "xunit.runner.dnx"
+    "buildOptions": {
+        "compile": [
+            "../Nancy.Tests/ShouldExtensions.cs",
+            "../Nancy.Tests/xUnitExtensions/SkipException.cs",
+            "../Nancy.Tests/xUnitExtensions/SkippableFactAttribute.cs"
+        ]
     },
-
-    "compilationOptions": {
-        "define": [ "DNX" ]
-    },
-
-    "compileFiles": [
-        "../Nancy.Tests/ShouldExtensions.cs",
-        "../Nancy.Tests/xUnitExtensions/SkipException.cs",
-        "../Nancy.Tests/xUnitExtensions/SkippableFactAttribute.cs"
-    ],
 
     "frameworks": {
-        "dnx451": { }
-    }
+        "net452": {
+            "dependencies": {
+                "FakeItEasy": "2.0.0-beta011"
+            },
+            "frameworkAssemblies": {
+                "System.Runtime": { "type": "build" },
+                "System.Threading.Tasks": { "type": "build" }
+            }
+        }
+    },
+
+    "testRunner": "xunit"
 }

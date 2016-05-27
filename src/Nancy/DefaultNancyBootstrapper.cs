@@ -8,7 +8,7 @@ namespace Nancy
     using Nancy.Configuration;
     using Nancy.Diagnostics;
     using Nancy.TinyIoc;
-
+    using Extensions;
     /// <summary>
     /// TinyIoC bootstrapper - registers default route resolver and registers itself as
     /// INancyModuleCatalog for resolving modules but behavior can be overridden if required.
@@ -277,11 +277,11 @@ namespace Nancy
         /// Executes auto registration with the given container.
         /// </summary>
         /// <param name="container">Container instance</param>
-        private static void AutoRegister(TinyIoCContainer container, IEnumerable<Func<Assembly, bool>> ignoredAssemblies)
+        private void AutoRegister(TinyIoCContainer container, IEnumerable<Func<Assembly, bool>> ignoredAssemblies)
         {
-            var assembly = typeof(NancyEngine).Assembly;
+            var assembly = typeof(NancyEngine).GetTypeInfo().Assembly;
 
-            container.AutoRegister(AppDomain.CurrentDomain.GetAssemblies().Where(a => !ignoredAssemblies.Any(ia => ia(a))), DuplicateImplementationActions.RegisterMultiple, t => t.Assembly != assembly);
+            container.AutoRegister(this.AssemblyCatalog.GetAssemblies().Where(a => !ignoredAssemblies.Any(ia => ia(a))), DuplicateImplementationActions.RegisterMultiple, t => t.GetAssembly() != assembly);
         }
     }
 }

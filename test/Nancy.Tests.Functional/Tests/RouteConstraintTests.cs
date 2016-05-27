@@ -1,7 +1,6 @@
 ﻿namespace Nancy.Tests.Functional.Tests
 {
     using System;
-    using System.Runtime.Remoting.Messaging;
     using System.Threading.Tasks;
     using Nancy.Bootstrapper;
     using Nancy.Routing.Constraints;

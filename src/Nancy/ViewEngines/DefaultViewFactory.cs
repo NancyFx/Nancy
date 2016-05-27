@@ -5,8 +5,8 @@
     using System.Dynamic;
     using System.IO;
     using System.Linq;
+    using System.Reflection;
     using System.Text.RegularExpressions;
-
     using Nancy.Conventions;
 
     /// <summary>
@@ -101,7 +101,7 @@
         {
             var inspectedLocations = new List<string>();
 
-            foreach (var convention in conventions)
+            foreach (var convention in this.conventions)
             {
                 try
                 {
@@ -115,6 +115,7 @@
                 }
                 catch
                 {
+                    // ignored
                 }
             }
 

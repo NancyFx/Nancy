@@ -314,14 +314,14 @@
     <Compile Include="..\Nancy\ErrorHandling\RouteExecutionEarlyExitException.cs">
       <Link>ErrorHandling\RouteExecutionEarlyExitException.cs</Link>
     </Compile>
+    <Compile Include="..\Nancy\Extensions\MemoryStreamExtensions.cs">
+      <Link>Extensions\MemoryStreamExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\Nancy\Extensions\ModelValidationErrorExtensions.cs">
       <Link>Extensions\ModelValidationErrorExtensions.cs</Link>
     </Compile>
     <Compile Include="..\Nancy\Extensions\RequestStreamExtensions.cs">
       <Link>Extensions\RequestStreamExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy\Extensions\StreamExtensions.cs">
-      <Link>Extensions\StreamExtensions.cs</Link>
     </Compile>
     <Compile Include="..\Nancy\Extensions\TypeExtensions.cs">
       <Link>Extensions\TypeExtensions.cs</Link>
@@ -1178,9 +1178,6 @@
     <Compile Include="..\Nancy\Session\CookieBasedSessions.cs">
       <Link>Session\CookieBasedSessions.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy\Cryptography\RijndaelEncryptionProvider.cs">
-      <Link>Cryptography\RijndaelEncryptionProvider.cs</Link>
-    </Compile>
     <Compile Include="..\Nancy\DefaultObjectSerializer.cs">
       <Link>DefaultObjectSerializer.cs</Link>
     </Compile>
@@ -1355,6 +1352,15 @@
     <Compile Include="..\Nancy\GlobalizationConfiguration.cs" />
     <Compile Include="..\Nancy\GlobalizationConfigurationExtensions.cs" />
     <Compile Include="..\Nancy\DefaultGlobalizationConfigurationProvider.cs" />
+    <Compile Include="..\Nancy\Cryptography\AesEncryptionProvider.cs">
+      <Link>Cryptography\AesEncryptionProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy\Json\SimpleJson.cs">
+      <Link>Json\SimpleJson.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy\Extensions\ObjectExtensions.cs">
+      <Link>Extensions\ObjectExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\Nancy\Configuration\ConfigurationException.cs">
       <Link>Configuration\ConfigurationException.cs</Link>
     </Compile>

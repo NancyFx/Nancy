@@ -6,7 +6,9 @@
     /// <summary>
     /// Represents a Csrf protection token
     /// </summary>
+#if !NETSTANDARD1_5
     [Serializable]
+#endif
     public sealed class CsrfToken
     {
         /// <summary>
@@ -22,7 +24,7 @@
         /// <summary>
         /// Date and time the token was created
         /// </summary>
-        public DateTime CreatedDate { get; set; }
+        public DateTimeOffset CreatedDate { get; set; }
 
         /// <summary>
         /// Tamper prevention hmac

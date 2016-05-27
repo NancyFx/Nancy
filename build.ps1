@@ -1,56 +1,60 @@
-function Install-Dnvm
+function Install-Dotnet
 {
-    & where.exe dnvm 2>&1 | Out-Null
-    if(($LASTEXITCODE -ne 0) -Or ((Test-Path Env:\APPVEYOR) -eq $true))
-    {
-        Write-Host "DNVM not found"
-        &{$Branch='dev';iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/aspnet/Home/dev/dnvminstall.ps1'))}
+  & where.exe dotnet 2>&1 | Out-Null
 
-        # Normally this happens automatically during install but AppVeyor has
-        # an issue where you may need to manually re-run setup from within this process.
-        if($env:DNX_HOME -eq $NULL)
-        {
-            Write-Host "Initial DNVM environment setup failed; running manual setup"
-            $tempDnvmPath = Join-Path $env:TEMP "dnvminstall"
-            $dnvmSetupCmdPath = Join-Path $tempDnvmPath "dnvm.ps1"
-            & $dnvmSetupCmdPath setup
-        }
+  if(($LASTEXITCODE -ne 0) -Or ((Test-Path Env:\APPVEYOR) -eq $true))
+  {
+    Write-Host "Dotnet CLI not found - downloading latest version"
+
+    # Prepare the dotnet CLI folder
+    $env:DOTNET_INSTALL_DIR="$(Convert-Path "$PSScriptRoot")\.dotnet\win7-x64"
+    if (!(Test-Path $env:DOTNET_INSTALL_DIR))
+    {
+      mkdir $env:DOTNET_INSTALL_DIR | Out-Null
     }
+
+    # Download the dotnet CLI install script
+    if (!(Test-Path .\dotnet\install.ps1))
+    {
+      Invoke-WebRequest "https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/scripts/obtain/dotnet-install.ps1" -OutFile ".\.dotnet\dotnet-install.ps1"
+    }
+
+    # Run the dotnet CLI install
+    & .\.dotnet\dotnet-install.ps1
+
+    # Add the dotnet folder path to the process. This gets skipped
+    # by Install-DotNetCli if it's already installed.
+    Remove-PathVariable $env:DOTNET_INSTALL_DIR
+    $env:PATH = "$env:DOTNET_INSTALL_DIR;$env:PATH"
+
+  }
 }
 
-function Get-DnxVersion
+function Remove-PathVariable
 {
-    $globalJson = join-path $PSScriptRoot "global.json"
-    $jsonData = Get-Content -Path $globalJson -Raw | ConvertFrom-JSON
-    return $jsonData.sdk.version
+  [cmdletbinding()]
+  param([string] $VariableToRemove)
+  $path = [Environment]::GetEnvironmentVariable("PATH", "User")
+  $newItems = $path.Split(';') | Where-Object { $_.ToString() -inotlike $VariableToRemove }
+  [Environment]::SetEnvironmentVariable("PATH", [System.String]::Join(';', $newItems), "User")
+  $path = [Environment]::GetEnvironmentVariable("PATH", "Process")
+  $newItems = $path.Split(';') | Where-Object { $_.ToString() -inotlike $VariableToRemove }
+  [Environment]::SetEnvironmentVariable("PATH", [System.String]::Join(';', $newItems), "Process")
 }
 
 function Restore-Packages
 {
     param([string] $DirectoryName)
-    & dnu restore --quiet ("""" + $DirectoryName + """")
-}
-
-function Pack-Projects
-{
-    param([string] $DirectoryName, [string] $Configuration)
-    & dnu pack --quiet ("""" + $DirectoryName + """") --configuration $Configuration --out .\artifacts\packages; if($LASTEXITCODE -ne 0) { exit 2 }
+    & dotnet restore -v Warning ("""" + $DirectoryName + """")
 }
 
 function Test-Projects
 {
-    & dnx test; if($LASTEXITCODE -ne 0) { exit 3 }
-}
-
-function Remove-PathVariable
-{
-    param([string] $VariableToRemove)
-    $path = [Environment]::GetEnvironmentVariable("PATH", "User")
-    $newItems = $path.Split(';') | Where-Object { $_.ToString() -inotlike $VariableToRemove }
-    [Environment]::SetEnvironmentVariable("PATH", [System.String]::Join(';', $newItems), "User")
-    $path = [Environment]::GetEnvironmentVariable("PATH", "Process")
-    $newItems = $path.Split(';') | Where-Object { $_.ToString() -inotlike $VariableToRemove }
-    [Environment]::SetEnvironmentVariable("PATH", [System.String]::Join(';', $newItems), "Process")
+    & dotnet test -c Release;
+    if($LASTEXITCODE -ne 0)
+    {
+      exit 3
+    }
 }
 
 ########################
@@ -59,55 +63,19 @@ function Remove-PathVariable
 
 Push-Location $PSScriptRoot
 
-$dnxVersion = Get-DnxVersion
-
-if (!$env:CONFIGURATION)
-{
-    $env:CONFIGURATION = "Release"
-}
-
-# Clean
-if(Test-Path .\artifacts) { Remove-Item .\artifacts -Force -Recurse }
-
-# Remove the installed DNVM from the path and force use of
-# per-user DNVM (which we can upgrade as needed without admin permissions)
-Remove-PathVariable "*Program Files\Microsoft DNX\DNVM*"
-
-# Make sure per-user DNVM is installed
-Install-Dnvm
-
-# Install DNX
-dnvm install $dnxVersion -r CoreCLR -NoNative
-dnvm install $dnxVersion -r CLR -NoNative
-
-# Start with regular CLR
-dnvm use $dnxVersion -r CLR
+# Install Dotnet CLI
+Install-Dotnet
 
 # Package restore
+Write-Host "Running package restore"
 Get-ChildItem -Path . -Filter *.xproj -Recurse | ForEach-Object { Restore-Packages $_.DirectoryName }
 
-# Set build number
-$env:DNX_BUILD_VERSION = @{ $true = $env:APPVEYOR_BUILD_NUMBER; $false = 1 }[$env:APPVEYOR_BUILD_NUMBER -ne $NULL];
-Write-Host "Build number: " $env:DNX_BUILD_VERSION
-
-# Package
-Get-ChildItem -Path .\src -Filter *.xproj -Recurse | ForEach-Object { Pack-Projects $_.DirectoryName $env:CONFIGURATION }
-
-# Test
+# Tests
+Write-Host "Running tests"
 Get-ChildItem -Path .\test -Filter *.xproj -Exclude Nancy.ViewEngines.Razor.Tests.Models.xproj -Recurse | ForEach-Object {
     Push-Location $_.DirectoryName
-    Test-Projects $_.DirectoryName
+    Test-Projects
     Pop-Location
- }
-
-# Switch to Core CLR
-#dnvm use $dnxVersion -r CoreCLR
-
-# Test again
-# Get-ChildItem -Path .\test -Filter *Tests.xproj -Recurse | ForEach-Object {
-#    Push-Location $_.DirectoryName
-#    Test-Projects $_.DirectoryName
-#    Pop-Location
-# }
+}
 
 Pop-Location

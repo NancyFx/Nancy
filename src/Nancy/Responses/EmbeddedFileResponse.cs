@@ -63,7 +63,7 @@
 
         private static string GenerateETag(Stream stream)
         {
-            using (var sha1 = new SHA1CryptoServiceProvider())
+            using (var sha1 = SHA1.Create())
             {
                 var hash = sha1.ComputeHash(stream);
                 return string.Concat("\"", ByteArrayToString(hash), "\"");

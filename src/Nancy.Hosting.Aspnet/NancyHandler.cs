@@ -4,6 +4,7 @@ namespace Nancy.Hosting.Aspnet
     using System.Configuration;
     using System.Globalization;
     using System.Linq;
+    using System.Security.Cryptography.X509Certificates;
     using System.Threading.Tasks;
     using System.Web;
 
@@ -84,7 +85,7 @@ namespace Nancy.Hosting.Aspnet
                 body, 
                 incomingHeaders, 
                 context.Request.UserHostAddress, 
-                certificate,
+                new X509Certificate2(certificate),
                 protocolVersion);
         }
 

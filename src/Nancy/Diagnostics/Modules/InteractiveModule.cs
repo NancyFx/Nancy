@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
+    using System.Reflection;
     using Nancy.Helpers;
 
     public class InteractiveModule : DiagnosticModule
@@ -30,7 +31,7 @@
                             p.Description,
                             Type = p.GetType().Name,
                             p.GetType().Namespace,
-                            Assembly = p.GetType().Assembly.GetName().Name
+                            Assembly = p.GetType().GetTypeInfo().Assembly.GetName().Name
                         })
                     .ToArray();
 

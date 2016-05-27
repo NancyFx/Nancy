@@ -68,13 +68,13 @@
                         var owinRequestProtocol = Get<string>(environment, "owin.RequestProtocol");
                         var owinCallCancelled = Get<CancellationToken>(environment, "owin.CallCancelled");
                         var owinRequestHost = GetHeader(owinRequestHeaders, "Host") ?? Dns.GetHostName();
-                        var owinUser = GetUser(environment); 
+                        var owinUser = GetUser(environment);
 
-                        byte[] certificate = null;
+                        X509Certificate2 certificate = null;
                         if (options.EnableClientCertificates)
                         {
-                            var clientCertificate = Get<X509Certificate>(environment, "ssl.ClientCertificate");
-                            certificate = (clientCertificate == null) ? null : clientCertificate.GetRawCertData();
+                            var clientCertificate = new X509Certificate2(Get<X509Certificate>(environment, "ssl.ClientCertificate").Export(X509ContentType.Cert));
+                            certificate = clientCertificate ?? null;
                         }
 
                         var serverClientIp = Get<string>(environment, "server.RemoteIpAddress");
@@ -133,12 +133,12 @@
 
                 foreach (var responseHeader in nancyResponse.Headers)
                 {
-                    owinResponseHeaders[responseHeader.Key] = new[] {responseHeader.Value};
+                    owinResponseHeaders[responseHeader.Key] = new[] { responseHeader.Value };
                 }
 
                 if (!string.IsNullOrWhiteSpace(nancyResponse.ContentType))
                 {
-                    owinResponseHeaders["Content-Type"] = new[] {nancyResponse.ContentType};
+                    owinResponseHeaders["Content-Type"] = new[] { nancyResponse.ContentType };
                 }
 
                 if (nancyResponse.Cookies != null && nancyResponse.Cookies.Count != 0)

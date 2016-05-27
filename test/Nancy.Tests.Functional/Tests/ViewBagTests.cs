@@ -1,11 +1,10 @@
-﻿namespace Nancy.Tests.Functional.Tests
+﻿#if !NETCOREAPP1_0
+namespace Nancy.Tests.Functional.Tests
 {
-    using System;
     using System.Threading.Tasks;
     using Nancy.Bootstrapper;
     using Nancy.Testing;
     using Nancy.Tests.Functional.Modules;
-
     using Xunit;
 
     public class ViewBagTests
@@ -13,7 +12,7 @@
         private readonly INancyBootstrapper bootstrapper;
 
         private readonly Browser browser;
-
+        
         public ViewBagTests()
         {
             this.bootstrapper = new ConfigurableBootstrapper(
@@ -90,3 +89,5 @@
         }
     }
 }
+
+#endif

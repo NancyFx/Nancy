@@ -44,46 +44,29 @@
         private static IReadOnlyCollection<Type> GetAvailableBootstrapperTypes()
         {
             var assemblies = GetNancyReferencingAssemblies()
-                .Where(x => !x.IsDynamic && !x.ReflectionOnly)
+                .Where(x => !x.IsDynamic)
                 .ToArray();
 
             return assemblies
                 .SelectMany(x => x.SafeGetExportedTypes())
-                .Where(x => !x.IsAbstract && x.IsPublic)
+                .Where(x => !x.GetTypeInfo().IsAbstract && x.GetTypeInfo().IsPublic)
                 .Where(x => typeof(INancyBootstrapper).IsAssignableFrom(x))
                 .ToArray();
         }
 
         private static IEnumerable<Assembly> GetNancyReferencingAssemblies()
         {
-#if DNX
-            var libraryManager = Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.LibraryManager;
+#if CORE
+            var assemblyCatalog =
+                new DependencyContextAssemblyCatalog();
 
-            var results = new HashSet<Assembly>
-            {
-                typeof (INancyEngine).Assembly
-            };
-
-            var referencingLibraries = libraryManager.GetReferencingLibraries(NancyAssemblyName.Name);
-
-            foreach (var assemblyName in referencingLibraries.SelectMany(referencingLibrary => referencingLibrary.Assemblies))
-            {
-                try
-                {
-                    results.Add(Assembly.Load(assemblyName));
-                }
-                catch
-                {
-                }
-            }
-
-            return results.ToArray();
+            return assemblyCatalog.GetAssemblies();
 #else
-            return AppDomain.CurrentDomain.GetAssemblies().Where(IsNancyReferencing);
+            return AppDomain.CurrentDomain.GetAssemblies().Where(IsNancyReferencing).Where(assembly => !assembly.ReflectionOnly);
 #endif
         }
 
-#if !DNX
+#if !CORE
         private static bool IsNancyReferencing(Assembly assembly)
         {
             if (AssemblyName.ReferenceMatchesDefinition(assembly.GetName(), NancyAssemblyName))
@@ -133,7 +116,7 @@
             var set = new HashSet<Type>();
             bootstrapper = null;
 
-            if (customBootstrappers.All(b => set.Add(b.BaseType)))
+            if (customBootstrappers.All(b => set.Add(b.GetTypeInfo().BaseType)))
             {
                 var except = customBootstrappers.Except(set).ToList();
                 bootstrapper = except.Count == 1 ? except[0] : null;

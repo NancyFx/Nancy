@@ -1,7 +1,9 @@
 namespace Nancy
 {
     using System;
-
+    using System.Reflection;
+    using Nancy.Extensions;
+    
     /// <summary>
     /// Default <see cref="TypeResolveStrategy"/> implementations.
     /// </summary>
@@ -36,7 +38,7 @@ namespace Nancy
         /// </summary>
         public static readonly TypeResolveStrategy OnlyNancy = type =>
         {
-            return type.Assembly.Equals(typeof(INancyEngine).Assembly);
+            return type.GetAssembly().Equals(typeof(INancyEngine).GetTypeInfo().Assembly);
         };
 
         /// <summary>
