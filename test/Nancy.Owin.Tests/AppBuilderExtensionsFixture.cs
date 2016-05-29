@@ -1,48 +1,51 @@
 ﻿namespace Nancy.Owin.Tests
 {
     using System;
-    using System.Collections.Generic;
     using System.Security.Cryptography.X509Certificates;
     using System.Text;
     using global::Owin;
-    using Microsoft.Owin.Testing;
     using Nancy.Testing;
     using Xunit;
     using HttpStatusCode = Nancy.HttpStatusCode;
-
+    using Microsoft.Owin.Builder;
+    using System.Net.Http;
+    using System.Threading.Tasks;
+    using AppFunc = System.Func<System.Collections.Generic.IDictionary<string, object>, System.Threading.Tasks.Task>;
     public class AppBuilderExtensionsFixture
     {
 #if !__MonoCS__
         [Fact]
-        public void When_host_Nancy_via_IAppBuilder_then_should_handle_requests()
+        public async Task When_host_Nancy_via_IAppBuilder_then_should_handle_requests()
         {
             // Given
+            var app = new AppBuilder();
             var bootstrapper = new ConfigurableBootstrapper(config => config.Module<TestModule>());
+            app.UseNancy(opts => opts.Bootstrapper = bootstrapper);
+            var appFunc = app.Build();
 
-            using (var server = TestServer.Create(app => app.UseNancy(opts => opts.Bootstrapper = bootstrapper)))
+            var handler = new OwinHttpMessageHandler(appFunc);
+
+            using (var httpClient = new HttpClient(handler)
+            {
+                BaseAddress = new Uri("http://localhost")
+            })
             {
                 // When
-                var response = server.HttpClient.GetAsync(new Uri("http://localhost/")).Result;
+                var response = await httpClient.GetAsync(new Uri("http://localhost/"));
 
                 // Then
-                Assert.Equal(response.StatusCode, System.Net.HttpStatusCode.OK);
+                Assert.Equal(System.Net.HttpStatusCode.OK, response.StatusCode);
             }
         }
 
         [Fact]
-        public void When_host_Nancy_via_IAppBuilder_should_read_X509Certificate2()
+        public async Task When_host_Nancy_via_IAppBuilder_should_read_X509Certificate2()
         {
             // Given
+            var app = new AppBuilder();
             var bootstrapper = new ConfigurableBootstrapper(config => config.Module<TestModule>());
 
-            using (var server = TestServer.Create(app => app.UseNancy(opts =>
-            {
-                opts.Bootstrapper = bootstrapper;
-                opts.EnableClientCertificates = true;
-            })))
-            {
-                // When
-                var cert = @"-----BEGIN CERTIFICATE-----
+            var cert = @"-----BEGIN CERTIFICATE-----
                             MIICNTCCAZ4CCQC21XwOAYG32zANBgkqhkiG9w0BAQUFADBfMQswCQYDVQQGEwJH
                             QjETMBEGA1UECBMKU29tZS1TdGF0ZTEOMAwGA1UEChMFTmFuY3kxDjAMBgNVBAsT
                             BU5hbmN5MRswGQYDVQQDExJodHRwOi8vbmFuY3lmeC5vcmcwHhcNMTYwMjIyMTE1
@@ -58,23 +61,34 @@
                             -----END CERTIFICATE-----
                             ";
 
-                var embeddedCert = Encoding.UTF8.GetBytes(cert);
+            var embeddedCert = Encoding.UTF8.GetBytes(cert);
 
-                var env = new Dictionary<string, object>()
-                {
-                    { "owin.RequestPath", "/ssl" },
-                    { "owin.RequestScheme", "http" },
-                    { "owin.RequestHeaders", new Dictionary<string, string[]>() { { "Host", new[] { "localhost" } } } },
-                    { "owin.RequestMethod", "GET" },
-                    { "owin.ResponseHeaders", new Dictionary<string, string[]>() },
-                    { "ssl.ClientCertificate", new X509Certificate(embeddedCert) }
-                };
+            app.Use(new Func<AppFunc, AppFunc>(next => (async env =>
+            {
+                env.Add("ssl.ClientCertificate", new X509Certificate(embeddedCert));
+                await next.Invoke(env);
+            })));
 
-                var result = server.Invoke(env);
-                result.Wait();
+            app.UseNancy(opts =>
+            {
+                opts.Bootstrapper = bootstrapper;
+                opts.EnableClientCertificates = true;
+            });
+
+            var appFunc = app.Build();
+
+            var handler = new OwinHttpMessageHandler(appFunc);
+
+            using (var httpClient = new HttpClient(handler)
+            {
+                BaseAddress = new Uri("http://localhost")
+            })
+            {
+                // When
+                var response = await httpClient.GetAsync(new Uri("http://localhost/ssl"));
 
                 // Then
-                Assert.Equal(env["owin.ResponseStatusCode"], 200);
+                Assert.Equal(System.Net.HttpStatusCode.OK, response.StatusCode);
             }
         }
 #endif
