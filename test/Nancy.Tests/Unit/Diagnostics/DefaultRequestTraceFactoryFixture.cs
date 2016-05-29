@@ -91,10 +91,10 @@
             var trace = this.factory.Create(this.request);
 
             // Then
-            trace.RequestData.ContentType.ShouldEqual(request.Headers.ContentType);
-            trace.RequestData.Headers.ShouldBeSameAs(request.Headers);
-            trace.RequestData.Method.ShouldEqual(request.Method);
-            trace.RequestData.Url.ShouldBeSameAs(request.Url);
+            trace.RequestData.ContentType.Matches(this.request.Headers.ContentType).ShouldBeTrue();
+            trace.RequestData.Headers.ShouldBeSameAs(this.request.Headers);
+            trace.RequestData.Method.ShouldEqual(this.request.Method);
+            trace.RequestData.Url.ShouldBeSameAs(this.request.Url);
         }
 
         [Fact]

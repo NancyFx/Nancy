@@ -8,6 +8,7 @@ namespace Nancy.ModelBinding
     using System.Text.RegularExpressions;
 
     using Nancy.Extensions;
+    using Nancy.Responses.Negotiation;
 
     /// <summary>
     /// Default binder - used as a fallback when a specific modelbinder
@@ -485,7 +486,7 @@ namespace Nancy.ModelBinding
 
             var contentType = GetRequestContentType(context.Context);
 
-            if (string.IsNullOrEmpty(contentType))
+            if (contentType == null)
             {
                 return null;
             }
@@ -498,19 +499,14 @@ namespace Nancy.ModelBinding
                 : null;
         }
 
-        private static string GetRequestContentType(NancyContext context)
+        private static MediaRange GetRequestContentType(NancyContext context)
         {
             if (context == null || context.Request == null)
             {
-                return String.Empty;
+                return null;
             }
 
-            var contentType =
-                context.Request.Headers.ContentType;
-
-            return (string.IsNullOrEmpty(contentType))
-                ? string.Empty
-                : contentType;
+            return context.Request.Headers.ContentType;
         }
     }
 }

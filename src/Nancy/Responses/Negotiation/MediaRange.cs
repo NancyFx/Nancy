@@ -6,17 +6,25 @@ namespace Nancy.Responses.Negotiation
     /// <summary>
     /// Represents a media range from an accept header
     /// </summary>
-    public class MediaRange
+    public class MediaRange : IEquatable<MediaRange>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MediaRange"/> class from a string representation of a media range
         /// </summary>
         /// <param name="contentType">the content type</param>
-        public MediaRange(string contentType) : this()
+        public MediaRange(string contentType)
+        {
+            this.ParseContentType(contentType);
+        }
+
+        private void ParseContentType(string contentType)
         {
             if (string.IsNullOrEmpty(contentType))
             {
-                throw new ArgumentException("inputString cannot be null or empty", contentType);
+                this.Type = string.Empty;
+                this.Subtype = string.Empty;
+                this.Parameters = new MediaRangeParameters();
+                return;
             }
 
             if (contentType.Equals("*"))
@@ -36,19 +44,14 @@ namespace Nancy.Responses.Negotiation
             this.Type = parts[0];
             this.Subtype = parts[1].TrimEnd();
 
-            if (parts.Length > 2)
+            if (parts.Length <= 2)
             {
-                var separator = contentType.IndexOf(';');
-                this.Parameters = MediaRangeParameters.FromString(contentType.Substring(separator));
+                this.Parameters = new MediaRangeParameters();
+                return;
             }
-        }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MediaRange"/> class.
-        /// </summary>
-        public MediaRange()
-        {
-            this.Parameters = new MediaRangeParameters();
+            var separator = contentType.IndexOf(';');
+            this.Parameters = MediaRangeParameters.FromString(contentType.Substring(separator));
         }
 
         /// <summary>
@@ -106,10 +109,22 @@ namespace Nancy.Responses.Negotiation
         {
             if (mediaRange.Parameters.Any())
             {
-                return string.Format("{0}/{1};{2}", mediaRange.Type, mediaRange.Subtype, mediaRange.Parameters);
+                return string.Concat(mediaRange.Type, "/", mediaRange.Subtype, ";", mediaRange.Parameters);
             }
 
-            return string.Format("{0}/{1}", mediaRange.Type, mediaRange.Subtype);
+            return string.Concat(mediaRange.Type, "/",  mediaRange.Subtype);
+        }
+
+        /// <summary>
+        /// Indicates whether the current object is equal to another object of the same type.
+        /// </summary>
+        /// <returns>
+        /// true if the current object is equal to the <paramref name="other"/> parameter; otherwise, false.
+        /// </returns>
+        /// <param name="other">An object to compare with this object.</param>
+        public bool Equals(MediaRange other)
+        {
+            return this.Matches(other);
         }
 
         public override string ToString()
