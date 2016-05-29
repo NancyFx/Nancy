@@ -12,10 +12,13 @@
 
     "dependencies": {
         "Nancy": { "target": "project" },
-        "FluentValidation": "3.4.0"
+        "FluentValidation": "6.3.3-alpha"
     },
 
     "frameworks": {
-        "net452": { }
+        "net452": { },
+        "netstandard1.5": {
+            "imports": "dnxcore50"
+        }
     }
 }
