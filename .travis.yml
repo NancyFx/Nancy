@@ -16,4 +16,7 @@ script: ./travis.sh
 notifications:
   email:
     - nancy@nancyfx.org
+cache:
+  directories:
+    - $TRAVIS_BUILD_DIR/packages
 gemfile: Gemfile
