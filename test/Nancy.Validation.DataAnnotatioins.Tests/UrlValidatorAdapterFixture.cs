@@ -39,6 +39,8 @@
             validator.Description.Rules.SelectMany(r => r.Value).ShouldHave(r => r.RuleType == "Url" && r.MemberNames.Contains("OtherUrl"));
         }
 
+#if !__MonoCS__
+
         [Fact]
         public void Should_return_false_and_contain_property_name()
         {
@@ -83,6 +85,8 @@
             result.IsValid.ShouldBeFalse();
             result.Errors["OtherUrl"][0].ErrorMessage.ShouldEqual("The Other Url field is not a valid fully-qualified http, https, or ftp URL.");
         }
+
+#endif
 
         private class TestModel
         {

@@ -39,6 +39,8 @@
             validator.Description.Rules.SelectMany(r => r.Value).ShouldHave(r => r.RuleType == "Phone" && r.MemberNames.Contains("WorkPhone"));
         }
 
+#if !__MonoCS__
+
         [Fact]
         public void Should_return_false_and_contain_property_name()
         {
@@ -83,6 +85,8 @@
             result.IsValid.ShouldBeFalse();
             result.Errors["WorkPhone"][0].ErrorMessage.ShouldEqual("The Work Phone field is not a valid phone number.");
         }
+
+#endif
 
         private class TestModel
         {

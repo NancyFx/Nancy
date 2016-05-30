@@ -39,6 +39,8 @@
             validator.Description.Rules.SelectMany(r => r.Value).ShouldHave(r => r.RuleType == "FileExtension" && r.MemberNames.Contains("Avatar3"));
         }
 
+#if !__MonoCS__
+
         [Fact]
         public void Should_return_false_and_contain_property_name()
         {
@@ -83,6 +85,8 @@
             result.IsValid.ShouldBeFalse();
             result.Errors["Avatar3"][0].ErrorMessage.ShouldEqual("The Avatar 3 Url field only accepts files with the following extensions: .png, .jpg, .jpeg, .gif");
         }
+
+#endif
 
         private class TestModel
         {

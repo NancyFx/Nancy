@@ -39,6 +39,8 @@
             validator.Description.Rules.SelectMany(r => r.Value).ShouldHave(r => r.RuleType == "Regex" && r.MemberNames.Contains("WorkEmail"));
         }
 
+#if !__MonoCS__
+
         [Fact]
         public void Should_return_false_and_contain_property_name()
         {
@@ -83,6 +85,8 @@
             result.IsValid.ShouldBeFalse();
             result.Errors["WorkEmail"][0].ErrorMessage.ShouldEqual("The Work Email Address field is not a valid e-mail address.");
         }
+
+#endif
 
         private class TestModel
         {

@@ -39,6 +39,8 @@
             validator.Description.Rules.SelectMany(r => r.Value).ShouldHave(r => r.RuleType == "CreditCard" && r.MemberNames.Contains("DiscoverCard"));
         }
 
+#if !__MonoCS__
+
         [Fact]
         public void Should_return_false_and_contain_property_name()
         {
@@ -83,6 +85,8 @@
             result.IsValid.ShouldBeFalse();
             result.Errors["DiscoverCard"][0].ErrorMessage.ShouldEqual("The Discover Card field is not a valid credit card number.");
         }
+
+#endif
 
         private class TestModel
         {
