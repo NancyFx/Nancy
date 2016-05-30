@@ -7,20 +7,20 @@
     {
         public HomeModule()
         {
-            Get("/", (args, ct) => Task.FromResult("Hello from Nancy running on CoreCLR"));
+            Get("/", args => "Hello from Nancy running on CoreCLR");
 
-            Get("/conneg/{name}", (args, token) => Task.FromResult(new Person() { Name = args.name }));
+            Get("/conneg/{name}", args => new Person() { Name = args.name });
 
-            Post("/", (parameters, token) =>
+            Post("/", args =>
             {
                 var person = this.BindAndValidate<Person>();
 
                 if (!this.ModelValidationResult.IsValid)
                 {
-                    return Task.FromResult<dynamic>(422);
+                    return 422;
                 }
 
-                return Task.FromResult<dynamic>(person);
+                return person;
             });
         }
     }
