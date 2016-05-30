@@ -5,7 +5,8 @@
     },
 
     "dependencies": {
-        "Nancy": { "target": "project" }
+        "Nancy": { "target": "project" },
+        "Nancy.Validation.FluentValidation": {"target": "project"}
     },
 
     "frameworks": {
