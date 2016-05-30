@@ -9,7 +9,7 @@
         {
             Get("/", (args, ct) => Task.FromResult("Hello from Nancy running on CoreCLR"));
 
-            Get("/conneg/{name}", (args, token) => Task.FromResult(new Person() { Name = args.name });
+            Get("/conneg/{name}", (args, token) => Task.FromResult(new Person() { Name = args.name }));
 
             Post("/", (parameters, token) =>
             {
