@@ -12,7 +12,7 @@
 
     "dependencies": {
         "Nancy": { "target": "project" },
-        "FluentValidation": "6.3.3-alpha"
+        "FluentValidation": "6.3.4-alpha"
     },
 
     "frameworks": {
