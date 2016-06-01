@@ -50,7 +50,11 @@ namespace Nancy.ModelBinding.DefaultBodyDeserializers
 
             serializer.RegisterConverters(this.jsonConfiguration.Converters, this.jsonConfiguration.PrimitiveConverters);
 
-            bodyStream.Position = 0;
+            if (bodyStream.CanSeek)
+            {
+                bodyStream.Position = 0;
+            }
+
             string bodyText;
             using (var bodyReader = new StreamReader(bodyStream))
             {
