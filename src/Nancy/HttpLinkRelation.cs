@@ -94,7 +94,7 @@
         /// </returns>
         public override bool Equals(object other)
         {
-            return ((IEquatable<HttpLinkRelation>)this).Equals(other as HttpLinkRelation);
+            return other is HttpLinkRelation && this.Equals((HttpLinkRelation)other);
         }
 
         /// <summary>
@@ -105,7 +105,18 @@
         /// </returns>
         public override int GetHashCode()
         {
-            return StringComparer.OrdinalIgnoreCase.GetHashCode(this.ToString());
+            unchecked
+            {
+                var p = this.prefix != null
+                    ? this.prefix.GetHashCode()
+                    : 0;
+
+                var v = this.value != null
+                    ? StringComparer.OrdinalIgnoreCase.GetHashCode(this.value)
+                    : 0;
+
+                return (p * 397) ^ v;
+            }
         }
 
         /// <summary>

@@ -139,12 +139,17 @@ namespace Nancy
         /// </returns>
         public bool Equals(HttpLink other)
         {
-            if (ReferenceEquals(other, null))
+            if (ReferenceEquals(null, other))
             {
                 return false;
             }
 
-            if (this.TargetUri != other.TargetUri)
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            if (!Equals(this.targetUri, other.targetUri))
             {
                 return false;
             }
@@ -180,7 +185,7 @@ namespace Nancy
         /// </returns>
         public override bool Equals(object other)
         {
-            return ((IEquatable<HttpLink>)this).Equals(other as HttpLink);
+            return other is HttpLink && this.Equals((HttpLink)other);
         }
 
         /// <summary>
@@ -191,7 +196,22 @@ namespace Nancy
         /// </returns>
         public override int GetHashCode()
         {
-            return StringComparer.OrdinalIgnoreCase.GetHashCode(this.ToString());
+            unchecked
+            {
+                var p = 0;
+
+                foreach (var parameter in this.parameters)
+                {
+                    p ^= StringComparer.OrdinalIgnoreCase.GetHashCode(parameter.Key);
+                    p ^= parameter.Value != null ? parameter.Value.GetHashCode() : 0;
+                }
+
+                var u = this.targetUri != null
+                    ? StringComparer.OrdinalIgnoreCase.GetHashCode(this.targetUri.ToString())
+                    : 0;
+
+                return (p * 397) ^ u;
+            }
         }
 
         /// <summary>
