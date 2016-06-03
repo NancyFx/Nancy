@@ -457,9 +457,13 @@ namespace Nancy.Tests.Functional.Tests
             var response = await browser.Get("/");
 
             // Then
-            Assert.True(response.Headers["Link"].Contains(@"</.foo>; rel=""alternate""; type=""foo/bar"""));
-            Assert.True(response.Headers["Link"].Contains(@"</.json>; rel=""alternate""; type=""application/json"""));
-            Assert.True(response.Headers["Link"].Contains(@"</.xml>; rel=""alternate""; type=""application/xml"""));
+            var linkHeader = response.Headers["Link"];
+            Assert.True(linkHeader.Contains(@"</.foo>; rel=""alternate""; type=""foo/bar"""),
+                        string.Format("'{0}' does not contain '{1}'", linkHeader, @"</.foo>; rel=""alternate""; type=""foo/bar"""));
+            Assert.True(linkHeader.Contains(@"</.json>; rel=""alternate""; type=""application/json"""),
+                        string.Format("'{0}' does not contain '{1}'", linkHeader, @"</.json>; rel=""alternate""; type=""application/json"""));
+            Assert.True(linkHeader.Contains(@"</.xml>; rel=""alternate""; type=""application/xml"""),
+                        string.Format("'{0}' does not contain '{1}'", linkHeader, @"</.xml>; rel=""alternate""; type=""application/xml"""));
         }
 
         [Fact]
@@ -480,8 +484,11 @@ namespace Nancy.Tests.Functional.Tests
             var response = await browser.Get("/");
 
             // Then
-            Assert.True(response.Headers["Link"].Contains(@"</context.jsonld>; rel=""http://www.w3.org/ns/json-ld#context""; type=""application/ld+json"""));
-            Assert.True(response.Headers["Link"].Contains(@"</.xml>; rel=""alternate""; type=""application/xml"""));
+            var linkHeader = response.Headers["Link"];
+            Assert.True(linkHeader.Contains(@"</context.jsonld>; rel=""http://www.w3.org/ns/json-ld#context""; type=""application/ld+json"""),
+                        string.Format("'{0}' does not contain '{1}'", linkHeader, @"</context.jsonld>; rel=""http://www.w3.org/ns/json-ld#context""; type=""application/ld+json"""));
+            Assert.True(linkHeader.Contains(@"</.xml>; rel=""alternate""; type=""application/xml"""),
+                        string.Format("'{0}' does not contain '{1}'", linkHeader, @"</.xml>; rel=""alternate""; type=""application/xml"""));
         }
 
         [Fact]

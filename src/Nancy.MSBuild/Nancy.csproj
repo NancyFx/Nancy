@@ -356,6 +356,15 @@
     <Compile Include="..\Nancy\Helpers\ExceptionExtensions.cs">
       <Link>Helpers\ExceptionExtensions.cs</Link>
     </Compile>
+    <Compile Include="..\Nancy\HttpLink.cs">
+      <Link>HttpLink.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy\HttpLinkBuilder.cs">
+      <Link>HttpLinkBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy\HttpLinkRelation.cs">
+      <Link>HttpLinkRelation.cs</Link>
+    </Compile>
     <Compile Include="..\Nancy\IAssemblyCatalog.cs">
       <Link>IAssemblyCatalog.cs</Link>
     </Compile>

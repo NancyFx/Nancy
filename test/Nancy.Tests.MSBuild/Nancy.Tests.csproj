@@ -276,6 +276,15 @@
     <Compile Include="..\Nancy.Tests\Unit\Helpers\HttpUtilityFixture.cs">
       <Link>Unit\Helpers\HttpUtilityFixture.cs</Link>
     </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\HttpLinkBuilderFixture.cs">
+      <Link>Unit\HttpLinkBuilderFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\HttpLinkFixture.cs">
+      <Link>Unit\HttpLinkFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\HttpLinkRelationFixture.cs">
+      <Link>Unit\HttpLinkRelationFixture.cs</Link>
+    </Compile>
     <Compile Include="..\Nancy.Tests\Unit\JsonSerializerFixture.cs">
       <Link>Unit\JsonSerializerFixture.cs</Link>
     </Compile>

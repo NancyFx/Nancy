@@ -361,36 +361,20 @@
         {
             var fileName = Path.GetFileNameWithoutExtension(requestUrl.Path);
             var baseUrl = string.Concat(requestUrl.BasePath, "/", fileName);
+            var linkBuilder = new HttpLinkBuilder();
 
-            var result = new StringBuilder();
+            if (existingLinkHeader != null)
+            {
+                linkBuilder.Add(existingLinkHeader);
+            }
 
             foreach (var linkProcessor in linkProcessors)
             {
-                if (result.Length > 0)
-                {
-                    result.Append(", ");
-                }
-
-                result.Append("<");
-                result.Append(baseUrl);
-                result.Append(".");
-                result.Append(linkProcessor.Key);
-                result.Append(">; rel=\"alternate\"; type=\"");
-                result.Append(linkProcessor.Value);
-                result.Append("\"");
+                var uri = string.Concat(baseUrl, '.', linkProcessor.Key);
+                linkBuilder.Add(new HttpLink(uri, "alternate", linkProcessor.Value));
             }
 
-            if (!string.IsNullOrEmpty(existingLinkHeader))
-            {
-                if (result.Length > 0)
-                {
-                    result.Append(", ");
-                }
-
-                result.Append(existingLinkHeader);
-            }
-
-            return result.ToString();
+            return linkBuilder.ToString();
         }
 
         /// <summary>
