@@ -17,7 +17,7 @@
     "frameworks": {
         "net452": {
             "dependencies": {
-                "FakeItEasy": "2.0.0-beta011"
+                "FakeItEasy": "2.0.0"
             },
             "frameworkAssemblies": {
                 "System.Runtime": { "type": "build" }
