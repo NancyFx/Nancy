@@ -48,7 +48,7 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
             const string contentType = "application/xml";
 
             // When
-            var result = this.deserialize.CanDeserialize(contentType, A<BindingContext>._);
+            var result = this.deserialize.CanDeserialize(contentType, A.Dummy<BindingContext>());
 
             // Then
             result.ShouldBeFalse();
@@ -61,7 +61,7 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
             const string contentType = "application/json";
 
             // When
-            var result = this.deserialize.CanDeserialize(contentType, A<BindingContext>._);
+            var result = this.deserialize.CanDeserialize(contentType, A.Dummy<BindingContext>());
 
             // Then
             result.ShouldBeTrue();
@@ -74,7 +74,7 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
             const string contentType = "text/json";
 
             // When
-            var result = this.deserialize.CanDeserialize(contentType, A<BindingContext>._);
+            var result = this.deserialize.CanDeserialize(contentType, A.Dummy<BindingContext>());
 
             // Then
             result.ShouldBeTrue();
@@ -87,7 +87,7 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
             const string contentType = "application/vnd.org.nancyfx.mything+json";
 
             // When
-            var result = this.deserialize.CanDeserialize(contentType, A<BindingContext>._);
+            var result = this.deserialize.CanDeserialize(contentType, A.Dummy<BindingContext>());
 
             // Then
             result.ShouldBeTrue();
@@ -100,7 +100,7 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
             const string contentType = "appLicaTion/jsOn";
 
             // When
-            var result = this.deserialize.CanDeserialize(contentType, A<BindingContext>._);
+            var result = this.deserialize.CanDeserialize(contentType, A.Dummy<BindingContext>());
 
             // Then
             result.ShouldBeTrue();
