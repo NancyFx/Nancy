@@ -98,9 +98,6 @@
     <Compile Include="..\Nancy.ViewEngines.Markdown.Tests\MarkdownViewengineRenderFixture.cs">
       <Link>MarkdownViewengineRenderFixture.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy.ViewEngines.Markdown.Tests\Properties\AssemblyInfo.cs">
-      <Link>Properties\AssemblyInfo.cs</Link>
-    </Compile>
     <Compile Include="..\Nancy.ViewEngines.Markdown.Tests\UserModel.cs">
       <Link>UserModel.cs</Link>
     </Compile>
@@ -146,6 +143,9 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
