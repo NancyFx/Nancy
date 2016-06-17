@@ -2,6 +2,7 @@
     "dependencies": {
         "AngleSharp": "0.9.5",
         "dotnet-test-xunit": "2.2.0-preview2-build1029",
+        "FakeItEasy.Analyzer": "2.1.0",
         "Microsoft.NETCore.Platforms": "1.0.1",
         "Nancy": { "target": "project" },
         "Nancy.Testing": { "target": "project" },

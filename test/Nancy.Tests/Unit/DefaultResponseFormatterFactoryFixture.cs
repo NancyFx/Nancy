@@ -18,7 +18,6 @@
             A.CallTo(() => this.rootPathProvider.GetRootPath()).Returns("RootPath");
 
             this.serializerFactory = A.Fake<ISerializerFactory>();
-            A.CallTo(() => this.serializerFactory.GetSerializer(A<MediaRange>._));
 
             this.environment = A.Fake<INancyEnvironment>();
 
