@@ -7,7 +7,8 @@
         "Nancy": { "target": "project" },
         "Nancy.Owin": { "target": "project" },
         "Nancy.Testing": { "target": "project" },
-        "xunit": "2.2.0-beta2-build3300"
+        "xunit": "2.2.0-beta2-build3300",
+        "FakeItEasy.Analyzer": "2.1.0"
     },
 
     "buildOptions": {
