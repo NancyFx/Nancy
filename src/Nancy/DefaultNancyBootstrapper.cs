@@ -57,14 +57,14 @@ namespace Nancy
         /// <param name="container">Container instance</param>
         protected override void ConfigureApplicationContainer(TinyIoCContainer container)
         {
-            AutoRegister(container, this.AutoRegisterIgnoredAssemblies);
+            this.AutoRegister(container, this.AutoRegisterIgnoredAssemblies);
         }
 
         /// <summary>
         /// Resolve INancyEngine
         /// </summary>
         /// <returns>INancyEngine implementation</returns>
-        protected override sealed INancyEngine GetEngineInternal()
+        protected sealed override INancyEngine GetEngineInternal()
         {
             return this.ApplicationContainer.Resolve<INancyEngine>();
         }
@@ -94,7 +94,7 @@ namespace Nancy
         /// to take the responsibility of registering things like INancyModuleCatalog manually.
         /// </summary>
         /// <param name="applicationContainer">Application container to register into</param>
-        protected override sealed void RegisterBootstrapperTypes(TinyIoCContainer applicationContainer)
+        protected sealed override void RegisterBootstrapperTypes(TinyIoCContainer applicationContainer)
         {
             applicationContainer.Register<INancyModuleCatalog>(this);
         }
@@ -104,7 +104,7 @@ namespace Nancy
         /// </summary>
         /// <param name="container">Container to register into</param>
         /// <param name="typeRegistrations">Type registrations to register</param>
-        protected override sealed void RegisterTypes(TinyIoCContainer container, IEnumerable<TypeRegistration> typeRegistrations)
+        protected sealed override void RegisterTypes(TinyIoCContainer container, IEnumerable<TypeRegistration> typeRegistrations)
         {
             foreach (var typeRegistration in typeRegistrations)
             {
@@ -130,7 +130,7 @@ namespace Nancy
         /// </summary>
         /// <param name="container">Container to register into</param>
         /// <param name="collectionTypeRegistrations">Collection type registrations to register</param>
-        protected override sealed void RegisterCollectionTypes(TinyIoCContainer container, IEnumerable<CollectionTypeRegistration> collectionTypeRegistrations)
+        protected sealed override void RegisterCollectionTypes(TinyIoCContainer container, IEnumerable<CollectionTypeRegistration> collectionTypeRegistrations)
         {
             foreach (var collectionTypeRegistration in collectionTypeRegistrations)
             {
@@ -155,7 +155,7 @@ namespace Nancy
         /// </summary>
         /// <param name="container">Container to register into</param>
         /// <param name="moduleRegistrationTypes">NancyModule types</param>
-        protected override sealed void RegisterRequestContainerModules(TinyIoCContainer container, IEnumerable<ModuleRegistration> moduleRegistrationTypes)
+        protected sealed override void RegisterRequestContainerModules(TinyIoCContainer container, IEnumerable<ModuleRegistration> moduleRegistrationTypes)
         {
             foreach (var moduleRegistrationType in moduleRegistrationTypes)
             {
@@ -254,7 +254,7 @@ namespace Nancy
         /// </summary>
         /// <param name="container">Container to use</param>
         /// <returns>Collection of NancyModule instances</returns>
-        protected override sealed IEnumerable<INancyModule> GetAllModules(TinyIoCContainer container)
+        protected sealed override IEnumerable<INancyModule> GetAllModules(TinyIoCContainer container)
         {
             var nancyModules = container.ResolveAll<INancyModule>(false);
             return nancyModules;
@@ -266,7 +266,7 @@ namespace Nancy
         /// <param name="container">Container to use</param>
         /// <param name="moduleType">Type of the module</param>
         /// <returns>NancyModule instance</returns>
-        protected override sealed INancyModule GetModule(TinyIoCContainer container, Type moduleType)
+        protected sealed override INancyModule GetModule(TinyIoCContainer container, Type moduleType)
         {
             container.Register(typeof(INancyModule), moduleType);
 
@@ -277,6 +277,7 @@ namespace Nancy
         /// Executes auto registration with the given container.
         /// </summary>
         /// <param name="container">Container instance</param>
+        /// <param name="ignoredAssemblies">List of ignored assemblies</param>
         private void AutoRegister(TinyIoCContainer container, IEnumerable<Func<Assembly, bool>> ignoredAssemblies)
         {
             var assembly = typeof(NancyEngine).GetTypeInfo().Assembly;
