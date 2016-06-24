@@ -168,7 +168,7 @@ namespace Nancy.Authentication.Forms.Tests
 
             var result = FormsAuthentication.UserLoggedInRedirectResponse(context, userGuid);
 
-            result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).Any().ShouldBeTrue();
+            result.Cookies.Any(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).ShouldBeTrue();
         }
 
         [Fact]
@@ -181,7 +181,7 @@ namespace Nancy.Authentication.Forms.Tests
             var result = FormsAuthentication.UserLoggedInResponse(userGuid);
 
             // Then
-            result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).Any().ShouldBeTrue();
+            result.Cookies.Any(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).ShouldBeTrue();
         }
 
         [Fact]
@@ -194,7 +194,7 @@ namespace Nancy.Authentication.Forms.Tests
             var result = FormsAuthentication.UserLoggedInRedirectResponse(context, userGuid);
 
             //Then
-            result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).First()
+            result.Cookies.First(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName)
                 .HttpOnly.ShouldBeTrue();
         }
 
@@ -208,7 +208,7 @@ namespace Nancy.Authentication.Forms.Tests
             var result = FormsAuthentication.UserLoggedInResponse(userGuid);
 
             // Then
-            result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).First()
+            result.Cookies.First(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName)
                 .HttpOnly.ShouldBeTrue();
         }
 
@@ -219,7 +219,7 @@ namespace Nancy.Authentication.Forms.Tests
 
             var result = FormsAuthentication.UserLoggedInRedirectResponse(context, userGuid);
 
-            result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).First()
+            result.Cookies.First(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName)
                 .Expires.ShouldBeNull();
         }
 
@@ -233,7 +233,7 @@ namespace Nancy.Authentication.Forms.Tests
             var result = FormsAuthentication.UserLoggedInResponse(userGuid);
 
             // Then
-            result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).First()
+            result.Cookies.First(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName)
                 .Expires.ShouldBeNull();
         }
 
@@ -244,7 +244,7 @@ namespace Nancy.Authentication.Forms.Tests
 
             var result = FormsAuthentication.UserLoggedInRedirectResponse(context, userGuid, DateTime.Now.AddDays(1));
 
-            result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).First()
+            result.Cookies.First(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName)
                 .Expires.ShouldNotBeNull();
         }
 
@@ -258,7 +258,7 @@ namespace Nancy.Authentication.Forms.Tests
             var result = FormsAuthentication.UserLoggedInResponse(userGuid, DateTime.Now.AddDays(1));
 
             // Then
-            result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).First()
+            result.Cookies.First(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName)
                 .Expires.ShouldNotBeNull();
         }
 
@@ -360,7 +360,7 @@ namespace Nancy.Authentication.Forms.Tests
 
             var result = FormsAuthentication.LogOutAndRedirectResponse(context, "/");
 
-            var cookie = result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).First();
+            var cookie = result.Cookies.First(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName);
             cookie.Value.ShouldBeEmpty();
             cookie.Expires.ShouldNotBeNull();
             (cookie.Expires < DateTime.Now).ShouldBeTrue();
@@ -609,8 +609,7 @@ namespace Nancy.Authentication.Forms.Tests
 
             //Then
             result.Cookies
-                    .Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName)
-                    .First()
+                    .First(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName)
                     .Secure.ShouldBeTrue();
         }
 
@@ -625,8 +624,7 @@ namespace Nancy.Authentication.Forms.Tests
 
             // Then
             result.Cookies
-                    .Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName)
-                    .First()
+                    .First(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName)
                     .Secure.ShouldBeTrue();
         }
 
@@ -637,7 +635,7 @@ namespace Nancy.Authentication.Forms.Tests
 
             var result = FormsAuthentication.LogOutAndRedirectResponse(context, "/");
 
-            var cookie = result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).First();
+            var cookie = result.Cookies.First(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName);
             cookie.Secure.ShouldBeTrue();
         }
 
@@ -651,7 +649,7 @@ namespace Nancy.Authentication.Forms.Tests
             var result = FormsAuthentication.LogOutResponse();
 
             // Then
-            var cookie = result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).First();
+            var cookie = result.Cookies.First(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName);
             cookie.Secure.ShouldBeTrue();
         }
 
@@ -704,7 +702,7 @@ namespace Nancy.Authentication.Forms.Tests
             var result = FormsAuthentication.UserLoggedInRedirectResponse(context, userGuid);
 
             //Then
-            var cookie = result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).First();
+            var cookie = result.Cookies.First(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName);
             cookie.Domain.ShouldEqual(domain);
         }
 
@@ -718,7 +716,7 @@ namespace Nancy.Authentication.Forms.Tests
             var result = FormsAuthentication.UserLoggedInRedirectResponse(context, userGuid);
 
             //Then
-            var cookie = result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).First();
+            var cookie = result.Cookies.First(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName);
             cookie.Path.ShouldEqual(path);
         }
 

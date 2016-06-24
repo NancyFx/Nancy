@@ -20,7 +20,8 @@
             "ErrorHandling/Resources/**/*.*",
             "Diagnostics/Resources/**/*.*",
             "Diagnostics/Views/**/*.*"
-        ]
+        ],
+		"xmlDoc": true
     },
 
     "frameworks": {
