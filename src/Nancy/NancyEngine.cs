@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -22,7 +21,14 @@
     /// </summary>
     public class NancyEngine : INancyEngine
     {
+        /// <summary>
+        /// Key for error type
+        /// </summary>
         public const string ERROR_KEY = "ERROR_TRACE";
+
+        /// <summary>
+        /// Key for error exception message
+        /// </summary>
         public const string ERROR_EXCEPTION = "ERROR_EXCEPTION";
 
         private readonly IRequestDispatcher dispatcher;
@@ -257,7 +263,7 @@
             {
                 handler.Handle(context.Response.StatusCode, context);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 if (defaultHandler == null)
                 {
