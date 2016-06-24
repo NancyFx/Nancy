@@ -143,6 +143,12 @@
             return defaultValue;
         }
 
+        /// <summary>
+        /// == operator for DynamicDictionaryValue
+        /// </summary>
+        /// <param name="dynamicValue"></param>
+        /// <param name="compareValue"></param>
+        /// <returns></returns>
         public static bool operator ==(DynamicDictionaryValue dynamicValue, object compareValue)
         {
             if (ReferenceEquals(null, dynamicValue))
@@ -158,6 +164,12 @@
             return dynamicValue.value != null && dynamicValue.value.Equals(compareValue);
         }
 
+        /// <summary>
+        /// != operator for DynamicDictionaryValue
+        /// </summary>
+        /// <param name="dynamicValue"></param>
+        /// <param name="compareValue"></param>
+        /// <returns></returns>
         public static bool operator !=(DynamicDictionaryValue dynamicValue, object compareValue)
         {
             return !(dynamicValue == compareValue);
