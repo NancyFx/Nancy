@@ -3,6 +3,9 @@ namespace Nancy
     using System.Threading;
     using System.Threading.Tasks;
 
+    /// <summary>
+    /// Extensions for Nancy engine
+    /// </summary>
     public static class NancyEngineExtensions
     {
         /// <summary>
