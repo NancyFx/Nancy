@@ -280,7 +280,7 @@
             else if (binderType.GetTypeInfo().IsEnum)
             {
                 // handles enum to enum assignments
-                if (value.GetType().GetTypeInfo().IsEnum)
+                if (this.value.GetType().GetTypeInfo().IsEnum)
                 {
                     if (binderType == this.value.GetType())
                     {
@@ -333,11 +333,19 @@
             return base.TryConvert(binder, out result);
         }
 
+        /// <summary>
+        /// Returns the string representation for a DynamicDictionaryValue instance
+        /// </summary>
         public override string ToString()
         {
             return this.value == null ? base.ToString() : Convert.ToString(this.value);
         }
 
+
+        /// <summary>
+        /// Implicit type conversion operator from DynamicDictionaryValue to bool?
+        /// </summary>
+        /// <param name="dynamicValue"></param>
         public static implicit operator bool?(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -348,6 +356,11 @@
             return (bool)dynamicValue;
         }
 
+
+        /// <summary>
+        /// Implicit type conversion operator from DynamicDictionaryValue to bool
+        /// </summary>
+        /// <param name="dynamicValue"></param>
         public static implicit operator bool(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -369,6 +382,11 @@
             return true;
         }
 
+
+        /// <summary>
+        /// Implicit type conversion operator from DynamicDictionaryValue to string
+        /// </summary>
+        /// <param name="dynamicValue"></param>
         public static implicit operator string(DynamicDictionaryValue dynamicValue)
         {
             return dynamicValue.HasValue
@@ -376,6 +394,11 @@
                        : null;
         }
 
+
+        /// <summary>
+        /// Implicit type conversion operator from DynamicDictionaryValue to int?
+        /// </summary>
+        /// <param name="dynamicValue"></param>
         public static implicit operator int?(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -386,6 +409,11 @@
             return (int)dynamicValue;
         }
 
+
+        /// <summary>
+        /// Implicit type conversion operator from DynamicDictionaryValue to int
+        /// </summary>
+        /// <param name="dynamicValue"></param>
         public static implicit operator int(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -401,6 +429,11 @@
             return int.Parse(dynamicValue.ToString());
         }
 
+
+        /// <summary>
+        /// Implicit type conversion operator from DynamicDictionaryValue to Guid?
+        /// </summary>
+        /// <param name="dynamicValue"></param>
         public static implicit operator Guid?(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -411,6 +444,11 @@
             return (Guid)dynamicValue;
         }
 
+
+        /// <summary>
+        /// Implicit type conversion operator from DynamicDictionaryValue to Guid
+        /// </summary>
+        /// <param name="dynamicValue"></param>
         public static implicit operator Guid(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -426,6 +464,11 @@
             return Guid.Parse(dynamicValue.ToString());
         }
 
+
+        /// <summary>
+        /// Implicit type conversion operator from DynamicDictionaryValue to DateTime?
+        /// </summary>
+        /// <param name="dynamicValue"></param>
         public static implicit operator DateTime?(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -436,6 +479,11 @@
             return (DateTime)dynamicValue;
         }
 
+
+        /// <summary>
+        /// Implicit type conversion operator from DynamicDictionaryValue to DateTime
+        /// </summary>
+        /// <param name="dynamicValue"></param>
         public static implicit operator DateTime(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -451,6 +499,11 @@
             return DateTime.Parse(dynamicValue.ToString(), CultureInfo.InvariantCulture, dynamicValue.globalizationConfiguration.DateTimeStyles);
         }
 
+
+        /// <summary>
+        /// Implicit type conversion operator from DynamicDictionaryValue to TimeSpan?
+        /// </summary>
+        /// <param name="dynamicValue"></param>
         public static implicit operator TimeSpan?(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -461,6 +514,11 @@
             return (TimeSpan)dynamicValue;
         }
 
+
+        /// <summary>
+        /// Implicit type conversion operator from DynamicDictionaryValue to TimeSpan
+        /// </summary>
+        /// <param name="dynamicValue"></param>
         public static implicit operator TimeSpan(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -476,6 +534,11 @@
             return TimeSpan.Parse(dynamicValue.ToString());
         }
 
+
+        /// <summary>
+        /// Implicit type conversion operator from DynamicDictionaryValue to long?
+        /// </summary>
+        /// <param name="dynamicValue"></param>
         public static implicit operator long?(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -486,6 +549,11 @@
             return (long)dynamicValue;
         }
 
+
+        /// <summary>
+        /// Implicit type conversion operator from DynamicDictionaryValue to long
+        /// </summary>
+        /// <param name="dynamicValue"></param>
         public static implicit operator long(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -501,6 +569,11 @@
             return long.Parse(dynamicValue.ToString());
         }
 
+
+        /// <summary>
+        /// Implicit type conversion operator from DynamicDictionaryValue to float?
+        /// </summary>
+        /// <param name="dynamicValue"></param>
         public static implicit operator float?(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -511,6 +584,11 @@
             return (float)dynamicValue;
         }
 
+
+        /// <summary>
+        /// Implicit type conversion operator from DynamicDictionaryValue to float
+        /// </summary>
+        /// <param name="dynamicValue"></param>
         public static implicit operator float(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -526,6 +604,11 @@
             return float.Parse(dynamicValue.ToString());
         }
 
+
+        /// <summary>
+        /// Implicit type conversion operator from DynamicDictionaryValue to decimal?
+        /// </summary>
+        /// <param name="dynamicValue"></param>
         public static implicit operator decimal?(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -536,6 +619,11 @@
             return (decimal)dynamicValue;
         }
 
+
+        /// <summary>
+        /// Implicit type conversion operator from DynamicDictionaryValue to decimal
+        /// </summary>
+        /// <param name="dynamicValue"></param>
         public static implicit operator decimal(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -551,6 +639,11 @@
             return decimal.Parse(dynamicValue.ToString());
         }
 
+
+        /// <summary>
+        /// Implicit type conversion operator from DynamicDictionaryValue to double?
+        /// </summary>
+        /// <param name="dynamicValue"></param>
         public static implicit operator double?(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -561,6 +654,10 @@
             return (double)dynamicValue;
         }
 
+        /// <summary>
+        /// Implicit type conversion operator from DynamicDictionaryValue to double
+        /// </summary>
+        /// <param name="dynamicValue"></param>
         public static implicit operator double(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -587,8 +684,8 @@
         /// <filterpriority>2</filterpriority>
         public TypeCode GetTypeCode()
         {
-            if (value == null) return TypeCode.Empty;
-            return value.GetType().GetTypeCode();
+            if (this.value == null) return TypeCode.Empty;
+            return this.value.GetType().GetTypeCode();
         }
 
         /// <summary>
@@ -600,7 +697,7 @@
         /// <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information. </param><filterpriority>2</filterpriority>
         public bool ToBoolean(IFormatProvider provider)
         {
-            return Convert.ToBoolean(value, provider);
+            return Convert.ToBoolean(this.value, provider);
         }
 
         /// <summary>
@@ -612,7 +709,7 @@
         /// <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information. </param><filterpriority>2</filterpriority>
         public char ToChar(IFormatProvider provider)
         {
-            return Convert.ToChar(value, provider);
+            return Convert.ToChar(this.value, provider);
         }
 
         /// <summary>
@@ -624,7 +721,7 @@
         /// <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information. </param><filterpriority>2</filterpriority>
         public sbyte ToSByte(IFormatProvider provider)
         {
-            return Convert.ToSByte(value, provider);
+            return Convert.ToSByte(this.value, provider);
         }
 
         /// <summary>
@@ -636,7 +733,7 @@
         /// <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information. </param><filterpriority>2</filterpriority>
         public byte ToByte(IFormatProvider provider)
         {
-            return Convert.ToByte(value, provider);
+            return Convert.ToByte(this.value, provider);
         }
 
         /// <summary>
@@ -648,7 +745,7 @@
         /// <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information. </param><filterpriority>2</filterpriority>
         public short ToInt16(IFormatProvider provider)
         {
-            return Convert.ToInt16(value, provider);
+            return Convert.ToInt16(this.value, provider);
         }
 
         /// <summary>
@@ -660,7 +757,7 @@
         /// <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information. </param><filterpriority>2</filterpriority>
         public ushort ToUInt16(IFormatProvider provider)
         {
-            return Convert.ToUInt16(value, provider);
+            return Convert.ToUInt16(this.value, provider);
         }
 
         /// <summary>
@@ -672,7 +769,7 @@
         /// <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information. </param><filterpriority>2</filterpriority>
         public int ToInt32(IFormatProvider provider)
         {
-            return Convert.ToInt32(value, provider);
+            return Convert.ToInt32(this.value, provider);
         }
 
         /// <summary>
@@ -684,7 +781,7 @@
         /// <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information. </param><filterpriority>2</filterpriority>
         public uint ToUInt32(IFormatProvider provider)
         {
-            return Convert.ToUInt32(value, provider);
+            return Convert.ToUInt32(this.value, provider);
         }
 
         /// <summary>
@@ -696,7 +793,7 @@
         /// <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information. </param><filterpriority>2</filterpriority>
         public long ToInt64(IFormatProvider provider)
         {
-            return Convert.ToInt64(value, provider);
+            return Convert.ToInt64(this.value, provider);
         }
 
         /// <summary>
@@ -708,7 +805,7 @@
         /// <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information. </param><filterpriority>2</filterpriority>
         public ulong ToUInt64(IFormatProvider provider)
         {
-            return Convert.ToUInt64(value, provider);
+            return Convert.ToUInt64(this.value, provider);
         }
 
         /// <summary>
@@ -720,7 +817,7 @@
         /// <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information. </param><filterpriority>2</filterpriority>
         public float ToSingle(IFormatProvider provider)
         {
-            return Convert.ToSingle(value, provider);
+            return Convert.ToSingle(this.value, provider);
         }
 
         /// <summary>
@@ -732,7 +829,7 @@
         /// <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information. </param><filterpriority>2</filterpriority>
         public double ToDouble(IFormatProvider provider)
         {
-            return Convert.ToDouble(value, provider);
+            return Convert.ToDouble(this.value, provider);
         }
 
         /// <summary>
@@ -744,7 +841,7 @@
         /// <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information. </param><filterpriority>2</filterpriority>
         public decimal ToDecimal(IFormatProvider provider)
         {
-            return Convert.ToDecimal(value, provider);
+            return Convert.ToDecimal(this.value, provider);
         }
 
         /// <summary>
@@ -756,7 +853,7 @@
         /// <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information. </param><filterpriority>2</filterpriority>
         public DateTime ToDateTime(IFormatProvider provider)
         {
-            return Convert.ToDateTime(value, provider);
+            return Convert.ToDateTime(this.value, provider);
         }
 
         /// <summary>
@@ -768,7 +865,7 @@
         /// <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information. </param><filterpriority>2</filterpriority>
         public string ToString(IFormatProvider provider)
         {
-            return Convert.ToString(value, provider);
+            return Convert.ToString(this.value, provider);
         }
 
         /// <summary>
@@ -780,7 +877,7 @@
         /// <param name="conversionType">The <see cref="T:System.Type"/> to which the value of this instance is converted. </param><param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information. </param><filterpriority>2</filterpriority>
         public object ToType(Type conversionType, IFormatProvider provider)
         {
-            return Convert.ChangeType(value, conversionType, provider);
+            return Convert.ChangeType(this.value, conversionType, provider);
         }
 
 #endregion
