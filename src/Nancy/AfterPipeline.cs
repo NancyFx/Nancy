@@ -24,7 +24,7 @@ namespace Nancy
         /// <summary>
         /// Creates a new instance of AfterPipeline with a capacity
         /// </summary>
-        /// <param name="capacity">Size of the pipeline, usually the count of pipeline items</param>
+        /// <param name="capacity">Size of the pipeline which is the count of pipeline delegates</param>
         public AfterPipeline(int capacity)
             : base(capacity)
         {
@@ -51,7 +51,7 @@ namespace Nancy
         }
 
         /// <summary>
-        /// Appends a new task to the AfterPipeline
+        /// Appends a new func to the AfterPipeline
         /// </summary>
         /// <param name="pipeline">Target pipeline</param>
         /// <param name="func">A function that returns a task</param>
