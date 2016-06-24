@@ -5,7 +5,7 @@
     using System.Linq;
 
     /// <summary>
-    /// Abstract base class for After and Before pipelines
+    /// Abstract base class for request pipelines with async support
     /// </summary>
     /// <typeparam name="TAsyncDelegate"></typeparam>
     /// <typeparam name="TSyncDelegate"></typeparam>
