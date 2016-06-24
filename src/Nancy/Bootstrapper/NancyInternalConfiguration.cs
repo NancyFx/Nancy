@@ -85,98 +85,239 @@ namespace Nancy.Bootstrapper
             }
         }
 
+        /// <summary>
+        /// Type of runtime evironment information
+        /// </summary>
         public Type RuntimeEnvironmentInformation { get; set; }
 
+        /// <summary>
+        /// Type of serializer factory
+        /// </summary>
         public Type SerializerFactory { get; set; }
 
+        /// <summary>
+        /// Type of default configuration providers
+        /// </summary>
         public IList<Type> DefaultConfigurationProviders { get; set; }
 
+        /// <summary>
+        /// Type of environment configurator
+        /// </summary>
         public Type EnvironmentConfigurator { get; set; }
 
+        /// <summary>
+        /// Type of environment factory
+        /// </summary>
         public Type EnvironmentFactory { get; set; }
 
+        /// <summary>
+        /// List of types for the route metadata providers
+        /// </summary>
         public IList<Type> RouteMetadataProviders { get; set; }
 
+        /// <summary>
+        /// Type of route resolver
+        /// </summary>
         public Type RouteResolver { get; set; }
 
+        /// <summary>
+        /// Type of route pattern matcher
+        /// </summary>
         public Type RoutePatternMatcher { get; set; }
 
+        /// <summary>
+        /// Type of context factory
+        /// </summary>
         public Type ContextFactory { get; set; }
 
+        /// <summary>
+        /// Type of nancy engine
+        /// </summary>
         public Type NancyEngine { get; set; }
 
+        /// <summary>
+        /// Type of route cache
+        /// </summary>
         public Type RouteCache { get; set; }
 
+        /// <summary>
+        /// Type of route cache provider
+        /// </summary>
         public Type RouteCacheProvider { get; set; }
 
+        /// <summary>
+        /// Type of view locator
+        /// </summary>
         public Type ViewLocator { get; set; }
 
+        /// <summary>
+        /// Type of view factory
+        /// </summary>
         public Type ViewFactory { get; set; }
 
+        /// <summary>
+        /// Type of nancy module builder
+        /// </summary>
         public Type NancyModuleBuilder { get; set; }
 
+        /// <summary>
+        /// Type of response formatter factory
+        /// </summary>
         public Type ResponseFormatterFactory { get; set; }
 
+        /// <summary>
+        /// Type of model binder locator
+        /// </summary>
         public Type ModelBinderLocator { get; set; }
 
+        /// <summary>
+        /// Type of binder
+        /// </summary>
         public Type Binder { get; set; }
 
+        /// <summary>
+        /// Type of binding defaults
+        /// </summary>
         public Type BindingDefaults { get; set; }
 
+        /// <summary>
+        /// Type of field name converter
+        /// </summary>
         public Type FieldNameConverter { get; set; }
 
+        /// <summary>
+        /// Type of model validator locator
+        /// </summary>
         public Type ModelValidatorLocator { get; set; }
 
+        /// <summary>
+        /// Type of view resolver
+        /// </summary>
         public Type ViewResolver { get; set; }
 
+        /// <summary>
+        /// Type of view cache
+        /// </summary>
         public Type ViewCache { get; set; }
 
+        /// <summary>
+        /// Type of render context factory
+        /// </summary>
         public Type RenderContextFactory { get; set; }
 
+        /// <summary>
+        /// Type of view location provider
+        /// </summary>
         public Type ViewLocationProvider { get; set; }
 
+        /// <summary>
+        /// Type of status code handlers
+        /// </summary>
         public IList<Type> StatusCodeHandlers { get; set; }
 
+        /// <summary>
+        /// Type of CSRF token validator
+        /// </summary>
         public Type CsrfTokenValidator { get; set; }
 
+        /// <summary>
+        /// Type of object serializer
+        /// </summary>
         public Type ObjectSerializer { get; set; }
 
+        /// <summary>
+        /// List of types for serializers
+        /// </summary>
         public IList<Type> Serializers { get; set; }
 
+        /// <summary>
+        /// List of types for interactive diagnostic providers
+        /// </summary>
         public IList<Type> InteractiveDiagnosticProviders { get; set; }
 
+        /// <summary>
+        /// Type of request tracing
+        /// </summary>
         public Type RequestTracing { get; set; }
 
+        /// <summary>
+        /// Type of route invoker
+        /// </summary>
         public Type RouteInvoker { get; set; }
 
+        /// <summary>
+        /// Type of response processors
+        /// </summary>
         public IList<Type> ResponseProcessors { get; set; }
 
+        /// <summary>
+        /// Type of request dispatcher
+        /// </summary>
         public Type RequestDispatcher { get; set; }
 
+        /// <summary>
+        /// Type of diagnostics
+        /// </summary>
         public Type Diagnostics { get; set; }
 
+        /// <summary>
+        /// Type of route segment extractor
+        /// </summary>
         public Type RouteSegmentExtractor { get; set; }
 
+        /// <summary>
+        /// Type of route description provider
+        /// </summary>
         public Type RouteDescriptionProvider { get; set; }
 
+        /// <summary>
+        /// Type of culture service
+        /// </summary>
         public Type CultureService { get; set; }
 
+        /// <summary>
+        /// Type of text resource
+        /// </summary>
         public Type TextResource { get; set; }
 
+        /// <summary>
+        /// Type of resource assembly provider
+        /// </summary>
         public Type ResourceAssemblyProvider { get; set; }
 
+        /// <summary>
+        /// Type of resource reader
+        /// </summary>
         public Type ResourceReader { get; set; }
 
+        /// <summary>
+        /// Type of static content provider
+        /// </summary>
         public Type StaticContentProvider { get; set; }
 
+        /// <summary>
+        /// Type of route resolver trie
+        /// </summary>
         public Type RouteResolverTrie { get; set; }
 
+        /// <summary>
+        /// Type of trie node factory
+        /// </summary>
         public Type TrieNodeFactory { get; set; }
 
+        /// <summary>
+        /// List of types for route segment constraints
+        /// </summary>
         public IList<Type> RouteSegmentConstraints { get; set; }
 
+        /// <summary>
+        /// Type of request trace factory
+        /// </summary>
         public Type RequestTraceFactory { get; set; }
 
+        /// <summary>
+        /// Type of response negotiator
+        /// </summary>
         public Type ResponseNegotiator { get; set; }
 
         /// <summary>
@@ -197,6 +338,11 @@ namespace Nancy.Bootstrapper
             }
         }
 
+        /// <summary>
+        /// Creates a new nancy internal configuration initializer with overrides for default types.
+        /// </summary>
+        /// <param name="builder">Action that overrides default configuration types</param>
+        /// <returns>Initializer with overriden default types</returns>
         public static Func<ITypeCatalog, NancyInternalConfiguration> WithOverrides(Action<NancyInternalConfiguration> builder)
         {
             return catalog =>
