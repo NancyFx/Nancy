@@ -33,6 +33,12 @@
         {
             get { return this.buffer.SequenceEqual(this.boundaryAsBytes); }
         }
+        /// <summary>
+        /// Gets a value indicating whether this instance is closing boundary.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance is closing boundary; otherwise, <c>false</c>.
+        /// </value>
         public bool IsClosingBoundary
         {
             get { return this.buffer.SequenceEqual(this.closingBoundaryAsBytes); }

@@ -5,7 +5,7 @@
     using System.IO;
     using System.Threading.Tasks;
 
- 	  /// <summary>
+ 	/// <summary>
     /// Represents a HEAD only response.
     /// </summary>
     public class HeadResponse : Response
@@ -33,6 +33,15 @@
             this.ReasonPhrase = response.ReasonPhrase;
         }
 
+
+        /// <summary>
+        /// Executes at the end of the nancy execution pipeline and before control is passed back to the hosting.
+        /// Can be used to pre-render/validate views while still inside the main pipeline/error handling.
+        /// </summary>
+        /// <param name="context">Nancy context</param>
+        /// <returns>
+        /// Task for completion/erroring
+        /// </returns>
         public override Task PreExecute(NancyContext context)
         {
             return this.innerResponse.PreExecute(context);
