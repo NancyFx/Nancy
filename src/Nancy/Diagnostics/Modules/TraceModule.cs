@@ -3,19 +3,24 @@
     using System;
     using System.Linq;
 
+    /// <summary>
+    /// Nancy module for request tracing. Part of diagnostics module.
+    /// </summary>
+    /// <seealso cref="Nancy.Diagnostics.DiagnosticModule" />
     public class TraceModule : DiagnosticModule
     {
         private readonly IRequestTracing sessionProvider;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TraceModule"/> class.
+        /// </summary>
+        /// <param name="sessionProvider">The session provider.</param>
         public TraceModule(IRequestTracing sessionProvider)
             : base("/trace")
         {
             this.sessionProvider = sessionProvider;
 
-            Get("/", _ =>
-            {
-                return View["RequestTracing"];
-            });
+            Get("/", _ => this.View["RequestTracing"]);
 
             Get("/sessions", _ =>
             {

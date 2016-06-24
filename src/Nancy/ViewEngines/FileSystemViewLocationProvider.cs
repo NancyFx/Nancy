@@ -53,6 +53,7 @@
         /// Returns an <see cref="ViewLocationResult"/> instance for all the views matching the viewName that could be located by the provider.
         /// </summary>
         /// <param name="supportedViewExtensions">An <see cref="IEnumerable{T}"/> instance, containing the view engine file extensions that is supported by the running instance of Nancy.</param>
+        /// <param name="location">Location of the view</param>
         /// <param name="viewName">The name of the view to try and find</param>
         /// <returns>An <see cref="IEnumerable{T}"/> instance, containing <see cref="ViewLocationResult"/> instances for the located views.</returns>
         /// <remarks>If no views could be located, this method should return an empty enumerable, never <see langword="null"/>.</remarks>
@@ -114,10 +115,10 @@
         {
             var location = match
                 .Replace(rootPath, string.Empty)
-                .TrimStart(new[] { Path.DirectorySeparatorChar })
+                .TrimStart(Path.DirectorySeparatorChar)
                 .Replace(@"\", "/")
                 .Replace(Path.GetFileName(match), string.Empty)
-                .TrimEnd(new [] { '/' });
+                .TrimEnd('/');
 
             return location;
         }

@@ -7,19 +7,24 @@
     using System.Reflection;
     using Nancy.Helpers;
 
+    /// <summary>
+    /// Nancy module for interactive diagnostics.
+    /// </summary>
+    /// <seealso cref="Nancy.Diagnostics.DiagnosticModule" />
     public class InteractiveModule : DiagnosticModule
     {
         private readonly IInteractiveDiagnostics interactiveDiagnostics;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InteractiveModule"/> class.
+        /// </summary>
+        /// <param name="interactiveDiagnostics">The interactive diagnostics.</param>
         public InteractiveModule(IInteractiveDiagnostics interactiveDiagnostics)
             :base ("/interactive")
         {
             this.interactiveDiagnostics = interactiveDiagnostics;
 
-            Get("/", _ =>
-            {
-                return View["InteractiveDiagnostics"];
-            });
+            Get("/", _ => this.View["InteractiveDiagnostics"]);
 
             Get("/providers", _ =>
             {

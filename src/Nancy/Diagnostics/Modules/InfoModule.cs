@@ -10,21 +10,30 @@
     using Nancy.Configuration;
     using Nancy.ViewEngines;
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <seealso cref="Nancy.Diagnostics.DiagnosticModule" />
     public class InfoModule : DiagnosticModule
     {
         private readonly ITypeCatalog typeCatalog;
         private readonly IAssemblyCatalog assemblyCatalog;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InfoModule"/> class.
+        /// </summary>
+        /// <param name="rootPathProvider">The root path provider.</param>
+        /// <param name="configuration">The configuration.</param>
+        /// <param name="environment">The environment.</param>
+        /// <param name="typeCatalog">The type catalog.</param>
+        /// <param name="assemblyCatalog">The assembly catalog.</param>
         public InfoModule(IRootPathProvider rootPathProvider, NancyInternalConfiguration configuration, INancyEnvironment environment, ITypeCatalog typeCatalog, IAssemblyCatalog assemblyCatalog)
             : base("/info")
         {
             this.typeCatalog = typeCatalog;
             this.assemblyCatalog = assemblyCatalog;
 
-            Get("/", _ =>
-            {
-                return View["Info"];
-            });
+            Get("/", _ => this.View["Info"]);
 
             Get("/data", _ =>
             {
@@ -35,10 +44,10 @@
                 data.Nancy.TracesDisabled = !environment.GetValue<TraceConfiguration>().DisplayErrorTraces;
                 data.Nancy.CaseSensitivity = StaticConfiguration.CaseSensitive ? "Sensitive" : "Insensitive";
                 data.Nancy.RootPath = rootPathProvider.GetRootPath();
-                data.Nancy.Hosting = GetHosting();
-                data.Nancy.BootstrapperContainer = GetBootstrapperContainer();
+                data.Nancy.Hosting = this.GetHosting();
+                data.Nancy.BootstrapperContainer = this.GetBootstrapperContainer();
                 data.Nancy.LocatedBootstrapper = NancyBootstrapperLocator.Bootstrapper.GetType().ToString();
-                data.Nancy.LoadedViewEngines = GetViewEngines();
+                data.Nancy.LoadedViewEngines = this.GetViewEngines();
 
                 data.Configuration = new Dictionary<string, object>();
                 foreach (var propertyInfo in configuration.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))

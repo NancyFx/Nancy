@@ -68,6 +68,7 @@
         /// Returns an <see cref="ViewLocationResult"/> instance for all the views matching the viewName that could be located by the provider.
         /// </summary>
         /// <param name="supportedViewExtensions">An <see cref="IEnumerable{T}"/> instance, containing the view engine file extensions that is supported by the running instance of Nancy.</param>
+        /// <param name="location">Location of the view</param>
         /// <param name="viewName">The name of the view to try and find</param>
         /// <returns>An <see cref="IEnumerable{T}"/> instance, containing <see cref="ViewLocationResult"/> instances for the located views.</returns>
         /// <remarks>If no views could be located, this method should return an empty enumerable, never <see langword="null"/>.</remarks>
@@ -89,7 +90,7 @@
                 return Enumerable.Empty<ViewLocationResult>();
             }
 
-            if (resourceStreams.Count() == 1 && !RootNamespaces.ContainsKey(assembly))
+            if (resourceStreams.Count == 1 && !RootNamespaces.ContainsKey(assembly))
             {
                 var errorMessage =
                     string.Format("Only one view was found in assembly {0}, but no rootnamespace had been registered.", assembly.FullName);
@@ -124,7 +125,7 @@
             return resource
                 .Replace(commonNamespace, string.Empty)
                 .Replace(resourceName, string.Empty)
-                .Trim(new[] { '.' })
+                .Trim('.')
                 .Replace(".", "/");
         }
 
@@ -136,7 +137,7 @@
 
                 return resource
                     .Replace(GetResourceFileName(resource), string.Empty)
-                    .TrimEnd(new[] { '.' });
+                    .TrimEnd('.');
             }
 
             var commonPathSegments = resources.Select(s => new { parts = s.Split('.') })
@@ -165,7 +166,7 @@
                 resourceName.Split(new[] { "." }, StringSplitOptions.RemoveEmptyEntries);
 
             var segmentCount =
-                nameSegments.Count();
+                nameSegments.Length;
 
             return (segmentCount < 2) ?
                 string.Empty :

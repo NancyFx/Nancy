@@ -137,6 +137,10 @@ namespace Nancy.Diagnostics
                 configuration.SlidingTimeout != 0;
         }
 
+        /// <summary>
+        /// Disables the specified pipelines.
+        /// </summary>
+        /// <param name="pipelines">The pipelines.</param>
         public static void Disable(IPipelines pipelines)
         {
             pipelines.BeforeRequest.RemoveByName(PipelineKey);

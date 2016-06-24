@@ -212,7 +212,7 @@ namespace Nancy.Bootstrapper
         /// <summary>
         /// Retrieve a specific module instance from the container
         /// </summary>
-        /// <param name="container">Container to use</param>
+        /// <param name="container">Container to use</param> 
         /// <param name="moduleType">Type of the module</param>
         /// <returns>NancyModule instance</returns>
         protected abstract INancyModule GetModule(TContainer container, Type moduleType);
