@@ -16,19 +16,35 @@
     /// </summary>
     public class ErrorPipeline : NamedPipelineBase<Func<NancyContext, Exception, dynamic>>
     {
+        /// <summary>
+        /// Creates a new instance of ErrorPipeline
+        /// </summary>
         public ErrorPipeline()
         {
         }
 
+
+        /// <summary>
+        /// Creates a new instance of ErrorPipeline with a capacity
+        /// </summary>
+        /// <param name="capacity">Size of the pipeline which is the count of pipeline delegates</param>
         public ErrorPipeline(int capacity) : base(capacity)
         {
         }
 
+        /// <summary>
+        /// Implict type conversion operator from ErrorPipeline to func
+        /// </summary>
+        /// <param name="pipeline"></param>
         public static implicit operator Func<NancyContext, Exception, dynamic>(ErrorPipeline pipeline)
         {
             return pipeline.Invoke;
         }
 
+        /// <summary>
+        /// Implict type conversion operator from func to ErrorPipeline
+        /// </summary>
+        /// <param name="func"></param>
         public static implicit operator ErrorPipeline(Func<NancyContext, Exception, dynamic> func)
         {
             var pipeline = new ErrorPipeline();
@@ -36,12 +52,24 @@
             return pipeline;
         }
 
+        /// <summary>
+        /// Appends a new func to the ErrorPipeline
+        /// </summary>
+        /// <param name="pipeline">Target pipeline</param>
+        /// <param name="func">A function that returns a task</param>
+        /// <returns></returns>
         public static ErrorPipeline operator +(ErrorPipeline pipeline, Func<NancyContext, Exception, dynamic> func)
         {
             pipeline.AddItemToEndOfPipeline(func);
             return pipeline;
         }
 
+        /// <summary>
+        /// Appends the items of an ErrorPipeline to the other
+        /// </summary>
+        /// <param name="pipelineToAddTo"></param>
+        /// <param name="pipelineToAdd"></param>
+        /// <returns></returns>
         public static ErrorPipeline operator +(ErrorPipeline pipelineToAddTo, ErrorPipeline pipelineToAdd)
         {
             foreach (var pipelineItem in pipelineToAdd.PipelineItems)
