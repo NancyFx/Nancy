@@ -3,6 +3,9 @@ namespace Nancy.Cryptography
     using System;
     using System.Runtime.CompilerServices;
 
+    /// <summary>
+    /// Compares two HMAC
+    /// </summary>
     public static class HmacComparer
     {
         /// <summary>
@@ -30,7 +33,7 @@ namespace Nancy.Cryptography
             }
 
             var isValid = true;
-            for (int i = 0; i < hashLength; i++)
+            for (var i = 0; i < hashLength; i++)
             {
                 if (hmac1[i] != hmac2[i])
                 {
@@ -38,7 +41,7 @@ namespace Nancy.Cryptography
                 }
             }
 
-            return hasResized ? false : isValid;
+            return !hasResized && isValid;
         }
     }
 }

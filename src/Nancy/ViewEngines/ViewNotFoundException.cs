@@ -9,9 +9,29 @@
     public class ViewNotFoundException : Exception
     {
         private readonly IRootPathProvider rootPathProvider;
+
+        /// <summary>
+        /// Gets the name of the view.
+        /// </summary>
+        /// <value>
+        /// The name of the view.
+        /// </value>
         public string ViewName { get; private set; }
 
+        /// <summary>
+        /// Gets the available view engine extensions.
+        /// </summary>
+        /// <value>
+        /// The available view engine extensions.
+        /// </value>
         public string[] AvailableViewEngineExtensions { get; private set; }
+
+        /// <summary>
+        /// Gets the inspected locations.
+        /// </summary>
+        /// <value>
+        /// The inspected locations.
+        /// </value>
         public string[] InspectedLocations { get; private set; }
 
         private string message;
@@ -50,7 +70,7 @@
             this.ViewName = viewName;
             this.AvailableViewEngineExtensions = availableViewEngineExtensions;
 
-            this.message = String.Format(
+            this.message = string.Format(
                     "Unable to locate view '{0}'{2}Currently available view engine extensions: {1}{2}",
                     this.ViewName,
                     string.Join(",", this.AvailableViewEngineExtensions),
@@ -72,7 +92,7 @@
         /// <returns>The error message that explains the reason for the exception, or an empty string("").</returns>
         public override string Message
         {
-            get { return message; }
+            get { return this.message; }
         }
     }
 }

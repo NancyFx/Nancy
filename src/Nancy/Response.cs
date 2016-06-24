@@ -37,6 +37,10 @@ namespace Nancy
             this.Cookies = new List<INancyCookie>(2);
         }
 
+        /// <summary>
+        /// Gets the awaiter.
+        /// </summary>
+        /// <returns></returns>
         public TaskAwaiter<Response> GetAwaiter()
         {
             return Task.FromResult(this).GetAwaiter();
