@@ -15,6 +15,12 @@
 
         private ConcurrentQueue<T> internalStore;
 
+        /// <summary>
+        /// Gets the current size for the collection.
+        /// </summary>
+        /// <value>
+        /// The size of the current.
+        /// </value>
         public int CurrentSize
         {
             get

@@ -7,11 +7,18 @@
     using System.Text.RegularExpressions;
     using Nancy.ModelBinding;
 
+    /// <summary>
+    /// Nancy module for diagnostic settings.
+    /// </summary>
+    /// <seealso cref="Nancy.Diagnostics.DiagnosticModule" />
     public class SettingsModule : DiagnosticModule
     {
         private static readonly IEnumerable<Type> Types = new[] { typeof(StaticConfiguration) }.Union(
                                                                   typeof(StaticConfiguration).GetNestedTypes(BindingFlags.Static | BindingFlags.Public));
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SettingsModule"/> class.
+        /// </summary>
         public SettingsModule()
             : base("/settings")
         {

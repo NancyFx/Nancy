@@ -74,7 +74,7 @@
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Equals(other.Extension, Extension) && Equals(other.Location, Location) && Equals(other.Name, Name);
+            return Equals(other.Extension, this.Extension) && Equals(other.Location, this.Location) && Equals(other.Name, this.Name);
         }
 
         /// <summary>
@@ -86,7 +86,7 @@
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == typeof (ViewLocationResult) && Equals((ViewLocationResult) obj);
+            return obj.GetType() == typeof (ViewLocationResult) && this.Equals((ViewLocationResult) obj);
         }
 
         /// <summary>
@@ -97,18 +97,34 @@
         {
             unchecked
             {
-                var result = Extension.GetHashCode();
-                result = (result*397) ^ Location.GetHashCode();
-                result = (result*397) ^ Name.GetHashCode();
+                var result = this.Extension.GetHashCode();
+                result = (result*397) ^ this.Location.GetHashCode();
+                result = (result*397) ^ this.Name.GetHashCode();
                 return result;
             }
         }
 
+        /// <summary>
+        /// Implements the operator ==.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>
+        /// The result of the operator.
+        /// </returns>
         public static bool operator ==(ViewLocationResult left, ViewLocationResult right)
         {
             return Equals(left, right);
         }
 
+        /// <summary>
+        /// Implements the operator !=.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>
+        /// The result of the operator.
+        /// </returns>
         public static bool operator !=(ViewLocationResult left, ViewLocationResult right)
         {
             return !Equals(left, right);

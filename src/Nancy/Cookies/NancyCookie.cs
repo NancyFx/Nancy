@@ -130,30 +130,36 @@ namespace Nancy.Cookies
         /// </summary>
         public bool Secure { get; private set; }
 
+        /// <summary>
+        /// Returns a <see cref="System.String" /> that represents this instance.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String" /> that represents this instance.
+        /// </returns>
         public override string ToString()
         {
             var sb = new StringBuilder(50);
-            sb.AppendFormat("{0}={1}; path={2}", this.EncodedName, this.EncodedValue, Path ?? "/");
+            sb.AppendFormat("{0}={1}; path={2}", this.EncodedName, this.EncodedValue, this.Path ?? "/");
 
-            if (Expires != null)
+            if (this.Expires != null)
             {
                 sb.Append("; expires=");
-                sb.Append(Expires.Value.ToUniversalTime().ToString("ddd, dd-MMM-yyyy HH:mm:ss", DateTimeFormatInfo.InvariantInfo));
+                sb.Append(this.Expires.Value.ToUniversalTime().ToString("ddd, dd-MMM-yyyy HH:mm:ss", DateTimeFormatInfo.InvariantInfo));
                 sb.Append(" GMT");
             }
 
-            if (Domain != null)
+            if (this.Domain != null)
             {
                 sb.Append("; domain=");
-                sb.Append(Domain);
+                sb.Append(this.Domain);
             }
 
-            if (Secure)
+            if (this.Secure)
             {
                 sb.Append("; Secure");
             }
 
-            if (HttpOnly)
+            if (this.HttpOnly)
             {
                 sb.Append("; HttpOnly");
             }

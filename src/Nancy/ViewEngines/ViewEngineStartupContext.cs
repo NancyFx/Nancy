@@ -5,6 +5,11 @@
     /// </summary>
     public class ViewEngineStartupContext
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ViewEngineStartupContext"/> class.
+        /// </summary>
+        /// <param name="viewCache">The view cache.</param>
+        /// <param name="viewLocator">The view locator.</param>
         public ViewEngineStartupContext(IViewCache viewCache, IViewLocator viewLocator)
         {
             this.ViewLocator = viewLocator;
