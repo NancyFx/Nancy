@@ -98,6 +98,9 @@
             return subStreamRelativePosition;
         }
 
+        /// <summary>
+        /// Sets the position of the stream as the start point.
+        /// </summary>
         public void PositionStartAtCurrentLocation()
         {
             this.start = this.stream.Position;

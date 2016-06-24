@@ -33,6 +33,9 @@ namespace Nancy
     using System;
     using System.Collections.Generic;
 
+    /// <summary>
+    /// Holds the MIME types
+    /// </summary>
     public sealed class MimeTypes
     {
         static Dictionary <string, string> mimeTypes;
@@ -584,11 +587,21 @@ namespace Nancy
             mimeTypes.Add("xltx", "application/vnd.openxmlformats-officedocument.spreadsheetml.template");
         }
 
+        /// <summary>
+        /// Adds a new MIME type.
+        /// </summary>
+        /// <param name="extension">File extension</param>
+        /// <param name="type">MIME type</param>
         public static void AddType(string extension, string type) 
         {
             mimeTypes.Add(extension, type);
         }
 
+        /// <summary>
+        /// Gets the MIME type for a file name.
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        /// <returns></returns>
         public static string GetMimeType (string fileName)
         {
             string result = null;
