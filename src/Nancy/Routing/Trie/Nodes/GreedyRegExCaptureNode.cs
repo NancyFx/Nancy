@@ -25,6 +25,12 @@
             get { return 100; }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GreedyRegExCaptureNode"/> class.
+        /// </summary>
+        /// <param name="parent">Parent node</param>
+        /// <param name="segment">Segment of the route definition</param>
+        /// <param name="nodeFactory">Factory for creating new nodes</param>
         public GreedyRegExCaptureNode(TrieNode parent, string segment, ITrieNodeFactory nodeFactory)
             : base(parent, segment, nodeFactory)
         {

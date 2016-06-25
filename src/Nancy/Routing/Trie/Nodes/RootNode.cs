@@ -7,7 +7,7 @@ namespace Nancy.Routing.Trie.Nodes
     /// </summary>
     public class RootNode : TrieNode
     {
-        private SegmentMatch segmentMatch = new SegmentMatch(true);
+        private readonly SegmentMatch segmentMatch = new SegmentMatch(true);
 
         private readonly Dictionary<string, object> localCaptures = new Dictionary<string, object>();
 
@@ -19,6 +19,10 @@ namespace Nancy.Routing.Trie.Nodes
             get { return 0; }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RootNode"/> class.
+        /// </summary>
+        /// <param name="nodeFactory">The node factory.</param>
         public RootNode(ITrieNodeFactory nodeFactory)
             : base(null, null, nodeFactory)
         {

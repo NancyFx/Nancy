@@ -6,6 +6,9 @@
 
     using Nancy.Cryptography;
 
+    /// <summary>
+    /// Extension methods for CSRF token related tasks.
+    /// </summary>
     public static class CsrfTokenExtensions
     {
         private static readonly RandomNumberGenerator randomGenerator = RandomNumberGenerator.Create();

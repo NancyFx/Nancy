@@ -8,6 +8,10 @@
     using System.Text;
     using System.Text.RegularExpressions;
 
+    /// <summary>
+    /// Represent an HTML response with embeded file content.
+    /// </summary>
+    /// <seealso cref="Nancy.Response" />
     public class EmbeddedFileResponse : Response
     {
         private static readonly byte[] ErrorText;
@@ -17,13 +21,18 @@
             ErrorText = Encoding.UTF8.GetBytes("NOT FOUND");
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EmbeddedFileResponse"/> class.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <param name="resourcePath">The resource path.</param>
+        /// <param name="name">The name.</param>
         public EmbeddedFileResponse(Assembly assembly, string resourcePath, string name)
         {
             this.ContentType = MimeTypes.GetMimeType(name);
             this.StatusCode = HttpStatusCode.OK;
 
-            var content =
-                    GetResourceContent(assembly, resourcePath, name);
+            var content = this.GetResourceContent(assembly, resourcePath, name);
 
             if (content != null)
             {
@@ -75,7 +84,7 @@
             var output = new StringBuilder(data.Length);
             for (int i = 0; i < data.Length; i++)
             {
-                output.Append(data[i].ToString("X2"));
+                output.Append(i.ToString("X2"));
             }
 
             return output.ToString();

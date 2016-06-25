@@ -39,11 +39,18 @@ namespace Nancy.Routing.Trie
             }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MatchResult"/> class.
+        /// </summary>
+        /// <param name="parameters">The parameters.</param>
         public MatchResult(IDictionary<string, object> parameters)
         {
             this.Parameters = parameters;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MatchResult"/> class.
+        /// </summary>
         public MatchResult()
             : this(new Dictionary<string, object>())
         {

@@ -24,11 +24,27 @@ namespace Nancy.ModelBinding
 
         private readonly BindingDefaults defaults;
 
-        private readonly static MethodInfo ToListMethodInfo = typeof(Enumerable).GetMethod("ToList", BindingFlags.Public | BindingFlags.Static);
-        private readonly static MethodInfo ToArrayMethodInfo = typeof(Enumerable).GetMethod("ToArray", BindingFlags.Public | BindingFlags.Static);
+        private static readonly MethodInfo ToListMethodInfo = typeof(Enumerable).GetMethod("ToList", BindingFlags.Public | BindingFlags.Static);
+        private static readonly MethodInfo ToArrayMethodInfo = typeof(Enumerable).GetMethod("ToArray", BindingFlags.Public | BindingFlags.Static);
         private static readonly Regex BracketRegex = new Regex(@"\[(\d+)\]\z", RegexOptions.Compiled);
         private static readonly Regex UnderscoreRegex = new Regex(@"_(\d+)\z", RegexOptions.Compiled);
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultBinder"/> class.
+        /// </summary>
+        /// <param name="typeConverters">The type converters.</param>
+        /// <param name="bodyDeserializers">The body deserializers.</param>
+        /// <param name="fieldNameConverter">The field name converter.</param>
+        /// <param name="defaults">The defaults for bindings.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// typeConverters
+        /// or
+        /// bodyDeserializers
+        /// or
+        /// fieldNameConverter
+        /// or
+        /// defaults
+        /// </exception>
         public DefaultBinder(IEnumerable<ITypeConverter> typeConverters, IEnumerable<IBodyDeserializer> bodyDeserializers, IFieldNameConverter fieldNameConverter, BindingDefaults defaults)
         {
             if (typeConverters == null)

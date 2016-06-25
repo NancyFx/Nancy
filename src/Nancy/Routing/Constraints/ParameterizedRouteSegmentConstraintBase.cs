@@ -9,16 +9,32 @@
     /// <typeparam name="T">The type of parameter to capture.</typeparam>
     public abstract class ParameterizedRouteSegmentConstraintBase<T> : RouteSegmentConstraintBase<T>
     {
+        /// <summary>
+        /// Determines whether the given constraint matches the name of this constraint.
+        /// </summary>
+        /// <param name="constraint">The route constraint.</param>
+        /// <returns>
+        /// <c>true</c> if the constraint matches, <c>false</c> otherwise.
+        /// </returns>
         public override bool Matches(string constraint)
         {
             return constraint.Contains('(') && constraint.Contains(')') && base.Matches(constraint.Substring(0, constraint.IndexOf('(')));
         }
 
+        /// <summary>
+        /// Tries to match the given segment against the constraint.
+        /// </summary>
+        /// <param name="constraint">The constraint.</param>
+        /// <param name="segment">The segment to match.</param>
+        /// <param name="matchedValue">The matched value.</param>
+        /// <returns>
+        ///   <c>true</c> if the segment matches the constraint, <c>false</c> otherwise.
+        /// </returns>
         protected override bool TryMatch(string constraint, string segment, out T matchedValue)
         {
             var parameters = constraint.Substring(constraint.IndexOf('(')).Trim('(', ')').Split(',');
 
-            return TryMatch(segment, parameters, out matchedValue);
+            return this.TryMatch(segment, parameters, out matchedValue);
         }
 
         /// <summary>

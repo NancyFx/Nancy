@@ -42,16 +42,36 @@ namespace Nancy.Responses.Negotiation
                    this.type.Equals(other.type, StringComparison.OrdinalIgnoreCase);
         }
 
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="System.String"/> to <see cref="MediaType"/>.
+        /// </summary>
+        /// <param name="inputString">The input string.</param>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
         public static implicit operator MediaType(string inputString)
         {
             return new MediaType(inputString);
         }
 
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="MediaType"/> to <see cref="System.String"/>.
+        /// </summary>
+        /// <param name="inputMediaType">Type of the input media.</param>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
         public static implicit operator string(MediaType inputMediaType)
         {
             return inputMediaType.type;
         }
 
+        /// <summary>
+        /// Returns the type as a <see cref="System.String" /> that represents this instance.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String" /> that represents this instance.
+        /// </returns>
         public override string ToString()
         {
             return this.type;

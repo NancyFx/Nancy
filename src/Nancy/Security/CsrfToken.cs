@@ -31,6 +31,11 @@
         /// </summary>
         public byte[] Hmac { get; set; }
 
+        /// <summary>
+        /// Compares two CsrfToken instances.
+        /// </summary>
+        /// <param name="other">The other.</param>
+        /// <returns></returns>
         public bool Equals(CsrfToken other)
         {
             if (ReferenceEquals(null, other)) return false;
@@ -53,7 +58,7 @@
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != typeof(CsrfToken)) return false;
-            return Equals((CsrfToken)obj);
+            return this.Equals((CsrfToken)obj);
         }
 
         /// <summary>
@@ -74,11 +79,27 @@
             }
         }
 
+        /// <summary>
+        /// Implements the operator == for CsrfToken instances.
+        /// </summary>
+        /// <param name="left">The left CsrfToken.</param>
+        /// <param name="right">The right CsrfToken.</param>
+        /// <returns>
+        /// <c>true</c> if left and right instances are equal.
+        /// </returns>
         public static bool operator ==(CsrfToken left, CsrfToken right)
         {
             return Equals(left, right);
         }
 
+        /// <summary>
+        /// Implements the operator != for CsrfToken instances.
+        /// </summary>
+        /// <param name="left">The left CsrfToken.</param>
+        /// <param name="right">The right CsrfToken.</param>
+        /// <returns>
+        /// <c>true</c> if left and right instances are not equal.
+        /// </returns>
         public static bool operator !=(CsrfToken left, CsrfToken right)
         {
             return !Equals(left, right);
