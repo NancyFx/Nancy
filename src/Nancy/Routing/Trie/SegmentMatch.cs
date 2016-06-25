@@ -7,7 +7,7 @@ namespace Nancy.Routing.Trie
     /// </summary>
     public class SegmentMatch
     {
-        private static SegmentMatch noMatch = new SegmentMatch(false);
+        private static readonly SegmentMatch noMatch = new SegmentMatch(false);
 
         /// <summary>
         /// Gets a value indicating whether the match was successful or not
@@ -24,6 +24,10 @@ namespace Nancy.Routing.Trie
         /// </summary>
         public IDictionary<string, object> CapturedParameters { get; private set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SegmentMatch"/> class.
+        /// </summary>
+        /// <param name="matches">if set to <c>true</c> [matches].</param>
         public SegmentMatch(bool matches)
         {
             this.Matches = matches;
