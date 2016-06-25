@@ -84,7 +84,7 @@
             var output = new StringBuilder(data.Length);
             for (int i = 0; i < data.Length; i++)
             {
-                output.Append(i.ToString("X2"));
+                output.Append(data[i].ToString("X2"));
             }
 
             return output.ToString();
