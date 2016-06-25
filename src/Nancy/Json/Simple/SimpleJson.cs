@@ -1,3 +1,5 @@
+#pragma warning disable CS1591, CS1574, CS1711, CS1712 //  Disable XML comment related warnings
+
 //-----------------------------------------------------------------------
 // <copyright file="SimpleJson.cs" company="The Outercurve Foundation">
 //    Copyright (c) 2011, The Outercurve Foundation.
