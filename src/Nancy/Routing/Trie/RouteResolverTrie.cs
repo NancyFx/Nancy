@@ -15,8 +15,12 @@ namespace Nancy.Routing.Trie
 
         private readonly IDictionary<string, TrieNode> routeTries = new Dictionary<string, TrieNode>(StringComparer.OrdinalIgnoreCase);
 
-        private static char[] splitSeparators = new[] {'/'};
+        private static readonly char[] splitSeparators = {'/'};
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RouteResolverTrie"/> class.
+        /// </summary>
+        /// <param name="nodeFactory">The node factory.</param>
         public RouteResolverTrie(ITrieNodeFactory nodeFactory)
         {
             this.nodeFactory = nodeFactory;

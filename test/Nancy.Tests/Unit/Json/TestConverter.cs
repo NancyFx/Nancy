@@ -17,11 +17,9 @@
 			if (type != typeof(TestConverterType))
 				return null;
 
-			var data = new TestConverterType();
+		    var data = new TestConverterType { Data = Convert.ToInt32(dictionary["DataValue"]) };
 
-			data.Data = Convert.ToInt32(dictionary["DataValue"]);
-
-			return data;
+		    return data;
 		}
 
 		public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)

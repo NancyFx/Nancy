@@ -1,6 +1,5 @@
 namespace Nancy.Session
 {
-    using System;
     using System.Collections;
     using System.Collections.Generic;
 
@@ -12,7 +11,15 @@ namespace Nancy.Session
         private readonly IDictionary<string, object> dictionary;
         private bool hasChanged;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Session"/> class.
+        /// </summary>
         public Session() : this(new Dictionary<string, object>(0)){}
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Session"/> class.
+        /// </summary>
+        /// <param name="dictionary">The dictionary.</param>
         public Session(IDictionary<string, object> dictionary)
         {
             this.dictionary = dictionary;
@@ -23,7 +30,7 @@ namespace Nancy.Session
         /// </summary>
         public int Count
         {
-            get { return dictionary.Count; }
+            get { return this.dictionary.Count; }
         }
 
         /// <summary>
@@ -31,12 +38,12 @@ namespace Nancy.Session
         /// </summary>
         public void DeleteAll()
         {
-            if (Count > 0)
+            if (this.Count > 0)
             {
-                MarkAsChanged();
+                this.MarkAsChanged();
             }
 
-            dictionary.Clear();
+            this.dictionary.Clear();
         }
 
         /// <summary>
@@ -45,7 +52,8 @@ namespace Nancy.Session
         /// <param name="key">Key to delete</param>
         public void Delete(string key)
         {
-            if (dictionary.Remove(key)) { MarkAsChanged(); }
+            if (this.dictionary.Remove(key)) {
+                this.MarkAsChanged(); }
         }
 
         /// <summary>
@@ -55,18 +63,18 @@ namespace Nancy.Session
         /// <returns>The value, or null or the key didn't exist</returns>
         public object this[string key]
         {
-            get { return dictionary.ContainsKey(key) ? dictionary[key] : null; }
+            get { return this.dictionary.ContainsKey(key) ? this.dictionary[key] : null; }
             set
             {
-                var existingValue = this[key] ?? new Object();
+                var existingValue = this[key] ?? new object();
 
                 if (existingValue.Equals(value))
                 {
                     return;
                 }
 
-                dictionary[key] = value;
-                MarkAsChanged();
+                this.dictionary[key] = value;
+                this.MarkAsChanged();
             }
         }
 
@@ -99,12 +107,12 @@ namespace Nancy.Session
         /// <filterpriority>1</filterpriority>
         public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
         {
-            return dictionary.GetEnumerator();
+            return this.dictionary.GetEnumerator();
         }
 
         private void MarkAsChanged()
         {
-            hasChanged = true;
+            this.hasChanged = true;
         }
     }
 }

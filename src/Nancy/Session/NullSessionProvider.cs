@@ -4,6 +4,10 @@ namespace Nancy.Session
     using System.Collections;
     using System.Collections.Generic;
 
+    /// <summary>
+    /// Provides a dummy session instance with no functionality.
+    /// </summary>
+    /// <seealso cref="Nancy.Session.ISession" />
     public class NullSessionProvider : ISession
     {
         /// <summary>
@@ -27,7 +31,7 @@ namespace Nancy.Session
         /// <filterpriority>2</filterpriority>
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return GetEnumerator();
+            return this.GetEnumerator();
         }
 
         /// <summary>
@@ -74,6 +78,12 @@ namespace Nancy.Session
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether this instance has changed.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance has changed; otherwise, <c>false</c>.
+        /// </value>
         public bool HasChanged
         {
             get

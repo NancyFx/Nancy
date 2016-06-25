@@ -28,6 +28,12 @@ namespace Nancy.Session
         /// </summary>
         object this[string key] { get; set; }
 
+        /// <summary>
+        /// Gets a value indicating whether this instance has changed.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance has changed; otherwise, <c>false</c>.
+        /// </value>
         bool HasChanged { get; }
     }
 }

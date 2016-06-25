@@ -22,6 +22,13 @@
             get { return 2000; }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CaptureNodeWithConstraint"/> class.
+        /// </summary>
+        /// <param name="parent">The parent.</param>
+        /// <param name="segment">The segment.</param>
+        /// <param name="nodeFactory">The node factory.</param>
+        /// <param name="routeSegmentConstraints">The route segment constraints.</param>
         public CaptureNodeWithConstraint(TrieNode parent, string segment, ITrieNodeFactory nodeFactory, IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints)
             : base(parent, segment, nodeFactory)
         {
@@ -36,7 +43,7 @@
         /// <returns>A <see cref="SegmentMatch"/> instance representing the result of the match</returns>
         public override SegmentMatch Match(string segment)
         {
-            var routeSegmentConstraint = routeSegmentConstraints.FirstOrDefault(x => x.Matches(constraint));
+            var routeSegmentConstraint = this.routeSegmentConstraints.FirstOrDefault(x => x.Matches(this.constraint));
             if (routeSegmentConstraint == null)
             {
                 return SegmentMatch.NoMatch;

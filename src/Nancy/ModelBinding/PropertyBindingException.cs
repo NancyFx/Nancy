@@ -2,6 +2,10 @@
 {
     using System;
 
+    /// <summary>
+    /// Represents an exception occurred when binding the properties.
+    /// </summary>
+    /// <seealso cref="System.Exception" />
     public class PropertyBindingException : Exception
     {
         private const string ExceptionMessage = "Unable to bind property: {0}; Attempted value: {1}";
@@ -23,7 +27,7 @@
         /// <param name="attemptedValue">the value attempted to set</param>
         /// <param name="innerException">the underlying exception</param>
         public PropertyBindingException(string propertyName, string attemptedValue, Exception innerException = null)
-            : base(String.Format(ExceptionMessage, propertyName, attemptedValue), innerException)
+            : base(string.Format(ExceptionMessage, propertyName, attemptedValue), innerException)
         {
             this.PropertyName = propertyName;
             this.AttemptedValue = attemptedValue;

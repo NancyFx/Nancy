@@ -22,7 +22,7 @@
         public SettingsModule()
             : base("/settings")
         {
-            Get("/", _ =>
+            this.Get("/", _ =>
             {
                 var properties = Types.SelectMany(t => t.GetProperties(BindingFlags.Static | BindingFlags.Public))
                                       .Where(x => x.PropertyType == typeof(bool));
@@ -40,10 +40,10 @@
                             Checked = (value) ? "checked='checked'" : string.Empty
                         };
 
-                return View["Settings", model];
+                return this.View["Settings", model];
             });
 
-            Post("/", _ => {
+            this.Post("/", _ => {
 
                 var model =
                     this.Bind<SettingsModel>();
@@ -76,10 +76,25 @@
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class SettingsModel
     {
+        /// <summary>
+        /// Gets or sets the name for the setting.
+        /// </summary>
+        /// <value>
+        /// The name.
+        /// </value>
         public string Name { get; set; }
 
+        /// <summary>
+        /// Gets or sets the value for this setting.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> or <c>false</c>.
+        /// </value>
         public bool Value { get; set; }
     }
 }

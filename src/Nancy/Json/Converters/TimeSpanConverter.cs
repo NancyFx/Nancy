@@ -3,8 +3,18 @@ namespace Nancy.Json.Converters
     using System;
     using System.Collections.Generic;
 
+    /// <summary>
+    /// Converts a dictionary with time info into a time span instance or vice versa.
+    /// </summary>
+    /// <seealso cref="Nancy.Json.JavaScriptConverter" />
     public class TimeSpanConverter : JavaScriptConverter
     {
+        /// <summary>
+        /// Gets the supported types.
+        /// </summary>
+        /// <value>
+        /// The supported types.
+        /// </value>
         public override IEnumerable<Type> SupportedTypes
         {
             get
@@ -13,6 +23,13 @@ namespace Nancy.Json.Converters
             }
         }
 
+        /// <summary>
+        /// Deserializes the specified dictionary into a timespan instance.
+        /// </summary>
+        /// <param name="dictionary">The dictionary.</param>
+        /// <param name="type">The type.</param>
+        /// <param name="serializer">The serializer.</param>
+        /// <returns></returns>
         public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
         {
             return new TimeSpan(
@@ -23,6 +40,12 @@ namespace Nancy.Json.Converters
                 this.GetValue(dictionary, "Milliseconds"));
         }
 
+        /// <summary>
+        /// Serializes the specified object.
+        /// </summary>
+        /// <param name="obj">The object.</param>
+        /// <param name="serializer">The serializer.</param>
+        /// <returns></returns>
         public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
         {
             var timeSpan = (TimeSpan)obj;
