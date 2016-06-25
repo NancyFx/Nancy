@@ -1,4 +1,7 @@
-﻿//===============================================================================
+﻿#pragma warning disable CS1591, CS1574, CS1711, CS1712 //  Disable XML comment related warnings
+
+
+//===============================================================================
 // TinyIoC
 //
 // An easy to use, hassle free, Inversion of Control Container for small projects
@@ -12,6 +15,7 @@
 // LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
 // FITNESS FOR A PARTICULAR PURPOSE.
 //===============================================================================
+
 
 #region Preprocessor Directives
 // Uncomment this line if you want the container to automatically
