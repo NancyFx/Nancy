@@ -3,13 +3,15 @@ namespace Nancy.Diagnostics
     using System;
     using System.Security.Cryptography;
     using System.Text;
-
-#if !NETSTANDARD1_6
-    [Serializable]
-#endif
+    
     /// <summary>
     /// Stores the http session information for diagnostics.
     /// </summary>
+    
+#if !NETSTANDARD1_6
+    [Serializable]
+#endif
+
     public class DiagnosticsSession
     {
         /// <summary>
