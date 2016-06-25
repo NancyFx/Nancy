@@ -9,7 +9,7 @@ namespace Nancy.Diagnostics
     /// </summary>
     
 #if !NETSTANDARD1_6
-    [Serializable]
+    [Serializable] 
 #endif
 
     public class DiagnosticsSession
