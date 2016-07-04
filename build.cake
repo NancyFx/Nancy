@@ -1,4 +1,4 @@
-#addin "Newtonsoft.Json"
+#addin nuget:?package=Newtonsoft.Json&version=8.0.3
 
 // Usings
 using System.Xml;
