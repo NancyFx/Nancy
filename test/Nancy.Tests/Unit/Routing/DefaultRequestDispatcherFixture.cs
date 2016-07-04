@@ -930,7 +930,7 @@ namespace Nancy.Tests.Unit.Routing
             exception.ShouldBeNull();
         }
 
-#if !__MonoCS__
+#if !MONO
         [Fact]
         public async Task should_preserve_stacktrace_when_rethrowing_the_excption()
         {

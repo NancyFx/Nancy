@@ -5,6 +5,10 @@
         "Nancy": { "target": "project" },
         "Nancy.ViewEngines.Razor": { "target": "project" }
     },
+    
+    "buildOptions": {
+        "xmlDoc": true
+    },
 
     "frameworks": {
         "net452": {

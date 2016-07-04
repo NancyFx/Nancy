@@ -31,4 +31,7 @@ Gemfile.lock
 packages/
 project.lock.json
 TestAssembly.dll
+[Tt]ools/Cake.*
 .vscode/
+.dotnet/
+[Tt]ools/Addins/

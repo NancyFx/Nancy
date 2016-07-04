@@ -2,7 +2,7 @@
     "version": "2.0.0-*",
     "description": "Nancy is a lightweight web framework for the .Net platform, inspired by Sinatra. Nancy aim at delivering a low ceremony approach to building light, fast web applications.",
     "authors": [ "Andreas Håkansson, Steven Robbins and contributors" ],
-
+    
     "packOptions": {
         "tags": [ "Nancy" ],
         "projectUrl": "http://nancyfx.org",
@@ -15,6 +15,7 @@
     },
 
     "buildOptions": {
+        "xmlDoc": true,
         "embed": [
             "ErrorHandling/Resources/**/*.*",
             "Diagnostics/Resources/**/*.*",

@@ -9,6 +9,10 @@
         "licenseUrl": "https://github.com/NancyFx/Nancy/blob/master/license.txt",
         "iconUrl": "http://nancyfx.org/nancy-nuget.png"
     },
+    
+    "buildOptions": {
+        "xmlDoc": true
+    },
 
     "dependencies": {
         "Nancy": { "target": "project" },

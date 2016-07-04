@@ -282,7 +282,7 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
             Assert.Equal ((uint)6, model.F3);
         }
 
-#if !__MonoCS__
+#if !MONO
         [Fact]
         public void Should_Serialize_Doubles_In_Different_Cultures()
         {

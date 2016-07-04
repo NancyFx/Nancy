@@ -1,22 +1,18 @@
 language: csharp
-solution: src/Nancy.sln
-sudo: false
-install:
-  - gem install bundle
-  - bundle
-  - echo \#\!/bin/bash >> ./travis.sh
-  - echo set -e >> ./travis.sh
-  - echo set -x >> ./travis.sh
-  - echo set -o pipefail >> ./travis.sh
-  - echo echo Running on latest Mono >> ./travis.sh
-  - echo rake mono >> ./travis.sh
-  - chmod +x ./travis.sh
-  - cat travis.sh
-script: ./travis.sh
+sudo: required
+dist: trusty
+addons:
+  apt:
+    packages: 
+    - gettext
+    - libcurl4-openssl-dev
+    - libicu-dev
+    - libssl-dev
+    - libunwind8
+script: ./build.sh --verbosity diagnostic
 notifications:
   email:
     - nancy@nancyfx.org
 cache:
   directories:
-    - $TRAVIS_BUILD_DIR/packages
-gemfile: Gemfile
+    - .dotnet

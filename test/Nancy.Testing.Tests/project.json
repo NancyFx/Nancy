@@ -18,6 +18,15 @@
         ]
     },
 
+    "configurations" : {
+        "MonoRelease": {
+             "buildOptions": {
+                "define": ["MONO"],
+                "optimize": true
+              }
+        }
+    },
+
     "frameworks": {
         "net452": {
             "dependencies": {

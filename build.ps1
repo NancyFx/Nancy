@@ -1,10 +1,33 @@
-function Install-Dotnet
-{
-  & where.exe dotnet 2>&1 | Out-Null
+[CmdletBinding()]
+Param(
+    [string]$Target = "Default",
+    [ValidateSet("Quiet", "Minimal", "Normal", "Verbose", "Diagnostic")]
+    [string]$Verbosity = "Verbose",
+    [switch]$WhatIf,
+    [string]$NuGetSource = $null,
+    [string]$NuGetApiKey = $null,
+    [string]$Version = $null,
+    [switch]$SkipClean,
+    [switch]$SkipTests
+)
 
-  if(($LASTEXITCODE -ne 0) -Or ((Test-Path Env:\APPVEYOR) -eq $true))
+######################################################################################################
+
+Function Install-Dotnet()
+{
+  $existingPaths = $Env:Path -Split ';' | Where-Object { (![string]::IsNullOrEmpty($_)) -and (Test-Path $_) }
+  $DOTNET_EXE_IN_PATH = (Get-ChildItem -Path $existingPaths -Filter "dotnet.exe" | Select -First 1).FullName
+  $GlobalDotNetFound =  (![string]::IsNullOrEmpty($DOTNET_EXE_IN_PATH)) -and (Test-Path $DOTNET_EXE_IN_PATH)
+  $LocalDotNetFound = Test-Path (Join-Path $PSScriptRoot ".dotnet")
+
+  if ($GlobalDotNetFound)
   {
-    Write-Host "Dotnet CLI not found - downloading latest version"
+    return
+  }
+
+  if((!$LocalDotNetFound) -Or ((Test-Path Env:\APPVEYOR) -eq $true))
+  {
+    Write-Output "Dotnet CLI was not found."
 
     # Prepare the dotnet CLI folder
     $env:DOTNET_INSTALL_DIR="$(Convert-Path "$PSScriptRoot")\.dotnet\win7-x64"
@@ -16,24 +39,23 @@ function Install-Dotnet
     # Download the dotnet CLI install script
     if (!(Test-Path .\dotnet\install.ps1))
     {
-      Invoke-WebRequest "https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/scripts/obtain/dotnet-install.ps1" -OutFile ".\.dotnet\dotnet-install.ps1"
+      Write-Output "Downloading version 1.0.0-preview2 of Dotnet CLI installer..."
+      Invoke-WebRequest "https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0-preview2/scripts/obtain/dotnet-install.ps1" -OutFile ".\.dotnet\dotnet-install.ps1"
     }
 
     # Run the dotnet CLI install
-    & .\.dotnet\dotnet-install.ps1
+    Write-Output "Installing Dotnet CLI version 1.0.0-preview1-002702..."
+    & .\.dotnet\dotnet-install.ps1 -Channel beta -Version 1.0.0-preview1-002702
 
     # Add the dotnet folder path to the process. This gets skipped
     # by Install-DotNetCli if it's already installed.
     Remove-PathVariable $env:DOTNET_INSTALL_DIR
     $env:PATH = "$env:DOTNET_INSTALL_DIR;$env:PATH"
-
   }
 }
 
-function Remove-PathVariable
+Function Remove-PathVariable([string]$VariableToRemove)
 {
-  [cmdletbinding()]
-  param([string] $VariableToRemove)
   $path = [Environment]::GetEnvironmentVariable("PATH", "User")
   $newItems = $path.Split(';') | Where-Object { $_.ToString() -inotlike $VariableToRemove }
   [Environment]::SetEnvironmentVariable("PATH", [System.String]::Join(';', $newItems), "User")
@@ -42,40 +64,46 @@ function Remove-PathVariable
   [Environment]::SetEnvironmentVariable("PATH", [System.String]::Join(';', $newItems), "Process")
 }
 
-function Restore-Packages
-{
-    param([string] $DirectoryName)
-    & dotnet restore -v Warning ("""" + $DirectoryName + """")
-}
+######################################################################################################
 
-function Test-Projects
-{
-    & dotnet test -c Release;
-    if($LASTEXITCODE -ne 0)
-    {
-      exit 3
+Write-Host "Preparing to run build script..."
+
+# Define constants.
+$PSScriptRoot = split-path -parent $MyInvocation.MyCommand.Definition;
+$Script = Join-Path $PSScriptRoot "build.cake"
+$ToolPath = Join-Path $PSScriptRoot "tools"
+$NuGetPath = Join-Path $ToolPath "nuget/NuGet.exe"
+$CakeVersion = "0.13.0"
+$CakePath = Join-Path $ToolPath "Cake.$CakeVersion/Cake.exe"
+
+# Install Dotnet CLI.
+Install-Dotnet
+
+# Make sure Cake has been installed.
+if (!(Test-Path $CakePath)) {
+    Write-Verbose "Installing Cake..."
+    Invoke-Expression "&`"$NuGetPath`" install Cake -Version $CakeVersion -OutputDirectory `"$ToolPath`"" | Out-Null;
+    if ($LASTEXITCODE -ne 0) {
+        Throw "An error occured while restoring Cake from NuGet."
     }
 }
 
-########################
-# THE BUILD!
-########################
-
-Push-Location $PSScriptRoot
-
-# Install Dotnet CLI
-Install-Dotnet
-
-# Package restore
-Write-Host "Running package restore"
-Get-ChildItem -Path . -Filter *.xproj -Recurse | ForEach-Object { Restore-Packages $_.DirectoryName }
-
-# Tests
-Write-Host "Running tests"
-Get-ChildItem -Path .\test -Filter *.xproj -Exclude Nancy.ViewEngines.Razor.Tests.Models.xproj -Recurse | ForEach-Object {
-    Push-Location $_.DirectoryName
-    Test-Projects
-    Pop-Location
+# Is this a dry run?
+$UseDryRun = "";
+if($WhatIf.IsPresent) {
+    $UseDryRun = "-dryrun"
 }
 
-Pop-Location
+# Build the argument list.
+$Arguments = @{
+    source=$NuGetSource;
+    apikey=$NuGetApiKey;
+    targetversion=$Version;
+    skipclean=$SkipClean.IsPresent;
+    skiptests=$SkipTests.IsPresent;
+}.GetEnumerator() | %{"--{0}=`"{1}`"" -f $_.key, $_.value };
+
+# Start Cake.
+Write-Host "Running build script..."
+Invoke-Expression "& `"$CakePath`" `"$Script`" -target=`"$Target`" -verbosity=`"$Verbosity`" $UseDryRun $Arguments"
+exit $LASTEXITCODE

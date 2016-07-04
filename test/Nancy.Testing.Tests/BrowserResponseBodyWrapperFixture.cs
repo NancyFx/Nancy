@@ -51,7 +51,7 @@
             var result = body["#bar"];
 
             // Then
-#if __MonoCS__
+#if MONO
             AssertExtensions.AllShouldContain(result, "inner", System.StringComparison.OrdinalIgnoreCase);
 #else
             result.AllShouldContain("inner");
