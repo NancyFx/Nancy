@@ -12,6 +12,7 @@ var apiKey = Argument<string>("apikey", null);
 var version = Argument<string>("targetversion", null);
 var skipClean = Argument<bool>("skipclean", false);
 var skipTests = Argument<bool>("skiptests", false);
+var nogit = Argument<bool>("nogit", false);
 
 // Variables
 var configuration = IsRunningOnWindows() ? "Release" : "MonoRelease";
@@ -234,22 +235,45 @@ Task("Prepare-Release")
   // Update version.
   UpdateProjectJsonVersion(version, projectJsonFiles);
 
-  // Add
-  foreach (var file in projectJsonFiles) 
-  {
-    StartProcess("git", new ProcessSettings {
-      Arguments = string.Format("add {0}", file.FullPath)
-    });
-  }
+    // Add
+    foreach (var file in projectJsonFiles) 
+    {
+      if (nogit)
+      {
+        Information("git " + string.Format("add {0}", file.FullPath));
+      }
+      else
+      {
+        StartProcess("git", new ProcessSettings {
+          Arguments = string.Format("add {0}", file.FullPath)
+        });
+      }
+    }
 
-  // Commit
-  StartProcess("git", new ProcessSettings {
-    Arguments = string.Format("commit -m \"Updated version to {0}\"", version)
-  });
-  // Tag
-  StartProcess("git", new ProcessSettings {
-    Arguments = string.Format("tag \"v{0}\"", version)
-  });
+    // Commit
+    if (nogit)
+    {
+      Information("git " + string.Format("commit -m \"Updated version to {0}\"", version));
+    }
+    else 
+    {
+      StartProcess("git", new ProcessSettings {
+        Arguments = string.Format("commit -m \"Updated version to {0}\"", version)
+      });
+    }
+
+    // Tag
+    if (nogit)
+    {
+      Information("git " + string.Format("tag \"v{0}\"", version));
+    }
+    else
+    {
+      StartProcess("git", new ProcessSettings {
+        Arguments = string.Format("tag \"v{0}\"", version)
+      });
+    }
+  
 });
 
 Task("Update-Version")
