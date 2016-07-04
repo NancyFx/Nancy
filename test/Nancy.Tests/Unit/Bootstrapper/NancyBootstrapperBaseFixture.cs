@@ -131,17 +131,11 @@
             this.bootstrapper.OverriddenRegistrationTasks = new[] { registrations };
 
             // When
-            using(var scope = Fake.CreateScope())
-            {
-                this.bootstrapper.Initialise();
+            this.bootstrapper.Initialise();
 
-                // Then
-                using (scope.OrderedAssertions())
-                {
-                    A.CallTo(() => registrations.CollectionTypeRegistrations).MustHaveHappened();
-                    A.CallTo(() => startup.Initialize(A<IPipelines>._)).MustHaveHappened();
-                }
-            }
+            // Then
+            A.CallTo(() => registrations.CollectionTypeRegistrations).MustHaveHappened()
+                .Then(A.CallTo(() => startup.Initialize(A<IPipelines>._)).MustHaveHappened());
         }
 
         [Fact]

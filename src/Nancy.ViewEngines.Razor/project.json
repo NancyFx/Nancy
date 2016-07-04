@@ -17,7 +17,8 @@
     },
 
     "buildOptions": {
-        "embed": "Resources/**/*.*"
+        "embed": "Resources/**/*.*",
+        "xmlDoc": true
     },
 
     "frameworks": {

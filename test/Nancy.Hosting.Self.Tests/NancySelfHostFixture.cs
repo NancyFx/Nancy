@@ -1,4 +1,4 @@
-﻿#if !__MonoCS__
+﻿#if !MONO
 namespace Nancy.Hosting.Self.Tests
 {
     using System;

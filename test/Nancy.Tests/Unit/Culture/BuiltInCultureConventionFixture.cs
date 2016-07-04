@@ -392,7 +392,7 @@
         [InlineData("en-US")]
         [InlineData("nl")]
         [InlineData("es")]
-#if !__MonoCS__
+#if !MONO
         [InlineData("iu-Latn-CA")]
 #endif
         public void Validation_should_return_true_if_valid_culture_name(string cultureName)

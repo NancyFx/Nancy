@@ -13,7 +13,7 @@
     using AppFunc = System.Func<System.Collections.Generic.IDictionary<string, object>, System.Threading.Tasks.Task>;
     public class AppBuilderExtensionsFixture
     {
-#if !__MonoCS__
+#if !MONO
         [Fact]
         public async Task When_host_Nancy_via_IAppBuilder_then_should_handle_requests()
         {

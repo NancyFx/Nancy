@@ -17,6 +17,7 @@
     },
 
     "buildOptions": {
+        "xmlDoc": true,
         "embed": [
             "Resources/NancyTestingCert.pfx"
         ]

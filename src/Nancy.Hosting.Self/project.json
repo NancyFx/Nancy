@@ -11,7 +11,8 @@
     },
 
     "buildOptions": {
-        "define": [ "CORE" ]
+        "define": [ "CORE" ],
+        "xmlDoc": true
     },
 
     "dependencies": {
