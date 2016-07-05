@@ -183,10 +183,9 @@ Task("Nuke-Symbol-Packages")
 
 Task("Package-NuGet")
   .Description("Generates NuGet packages for each project that contains a nuspec")
-  .IsDependentOn("Publish")
   .Does(() =>
 {
-  var projects = GetFiles("./**/*.xproj");
+  var projects = GetFiles("./src/**/*.xproj");
   foreach(var project in projects)
   {
     var settings = new DotNetCorePackSettings {
