@@ -15,20 +15,6 @@ Param(
 
 Function Install-Dotnet()
 {
-  $existingPaths = $Env:Path -Split ';' | Where-Object { (![string]::IsNullOrEmpty($_)) -and (Test-Path $_) }
-  $DOTNET_EXE_IN_PATH = (Get-ChildItem -Path $existingPaths -Filter "dotnet.exe" | Select -First 1).FullName
-  $GlobalDotNetFound =  (![string]::IsNullOrEmpty($DOTNET_EXE_IN_PATH)) -and (Test-Path $DOTNET_EXE_IN_PATH)
-  $LocalDotNetFound = Test-Path (Join-Path $PSScriptRoot ".dotnet")
-
-  if ($GlobalDotNetFound)
-  {
-    return
-  }
-
-  if((!$LocalDotNetFound) -Or ((Test-Path Env:\APPVEYOR) -eq $true))
-  {
-    Write-Output "Dotnet CLI was not found."
-
     # Prepare the dotnet CLI folder
     $env:DOTNET_INSTALL_DIR="$(Convert-Path "$PSScriptRoot")\.dotnet\win7-x64"
     if (!(Test-Path $env:DOTNET_INSTALL_DIR))
@@ -40,7 +26,7 @@ Function Install-Dotnet()
     if (!(Test-Path .\dotnet\install.ps1))
     {
       Write-Output "Downloading version 1.0.0-preview2 of Dotnet CLI installer..."
-      Invoke-WebRequest "https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0-preview2/scripts/obtain/dotnet-install.ps1" -OutFile ".\.dotnet\dotnet-install.ps1"
+      Invoke-WebRequest "https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0-preview1/scripts/obtain/dotnet-install.ps1" -OutFile ".\.dotnet\dotnet-install.ps1"
     }
 
     # Run the dotnet CLI install
@@ -51,7 +37,6 @@ Function Install-Dotnet()
     # by Install-DotNetCli if it's already installed.
     Remove-PathVariable $env:DOTNET_INSTALL_DIR
     $env:PATH = "$env:DOTNET_INSTALL_DIR;$env:PATH"
-  }
 }
 
 Function Remove-PathVariable([string]$VariableToRemove)
