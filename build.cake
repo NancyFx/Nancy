@@ -273,7 +273,23 @@ Task("Prepare-Release")
         Arguments = string.Format("tag \"v{0}\"", version)
       });
     }
-  
+
+    //Push
+    if (nogit)
+    {
+      Information("git push origin master");
+      Information("git push --tags");
+    }
+    else
+    {
+      StartProcess("git", new ProcessSettings {
+        Arguments = "push origin master"
+      });
+
+      StartProcess("git", new ProcessSettings {
+        Arguments = "push --tags"
+      });
+    }
 });
 
 Task("Update-Version")
