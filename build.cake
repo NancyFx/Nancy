@@ -1,5 +1,3 @@
-#addin nuget:?package=Newtonsoft.Json&version=8.0.3
-
 // Usings
 using System.Xml;
 using System.Xml.Linq;
@@ -308,12 +306,11 @@ public void UpdateProjectJsonVersion(string version, FilePathCollection filePath
   Verbose(logAction => logAction("Setting version to {0}", version));
   foreach (var file in filePaths) 
   {
-    var project = Newtonsoft.Json.Linq.JObject.Parse(
-      System.IO.File.ReadAllText(file.FullPath, Encoding.UTF8));
+    var project = System.IO.File.ReadAllText(file.FullPath, Encoding.UTF8);
 
-    project["version"].Replace(version);
+    project = System.Text.RegularExpressions.Regex.Replace(project, "(\"version\":\\s*)\".+\"", "$1\"" + version + "\"");
 
-    System.IO.File.WriteAllText(file.FullPath, project.ToString(), Encoding.UTF8);
+    System.IO.File.WriteAllText(file.FullPath, project, Encoding.UTF8);
   }
 }
 
