@@ -13,3 +13,6 @@ script: ./build.sh --verbosity diagnostic
 notifications:
   email:
     - nancy@nancyfx.org
+cache:
+  directories:
+    - .dotnet
