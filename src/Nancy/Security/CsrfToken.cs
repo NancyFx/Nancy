@@ -58,7 +58,7 @@
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != typeof(CsrfToken)) return false;
-            return this.Equals((CsrfToken)obj);
+            return Equals((CsrfToken)obj);
         }
 
         /// <summary>

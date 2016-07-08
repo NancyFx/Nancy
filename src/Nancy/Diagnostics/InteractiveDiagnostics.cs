@@ -177,7 +177,7 @@
         private static string GetTemplateFromProperty(
             InteractiveDiagnosticMethod interactiveDiagnosticMethod, Type diagObjectType)
         {
-            var propertyName = string.Format("{0}{1}", interactiveDiagnosticMethod.MethodName, "Template");
+            var propertyName = String.Format("{0}{1}", interactiveDiagnosticMethod.MethodName, "Template");
             var property = diagObjectType.GetProperty(propertyName);
 
             if (property == null)
@@ -199,7 +199,7 @@
 
         private static string GetDescriptionFromProperty(IDiagnosticsProvider diagnosticsProvider, MethodInfo methodInfo)
         {
-            var propertyName = string.Format("{0}{1}", methodInfo.Name, "Description");
+            var propertyName = String.Format("{0}{1}", methodInfo.Name, "Description");
             var property = diagnosticsProvider.DiagnosticObject.GetType().GetProperty(propertyName);
 
             if (property == null)

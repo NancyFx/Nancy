@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -263,7 +264,7 @@
             {
                 handler.Handle(context.Response.StatusCode, context);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 if (defaultHandler == null)
                 {

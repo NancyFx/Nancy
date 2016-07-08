@@ -90,7 +90,7 @@
                 return Enumerable.Empty<ViewLocationResult>();
             }
 
-            if (resourceStreams.Count == 1 && !RootNamespaces.ContainsKey(assembly))
+            if (resourceStreams.Count() == 1 && !RootNamespaces.ContainsKey(assembly))
             {
                 var errorMessage =
                     string.Format("Only one view was found in assembly {0}, but no rootnamespace had been registered.", assembly.FullName);
@@ -125,7 +125,7 @@
             return resource
                 .Replace(commonNamespace, string.Empty)
                 .Replace(resourceName, string.Empty)
-                .Trim('.')
+                .Trim(new[] { '.' })
                 .Replace(".", "/");
         }
 
@@ -137,7 +137,7 @@
 
                 return resource
                     .Replace(GetResourceFileName(resource), string.Empty)
-                    .TrimEnd('.');
+                    .TrimEnd(new[] { '.' });
             }
 
             var commonPathSegments = resources.Select(s => new { parts = s.Split('.') })
@@ -166,7 +166,7 @@
                 resourceName.Split(new[] { "." }, StringSplitOptions.RemoveEmptyEntries);
 
             var segmentCount =
-                nameSegments.Length;
+                nameSegments.Count();
 
             return (segmentCount < 2) ?
                 string.Empty :

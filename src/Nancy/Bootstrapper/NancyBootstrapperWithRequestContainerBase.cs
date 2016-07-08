@@ -58,7 +58,7 @@ namespace Nancy.Bootstrapper
         /// </summary>
         /// <param name="context">The current context</param>
         /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="INancyModule"/> instances.</returns>
-        public sealed override IEnumerable<INancyModule> GetAllModules(NancyContext context)
+        public override sealed IEnumerable<INancyModule> GetAllModules(NancyContext context)
         {
             var requestContainer = this.GetConfiguredRequestContainer(context);
 
@@ -73,7 +73,7 @@ namespace Nancy.Bootstrapper
         /// <param name="moduleType">Module type</param>
         /// <param name="context">The current context</param>
         /// <returns>The <see cref="INancyModule"/> instance</returns>
-        public sealed override INancyModule GetModule(Type moduleType, NancyContext context)
+        public override sealed INancyModule GetModule(Type moduleType, NancyContext context)
         {
             var requestContainer = this.GetConfiguredRequestContainer(context);
 
@@ -85,7 +85,7 @@ namespace Nancy.Bootstrapper
         /// </summary>
         /// <param name="context">The <see cref="NancyContext"/> used by the request.</param>
         /// <returns>An <see cref="IPipelines"/> instance.</returns>
-        protected sealed override IPipelines InitializeRequestPipelines(NancyContext context)
+        protected override sealed IPipelines InitializeRequestPipelines(NancyContext context)
         {
             var requestContainer =
                 this.GetConfiguredRequestContainer(context);
@@ -112,7 +112,7 @@ namespace Nancy.Bootstrapper
         /// Takes the registration tasks and calls the relevant methods to register them
         /// </summary>
         /// <param name="registrationTasks">Registration tasks</param>
-        protected sealed override void RegisterRegistrationTasks(IEnumerable<IRegistrations> registrationTasks)
+        protected override sealed void RegisterRegistrationTasks(IEnumerable<IRegistrations> registrationTasks)
         {
             foreach (var applicationRegistrationTask in registrationTasks.ToList())
             {
@@ -183,7 +183,7 @@ namespace Nancy.Bootstrapper
         /// </summary>
         /// <param name="container">Container to register into</param>
         /// <param name="moduleRegistrationTypes">NancyModule types</param>
-        protected sealed override void RegisterModules(TContainer container, IEnumerable<ModuleRegistration> moduleRegistrationTypes)
+        protected override sealed void RegisterModules(TContainer container, IEnumerable<ModuleRegistration> moduleRegistrationTypes)
         {
             this.moduleRegistrationTypeCache = moduleRegistrationTypes;
         }

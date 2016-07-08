@@ -33,7 +33,7 @@ namespace Nancy.Cryptography
             }
 
             var isValid = true;
-            for (var i = 0; i < hashLength; i++)
+            for (int i = 0; i < hashLength; i++)
             {
                 if (hmac1[i] != hmac2[i])
                 {
@@ -41,7 +41,7 @@ namespace Nancy.Cryptography
                 }
             }
 
-            return !hasResized && isValid;
+            return hasResized ? false : isValid;
         }
     }
 }

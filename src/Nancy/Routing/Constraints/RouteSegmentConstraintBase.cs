@@ -25,7 +25,7 @@
         /// </returns>
         public virtual bool Matches(string constraint)
         {
-            return constraint.Equals(this.Name, StringComparison.OrdinalIgnoreCase);
+            return constraint.Equals(Name, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>
@@ -41,9 +41,12 @@
         public SegmentMatch GetMatch(string constraint, string segment, string parameterName)
         {
             T value;
-            return this.TryMatch(constraint, segment, out value) 
-                ? CreateMatch(parameterName, value) 
-                : SegmentMatch.NoMatch;
+            if (this.TryMatch(constraint, segment, out value))
+            {
+                return CreateMatch(parameterName, value);
+            }
+
+            return SegmentMatch.NoMatch;
         }
 
         /// <summary>

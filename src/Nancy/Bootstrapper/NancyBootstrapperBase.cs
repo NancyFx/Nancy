@@ -307,7 +307,7 @@
                             return null;
                         }
 
-                        if (string.Equals(ctx.Request.Path, "/favicon.ico", StringComparison.OrdinalIgnoreCase))
+                        if (String.Equals(ctx.Request.Path, "/favicon.ico", StringComparison.OrdinalIgnoreCase))
                         {
                             var response = new Response
                                 {
@@ -443,7 +443,8 @@
                 }
             }
 
-            this.Dispose(true);
+
+            Dispose(true);
         }
 
         /// <summary>
@@ -451,7 +452,7 @@
         /// </summary>
         /// <param name="obj">Object to compare</param>
         /// <returns>Boolean indicating equality</returns>
-        public sealed override bool Equals(object obj)
+        public override sealed bool Equals(object obj)
         {
             return base.Equals(obj);
         }
@@ -460,7 +461,7 @@
         /// Hides GetHashCode from the overrides list
         /// </summary>
         /// <returns>Hash code integer</returns>
-        public sealed override int GetHashCode()
+        public override sealed int GetHashCode()
         {
             return base.GetHashCode();
         }
@@ -494,7 +495,7 @@
         /// Hides ToString from the overrides list
         /// </summary>
         /// <returns>String representation</returns>
-        public sealed override string ToString()
+        public override sealed string ToString()
         {
             return base.ToString();
         }

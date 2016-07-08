@@ -20,7 +20,10 @@
         {
             this.sessionProvider = sessionProvider;
 
-            Get("/", _ => this.View["RequestTracing"]);
+            Get("/", _ =>
+            {
+                return View["RequestTracing"];
+            });
 
             Get("/sessions", _ =>
             {

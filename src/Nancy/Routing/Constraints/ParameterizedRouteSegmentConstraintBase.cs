@@ -34,7 +34,7 @@
         {
             var parameters = constraint.Substring(constraint.IndexOf('(')).Trim('(', ')').Split(',');
 
-            return this.TryMatch(segment, parameters, out matchedValue);
+            return TryMatch(segment, parameters, out matchedValue);
         }
 
         /// <summary>

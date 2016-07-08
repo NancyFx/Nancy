@@ -139,27 +139,27 @@ namespace Nancy.Cookies
         public override string ToString()
         {
             var sb = new StringBuilder(50);
-            sb.AppendFormat("{0}={1}; path={2}", this.EncodedName, this.EncodedValue, this.Path ?? "/");
+            sb.AppendFormat("{0}={1}; path={2}", this.EncodedName, this.EncodedValue, Path ?? "/");
 
-            if (this.Expires != null)
+            if (Expires != null)
             {
                 sb.Append("; expires=");
-                sb.Append(this.Expires.Value.ToUniversalTime().ToString("ddd, dd-MMM-yyyy HH:mm:ss", DateTimeFormatInfo.InvariantInfo));
+                sb.Append(Expires.Value.ToUniversalTime().ToString("ddd, dd-MMM-yyyy HH:mm:ss", DateTimeFormatInfo.InvariantInfo));
                 sb.Append(" GMT");
             }
 
-            if (this.Domain != null)
+            if (Domain != null)
             {
                 sb.Append("; domain=");
-                sb.Append(this.Domain);
+                sb.Append(Domain);
             }
 
-            if (this.Secure)
+            if (Secure)
             {
                 sb.Append("; Secure");
             }
 
-            if (this.HttpOnly)
+            if (HttpOnly)
             {
                 sb.Append("; HttpOnly");
             }

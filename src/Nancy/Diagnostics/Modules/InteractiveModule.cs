@@ -24,7 +24,10 @@
         {
             this.interactiveDiagnostics = interactiveDiagnostics;
 
-            Get("/", _ => this.View["InteractiveDiagnostics"]);
+            Get("/", _ =>
+            {
+                return View["InteractiveDiagnostics"];
+            });
 
             Get("/providers", _ =>
             {
@@ -58,16 +61,16 @@
 
                 var methods = diagnostic.Methods
                     .Select(m => new
+                    {
+                        m.MethodName,
+                        ReturnType = m.ReturnType.ToString(),
+                        m.Description,
+                        Arguments = m.Arguments.Select(a => new
                         {
-                            m.MethodName,
-                            ReturnType = m.ReturnType.ToString(),
-                            m.Description,
-                            Arguments = m.Arguments.Select(a => new
-                            {
-                                ArgumentName = a.Item1,
-                                ArgumentType = a.Item2.ToString()
-                            })
+                            ArgumentName = a.Item1,
+                            ArgumentType = a.Item2.ToString()
                         })
+                    })
                     .ToArray();
 
                 return this.Response.AsJson(methods);
@@ -93,6 +96,7 @@
                     GetArguments(method, this.Request.Query);
 
                 return this.Response.AsJson(new { Result = this.interactiveDiagnostics.ExecuteDiagnostic(method, arguments) });
+
             });
 
             Get<Response>("/templates/{providerName}/{methodName}", ctx =>

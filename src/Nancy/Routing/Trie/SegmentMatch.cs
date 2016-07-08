@@ -7,7 +7,7 @@ namespace Nancy.Routing.Trie
     /// </summary>
     public class SegmentMatch
     {
-        private static readonly SegmentMatch noMatch = new SegmentMatch(false);
+        private static SegmentMatch noMatch = new SegmentMatch(false);
 
         /// <summary>
         /// Gets a value indicating whether the match was successful or not
