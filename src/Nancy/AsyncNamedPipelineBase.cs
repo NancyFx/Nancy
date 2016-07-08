@@ -229,7 +229,7 @@
         public virtual void InsertBefore(string name, PipelineItem<TAsyncDelegate> item)
         {
             var existingIndex =
-                this.pipelineItems.FindIndex(i => string.Equals(name, i.Name, StringComparison.Ordinal));
+                this.pipelineItems.FindIndex(i => String.Equals(name, i.Name, StringComparison.Ordinal));
 
             if (existingIndex == -1)
             {
@@ -281,7 +281,7 @@
         public virtual void InsertAfter(string name, PipelineItem<TAsyncDelegate> item)
         {
             var existingIndex =
-                this.pipelineItems.FindIndex(i => string.Equals(name, i.Name, StringComparison.Ordinal));
+                this.pipelineItems.FindIndex(i => String.Equals(name, i.Name, StringComparison.Ordinal));
 
             if (existingIndex == -1)
             {
@@ -324,7 +324,7 @@
             }
 
             var existingIndex =
-                this.pipelineItems.FindIndex(i => string.Equals(name, i.Name, StringComparison.Ordinal));
+                this.pipelineItems.FindIndex(i => String.Equals(name, i.Name, StringComparison.Ordinal));
 
             if (existingIndex != -1)
             {

@@ -11,9 +11,15 @@
         /// </summary>
         public MainModule()
         {
-            Get("/", _ => this.View["Dashboard"]);
+            Get("/", _ =>
+            {
+                return View["Dashboard"];
+            });
 
-            Post("/", _ => this.Response.AsRedirect("~/"));
+            Post("/", _ =>
+            {
+                return this.Response.AsRedirect("~/");
+            });
         }
     }
 }

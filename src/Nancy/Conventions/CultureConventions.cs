@@ -29,12 +29,12 @@
         /// </returns>
         public IEnumerator<Func<NancyContext, GlobalizationConfiguration, CultureInfo>> GetEnumerator()
         {
-            return this.conventions.GetEnumerator();
+            return conventions.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return this.GetEnumerator();
+            return GetEnumerator();
         }
     }
 }

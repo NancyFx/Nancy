@@ -115,10 +115,10 @@
         {
             var location = match
                 .Replace(rootPath, string.Empty)
-                .TrimStart(Path.DirectorySeparatorChar)
+                .TrimStart(new[] { Path.DirectorySeparatorChar })
                 .Replace(@"\", "/")
                 .Replace(Path.GetFileName(match), string.Empty)
-                .TrimEnd('/');
+                .TrimEnd(new [] { '/' });
 
             return location;
         }

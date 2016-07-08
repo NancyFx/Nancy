@@ -74,7 +74,7 @@
                         if (options.EnableClientCertificates)
                         {
                             var clientCertificate = new X509Certificate2(Get<X509Certificate>(environment, "ssl.ClientCertificate").Export(X509ContentType.Cert));
-                            certificate = clientCertificate;
+                            certificate = clientCertificate ?? null;
                         }
 
                         var serverClientIp = Get<string>(environment, "server.RemoteIpAddress");

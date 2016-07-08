@@ -30,8 +30,8 @@
 
             this.configuration = environment.GetValue<XmlConfiguration>();
 
-            this.Contents = this.GetXmlContents(model, serializer);
-            this.ContentType = this.DefaultContentType;
+            this.Contents = GetXmlContents(model, serializer);
+            this.ContentType = DefaultContentType;
             this.StatusCode = HttpStatusCode.OK;
         }
 

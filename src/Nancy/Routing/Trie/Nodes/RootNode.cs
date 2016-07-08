@@ -7,7 +7,7 @@ namespace Nancy.Routing.Trie.Nodes
     /// </summary>
     public class RootNode : TrieNode
     {
-        private readonly SegmentMatch segmentMatch = new SegmentMatch(true);
+        private SegmentMatch segmentMatch = new SegmentMatch(true);
 
         private readonly Dictionary<string, object> localCaptures = new Dictionary<string, object>();
 

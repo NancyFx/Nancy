@@ -6,34 +6,36 @@
     using Nancy.Json;
 
     public class TestConverter : JavaScriptConverter
-	{
-		public override IEnumerable<Type> SupportedTypes
-		{
-			get { yield return typeof(TestConverterType); }
-		}
+    {
+        public override IEnumerable<Type> SupportedTypes
+        {
+            get { yield return typeof(TestConverterType); }
+        }
 
-		public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
-		{
-			if (type != typeof(TestConverterType))
-				return null;
+        public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
+        {
+            if (type != typeof(TestConverterType))
+                return null;
 
-		    var data = new TestConverterType { Data = Convert.ToInt32(dictionary["DataValue"]) };
+            var data = new TestConverterType();
 
-		    return data;
-		}
+            data.Data = Convert.ToInt32(dictionary["DataValue"]);
 
-		public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
-		{
-			TestConverterType data = obj as TestConverterType;
+            return data;
+        }
 
-			if (data == null)
-				return null;
+        public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
+        {
+            TestConverterType data = obj as TestConverterType;
 
-			var fields = new Dictionary<string, object>();
+            if (data == null)
+                return null;
 
-			fields["DataValue"] = data.Data;
+            var fields = new Dictionary<string, object>();
 
-			return fields;
-		}
-	}
+            fields["DataValue"] = data.Data;
+
+            return fields;
+        }
+    }
 }

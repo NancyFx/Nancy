@@ -43,7 +43,7 @@
         /// <returns>A <see cref="SegmentMatch"/> instance representing the result of the match</returns>
         public override SegmentMatch Match(string segment)
         {
-            var routeSegmentConstraint = this.routeSegmentConstraints.FirstOrDefault(x => x.Matches(this.constraint));
+            var routeSegmentConstraint = routeSegmentConstraints.FirstOrDefault(x => x.Matches(constraint));
             if (routeSegmentConstraint == null)
             {
                 return SegmentMatch.NoMatch;

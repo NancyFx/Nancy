@@ -57,7 +57,7 @@ namespace Nancy.Json
         /// <returns></returns>
         public virtual object Deserialize(IDictionary<string, object> dictionary, Type type)
         {
-            return this.Deserialize(dictionary, type, null);
+            return Deserialize(dictionary, type, null);
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace Nancy.Json
         /// <returns></returns>
         public IDictionary<string, object> Serialize(object obj)
         {
-            return this.Serialize(obj, null);
+            return Serialize(obj, null);
         }
 
         /// <summary>

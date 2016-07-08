@@ -1,5 +1,6 @@
 namespace Nancy.Session
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
 
@@ -30,7 +31,7 @@ namespace Nancy.Session
         /// </summary>
         public int Count
         {
-            get { return this.dictionary.Count; }
+            get { return dictionary.Count; }
         }
 
         /// <summary>
@@ -38,12 +39,12 @@ namespace Nancy.Session
         /// </summary>
         public void DeleteAll()
         {
-            if (this.Count > 0)
+            if (Count > 0)
             {
-                this.MarkAsChanged();
+                MarkAsChanged();
             }
 
-            this.dictionary.Clear();
+            dictionary.Clear();
         }
 
         /// <summary>
@@ -52,8 +53,7 @@ namespace Nancy.Session
         /// <param name="key">Key to delete</param>
         public void Delete(string key)
         {
-            if (this.dictionary.Remove(key)) {
-                this.MarkAsChanged(); }
+            if (dictionary.Remove(key)) { MarkAsChanged(); }
         }
 
         /// <summary>
@@ -63,18 +63,18 @@ namespace Nancy.Session
         /// <returns>The value, or null or the key didn't exist</returns>
         public object this[string key]
         {
-            get { return this.dictionary.ContainsKey(key) ? this.dictionary[key] : null; }
+            get { return dictionary.ContainsKey(key) ? dictionary[key] : null; }
             set
             {
-                var existingValue = this[key] ?? new object();
+                var existingValue = this[key] ?? new Object();
 
                 if (existingValue.Equals(value))
                 {
                     return;
                 }
 
-                this.dictionary[key] = value;
-                this.MarkAsChanged();
+                dictionary[key] = value;
+                MarkAsChanged();
             }
         }
 
@@ -107,12 +107,12 @@ namespace Nancy.Session
         /// <filterpriority>1</filterpriority>
         public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
         {
-            return this.dictionary.GetEnumerator();
+            return dictionary.GetEnumerator();
         }
 
         private void MarkAsChanged()
         {
-            this.hasChanged = true;
+            hasChanged = true;
         }
     }
 }

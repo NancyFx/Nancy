@@ -56,7 +56,7 @@ namespace Nancy.Routing.Trie
 
             if (CaptureNodeWithMultipleParameters.IsMatch(segment))
             {
-                return new CaptureNodeWithMultipleParameters(parent, segment, this, this.routeSegmentConstraints);
+                return new CaptureNodeWithMultipleParameters(parent, segment, this, routeSegmentConstraints);
             }
 
             return new LiteralNode(parent, segment, this);
@@ -66,7 +66,7 @@ namespace Nancy.Routing.Trie
         {
             if (segment.Contains(":"))
             {
-                return new CaptureNodeWithConstraint(parent, segment, this, this.routeSegmentConstraints);
+                return new CaptureNodeWithConstraint(parent, segment, this, routeSegmentConstraints);
             }
 
             if (segment.EndsWith("?}"))

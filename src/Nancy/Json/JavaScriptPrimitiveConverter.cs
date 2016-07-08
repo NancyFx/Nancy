@@ -24,7 +24,7 @@
         /// <returns></returns>
         public virtual object Deserialize(object primitiveValue, Type type)
         {
-            return this.Deserialize(primitiveValue, type, null);    
+            return Deserialize(primitiveValue, type, null);    
         }
 
         /// <summary>
@@ -43,7 +43,7 @@
         /// <returns></returns>
         public virtual object Serialize(object obj)
         {
-            return this.Serialize(obj, null);
+            return Serialize(obj, null);
         }
 
         /// <summary>

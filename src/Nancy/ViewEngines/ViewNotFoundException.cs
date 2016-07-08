@@ -70,7 +70,7 @@
             this.ViewName = viewName;
             this.AvailableViewEngineExtensions = availableViewEngineExtensions;
 
-            this.message = string.Format(
+            this.message = String.Format(
                     "Unable to locate view '{0}'{2}Currently available view engine extensions: {1}{2}",
                     this.ViewName,
                     string.Join(",", this.AvailableViewEngineExtensions),
@@ -92,7 +92,7 @@
         /// <returns>The error message that explains the reason for the exception, or an empty string("").</returns>
         public override string Message
         {
-            get { return this.message; }
+            get { return message; }
         }
     }
 }

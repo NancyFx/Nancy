@@ -28,12 +28,12 @@ namespace Nancy.Conventions
         /// </returns>
         public IEnumerator<Func<NancyContext, string, Response>> GetEnumerator()
         {
-            return this.conventions.GetEnumerator();
+            return conventions.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return this.GetEnumerator();
+            return GetEnumerator();
         }
     }
 }

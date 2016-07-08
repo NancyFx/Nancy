@@ -1,5 +1,9 @@
 namespace Nancy
 {
+    using System;
+    using System.Diagnostics;
+    using System.Linq;
+    using Nancy.Bootstrapper;
     using Nancy.Diagnostics;
 
     /// <summary>

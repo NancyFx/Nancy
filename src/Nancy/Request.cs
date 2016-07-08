@@ -184,7 +184,17 @@ namespace Nancy
             {
                 var cookieName = parts[0].Trim();
 
-                var cookieValue = parts.Length == 1 ? string.Empty : HttpUtility.UrlDecode(parts[1]);
+                string cookieValue;
+
+                if (parts.Length == 1)
+                {
+                    //Cookie attribute
+                    cookieValue = string.Empty;
+                }
+                else
+                {
+                    cookieValue = HttpUtility.UrlDecode(parts[1]);
+                }
 
                 cookieDictionary[cookieName] = cookieValue;
             }

@@ -13,7 +13,7 @@ namespace Nancy.Bootstrapper
         /// <param name="moduleType">Type of the module</param>
         public ModuleRegistration(Type moduleType)
         {
-            this.ModuleType = moduleType;
+            ModuleType = moduleType;
         }
 
         /// <summary>
