@@ -27,7 +27,7 @@
         /// <param name="attemptedValue">the value attempted to set</param>
         /// <param name="innerException">the underlying exception</param>
         public PropertyBindingException(string propertyName, string attemptedValue, Exception innerException = null)
-            : base(string.Format(ExceptionMessage, propertyName, attemptedValue), innerException)
+            : base(String.Format(ExceptionMessage, propertyName, attemptedValue), innerException)
         {
             this.PropertyName = propertyName;
             this.AttemptedValue = attemptedValue;

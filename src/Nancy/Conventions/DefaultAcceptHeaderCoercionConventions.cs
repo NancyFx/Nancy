@@ -26,17 +26,20 @@
         /// </returns>
         public Tuple<bool, string> Validate(NancyConventions conventions)
         {
-            return conventions.AcceptHeaderCoercionConventions == null 
-                ? Tuple.Create(false, "The accept header coercion conventions cannot be null.") 
-                : Tuple.Create(true, string.Empty);
+            if (conventions.AcceptHeaderCoercionConventions == null)
+            {
+                return Tuple.Create(false, "The accept header coercion conventions cannot be null.");
+            }
+
+            return Tuple.Create(true, string.Empty);
         }
 
         private void ConfigureDefaultConventions(NancyConventions conventions)
         {
             conventions.AcceptHeaderCoercionConventions = new List<Func<IEnumerable<Tuple<string, decimal>>, NancyContext, IEnumerable<Tuple<string, decimal>>>>(2)
                                                               {
-                                                                  BuiltInAcceptHeaderCoercions.BoostHtml,
-                                                                  BuiltInAcceptHeaderCoercions.CoerceBlankAcceptHeader,
+                                                                 BuiltInAcceptHeaderCoercions.BoostHtml,
+                                                                 BuiltInAcceptHeaderCoercions.CoerceBlankAcceptHeader,
                                                               };
         }
     }

@@ -4,6 +4,8 @@
     using System.IO;
     using System.Threading.Tasks;
 
+    using Nancy.Extensions;
+
     /// <summary>
     /// A <see cref="Stream"/> decorator that can handle moving the stream out from memory and on to disk when the contents reaches a certain length.
     /// </summary>
@@ -75,7 +77,8 @@
 
             if (!this.stream.CanSeek)
             {
-                var task = this.MoveToWritableStream();
+                var task =
+                    MoveToWritableStream();
 
                 task.Wait();
 
@@ -156,7 +159,7 @@
         /// <remarks>The stream is moved to disk when either the length of the contents or expected content length exceeds the threshold specified in the constructor.</remarks>
         public bool IsInMemory
         {
-            get { return this.stream.GetType() != typeof(FileStream); }
+            get { return !(this.stream.GetType() == typeof(FileStream)); }
         }
 
         /// <summary>

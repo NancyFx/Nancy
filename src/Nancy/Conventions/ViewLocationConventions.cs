@@ -33,12 +33,12 @@
         /// </returns>
         public IEnumerator<Func<string, object, ViewLocationContext, string>> GetEnumerator()
         {
-            return this.conventions.GetEnumerator();
+            return conventions.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return this.GetEnumerator();
+            return GetEnumerator();
         }
     }
 }

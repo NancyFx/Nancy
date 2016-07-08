@@ -32,7 +32,8 @@
             this.ContentType = MimeTypes.GetMimeType(name);
             this.StatusCode = HttpStatusCode.OK;
 
-            var content = this.GetResourceContent(assembly, resourcePath, name);
+            var content =
+                    GetResourceContent(assembly, resourcePath, name);
 
             if (content != null)
             {

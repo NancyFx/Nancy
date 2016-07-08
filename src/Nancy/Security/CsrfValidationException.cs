@@ -23,7 +23,7 @@ namespace Nancy.Security
         public CsrfValidationException(CsrfTokenValidationResult result)
             : base(result.ToString())
         {
-            this.Result = result;
+            Result = result;
         }
     }
 }

@@ -6,6 +6,7 @@
     using Nancy.Bootstrapper;
     using Nancy.Cookies;
     using Nancy.Cryptography;
+    using Nancy.Helpers;
 
     /// <summary>
     /// Csrf protection methods

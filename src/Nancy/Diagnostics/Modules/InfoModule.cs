@@ -33,7 +33,10 @@
             this.typeCatalog = typeCatalog;
             this.assemblyCatalog = assemblyCatalog;
 
-            Get("/", _ => this.View["Info"]);
+            Get("/", _ =>
+            {
+                return View["Info"];
+            });
 
             Get("/data", _ =>
             {
@@ -44,10 +47,10 @@
                 data.Nancy.TracesDisabled = !environment.GetValue<TraceConfiguration>().DisplayErrorTraces;
                 data.Nancy.CaseSensitivity = StaticConfiguration.CaseSensitive ? "Sensitive" : "Insensitive";
                 data.Nancy.RootPath = rootPathProvider.GetRootPath();
-                data.Nancy.Hosting = this.GetHosting();
-                data.Nancy.BootstrapperContainer = this.GetBootstrapperContainer();
+                data.Nancy.Hosting = GetHosting();
+                data.Nancy.BootstrapperContainer = GetBootstrapperContainer();
                 data.Nancy.LocatedBootstrapper = NancyBootstrapperLocator.Bootstrapper.GetType().ToString();
-                data.Nancy.LoadedViewEngines = this.GetViewEngines();
+                data.Nancy.LoadedViewEngines = GetViewEngines();
 
                 data.Configuration = new Dictionary<string, object>();
                 foreach (var propertyInfo in configuration.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))

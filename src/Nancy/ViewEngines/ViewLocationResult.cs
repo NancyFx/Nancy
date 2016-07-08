@@ -74,7 +74,7 @@
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Equals(other.Extension, this.Extension) && Equals(other.Location, this.Location) && Equals(other.Name, this.Name);
+            return Equals(other.Extension, Extension) && Equals(other.Location, Location) && Equals(other.Name, Name);
         }
 
         /// <summary>
@@ -86,7 +86,7 @@
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == typeof (ViewLocationResult) && this.Equals((ViewLocationResult) obj);
+            return obj.GetType() == typeof (ViewLocationResult) && Equals((ViewLocationResult) obj);
         }
 
         /// <summary>
@@ -97,9 +97,9 @@
         {
             unchecked
             {
-                var result = this.Extension.GetHashCode();
-                result = (result*397) ^ this.Location.GetHashCode();
-                result = (result*397) ^ this.Name.GetHashCode();
+                var result = Extension.GetHashCode();
+                result = (result*397) ^ Location.GetHashCode();
+                result = (result*397) ^ Name.GetHashCode();
                 return result;
             }
         }

@@ -1,7 +1,10 @@
 ﻿namespace Nancy.Responses
 {
+    using System;
     using System.IO;
     using System.Threading.Tasks;
+
+    using Nancy.Helpers;
 
     /// <summary>
     /// Takes an existing response and materialises the body.
@@ -45,7 +48,7 @@
             this.StatusCode = sourceResponse.StatusCode;
             this.ReasonPhrase = sourceResponse.ReasonPhrase;
 
-            this.Contents = this.WriteContents;
+            this.Contents = WriteContents;
         }
 
         private void WriteContents(Stream stream)

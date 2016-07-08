@@ -149,7 +149,7 @@ namespace Nancy
         public virtual void InsertBefore(string name, PipelineItem<TDelegate> item)
         {
             var existingIndex =
-                this.pipelineItems.FindIndex(i => string.Equals(name, i.Name, StringComparison.Ordinal));
+                this.pipelineItems.FindIndex(i => String.Equals(name, i.Name, StringComparison.Ordinal));
 
             if (existingIndex == -1)
             {
@@ -179,7 +179,7 @@ namespace Nancy
         public virtual void InsertAfter(string name, PipelineItem<TDelegate> item)
         {
             var existingIndex =
-                this.pipelineItems.FindIndex(i => string.Equals(name, i.Name, StringComparison.Ordinal));
+                this.pipelineItems.FindIndex(i => String.Equals(name, i.Name, StringComparison.Ordinal));
 
             if (existingIndex == -1)
             {
@@ -211,7 +211,7 @@ namespace Nancy
             }
 
             var existingIndex =
-                this.pipelineItems.FindIndex(i => string.Equals(name, i.Name, StringComparison.Ordinal));
+                this.pipelineItems.FindIndex(i => String.Equals(name, i.Name, StringComparison.Ordinal));
 
             if (existingIndex != -1)
             {
