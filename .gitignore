@@ -35,3 +35,4 @@ TestAssembly.dll
 .vscode/
 .dotnet/
 [Tt]ools/Addins/
+TestResults/

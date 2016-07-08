@@ -28,15 +28,18 @@ done
 
 function installdotnet() {
   echo "Installing dotnet"
-  curl -sSL https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0-preview1/scripts/obtain/dotnet-install.sh | bash /dev/stdin --version 1.0.0-preview1-002702 --install-dir .dotnet
+  wget https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0-preview2/scripts/obtain/dotnet-install.sh
+  sudo bash dotnet-install.sh --version 1.0.0-preview2-003121 --install-dir .dotnet
   export PATH=.dotnet:$PATH
+  export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
+  dotnet --info
 }
 
 function installcake() {
   echo "Checking for Cake at "$CAKE_PATH
   if [ ! -f $CAKE_PATH ]; then
     echo "Installing Cake"
-    mono $TOOL_PATH/$NUGET_PATH install Cake -Version $CAKE_VERSION -OutputDirectory $TOOL_PATH
+    mono $TOOL_PATH/$NUGET_PATH install Cake -source https://api.nuget.org/v3/index.json -Version $CAKE_VERSION -OutputDirectory $TOOL_PATH
   fi
 }
 

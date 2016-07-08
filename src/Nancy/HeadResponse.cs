@@ -62,7 +62,7 @@
             {
             }
 
-#if !NETSTANDARD1_5
+#if !NETSTANDARD1_6
             public override IAsyncResult BeginRead(byte[] buffer, int offset, int count, AsyncCallback callback, object state)
             {
                 throw new NotSupportedException();
