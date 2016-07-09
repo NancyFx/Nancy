@@ -12,17 +12,17 @@
         {
             this.sessionProvider = sessionProvider;
 
-            Get["/"] = _ =>
+            Get("/", _ =>
             {
                 return View["RequestTracing"];
-            };
+            });
 
-            Get["/sessions"] = _ =>
+            Get("/sessions", _ =>
             {
                 return this.Response.AsJson(this.sessionProvider.GetSessions().Select(s => new { Id = s.Id }).ToArray());
-            };
+            });
 
-            Get["/sessions/{id}"] = ctx =>
+            Get("/sessions/{id}", ctx =>
             {
                 Guid id;
                 if (!Guid.TryParse(ctx.Id, out id))
@@ -49,7 +49,7 @@
                         t.ResponseData.StatusCode,
                         Log = t.TraceLog.ToString().Replace("\r", "").Split(new[] { "\n" }, StringSplitOptions.None),
                     }).ToArray());
-            };
+            });
         }
     }
 }

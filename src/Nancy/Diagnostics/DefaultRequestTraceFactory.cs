@@ -2,12 +2,24 @@ namespace Nancy.Diagnostics
 {
     using System;
     using System.Collections.Generic;
+    using Nancy.Configuration;
 
     /// <summary>
     /// Default implementation of the <see cref="IRequestTraceFactory"/> interface.
     /// </summary>
     public class DefaultRequestTraceFactory : IRequestTraceFactory
     {
+        private readonly TraceConfiguration configuration;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultRequestTraceFactory"/> class.
+        /// </summary>
+        /// <param name="environment">An <see cref="INancyEnvironment"/> instance.</param>
+        public DefaultRequestTraceFactory(INancyEnvironment environment)
+        {
+            this.configuration = environment.GetValue<TraceConfiguration>();
+        }
+
         /// <summary>
         /// Creates an <see cref="IRequestTrace"/> instance.
         /// </summary>
@@ -27,9 +39,9 @@ namespace Nancy.Diagnostics
 
             requestTrace.RequestData = request;
 
-            requestTrace.TraceLog = (StaticConfiguration.DisableErrorTraces) ?
-                (ITraceLog)new NullLog() :
-                (ITraceLog)new DefaultTraceLog();
+            requestTrace.TraceLog = (this.configuration.DisplayErrorTraces) ?
+                (ITraceLog)new DefaultTraceLog() :
+                (ITraceLog)new NullLog();
 
             return requestTrace;
         }

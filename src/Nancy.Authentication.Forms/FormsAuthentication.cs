@@ -4,9 +4,9 @@ namespace Nancy.Authentication.Forms
     using Bootstrapper;
     using Cookies;
     using Cryptography;
+    using Extensions;
     using Helpers;
-    using Nancy.Extensions;
-    using Nancy.Security;
+    using Security;
 
     /// <summary>
     /// Nancy forms authentication implementation
@@ -51,17 +51,14 @@ namespace Nancy.Authentication.Forms
                 throw new ArgumentNullException("configuration");
             }
 
-            if (!configuration.IsValid)
-            {
-                throw new ArgumentException("Configuration is invalid", "configuration");
-            }
+            configuration.EnsureConfigurationIsValid();
 
             currentConfiguration = configuration;
 
             pipelines.BeforeRequest.AddItemToStartOfPipeline(GetLoadAuthenticationHook(configuration));
             if (!configuration.DisableRedirect)
             {
-                pipelines.AfterRequest.AddItemToEndOfPipeline(GetRedirectToLoginHook(configuration));                
+                pipelines.AfterRequest.AddItemToEndOfPipeline(GetRedirectToLoginHook(configuration));
             }
         }
 
@@ -82,10 +79,7 @@ namespace Nancy.Authentication.Forms
                 throw new ArgumentNullException("configuration");
             }
 
-            if (!configuration.IsValid)
-            {
-                throw new ArgumentException("Configuration is invalid", "configuration");
-            }
+            configuration.EnsureConfigurationIsValid();
 
             module.RequiresAuthentication();
 
@@ -136,7 +130,7 @@ namespace Nancy.Authentication.Forms
 
             var response = context.GetRedirect(redirectUrl);
             var authenticationCookie = BuildCookie(userIdentifier, cookieExpiry, currentConfiguration);
-            response.AddCookie(authenticationCookie);
+            response.WithCookie(authenticationCookie);
 
             return response;
         }
@@ -152,10 +146,10 @@ namespace Nancy.Authentication.Forms
             var response =
                 (Response)HttpStatusCode.OK;
 
-            var authenticationCookie = 
+            var authenticationCookie =
                 BuildCookie(userIdentifier, cookieExpiry, currentConfiguration);
 
-            response.AddCookie(authenticationCookie);
+            response.WithCookie(authenticationCookie);
 
             return response;
         }
@@ -170,7 +164,7 @@ namespace Nancy.Authentication.Forms
         {
             var response = context.GetRedirect(redirectUrl);
             var authenticationCookie = BuildLogoutCookie(currentConfiguration);
-            response.AddCookie(authenticationCookie);
+            response.WithCookie(authenticationCookie);
 
             return response;
         }
@@ -184,10 +178,10 @@ namespace Nancy.Authentication.Forms
             var response =
                 (Response)HttpStatusCode.OK;
 
-            var authenticationCookie = 
+            var authenticationCookie =
                 BuildLogoutCookie(currentConfiguration);
 
-            response.AddCookie(authenticationCookie);
+            response.WithCookie(authenticationCookie);
 
             return response;
         }
@@ -232,7 +226,7 @@ namespace Nancy.Authentication.Forms
                         string redirectQuerystringKey = GetRedirectQuerystringKey(configuration);
 
                         context.Response = context.GetRedirect(
-                            string.Format("{0}?{1}={2}", 
+                            string.Format("{0}?{1}={2}",
                             configuration.RedirectUrl,
                             redirectQuerystringKey,
                             context.ToFullPath("~" + context.Request.Path + HttpUtility.UrlEncode(context.Request.Url.Query))));
@@ -264,7 +258,7 @@ namespace Nancy.Authentication.Forms
             var cookieValue = DecryptAndValidateAuthenticationCookie(cookieValueEncrypted, configuration);
 
             Guid returnGuid;
-            if (String.IsNullOrEmpty(cookieValue) || !Guid.TryParse(cookieValue, out returnGuid))
+            if (string.IsNullOrEmpty(cookieValue) || !Guid.TryParse(cookieValue, out returnGuid))
             {
                 return Guid.Empty;
             }
@@ -285,12 +279,12 @@ namespace Nancy.Authentication.Forms
 
             var cookie = new NancyCookie(formsAuthenticationCookieName, cookieContents, true, configuration.RequiresSSL, cookieExpiry);
 
-            if(!string.IsNullOrEmpty(configuration.Domain))
+            if (!string.IsNullOrEmpty(configuration.Domain))
             {
                 cookie.Domain = configuration.Domain;
             }
 
-            if(!string.IsNullOrEmpty(configuration.Path))
+            if (!string.IsNullOrEmpty(configuration.Path))
             {
                 cookie.Path = configuration.Path;
             }
@@ -305,14 +299,14 @@ namespace Nancy.Authentication.Forms
         /// <returns>Nancy cookie instance</returns>
         private static INancyCookie BuildLogoutCookie(FormsAuthenticationConfiguration configuration)
         {
-            var cookie = new NancyCookie(formsAuthenticationCookieName, String.Empty, true, configuration.RequiresSSL,  DateTime.Now.AddDays(-1));
+            var cookie = new NancyCookie(formsAuthenticationCookieName, String.Empty, true, configuration.RequiresSSL, DateTime.Now.AddDays(-1));
 
-            if(!string.IsNullOrEmpty(configuration.Domain))
+            if (!string.IsNullOrEmpty(configuration.Domain))
             {
                 cookie.Domain = configuration.Domain;
             }
 
-            if(!string.IsNullOrEmpty(configuration.Path))
+            if (!string.IsNullOrEmpty(configuration.Path))
             {
                 cookie.Path = configuration.Path;
             }
@@ -354,13 +348,10 @@ namespace Nancy.Authentication.Forms
         /// <returns>Decrypted value, or empty on error or if failed validation</returns>
         public static string DecryptAndValidateAuthenticationCookie(string cookieValue, FormsAuthenticationConfiguration configuration)
         {
-            // TODO - shouldn't this be automatically decoded by nancy cookie when that change is made?
-            var decodedCookie = Helpers.HttpUtility.UrlDecode(cookieValue);
-
             var hmacStringLength = Base64Helpers.GetBase64Length(configuration.CryptographyConfiguration.HmacProvider.HmacLength);
 
-            var encryptedCookie = decodedCookie.Substring(hmacStringLength);
-            var hmacString = decodedCookie.Substring(0, hmacStringLength);
+            var encryptedCookie = cookieValue.Substring(hmacStringLength);
+            var hmacString = cookieValue.Substring(0, hmacStringLength);
 
             var encryptionProvider = configuration.CryptographyConfiguration.EncryptionProvider;
 
@@ -389,12 +380,12 @@ namespace Nancy.Authentication.Forms
                 redirectQuerystringKey = configuration.RedirectQuerystringKey;
             }
 
-            if(string.IsNullOrWhiteSpace(redirectQuerystringKey))
+            if (string.IsNullOrWhiteSpace(redirectQuerystringKey))
             {
                 redirectQuerystringKey = FormsAuthenticationConfiguration.DefaultRedirectQuerystringKey;
             }
 
             return redirectQuerystringKey;
         }
-     }
+    }
 }

@@ -19,20 +19,13 @@
 
         public override Task PreExecute(NancyContext context)
         {
-            try
+            using (var memoryStream = new MemoryStream())
             {
-                using (var memoryStream = new MemoryStream())
-                {
-                    this.sourceResponse.Contents.Invoke(memoryStream);
-                    this.oldResponseOutput = memoryStream.ToArray();
-                }
+                this.sourceResponse.Contents.Invoke(memoryStream);
+                this.oldResponseOutput = memoryStream.ToArray();
+            }
 
-                return base.PreExecute(context);
-            }
-            catch (Exception e)
-            {
-                return TaskHelpers.GetFaultedTask<object>(e);
-            }
+            return base.PreExecute(context);
         }
 
         public MaterialisingResponse(Response sourceResponse)
@@ -43,7 +36,19 @@
             this.StatusCode = sourceResponse.StatusCode;
             this.ReasonPhrase = sourceResponse.ReasonPhrase;
 
-            this.Contents = stream => stream.Write(this.oldResponseOutput, 0, this.oldResponseOutput.Length);
+            this.Contents = WriteContents;
+        }
+
+        private void WriteContents(Stream stream)
+        {
+            if (this.oldResponseOutput == null)
+            {
+                this.sourceResponse.Contents.Invoke(stream);
+            }
+            else
+            {
+                stream.Write(this.oldResponseOutput, 0, this.oldResponseOutput.Length);
+            }
         }
     }
 }

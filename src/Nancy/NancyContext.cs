@@ -3,13 +3,14 @@ namespace Nancy
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
+    using System.Security.Claims;
+    using Nancy.Configuration;
     using Nancy.Diagnostics;
     using Nancy.Responses.Negotiation;
     using Nancy.Routing;
-    using Nancy.Security;
     using Nancy.Validation;
-    using System.Globalization;
 
     /// <summary>
     /// Nancy context.
@@ -74,7 +75,7 @@ namespace Nancy
         /// <summary>
         /// Gets or sets the current user
         /// </summary>
-        public IUserIdentity CurrentUser { get; set; }
+        public ClaimsPrincipal CurrentUser { get; set; }
 
         /// <summary>
         /// Diagnostic request tracing
@@ -114,6 +115,12 @@ namespace Nancy
         /// Gets or sets the dynamic object used to locate text resources.
         /// </summary>
         public dynamic Text { get; set; }
+
+        /// <summary>
+        /// Gets or sets the <see cref="INancyEnvironment"/>.
+        /// </summary>
+        /// <value>An <see cref="INancyEnvironment"/> instance.</value>
+        public INancyEnvironment Environment { get; set; }
 
         /// <summary>
         /// Disposes any disposable items in the <see cref="Items"/> dictionary.

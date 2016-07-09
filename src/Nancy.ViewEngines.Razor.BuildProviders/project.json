@@ -1,0 +1,20 @@
+﻿{
+    "version": "2.0.0-*",
+
+    "dependencies": {
+        "Nancy": { "target": "project" },
+        "Nancy.ViewEngines.Razor": { "target": "project" }
+    },
+    
+    "buildOptions": {
+        "xmlDoc": true
+    },
+
+    "frameworks": {
+        "net452": {
+            "frameworkAssemblies": {
+                "System.Web": { "type": "build" }
+            }
+        }
+    }
+}

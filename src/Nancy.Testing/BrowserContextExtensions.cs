@@ -1,18 +1,19 @@
-﻿
-namespace Nancy.Testing
+﻿namespace Nancy.Testing
 {
     using System;
-    using System.Globalization;
-    using System.Text;
-    using System.IO;
     using System.Collections.Generic;
+    using System.Globalization;
+    using System.IO;
     using System.Linq;
+    using System.Text;
 
     using Nancy.Authentication.Forms;
+    using Nancy.Configuration;
     using Nancy.Extensions;
     using Nancy.Helpers;
     using Nancy.Responses;
-    using Responses.Negotiation;
+    using Nancy.Responses.Negotiation;
+    using Nancy.Xml;
 
     /// <summary>
     /// Defines extensions for the <see cref="BrowserContext"/> type.
@@ -54,7 +55,7 @@ namespace Nancy.Testing
         {
             if (serializer == null)
             {
-                serializer = new DefaultJsonSerializer();
+                serializer = new DefaultJsonSerializer(browserContext.Environment);
             }
 
             var contextValues =
@@ -76,7 +77,7 @@ namespace Nancy.Testing
         {
             if (serializer == null)
             {
-                serializer = new DefaultXmlSerializer();
+                serializer = new DefaultXmlSerializer(browserContext.Environment);
             }
 
             var contextValues =
@@ -187,7 +188,7 @@ namespace Nancy.Testing
                     if (contextValues.Headers["accept"].Any(x => x.Equals("*/*")))
                     {
                         contextValues.Headers.Remove("accept");
-                    }    
+                    }
                 }
             }
 

@@ -89,7 +89,7 @@
         {
             if (!this.NodeData.Any())
             {
-                return new MatchResult[] { };
+                return ArrayCache.Empty<MatchResult>();
             }
 
             var value = segments.Skip(currentIndex).Aggregate((seg1, seg2) => seg1 + "/" + seg2);

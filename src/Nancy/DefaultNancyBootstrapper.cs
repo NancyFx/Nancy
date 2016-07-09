@@ -4,13 +4,14 @@ namespace Nancy
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
+    using Nancy.Bootstrapper;
+    using Nancy.Configuration;
     using Nancy.Diagnostics;
-    using Bootstrapper;
     using Nancy.TinyIoc;
-
+    using Extensions;
     /// <summary>
     /// TinyIoC bootstrapper - registers default route resolver and registers itself as
-    /// INancyModuleCatalog for resolving modules but behaviour can be overridden if required.
+    /// INancyModuleCatalog for resolving modules but behavior can be overridden if required.
     /// </summary>
     public class DefaultNancyBootstrapper : NancyBootstrapperWithRequestContainerBase<TinyIoCContainer>
     {
@@ -19,27 +20,29 @@ namespace Nancy
         /// </summary>
         public static IEnumerable<Func<Assembly, bool>> DefaultAutoRegisterIgnoredAssemblies = new Func<Assembly, bool>[]
             {
-                asm => asm.FullName.StartsWith("Microsoft.", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("System.", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("System,", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("CR_ExtUnitTest", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("mscorlib,", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("CR_VSTest", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("DevExpress.CodeRush", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("IronPython", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("IronRuby", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("xunit", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("Nancy.Testing", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("MonoDevelop.NUnit", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("SMDiagnostics", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("CppCodeProvider", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("WebDev.WebHost40", StringComparison.InvariantCulture),
+                asm => asm.FullName.StartsWith("Microsoft.", StringComparison.Ordinal),
+                asm => asm.FullName.StartsWith("System.", StringComparison.Ordinal),
+                asm => asm.FullName.StartsWith("System,", StringComparison.Ordinal),
+                asm => asm.FullName.StartsWith("CR_ExtUnitTest", StringComparison.Ordinal),
+                asm => asm.FullName.StartsWith("mscorlib,", StringComparison.Ordinal),
+                asm => asm.FullName.StartsWith("CR_VSTest", StringComparison.Ordinal),
+                asm => asm.FullName.StartsWith("DevExpress.CodeRush", StringComparison.Ordinal),
+                asm => asm.FullName.StartsWith("IronPython", StringComparison.Ordinal),
+                asm => asm.FullName.StartsWith("IronRuby", StringComparison.Ordinal),
+                asm => asm.FullName.StartsWith("xunit", StringComparison.Ordinal),
+                asm => asm.FullName.StartsWith("Nancy.Testing", StringComparison.Ordinal),
+                asm => asm.FullName.StartsWith("MonoDevelop.NUnit", StringComparison.Ordinal),
+                asm => asm.FullName.StartsWith("SMDiagnostics", StringComparison.Ordinal),
+                asm => asm.FullName.StartsWith("CppCodeProvider", StringComparison.Ordinal),
+                asm => asm.FullName.StartsWith("WebDev.WebHost40", StringComparison.Ordinal),
+                asm => asm.FullName.StartsWith("nunit", StringComparison.Ordinal),
+                asm => asm.FullName.StartsWith("nCrunch", StringComparison.Ordinal),
             };
 
         /// <summary>
         /// Gets the assemblies to ignore when autoregistering the application container
-        /// Return true from the delegate to ignore that particular assembly, returning true
-        /// does not mean the assembly *will* be included, a false from another delegate will
+        /// Return true from the delegate to ignore that particular assembly, returning false
+        /// does not mean the assembly *will* be included, a true from another delegate will
         /// take precedence.
         /// </summary>
         protected virtual IEnumerable<Func<Assembly, bool>> AutoRegisterIgnoredAssemblies
@@ -76,6 +79,16 @@ namespace Nancy
         }
 
         /// <summary>
+        /// Registers an <see cref="INancyEnvironment"/> instance in the container.
+        /// </summary>
+        /// <param name="container">The container to register into.</param>
+        /// <param name="environment">The <see cref="INancyEnvironment"/> instance to register.</param>
+        protected override void RegisterNancyEnvironment(TinyIoCContainer container, INancyEnvironment environment)
+        {
+            container.Register(environment);
+        }
+
+        /// <summary>
         /// Register the bootstrapper's implemented types into the container.
         /// This is necessary so a user can pass in a populated container but not have
         /// to take the responsibility of registering things like INancyModuleCatalog manually.
@@ -105,7 +118,6 @@ namespace Nancy
                         break;
                     case Lifetime.PerRequest:
                         throw new InvalidOperationException("Unable to directly register a per request lifetime.");
-                        break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
@@ -132,7 +144,6 @@ namespace Nancy
                         break;
                     case Lifetime.PerRequest:
                         throw new InvalidOperationException("Unable to directly register a per request lifetime.");
-                        break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
@@ -182,7 +193,16 @@ namespace Nancy
         }
 
         /// <summary>
-        /// Gets the diagnostics for initialisation
+        /// Gets the <see cref="INancyEnvironmentConfigurator"/> used by th.
+        /// </summary>
+        /// <returns>An <see cref="INancyEnvironmentConfigurator"/> instance.</returns>
+        protected override INancyEnvironmentConfigurator GetEnvironmentConfigurator()
+        {
+            return this.ApplicationContainer.Resolve<INancyEnvironmentConfigurator>();
+        }
+
+        /// <summary>
+        /// Gets the diagnostics for initialization
         /// </summary>
         /// <returns>IDiagnostics implementation</returns>
         protected override IDiagnostics GetDiagnostics()
@@ -220,6 +240,16 @@ namespace Nancy
         }
 
         /// <summary>
+        /// Get the <see cref="INancyEnvironment"/> instance.
+        /// </summary>
+        /// <returns>An configured <see cref="INancyEnvironment"/> instance.</returns>
+        /// <remarks>The boostrapper must be initialised (<see cref="INancyBootstrapper.Initialise"/>) prior to calling this.</remarks>
+        public override INancyEnvironment GetEnvironment()
+        {
+            return this.ApplicationContainer.Resolve<INancyEnvironment>();
+        }
+
+        /// <summary>
         /// Retrieve all module instances from the container
         /// </summary>
         /// <param name="container">Container to use</param>
@@ -244,14 +274,14 @@ namespace Nancy
         }
 
         /// <summary>
-        /// Executes auto registation with the given container.
+        /// Executes auto registration with the given container.
         /// </summary>
         /// <param name="container">Container instance</param>
-        private static void AutoRegister(TinyIoCContainer container, IEnumerable<Func<Assembly, bool>> ignoredAssemblies)
+        private void AutoRegister(TinyIoCContainer container, IEnumerable<Func<Assembly, bool>> ignoredAssemblies)
         {
-            var assembly = typeof(NancyEngine).Assembly;
+            var assembly = typeof(NancyEngine).GetTypeInfo().Assembly;
 
-            container.AutoRegister(AppDomain.CurrentDomain.GetAssemblies().Where(a => !ignoredAssemblies.Any(ia => ia(a))), DuplicateImplementationActions.RegisterMultiple, t => t.Assembly != assembly);
+            container.AutoRegister(this.AssemblyCatalog.GetAssemblies().Where(a => !ignoredAssemblies.Any(ia => ia(a))), DuplicateImplementationActions.RegisterMultiple, t => t.GetAssembly() != assembly);
         }
     }
 }

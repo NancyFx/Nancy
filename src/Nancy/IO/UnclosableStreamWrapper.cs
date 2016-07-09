@@ -175,7 +175,7 @@
                 this.baseStream.WriteTimeout = value;
             }
         }
-
+#if !NETSTANDARD1_6
         /// <summary>
         /// Closes the current stream and releases any resources (such as sockets and file handles) associated with the current stream.
         /// </summary>
@@ -183,6 +183,7 @@
         public override void Close()
         {
         }
+#endif
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -243,6 +244,7 @@
             this.baseStream.Write(buffer, offset, count);
         }
 
+#if !NETSTANDARD1_6
         /// <summary>
         /// Begins an asynchronous read operation.
         /// </summary>
@@ -267,6 +269,7 @@
             return this.baseStream.BeginWrite(buffer, offset, count, callback, state);
         }
 
+
         /// <summary>
         /// Waits for the pending asynchronous read to complete.
         /// </summary>
@@ -287,7 +290,7 @@
         {
             this.baseStream.EndWrite(asyncResult);
         }
-
+#endif
         /// <summary>
         /// Reads a byte from the stream and advances the position within the stream by one byte, or returns -1 if at the end of the stream.
         /// </summary>

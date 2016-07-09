@@ -1,4 +1,4 @@
-# Meet Nancy [![NuGet Version](http://img.shields.io/nuget/v/Nancy.svg?style=flat)](https://www.nuget.org/packages/Nancy/) [![NuGet Downloads](http://img.shields.io/nuget/dt/Nancy.svg?style=flat)](https://www.nuget.org/packages/Nancy/)
+# Meet Nancy [![NuGet Version](http://img.shields.io/nuget/v/Nancy.svg?style=flat)](https://www.nuget.org/packages/Nancy/) [![Slack Status](http://slack.nancyfx.org/badge.svg)](http://slack.nancyfx.org)
 
 Nancy is a lightweight, low-ceremony, framework for building HTTP based services on .Net and [Mono](http://mono-project.com). The goal of the framework is to stay out of the way as much as possible and provide a super-duper-happy-path to all interactions.
 
@@ -11,9 +11,9 @@ public class Module : NancyModule
 {
     public Module()
     {
-        Get["/greet/{name}"] = x => {
+        Get("/greet/{name}", x => {
             return string.Concat("Hello ", x.name);
-        };
+        });
     }
 }
 ```
@@ -47,7 +47,7 @@ Above all, creating an application with Nancy should be a pleasure, and hopefull
 
 ## Community
 
-Nancy followers can be found in the JabbR [#NancyFX room](http://jabbr.net/#/rooms/nancyfx). You can also find Nancy on Twitter using the #NancyFx hashtag.	
+Nancy followers can be found on Slack [NancyFx team](http://nancyfx.slack.com). You can also find Nancy on Twitter using the #NancyFx hashtag.	
 	
 ## Help out
 
@@ -83,13 +83,5 @@ Nancy is licensed under [MIT](http://www.opensource.org/licenses/mit-license.php
 ### TC (.net) 
 [![Build Status](http://nancy-ci.cloudapp.net/app/rest/builds/buildType:%28id:Nancy_NancyMaster%29/statusIcon)](http://nancy-ci.cloudapp.net/viewType.html?buildTypeId=Nancy_NancyMaster&guest=1)
 
-### Travis (Mono 2.x) 
+### Travis (Mono) 
 [![Build Status](https://travis-ci.org/NancyFx/Nancy.png?branch=master)](https://travis-ci.org/NancyFx/Nancy)
-
-### TC (Mono 2.x) 
-[![Build Status](http://nancy-ci.cloudapp.net/app/rest/builds/buildType:%28id:Nancy_NancyMasterMono2x%29/statusIcon)](http://nancy-ci.cloudapp.net/viewType.html?buildTypeId=Nancy_NancyMasterMono2x&guest=1)
-
-### TC (Mono 3.x) 
-[![Build Status](http://nancy-ci.cloudapp.net/app/rest/builds/buildType:%28id:Nancy_NancyMasterMono3x%29/statusIcon)](http://nancy-ci.cloudapp.net/viewType.html?buildTypeId=Nancy_NancyMasterMono3x&guest=1)
-
-

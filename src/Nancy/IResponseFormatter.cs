@@ -1,6 +1,6 @@
 ﻿namespace Nancy
 {
-    using System.Collections.Generic;
+    using Nancy.Configuration;
 
     /// <summary>
     /// An extension point for adding support for formatting response contents. No members should be added to this interface without good reason.
@@ -9,15 +9,21 @@
     public interface IResponseFormatter : IHideObjectMembers
     {
         /// <summary>
-        /// Gets all serializers currently registered
+        /// Gets all <see cref="ISerializerFactory"/> factory.
         /// </summary>
-        IEnumerable<ISerializer> Serializers { get; }
+        ISerializerFactory SerializerFactory { get; }
 
         /// <summary>
         /// Gets the context for which the response is being formatted.
         /// </summary>
         /// <value>A <see cref="NancyContext"/> instance.</value>
         NancyContext Context { get; }
+
+        /// <summary>
+        /// Gets the <see cref="INancyEnvironment"/>.
+        /// </summary>
+        /// <value>An <see cref="INancyEnvironment"/> instance.</value>
+        INancyEnvironment Environment { get; }
 
         /// <summary>
         /// Gets the root path of the application.

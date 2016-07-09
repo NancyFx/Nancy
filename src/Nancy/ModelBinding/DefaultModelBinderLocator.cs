@@ -12,7 +12,7 @@ namespace Nancy.ModelBinding
         /// <summary>
         /// Available model binders
         /// </summary>
-        private readonly IEnumerable<IModelBinder> binders;
+        private readonly IReadOnlyCollection<IModelBinder> binders;
 
         /// <summary>
         /// Default model binder to fall back on
@@ -27,7 +27,11 @@ namespace Nancy.ModelBinding
         public DefaultModelBinderLocator(IEnumerable<IModelBinder> binders, IBinder fallbackBinder)
         {
             this.fallbackBinder = fallbackBinder;
-            this.binders = binders;
+
+            if (binders != null)
+            {
+                this.binders = binders.ToArray();
+            }
         }
 
         /// <summary>
@@ -38,7 +42,20 @@ namespace Nancy.ModelBinding
         /// <returns>IModelBinder instance or null if none found</returns>
         public IBinder GetBinderForType(Type modelType, NancyContext context)
         {
-            return this.binders.FirstOrDefault(modelBinder => modelBinder.CanBind(modelType)) ?? this.fallbackBinder;
+            if (this.binders == null)
+            {
+                return this.fallbackBinder;
+            }
+
+            foreach (var modelBinder in this.binders)
+            {
+                if (modelBinder.CanBind(modelType))
+                {
+                    return modelBinder;
+                }
+            }
+
+            return this.fallbackBinder;
         }
     }
 }

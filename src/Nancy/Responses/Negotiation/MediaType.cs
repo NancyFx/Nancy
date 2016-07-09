@@ -39,7 +39,7 @@ namespace Nancy.Responses.Negotiation
         {
             return this.IsWildcard ||
                    other.IsWildcard ||
-                   this.type.Equals(other.type, StringComparison.InvariantCultureIgnoreCase);
+                   this.type.Equals(other.type, StringComparison.OrdinalIgnoreCase);
         }
 
         public static implicit operator MediaType(string inputString)

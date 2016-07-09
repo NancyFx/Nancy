@@ -1,10 +1,10 @@
 ﻿namespace Nancy.Routing
 {
-    using ModelBinding;
     using Nancy.Extensions;
+    using Nancy.ModelBinding;
     using Nancy.Responses.Negotiation;
-    using Nancy.ViewEngines;
     using Nancy.Validation;
+    using Nancy.ViewEngines;
 
     /// <summary>
     /// Default implementation for building a full configured <see cref="INancyModule"/> instance.

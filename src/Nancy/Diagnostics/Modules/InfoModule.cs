@@ -7,25 +7,32 @@
     using System.Linq;
     using System.Reflection;
     using Nancy.Bootstrapper;
+    using Nancy.Configuration;
     using Nancy.ViewEngines;
 
     public class InfoModule : DiagnosticModule
     {
-        public InfoModule(IRootPathProvider rootPathProvider, NancyInternalConfiguration configuration)
+        private readonly ITypeCatalog typeCatalog;
+        private readonly IAssemblyCatalog assemblyCatalog;
+
+        public InfoModule(IRootPathProvider rootPathProvider, NancyInternalConfiguration configuration, INancyEnvironment environment, ITypeCatalog typeCatalog, IAssemblyCatalog assemblyCatalog)
             : base("/info")
         {
-            Get["/"] = _ =>
+            this.typeCatalog = typeCatalog;
+            this.assemblyCatalog = assemblyCatalog;
+
+            Get("/", _ =>
             {
                 return View["Info"];
-            };
+            });
 
-            Get["/data"] = _ =>
+            Get("/data", _ =>
             {
                 dynamic data = new ExpandoObject();
 
                 data.Nancy = new ExpandoObject();
-                data.Nancy.Version = string.Format("v{0}", this.GetType().Assembly.GetName().Version.ToString());
-                data.Nancy.TracesDisabled = StaticConfiguration.DisableErrorTraces;
+                data.Nancy.Version = string.Format("v{0}", this.GetType().GetTypeInfo().Assembly.GetName().Version.ToString());
+                data.Nancy.TracesDisabled = !environment.GetValue<TraceConfiguration>().DisplayErrorTraces;
                 data.Nancy.CaseSensitivity = StaticConfiguration.CaseSensitive ? "Sensitive" : "Insensitive";
                 data.Nancy.RootPath = rootPathProvider.GetRootPath();
                 data.Nancy.Hosting = GetHosting();
@@ -41,26 +48,25 @@
 
                     data.Configuration[propertyInfo.Name] = (!typeof(IEnumerable).IsAssignableFrom(value.GetType())) ?
                         new[] { value.ToString() } :
-                        ((IEnumerable<object>) value).Select(x => x.ToString());
+                        ((IEnumerable<object>)value).Select(x => x.ToString());
                 }
 
                 return this.Response.AsJson((object)data);
-            };
+            });
         }
 
-        private static string[] GetViewEngines()
+        private string[] GetViewEngines()
         {
-            var engines =
-                AppDomainAssemblyTypeScanner.TypesOf<IViewEngine>();
+            var engines = this.typeCatalog.GetTypesAssignableTo<IViewEngine>();
 
             return engines
                 .Select(engine => engine.Name.Split(new [] { "ViewEngine" }, StringSplitOptions.None)[0])
                 .ToArray();
         }
 
-        private static string GetBootstrapperContainer()
+        private string GetBootstrapperContainer()
         {
-            var name = AppDomain.CurrentDomain
+            var name = this.assemblyCatalog
                 .GetAssemblies()
                 .Select(asm => asm.GetName())
                 .FirstOrDefault(asmName => asmName.Name != null && asmName.Name.StartsWith("Nancy.Bootstrappers."));
@@ -70,9 +76,9 @@
                 string.Format("{0} (v{1})", name.Name.Split('.').Last(), name.Version);
         }
 
-        private static string GetHosting()
+        private string GetHosting()
         {
-            var name = AppDomain.CurrentDomain
+            var name = this.assemblyCatalog
                 .GetAssemblies()
                 .Select(asm => asm.GetName())
                 .FirstOrDefault(asmName => asmName.Name != null && asmName.Name.StartsWith("Nancy.Hosting."));

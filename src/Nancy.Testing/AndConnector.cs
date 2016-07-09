@@ -1,7 +1,5 @@
 namespace Nancy.Testing
 {
-    using Nancy;
-
     public class AndConnector<TSource> : IHideObjectMembers
     {
         private TSource source;

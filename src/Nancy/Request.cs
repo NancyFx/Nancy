@@ -3,18 +3,20 @@ namespace Nancy
     using System;
     using System.Collections.Generic;
     using System.Collections.Specialized;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
-    using System.Text.RegularExpressions;
     using System.Security.Cryptography.X509Certificates;
-
+    using System.Text.RegularExpressions;
+    using Extensions;
+    using Helpers;
     using IO;
-    using Nancy.Extensions;
     using Session;
 
     /// <summary>
     /// Encapsulates HTTP-request information to an Nancy application.
     /// </summary>
+    [DebuggerDisplay("{DebuggerDisplay, nq}")]
     public class Request : IDisposable
     {
         private readonly List<HttpFile> files = new List<HttpFile>();
@@ -48,10 +50,10 @@ namespace Nancy
             RequestStream body = null,
             IDictionary<string, IEnumerable<string>> headers = null,
             string ip = null,
-            byte[] certificate = null,
+            X509Certificate certificate = null,
             string protocolVersion = null)
         {
-            if (String.IsNullOrEmpty(method))
+            if (string.IsNullOrEmpty(method))
             {
                 throw new ArgumentOutOfRangeException("method");
             }
@@ -66,7 +68,7 @@ namespace Nancy
                 throw new ArgumentNullException("url.Path");
             }
 
-            if (String.IsNullOrEmpty(url.Scheme))
+            if (string.IsNullOrEmpty(url.Scheme))
             {
                 throw new ArgumentOutOfRangeException("url.Scheme");
             }
@@ -85,14 +87,14 @@ namespace Nancy
 
             this.Session = new NullSessionProvider();
 
-            if (certificate != null && certificate.Length != 0)
+            if (certificate != null)
             {
-                this.ClientCertificate = new X509Certificate2(certificate);
+                this.ClientCertificate = certificate;
             }
 
             this.ProtocolVersion = protocolVersion ?? string.Empty;
 
-            if (String.IsNullOrEmpty(this.Url.Path))
+            if (string.IsNullOrEmpty(this.Url.Path))
             {
                 this.Url.Path = "/";
             }
@@ -190,7 +192,7 @@ namespace Nancy
                 }
                 else
                 {
-                    cookieValue = parts[1];
+                    cookieValue = HttpUtility.UrlDecode(parts[1]);
                 }
 
                 cookieDictionary[cookieName] = cookieValue;
@@ -232,21 +234,20 @@ namespace Nancy
 
         private void ParseFormData()
         {
-            if (string.IsNullOrEmpty(this.Headers.ContentType))
+            if (this.Headers.ContentType == null)
             {
                 return;
             }
 
-            var contentType = this.Headers["content-type"].First();
-            var mimeType = contentType.Split(';').First();
-            if (mimeType.Equals("application/x-www-form-urlencoded", StringComparison.OrdinalIgnoreCase))
+            var contentType = this.Headers.ContentType;
+            if (contentType.Matches("application/x-www-form-urlencoded"))
             {
                 var reader = new StreamReader(this.Body);
                 this.form = reader.ReadToEnd().AsQueryDictionary();
                 this.Body.Position = 0;
             }
 
-            if (!mimeType.Equals("multipart/form-data", StringComparison.OrdinalIgnoreCase))
+            if (!contentType.Matches("multipart/form-data"))
             {
                 return;
             }
@@ -255,7 +256,7 @@ namespace Nancy
             var multipart = new HttpMultipart(this.Body, boundary);
 
             var formValues =
-                new NameValueCollection(StaticConfiguration.CaseSensitive ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase);
+                new NameValueCollection(StaticConfiguration.CaseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase);
 
             foreach (var httpMultipartBoundary in multipart.GetBoundaries())
             {
@@ -296,14 +297,15 @@ namespace Nancy
                 };
 
             var providedOverride =
-                overrides.Where(x => !string.IsNullOrEmpty(x.Item2));
+                overrides.Where(x => !string.IsNullOrEmpty(x.Item2))
+                         .ToList();
 
             if (!providedOverride.Any())
             {
                 return;
             }
 
-            if (providedOverride.Count() > 1)
+            if (providedOverride.Count > 1)
             {
                 var overrideSources =
                     string.Join(", ", providedOverride);
@@ -315,6 +317,11 @@ namespace Nancy
             }
 
             this.Method = providedOverride.Single().Item2;
+        }
+
+        private string DebuggerDisplay
+        {
+            get { return string.Format("{0} {1} {2}", this.Method, this.Url, this.ProtocolVersion).Trim(); }
         }
     }
 }

@@ -28,6 +28,7 @@
         {
         }
 
+#if !NETSTANDARD1_6
         /// <summary>
         /// Initializes a new instance of the <see cref="MultipleRootPathProvidersLocatedException"/> class.
         /// </summary>
@@ -37,5 +38,6 @@
             : base(info, context)
         {
         }
+#endif
     }
 }

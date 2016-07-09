@@ -5,9 +5,9 @@
     using System.Dynamic;
     using System.IO;
     using System.Linq;
+    using System.Reflection;
     using System.Text.RegularExpressions;
     using Nancy.Conventions;
-
 
     /// <summary>
     /// The default implementation for how views are resolved and rendered by Nancy.
@@ -101,7 +101,7 @@
         {
             var inspectedLocations = new List<string>();
 
-            foreach (var convention in conventions)
+            foreach (var convention in this.conventions)
             {
                 try
                 {
@@ -115,6 +115,7 @@
                 }
                 catch
                 {
+                    // ignored
                 }
             }
 
@@ -150,7 +151,7 @@
 
             var matchingViewEngines =
                 from viewEngine in this.viewEngines
-                where viewEngine.Extensions.Any(x => x.Equals(viewLocationResult.Extension, StringComparison.InvariantCultureIgnoreCase))
+                where viewEngine.Extensions.Any(x => x.Equals(viewLocationResult.Extension, StringComparison.OrdinalIgnoreCase))
                 select viewEngine;
 
             return matchingViewEngines.FirstOrDefault();

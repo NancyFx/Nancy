@@ -3,13 +3,11 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    using Nancy.Helpers;
-
     /// <summary>
     /// Route that is returned when the path could be matched but it was for the wrong request method.
     /// </summary>
     /// <remarks>This is equal to sending back the 405 HTTP status code.</remarks>
-    public class MethodNotAllowedRoute : Route
+    public class MethodNotAllowedRoute : Route<Response>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MethodNotAllowedRoute"/> type, for the
@@ -23,13 +21,13 @@
         {
         }
 
-        private static Task<dynamic> CreateMethodNotAllowedResponse(IEnumerable<string> allowedMethods)
+        private static Task<Response> CreateMethodNotAllowedResponse(IEnumerable<string> allowedMethods)
         {
             var response = new Response();
             response.Headers["Allow"] = string.Join(", ", allowedMethods);
             response.StatusCode = HttpStatusCode.MethodNotAllowed;
 
-            return TaskHelpers.GetCompletedTask<dynamic>(response);
+            return Task.FromResult(response);
         }
     }
 }

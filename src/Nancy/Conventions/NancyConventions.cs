@@ -2,28 +2,27 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Text;
-    using System.Globalization;
-    using Nancy.Bootstrapper;
 
-    using ViewEngines;
+    using Nancy.Bootstrapper;
+    using Nancy.ViewEngines;
 
     /// <summary>
     /// Nancy configurable conventions
     /// </summary>
     public class NancyConventions
     {
-        /// <summary>
-        /// Discovered conventions
-        /// </summary>
+        private readonly ITypeCatalog typeCatalog;
         private IEnumerable<IConvention> conventions;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyConventions"/> class.
         /// </summary>
-        public NancyConventions()
+        public NancyConventions(ITypeCatalog typeCatalog)
         {
+            this.typeCatalog = typeCatalog;
             this.BuildDefaultConventions();
         }
 
@@ -47,7 +46,7 @@
         /// <summary>
         /// Gets or sets the conventions for determining request culture
         /// </summary>
-        public IList<Func<NancyContext, CultureInfo>> CultureConventions { get; set; }
+        public IList<Func<NancyContext, GlobalizationConfiguration, CultureInfo>> CultureConventions { get; set; }
 
         /// <summary>
         /// Validates the conventions
@@ -77,7 +76,7 @@
             {
                 new InstanceRegistration(typeof(ViewLocationConventions), new ViewLocationConventions(this.ViewLocationConventions)),
                 new InstanceRegistration(typeof(StaticContentsConventions), new StaticContentsConventions(this.StaticContentsConventions)),
-                new InstanceRegistration(typeof(AcceptHeaderCoercionConventions), new AcceptHeaderCoercionConventions(this.AcceptHeaderCoercionConventions)), 
+                new InstanceRegistration(typeof(AcceptHeaderCoercionConventions), new AcceptHeaderCoercionConventions(this.AcceptHeaderCoercionConventions)),
                 new InstanceRegistration(typeof(CultureConventions), new CultureConventions(this.CultureConventions))
             };
         }
@@ -89,10 +88,10 @@
         private void BuildDefaultConventions()
         {
             var defaultConventions =
-                AppDomainAssemblyTypeScanner.TypesOf<IConvention>(ScanMode.OnlyNancy);
+                this.typeCatalog.GetTypesAssignableTo<IConvention>(TypeResolveStrategies.OnlyNancy);
 
             this.conventions = defaultConventions
-                .Union(AppDomainAssemblyTypeScanner.TypesOf<IConvention>(ScanMode.ExcludeNancy))
+                .Union(this.typeCatalog.GetTypesAssignableTo<IConvention>(TypeResolveStrategies.ExcludeNancy))
                 .Select(t => (IConvention)Activator.CreateInstance(t));
 
             foreach (var convention in this.conventions)

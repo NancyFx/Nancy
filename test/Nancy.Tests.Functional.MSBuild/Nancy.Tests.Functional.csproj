@@ -1,0 +1,243 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props" Condition="Exists('..\..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{BDA5E175-07D7-4E6F-B46F-C2CF7D63E231}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Nancy.Tests.Functional</RootNamespace>
+    <AssemblyName>Nancy.Tests.Functional</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'MonoRelease|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\MonoRelease</OutputPath>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'MonoDebug|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\MonoDebug</OutputPath>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\xunit.abstractions.2.0.0\lib\net35\xunit.abstractions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.assert, Version=2.1.0.3179, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\xunit.assert.2.1.0\lib\dotnet\xunit.assert.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.core, Version=2.1.0.3179, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\xunit.extensibility.core.2.1.0\lib\dotnet\xunit.core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.execution.desktop, Version=2.1.0.3179, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\xunit.extensibility.execution.2.1.0\lib\net45\xunit.execution.desktop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Nancy.Tests.Functional\Tests\JsonLdProcessor.cs">
+      <Link>Tests\JsonLdProcessor.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\xUnitExtensions\RecordAsync.cs">
+      <Link>RecordAsync.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Modules\AbsoluteUrlTestModule.cs">
+      <Link>Modules\AbsoluteUrlTestModule.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Modules\CookieModule.cs">
+      <Link>Modules\CookieModule.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Modules\PerRouteAuthModule.cs">
+      <Link>Modules\PerRouteAuthModule.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Modules\RazorWithTracingTestModule.cs">
+      <Link>Modules\RazorWithTracingTestModule.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Modules\JsonpTestModule.cs">
+      <Link>Modules\JsonpTestModule.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Modules\RazorTestModule.cs">
+      <Link>Modules\RazorTestModule.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Modules\SerializerTestModule.cs">
+      <Link>Modules\SerializerTestModule.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Modules\ThrowingModule.cs">
+      <Link>Modules\ThrowingModule.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Tests\AbsoluteUrlTests.cs">
+      <Link>Tests\AbsoluteUrlTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Tests\AsyncExceptionTests.cs">
+      <Link>Tests\AsyncExceptionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Tests\BasicRouteInvocationsFixture.cs">
+      <Link>Tests\BasicRouteInvocationsFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Modules\SerializeTestModule.cs">
+      <Link>Modules\SerializeTestModule.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Tests\ContentNegotiationFixture.cs">
+      <Link>Tests\ContentNegotiationFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Tests\CookieFixture.cs">
+      <Link>Tests\CookieFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Tests\MethodRewriteFixture.cs">
+      <Link>Tests\MethodRewriteFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Tests\PerRouteAuthFixture.cs">
+      <Link>Tests\PerRouteAuthFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Tests\RouteConstraintTests.cs">
+      <Link>Tests\RouteConstraintTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Tests\SerializerTests.cs">
+      <Link>Tests\SerializerTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Tests\TracingSmokeTests.cs">
+      <Link>Tests\TracingSmokeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Tests\JsonpTests.cs">
+      <Link>Tests\JsonpTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Tests\ModelBindingTests.cs">
+      <Link>Tests\ModelBindingTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Tests\ManualStaticContentTests.cs">
+      <Link>Tests\ManualStaticContentTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Tests\PartialViewTests.cs">
+      <Link>Tests\PartialViewTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Tests\ViewBagTests.cs">
+      <Link>Tests\ViewBagTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests.Functional\Tests\SerializeTests.cs">
+      <Link>Tests\SerializeTests.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Nancy.Testing.MSBuild\Nancy.Testing.csproj">
+      <Project>{D79203C0-B672-4751-9C95-C3AB7D3FEFBE}</Project>
+      <Name>Nancy.Testing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\Nancy.ViewEngines.Razor.MSBuild\Nancy.ViewEngines.Razor.csproj">
+      <Project>{2C6F51DF-015C-4DB6-B44C-0E5E4F25E2A9}</Project>
+      <Name>Nancy.ViewEngines.Razor</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\Nancy.MSBuild\Nancy.csproj">
+      <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
+      <Name>Nancy</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\Nancy.Tests.Functional\Content\smiley.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>Content\smiley.png</Link>
+    </Content>
+    <Content Include="..\Nancy.Tests.Functional\Hidden.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>Hidden.txt</Link>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="..\Nancy.Tests.Functional\Views\RazorPageWithUnknownPartial.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>Views\RazorPageWithUnknownPartial.cshtml</Link>
+    </None>
+    <None Include="..\Nancy.Tests.Functional\Views\_PartialTest.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>Views\_PartialTest.cshtml</Link>
+    </None>
+    <None Include="..\Nancy.Tests.Functional\Views\_LayoutPage.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>Views\_LayoutPage.cshtml</Link>
+    </None>
+    <None Include="..\Nancy.Tests.Functional\Views\_ViewStart.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>Views\_ViewStart.cshtml</Link>
+    </None>
+    <None Include="..\Nancy.Tests.Functional\Views\RazorPage.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>Views\RazorPage.cshtml</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

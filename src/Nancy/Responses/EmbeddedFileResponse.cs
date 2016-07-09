@@ -6,6 +6,7 @@
     using System.Reflection;
     using System.Security.Cryptography;
     using System.Text;
+    using System.Text.RegularExpressions;
 
     public class EmbeddedFileResponse : Response
     {
@@ -47,24 +48,22 @@
         {
             var resourceName = assembly
                 .GetManifestResourceNames()
-                .Where(x => GetFileNameFromResourceName(resourcePath, x).Equals(name, StringComparison.OrdinalIgnoreCase))
-                .Select(x => GetFileNameFromResourceName(resourcePath, x))
-                .FirstOrDefault();
+                .FirstOrDefault(x => GetFileNameFromResourceName(resourcePath, x).Equals(name, StringComparison.OrdinalIgnoreCase));
 
-            resourceName =
-                string.Concat(resourcePath, ".", resourceName);
+            if (resourceName == null)
+                return null;
 
             return assembly.GetManifestResourceStream(resourceName);
         }
 
         private static string GetFileNameFromResourceName(string resourcePath, string resourceName)
         {
-            return resourceName.Replace(resourcePath, string.Empty).Substring(1);
+            return Regex.Replace(resourceName, resourcePath, string.Empty, RegexOptions.IgnoreCase).Substring(1);
         }
 
         private static string GenerateETag(Stream stream)
         {
-            using (var sha1 = new SHA1CryptoServiceProvider())
+            using (var sha1 = SHA1.Create())
             {
                 var hash = sha1.ComputeHash(stream);
                 return string.Concat("\"", ByteArrayToString(hash), "\"");

@@ -1,9 +1,6 @@
-﻿using System;
-using System.Runtime.CompilerServices;
-using Microsoft.CSharp.RuntimeBinder;
-
-namespace Nancy.ViewEngines.DotLiquid
+﻿namespace Nancy.ViewEngines.DotLiquid
 {
+    using System;
     using System.Collections.Generic;
     using System.Dynamic;
 
@@ -81,7 +78,7 @@ namespace Nancy.ViewEngines.DotLiquid
             }
 
             return model.GetType().Equals(typeof(ExpandoObject))
-                ? new Dictionary<string, object>(model, StaticConfiguration.CaseSensitive ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase)
+                ? new Dictionary<string, object>(model, StaticConfiguration.CaseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase)
                 : model;
         }
     }

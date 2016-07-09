@@ -2,7 +2,8 @@ namespace Nancy.Security
 {
     using System;
     using System.Linq;
-    using Cryptography;
+
+    using Nancy.Cryptography;
 
     /// <summary>
     /// The default implementation of the <see cref="ICsrfTokenValidator"/> interface.
@@ -60,7 +61,7 @@ namespace Nancy.Security
             {
                 var expiryDate = tokenOne.CreatedDate.Add(validityPeriod.Value);
 
-                if (DateTime.Now > expiryDate)
+                if (DateTimeOffset.Now > expiryDate)
                 {
                     return CsrfTokenValidationResult.TokenExpired;
                 }

@@ -1,20 +1,20 @@
 namespace Nancy.Testing
 {
-    using CsQuery.Implementation;
+    using AngleSharp.Dom;
 
     /// <summary>
-    /// Simple wrapper around a <see cref="DomElement"/>.
+    /// Simple wrapper around a <see cref="IElement"/>.
     /// </summary>
     public class NodeWrapper
     {
-        private readonly DomElement element;
+        private readonly IElement element;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NodeWrapper"/> class, for
         /// the provided <paramref name="element"/>.
         /// </summary>
         /// <param name="element">The dom element that should be wrapped.</param>
-        public NodeWrapper(DomElement element)
+        public NodeWrapper(IElement element)
         {
             this.element = element;
         }
@@ -29,9 +29,22 @@ namespace Nancy.Testing
             return this.element.HasAttribute(name);
         }
 
+        /// <summary>
+        /// Gets the attributes of the element
+        /// </summary>
         public IndexHelper<string, string> Attributes
         {
-            get { return new IndexHelper<string, string>(x => this.element.Attributes[x]); }
+            get
+            {
+                return new IndexHelper<string, string>(x =>
+                {
+                    var attribute = this.element.Attributes[x];
+
+                    return (attribute != null)
+                        ? attribute.Value
+                        : null;
+                });
+            }
         }
 
         /// <summary>
@@ -40,27 +53,7 @@ namespace Nancy.Testing
         /// <value>A <see cref="string"/> containing the inner text of the node.</value>
         public string InnerText
         {
-            get { return this.element.InnerText; }
-        }
-
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="DomElement"/> to <see cref="Nancy.Testing.NodeWrapper"/>.
-        /// </summary>
-        /// <param name="node">The <see cref="DomElement"/> that should be cast.</param>
-        /// <returns>An <see cref="NodeWrapper"/> instance, that contains the results of the cast.</returns>
-        public static implicit operator NodeWrapper(DomElement node)
-        {
-            return new NodeWrapper(node);
-        }
-
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="Nancy.Testing.NodeWrapper"/> to <see cref="DomElement"/>.
-        /// </summary>
-        /// <param name="wrapper">The <see cref="NodeWrapper"/> that should be cast.</param>
-        /// <returns>A <see cref="DomElement"/> instance, that contains the results of the cast.</returns>
-        public static implicit operator DomElement(NodeWrapper wrapper)
-        {
-            return wrapper.element;
+            get { return this.element.TextContent; }
         }
     }
 }

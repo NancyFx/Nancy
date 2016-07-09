@@ -1,16 +1,17 @@
 ﻿namespace Nancy.Testing
 {
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
-    using System.Text;
-    using CsQuery;
+    using AngleSharp.Dom.Html;
+    using AngleSharp.Parser.Html;
 
     /// <summary>
     /// A basic wrapper around CsQuery
     /// </summary>
     public class DocumentWrapper
     {
-        private readonly CQ document;
+        private readonly IHtmlDocument document;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DocumentWrapper"/> class.
@@ -18,9 +19,11 @@
         /// <param name="buffer">The document represented as a byte array.</param>
         public DocumentWrapper(IEnumerable<byte> buffer)
         {
-            var utf8String = Encoding.UTF8.GetString(buffer.ToArray());
-
-            this.document = CQ.Create(utf8String);
+            var parser = new HtmlParser();
+            using (var stream = new MemoryStream(buffer.ToArray()))
+            {
+                this.document = parser.Parse(stream);
+            }
         }
 
         /// <summary>
@@ -30,7 +33,7 @@
         /// <returns>A <see cref="QueryWrapper"/> instance.</returns>
         public QueryWrapper this[string selector]
         {
-            get { return this.document.Select(selector); }
+            get { return new QueryWrapper(this.document.QuerySelectorAll(selector).ToArray()); }
         }
     }
 }

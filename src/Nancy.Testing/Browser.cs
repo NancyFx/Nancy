@@ -5,9 +5,11 @@ namespace Nancy.Testing
     using System.IO;
     using System.Linq;
     using System.Text;
+    using System.Threading.Tasks;
     using Nancy.Bootstrapper;
+    using Nancy.Configuration;
     using Nancy.Helpers;
-    using IO;
+    using Nancy.IO;
 
     /// <summary>
     /// Provides the capability of executing a request with Nancy, using a specific configuration provided by an <see cref="INancyBootstrapper"/> instance.
@@ -15,8 +17,8 @@ namespace Nancy.Testing
     public class Browser : IHideObjectMembers
     {
         private readonly Action<BrowserContext> defaultBrowserContext;
-        private readonly INancyBootstrapper bootstrapper;
         private readonly INancyEngine engine;
+        private readonly INancyEnvironment environment;
 
         private readonly IDictionary<string, string> cookies = new Dictionary<string, string>();
 
@@ -38,10 +40,10 @@ namespace Nancy.Testing
         /// <param name="defaults">The default <see cref="BrowserContext"/> that should be used in a all requests through this browser object.</param>
         public Browser(INancyBootstrapper bootstrapper, Action<BrowserContext> defaults = null)
         {
-            this.bootstrapper = bootstrapper;
-            this.bootstrapper.Initialise();
-            this.engine = this.bootstrapper.GetEngine();
-            this.defaultBrowserContext = defaults ?? this.DefaultBrowserContext;
+            bootstrapper.Initialise();
+            this.engine = bootstrapper.GetEngine();
+            this.environment = bootstrapper.GetEnvironment();
+            this.defaultBrowserContext = defaults ?? DefaultBrowserContext;
         }
 
         /// <summary>
@@ -50,7 +52,7 @@ namespace Nancy.Testing
         /// <param name="path">The path that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public BrowserResponse Delete(string path, Action<BrowserContext> browserContext = null)
+        public Task<BrowserResponse> Delete(string path, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("DELETE", path, browserContext);
         }
@@ -61,7 +63,7 @@ namespace Nancy.Testing
         /// <param name="url">The url that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public BrowserResponse Delete(Url url, Action<BrowserContext> browserContext = null)
+        public Task<BrowserResponse> Delete(Url url, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("DELETE", url, browserContext);
         }
@@ -72,7 +74,7 @@ namespace Nancy.Testing
         /// <param name="path">The path that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public BrowserResponse Get(string path, Action<BrowserContext> browserContext = null)
+        public Task<BrowserResponse> Get(string path, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("GET", path, browserContext);
         }
@@ -83,7 +85,7 @@ namespace Nancy.Testing
         /// <param name="url">The url that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public BrowserResponse Get(Url url, Action<BrowserContext> browserContext = null)
+        public Task<BrowserResponse> Get(Url url, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("GET", url, browserContext);
         }
@@ -94,7 +96,7 @@ namespace Nancy.Testing
         /// <param name="path">The path that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public BrowserResponse Head(string path, Action<BrowserContext> browserContext = null)
+        public Task<BrowserResponse> Head(string path, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("HEAD", path, browserContext);
         }
@@ -105,7 +107,7 @@ namespace Nancy.Testing
         /// <param name="url">The url that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public BrowserResponse Head(Url url, Action<BrowserContext> browserContext = null)
+        public Task<BrowserResponse> Head(Url url, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("HEAD", url, browserContext);
         }
@@ -116,7 +118,7 @@ namespace Nancy.Testing
         /// <param name="path">The path that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public BrowserResponse Options(string path, Action<BrowserContext> browserContext = null)
+        public Task<BrowserResponse> Options(string path, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("OPTIONS", path, browserContext);
         }
@@ -127,7 +129,7 @@ namespace Nancy.Testing
         /// <param name="url">The url that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public BrowserResponse Options(Url url, Action<BrowserContext> browserContext = null)
+        public Task<BrowserResponse> Options(Url url, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("OPTIONS", url, browserContext);
         }
@@ -138,7 +140,7 @@ namespace Nancy.Testing
         /// <param name="path">The path that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public BrowserResponse Patch(string path, Action<BrowserContext> browserContext = null)
+        public Task<BrowserResponse> Patch(string path, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("PATCH", path, browserContext);
         }
@@ -149,7 +151,7 @@ namespace Nancy.Testing
         /// <param name="url">The url that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public BrowserResponse Patch(Url url, Action<BrowserContext> browserContext = null)
+        public Task<BrowserResponse> Patch(Url url, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("PATCH", url, browserContext);
         }
@@ -160,7 +162,7 @@ namespace Nancy.Testing
         /// <param name="path">The path that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public BrowserResponse Post(string path, Action<BrowserContext> browserContext = null)
+        public Task<BrowserResponse> Post(string path, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("POST", path, browserContext);
         }
@@ -171,7 +173,7 @@ namespace Nancy.Testing
         /// <param name="url">The url that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public BrowserResponse Post(Url url, Action<BrowserContext> browserContext = null)
+        public Task<BrowserResponse> Post(Url url, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("POST", url, browserContext);
         }
@@ -182,11 +184,10 @@ namespace Nancy.Testing
         /// <param name="path">The path that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public BrowserResponse Put(string path, Action<BrowserContext> browserContext = null)
+        public Task<BrowserResponse> Put(string path, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("PUT", path, browserContext);
         }
-
 
         /// <summary>
         /// Performs a PUT request against Nancy.
@@ -194,33 +195,54 @@ namespace Nancy.Testing
         /// <param name="url">The url that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public BrowserResponse Put(Url url, Action<BrowserContext> browserContext = null)
+        public Task<BrowserResponse> Put(Url url, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("PUT", url, browserContext);
         }
 
-        public BrowserResponse HandleRequest(string method, Url url, Action<BrowserContext> browserContext)
+        /// <summary>
+        /// Performs a request of the HTTP <paramref name="method"/>, on the given <paramref name="url"/>, using the
+        /// provided <paramref name="browserContext"/> configuration.
+        /// </summary>
+        /// <param name="method">HTTP method to send the request as.</param>
+        /// <param name="url">The URl of the request.</param>
+        /// <param name="browserContext">An closure for providing browser context for the request.</param>
+        /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
+        public async Task<BrowserResponse> HandleRequest(string method, Url url, Action<BrowserContext> browserContext)
         {
-            var request =
-                CreateRequest(method, url, browserContext ?? (with => {}));
+            var browserContextValues =
+                BuildBrowserContextValues(browserContext ?? (with => { }));
 
-            var response = new BrowserResponse(this.engine.HandleRequest(request), this);
+            var request =
+                CreateRequest(method, url, browserContextValues);
+
+            var context = await this.engine.HandleRequest(request).ConfigureAwait(false);
+
+            var response = new BrowserResponse(context, this, (BrowserContext)browserContextValues);
 
             this.CaptureCookies(response);
 
             return response;
         }
 
-        public BrowserResponse HandleRequest(string method, string path, Action<BrowserContext> browserContext)
+        /// <summary>
+        /// Performs a request of the HTTP <paramref name="method"/>, on the given <paramref name="path"/>, using the
+        /// provided <paramref name="browserContext"/> configuration.
+        /// </summary>
+        /// <param name="method">HTTP method to send the request as.</param>
+        /// <param name="path">The path that is being requested.</param>
+        /// <param name="browserContext">An closure for providing browser context for the request.</param>
+        /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
+        public Task<BrowserResponse> HandleRequest(string method, string path, Action<BrowserContext> browserContext)
         {
-            var url = Uri.IsWellFormedUriString(path, UriKind.Relative)
-                          ? new Url {Path = path}
-                          : (Url)new Uri(path);
+            var url = Uri.IsWellFormedUriString(path, UriKind.Relative) ?
+                new Url { Path = path } :
+                (Url)new Uri(path);
 
-            return HandleRequest(method, url, browserContext);
+            return this.HandleRequest(method, url, browserContext);
         }
 
-        private void DefaultBrowserContext(BrowserContext context)
+        private static void DefaultBrowserContext(BrowserContext context)
         {
             context.HttpRequest();
         }
@@ -264,9 +286,9 @@ namespace Nancy.Testing
                 return;
             }
 
-            var useFormValues = !String.IsNullOrEmpty(contextValues.FormValues);
+            var useFormValues = !string.IsNullOrEmpty(contextValues.FormValues);
             var bodyContents = useFormValues ? contextValues.FormValues : contextValues.BodyString;
-            var bodyBytes = bodyContents != null ? Encoding.UTF8.GetBytes(bodyContents) : new byte[] { };
+            var bodyBytes = bodyContents != null ? Encoding.UTF8.GetBytes(bodyContents) : ArrayCache.Empty<byte>();
 
             if (useFormValues && !contextValues.Headers.ContainsKey("Content-Type"))
             {
@@ -276,27 +298,35 @@ namespace Nancy.Testing
             contextValues.Body = new MemoryStream(bodyBytes);
         }
 
-        private Request CreateRequest(string method, Url url, Action<BrowserContext> browserContext)
+        private IBrowserContextValues BuildBrowserContextValues(Action<BrowserContext> browserContext)
         {
             var context =
-                new BrowserContext();
+                new BrowserContext(this.environment);
 
             this.SetCookies(context);
 
-            defaultBrowserContext.Invoke(context);
+            this.defaultBrowserContext.Invoke(context);
             browserContext.Invoke(context);
 
             var contextValues =
                 (IBrowserContextValues)context;
 
+            if (!contextValues.Headers.ContainsKey("user-agent"))
+            {
+                contextValues.Headers.Add("user-agent", new[] { "Nancy.Testing.Browser" });
+            }
+
+            return contextValues;
+        }
+
+        private static Request CreateRequest(string method, Url url, IBrowserContextValues contextValues)
+        {
             BuildRequestBody(contextValues);
 
             var requestStream =
                 RequestStream.FromStream(contextValues.Body, 0, true);
 
-            var certBytes = (contextValues.ClientCertificate == null) ?
-                new byte[] { } :
-                contextValues.ClientCertificate.GetRawCertData();
+            var certBytes = contextValues.ClientCertificate ?? null;
 
             var requestUrl = url;
             requestUrl.Scheme = string.IsNullOrWhiteSpace(contextValues.Protocol) ? requestUrl.Scheme : contextValues.Protocol;

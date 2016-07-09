@@ -5,7 +5,7 @@
     using System.Linq;
     using System.Reflection;
     using System.Text.RegularExpressions;
-    using ModelBinding;
+    using Nancy.ModelBinding;
 
     public class SettingsModule : DiagnosticModule
     {
@@ -15,7 +15,7 @@
         public SettingsModule()
             : base("/settings")
         {
-            Get["/"] = _ =>
+            Get("/", _ =>
             {
                 var properties = Types.SelectMany(t => t.GetProperties(BindingFlags.Static | BindingFlags.Public))
                                       .Where(x => x.PropertyType == typeof(bool));
@@ -34,9 +34,9 @@
                         };
 
                 return View["Settings", model];
-            };
+            });
 
-            Post["/"] = parameters => {
+            Post("/", _ => {
 
                 var model =
                     this.Bind<SettingsModel>();
@@ -49,7 +49,7 @@
                 }
 
                 return HttpStatusCode.OK;
-            };
+            });
         }
 
         private static PropertyInfo GetProperty(SettingsModel model)

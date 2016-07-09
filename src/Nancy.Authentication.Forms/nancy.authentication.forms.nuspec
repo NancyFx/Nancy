@@ -18,9 +18,9 @@
     <tags>Nancy Authentication</tags>
   </metadata>
   <files>
-    <file src="build\binaries\Nancy.Authentication.Forms.dll" target="lib\net40" />
-    <file src="build\binaries\Nancy.Authentication.Forms.pdb" target="lib\net40" />
-    <file src="build\binaries\Nancy.Authentication.Forms.XML" target="lib\net40" />
+    <file src="build\binaries\Nancy.Authentication.Forms.dll" target="lib\net45" />
+    <file src="build\binaries\Nancy.Authentication.Forms.pdb" target="lib\net45" />
+    <file src="build\binaries\Nancy.Authentication.Forms.XML" target="lib\net45" />
     <file src="src\Nancy.Authentication.Forms\**\*.cs" target="src" />
   </files>
 </package>

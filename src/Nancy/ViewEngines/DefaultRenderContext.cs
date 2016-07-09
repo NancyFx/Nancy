@@ -2,12 +2,11 @@
 {
     using System;
     using System.Collections.Generic;
-    using Cryptography;
-    using Nancy.Extensions;
-    using Nancy.Localization;
 
-    using Security;
-    using Session;
+    using Nancy.Extensions;
+    using Nancy.Helpers;
+    using Nancy.Localization;
+    using Nancy.Security;
 
     /// <summary>
     /// Default render context implementation.
@@ -91,7 +90,7 @@
         /// <returns>A HTML encoded <see cref="string"/>.</returns>
         public string HtmlEncode(string input)
         {
-            return Helpers.HttpUtility.HtmlEncode(input);
+            return HttpUtility.HtmlEncode(input);
         }
 
         /// <summary>

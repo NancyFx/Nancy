@@ -3,12 +3,12 @@
     using System;
     using System.Linq;
     using System.Security.Cryptography;
-    using System.Text;
-    using Cryptography;
+
+    using Nancy.Cryptography;
 
     public static class CsrfTokenExtensions
     {
-        private static readonly RandomNumberGenerator randomGenerator = new RNGCryptoServiceProvider();
+        private static readonly RandomNumberGenerator randomGenerator = RandomNumberGenerator.Create();
 
         /// <summary>
         /// Gets a byte array representation of the csrf token for generating
@@ -19,7 +19,7 @@
         public static byte[] GetCsrfTokenBytes(this CsrfToken token)
         {
             return token.RandomBytes
-                        .Concat(BitConverter.GetBytes(token.CreatedDate.Ticks))
+                        .Concat(BitConverter.GetBytes(token.CreatedDate.UtcTicks))
                         .ToArray();
         }
 

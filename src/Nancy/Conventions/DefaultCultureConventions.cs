@@ -4,6 +4,9 @@
     using System.Collections.Generic;
     using System.Globalization;
 
+    /// <summary>
+    /// Default implementation of <see cref="IConvention"/>
+    /// </summary>
     public class DefaultCultureConventions : IConvention
     {
         /// <summary>
@@ -38,13 +41,13 @@
         /// <param name="conventions"></param>
         private static void ConfigureDefaultConventions(NancyConventions conventions)
         {
-            conventions.CultureConventions = new List<Func<NancyContext, CultureInfo>>
+            conventions.CultureConventions = new List<Func<NancyContext, GlobalizationConfiguration, CultureInfo>>
             {
                 BuiltInCultureConventions.FormCulture,
                 BuiltInCultureConventions.HeaderCulture,
                 BuiltInCultureConventions.SessionCulture,
                 BuiltInCultureConventions.CookieCulture,
-                BuiltInCultureConventions.ThreadCulture
+                BuiltInCultureConventions.GlobalizationConfigurationCulture,
             };
         }
     }

@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-namespace Nancy.Authentication.Basic
+﻿namespace Nancy.Authentication.Basic
 {
-    using Nancy.Security;
+    using System.Security.Claims;
 
     /// <summary>
     /// Provides a way to validate the username and password
@@ -16,6 +13,6 @@ namespace Nancy.Authentication.Basic
         /// <param name="username">Username</param>
         /// <param name="password">Password</param>
         /// <returns>A value representing the authenticated user, null if the user was not authenticated.</returns>
-        IUserIdentity Validate(string username, string password);
+        ClaimsPrincipal Validate(string username, string password);
     }
 }

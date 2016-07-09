@@ -3,15 +3,27 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
+    using Nancy.Extensions;
 
     /// <summary>
     /// Helper class for providing application registrations
     /// </summary>
     public abstract class Registrations : IRegistrations
     {
+        private readonly ITypeCatalog typeCatalog;
         private readonly IList<CollectionTypeRegistration> collectionRegistrations = new List<CollectionTypeRegistration>();
         private readonly IList<InstanceRegistration> instanceRegistrations = new List<InstanceRegistration>();
         private readonly IList<TypeRegistration> typeRegistrations = new List<TypeRegistration>();
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Registrations"/> class.
+        /// </summary>
+        /// <param name="typeCatalog">An <see cref="ITypeCatalog"/> instance.</param>
+        protected Registrations(ITypeCatalog typeCatalog)
+        {
+            this.typeCatalog = typeCatalog;
+        }
 
         /// <summary>
         /// Gets the collection registrations to register for this startup task
@@ -44,8 +56,8 @@
         /// <typeparam name="TRegistration">The <see cref="Type"/> to scan for and register as.</typeparam>
         public void Register<TRegistration>(Lifetime lifetime = Lifetime.Singleton)
         {
-            var implementation = AppDomainAssemblyTypeScanner
-                .TypesOf<TRegistration>()
+            var implementation = this.typeCatalog
+                .GetTypesAssignableTo<TRegistration>()
                 .Single();
 
             this.typeRegistrations.Add(new TypeRegistration(typeof(TRegistration), implementation, lifetime));
@@ -58,8 +70,8 @@
         /// <typeparam name="TRegistration">The <see cref="Type"/> to scan for and register as.</typeparam>
         public void RegisterAll<TRegistration>(Lifetime lifetime = Lifetime.Singleton)
         {
-            var implementations = AppDomainAssemblyTypeScanner
-                .TypesOf<TRegistration>();
+            var implementations = this.typeCatalog
+                .GetTypesAssignableTo<TRegistration>();
 
             var registration =
                 new CollectionTypeRegistration(typeof(TRegistration), implementations, lifetime);
@@ -114,9 +126,9 @@
         /// </remarks>
         public void RegisterWithDefault<TRegistration>(Type defaultImplementation, Lifetime lifetime = Lifetime.Singleton)
         {
-            var implementation = AppDomainAssemblyTypeScanner
-                .TypesOf<TRegistration>()
-                .Where(type => type.Assembly != this.GetType().Assembly)
+            var implementation = this.typeCatalog
+                .GetTypesAssignableTo<TRegistration>()
+                .Where(type => type.GetTypeInfo().Assembly != this.GetType().GetTypeInfo().Assembly)
                 .SingleOrDefault(type => type != defaultImplementation);
 
             this.typeRegistrations.Add(new TypeRegistration(typeof(TRegistration), implementation ?? defaultImplementation, lifetime));
@@ -132,9 +144,10 @@
         /// <remarks>When scanning, it will exclude the assembly that the <see cref="Registrations"/> instance is defined in</remarks>
         public void RegisterWithDefault<TRegistration>(Func<TRegistration> defaultImplementationFactory)
         {
-            var implementation = AppDomainAssemblyTypeScanner
-                .TypesOf<TRegistration>()
-                .SingleOrDefault(type => type.Assembly != this.GetType().Assembly);
+            var implementation = this.typeCatalog
+                .GetTypesAssignableTo<TRegistration>()
+                .SingleOrDefault(type => type.GetTypeInfo().Assembly != this.GetType().GetTypeInfo().Assembly);
+
 
             if (implementation != null)
             {
@@ -159,9 +172,9 @@
         /// </remarks>
         public void RegisterWithDefault<TRegistration>(IEnumerable<Type> defaultImplementations, Lifetime lifetime = Lifetime.Singleton)
         {
-            var implementations = AppDomainAssemblyTypeScanner
-                .TypesOf<TRegistration>()
-                .Where(type => type.Assembly != this.GetType().Assembly)
+            var implementations = this.typeCatalog
+                .GetTypesAssignableTo<TRegistration>()
+                .Where(type => type.GetAssembly() != this.GetType().GetTypeInfo().Assembly)
                 .Where(type => !defaultImplementations.Contains(type))
                 .ToList();
 
@@ -186,9 +199,9 @@
         /// </remarks>
         public void RegisterWithUserThenDefault<TRegistration>(IEnumerable<Type> defaultImplementations, Lifetime lifetime = Lifetime.Singleton)
         {
-            var implementations = AppDomainAssemblyTypeScanner
-                .TypesOf<TRegistration>()
-                .Where(type => type.Assembly != this.GetType().Assembly)
+            var implementations = this.typeCatalog
+                .GetTypesAssignableTo<TRegistration>()
+                .Where(type => type.GetAssembly() != this.GetType().GetTypeInfo().Assembly)
                 .Where(type => !defaultImplementations.Contains(type))
                 .ToList();
 

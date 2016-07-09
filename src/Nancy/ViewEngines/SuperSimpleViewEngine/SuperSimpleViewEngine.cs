@@ -45,7 +45,17 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         /// <summary>
         /// Compiled Regex for if blocks
         /// </summary>
-        private static readonly Regex ConditionalSubstitutionRegEx = new Regex(@"@If(?<Not>Not)?(?<Null>Null)?(?:\.(?<ModelSource>(Model|Context)+))?(?:\.(?<ParameterName>[a-zA-Z0-9-_]+))+;?(?<Contents>.*?)@EndIf;?", RegexOptions.Compiled | RegexOptions.Singleline);
+        private const string ConditionalOpenSyntaxPattern = @"@If(?<Not>Not)?(?<Null>Null)?(?:\.(?<ModelSource>(Model|Context)+))?(?:\.(?<ParameterName>[a-zA-Z0-9-_]+))+;?";
+        private const string ConditionalOpenInnerSyntaxPattern = @"@If(?:Not)?(?:Null)?(?:\.(?:(Model|Context)+))?(?:\.(?:[a-zA-Z0-9-_]+))+;?";
+        private const string ConditionalCloseStynaxPattern = @"@EndIf;?";
+         
+        private static readonly string ConditionalSubstituionPattern =
+            string.Format(@"{0}(?<Contents>:[.*]|(?>{2}(?<DEPTH>)|{1}(?<-DEPTH>)|.)*(?(DEPTH)(?!))){1}", 
+                            ConditionalOpenSyntaxPattern,
+                            ConditionalCloseStynaxPattern,
+                            ConditionalOpenInnerSyntaxPattern);
+
+        private static readonly Regex ConditionalSubstitutionRegEx = new Regex(ConditionalSubstituionPattern, RegexOptions.Compiled | RegexOptions.Singleline);
 
         /// <summary>
         /// Compiled regex for partial blocks
@@ -208,7 +218,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
             var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
 
             var property =
-                properties.Where(p => string.Equals(p.Name, propertyName, StringComparison.InvariantCulture)).
+                properties.Where(p => string.Equals(p.Name, propertyName, StringComparison.Ordinal)).
                 FirstOrDefault();
 
             if (property != null)
@@ -219,7 +229,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
             var fields = type.GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
 
             var field =
-                fields.Where(p => string.Equals(p.Name, propertyName, StringComparison.InvariantCulture)).
+                fields.Where(p => string.Equals(p.Name, propertyName, StringComparison.Ordinal)).
                 FirstOrDefault();
 
             return field == null ? new Tuple<bool, object>(false, null) : new Tuple<bool, object>(true, field.GetValue(model));
@@ -571,7 +581,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
                         predicateResult = !predicateResult;
                     }
 
-                    return predicateResult ? m.Groups["Contents"].Value : string.Empty;
+                    return predicateResult ? PerformConditionalSubstitutions(m.Groups["Contents"].Value, model, host) : string.Empty;
                 });
 
             return result;

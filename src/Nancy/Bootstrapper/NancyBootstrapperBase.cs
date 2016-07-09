@@ -4,12 +4,15 @@
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using Diagnostics;
-    using Nancy.Cryptography;
-    using Nancy.ModelBinding;
+
+    using Nancy.Configuration;
     using Nancy.Conventions;
-    using Nancy.ViewEngines;
+    using Nancy.Cryptography;
+    using Nancy.Diagnostics;
+    using Nancy.Extensions;
+    using Nancy.ModelBinding;
     using Nancy.Validation;
+    using Nancy.ViewEngines;
 
     /// <summary>
     /// Nancy bootstrapper base class
@@ -39,11 +42,12 @@
         /// <summary>
         /// Default Nancy conventions
         /// </summary>
-        private readonly NancyConventions conventions;
+        private NancyConventions conventions;
 
         /// <summary>
         /// Internal configuration
         /// </summary>
+        private Func<ITypeCatalog, NancyInternalConfiguration> internalConfigurationFactory;
         private NancyInternalConfiguration internalConfiguration;
 
         /// <summary>
@@ -63,13 +67,15 @@
         /// </summary>
         protected Type[] RequestStartupTaskTypeCache { get; private set; }
 
+        private IAssemblyCatalog assemblyCatalog;
+        private ITypeCatalog typeCatalog;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyBootstrapperBase{TContainer}"/> class.
         /// </summary>
         protected NancyBootstrapperBase()
         {
             this.ApplicationPipelines = new Pipelines();
-            this.conventions = new NancyConventions();
         }
 
         /// <summary>
@@ -78,14 +84,37 @@
         protected TContainer ApplicationContainer { get; private set; }
 
         /// <summary>
+        /// Gets the <see cref="IAssemblyCatalog"/> that should be used by the application.
+        /// </summary>
+        /// <value>An <see cref="IAssemblyCatalog"/> instance.</value>
+        protected virtual IAssemblyCatalog AssemblyCatalog
+        {
+            get {
+                return this.assemblyCatalog ?? (
+#if !CORE
+                    this.assemblyCatalog = new AppDomainAssemblyCatalog()
+#else
+                    this.assemblyCatalog = new DependencyContextAssemblyCatalog()
+#endif
+                );
+            }
+        }
+
+        /// <summary>
+        /// Gets the <see cref="ITypeCatalog"/> that should be used by the application.
+        /// </summary>
+        /// <value>An <see cref="ITypeCatalog"/> instance.</value>
+        protected virtual ITypeCatalog TypeCatalog
+        {
+            get { return this.typeCatalog ?? (this.typeCatalog = new DefaultTypeCatalog(this.AssemblyCatalog)); }
+        }
+
+        /// <summary>
         /// Nancy internal configuration
         /// </summary>
-        protected virtual NancyInternalConfiguration InternalConfiguration
+        protected virtual Func<ITypeCatalog, NancyInternalConfiguration> InternalConfiguration
         {
-            get
-            {
-                return this.internalConfiguration ?? (this.internalConfiguration = NancyInternalConfiguration.Default);
-            }
+            get { return this.internalConfigurationFactory ?? (this.internalConfigurationFactory = NancyInternalConfiguration.Default); }
         }
 
         /// <summary>
@@ -95,7 +124,7 @@
         {
             get
             {
-                return this.conventions;
+                return this.conventions ?? (this.conventions = new NancyConventions(this.TypeCatalog));
             }
         }
 
@@ -106,15 +135,11 @@
         {
             get
             {
-                // Shouldn't need thread safety here?
-                return
-                    this.modules
-                    ??
-                    (this.modules = AppDomainAssemblyTypeScanner
-                                        .TypesOf<INancyModule>(ScanMode.ExcludeNancy)
-                                        .NotOfType<DiagnosticModule>()
-                                        .Select(t => new ModuleRegistration(t))
-                                        .ToArray());
+                return this.modules ?? (this.modules = this.TypeCatalog
+                    .GetTypesAssignableTo<INancyModule>(TypeResolveStrategies.ExcludeNancy)
+                    .NotOfType<DiagnosticModule>()
+                    .Select(t => new ModuleRegistration(t))
+                    .ToArray());
             }
         }
 
@@ -123,10 +148,7 @@
         /// </summary>
         protected virtual IEnumerable<Type> ViewEngines
         {
-            get
-            {
-                return AppDomainAssemblyTypeScanner.TypesOf<IViewEngine>();
-            }
+            get { return this.TypeCatalog.GetTypesAssignableTo<IViewEngine>(); }
         }
 
         /// <summary>
@@ -134,10 +156,7 @@
         /// </summary>
         protected virtual IEnumerable<Type> ModelBinders
         {
-            get
-            {
-                return AppDomainAssemblyTypeScanner.TypesOf<IModelBinder>();
-            }
+            get { return this.TypeCatalog.GetTypesAssignableTo<IModelBinder>(); }
         }
 
         /// <summary>
@@ -145,10 +164,7 @@
         /// </summary>
         protected virtual IEnumerable<Type> TypeConverters
         {
-            get
-            {
-                return AppDomainAssemblyTypeScanner.TypesOf<ITypeConverter>(ScanMode.ExcludeNancy);
-            }
+            get { return this.TypeCatalog.GetTypesAssignableTo<ITypeConverter>(TypeResolveStrategies.ExcludeNancy); }
         }
 
         /// <summary>
@@ -156,7 +172,7 @@
         /// </summary>
         protected virtual IEnumerable<Type> BodyDeserializers
         {
-            get { return AppDomainAssemblyTypeScanner.TypesOf<IBodyDeserializer>(ScanMode.ExcludeNancy); }
+            get { return this.TypeCatalog.GetTypesAssignableTo<IBodyDeserializer>(TypeResolveStrategies.ExcludeNancy); }
         }
 
         /// <summary>
@@ -164,7 +180,7 @@
         /// </summary>
         protected virtual IEnumerable<Type> ApplicationStartupTasks
         {
-            get { return AppDomainAssemblyTypeScanner.TypesOf<IApplicationStartup>(); }
+            get { return this.TypeCatalog.GetTypesAssignableTo<IApplicationStartup>(); }
         }
 
         /// <summary>
@@ -172,7 +188,7 @@
         /// </summary>
         protected virtual IEnumerable<Type> RequestStartupTasks
         {
-            get { return AppDomainAssemblyTypeScanner.TypesOf<IRequestStartup>(); }
+            get { return this.TypeCatalog.GetTypesAssignableTo<IRequestStartup>(); }
         }
 
         /// <summary>
@@ -180,7 +196,7 @@
         /// </summary>
         protected virtual IEnumerable<Type> RegistrationTasks
         {
-            get { return AppDomainAssemblyTypeScanner.TypesOf<IRegistrations>(); }
+            get { return this.TypeCatalog.GetTypesAssignableTo<IRegistrations>(); }
         }
 
         /// <summary>
@@ -188,7 +204,7 @@
         /// </summary>
         protected virtual IRootPathProvider RootPathProvider
         {
-            get { return this.rootPathProvider ?? (this.rootPathProvider = GetRootPathProvider()); }
+            get { return this.rootPathProvider ?? (this.rootPathProvider = this.GetRootPathProvider()); }
         }
 
         /// <summary>
@@ -196,7 +212,7 @@
         /// </summary>
         protected virtual IEnumerable<Type> ModelValidatorFactories
         {
-            get { return AppDomainAssemblyTypeScanner.TypesOf<IModelValidatorFactory>(); }
+            get { return this.TypeCatalog.GetTypesAssignableTo<IModelValidatorFactory>(); }
         }
 
         /// <summary>
@@ -215,12 +231,9 @@
             get { return CryptographyConfiguration.Default; }
         }
 
-        /// <summary>
-        /// Gets the diagnostics / dashboard configuration (password etc)
-        /// </summary>
-        protected virtual DiagnosticsConfiguration DiagnosticsConfiguration
+        private NancyInternalConfiguration GetInitializedInternalConfiguration()
         {
-            get { return new DiagnosticsConfiguration(); }
+            return this.internalConfiguration ?? (this.internalConfiguration = this.InternalConfiguration.Invoke(this.TypeCatalog));
         }
 
         /// <summary>
@@ -228,12 +241,15 @@
         /// </summary>
         public void Initialise()
         {
-            if (this.InternalConfiguration == null)
+            var configuration =
+                this.GetInitializedInternalConfiguration();
+
+            if (configuration == null)
             {
                 throw new InvalidOperationException("Configuration cannot be null");
             }
 
-            if (!this.InternalConfiguration.IsValid)
+            if (!configuration.IsValid)
             {
                 throw new InvalidOperationException("Configuration is invalid");
             }
@@ -244,14 +260,13 @@
 
             this.ConfigureApplicationContainer(this.ApplicationContainer);
 
-            // We need to call this to fix an issue with assemblies that are referenced by DI not being loaded
-            AppDomainAssemblyTypeScanner.UpdateTypes();
+            var typeRegistrations = configuration
+                .GetTypeRegistrations()
+                .Concat(this.GetAdditionalTypes());
 
-            var typeRegistrations = this.InternalConfiguration.GetTypeRegistations()
-                                        .Concat(this.GetAdditionalTypes());
-
-            var collectionTypeRegistrations = this.InternalConfiguration.GetCollectionTypeRegistrations()
-                                                  .Concat(this.GetApplicationCollections());
+            var collectionTypeRegistrations = configuration
+                .GetCollectionTypeRegistrations()
+                .Concat(this.GetApplicationCollections());
 
             // TODO - should this be after initialiseinternal?
             this.ConfigureConventions(this.Conventions);
@@ -266,9 +281,13 @@
 
             this.RegisterTypes(this.ApplicationContainer, typeRegistrations);
             this.RegisterCollectionTypes(this.ApplicationContainer, collectionTypeRegistrations);
-            this.RegisterModules(this.ApplicationContainer, this.Modules);
             this.RegisterInstances(this.ApplicationContainer, instanceRegistrations);
             this.RegisterRegistrationTasks(this.GetRegistrationTasks());
+
+            var environment = this.GetEnvironmentConfigurator().ConfigureEnvironment(this.Configure);
+            this.RegisterNancyEnvironment(this.ApplicationContainer, environment);
+
+            this.RegisterModules(this.ApplicationContainer, this.Modules);
 
             foreach (var applicationStartupTask in this.GetApplicationStartupTasks().ToList())
             {
@@ -283,12 +302,12 @@
             {
                 this.ApplicationPipelines.BeforeRequest.AddItemToStartOfPipeline(ctx =>
                     {
-                        if (ctx.Request == null || String.IsNullOrEmpty(ctx.Request.Path))
+                        if (ctx.Request == null || string.IsNullOrEmpty(ctx.Request.Path))
                         {
                             return null;
                         }
 
-                        if (String.Equals(ctx.Request.Path, "/favicon.ico", StringComparison.InvariantCultureIgnoreCase))
+                        if (String.Equals(ctx.Request.Path, "/favicon.ico", StringComparison.OrdinalIgnoreCase))
                         {
                             var response = new Response
                                 {
@@ -310,6 +329,20 @@
 
             this.initialised = true;
         }
+
+        /// <summary>
+        /// Configures the Nancy environment
+        /// </summary>
+        /// <param name="environment">The <see cref="INancyEnvironment"/> instance to configure</param>
+        public virtual void Configure(INancyEnvironment environment)
+        {
+        }
+
+        /// <summary>
+        /// Gets the <see cref="INancyEnvironmentConfigurator"/> used by th.
+        /// </summary>
+        /// <returns>An <see cref="INancyEnvironmentConfigurator"/> instance.</returns>
+        protected abstract INancyEnvironmentConfigurator GetEnvironmentConfigurator();
 
         /// <summary>
         /// Gets the diagnostics for initialisation
@@ -371,6 +404,13 @@
         }
 
         /// <summary>
+        /// Get the <see cref="INancyEnvironment"/> instance.
+        /// </summary>
+        /// <returns>An configured <see cref="INancyEnvironment"/> instance.</returns>
+        /// <remarks>The boostrapper must be initialised (<see cref="INancyBootstrapper.Initialise"/>) prior to calling this.</remarks>
+        public abstract INancyEnvironment GetEnvironment();
+
+        /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
         /// <filterpriority>2</filterpriority>
@@ -392,18 +432,19 @@
 
             var container = this.ApplicationContainer as IDisposable;
 
-            if (container == null)
+            if (container != null)
             {
-                return;
+                try
+                {
+                    container.Dispose();
+                }
+                catch (ObjectDisposedException)
+                {
+                }
             }
 
-            try
-            {
-                container.Dispose();
-            }
-            catch (ObjectDisposedException)
-            {
-            }
+
+            Dispose(true);
         }
 
         /// <summary>
@@ -498,6 +539,14 @@
         }
 
         /// <summary>
+        /// Releases unmanaged and - optionally - managed resources.
+        /// </summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        protected virtual void Dispose(bool disposing)
+        {
+        }
+
+        /// <summary>
         /// Resolve INancyEngine
         /// </summary>
         /// <returns>INancyEngine implementation</returns>
@@ -508,6 +557,13 @@
         /// </summary>
         /// <returns>Container instance</returns>
         protected abstract TContainer GetApplicationContainer();
+
+        /// <summary>
+        /// Registers an <see cref="INancyEnvironment"/> instance in the container.
+        /// </summary>
+        /// <param name="container">The container to register into.</param>
+        /// <param name="environment">The <see cref="INancyEnvironment"/> instance to register.</param>
+        protected abstract void RegisterNancyEnvironment(TContainer container, INancyEnvironment environment);
 
         /// <summary>
         /// Register the bootstrapper's implemented types into the container.
@@ -567,9 +623,10 @@
         {
             return new[] {
                 new InstanceRegistration(typeof(CryptographyConfiguration), this.CryptographyConfiguration),
-                new InstanceRegistration(typeof(NancyInternalConfiguration), this.InternalConfiguration),
-                new InstanceRegistration(typeof(DiagnosticsConfiguration), this.DiagnosticsConfiguration),
+                new InstanceRegistration(typeof(NancyInternalConfiguration), this.GetInitializedInternalConfiguration()),
                 new InstanceRegistration(typeof(IRootPathProvider), this.RootPathProvider),
+                new InstanceRegistration(typeof(IAssemblyCatalog), this.AssemblyCatalog),
+                new InstanceRegistration(typeof(ITypeCatalog), this.TypeCatalog),
             };
         }
 
@@ -580,16 +637,15 @@
         /// <returns>Collection of CollectionTypeRegistration types</returns>
         private IEnumerable<CollectionTypeRegistration> GetApplicationCollections()
         {
-            return new[]
-                {
-                    new CollectionTypeRegistration(typeof(IViewEngine), this.ViewEngines),
-                    new CollectionTypeRegistration(typeof(IModelBinder), this.ModelBinders),
-                    new CollectionTypeRegistration(typeof(ITypeConverter), this.TypeConverters),
-                    new CollectionTypeRegistration(typeof(IBodyDeserializer), this.BodyDeserializers),
-                    new CollectionTypeRegistration(typeof(IApplicationStartup), this.ApplicationStartupTasks),
-                    new CollectionTypeRegistration(typeof(IRegistrations), this.RegistrationTasks),
-                    new CollectionTypeRegistration(typeof(IModelValidatorFactory), this.ModelValidatorFactories)
-                };
+            return new[] {
+                new CollectionTypeRegistration(typeof(IViewEngine), this.ViewEngines),
+                new CollectionTypeRegistration(typeof(IModelBinder), this.ModelBinders),
+                new CollectionTypeRegistration(typeof(ITypeConverter), this.TypeConverters),
+                new CollectionTypeRegistration(typeof(IBodyDeserializer), this.BodyDeserializers),
+                new CollectionTypeRegistration(typeof(IApplicationStartup), this.ApplicationStartupTasks),
+                new CollectionTypeRegistration(typeof(IRegistrations), this.RegistrationTasks),
+                new CollectionTypeRegistration(typeof(IModelValidatorFactory), this.ModelValidatorFactories)
+            };
         }
 
         private INancyEngine SafeGetNancyEngineInstance()
@@ -637,10 +693,10 @@
             }
         }
 
-        private static IRootPathProvider GetRootPathProvider()
+        private IRootPathProvider GetRootPathProvider()
         {
-            var providerTypes = AppDomainAssemblyTypeScanner
-                .TypesOf<IRootPathProvider>(ScanMode.ExcludeNancy)
+            var providerTypes = this.TypeCatalog
+                .GetTypesAssignableTo<IRootPathProvider>(TypeResolveStrategies.ExcludeNancy)
                 .ToArray();
 
             if (providerTypes.Length > 1)

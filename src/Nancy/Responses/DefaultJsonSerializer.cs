@@ -3,23 +3,40 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using Json;
-
+    using Nancy.Configuration;
     using Nancy.IO;
+    using Nancy.Json;
+    using Nancy.Responses.Negotiation;
 
+    /// <summary>
+    /// Default <see cref="ISerializer"/> implementation for JSON serialization.
+    /// </summary>
     public class DefaultJsonSerializer : ISerializer
     {
-        private bool? retainCasing;
-        private bool? iso8601DateFormat;
+        private readonly JsonConfiguration jsonConfiguration;
+        private readonly TraceConfiguration traceConfiguration;
+        private readonly GlobalizationConfiguration globalizationConfiguration;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultJsonSerializer"/> class,
+        /// with the provided <see cref="INancyEnvironment"/>.
+        /// </summary>
+        /// <param name="environment">An <see cref="INancyEnvironment"/> instance.</param>
+        public DefaultJsonSerializer(INancyEnvironment environment)
+        {
+            this.jsonConfiguration = environment.GetValue<JsonConfiguration>();
+            this.traceConfiguration = environment.GetValue<TraceConfiguration>();
+            this.globalizationConfiguration = environment.GetValue<GlobalizationConfiguration>();
+        }
 
         /// <summary>
         /// Whether the serializer can serialize the content type
         /// </summary>
-        /// <param name="contentType">Content type to serialise</param>
+        /// <param name="mediaRange">Content type to serialise</param>
         /// <returns>True if supported, false otherwise</returns>
-        public bool CanSerialize(string contentType)
+        public bool CanSerialize(MediaRange mediaRange)
         {
-            return IsJsonType(contentType);
+            return IsJsonType(mediaRange);
         }
 
         /// <summary>
@@ -32,43 +49,32 @@
         }
 
         /// <summary>
-        /// Set to true to retain the casing used in the C# code in produced JSON.
-        /// Set to false to use camelCasig in the produced JSON.
-        /// False by default.
-        /// </summary>
-        public bool RetainCasing
-        {
-            get { return retainCasing.HasValue ? retainCasing.Value : JsonSettings.RetainCasing; }
-            set { retainCasing = value; }
-        }
-
-        /// <summary>
-        /// Set to true to use the ISO8601 format for datetimes in produced JSON.
-        /// Set to false to use the WCF \/Date()\/ format in the produced JSON.
-        /// True by default.
-        /// </summary>
-        public bool ISO8601DateFormat
-        {
-            get { return iso8601DateFormat.HasValue ? iso8601DateFormat.Value : JsonSettings.ISO8601DateFormat; }
-            set { iso8601DateFormat = value; }
-        }
-
-        /// <summary>
         /// Serialize the given model with the given contentType
         /// </summary>
-        /// <param name="contentType">Content type to serialize into</param>
+        /// <param name="mediaRange">Content type to serialize into</param>
         /// <param name="model">Model to serialize</param>
         /// <param name="outputStream">Stream to serialize to</param>
         /// <returns>Serialised object</returns>
-        public void Serialize<TModel>(string contentType, TModel model, Stream outputStream)
+        public void Serialize<TModel>(MediaRange mediaRange, TModel model, Stream outputStream)
         {
             using (var writer = new StreamWriter(new UnclosableStreamWrapper(outputStream)))
             {
-                var serializer = new JavaScriptSerializer(null, false, JsonSettings.MaxJsonLength, JsonSettings.MaxRecursions, RetainCasing, ISO8601DateFormat);
+                var serializer = new JavaScriptSerializer(this.jsonConfiguration, this.globalizationConfiguration);
 
-                serializer.RegisterConverters(JsonSettings.Converters, JsonSettings.PrimitiveConverters);
+                serializer.RegisterConverters(this.jsonConfiguration.Converters,
+                    this.jsonConfiguration.PrimitiveConverters);
 
-                serializer.Serialize(model, writer);
+                try
+                {
+                    serializer.Serialize(model, writer);
+                }
+                catch (Exception exception)
+                {
+                    if (this.traceConfiguration.DisplayErrorTraces)
+                    {
+                        writer.Write(exception.Message);
+                    }
+                }
             }
         }
 
@@ -91,11 +97,11 @@
 
             var contentMimeType = contentType.Split(';')[0];
 
-            return contentMimeType.Equals("application/json", StringComparison.InvariantCultureIgnoreCase) ||
-                   contentMimeType.StartsWith("application/json-", StringComparison.InvariantCultureIgnoreCase) ||
-                   contentMimeType.Equals("text/json", StringComparison.InvariantCultureIgnoreCase) ||
-                  (contentMimeType.StartsWith("application/vnd", StringComparison.InvariantCultureIgnoreCase) &&
-                   contentMimeType.EndsWith("+json", StringComparison.InvariantCultureIgnoreCase));
+            return contentMimeType.Equals("application/json", StringComparison.OrdinalIgnoreCase) ||
+                contentMimeType.StartsWith("application/json-", StringComparison.OrdinalIgnoreCase) ||
+                contentMimeType.Equals("text/json", StringComparison.OrdinalIgnoreCase) ||
+                (contentMimeType.StartsWith("application/vnd", StringComparison.OrdinalIgnoreCase) &&
+                    contentMimeType.EndsWith("+json", StringComparison.OrdinalIgnoreCase));
         }
     }
 }

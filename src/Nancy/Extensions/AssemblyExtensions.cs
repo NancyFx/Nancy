@@ -25,13 +25,16 @@ namespace Nancy.Extensions
             }
             catch (FileNotFoundException)
             {
-                types = new Type[] { };
+                types = ArrayCache.Empty<Type>();
             }
             catch (NotSupportedException)
             {
-                types = new Type[] { };
+                types = ArrayCache.Empty<Type>();
             }
-
+            catch (FileLoadException) {
+                // probably assembly version conflict
+                types = ArrayCache.Empty<Type>();
+            }
             return types;
         }
     }

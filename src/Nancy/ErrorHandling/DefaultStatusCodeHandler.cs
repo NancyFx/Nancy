@@ -1,45 +1,54 @@
 namespace Nancy.ErrorHandling
 {
-    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Reflection;
     using System.Text;
-    using IO;
+    using Nancy.Configuration;
     using Nancy.Extensions;
+    using Nancy.IO;
+    using Nancy.Responses.Negotiation;
+    using Nancy.ViewEngines;
 
     /// <summary>
     /// Default error handler
     /// </summary>
     public class DefaultStatusCodeHandler : IStatusCodeHandler
     {
-        private const string DisableErrorTracesTrueMessage = "Error details are currently disabled. Please set <code>StaticConfiguration.DisableErrorTraces = false;</code> to enable.";
+        private const string DisplayErrorTracesFalseMessage = "Error details are currently disabled.<br />To enable it, please set <strong>TraceConfiguration.DisplayErrorTraces</strong> to <strong>true</strong>.<br />For example by overriding your Bootstrapper's <strong>Configure</strong> method and calling<br/> <strong>environment.Tracing(enabled: false, displayErrorTraces: true);</strong>.";
 
+        private readonly IDictionary<HttpStatusCode, string> errorMessages;
         private readonly IDictionary<HttpStatusCode, string> errorPages;
-
-        private readonly IDictionary<HttpStatusCode, Func<HttpStatusCode, NancyContext, string, string>> expansionDelegates;
-
-        private readonly HttpStatusCode[] supportedStatusCodes = new[] { HttpStatusCode.NotFound, HttpStatusCode.InternalServerError};
+        private readonly IResponseNegotiator responseNegotiator;
+        private readonly HttpStatusCode[] supportedStatusCodes = { HttpStatusCode.NotFound, HttpStatusCode.InternalServerError };
+        private readonly TraceConfiguration configuration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultStatusCodeHandler"/> type.
         /// </summary>
-        public DefaultStatusCodeHandler()
+        /// <param name="responseNegotiator">The response negotiator.</param>
+        /// <param name="environment">An <see cref="INancyEnvironment"/> instance.</param>
+        public DefaultStatusCodeHandler(IResponseNegotiator responseNegotiator, INancyEnvironment environment)
         {
-            this.errorPages = new Dictionary<HttpStatusCode, string>
-                {
-                    { HttpStatusCode.NotFound, LoadResource("404.html") },
-                    { HttpStatusCode.InternalServerError, LoadResource("500.html") },
-                };
+            this.errorMessages = new Dictionary<HttpStatusCode, string>
+            {
+                { HttpStatusCode.NotFound, "The resource you have requested cannot be found." },
+                { HttpStatusCode.InternalServerError, "Something went horribly, horribly wrong while servicing your request." }
+            };
 
-            this.expansionDelegates = new Dictionary<HttpStatusCode, Func<HttpStatusCode, NancyContext, string, string>>
-                {
-                    { HttpStatusCode.InternalServerError, PopulateErrorInfo}
-                };
+            this.errorPages = new Dictionary<HttpStatusCode, string>
+            {
+                { HttpStatusCode.NotFound, LoadResource("404.html") },
+                { HttpStatusCode.InternalServerError, LoadResource("500.html") }
+            };
+
+            this.responseNegotiator = responseNegotiator;
+            this.configuration = environment.GetValue<TraceConfiguration>();
         }
 
         /// <summary>
-        /// Whether then
+        /// Whether the status code is handled
         /// </summary>
         /// <param name="statusCode">Status code</param>
         /// <param name="context">The <see cref="NancyContext"/> instance of the current request.</param>
@@ -62,47 +71,75 @@ namespace Nancy.ErrorHandling
                 return;
             }
 
-            string errorPage;
-
-            if (!this.errorPages.TryGetValue(statusCode, out errorPage))
+            if (!this.errorMessages.ContainsKey(statusCode) || !this.errorPages.ContainsKey(statusCode))
             {
                 return;
             }
 
-            if (String.IsNullOrEmpty(errorPage))
+            Response existingResponse = null;
+
+            if (context.Response != null)
             {
+                existingResponse = context.Response;
+            }
+
+            // Reset negotiation context to avoid any downstream cast exceptions
+            // from swapping a view model with a `DefaultStatusCodeHandlerResult`
+            context.NegotiationContext = new NegotiationContext();
+
+            var details = !this.configuration.DisplayErrorTraces
+                ? DisplayErrorTracesFalseMessage
+                : string.Concat("<pre>", context.GetExceptionDetails().Replace("<", "&gt;").Replace(">", "&lt;"), "</pre>");
+
+            var result = new DefaultStatusCodeHandlerResult(statusCode, this.errorMessages[statusCode], details);
+            try
+            {
+                context.Response = this.responseNegotiator.NegotiateResponse(result, context);
+                context.Response.StatusCode = statusCode;
+
+                if (existingResponse != null)
+                {
+                    context.Response.ReasonPhrase = existingResponse.ReasonPhrase;
+                }
                 return;
             }
-
-            Func<HttpStatusCode, NancyContext, string, string> expansionDelegate;
-            if (this.expansionDelegates.TryGetValue(statusCode, out expansionDelegate))
+            catch (ViewNotFoundException)
             {
-                errorPage = expansionDelegate.Invoke(statusCode, context, errorPage);
+                // No view will be found for `DefaultStatusCodeHandlerResult`
+                // because it is rendered from embedded resources below
             }
 
-            ModifyResponse(statusCode, context, errorPage);
+            this.ModifyResponse(statusCode, context, result);
         }
 
-        private static void ModifyResponse(HttpStatusCode statusCode, NancyContext context, string errorPage)
+        private void ModifyResponse(HttpStatusCode statusCode, NancyContext context, DefaultStatusCodeHandlerResult result)
         {
             if (context.Response == null)
             {
-                context.Response = new Response() { StatusCode = statusCode };
+                context.Response = new Response { StatusCode = statusCode };
+            }
+
+            var contents = this.errorPages[statusCode];
+
+            if (!string.IsNullOrEmpty(contents))
+            {
+                contents = contents.Replace("[DETAILS]", result.Details);
             }
 
             context.Response.ContentType = "text/html";
             context.Response.Contents = s =>
+            {
+                using (var writer = new StreamWriter(new UnclosableStreamWrapper(s), Encoding.UTF8))
                 {
-                    using (var writer = new StreamWriter(new UnclosableStreamWrapper(s), Encoding.UTF8))
-                    {
-                        writer.Write(errorPage);
-                    }
-                };
+                    writer.Write(contents);
+                }
+            };
         }
 
         private static string LoadResource(string filename)
         {
-            var resourceStream = typeof(INancyEngine).Assembly.GetManifestResourceStream(String.Format("Nancy.ErrorHandling.Resources.{0}", filename));
+            var resourceStream = typeof(INancyEngine).GetTypeInfo().Assembly.GetManifestResourceStream(string.Format("Nancy.ErrorHandling.Resources.{0}", filename));
+
 
             if (resourceStream == null)
             {
@@ -115,9 +152,20 @@ namespace Nancy.ErrorHandling
             }
         }
 
-        private static string PopulateErrorInfo(HttpStatusCode httpStatusCode, NancyContext context, string templateContents)
+        internal class DefaultStatusCodeHandlerResult
         {
-            return templateContents.Replace("[DETAILS]", StaticConfiguration.DisableErrorTraces ? DisableErrorTracesTrueMessage : context.GetExceptionDetails());
+            public DefaultStatusCodeHandlerResult(HttpStatusCode statusCode, string message, string details)
+            {
+                this.StatusCode = statusCode;
+                this.Message = message;
+                this.Details = details;
+            }
+
+            public HttpStatusCode StatusCode { get; private set; }
+
+            public string Message { get; private set; }
+
+            public string Details { get; private set; }
         }
     }
 }

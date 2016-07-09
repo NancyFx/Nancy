@@ -6,13 +6,21 @@ namespace Nancy.Hosting.Self
 
     public class FileSystemRootPathProvider : IRootPathProvider
     {
+        private readonly Lazy<string> rootPath = new Lazy<string>(ExtractRootPath);
+
         public string GetRootPath()
         {
-            var assembly = Assembly.GetEntryAssembly();
+            return this.rootPath.Value;
+        }
 
-            return assembly != null ? 
-                Path.GetDirectoryName(assembly.Location) :
-                Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        private static string ExtractRootPath()
+        {
+            var assembly =
+                Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly();
+
+            var location = assembly.Location;
+
+            return Path.GetDirectoryName(location);
         }
     }
 }

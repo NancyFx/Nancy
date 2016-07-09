@@ -31,13 +31,24 @@ namespace Nancy.Json
     using System;
     using System.Collections.Generic;
 
-	public abstract class JavaScriptConverter
+    public abstract class JavaScriptConverter
 	{
 		protected JavaScriptConverter () { }
 
 		public abstract IEnumerable<Type> SupportedTypes { get; }
 
+        public virtual object Deserialize(IDictionary<string, object> dictionary, Type type)
+        {
+            return Deserialize(dictionary, type, null);
+        }
+
 		public abstract object Deserialize (IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer);
-		public abstract IDictionary<string, object> Serialize (object obj, JavaScriptSerializer serializer);
+
+        public IDictionary<string, object> Serialize(object obj)
+        {
+            return Serialize(obj, null);
+        } 
+
+        public abstract IDictionary<string, object> Serialize (object obj, JavaScriptSerializer serializer);
 	}
 }

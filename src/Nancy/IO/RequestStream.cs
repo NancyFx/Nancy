@@ -3,6 +3,7 @@
     using System;
     using System.IO;
     using System.Threading.Tasks;
+
     using Nancy.Extensions;
 
     /// <summary>
@@ -10,6 +11,8 @@
     /// </summary>
     public class RequestStream : Stream
     {
+        internal const int BufferSize = 4096;
+
         public static long DEFAULT_SWITCHOVER_THRESHOLD = 81920;
 
         private bool disableStreamSwitching;
@@ -78,33 +81,24 @@
 
                 if (task.IsFaulted)
                 {
-                   throw new InvalidOperationException("Unable to copy stream", task.Exception);
+                    throw new InvalidOperationException("Unable to copy stream", task.Exception);
                 }
             }
 
             this.stream.Position = 0;
         }
 
-        private Task<object> MoveToWritableStream()
+        ~RequestStream()
         {
-            var tcs = new TaskCompletionSource<object>();
+            this.Dispose(false);
+        }
 
+        private Task MoveToWritableStream()
+        {
             var sourceStream = this.stream;
-            this.stream = new MemoryStream(StreamExtensions.BufferSize);
+            this.stream = new MemoryStream(BufferSize);
 
-            sourceStream.CopyTo(this, (source, destination, ex) =>
-            {
-                if (ex != null)
-                {
-                    tcs.SetException(ex);
-                }
-                else
-                {
-                    tcs.SetResult(null);
-                }
-            });
-
-            return tcs.Task;
+            return sourceStream.CopyToAsync(this);
         }
 
         /// <summary>
@@ -181,6 +175,7 @@
             }
         }
 
+#if !NETSTANDARD1_6
         /// <summary>
         /// Begins an asynchronous read operation.
         /// </summary>
@@ -208,12 +203,16 @@
         {
             return this.stream.BeginWrite(buffer, offset, count, callback, state);
         }
+#endif
 
         protected override void Dispose(bool disposing)
         {
             if (this.isSafeToDisposeStream)
             {
-                ((IDisposable)this.stream).Dispose();
+                if (this.stream != null)
+                {
+                    this.stream.Dispose();
+                }
 
                 var fileStream = this.stream as FileStream;
                 if (fileStream != null)
@@ -224,7 +223,7 @@
 
             base.Dispose(disposing);
         }
-
+#if !NETSTANDARD1_6
         /// <summary>
         /// Waits for the pending asynchronous read to complete.
         /// </summary>
@@ -247,6 +246,7 @@
 
             this.ShiftStreamToFileStreamIfNecessary();
         }
+#endif
 
         /// <summary>
         /// Clears all buffers for this stream and causes any buffered data to be written to the underlying device.
@@ -351,15 +351,31 @@
                 // in NancyWcfGenericService - webRequest.UriTemplateMatch
                 var old = this.stream;
                 this.MoveStreamContentsToFileStream();
+#if NETSTANDARD1_6
+                old.Dispose();
+#else
                 old.Close();
+#endif
             }
         }
 
         private static FileStream CreateTemporaryFileStream()
         {
-            var filePath = Path.GetTempFileName();
+            // we could use Path.GetTempFilePath() but this is problematic on Windows and more so on Mono
+            // symptoms will show when this method has been called > 65k times
+            // see docs: https://msdn.microsoft.com/en-us/library/system.io.path.gettempfilename(v=vs.110).aspx
+            // comments on Win32 implementation: https://msdn.microsoft.com/en-us/library/windows/desktop/aa364991(v=vs.85).aspx
+            // mono implementation: https://github.com/mono/mono/blob/master/mcs/class/corlib/System.IO/Path.cs#L490
 
-            return new FileStream(filePath, FileMode.Create, FileAccess.ReadWrite, FileShare.None, 8192, true);
+            var filePath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".tmp");
+
+            return new FileStream(
+                filePath,
+                FileMode.Create,
+                FileAccess.ReadWrite,
+                FileShare.None,
+                8192,
+                StaticConfiguration.AllowFileStreamUploadAsync);
         }
 
         private Stream CreateDefaultMemoryStream(long expectedLength)
@@ -428,7 +444,11 @@
 
             if (this.stream.CanSeek && this.stream.Length == 0)
             {
+#if NETSTANDARD1_6
+                this.stream.Dispose();
+#else
                 this.stream.Close();
+#endif
                 this.stream = targetStream;
                 return;
             }

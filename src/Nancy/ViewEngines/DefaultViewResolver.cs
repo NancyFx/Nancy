@@ -1,6 +1,7 @@
 ﻿namespace Nancy.ViewEngines
 {
     using System;
+
     using Nancy.Conventions;
 
     /// <summary>
@@ -58,7 +59,7 @@
                 var conventionBasedViewName =
                     SafeInvokeConvention(convention, viewName, model, viewLocationContext);
 
-                if (String.IsNullOrEmpty(conventionBasedViewName))
+                if (string.IsNullOrEmpty(conventionBasedViewName))
                 {
                     continue;
                 }

@@ -2,7 +2,6 @@
 {
     using System.IO;
     using System.Text;
-
     using Nancy.IO;
 
     /// <summary>
@@ -20,7 +19,15 @@
         {
             using (var reader = new StreamReader(stream, encoding ?? Encoding.UTF8))
             {
-                return reader.ReadToEnd();
+                var initialPosition = stream.Position;
+
+                stream.Position = 0;
+
+                var request = reader.ReadToEnd();
+
+                stream.Position = initialPosition;
+
+                return request;
             }
         }
     }

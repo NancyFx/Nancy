@@ -2,20 +2,24 @@
 {
     using System;
     using System.Collections.Concurrent;
+    using Configuration;
 
     /// <summary>
-    /// View cache that supports expiring content if it is stale
+    /// Default implementation of <see cref="IViewCache"/>.
     /// </summary>
+    /// <remarks>Supports expiring content if it is stale, through the <see cref="ViewConfiguration.RuntimeViewUpdates"/> setting.</remarks>
     public class DefaultViewCache : IViewCache
     {
         private readonly ConcurrentDictionary<ViewLocationResult, object> cache;
+        private readonly ViewConfiguration configuration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultViewCache"/> class.
         /// </summary>
-        public DefaultViewCache()
+        public DefaultViewCache(INancyEnvironment environment)
         {
             this.cache = new ConcurrentDictionary<ViewLocationResult, object>();
+            this.configuration = environment.GetValue<ViewConfiguration>();
         }
 
         /// <summary>
@@ -27,7 +31,7 @@
         /// <returns>An instance of the type specified by the <typeparamref name="TCompiledView"/> type.</returns>
         public TCompiledView GetOrAdd<TCompiledView>(ViewLocationResult viewLocationResult, Func<ViewLocationResult, TCompiledView> valueFactory)
         {
-            if (StaticConfiguration.Caching.EnableRuntimeViewUpdates)
+            if (this.configuration.RuntimeViewUpdates)
             {
                 if (viewLocationResult.IsStale())
                 {

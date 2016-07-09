@@ -3,23 +3,22 @@
     using System.Web.Razor;
     using System.Web.Razor.Generator;
     using System.Web.Razor.Parser;
-
-    using CSharp;
-
-    using VisualBasic;
+    using Nancy.ViewEngines.Razor.CSharp;
 
     /// <summary>
     /// A custom razor engine host responsible for decorating the existing code generators with nancy versions.
     /// </summary>
     public class NancyRazorEngineHost : RazorEngineHost
     {
+        private readonly RazorAssemblyProvider razorAssemblyProvider;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyRazorEngineHost"/> class.
         /// </summary>
-        /// <param name="language">The language.</param>
-        public NancyRazorEngineHost(RazorCodeLanguage language)
+        public NancyRazorEngineHost(RazorCodeLanguage language, RazorAssemblyProvider razorAssemblyProvider)
             : base(language)
         {
+            this.razorAssemblyProvider = razorAssemblyProvider;
             this.DefaultBaseClass = typeof (NancyRazorViewBase).FullName;
             this.DefaultNamespace = "RazorOutput";
             this.DefaultClassName = "RazorView";
@@ -40,12 +39,7 @@
         {
             if (incomingCodeParser is CSharpCodeParser)
             {
-                return new NancyCSharpRazorCodeParser();
-            }
-
-            if (incomingCodeParser is VBCodeParser)
-            {
-                return new NancyVisualBasicRazorCodeParser();
+                return new NancyCSharpRazorCodeParser(this.razorAssemblyProvider);
             }
 
             return base.DecorateCodeParser(incomingCodeParser);

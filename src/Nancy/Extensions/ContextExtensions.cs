@@ -2,6 +2,7 @@ namespace Nancy.Extensions
 {
     using System;
     using System.Text;
+
     using Nancy.Responses;
 
     /// <summary>
@@ -72,7 +73,7 @@ namespace Nancy.Extensions
             object errorObject;
             context.Items.TryGetValue(NancyEngine.ERROR_KEY, out errorObject);
 
-            return (errorObject as string) ?? "None";
+            return (errorObject as string) ?? string.Empty;
         }
 
         /// <summary>

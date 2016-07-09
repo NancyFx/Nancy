@@ -1,0 +1,41 @@
+{
+    "dependencies": {
+        "dotnet-test-xunit": "2.2.0-preview2-build1029",
+        "Microsoft.NETCore.Platforms": "1.0.1",
+        "OwinHttpMessageHandler": "1.3.5",
+        "Microsoft.Owin": "3.0.1",
+        "Nancy": { "target": "project" },
+        "Nancy.Owin": { "target": "project" },
+        "Nancy.Testing": { "target": "project" },
+        "xunit": "2.2.0-beta2-build3300"
+    },
+
+    "buildOptions": {
+        "compileFiles": [
+            "../Nancy.Tests/Fakes/FakeRequest.cs",
+            "../Nancy.Tests/ShouldExtensions.cs"
+        ]
+    },
+
+    "configurations" : {
+        "MonoRelease": {
+             "buildOptions": {
+                "define": ["MONO"],
+                "optimize": true
+              }
+        }
+    },
+
+    "frameworks": {
+        "net452": {
+            "dependencies": {
+                "FakeItEasy": "2.0.0"
+            },
+            "frameworkAssemblies": {
+                "System.Runtime": { "type": "build" }
+            }
+        }
+    },
+
+    "testRunner": "xunit"
+}

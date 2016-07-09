@@ -1,7 +1,8 @@
 ﻿namespace Nancy.ViewEngines.DotLiquid
 {
-    using Nancy.Bootstrapper;
     using global::DotLiquid.NamingConventions;
+
+    using Nancy.Bootstrapper;
 
     /// <summary>
     /// Used to register the default naming conventions for the ViewEngine. The naming convention affects DotLiquid Drops and filters.
@@ -14,7 +15,8 @@
         /// <summary>
         /// Register the <c>RubyNamingConvention</c> as the default.
         /// </summary>
-        public DotLiquidRegistrations()
+        /// <param name="typeCatalog">An <see cref="ITypeCatalog"/> instance.</param>
+        public DotLiquidRegistrations(ITypeCatalog typeCatalog) : base(typeCatalog)
         {
             this.RegisterWithDefault<INamingConvention>(typeof(RubyNamingConvention));
         }

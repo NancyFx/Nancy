@@ -1,5 +1,7 @@
 namespace Nancy.Diagnostics
 {
+    using Nancy.Responses.Negotiation;
+
     /// <summary>
     /// Stores request trace information about the request.
     /// </summary>
@@ -8,8 +10,8 @@ namespace Nancy.Diagnostics
         /// <summary>
         /// Gets or sets the content type of the request.
         /// </summary>
-        /// <value>A <see cref="string"/> containing the content type.</value>
-        public string ContentType { get; set; }
+        /// <value>A <see cref="MediaRange"/> containing the content type.</value>
+        public MediaRange ContentType { get; set; }
 
         /// <summary>
         /// Gets or sets the headers of the request.

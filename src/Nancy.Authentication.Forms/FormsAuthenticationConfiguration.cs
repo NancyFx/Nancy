@@ -1,5 +1,6 @@
 namespace Nancy.Authentication.Forms
 {
+    using System;
     using Cryptography;
 
     /// <summary>
@@ -68,38 +69,34 @@ namespace Nancy.Authentication.Forms
         public CryptographyConfiguration CryptographyConfiguration { get; set; }
 
         /// <summary>
-        /// Gets a value indicating whether the configuration is valid or not.
+        /// Ensures the configuration is valid or not.
         /// </summary>
-        public virtual bool IsValid
+        /// <exception cref="InvalidOperationException" />
+        public virtual void EnsureConfigurationIsValid()
         {
-            get
+            if (!this.DisableRedirect && string.IsNullOrEmpty(this.RedirectUrl))
             {
-                if (!this.DisableRedirect && string.IsNullOrEmpty(this.RedirectUrl))
-                {
-                    return false;
-                }
+                throw new InvalidOperationException("When DisableRedirect is false RedirectUrl cannot be null.");
+            }
 
-                if (this.UserMapper == null)
-                {
-                    return false;
-                }
+            if (this.UserMapper == null)
+            {
+                throw new InvalidOperationException("UserMapper cannot be null.");
+            }
 
-                if (this.CryptographyConfiguration == null)
-                {
-                    return false;
-                }
+            if (this.CryptographyConfiguration == null)
+            {
+                throw new InvalidOperationException("CryptographyConfiguration cannot be null.");
+            }
 
-                if (this.CryptographyConfiguration.EncryptionProvider == null)
-                {
-                    return false;
-                }
+            if (this.CryptographyConfiguration.EncryptionProvider == null)
+            {
+                throw new InvalidOperationException("CryptographyConfiguration EncryptionProvider cannot be null.");
+            }
 
-                if (this.CryptographyConfiguration.HmacProvider == null)
-                {
-                    return false;
-                }
-
-                return true;
+            if (this.CryptographyConfiguration.HmacProvider == null)
+            {
+                throw new InvalidOperationException("CryptographyConfiguration HmacProvider cannot be null.");
             }
         }
     }

@@ -1,0 +1,31 @@
+﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Nancy.Demo.Hosting.Aspnet.Models.Razor2>
+<html>
+<head>
+    <title>Razor View Engine Demo</title>
+</head>
+<body>
+    <h1>Hello @Model.FirstName</h1>
+    <p>This is a sample Razor2 view!</p>
+
+    <a href="/@Model.FirstName">Test link to @Model.FirstName</a>
+    <a href="~/@Model.FirstName">Test link to @Model.FirstName</a>
+
+    <!-- Auto expanded ~ safepaths -->
+    <img src='~/content/face.png' alt="Face"/>
+
+    <!-- Two null properties should collapse the whole class attribute -->
+    <div class="@Model.NullOne @Model.NullTwo"/>
+
+    <!-- One null property and one non-null should just show the one -->
+    <div class="@Model.NotNullOne @Model.NullTwo"/>
+
+    <!--Two non-null should show both -->
+    <div class="@Model.NotNullOne @Model.NotNullTwo"/>
+
+    <!-- A single bool value of false should collapse the attribute -->
+    <input type="checkbox" checked="@Model.FalseBool"/>
+
+    <!-- A single bool value of true should show the attribute -->
+    <input type="checkbox" checked="@Model.TrueBool"/>
+</body>
+</html>

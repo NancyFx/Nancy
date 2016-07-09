@@ -1,11 +1,9 @@
 ﻿namespace Nancy
 {
-    using System.Linq;
-
     using Nancy.Conventions;
 
     /// <summary>
-    /// The default static content provider that uses <see cref="Nancy.Conventions.StaticContentConventions"/>
+    /// The default static content provider that uses <see cref="StaticContentsConventions"/>
     /// to determine what static content to serve.
     /// </summary>
     public class DefaultStaticContentProvider : IStaticContentProvider

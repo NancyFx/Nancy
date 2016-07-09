@@ -4,9 +4,10 @@ namespace Nancy.Session
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    using Bootstrapper;
-    using Cryptography;
+
+    using Nancy.Bootstrapper;
     using Nancy.Cookies;
+    using Nancy.Cryptography;
     using Nancy.Helpers;
 
     /// <summary>
@@ -22,10 +23,7 @@ namespace Nancy.Session
         /// <value>Cookie name</value>
         public string CookieName
         {
-            get
-            {
-                return this.currentConfiguration.CookieName;
-            }
+            get { return this.currentConfiguration.CookieName; }
         }
 
         /// <summary>
@@ -60,8 +58,6 @@ namespace Nancy.Session
             }
             this.currentConfiguration = configuration;
         }
-
-
 
         /// <summary>
         /// Initialise and add cookie based session hooks to the application pipeline
@@ -148,7 +144,7 @@ namespace Nancy.Session
             var cryptographyConfiguration = this.currentConfiguration.CryptographyConfiguration;
             var encryptedData = cryptographyConfiguration.EncryptionProvider.Encrypt(sb.ToString());
             var hmacBytes = cryptographyConfiguration.HmacProvider.GenerateHmac(encryptedData);
-            var cookieData = String.Format("{0}{1}", Convert.ToBase64String(hmacBytes), encryptedData);
+            var cookieData = HttpUtility.UrlEncode(String.Format("{0}{1}", Convert.ToBase64String(hmacBytes), encryptedData));
 
             var cookie = new NancyCookie(this.currentConfiguration.CookieName, cookieData, true)
             {

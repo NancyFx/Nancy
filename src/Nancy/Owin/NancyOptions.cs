@@ -1,6 +1,7 @@
 ﻿namespace Nancy.Owin
 {
     using System;
+
     using Nancy.Bootstrapper;
 
     /// <summary>

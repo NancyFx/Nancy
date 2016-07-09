@@ -3,6 +3,7 @@ namespace Nancy.Testing
     using System.Collections;
     using System.Collections.Generic;
     using System.IO;
+    using Nancy.IO;
 
     /// <summary>
     /// Wrapper for the HTTP response body that is used by the <see cref="BrowserResponse"/> class.
@@ -13,24 +14,44 @@ namespace Nancy.Testing
         private readonly string contentType;
         private DocumentWrapper responseDocument;
 
-        public BrowserResponseBodyWrapper(Response response)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BrowserResponseBodyWrapper"/> class.
+        /// </summary>
+        /// <param name="response">The <see cref="Response"/> to wrap.</param>
+        /// <param name="browserContext">The <see cref="BrowserContext"/> of the request that generated the response.</param>
+        public BrowserResponseBodyWrapper(Response response, BrowserContext browserContext)
         {
+            this.BrowserContext = browserContext;
             var contentStream = GetContentStream(response);
 
             this.responseBytes = contentStream.ToArray();
             this.contentType = response.ContentType;
         }
 
-        internal string ContentType
+        /// <summary>
+        /// Gets the content type of the wrapped response.
+        /// </summary>
+        /// <returns>A string containing the content type.</returns>
+        public string ContentType
         {
             get { return this.contentType; }
         }
 
+        /// <summary>
+        /// Gets the <see cref="BrowserContext"/> of the request that generated the response.
+        /// </summary>
+        /// <value>A <see cref="BrowserContext"/> intance.</value>
+        public BrowserContext BrowserContext { get; private set; }
+
         private static MemoryStream GetContentStream(Response response)
         {
             var contentsStream = new MemoryStream();
-            response.Contents.Invoke(contentsStream);
+
+            var unclosableStream = new UnclosableStreamWrapper(contentsStream);
+
+            response.Contents.Invoke(unclosableStream);
             contentsStream.Position = 0;
+
             return contentsStream;
         }
 

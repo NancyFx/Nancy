@@ -5,6 +5,8 @@
     using System.Linq;
     using System.Reflection;
 
+    using Nancy.Routing;
+
     public class InteractiveDiagnostics : IInteractiveDiagnostics
     {
         private readonly IDiagnosticsProvider[] providers;
@@ -19,14 +21,14 @@
             {
                 Type providerType = provider.GetType();
 
-                return providerType != typeof(Nancy.Diagnostics.TestingDiagnosticProvider) &
-                       providerType != typeof(Nancy.Routing.DefaultRouteCacheProvider);
+                return providerType != typeof(TestingDiagnosticProvider) &
+                       providerType != typeof(DefaultRouteCacheProvider);
             });
 
             if (customProvidersAvailable)
             {
                 // Exclude only the TestingDiagnosticProvider
-                this.providers = providers.Where(provider => provider.GetType() != typeof(Nancy.Diagnostics.TestingDiagnosticProvider)).ToArray();
+                this.providers = providers.Where(provider => provider.GetType() != typeof(TestingDiagnosticProvider)).ToArray();
             }
             else
             {
@@ -153,7 +155,7 @@
         {
             var method = GetMethodInfo(interactiveDiagnosticMethod);
 
-            var attribute = (TemplateAttribute)Attribute.GetCustomAttribute(method, typeof(TemplateAttribute));
+            var attribute = (TemplateAttribute)method.GetCustomAttribute(typeof(TemplateAttribute));
 
             return attribute != null ? attribute.Template : null;
         }
@@ -173,7 +175,7 @@
 
         private static string GetDescriptionFromAttribute(IDiagnosticsProvider diagnosticsProvider, MethodInfo methodInfo)
         {
-            var attribute = (DescriptionAttribute)Attribute.GetCustomAttribute(methodInfo, typeof(DescriptionAttribute));
+            var attribute = (DescriptionAttribute)methodInfo.GetCustomAttribute(typeof(DescriptionAttribute));
 
             return attribute != null ? attribute.Description : null;
         }

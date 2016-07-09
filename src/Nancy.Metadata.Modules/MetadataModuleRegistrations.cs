@@ -11,7 +11,8 @@
         /// Creates a new instance of the <see cref="MetadataModuleRegistrations"/> class, that performs
         /// the default registrations of the metadata modules types.
         /// </summary>
-        public MetadataModuleRegistrations()
+        /// <param name="typeCatalog">An <see cref="ITypeCatalog"/> instance.</param>
+        public MetadataModuleRegistrations(ITypeCatalog typeCatalog) : base(typeCatalog)
         {
             this.Register<DefaultMetadataModuleConventions>();
             this.RegisterAll<IMetadataModule>();

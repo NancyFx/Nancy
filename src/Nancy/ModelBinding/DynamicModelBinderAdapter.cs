@@ -55,14 +55,16 @@
         /// <param name="binder">Provides information about the conversion operation. The binder.Type property provides the type to which the object must be converted. For example, for the statement (String)sampleObject in C# (CType(sampleObject, Type) in Visual Basic), where sampleObject is an instance of the class derived from the <see cref="T:System.Dynamic.DynamicObject"/> class, binder.Type returns the <see cref="T:System.String"/> type. The binder.Explicit property provides information about the kind of conversion that occurs. It returns true for explicit conversion and false for implicit conversion.</param><param name="result">The result of the type conversion operation.</param>
         public override bool TryConvert(ConvertBinder binder, out object result)
         {
-            var modelBinder = this.locator.GetBinderForType(binder.Type, this.context);
+            var instanceType = instance == null ? binder.Type : this.instance.GetType();
+
+            var modelBinder = this.locator.GetBinderForType(instanceType, this.context);
 
             if (modelBinder == null)
             {
-                throw new ModelBindingException(binder.Type);
+                throw new ModelBindingException(instanceType);
             }
 
-            result = modelBinder.Bind(this.context, binder.Type, this.instance, this.configuration, this.blacklistedProperties);
+            result = modelBinder.Bind(this.context, instanceType, this.instance, this.configuration, this.blacklistedProperties);
 
             return result != null || base.TryConvert(binder, out result);
         }

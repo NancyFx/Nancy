@@ -4,7 +4,8 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
-    using Helpers;
+    using System.Reflection;
+    using Nancy.Helpers;
 
     public class InteractiveModule : DiagnosticModule
     {
@@ -15,12 +16,12 @@
         {
             this.interactiveDiagnostics = interactiveDiagnostics;
 
-            Get["/"] = _ =>
+            Get("/", _ =>
             {
                 return View["InteractiveDiagnostics"];
-            };
+            });
 
-            Get["/providers"] = _ =>
+            Get("/providers", _ =>
             {
                 var providers = this.interactiveDiagnostics
                     .AvailableDiagnostics
@@ -30,14 +31,14 @@
                             p.Description,
                             Type = p.GetType().Name,
                             p.GetType().Namespace,
-                            Assembly = p.GetType().Assembly.GetName().Name
+                            Assembly = p.GetType().GetTypeInfo().Assembly.GetName().Name
                         })
                     .ToArray();
 
                 return this.Response.AsJson(providers);
-            };
+            });
 
-            Get["/providers/{providerName}"] = ctx =>
+            Get("/providers/{providerName}", ctx =>
             {
                 var providerName =
                     HttpUtility.UrlDecode((string)ctx.providerName);
@@ -65,9 +66,9 @@
                     .ToArray();
 
                 return this.Response.AsJson(methods);
-            };
+            });
 
-            Get["/providers/{providerName}/{methodName}"] = ctx =>
+            Get("/providers/{providerName}/{methodName}", ctx =>
             {
                 var providerName =
                     HttpUtility.UrlDecode((string)ctx.providerName);
@@ -87,9 +88,9 @@
                     GetArguments(method, this.Request.Query);
 
                 return this.Response.AsJson(new { Result = this.interactiveDiagnostics.ExecuteDiagnostic(method, arguments) });
-            };
+            });
 
-            Get["/templates/{providerName}/{methodName}"] = ctx =>
+            Get<Response>("/templates/{providerName}/{methodName}", ctx =>
             {
                 var providerName =
                     HttpUtility.UrlDecode((string)ctx.providerName);
@@ -114,7 +115,7 @@
                 }
 
                 return template;
-            };
+            });
         }
 
         private static object[] GetArguments(InteractiveDiagnosticMethod method, dynamic query)

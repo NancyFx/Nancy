@@ -28,11 +28,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-using System;
-using System.Collections.Generic;
-
 namespace Nancy
 {
+    using System;
+    using System.Collections.Generic;
+
     public sealed class MimeTypes
     {
         static Dictionary <string, string> mimeTypes;

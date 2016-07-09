@@ -1,6 +1,8 @@
 ﻿namespace Nancy.Testing
 {
     using System;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Provides a way to define a Nancy module though an API.
@@ -42,7 +44,7 @@
         /// </summary>
         public class ConfigurableNancyModuleConfigurator : IHideObjectMembers
         {
-            private readonly ConfigurableNancyModule module;
+            private readonly ConfigurableNancyModule wrappedModule;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="ConfigurableNancyModuleConfigurator"/> class.
@@ -50,29 +52,29 @@
             /// <param name="module">The <see cref="ConfigurableNancyModule"/> that should be configured.</param>
             public ConfigurableNancyModuleConfigurator(ConfigurableNancyModule module)
             {
-                this.module = module;
+                this.wrappedModule = module;
             }
 
             /// <summary>
-            /// Adds an after-request process pipeline to the module.
+            /// Adds an after-request process pipeline to the wrappedModule.
             /// </summary>
             /// <param name="after">An <see cref="AfterPipeline"/> instance.</param>
             /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
             public ConfigurableNancyModuleConfigurator After(AfterPipeline after)
             {
-                this.module.After = after;
+                this.wrappedModule.After = after;
 
                 return this;
             }
 
             /// <summary>
-            /// Adds a before-request process pipeline to the module.
+            /// Adds a before-request process pipeline to the wrappedModule.
             /// </summary>
             /// <param name="before">An <see cref="BeforePipeline"/> instance.</param>
             /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
             public ConfigurableNancyModuleConfigurator Before(BeforePipeline before)
             {
-                this.module.Before = before;
+                this.wrappedModule.Before = before;
 
                 return this;
             }
@@ -81,35 +83,94 @@
             /// Adds a route that is valid for DELETE requests.
             /// </summary>
             /// <param name="path">The path that the route should be registered for.</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
             /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
             /// <remarks>This will add a route with a condition that is always evaluates to <see langword="true"/> and an action that returns <see cref="HttpStatusCode.OK"/>.</remarks>
-            public ConfigurableNancyModuleConfigurator Delete(string path)
+            public ConfigurableNancyModuleConfigurator Delete(string path, Func<NancyContext, bool> condition = null, string name = null)
             {
-                return this.Delete(path, condition => true, (action, module) => HttpStatusCode.OK);
+                return this.Delete<object>(path, (args, module) => HttpStatusCode.OK, condition, name);
             }
 
             /// <summary>
             /// Adds a route that is valid for DELETE requests.
             /// </summary>
             /// <param name="path">The path that the route should be registered for.</param>
-            /// <param name="action">The action that should be invoked by the route.</param>
+            /// <param name="action">Action that will be invoked when the route it hit</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
             /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
-            /// <remarks>This will add a route with a condition that is always evaluates to <see langword="true"/>.</remarks>
-            public ConfigurableNancyModuleConfigurator Delete(string path, Func<dynamic, NancyModule, dynamic> action)
+            public ConfigurableNancyModuleConfigurator Delete(string path, Func<dynamic, NancyModule, object> action, Func<NancyContext, bool> condition = null, string name = null)
             {
-                return this.Delete(path, condition => true, action);
+                return this.Delete<object>(path, (args, module) => action((DynamicDictionary)args, module), condition, name);
+            }
+
+            /// <summary>
+            /// Adds a route that is valid for DELETE requests.
+            /// </summary>
+            /// <typeparam name="T">The return type of the route.</typeparam>
+            /// <param name="path">The path that the route should be registered for.</param>
+            /// <param name="action">Action that will be invoked when the route it hit</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
+            /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
+            public ConfigurableNancyModuleConfigurator Delete<T>(string path, Func<dynamic, NancyModule, T> action, Func<NancyContext, bool> condition = null, string name = null)
+            {
+                return this.Delete(path, (args, module) => Task.FromResult(action((DynamicDictionary)args, module)), condition, name);
             }
 
             /// <summary>
             /// Adds a route that is valid for DELETE requests.
             /// </summary>
             /// <param name="path">The path that the route should be registered for.</param>
-            /// <param name="condition">The condition that has to be fulfilled in order for the route to be invoked</param>
-            /// <param name="action">The action that should be invoked by the route.</param>
+            /// <param name="action">Action that will be invoked when the route it hit</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
             /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
-            public ConfigurableNancyModuleConfigurator Delete(string path, Func<NancyContext, bool> condition, Func<dynamic, NancyModule, dynamic> action)
+            public ConfigurableNancyModuleConfigurator Delete(string path, Func<dynamic, NancyModule, Task<object>> action, Func<NancyContext, bool> condition = null, string name = null)
             {
-                this.module.Delete[path, GetSafeRouteCondition(condition)] = GetSafeRouteAction(action);
+                return this.Delete<object>(path, action, condition, name);
+            }
+
+            /// <summary>
+            /// Adds a route that is valid for DELETE requests.
+            /// </summary>
+            /// <typeparam name="T">The return type of the route.</typeparam>
+            /// <param name="path">The path that the route should be registered for.</param>
+            /// <param name="action">Action that will be invoked when the route it hit</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
+            /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
+            public ConfigurableNancyModuleConfigurator Delete<T>(string path, Func<dynamic, NancyModule, Task<T>> action, Func<NancyContext, bool> condition = null, string name = null)
+            {
+                return this.Delete(path, (args, ct, module) => action((DynamicDictionary)args, module), condition, name);
+            }
+
+            /// <summary>
+            /// Adds a route that is valid for DELETE requests.
+            /// </summary>
+            /// <param name="path">The path that the route should be registered for.</param>
+            /// <param name="action">Action that will be invoked when the route it hit</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
+            /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
+            public ConfigurableNancyModuleConfigurator Delete(string path, Func<dynamic, CancellationToken, NancyModule, Task<object>> action, Func<NancyContext, bool> condition = null, string name = null)
+            {
+                return this.Delete<object>(path, action, condition, name);
+            }
+
+            /// <summary>
+            /// Adds a route that is valid for DELETE requests.
+            /// </summary>
+            /// <typeparam name="T">The return type of the route.</typeparam>
+            /// <param name="path">The path that the route should be registered for.</param>
+            /// <param name="action">Action that will be invoked when the route it hit</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
+            /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
+            public ConfigurableNancyModuleConfigurator Delete<T>(string path, Func<dynamic, CancellationToken, NancyModule, Task<T>> action, Func<NancyContext, bool> condition = null, string name = null)
+            {
+                this.wrappedModule.Delete(path, (args, ct) => action((DynamicDictionary)args, ct, this.wrappedModule), condition ?? (ctx => true), name ?? string.Empty);
                 return this;
             }
 
@@ -117,143 +178,187 @@
             /// Adds a route that is valid for GET requests.
             /// </summary>
             /// <param name="path">The path that the route should be registered for.</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
             /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
             /// <remarks>This will add a route with a condition that is always evaluates to <see langword="true"/> and an action that returns <see cref="HttpStatusCode.OK"/>.</remarks>
-            public ConfigurableNancyModuleConfigurator Get(string path)
+            public ConfigurableNancyModuleConfigurator Get(string path, Func<NancyContext, bool> condition = null, string name = null)
             {
-                return this.Get(path, condition => true, (action, module) => HttpStatusCode.OK);
+                return this.Get<object>(path, (args, module) => HttpStatusCode.OK, condition, name);
             }
 
             /// <summary>
             /// Adds a route that is valid for GET requests.
             /// </summary>
             /// <param name="path">The path that the route should be registered for.</param>
-            /// <param name="action">The action that should be invoked by the route.</param>
-            /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
-            /// <remarks>This will add a route with a condition that is always evaluates to <see langword="true"/>.</remarks>
-            public ConfigurableNancyModuleConfigurator Get(string path, Func<dynamic, NancyModule, dynamic> action)
+            /// <param name="action">Action that will be invoked when the route it hit</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
+            public ConfigurableNancyModuleConfigurator Get(string path, Func<dynamic, NancyModule, object> action, Func<NancyContext, bool> condition = null, string name = null)
             {
-                return this.Get(path, condition => true, action);
+                return this.Get<object>(path, (args, module) => action((DynamicDictionary)args, module), condition, name);
+            }
+
+            /// <summary>
+            /// Adds a route that is valid for GET requests.
+            /// </summary>
+            /// <typeparam name="T">The return type of the route.</typeparam>
+            /// <param name="path">The path that the route should be registered for.</param>
+            /// <param name="action">Action that will be invoked when the route it hit</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
+            /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
+            public ConfigurableNancyModuleConfigurator Get<T>(string path, Func<dynamic, NancyModule, T> action, Func<NancyContext, bool> condition = null, string name = null)
+            {
+                return this.Get(path, (args, module) => Task.FromResult(action((DynamicDictionary)args, module)), condition, name);
             }
 
             /// <summary>
             /// Adds a route that is valid for GET requests.
             /// </summary>
             /// <param name="path">The path that the route should be registered for.</param>
-            /// <param name="condition">The condition that has to be fulfilled in order for the route to be invoked</param>
-            /// <param name="action">The action that should be invoked by the route.</param>
+            /// <param name="action">Action that will be invoked when the route it hit</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
             /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
-            public ConfigurableNancyModuleConfigurator Get(string path, Func<NancyContext, bool> condition, Func<dynamic, NancyModule, dynamic> action)
+            public ConfigurableNancyModuleConfigurator Get(string path, Func<dynamic, NancyModule, Task<object>> action, Func<NancyContext, bool> condition = null, string name = null)
             {
-                this.module.Get[path, GetSafeRouteCondition(condition)] = GetSafeRouteAction(action);
+                return this.Get<object>(path, action, condition, name);
+            }
+
+            /// <summary>
+            /// Adds a route that is valid for GET requests.
+            /// </summary>
+            /// <typeparam name="T">The return type of the route.</typeparam>
+            /// <param name="path">The path that the route should be registered for.</param>
+            /// <param name="action">Action that will be invoked when the route it hit</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
+            /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
+            public ConfigurableNancyModuleConfigurator Get<T>(string path, Func<dynamic, NancyModule, Task<T>> action, Func<NancyContext, bool> condition = null, string name = null)
+            {
+                return this.Get(path, (args, ct, module) => action((DynamicDictionary)args, module), condition, name);
+            }
+
+            /// <summary>
+            /// Adds a route that is valid for GET requests.
+            /// </summary>
+            /// <param name="path">The path that the route should be registered for.</param>
+            /// <param name="action">Action that will be invoked when the route it hit</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
+            /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
+            public ConfigurableNancyModuleConfigurator Get(string path, Func<dynamic, CancellationToken, NancyModule, Task<object>> action, Func<NancyContext, bool> condition = null, string name = null)
+            {
+                return this.Get<object>(path, action, condition, name);
+            }
+
+            /// <summary>
+            /// Adds a route that is valid for GET requests.
+            /// </summary>
+            /// <typeparam name="T">The return type of the route.</typeparam>
+            /// <param name="path">The path that the route should be registered for.</param>
+            /// <param name="action">Action that will be invoked when the route it hit</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
+            /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
+            public ConfigurableNancyModuleConfigurator Get<T>(string path, Func<dynamic, CancellationToken, NancyModule, Task<T>> action, Func<NancyContext, bool> condition = null, string name = null)
+            {
+                this.wrappedModule.Get(path, (args, ct) => action((DynamicDictionary)args, ct, this.wrappedModule), condition ?? (ctx => true), name ?? string.Empty);
                 return this;
             }
 
             /// <summary>
-            /// Adds a route that is valid for PATCH requests.
+            /// Adds a route that is valid for HEAD requests.
             /// </summary>
             /// <param name="path">The path that the route should be registered for.</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
             /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
             /// <remarks>This will add a route with a condition that is always evaluates to <see langword="true"/> and an action that returns <see cref="HttpStatusCode.OK"/>.</remarks>
-            public ConfigurableNancyModuleConfigurator Patch(string path)
+            public ConfigurableNancyModuleConfigurator Head(string path, Func<NancyContext, bool> condition = null, string name = null)
             {
-                return this.Patch(path, condition => true, (action, module) => HttpStatusCode.OK);
+                return this.Head<object>(path, (args, module) => HttpStatusCode.OK, condition, name);
             }
 
             /// <summary>
-            /// Adds a route that is valid for PATCH requests.
+            /// Adds a route that is valid for HEAD requests.
             /// </summary>
             /// <param name="path">The path that the route should be registered for.</param>
-            /// <param name="action">The action that should be invoked by the route.</param>
-            /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
-            /// <remarks>This will add a route with a condition that is always evaluates to <see langword="true"/>.</remarks>
-            public ConfigurableNancyModuleConfigurator Patch(string path, Func<dynamic, NancyModule, dynamic> action)
+            /// <param name="action">Action that will be invoked when the route it hit</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
+            public ConfigurableNancyModuleConfigurator Head(string path, Func<dynamic, NancyModule, object> action, Func<NancyContext, bool> condition = null, string name = null)
             {
-                return this.Patch(path, condition => true, action);
+                return this.Head<object>(path, (args, module) => action((DynamicDictionary)args, module), condition, name);
             }
 
             /// <summary>
-            /// Adds a route that is valid for PATCH requests.
+            /// Adds a route that is valid for HEAD requests.
             /// </summary>
+            /// <typeparam name="T">The return type of the route.</typeparam>
             /// <param name="path">The path that the route should be registered for.</param>
-            /// <param name="condition">The condition that has to be fulfilled in order for the route to be invoked</param>
-            /// <param name="action">The action that should be invoked by the route.</param>
+            /// <param name="action">Action that will be invoked when the route it hit</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
             /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
-            public ConfigurableNancyModuleConfigurator Patch(string path, Func<NancyContext, bool> condition, Func<dynamic, NancyModule, dynamic> action)
+            public ConfigurableNancyModuleConfigurator Head<T>(string path, Func<dynamic, NancyModule, T> action, Func<NancyContext, bool> condition = null, string name = null)
             {
-                this.module.Patch[path, GetSafeRouteCondition(condition)] = GetSafeRouteAction(action);
-                return this;
+                return this.Head(path, (args, module) => Task.FromResult(action((DynamicDictionary)args, module)), condition, name);
             }
 
             /// <summary>
-            /// Adds a route that is valid for POST requests.
+            /// Adds a route that is valid for HEAD requests.
             /// </summary>
             /// <param name="path">The path that the route should be registered for.</param>
+            /// <param name="action">Action that will be invoked when the route it hit</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
             /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
-            /// <remarks>This will add a route with a condition that is always evaluates to <see langword="true"/> and an action that returns <see cref="HttpStatusCode.OK"/>.</remarks>
-            public ConfigurableNancyModuleConfigurator Post(string path)
+            public ConfigurableNancyModuleConfigurator Head(string path, Func<dynamic, NancyModule, Task<object>> action, Func<NancyContext, bool> condition = null, string name = null)
             {
-                return this.Post(path, condition => true, (action, module) => HttpStatusCode.OK);
+                return this.Head<object>(path, action, condition, name);
             }
 
             /// <summary>
-            /// Adds a route that is valid for POST requests.
+            /// Adds a route that is valid for HEAD requests.
             /// </summary>
+            /// <typeparam name="T">The return type of the route.</typeparam>
             /// <param name="path">The path that the route should be registered for.</param>
-            /// <param name="action">The action that should be invoked by the route.</param>
+            /// <param name="action">Action that will be invoked when the route it hit</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
             /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
-            /// <remarks>This will add a route with a condition that is always evaluates to <see langword="true"/>.</remarks>
-            public ConfigurableNancyModuleConfigurator Post(string path, Func<dynamic, NancyModule, dynamic> action)
+            public ConfigurableNancyModuleConfigurator Head<T>(string path, Func<dynamic, NancyModule, Task<T>> action, Func<NancyContext, bool> condition = null, string name = null)
             {
-                return this.Post(path, condition => true, action);
+                return this.Head(path, (args, ct, module) => action((DynamicDictionary)args, module), condition, name);
             }
 
             /// <summary>
-            /// Adds a route that is valid for POST requests.
+            /// Adds a route that is valid for HEAD requests.
             /// </summary>
             /// <param name="path">The path that the route should be registered for.</param>
-            /// <param name="condition">The condition that has to be fulfilled in order for the route to be invoked</param>
-            /// <param name="action">The action that should be invoked by the route.</param>
+            /// <param name="action">Action that will be invoked when the route it hit</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
             /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
-            public ConfigurableNancyModuleConfigurator Post(string path, Func<NancyContext, bool> condition, Func<dynamic, NancyModule, dynamic> action)
+            public ConfigurableNancyModuleConfigurator Head(string path, Func<dynamic, CancellationToken, NancyModule, Task<object>> action, Func<NancyContext, bool> condition = null, string name = null)
             {
-                this.module.Post[path, GetSafeRouteCondition(condition)] = GetSafeRouteAction(action);
-                return this;
+                return this.Head<object>(path, action, condition, name);
             }
 
             /// <summary>
-            /// Adds a route that is valid for PUT requests.
+            /// Adds a route that is valid for HEAD requests.
             /// </summary>
+            /// <typeparam name="T">The return type of the route.</typeparam>
             /// <param name="path">The path that the route should be registered for.</param>
+            /// <param name="action">Action that will be invoked when the route it hit</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
             /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
-            /// <remarks>This will add a route with a condition that is always evaluates to <see langword="true"/> and an action that returns <see cref="HttpStatusCode.OK"/>.</remarks>
-            public ConfigurableNancyModuleConfigurator Put(string path)
+            public ConfigurableNancyModuleConfigurator Head<T>(string path, Func<dynamic, CancellationToken, NancyModule, Task<T>> action, Func<NancyContext, bool> condition = null, string name = null)
             {
-                return this.Put(path, condition => true, (action, module) => HttpStatusCode.OK);
-            }
-
-            /// <summary>
-            /// Adds a route that is valid for PUT requests.
-            /// </summary>
-            /// <param name="path">The path that the route should be registered for.</param>
-            /// <param name="action">The action that should be invoked by the route.</param>
-            /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
-            /// <remarks>This will add a route with a condition that is always evaluates to <see langword="true"/>.</remarks>
-            public ConfigurableNancyModuleConfigurator Put(string path, Func<dynamic, NancyModule, dynamic> action)
-            {
-                return this.Put(path, condition => true, action);
-            }
-
-            /// <summary>
-            /// Adds a route that is valid for PUT requests.
-            /// </summary>
-            /// <param name="path">The path that the route should be registered for.</param>
-            /// <param name="condition">The condition that has to be fulfilled in order for the route to be invoked</param>
-            /// <param name="action">The action that should be invoked by the route.</param>
-            /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
-            public ConfigurableNancyModuleConfigurator Put(string path, Func<NancyContext, bool> condition, Func<dynamic, NancyModule, dynamic> action)
-            {
-                this.module.Post[path, GetSafeRouteCondition(condition)] = GetSafeRouteAction(action);
+                this.wrappedModule.Head(path, (args, ct) => action((DynamicDictionary)args, ct, this.wrappedModule), condition ?? (ctx => true), name ?? string.Empty);
                 return this;
             }
 
@@ -261,51 +366,376 @@
             /// Adds a route that is valid for OPTIONS requests.
             /// </summary>
             /// <param name="path">The path that the route should be registered for.</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
             /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
             /// <remarks>This will add a route with a condition that is always evaluates to <see langword="true"/> and an action that returns <see cref="HttpStatusCode.OK"/>.</remarks>
-            public ConfigurableNancyModuleConfigurator Options(string path)
+            public ConfigurableNancyModuleConfigurator Options(string path, Func<NancyContext, bool> condition = null, string name = null)
             {
-                return this.Patch(path, condition => true, (action, module) => HttpStatusCode.OK);
+                return this.Options<object>(path, (args, module) => HttpStatusCode.OK, condition, name);
             }
 
             /// <summary>
             /// Adds a route that is valid for OPTIONS requests.
             /// </summary>
             /// <param name="path">The path that the route should be registered for.</param>
-            /// <param name="action">The action that should be invoked by the route.</param>
-            /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
-            /// <remarks>This will add a route with a condition that is always evaluates to <see langword="true"/>.</remarks>
-            public ConfigurableNancyModuleConfigurator Options(string path, Func<dynamic, NancyModule, dynamic> action)
+            /// <param name="action">Action that will be invoked when the route it hit</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
+            public ConfigurableNancyModuleConfigurator Options(string path, Func<dynamic, NancyModule, object> action, Func<NancyContext, bool> condition = null, string name = null)
             {
-                return this.Options(path, condition => true, action);
+                return this.Options<object>(path, (args, module) => action((DynamicDictionary)args, module), condition, name);
+            }
+
+            /// <summary>
+            /// Adds a route that is valid for OPTIONS requests.
+            /// </summary>
+            /// <typeparam name="T">The return type of the route.</typeparam>
+            /// <param name="path">The path that the route should be registered for.</param>
+            /// <param name="action">Action that will be invoked when the route it hit</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
+            /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
+            public ConfigurableNancyModuleConfigurator Options<T>(string path, Func<dynamic, NancyModule, T> action, Func<NancyContext, bool> condition = null, string name = null)
+            {
+                return this.Options(path, (args, module) => Task.FromResult(action((DynamicDictionary)args, module)), condition, name);
             }
 
             /// <summary>
             /// Adds a route that is valid for OPTIONS requests.
             /// </summary>
             /// <param name="path">The path that the route should be registered for.</param>
-            /// <param name="condition">The condition that has to be fulfilled in order for the route to be invoked</param>
-            /// <param name="action">The action that should be invoked by the route.</param>
+            /// <param name="action">Action that will be invoked when the route it hit</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
             /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
-            public ConfigurableNancyModuleConfigurator Options(string path, Func<NancyContext, bool> condition, Func<dynamic, NancyModule, dynamic> action)
+            public ConfigurableNancyModuleConfigurator Options(string path, Func<dynamic, NancyModule, Task<object>> action, Func<NancyContext, bool> condition = null, string name = null)
             {
-                this.module.Options[path, GetSafeRouteCondition(condition)] = GetSafeRouteAction(action);
+                return this.Options<object>(path, action, condition, name);
+            }
+
+            /// <summary>
+            /// Adds a route that is valid for OPTIONS requests.
+            /// </summary>
+            /// <typeparam name="T">The return type of the route.</typeparam>
+            /// <param name="path">The path that the route should be registered for.</param>
+            /// <param name="action">Action that will be invoked when the route it hit</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
+            /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
+            public ConfigurableNancyModuleConfigurator Options<T>(string path, Func<dynamic, NancyModule, Task<T>> action, Func<NancyContext, bool> condition = null, string name = null)
+            {
+                return this.Options(path, (args, ct, module) => action((DynamicDictionary)args, module), condition, name);
+            }
+
+            /// <summary>
+            /// Adds a route that is valid for OPTIONS requests.
+            /// </summary>
+            /// <param name="path">The path that the route should be registered for.</param>
+            /// <param name="action">Action that will be invoked when the route it hit</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
+            /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
+            public ConfigurableNancyModuleConfigurator Options(string path, Func<dynamic, CancellationToken, NancyModule, Task<object>> action, Func<NancyContext, bool> condition = null, string name = null)
+            {
+                return this.Options<object>(path, action, condition, name);
+            }
+
+            /// <summary>
+            /// Adds a route that is valid for OPTIONS requests.
+            /// </summary>
+            /// <typeparam name="T">The return type of the route.</typeparam>
+            /// <param name="path">The path that the route should be registered for.</param>
+            /// <param name="action">Action that will be invoked when the route it hit</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
+            /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
+            public ConfigurableNancyModuleConfigurator Options<T>(string path, Func<dynamic, CancellationToken, NancyModule, Task<T>> action, Func<NancyContext, bool> condition = null, string name = null)
+            {
+                this.wrappedModule.Options(path, (args, ct) => action((DynamicDictionary)args, ct, this.wrappedModule), condition ?? (ctx => true), name ?? string.Empty);
                 return this;
             }
 
-            private Func<dynamic, dynamic> GetSafeRouteAction(Func<dynamic, NancyModule, dynamic> action)
+            /// <summary>
+            /// Adds a route that is valid for PATCH requests.
+            /// </summary>
+            /// <param name="path">The path that the route should be registered for.</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
+            /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
+            /// <remarks>This will add a route with a condition that is always evaluates to <see langword="true"/> and an action that returns <see cref="HttpStatusCode.OK"/>.</remarks>
+            public ConfigurableNancyModuleConfigurator Patch(string path, Func<NancyContext, bool> condition = null, string name = null)
             {
-                if (action == null)
-                {
-                    return x => HttpStatusCode.OK;
-                }
-
-                return x => action.Invoke(x, this.module);
+                return this.Patch<object>(path, (args, module) => HttpStatusCode.OK, condition, name);
             }
 
-            private static Func<NancyContext, bool> GetSafeRouteCondition(Func<NancyContext, bool> condition)
+            /// <summary>
+            /// Adds a route that is valid for PATCH requests.
+            /// </summary>
+            /// <param name="path">The path that the route should be registered for.</param>
+            /// <param name="action">Action that will be invoked when the route it hit</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
+            public ConfigurableNancyModuleConfigurator Patch(string path, Func<dynamic, NancyModule, object> action, Func<NancyContext, bool> condition = null, string name = null)
             {
-                return condition ?? (x => true);
+                return this.Patch<object>(path, (args, module) => action((DynamicDictionary)args, module), condition, name);
+            }
+
+            /// <summary>
+            /// Adds a route that is valid for PATCH requests.
+            /// </summary>
+            /// <typeparam name="T">The return type of the route.</typeparam>
+            /// <param name="path">The path that the route should be registered for.</param>
+            /// <param name="action">Action that will be invoked when the route it hit</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
+            /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
+            public ConfigurableNancyModuleConfigurator Patch<T>(string path, Func<dynamic, NancyModule, T> action, Func<NancyContext, bool> condition = null, string name = null)
+            {
+                return this.Patch(path, (args, module) => Task.FromResult(action((DynamicDictionary)args, module)), condition, name);
+            }
+
+            /// <summary>
+            /// Adds a route that is valid for PATCH requests.
+            /// </summary>
+            /// <param name="path">The path that the route should be registered for.</param>
+            /// <param name="action">Action that will be invoked when the route it hit</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
+            /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
+            public ConfigurableNancyModuleConfigurator Patch(string path, Func<dynamic, NancyModule, Task<object>> action, Func<NancyContext, bool> condition = null, string name = null)
+            {
+                return this.Patch<object>(path, action, condition, name);
+            }
+
+            /// <summary>
+            /// Adds a route that is valid for PATCH requests.
+            /// </summary>
+            /// <typeparam name="T">The return type of the route.</typeparam>
+            /// <param name="path">The path that the route should be registered for.</param>
+            /// <param name="action">Action that will be invoked when the route it hit</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
+            /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
+            public ConfigurableNancyModuleConfigurator Patch<T>(string path, Func<dynamic, NancyModule, Task<T>> action, Func<NancyContext, bool> condition = null, string name = null)
+            {
+                return this.Patch(path, (args, ct, module) => action((DynamicDictionary)args, module), condition, name);
+            }
+
+            /// <summary>
+            /// Adds a route that is valid for PATCH requests.
+            /// </summary>
+            /// <param name="path">The path that the route should be registered for.</param>
+            /// <param name="action">Action that will be invoked when the route it hit</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
+            /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
+            public ConfigurableNancyModuleConfigurator Patch(string path, Func<dynamic, CancellationToken, NancyModule, Task<object>> action, Func<NancyContext, bool> condition = null, string name = null)
+            {
+                return this.Patch<object>(path, action, condition, name);
+            }
+
+            /// <summary>
+            /// Adds a route that is valid for PATCH requests.
+            /// </summary>
+            /// <typeparam name="T">The return type of the route.</typeparam>
+            /// <param name="path">The path that the route should be registered for.</param>
+            /// <param name="action">Action that will be invoked when the route it hit</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
+            /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
+            public ConfigurableNancyModuleConfigurator Patch<T>(string path, Func<dynamic, CancellationToken, NancyModule, Task<T>> action, Func<NancyContext, bool> condition = null, string name = null)
+            {
+                this.wrappedModule.Patch(path, (args, ct) => action((DynamicDictionary)args, ct, this.wrappedModule), condition ?? (ctx => true), name ?? string.Empty);
+                return this;
+            }
+
+            /// <summary>
+            /// Adds a route that is valid for POST requests.
+            /// </summary>
+            /// <param name="path">The path that the route should be registered for.</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
+            /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
+            /// <remarks>This will add a route with a condition that is always evaluates to <see langword="true"/> and an action that returns <see cref="HttpStatusCode.OK"/>.</remarks>
+            public ConfigurableNancyModuleConfigurator Post(string path, Func<NancyContext, bool> condition = null, string name = null)
+            {
+                return this.Post<object>(path, (args, module) => HttpStatusCode.OK, condition, name);
+            }
+
+            /// <summary>
+            /// Adds a route that is valid for POST requests.
+            /// </summary>
+            /// <param name="path">The path that the route should be registered for.</param>
+            /// <param name="action">Action that will be invoked when the route it hit</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
+            public ConfigurableNancyModuleConfigurator Post(string path, Func<dynamic, NancyModule, object> action, Func<NancyContext, bool> condition = null, string name = null)
+            {
+                return this.Post<object>(path, (args, module) => action((DynamicDictionary)args, module), condition, name);
+            }
+
+            /// <summary>
+            /// Adds a route that is valid for POST requests.
+            /// </summary>
+            /// <typeparam name="T">The return type of the route.</typeparam>
+            /// <param name="path">The path that the route should be registered for.</param>
+            /// <param name="action">Action that will be invoked when the route it hit</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
+            /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
+            public ConfigurableNancyModuleConfigurator Post<T>(string path, Func<dynamic, NancyModule, T> action, Func<NancyContext, bool> condition = null, string name = null)
+            {
+                return this.Post(path, (args, module) => Task.FromResult(action((DynamicDictionary)args, module)), condition, name);
+            }
+
+            /// <summary>
+            /// Adds a route that is valid for POST requests.
+            /// </summary>
+            /// <param name="path">The path that the route should be registered for.</param>
+            /// <param name="action">Action that will be invoked when the route it hit</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
+            /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
+            public ConfigurableNancyModuleConfigurator Post(string path, Func<dynamic, NancyModule, Task<object>> action, Func<NancyContext, bool> condition = null, string name = null)
+            {
+                return this.Post<object>(path, action, condition, name);
+            }
+
+            /// <summary>
+            /// Adds a route that is valid for POST requests.
+            /// </summary>
+            /// <typeparam name="T">The return type of the route.</typeparam>
+            /// <param name="path">The path that the route should be registered for.</param>
+            /// <param name="action">Action that will be invoked when the route it hit</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
+            /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
+            public ConfigurableNancyModuleConfigurator Post<T>(string path, Func<dynamic, NancyModule, Task<T>> action, Func<NancyContext, bool> condition = null, string name = null)
+            {
+                return this.Post(path, (args, ct, module) => action((DynamicDictionary)args, module), condition, name);
+            }
+
+            /// <summary>
+            /// Adds a route that is valid for POST requests.
+            /// </summary>
+            /// <param name="path">The path that the route should be registered for.</param>
+            /// <param name="action">Action that will be invoked when the route it hit</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
+            /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
+            public ConfigurableNancyModuleConfigurator Post(string path, Func<dynamic, CancellationToken, NancyModule, Task<object>> action, Func<NancyContext, bool> condition = null, string name = null)
+            {
+                return this.Post<object>(path, action, condition, name);
+            }
+
+            /// <summary>
+            /// Adds a route that is valid for POST requests.
+            /// </summary>
+            /// <typeparam name="T">The return type of the route.</typeparam>
+            /// <param name="path">The path that the route should be registered for.</param>
+            /// <param name="action">Action that will be invoked when the route it hit</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
+            /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
+            public ConfigurableNancyModuleConfigurator Post<T>(string path, Func<dynamic, CancellationToken, NancyModule, Task<T>> action, Func<NancyContext, bool> condition = null, string name = null)
+            {
+                this.wrappedModule.Post(path, (args, ct) => action((DynamicDictionary)args, ct, this.wrappedModule), condition ?? (ctx => true), name ?? string.Empty);
+                return this;
+            }
+
+            /// <summary>
+            /// Adds a route that is valid for PUT requests.
+            /// </summary>
+            /// <param name="path">The path that the route should be registered for.</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
+            /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
+            /// <remarks>This will add a route with a condition that is always evaluates to <see langword="true"/> and an action that returns <see cref="HttpStatusCode.OK"/>.</remarks>
+            public ConfigurableNancyModuleConfigurator Put(string path, Func<NancyContext, bool> condition = null, string name = null)
+            {
+                return this.Put<object>(path, (args, module) => HttpStatusCode.OK, condition, name);
+            }
+
+            /// <summary>
+            /// Adds a route that is valid for PUT requests.
+            /// </summary>
+            /// <param name="path">The path that the route should be registered for.</param>
+            /// <param name="action">Action that will be invoked when the route it hit</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
+            public ConfigurableNancyModuleConfigurator Put(string path, Func<dynamic, NancyModule, object> action, Func<NancyContext, bool> condition = null, string name = null)
+            {
+                return this.Put<object>(path, (args, module) => action((DynamicDictionary)args, module), condition, name);
+            }
+
+            /// <summary>
+            /// Adds a route that is valid for PUT requests.
+            /// </summary>
+            /// <typeparam name="T">The return type of the route.</typeparam>
+            /// <param name="path">The path that the route should be registered for.</param>
+            /// <param name="action">Action that will be invoked when the route it hit</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
+            /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
+            public ConfigurableNancyModuleConfigurator Put<T>(string path, Func<dynamic, NancyModule, T> action, Func<NancyContext, bool> condition = null, string name = null)
+            {
+                return this.Put(path, (args, module) => Task.FromResult(action((DynamicDictionary)args, module)), condition, name);
+            }
+
+            /// <summary>
+            /// Adds a route that is valid for PUT requests.
+            /// </summary>
+            /// <param name="path">The path that the route should be registered for.</param>
+            /// <param name="action">Action that will be invoked when the route it hit</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
+            /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
+            public ConfigurableNancyModuleConfigurator Put(string path, Func<dynamic, NancyModule, Task<object>> action, Func<NancyContext, bool> condition = null, string name = null)
+            {
+                return this.Put<object>(path, action, condition, name);
+            }
+
+            /// <summary>
+            /// Adds a route that is valid for PUT requests.
+            /// </summary>
+            /// <typeparam name="T">The return type of the route.</typeparam>
+            /// <param name="path">The path that the route should be registered for.</param>
+            /// <param name="action">Action that will be invoked when the route it hit</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
+            /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
+            public ConfigurableNancyModuleConfigurator Put<T>(string path, Func<dynamic, NancyModule, Task<T>> action, Func<NancyContext, bool> condition = null, string name = null)
+            {
+                return this.Put(path, (args, ct, module) => action((DynamicDictionary)args, module), condition, name);
+            }
+
+            /// <summary>
+            /// Adds a route that is valid for PUT requests.
+            /// </summary>
+            /// <param name="path">The path that the route should be registered for.</param>
+            /// <param name="action">Action that will be invoked when the route it hit</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
+            /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
+            public ConfigurableNancyModuleConfigurator Put(string path, Func<dynamic, CancellationToken, NancyModule, Task<object>> action, Func<NancyContext, bool> condition = null, string name = null)
+            {
+                return this.Put<object>(path, action, condition, name);
+            }
+
+            /// <summary>
+            /// Adds a route that is valid for PUT requests.
+            /// </summary>
+            /// <typeparam name="T">The return type of the route.</typeparam>
+            /// <param name="path">The path that the route should be registered for.</param>
+            /// <param name="action">Action that will be invoked when the route it hit</param>
+            /// <param name="condition">A condition to determine if the route can be hit.</param>
+            /// <param name="name">Name of the route.</param>
+            /// <returns>An instance to the current <see cref="ConfigurableNancyModuleConfigurator"/>.</returns>
+            public ConfigurableNancyModuleConfigurator Put<T>(string path, Func<dynamic, CancellationToken, NancyModule, Task<T>> action, Func<NancyContext, bool> condition = null, string name = null)
+            {
+                this.wrappedModule.Put(path, (args, ct) => action((DynamicDictionary)args, ct, this.wrappedModule), condition ?? (ctx => true), name ?? string.Empty);
+                return this;
             }
         }
     }

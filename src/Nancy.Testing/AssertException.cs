@@ -32,6 +32,7 @@ namespace Nancy.Testing
         {
         }
 
+#if !NETSTANDARD1_6
         /// <summary>
         /// Initializes a new instance of the <see cref="AssertException"/> class.
         /// </summary>
@@ -42,5 +43,6 @@ namespace Nancy.Testing
         protected AssertException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
+#endif
     }
 }

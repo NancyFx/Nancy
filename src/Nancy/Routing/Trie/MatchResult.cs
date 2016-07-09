@@ -10,7 +10,7 @@ namespace Nancy.Routing.Trie
     {
         private static readonly MatchResult noMatch = new MatchResult();
 
-        private static readonly MatchResult[] noMatches = new MatchResult[] { };
+        private static readonly MatchResult[] noMatches = ArrayCache.Empty<MatchResult>();
 
         /// <summary>
         /// Gets or sets the captured parameters
@@ -79,7 +79,7 @@ namespace Nancy.Routing.Trie
                 return 1;
             }
 
-            if (string.Equals(this.ModuleType, other.ModuleType))
+            if (Equals(this.ModuleType, other.ModuleType))
             {
                 if (this.RouteIndex < other.RouteIndex)
                 {

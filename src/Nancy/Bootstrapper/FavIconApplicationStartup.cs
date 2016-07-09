@@ -4,7 +4,9 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-
+    using Nancy.Configuration;
+    using System.Reflection;
+    
     /// <summary>
     /// Application startup task that attempts to locate a favicon. The startup will first scan all
     /// folders in the path defined by the provided <see cref="IRootPathProvider"/> and if it cannot
@@ -12,6 +14,7 @@
     /// </summary>
     public class FavIconApplicationStartup : IApplicationStartup
     {
+        private static TraceConfiguration traceConfiguration;
         private static IRootPathProvider rootPathProvider;
         private static byte[] favIcon;
 
@@ -20,9 +23,11 @@
         /// provided <see cref="IRootPathProvider"/> instance.
         /// </summary>
         /// <param name="rootPathProvider">The <see cref="IRootPathProvider"/> that should be used to scan for a favicon.</param>
-        public FavIconApplicationStartup(IRootPathProvider rootPathProvider)
+        /// <param name="environment">An <see cref="INancyEnvironment"/> instance.</param>
+        public FavIconApplicationStartup(IRootPathProvider rootPathProvider, INancyEnvironment environment)
         {
             FavIconApplicationStartup.rootPathProvider = rootPathProvider;
+            FavIconApplicationStartup.traceConfiguration = environment.GetValue<TraceConfiguration>();
         }
 
         /// <summary>
@@ -45,7 +50,8 @@
         private static byte[] ExtractDefaultIcon()
         {
             var resourceStream =
-                typeof(INancyEngine).Assembly.GetManifestResourceStream("Nancy.favicon.ico");
+                typeof(INancyEngine).GetTypeInfo().Assembly.GetManifestResourceStream("Nancy.favicon.ico");
+
 
             if (resourceStream == null)
             {
@@ -81,7 +87,7 @@
             }
             catch (Exception e)
             {
-                if (!StaticConfiguration.DisableErrorTraces)
+                if (!traceConfiguration.Enabled)
                 {
                     throw new InvalidDataException("Unable to load favicon", e);
                 }

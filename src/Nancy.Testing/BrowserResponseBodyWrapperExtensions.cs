@@ -48,14 +48,14 @@ namespace Nancy.Testing
         }
 
         /// <summary>
-        /// Gets the deserialized representation of the JSON in the response body using the default XML body deserializer.
+        /// Gets the deserialized representation of the JSON in the response body using the default JSON body deserializer.
         /// </summary>
         /// <typeparam name="TModel">The type that the JSON response body should be deserialized to.</typeparam>
         /// <param name="bodyWrapper">An instance of the <see cref="BrowserResponseBodyWrapper"/> that the extension should be invoked on.</param>
         /// <value>A <typeparamref name="TModel"/> instance representation of the HTTP response body.</value>
         public static TModel DeserializeJson<TModel>(this BrowserResponseBodyWrapper bodyWrapper)
         {
-            var bodyDeserializer = new JsonBodyDeserializer();
+            var bodyDeserializer = new JsonBodyDeserializer(bodyWrapper.BrowserContext.Environment);
 
             return bodyWrapper.Deserialize<TModel>(bodyDeserializer);
         }

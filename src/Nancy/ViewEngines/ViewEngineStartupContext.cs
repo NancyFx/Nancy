@@ -1,7 +1,5 @@
 ﻿namespace Nancy.ViewEngines
 {
-    using System.Collections.Generic;
-
     /// <summary>
     /// Context passed to each view engine on startup
     /// </summary>

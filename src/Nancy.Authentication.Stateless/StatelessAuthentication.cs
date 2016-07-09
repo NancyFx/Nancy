@@ -1,6 +1,7 @@
 namespace Nancy.Authentication.Stateless
 {
     using System;
+
     using Nancy.Bootstrapper;
 
     /// <summary>
@@ -64,7 +65,7 @@ namespace Nancy.Authentication.Stateless
         /// </summary>
         /// <param name="configuration">Stateless authentication configuration to use</param>
         /// <returns>Pre request hook delegate</returns>
-        static Func<NancyContext, Response> GetLoadAuthenticationHook(StatelessAuthenticationConfiguration configuration)
+        private static Func<NancyContext, Response> GetLoadAuthenticationHook(StatelessAuthenticationConfiguration configuration)
         {
             if (configuration == null)
             {
@@ -73,15 +74,9 @@ namespace Nancy.Authentication.Stateless
 
             return context =>
             {
-                try
-                {
-                    context.CurrentUser = configuration.GetUserIdentity(context);
-                    return context.Response;
-                }
-                catch (Exception)
-                {
-                    return context.Response;
-                }
+                context.CurrentUser = configuration.GetUserIdentity(context);
+
+                return null;
             };
         }
     }

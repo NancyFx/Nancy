@@ -3,7 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Cookies;
+
+    using Nancy.Cookies;
 
     using Nancy.Extensions;
 
@@ -97,7 +98,7 @@
                 this.DefaultModel;
         }
 
-        internal void SetModule(INancyModule module)
+        public void SetModule(INancyModule module)
         {
             if (module == null)
             {

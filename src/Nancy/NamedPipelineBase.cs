@@ -2,9 +2,7 @@ namespace Nancy
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
-    using System.Runtime.Serialization.Formatters.Binary;
 
     public abstract class NamedPipelineBase<TDelegate>
     {
@@ -140,7 +138,7 @@ namespace Nancy
         public virtual void InsertBefore(string name, PipelineItem<TDelegate> item)
         {
             var existingIndex =
-                this.pipelineItems.FindIndex(i => String.Equals(name, i.Name, StringComparison.InvariantCulture));
+                this.pipelineItems.FindIndex(i => String.Equals(name, i.Name, StringComparison.Ordinal));
 
             if (existingIndex == -1)
             {
@@ -170,7 +168,7 @@ namespace Nancy
         public virtual void InsertAfter(string name, PipelineItem<TDelegate> item)
         {
             var existingIndex =
-                this.pipelineItems.FindIndex(i => String.Equals(name, i.Name, StringComparison.InvariantCulture));
+                this.pipelineItems.FindIndex(i => String.Equals(name, i.Name, StringComparison.Ordinal));
 
             if (existingIndex == -1)
             {
@@ -202,7 +200,7 @@ namespace Nancy
             }
 
             var existingIndex =
-                this.pipelineItems.FindIndex(i => String.Equals(name, i.Name, StringComparison.InvariantCulture));
+                this.pipelineItems.FindIndex(i => String.Equals(name, i.Name, StringComparison.Ordinal));
 
             if (existingIndex != -1)
             {

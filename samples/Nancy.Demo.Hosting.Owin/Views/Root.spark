@@ -1,0 +1,13 @@
+﻿<viewdata model="Nancy.Demo.Hosting.Owin.Models.Index" />
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>Nancy OWIN Host Demo</title>
+  </head>
+  <body>
+    <h1>Nancy OWIN Host Demo</h1>
+    <p>This is a Spark view rendered via the OWIN hosting. ${Model.StatusMessage}</p>
+  </body>
+</html>

@@ -54,7 +54,7 @@ namespace Nancy.Conventions
         {
             var current = currentAcceptHeaders as Tuple<string, decimal>[] ?? currentAcceptHeaders.ToArray();
 
-            var html = current.FirstOrDefault(h => string.Equals(h.Item1, HtmlContentType, StringComparison.InvariantCultureIgnoreCase) && h.Item2 < 1.0m);
+            var html = current.FirstOrDefault(h => string.Equals(h.Item1, HtmlContentType, StringComparison.OrdinalIgnoreCase) && h.Item2 < 1.0m);
 
             if (html == null)
             {
@@ -84,7 +84,7 @@ namespace Nancy.Conventions
             var maxScore = current.First().Item2;
 
             if (IsPotentiallyBrokenBrowser(context.Request.Headers.UserAgent)
-                && !current.Any(h => h.Item2 == maxScore && string.Equals(HtmlContentType, h.Item1, StringComparison.InvariantCultureIgnoreCase)))
+                && !current.Any(h => h.Item2 == maxScore && string.Equals(HtmlContentType, h.Item1, StringComparison.OrdinalIgnoreCase)))
             {
                 return true;
             }

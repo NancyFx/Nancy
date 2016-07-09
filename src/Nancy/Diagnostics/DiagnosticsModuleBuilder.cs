@@ -1,22 +1,22 @@
 namespace Nancy.Diagnostics
 {
-    using System.Collections.Generic;
-    using ModelBinding;
-    using Nancy.Responses;
+    using Nancy.Configuration;
+    using Nancy.ModelBinding;
     using Nancy.Routing;
 
     internal class DiagnosticsModuleBuilder : INancyModuleBuilder
     {
         private readonly IRootPathProvider rootPathProvider;
-
-        private readonly IEnumerable<ISerializer> serializers;
+        private readonly ISerializerFactory serializerFactory;
         private readonly IModelBinderLocator modelBinderLocator;
+        private readonly INancyEnvironment environment;
 
-        public DiagnosticsModuleBuilder(IRootPathProvider rootPathProvider, IModelBinderLocator modelBinderLocator)
+        public DiagnosticsModuleBuilder(IRootPathProvider rootPathProvider, IModelBinderLocator modelBinderLocator, INancyEnvironment diagnosticsEnvironment, INancyEnvironment environment)
         {
             this.rootPathProvider = rootPathProvider;
-            this.serializers = new[] { new DefaultJsonSerializer { RetainCasing = false } };
+            this.serializerFactory = new DiagnosticsSerializerFactory(diagnosticsEnvironment);
             this.modelBinderLocator = modelBinderLocator;
+            this.environment = environment;
         }
 
         /// <summary>
@@ -27,9 +27,8 @@ namespace Nancy.Diagnostics
         /// <returns>A fully configured <see cref="INancyModule"/> instance.</returns>
         public INancyModule BuildModule(INancyModule module, NancyContext context)
         {
-            // Currently we don't connect view location, binders etc.
             module.Context = context;
-            module.Response = new DefaultResponseFormatter(rootPathProvider, context, serializers);
+            module.Response = new DefaultResponseFormatter(rootPathProvider, context, this.serializerFactory, this.environment);
             module.ModelBinderLocator = this.modelBinderLocator;
 
             module.After = new AfterPipeline();

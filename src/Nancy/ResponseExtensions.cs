@@ -3,6 +3,7 @@ namespace Nancy
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
     using Nancy.Cookies;
     using Nancy.Responses;
 
@@ -109,7 +110,7 @@ namespace Nancy
         /// </summary>
         /// <param name="response">Response object</param>
         /// <param name="headers">
-        /// Array of headers - each header should be an anonymous type with two string properties 
+        /// Array of headers - each header should be an anonymous type with two string properties
         /// 'Header' and 'Value' to represent the header name and its value.
         /// </param>
         /// <returns>Modified response</returns>
@@ -123,7 +124,7 @@ namespace Nancy
         /// </summary>
         /// <param name="response">Response object</param>
         /// <param name="headers">
-        /// Array of headers - each header should be a Tuple with two string elements 
+        /// Array of headers - each header should be a Tuple with two string elements
         /// for header name and header value
         /// </param>
         /// <returns>Modified response</returns>
@@ -181,17 +182,18 @@ namespace Nancy
         private static Tuple<string, string> GetTuple(object header)
         {
             var properties = header.GetType()
-                                   .GetProperties()
-                                   .Where(prop => prop.CanRead && prop.PropertyType == typeof(string))
-                                   .ToArray();
+                .GetTypeInfo()
+                .DeclaredProperties
+                .Where(prop => prop.CanRead && prop.PropertyType == typeof(string))
+                .ToArray();
 
             var headerProperty = properties
-                                    .Where(p => string.Equals(p.Name, "Header", StringComparison.InvariantCultureIgnoreCase))
-                                    .FirstOrDefault();
+                .Where(p => string.Equals(p.Name, "Header", StringComparison.OrdinalIgnoreCase))
+                .FirstOrDefault();
 
             var valueProperty = properties
-                                    .Where(p => string.Equals(p.Name, "Value", StringComparison.InvariantCultureIgnoreCase))
-                                    .FirstOrDefault();
+                .Where(p => string.Equals(p.Name, "Value", StringComparison.OrdinalIgnoreCase))
+                .FirstOrDefault();
 
             if (headerProperty == null || valueProperty == null)
             {

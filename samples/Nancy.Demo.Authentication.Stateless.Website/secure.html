@@ -1,0 +1,141 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Stateless Authentication Demo</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"> </script>
+        <script src="Scripts/apiToken.js"> </script>
+        <script src="Scripts/api.js"> </script>
+        <style type="text/css">
+        	.secure { color: blue;}
+        </style>
+    </head>
+    <body style='display: none;'>
+        <div>
+            <a href='index.html'>&lt;&lt; Home</a>
+            <div id='loggedIn' style='display: none;'><p>Welcome <span id='username'></span>. <a href='#' id='logout'>Logout</a></p></div>
+
+            <h1>Secure Zone</h1>
+            <div>Secure Content: <span id="secureContent" class='secure'></span></div>
+
+            <div>
+                Username <input type="text" id="newusername"/><br/>
+                Password <input id="newpassword" type="password"/><br/>
+                <input type="button" onclick="createUser()"/>
+                <div id="createuserresult"></div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+
+                //if the apiKey is present, it means the user is logged in
+                //check if the apiKey is present
+                var apiToken = ApiToken.Get();
+                if (apiToken.IsValid) {
+
+                    //user is logged in
+                    //get and display secure content
+                    //using the apiKey that we stored in a cookie
+                    var request = { apiKey: apiToken.Key };
+
+                    //populate the view on success
+                    var success = function (response) {
+                        $("#username").html(apiToken.Username);
+                        $("#secureContent").html(response.SecureContent);
+                        $("body").show();
+                    };
+
+                    //redirect the user to the login page on 401 (or display an alert if it's something worse)
+                    var error = function (response) {
+                        if (response.status == 401) {
+                            window.location = "login.html";
+                            return;
+                        }
+
+                        alert("Something went wrong. " + response.error);
+                    };
+
+                    $.ajax({
+                        url: api.secure,
+                        data: request,
+                        success: success,
+                        error: error,
+                        dataType: "json"
+                    });
+
+                } else {
+                    //if we don't have the apiToken saved, it means the user has not logged in yet
+                    //send 'em packing to the login page
+                    window.location = "login.html";
+                }
+
+
+                if (apiToken.IsValid) {
+
+                    $("#loggedIn").show();
+                    $("#username").html(apiToken.Username);
+                    $("#logout").click(function () {
+
+                        //sending the apiKey to the API to be destroyed
+                        var request = { apiKey: apiToken.Key };
+                        
+                        //when the deed has been done on the server,
+                        //delete the cookie in the client and redirect to the home page.
+                        var success = function () {
+                            ApiToken.Delete();
+                            window.location = "index.html";
+                        };
+
+                        $.ajax({
+                            type: 'DELETE',
+                            url: api.auth,
+                            data: request,
+                            success: success,
+                            dataType: "json"
+                        });
+                    });
+                }
+            });
+
+            function createUser() {
+                var apiToken = ApiToken.Get();
+                if (apiToken.IsValid) {
+                    //user is logged in
+                    var request = {
+                        username: $("#newusername").val(),
+                        password: $("#newpassword").val()
+                    };
+
+                    //populate the view on success
+                    var success = function (response) {
+                        $("#createuserresult").html("User " + response.username + " has been created");
+                    };
+
+                    //redirect the user to the login page on 401 (or display an alert if it's something worse)
+                    var error = function (response) {
+                      if (response.status == 401) {
+                        window.location = "login.html";
+                        return;
+                      }
+
+                      alert("Something went wrong. " + response.error);
+                    };
+
+                    $.ajax({
+                      type: 'POST',
+                      url: api.create_user + "?ApiKey=" + apiToken.Key,
+                      data: request,
+                      success: success,
+                      error: error,
+                      dataType: "json"
+                    });
+                }
+                else {
+                    //if we don't have the apiToken saved, it means the user has not logged in yet
+                    //send 'em packing to the login page
+                    window.location = "login.html";
+                }
+            }
+        </script>
+    </body>
+</html>

@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-namespace Nancy
+﻿namespace Nancy
 {
     using System;
     using System.Linq;

@@ -18,10 +18,6 @@ namespace Nancy.Testing
         public StaticConfigurationContext(Action<StaticConfigurationValues> closure)
         {
             this.existingConfiguration.CaseSensitive = StaticConfiguration.CaseSensitive;
-            this.existingConfiguration.DisableErrorTraces = StaticConfiguration.DisableErrorTraces;
-            this.existingConfiguration.DisableMethodNotAllowedResponses = StaticConfiguration.DisableMethodNotAllowedResponses;
-            this.existingConfiguration.EnableHeadRouting = StaticConfiguration.EnableHeadRouting;
-            this.existingConfiguration.EnableRequestTracing = StaticConfiguration.EnableRequestTracing;
             this.existingConfiguration.RequestQueryFormMultipartLimit = StaticConfiguration.RequestQueryFormMultipartLimit;
 
             var temporaryConfiguration =
@@ -43,10 +39,6 @@ namespace Nancy.Testing
         private static void AssignStaticConfigurationValues(StaticConfigurationValues values)
         {
             StaticConfiguration.CaseSensitive = values.CaseSensitive;
-            StaticConfiguration.DisableErrorTraces = values.DisableErrorTraces;
-            StaticConfiguration.DisableMethodNotAllowedResponses = values.DisableMethodNotAllowedResponses;
-            StaticConfiguration.EnableHeadRouting = values.EnableHeadRouting;
-            StaticConfiguration.EnableRequestTracing = values.EnableRequestTracing;
             StaticConfiguration.RequestQueryFormMultipartLimit = values.RequestQueryFormMultipartLimit;
         }
 
@@ -56,14 +48,6 @@ namespace Nancy.Testing
         public class StaticConfigurationValues
         {
             public bool CaseSensitive { get; set; }
-
-            public bool DisableErrorTraces { get; set; }
-
-            public bool DisableMethodNotAllowedResponses { get; set; }
-
-            public bool EnableHeadRouting { get; set; }
-
-            public bool EnableRequestTracing { get; set; }
 
             public int RequestQueryFormMultipartLimit { get; set; }
         }

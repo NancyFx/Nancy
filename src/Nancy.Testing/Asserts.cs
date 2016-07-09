@@ -61,7 +61,7 @@
             }
         }
 
-        public static void Equal(string expected, string actual, StringComparison comparisonType = StringComparison.InvariantCulture)
+        public static void Equal(string expected, string actual, StringComparison comparisonType = StringComparison.Ordinal)
         {
             if (!String.Equals(expected, actual, comparisonType))
             {
@@ -96,7 +96,7 @@
         public static void Same<T>(T actual, T expected)
         {
             var isTheSameInstance =
-                Object.ReferenceEquals(actual, expected);
+                ReferenceEquals(actual, expected);
 
             if (!isTheSameInstance)
             {

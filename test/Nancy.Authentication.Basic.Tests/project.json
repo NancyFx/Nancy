@@ -1,0 +1,30 @@
+{
+    "dependencies": {
+        "dotnet-test-xunit": "2.2.0-preview2-build1029",
+        "Microsoft.NETCore.Platforms": "1.0.1",
+        "Nancy": { "target": "project" },
+        "Nancy.Authentication.Basic": { "target": "project" },
+        "xunit": "2.2.0-beta2-build3300"
+    },
+
+    "buildOptions": {
+        "compile": [
+            "../Nancy.Tests/Fakes/FakeRequest.cs",
+            "../Nancy.Tests/ShouldExtensions.cs"
+        ]
+    },
+
+    "frameworks": {
+        "net452": {
+            "dependencies": {
+                "FakeItEasy": "2.0.0"
+            },
+            "frameworkAssemblies": {
+                "System.Runtime": { "type": "build" },
+                "System.Threading.Tasks": { "type": "build" }
+            }
+        }
+    },
+
+    "testRunner": "xunit"
+}

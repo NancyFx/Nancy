@@ -1,0 +1,752 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props" Condition="Exists('..\..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{776D244D-BC4D-4BBB-A478-CAF2D04520E1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Nancy.Tests</RootNamespace>
+    <AssemblyName>Nancy.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'MonoDebug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\MonoDebug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>bin\Debug\Nancy.Tests.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'MonoRelease|AnyCPU'">
+    <OutputPath>bin\MonoRelease\</OutputPath>
+    <DefineConstants>TRACE;MONO</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType></DebugType>
+    <PlatformTarget>anycpu</PlatformTarget>
+    <CodeAnalysisLogFile>bin\Release\Nancy.Tests.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="FakeItEasy, Version=2.0.0.0, Culture=neutral, PublicKeyToken=eff28e2146d5fd2c, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\FakeItEasy.2.0.0\lib\net40\FakeItEasy.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\xunit.abstractions.2.0.0\lib\net35\xunit.abstractions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.assert, Version=2.1.0.3179, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\xunit.assert.2.1.0\lib\dotnet\xunit.assert.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.core, Version=2.1.0.3179, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\xunit.extensibility.core.2.1.0\lib\dotnet\xunit.core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.execution.desktop, Version=2.1.0.3179, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\xunit.extensibility.execution.2.1.0\lib\net45\xunit.execution.desktop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Nancy.Tests\Fakes\PersonWithAgeField.cs">
+      <Link>Fakes\PersonWithAgeField.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\StructModel.cs">
+      <Link>Fakes\StructModel.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Helpers\ExceptionExtensionsFixture.cs">
+      <Link>Helpers\ExceptionExtensionsFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\NoAppStartupsFixture.cs">
+      <Link>NoAppStartupsFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Extensions\ResponseExtensions.cs">
+      <Link>Extensions\ResponseExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeNancyModuleNoRoutes.cs">
+      <Link>Fakes\FakeNancyModuleNoRoutes.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeNancyModuleWithBasePath.cs">
+      <Link>Fakes\FakeNancyModuleWithBasePath.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeNancyModuleWithDependency.cs">
+      <Link>Fakes\FakeNancyModuleWithDependency.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeNancyModuleWithoutBasePath.cs">
+      <Link>Fakes\FakeNancyModuleWithoutBasePath.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeNancyModuleWithPreAndPostHooks.cs">
+      <Link>Fakes\FakeNancyModuleWithPreAndPostHooks.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeRoute.cs">
+      <Link>Fakes\FakeRoute.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeRouteResolver.cs">
+      <Link>Fakes\FakeRouteResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeObjectSerializer.cs">
+      <Link>Fakes\FakeObjectSerializer.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeHookedModule.cs">
+      <Link>Fakes\FakeHookedModule.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeViewEngineHost.cs">
+      <Link>Fakes\FakeViewEngineHost.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\MockPipelines.cs">
+      <Link>Fakes\MockPipelines.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\Person.cs">
+      <Link>Fakes\Person.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\ViewModel.cs">
+      <Link>Fakes\ViewModel.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Helpers\CacheHelpersFixture.cs">
+      <Link>Helpers\CacheHelpersFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Resources\Link.Texts.Designer.cs">
+      <DependentUpon>Link.Texts.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <Link>Resources\Link.Texts.Designer.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Resources\Menu.Texts.Designer.cs">
+      <DependentUpon>Menu.Texts.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <Link>Resources\Menu.Texts.Designer.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Resources\Menu.Designer.cs">
+      <DependentUpon>Menu.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <Link>Resources\Menu.Designer.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Responses\MaterialisingResponseFixture.cs">
+      <Link>Responses\MaterialisingResponseFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Bootstrapper\BootstrapperLocatorFixture.cs">
+      <Link>Unit\Bootstrapper\BootstrapperLocatorFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Bootstrapper\CollectionTypeRegistrationFixture.cs">
+      <Link>Unit\Bootstrapper\CollectionTypeRegistrationFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Bootstrapper\InstanceRegistrationFixture.cs">
+      <Link>Unit\Bootstrapper\InstanceRegistrationFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Bootstrapper\NancyBootstrapperWithRequestContainerBaseFixture.cs">
+      <Link>Unit\Bootstrapper\NancyBootstrapperWithRequestContainerBaseFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Bootstrapper\PipelinesFixture.cs">
+      <Link>Unit\Bootstrapper\PipelinesFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Configuration\DefaultNancyEnvironmentConfiguratorFixture.cs">
+      <Link>Unit\Configuration\DefaultNancyEnvironmentConfiguratorFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Configuration\DefaultNancyEnvironmentFactoryFixture.cs">
+      <Link>Unit\Configuration\DefaultNancyEnvironmentFactoryFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Configuration\DefaultNancyEnvironmentFixture.cs">
+      <Link>Unit\Configuration\DefaultNancyEnvironmentFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Configuration\INancyEnvironmentExtensionsFixture.cs">
+      <Link>Unit\Configuration\INancyEnvironmentExtensionsFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Conventions\DefaultAcceptHeaderCoercionConventionsFixture.cs">
+      <Link>Unit\Conventions\DefaultAcceptHeaderCoercionConventionsFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Conventions\DefaultCultureConventionsFixture.cs">
+      <Link>Unit\Conventions\DefaultCultureConventionsFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Conventions\DefaultStaticContentsConventionsFixture.cs">
+      <Link>Unit\Conventions\DefaultStaticContentsConventionsFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Culture\BuiltInCultureConventionFixture.cs">
+      <Link>Unit\Culture\BuiltInCultureConventionFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\DefaultNancyBootstrapperFixture.cs">
+      <Link>Unit\DefaultNancyBootstrapperFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\DefaultResponseFormatterFactoryFixture.cs">
+      <Link>Unit\DefaultResponseFormatterFactoryFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\DefaultSerializerFactoryFixture.cs">
+      <Link>Unit\DefaultSerializerFactoryFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Diagnostics\ConcurrentLimitedCollectionFixture.cs">
+      <Link>Unit\Diagnostics\ConcurrentLimitedCollectionFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Diagnostics\CustomInteractiveDiagnosticsFixture.cs">
+      <Link>Unit\Diagnostics\CustomInteractiveDiagnosticsFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Diagnostics\DefaultRequestTraceFactoryFixture.cs">
+      <Link>Unit\Diagnostics\DefaultRequestTraceFactoryFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Diagnostics\DiagnosticsHookFixture.cs">
+      <Link>Unit\Diagnostics\DiagnosticsHookFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Diagnostics\InteractiveDiagnosticsFixture.cs">
+      <Link>Unit\Diagnostics\InteractiveDiagnosticsFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\ErrorHandling\DefaultStatusCodeHandlerFixture.cs">
+      <Link>Unit\ErrorHandling\DefaultStatusCodeHandlerFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Extensions\RequestStreamExtensionsFixture.cs">
+      <Link>Unit\Extensions\RequestStreamExtensionsFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Extensions\TypeExtensionsFixture.cs">
+      <Link>Unit\Extensions\TypeExtensionsFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\FormatterExtensionsFixture.cs">
+      <Link>Unit\FormatterExtensionsFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Helpers\HttpUtilityFixture.cs">
+      <Link>Unit\Helpers\HttpUtilityFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\HttpLinkBuilderFixture.cs">
+      <Link>Unit\HttpLinkBuilderFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\HttpLinkFixture.cs">
+      <Link>Unit\HttpLinkFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\HttpLinkRelationFixture.cs">
+      <Link>Unit\HttpLinkRelationFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\JsonSerializerFixture.cs">
+      <Link>Unit\JsonSerializerFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Json\JavaScriptSerializerFixture.cs">
+      <Link>Unit\Json\JavaScriptSerializerFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Json\SimpleJsonFixture.cs">
+      <Link>Unit\Json\SimpleJsonFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Json\Simple\NancySerializationStrategyFixture.cs">
+      <Link>Unit\Json\Simple\NancySerializationStrategyFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Json\TestConverter.cs">
+      <Link>Unit\Json\TestConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Json\TestConverterType.cs">
+      <Link>Unit\Json\TestConverterType.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Json\TestData.cs">
+      <Link>Unit\Json\TestData.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Json\TestPrimitiveConverter.cs">
+      <Link>Unit\Json\TestPrimitiveConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Json\TestPrimitiveConverterType.cs">
+      <Link>Unit\Json\TestPrimitiveConverterType.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Json\TypeWithTuple.cs">
+      <Link>Unit\Json\TypeWithTuple.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\MimeTypesFixture.cs">
+      <Link>Unit\MimeTypesFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\ModelBinding\BindingMemberInfoFixture.cs">
+      <Link>Unit\ModelBinding\BindingMemberInfoFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\ModelBinding\ModelBindingExceptionFixture.cs">
+      <Link>Unit\ModelBinding\ModelBindingExceptionFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\ModelBinding\PropertyBindingExceptionFixture.cs">
+      <Link>Unit\ModelBinding\PropertyBindingExceptionFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\NamedPipelineBaseFixture.cs">
+      <Link>Unit\NamedPipelineBaseFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\ModuleNameFixture.cs">
+      <Link>Unit\ModuleNameFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\NancyContextFixture.cs">
+      <Link>Unit\NancyContextFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Resources\Views\SuperSimpleViewEngineSampleContent.cs">
+      <Link>Resources\Views\SuperSimpleViewEngineSampleContent.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Bootstrapper\Base\BootstrapperBaseFixtureBase.cs">
+      <Link>Unit\Bootstrapper\Base\BootstrapperBaseFixtureBase.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Bootstrapper\Base\ModuleCatalogFixtureBase.cs">
+      <Link>Unit\Bootstrapper\Base\ModuleCatalogFixtureBase.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Bootstrapper\NancyInternalConfigurationFixture.cs">
+      <Link>Unit\Bootstrapper\NancyInternalConfigurationFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Bootstrapper\TypeRegistrationFixture.cs">
+      <Link>Unit\Bootstrapper\TypeRegistrationFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Conventions\DefaultViewLocationConventionsFixture.cs">
+      <Link>Unit\Conventions\DefaultViewLocationConventionsFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Cryptography\DefaultHmacProviderFixture.cs">
+      <Link>Unit\Cryptography\DefaultHmacProviderFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Cryptography\HmacComparerFixture.cs">
+      <Link>Unit\Cryptography\HmacComparerFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Cryptography\NoEncryptionProviderFixture.cs">
+      <Link>Unit\Cryptography\NoEncryptionProviderFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Cryptography\AesEncryptionProviderFixture.cs">
+      <Link>Unit\Cryptography\AesEncryptionProviderFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\DefaultNancyBootstrapperModuleCatalogFixture.cs">
+      <Link>Unit\DefaultNancyBootstrapperModuleCatalogFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Extensions\ContextExtensionsFixture.cs">
+      <Link>Unit\Extensions\ContextExtensionsFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Extensions\RequestExtensionsFixture.cs">
+      <Link>Unit\Extensions\RequestExtensionsFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\HttpMultipartBoundaryFixture.cs">
+      <Link>Unit\HttpMultipartBoundaryFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\HttpMultipartBufferFixture.cs">
+      <Link>Unit\HttpMultipartBufferFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\HttpMultipartFixture.cs">
+      <Link>Unit\HttpMultipartFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\IO\RequestStreamFixture.cs">
+      <Link>Unit\IO\RequestStreamFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\JsonFormatterExtensionsFixtures.cs">
+      <Link>Unit\JsonFormatterExtensionsFixtures.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\ShouldExtensions.cs">
+      <Link>ShouldExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Bootstrapper\NancyBootstrapperBaseFixture.cs">
+      <Link>Unit\Bootstrapper\NancyBootstrapperBaseFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\DefaultNancyBootstrapperBootstrapperBaseFixture.cs">
+      <Link>Unit\DefaultNancyBootstrapperBootstrapperBaseFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\DynamicDictionaryValueFixture.cs">
+      <Link>Unit\DynamicDictionaryValueFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Extensions\StringExtensionsFixture.cs">
+      <Link>Unit\Extensions\StringExtensionsFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeDefaultNancyBootstrapper.cs">
+      <Link>Fakes\FakeDefaultNancyBootstrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\HeadResponseFixture.cs">
+      <Link>Unit\HeadResponseFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\ModelBinding\DefaultBinderFixture.cs">
+      <Link>Unit\ModelBinding\DefaultBinderFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\ModelBinding\DefaultBodyDeserializers\JsonBodyDeserializerFixture.cs">
+      <Link>Unit\ModelBinding\DefaultBodyDeserializers\JsonBodyDeserializerFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\ModelBinding\DefaultBodyDeserializers\XmlBodyDeserializerfixture.cs">
+      <Link>Unit\ModelBinding\DefaultBodyDeserializers\XmlBodyDeserializerfixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\ModelBinding\DefaultConverters\CollectionConverterFixture.cs">
+      <Link>Unit\ModelBinding\DefaultConverters\CollectionConverterFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\ModelBinding\DefaultConverters\FallbackConverterFixture.cs">
+      <Link>Unit\ModelBinding\DefaultConverters\FallbackConverterFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\ModelBinding\DefaultFieldNameConverterFixture.cs">
+      <Link>Unit\ModelBinding\DefaultFieldNameConverterFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\ModelBinding\DynamicModelBinderAdapterFixture.cs">
+      <Link>Unit\ModelBinding\DynamicModelBinderAdapterFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\ModelBinding\DefaultModelBinderLocatorFixture.cs">
+      <Link>Unit\ModelBinding\DefaultModelBinderLocatorFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\NancyCookieFixture.cs">
+      <Link>Unit\NancyCookieFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\NancyEngineFixture.cs">
+      <Link>Unit\NancyEngineFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\NancyMiddlewareFixture.cs">
+      <Link>Unit\NancyMiddlewareFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\NancyModuleFixture.cs">
+      <Link>Unit\NancyModuleFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\AfterPipelineFixture.cs">
+      <Link>Unit\AfterPipelineFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\BeforePipelineFixture.cs">
+      <Link>Unit\BeforePipelineFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\ErrorPipelineFixture.cs">
+      <Link>Unit\ErrorPipelineFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\NancyOptionsExtensionsFixture.cs">
+      <Link>Unit\NancyOptionsExtensionsFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\NancyOptionsFixture.cs">
+      <Link>Unit\NancyOptionsFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\RequestFixture.cs">
+      <Link>Unit\RequestFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeModuleCatalog.cs">
+      <Link>Fakes\FakeModuleCatalog.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\DefaultResponseFormatterFixture.cs">
+      <Link>Unit\DefaultResponseFormatterFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\RequestHeadersFixture.cs">
+      <Link>Unit\RequestHeadersFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\ResponseExtensionsFixture.cs">
+      <Link>Unit\ResponseExtensionsFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Responses\DefaultJsonSerializerFixture.cs">
+      <Link>Unit\Responses\DefaultJsonSerializerFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Responses\EmbeddedFileResponseFixture.cs">
+      <Link>Unit\Responses\EmbeddedFileResponseFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Responses\Negotiation\MediaRangeFixture.cs">
+      <Link>Unit\Responses\Negotiation\MediaRangeFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Responses\RedirectResponseFixture.cs">
+      <Link>Unit\Responses\RedirectResponseFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Responses\StreamResponseFixture.cs">
+      <Link>Unit\Responses\StreamResponseFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Responses\TextResponseFixture.cs">
+      <Link>Unit\Responses\TextResponseFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Routing\ConstraintNodeRouteResolverFixture.cs">
+      <Link>Unit\Routing\ConstraintNodeRouteResolverFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Routing\ConstraintNodeRouteScoringFixture.cs">
+      <Link>Unit\Routing\ConstraintNodeRouteScoringFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Routing\DefaultNancyModuleBuilderFixture.cs">
+      <Link>Unit\Routing\DefaultNancyModuleBuilderFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Routing\DefaultRequestDispatcherFixture.cs">
+      <Link>Unit\Routing\DefaultRequestDispatcherFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Routing\DefaultRouteCacheProviderFixture.cs">
+      <Link>Unit\Routing\DefaultRouteCacheProviderFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Routing\DefaultRouteInvokerFixture.cs">
+      <Link>Unit\Routing\DefaultRouteInvokerFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Routing\DefaultRoutePatternMatcherFixture.cs">
+      <Link>Unit\Routing\DefaultRoutePatternMatcherFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeRoutePatternMatchResult.cs">
+      <Link>Fakes\FakeRoutePatternMatchResult.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeRouteCache.cs">
+      <Link>Fakes\FakeRouteCache.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeNancyModule.cs">
+      <Link>Fakes\FakeNancyModule.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeRequest.cs">
+      <Link>Fakes\FakeRequest.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Routing\DefaultRouteSegmentExtractorFixture.cs">
+      <Link>Unit\Routing\DefaultRouteSegmentExtractorFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Routing\NotFoundRouteFixture.cs">
+      <Link>Unit\Routing\NotFoundRouteFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\ResponseFixture.cs">
+      <Link>Unit\ResponseFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Routing\RouteCacheFixture.cs">
+      <Link>Unit\Routing\RouteCacheFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Routing\RouteDescriptionFixture.cs">
+      <Link>Unit\Routing\RouteDescriptionFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Routing\RouteFixture.cs">
+      <Link>Unit\Routing\RouteFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\DynamicDictionaryFixture.cs">
+      <Link>Unit\DynamicDictionaryFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Routing\DefaultRouteResolverFixture.cs">
+      <Link>Unit\Routing\DefaultRouteResolverFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Security\CsrfFixture.cs">
+      <Link>Unit\Security\CsrfFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Security\DefaultCsrfTokenValidatorFixture.cs">
+      <Link>Unit\Security\DefaultCsrfTokenValidatorFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Security\ModuleSecurityFixture.cs">
+      <Link>Unit\Security\ModuleSecurityFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Security\SSLProxyFixture.cs">
+      <Link>Unit\Security\SSLProxyFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Security\ClaimsPrincipalExtensionsFixture.cs">
+      <Link>Unit\Security\ClaimsPrincipalExtensionsFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Sessions\CookieBasedSessionsConfigurationFixture.cs">
+      <Link>Unit\Sessions\CookieBasedSessionsConfigurationFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Sessions\CookieBasedSessionsFixture.cs">
+      <Link>Unit\Sessions\CookieBasedSessionsFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Sessions\DefaultSessionObjectFormatterFixture.cs">
+      <Link>Unit\Sessions\DefaultSessionObjectFormatterFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Sessions\NullSessionProviderFixture.cs">
+      <Link>Unit\Sessions\NullSessionProviderFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Sessions\SessionFixture.cs">
+      <Link>Unit\Sessions\SessionFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\TextFormatterFixture.cs">
+      <Link>Unit\TextFormatterFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\StaticContentConventionBuilderFixture.cs">
+      <Link>Unit\StaticContentConventionBuilderFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\UrlFixture.cs">
+      <Link>Unit\UrlFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Validation\CompositeValidatorFixture.cs">
+      <Link>Unit\Validation\CompositeValidatorFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Validation\ModuleExtensionsFixture.cs">
+      <Link>Unit\Validation\ModuleExtensionsFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Validation\ValidationResultFixture.cs">
+      <Link>Unit\Validation\ValidationResultFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Validation\DefaultValidatorLocatorFixture.cs">
+      <Link>Unit\Validation\DefaultValidatorLocatorFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\ViewEngines\DefaultRenderContextFixture.cs">
+      <Link>Unit\ViewEngines\DefaultRenderContextFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Localization\ResourceBasedTextResourceFixture.cs">
+      <Link>Unit\Localization\ResourceBasedTextResourceFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeViewEngine.cs">
+      <Link>Fakes\FakeViewEngine.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\ViewEngines\DefaultViewRendererFixture.cs">
+      <Link>Unit\ViewEngines\DefaultViewRendererFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\ViewEngines\FileSystemViewLocationProviderFixture.cs">
+      <Link>Unit\ViewEngines\FileSystemViewLocationProviderFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\ViewEngines\FileSystemViewLocationResultFixture.cs">
+      <Link>Unit\ViewEngines\FileSystemViewLocationResultFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\ViewEngines\ResourceViewLocationProviderFixture.cs">
+      <Link>Unit\ViewEngines\ResourceViewLocationProviderFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\ViewEngines\ViewEngineStartupFixture.cs">
+      <Link>Unit\ViewEngines\ViewEngineStartupFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\ViewEngines\DefaultViewFactoryFixture.cs">
+      <Link>Unit\ViewEngines\DefaultViewFactoryFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\ViewEngines\DefaultViewLocatorFixture.cs">
+      <Link>Unit\ViewEngines\DefaultViewLocatorFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\ViewEngines\DefaultViewResolverFixture.cs">
+      <Link>Unit\ViewEngines\DefaultViewResolverFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\ViewEngines\SuperSimpleViewEngineTests.cs">
+      <Link>Unit\ViewEngines\SuperSimpleViewEngineTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\ViewEngines\ViewNotFoundExceptionFixture.cs">
+      <Link>Unit\ViewEngines\ViewNotFoundExceptionFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\XmlFormatterExtensionsFixtures.cs">
+      <Link>Unit\XmlFormatterExtensionsFixtures.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\xUnitExtensions\RecordAsync.cs">
+      <Link>xUnitExtensions\RecordAsync.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\xUnitExtensions\Skip.cs">
+      <Link>xUnitExtensions\Skip.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\xUnitExtensions\SkipException.cs">
+      <Link>xUnitExtensions\SkipException.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\xUnitExtensions\SkippableFactAttribute.cs">
+      <Link>xUnitExtensions\SkippableFactAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\Responses\GenericFileResponseFixture.cs">
+      <Link>Unit\Responses\GenericFileResponseFixture.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Nancy.Testing.MSBuild\Nancy.Testing.csproj">
+      <Project>{D79203C0-B672-4751-9C95-C3AB7D3FEFBE}</Project>
+      <Name>Nancy.Testing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\Nancy.MSBuild\Nancy.csproj">
+      <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
+      <Name>Nancy</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\Nancy.Tests\Resources\Link.Texts.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Link.Texts.Designer.cs</LastGenOutput>
+      <Link>Resources\Link.Texts.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Nancy.Tests\Resources\Menu.Texts.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Menu.Texts.Designer.cs</LastGenOutput>
+      <Link>Resources\Menu.Texts.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Nancy.Tests\Resources\Menu.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Menu.Designer.cs</LastGenOutput>
+      <Link>Resources\Menu.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Nancy.Tests\Resources\Views\staticviewresource.html">
+      <Link>Resources\Views\staticviewresource.html</Link>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\Nancy.Tests\Resources\Assets\Styles\space in name.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>Resources\Assets\Styles\space in name.css</Link>
+    </Content>
+    <Content Include="..\Nancy.Tests\Resources\Assets\Styles\dotted.filename.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>Resources\Assets\Styles\dotted.filename.css</Link>
+    </Content>
+    <Content Include="..\Nancy.Tests\Resources\Assets\Styles\css\styles.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>Resources\Assets\Styles\css\styles.css</Link>
+    </Content>
+    <Content Include="..\Nancy.Tests\Resources\Assets\Styles\strange-css-filename.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>Resources\Assets\Styles\strange-css-filename.css</Link>
+    </Content>
+    <Content Include="..\Nancy.Tests\Resources\Assets\Styles\styles.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>Resources\Assets\Styles\styles.css</Link>
+    </Content>
+    <Content Include="..\Nancy.Tests\Resources\Assets\Styles\Sub.folder\styles.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>Resources\Assets\Styles\Sub.folder\styles.css</Link>
+    </Content>
+    <Content Include="..\Nancy.Tests\Resources\Assets\Styles\Sub\styles.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>Resources\Assets\Styles\Sub\styles.css</Link>
+    </Content>
+    <Content Include="..\Nancy.Tests\Resources\test.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>Resources\test.txt</Link>
+    </Content>
+    <Content Include="..\Nancy.Tests\Resources\zip.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>Resources\zip.png</Link>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

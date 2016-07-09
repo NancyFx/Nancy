@@ -1,0 +1,252 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props" Condition="Exists('..\..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{FE32460D-547C-4EB9-A768-541255CCAA83}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Nancy.ViewEngines.Razor.Tests</RootNamespace>
+    <AssemblyName>Nancy.ViewEngines.Razor.Tests</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'MonoDebug|AnyCPU'">
+    <DebugSymbols>True</DebugSymbols>
+    <OutputPath>bin\MonoDebug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>bin\Debug\Nancy.ViewEngines.Razor.Tests.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>False</Optimize>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'MonoRelease|AnyCPU'">
+    <OutputPath>bin\MonoRelease\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>True</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>bin\Release\Nancy.ViewEngines.Razor.Tests.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="FakeItEasy, Version=2.0.0.0, Culture=neutral, PublicKeyToken=eff28e2146d5fd2c, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\FakeItEasy.2.0.0\lib\net40\FakeItEasy.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\xunit.abstractions.2.0.0\lib\net35\xunit.abstractions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.assert, Version=2.1.0.3179, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\xunit.assert.2.1.0\lib\dotnet\xunit.assert.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.core, Version=2.1.0.3179, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\xunit.extensibility.core.2.1.0\lib\dotnet\xunit.core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.execution.desktop, Version=2.1.0.3179, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\xunit.extensibility.execution.2.1.0\lib\net45\xunit.execution.desktop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Nancy.Tests\ShouldExtensions.cs">
+      <Link>ShouldExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.Razor.Tests\GreetingViewBase.cs">
+      <Link>GreetingViewBase.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.Razor.Tests\RazorViewEngineFixture.cs">
+      <Link>RazorViewEngineFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.Razor.Tests\TestModel.cs">
+      <Link>TestModel.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.ViewEngines.Razor.Tests\TextResourceFinderFixture.cs">
+      <Link>TextResourceFinderFixture.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Nancy.ViewEngines.Razor.Tests.Models.MSBuild\Nancy.ViewEngines.Razor.Tests.Models.csproj">
+      <Project>{3F18F5DA-93E0-4513-8BF4-BC8EE5C4117C}</Project>
+      <Name>Nancy.ViewEngines.Razor.Tests.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\Nancy.ViewEngines.Razor.MSBuild\Nancy.ViewEngines.Razor.csproj">
+      <Project>{2C6F51DF-015C-4DB6-B44C-0E5E4F25E2A9}</Project>
+      <Name>Nancy.ViewEngines.Razor</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\Nancy.MSBuild\Nancy.csproj">
+      <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
+      <Name>Nancy</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="..\Nancy.ViewEngines.Razor.Tests\TestViews\ViewThatUsesAttributeWithRawHtmlStringInside.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\ViewThatUsesAttributeWithRawHtmlStringInside.cshtml</Link>
+    </None>
+    <None Include="..\Nancy.ViewEngines.Razor.Tests\TestViews\ViewThatUsesHelper.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\ViewThatUsesHelper.cshtml</Link>
+    </None>
+    <None Include="..\Nancy.ViewEngines.Razor.Tests\TestViews\ViewThatUsesAttributeWithCodeInside.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\ViewThatUsesAttributeWithCodeInside.cshtml</Link>
+    </None>
+    <None Include="..\Nancy.ViewEngines.Razor.Tests\TestViews\ViewThatUsesAttributeWithDynamicNullInside.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\ViewThatUsesAttributeWithDynamicNullInside.cshtml</Link>
+    </None>
+    <None Include="..\Nancy.ViewEngines.Razor.Tests\TestViews\ViewThatUsesAttributeWithHtmlStringInside.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\ViewThatUsesAttributeWithHtmlStringInside.cshtml</Link>
+    </None>
+    <None Include="..\Nancy.ViewEngines.Razor.Tests\TestViews\ViewThatUsesAttributeWithNonEncodedHtmlStringInside.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\ViewThatUsesAttributeWithNonEncodedHtmlStringInside.cshtml</Link>
+    </None>
+    <None Include="..\Nancy.ViewEngines.Razor.Tests\TestViews\ViewThatUsesModelVB.vbhtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\ViewThatUsesModelVB.vbhtml</Link>
+    </None>
+    <None Include="..\Nancy.ViewEngines.Razor.Tests\TestViews\ViewThatUsesModelCSharp.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\ViewThatUsesModelCSharp.cshtml</Link>
+    </None>
+    <None Include="..\Nancy.ViewEngines.Razor.Tests\TestViews\Layouts\LayoutWithManySections.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\Layouts\LayoutWithManySections.cshtml</Link>
+    </None>
+    <None Include="..\Nancy.ViewEngines.Razor.Tests\TestViews\Layouts\LayoutWithOptionalSection.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\Layouts\LayoutWithOptionalSection.cshtml</Link>
+    </None>
+    <None Include="..\Nancy.ViewEngines.Razor.Tests\TestViews\Layouts\LayoutWithOptionalSectionWithDefaults.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\Layouts\LayoutWithOptionalSectionWithDefaults.cshtml</Link>
+    </None>
+    <None Include="..\Nancy.ViewEngines.Razor.Tests\TestViews\Layouts\LayoutWithSection.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\Layouts\LayoutWithSection.cshtml</Link>
+    </None>
+    <None Include="..\Nancy.ViewEngines.Razor.Tests\TestViews\Layouts\SimplyLayout.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\Layouts\SimplyLayout.cshtml</Link>
+    </None>
+    <None Include="..\Nancy.ViewEngines.Razor.Tests\TestViews\ViewThatUsesLayout.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\ViewThatUsesLayout.cshtml</Link>
+    </None>
+    <None Include="..\Nancy.ViewEngines.Razor.Tests\TestViews\ViewThatUsesLayoutAndManySection.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\ViewThatUsesLayoutAndManySection.cshtml</Link>
+    </None>
+    <None Include="..\Nancy.ViewEngines.Razor.Tests\TestViews\ViewThatUsesLayoutAndModel.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\ViewThatUsesLayoutAndModel.cshtml</Link>
+    </None>
+    <None Include="..\Nancy.ViewEngines.Razor.Tests\TestViews\ViewThatUsesLayoutAndOptionalSection.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\ViewThatUsesLayoutAndOptionalSection.cshtml</Link>
+    </None>
+    <None Include="..\Nancy.ViewEngines.Razor.Tests\TestViews\ViewThatUsesLayoutAndOptionalSectionOverridingDefaults.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\ViewThatUsesLayoutAndOptionalSectionOverridingDefaults.cshtml</Link>
+    </None>
+    <None Include="..\Nancy.ViewEngines.Razor.Tests\TestViews\ViewThatUsesLayoutAndOptionalSectionWithDefaults.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\ViewThatUsesLayoutAndOptionalSectionWithDefaults.cshtml</Link>
+    </None>
+    <None Include="..\Nancy.ViewEngines.Razor.Tests\TestViews\ViewThatUsesLayoutAndSection.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestViews\ViewThatUsesLayoutAndSection.cshtml</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

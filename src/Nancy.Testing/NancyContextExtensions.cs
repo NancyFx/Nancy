@@ -3,6 +3,7 @@ namespace Nancy.Testing
     using System;
     using System.IO;
     using System.Xml.Serialization;
+    using Nancy.Extensions;
     using Nancy.Json;
 
     /// <summary>
@@ -42,7 +43,7 @@ namespace Nancy.Testing
                 {
                     context.Response.Contents.Invoke(contentsStream);
                     contentsStream.Position = 0;
-                    return new DocumentWrapper(contentsStream.GetBuffer());
+                    return new DocumentWrapper(contentsStream.GetBufferSegment());
                 }
             });
         }
@@ -77,9 +78,9 @@ namespace Nancy.Testing
                 {
                     context.Response.Contents.Invoke(contentsStream);
                     contentsStream.Position = 0;
-                    var serializer = new XmlSerializer(typeof (TModel));
+                    var serializer = new XmlSerializer(typeof(TModel));
                     var model = serializer.Deserialize(contentsStream);
-                    return (TModel) model;
+                    return (TModel)model;
                 }
             });
         }

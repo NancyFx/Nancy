@@ -19,9 +19,9 @@
     <tags>Nancy Viewengine Spark</tags>
   </metadata>
   <files>
-    <file src="build\binaries\Nancy.Viewengines.DotLiquid.dll" target="lib\net40" />
-    <file src="build\binaries\Nancy.Viewengines.DotLiquid.pdb" target="lib\net40" />
-    <file src="build\binaries\Nancy.Viewengines.DotLiquid.XML" target="lib\net40" />
+    <file src="build\binaries\Nancy.Viewengines.DotLiquid.dll" target="lib\net45" />
+    <file src="build\binaries\Nancy.Viewengines.DotLiquid.pdb" target="lib\net45" />
+    <file src="build\binaries\Nancy.Viewengines.DotLiquid.XML" target="lib\net45" />
     <file src="src\Nancy.Viewengines.DotLiquid\**\*.cs" target="src" />
   </files>
 </package>

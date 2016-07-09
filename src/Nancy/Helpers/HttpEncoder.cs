@@ -1,7 +1,7 @@
 //
 // Authors:
 //   Patrik Torstensson (Patrik.Torstensson@labs2.com)
-//   Wictor Wilén (decode/encode functions) (wictor@ibizkit.se)
+//   Wictor WilÃ©n (decode/encode functions) (wictor@ibizkit.se)
 //   Tim Coleman (tim@timcoleman.com)
 //   Gonzalo Paniagua Javier (gonzalo@ximian.com)
 
@@ -30,14 +30,15 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Text;
 
 namespace Nancy.Helpers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.IO;
+    using System.Text;
+
 #if NET_4_0
 	public
 #endif
@@ -120,12 +121,12 @@ namespace Nancy.Helpers
 #endif
  void HeaderNameValueEncode(string headerName, string headerValue, out string encodedHeaderName, out string encodedHeaderValue)
         {
-            if (String.IsNullOrEmpty(headerName))
+            if (string.IsNullOrEmpty(headerName))
                 encodedHeaderName = headerName;
             else
                 encodedHeaderName = EncodeHeaderString(headerName);
 
-            if (String.IsNullOrEmpty(headerValue))
+            if (string.IsNullOrEmpty(headerValue))
                 encodedHeaderValue = headerValue;
             else
                 encodedHeaderValue = EncodeHeaderString(headerValue);
@@ -164,7 +165,7 @@ namespace Nancy.Helpers
 			if (output == null)
 				throw new ArgumentNullException ("output");
 
-			if (String.IsNullOrEmpty (value))
+			if (string.IsNullOrEmpty (value))
 				return;
 
 			output.Write (HtmlAttributeEncode (value));
@@ -216,9 +217,9 @@ namespace Nancy.Helpers
 #else
         internal static
 #endif
- string UrlPathEncode(string value)
+        string UrlPathEncode(string value)
         {
-            if (String.IsNullOrEmpty(value))
+            if (string.IsNullOrEmpty(value))
                 return value;
 
             MemoryStream result = new MemoryStream();
@@ -236,7 +237,7 @@ namespace Nancy.Helpers
 
             int blen = bytes.Length;
             if (blen == 0)
-                return new byte[0];
+                return ArrayCache.Empty<byte>();
 
             if (offset < 0 || offset >= blen)
                 throw new ArgumentOutOfRangeException("offset");
@@ -331,7 +332,7 @@ namespace Nancy.Helpers
         internal static string HtmlAttributeEncode(string s)
         {
 #if NET_4_0
-			if (String.IsNullOrEmpty (s))
+			if (string.IsNullOrEmpty (s))
 				return String.Empty;
 #else
             if (s == null)
@@ -515,9 +516,9 @@ namespace Nancy.Helpers
 #endif
                         have_trailing_digits = false;
                     }
-                    else if (is_hex_value && Uri.IsHexDigit(c))
+                    else if (is_hex_value && IsHexDigit(c))
                     {
-                        number = number * 16 + Uri.FromHex(c);
+                        number = number * 16 + FromHex(c);
                         have_trailing_digits = true;
 #if NET_4_0
 						rawEntity.Append (c);
@@ -561,6 +562,32 @@ namespace Nancy.Helpers
             }
             return output.ToString();
         }
+
+        internal static bool IsHexDigit(char character)
+        {
+            //implementation from https://github.com/dotnet/corefx/blob/ac67ffac987d0c27236c4a6cf1255c2bcbc7fe7d/src/System.Private.Uri/src/System/Uri.cs#L1366
+            return ((character >= '0') && (character <= '9'))
+                || ((character >= 'A') && (character <= 'F'))
+                || ((character >= 'a') && (character <= 'f'));
+        }
+
+        internal static int FromHex(char digit)
+        {
+            //implementation from https://github.com/dotnet/corefx/blob/ac67ffac987d0c27236c4a6cf1255c2bcbc7fe7d/src/System.Private.Uri/src/System/Uri.cs#L1379
+            if (((digit >= '0') && (digit <= '9'))
+                || ((digit >= 'A') && (digit <= 'F'))
+                || ((digit >= 'a') && (digit <= 'f')))
+            {
+                return (digit <= '9')
+                    ? ((int)digit - (int)'0')
+                    : (((digit <= 'F')
+                    ? ((int)digit - (int)'A')
+                    : ((int)digit - (int)'a'))
+                    + 10);
+            }
+            throw new ArgumentException("digit");
+        }
+
 
         internal static bool NotEncoded(char c)
         {

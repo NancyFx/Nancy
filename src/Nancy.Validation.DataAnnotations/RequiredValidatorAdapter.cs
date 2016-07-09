@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
+
     using Nancy.Validation.Rules;
 
     /// <summary>
@@ -36,8 +37,14 @@
         /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="ModelValidationRule"/> instances.</returns>
         public override IEnumerable<ModelValidationRule> GetRules(ValidationAttribute attribute, PropertyDescriptor descriptor)
         {
+            var requiredAttribute = (RequiredAttribute) attribute;
+
             yield return new NotNullValidationRule(attribute.FormatErrorMessage, new[] { descriptor.Name });
-            yield return new NotEmptyValidationRule(attribute.FormatErrorMessage, new[] { descriptor.Name });
+
+            if (!requiredAttribute.AllowEmptyStrings)
+            {
+                yield return new NotEmptyValidationRule(attribute.FormatErrorMessage, new[] { descriptor.Name });
+            }
         }
     }
 }

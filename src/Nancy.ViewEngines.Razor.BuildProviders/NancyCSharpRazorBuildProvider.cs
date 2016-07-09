@@ -6,7 +6,6 @@
     using System.Globalization;
     using System.Web.Compilation;
     using System.Web.Razor;
-    using Nancy.ViewEngines.Razor;
 
     [BuildProviderAppliesTo(BuildProviderAppliesTo.Code | BuildProviderAppliesTo.Web)]
     public class NancyCSharpRazorBuildProvider : BuildProvider
@@ -20,11 +19,12 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyCSharpRazorBuildProvider"/> class.
         /// </summary>
-        public NancyCSharpRazorBuildProvider()
+        /// <param name="razorAssemblyProvider">An <see cref="RazorAssemblyProvider"/> instance.</param>
+        public NancyCSharpRazorBuildProvider(RazorAssemblyProvider razorAssemblyProvider)
         {
             this.compilerType = this.GetDefaultCompilerTypeForLanguage("C#");
 
-            this.host = new NancyRazorEngineHost(new CSharpRazorCodeLanguage());
+            this.host = new NancyRazorEngineHost(new CSharpRazorCodeLanguage(), razorAssemblyProvider);
         }
 
         /// <summary>
