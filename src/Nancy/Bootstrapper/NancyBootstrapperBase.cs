@@ -13,7 +13,7 @@
     using Nancy.ModelBinding;
     using Nancy.Validation;
     using Nancy.ViewEngines;
-
+    using Session;
     /// <summary>
     /// Nancy bootstrapper base class
     /// </summary>
@@ -69,6 +69,17 @@
 
         private IAssemblyCatalog assemblyCatalog;
         private ITypeCatalog typeCatalog;
+
+        /// <summary>
+        /// instance of session lifecycle
+        /// </summary>
+        private ISessionLifecycle sessionLifecycle;
+
+        private ISessionProvider sessionProvider;
+        protected virtual ISessionProvider SessionProvider
+        {
+            get { return this.sessionProvider ?? (this.sessionProvider = GetSessionProvider()); }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyBootstrapperBase{TContainer}"/> class.
@@ -325,6 +336,32 @@
                     });
             }
 
+            this.sessionLifecycle = GetSessionLifecycle();
+
+            if (sessionLifecycle != null)
+            {
+                sessionLifecycle.Initialise(this.ApplicationPipelines);
+
+                this.ApplicationPipelines.BeforeRequest.AddItemToStartOfPipeline(ctx =>
+                {
+                    if (SessionProvider != null)
+                    {
+                        sessionLifecycle.LoadSessionProvider(SessionProvider);
+                        return sessionLifecycle.OnStart(ctx);
+                    }
+
+                    return null;
+                });
+
+                this.ApplicationPipelines.AfterRequest.AddItemToEndOfPipeline(ctx =>
+                {
+                    if (SessionProvider != null)
+                    {
+                        sessionLifecycle.OnEnd(ctx);
+                    }
+                });
+            }
+
             this.GetDiagnostics().Initialize(this.ApplicationPipelines);
 
             this.initialised = true;
@@ -465,6 +502,35 @@
         {
             return base.GetHashCode();
         }
+
+        /// <summary>
+        /// Returns the Session Lifecycle for initialisation
+        /// </summary>
+        /// <returns>ISessionLifecycle instance</returns>
+        protected virtual ISessionLifecycle GetSessionLifecycle()
+        {
+            var sessionLifecycle = this.typeCatalog.GetTypesAssignableTo<ISessionLifecycle>().FirstOrDefault();
+
+            return Activator.CreateInstance(sessionLifecycle) as ISessionLifecycle;
+        }
+
+        /// <summary>
+        /// Returns the Session Provider
+        /// </summary>
+        /// <returns>ISessionProvider instance</returns>
+        protected virtual ISessionProvider GetSessionProvider()
+        {
+            var providerType = this.typeCatalog.GetTypesAssignableTo<ISessionProvider>().FirstOrDefault();
+            if (providerType != null)
+            {
+                return Activator.CreateInstance(providerType) as ISessionProvider;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
 
         /// <summary>
         /// Creates and initializes the request pipelines.
@@ -627,6 +693,7 @@
                 new InstanceRegistration(typeof(IRootPathProvider), this.RootPathProvider),
                 new InstanceRegistration(typeof(IAssemblyCatalog), this.AssemblyCatalog),
                 new InstanceRegistration(typeof(ITypeCatalog), this.TypeCatalog),
+                new InstanceRegistration(typeof(ISessionProvider),this.SessionProvider)
             };
         }
 

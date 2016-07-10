@@ -17,7 +17,7 @@ namespace Nancy.Bootstrapper
     using Nancy.Security;
     using Nancy.Validation;
     using Nancy.ViewEngines;
-
+    using Session;
     /// <summary>
     /// Configuration class for Nancy's internals.
     /// Contains implementation types/configuration for Nancy that usually
@@ -74,6 +74,8 @@ namespace Nancy.Bootstrapper
                     Serializers = typeCatalog.GetTypesAssignableTo<ISerializer>(TypeResolveStrategies.ExcludeNancy).Union(new List<Type>(new[] { typeof(DefaultJsonSerializer), typeof(DefaultXmlSerializer) })).ToList(),
                     StaticContentProvider = typeof(DefaultStaticContentProvider),
                     StatusCodeHandlers = new List<Type>(typeCatalog.GetTypesAssignableTo<IStatusCodeHandler>(TypeResolveStrategies.ExcludeNancy).Concat(new[] { typeof(DefaultStatusCodeHandler) })),
+                    SessionLifecycle = typeof(DefaultNancySessionLifecycle),
+                    SessionProvider = typeof(ServerSessionProvider),
                     TextResource = typeof(ResourceBasedTextResource),
                     TrieNodeFactory = typeof(TrieNodeFactory),
                     ViewLocator = typeof(DefaultViewLocator),
@@ -136,6 +138,8 @@ namespace Nancy.Bootstrapper
         public Type ViewLocationProvider { get; set; }
 
         public IList<Type> StatusCodeHandlers { get; set; }
+        public Type SessionLifecycle { get; set; }
+        public Type SessionProvider { get; set; }
 
         public Type CsrfTokenValidator { get; set; }
 
@@ -257,7 +261,9 @@ namespace Nancy.Bootstrapper
                 new TypeRegistration(typeof(INancyEnvironmentConfigurator), this.EnvironmentConfigurator),
                 new TypeRegistration(typeof(INancyEnvironmentFactory), this.EnvironmentFactory),
                 new TypeRegistration(typeof(ISerializerFactory), this.SerializerFactory),
-                new TypeRegistration(typeof(IRuntimeEnvironmentInformation), this.RuntimeEnvironmentInformation)
+                new TypeRegistration(typeof(IRuntimeEnvironmentInformation), this.RuntimeEnvironmentInformation),
+                new TypeRegistration(typeof(ISessionLifecycle),this.SessionLifecycle),
+                new TypeRegistration(typeof(ISessionProvider),this.SessionProvider)
             };
         }
 

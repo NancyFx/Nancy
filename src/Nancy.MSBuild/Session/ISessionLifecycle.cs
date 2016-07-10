@@ -1,0 +1,38 @@
+﻿using Nancy.Bootstrapper;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Nancy.Session
+{
+    /// <summary>
+    /// <para>Defines the behaviour in each stage of the lifecycle of a Session.</para>
+    /// <para>Initialise->OnStart->LoadSessionProvider->OnEnd->OnStart ... </para>
+    /// </summary>
+    public interface ISessionLifecycle
+    {
+        /// <summary>
+        /// Initialisation step. (Called only once)
+        /// </summary>
+        /// <param name="pipelines">pipelines</param>
+        void Initialise(IPipelines pipelines);
+        /// <summary>
+        /// When session provider is loaded
+        /// </summary>
+        /// <param name="provider">the loaded session provider</param>
+        void LoadSessionProvider(ISessionProvider provider);
+        /// <summary>
+        /// On start of pipeline, this is where initialisation of session should happen
+        /// </summary>
+        /// <param name="ctx">Nancy Context</param>
+        /// <returns>Response after initialising session</returns>
+        Response OnStart(NancyContext ctx);
+        /// <summary>
+        /// At the end of pipeline.
+        /// </summary>
+        /// <param name="ctx"></param>
+        void OnEnd(NancyContext ctx);
+    }
+}

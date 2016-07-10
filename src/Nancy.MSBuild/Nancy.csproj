@@ -1376,6 +1376,11 @@
     <Compile Include="..\Nancy\Routing\Route.cs">
       <Link>Routing\Route.cs</Link>
     </Compile>
+    <Compile Include="Session\CookieSessionProvider.cs" />
+    <Compile Include="Session\DefaultNancySessionLifecycle.cs" />
+    <Compile Include="Session\ISessionLifecycle.cs" />
+    <Compile Include="Session\ISessionProvider.cs" />
+    <Compile Include="Session\ServerSessionProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\Nancy\Diagnostics\Views\Dashboard.sshtml">
