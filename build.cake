@@ -1,5 +1,3 @@
-#addin nuget:?package=Newtonsoft.Json&version=8.0.3
-
 // Usings
 using System.Xml;
 using System.Xml.Linq;
@@ -183,10 +181,9 @@ Task("Nuke-Symbol-Packages")
 
 Task("Package-NuGet")
   .Description("Generates NuGet packages for each project that contains a nuspec")
-  .IsDependentOn("Publish")
   .Does(() =>
 {
-  var projects = GetFiles("./**/*.xproj");
+  var projects = GetFiles("./src/**/*.xproj");
   foreach(var project in projects)
   {
     var settings = new DotNetCorePackSettings {
@@ -273,7 +270,23 @@ Task("Prepare-Release")
         Arguments = string.Format("tag \"v{0}\"", version)
       });
     }
-  
+
+    //Push
+    if (nogit)
+    {
+      Information("git push origin master");
+      Information("git push --tags");
+    }
+    else
+    {
+      StartProcess("git", new ProcessSettings {
+        Arguments = "push origin master"
+      });
+
+      StartProcess("git", new ProcessSettings {
+        Arguments = "push --tags"
+      });
+    }
 });
 
 Task("Update-Version")
@@ -293,12 +306,11 @@ public void UpdateProjectJsonVersion(string version, FilePathCollection filePath
   Verbose(logAction => logAction("Setting version to {0}", version));
   foreach (var file in filePaths) 
   {
-    var project = Newtonsoft.Json.Linq.JObject.Parse(
-      System.IO.File.ReadAllText(file.FullPath, Encoding.UTF8));
+    var project = System.IO.File.ReadAllText(file.FullPath, Encoding.UTF8);
 
-    project["version"].Replace(version);
+    project = System.Text.RegularExpressions.Regex.Replace(project, "(\"version\":\\s*)\".+\"", "$1\"" + version + "\"");
 
-    System.IO.File.WriteAllText(file.FullPath, project.ToString(), Encoding.UTF8);
+    System.IO.File.WriteAllText(file.FullPath, project, Encoding.UTF8);
   }
 }
 

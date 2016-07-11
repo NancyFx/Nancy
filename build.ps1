@@ -15,20 +15,6 @@ Param(
 
 Function Install-Dotnet()
 {
-  $existingPaths = $Env:Path -Split ';' | Where-Object { (![string]::IsNullOrEmpty($_)) -and (Test-Path $_) }
-  $DOTNET_EXE_IN_PATH = (Get-ChildItem -Path $existingPaths -Filter "dotnet.exe" | Select -First 1).FullName
-  $GlobalDotNetFound =  (![string]::IsNullOrEmpty($DOTNET_EXE_IN_PATH)) -and (Test-Path $DOTNET_EXE_IN_PATH)
-  $LocalDotNetFound = Test-Path (Join-Path $PSScriptRoot ".dotnet")
-
-  if ($GlobalDotNetFound)
-  {
-    return
-  }
-
-  if((!$LocalDotNetFound) -Or ((Test-Path Env:\APPVEYOR) -eq $true))
-  {
-    Write-Output "Dotnet CLI was not found."
-
     # Prepare the dotnet CLI folder
     $env:DOTNET_INSTALL_DIR="$(Convert-Path "$PSScriptRoot")\.dotnet\win7-x64"
     if (!(Test-Path $env:DOTNET_INSTALL_DIR))
@@ -36,7 +22,7 @@ Function Install-Dotnet()
       mkdir $env:DOTNET_INSTALL_DIR | Out-Null
     }
 
-    # Download the dotnet CLI install script
+	# Download the dotnet CLI install script
     if (!(Test-Path .\dotnet\install.ps1))
     {
       Write-Output "Downloading version 1.0.0-preview2 of Dotnet CLI installer..."
@@ -44,14 +30,13 @@ Function Install-Dotnet()
     }
 
     # Run the dotnet CLI install
-    Write-Output "Installing Dotnet CLI version 1.0.0-preview1-002702..."
-    & .\.dotnet\dotnet-install.ps1 -Channel beta -Version 1.0.0-preview1-002702
+    Write-Output "Installing Dotnet CLI version 1.0.0-preview2-003121..."
+    & .\.dotnet\dotnet-install.ps1 -Channel "preview" -Version "1.0.0-preview2-003121" -InstallDir "$env:DOTNET_INSTALL_DIR"
 
     # Add the dotnet folder path to the process. This gets skipped
     # by Install-DotNetCli if it's already installed.
     Remove-PathVariable $env:DOTNET_INSTALL_DIR
     $env:PATH = "$env:DOTNET_INSTALL_DIR;$env:PATH"
-  }
 }
 
 Function Remove-PathVariable([string]$VariableToRemove)
