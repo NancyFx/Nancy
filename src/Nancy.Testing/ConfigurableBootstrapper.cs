@@ -21,6 +21,8 @@ namespace Nancy.Testing
     using Nancy.TinyIoc;
     using Nancy.Validation;
     using Nancy.ViewEngines;
+    using Session;
+    using Cookies;
 
     /// <summary>
     /// A Nancy bootstrapper that can be configured with either Type or Instance overrides for all Nancy types.
@@ -1787,6 +1789,40 @@ namespace Nancy.Testing
                 this.bootstrapper.configurationOverrides.Add(x => x.Serializers = new List<Type>(serializers));
                 return this;
             }
+
+            /// <summary>
+            /// Configures the bootstrapper to create an <see cref="ISessionLifecycle"/> instance of the specified type.
+            /// </summary>
+            /// <typeparam name="T">The type of the <see cref="ISessionLifecycle"/> that the bootstrapper should use.</typeparam>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator SessionLifecycle<T>() where T : ISessionLifecycle
+            {
+                this.bootstrapper.configurationOverrides.Add(x => x.SessionLifecycle = typeof(T));
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to create an <see cref="SessionProvider"/> instance of the specified type.
+            /// </summary>
+            /// <typeparam name="T">The type of the <see cref="SessionProvider"/> that the bootstrapper should use.</typeparam>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator SessionProvider<T>() where T : SessionProvider
+            {
+                this.bootstrapper.configurationOverrides.Add(x => x.SessionProvider = typeof(T));
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to create an <see cref="ICookieConfiguration"/> instance of the specified type.
+            /// </summary>
+            /// <typeparam name="T">The type of the <see cref="ICookieConfiguration"/> that the bootstrapper should use.</typeparam>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator CookieConfiguration<T>() where T : ICookieConfiguration
+            {
+                this.bootstrapper.configurationOverrides.Add(x => x.CookieConfiguration = typeof(T));
+                return this;
+            }
+
 
             /// <summary>
             /// Configures the bootstrapper to use the provided instance of <see cref="IDiagnostics"/>.
