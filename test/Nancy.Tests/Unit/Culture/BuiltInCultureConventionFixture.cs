@@ -201,7 +201,7 @@
                                   { "CurrentCulture", cultureName }
                               };
 
-            context.Request.Session = new Session(new Dictionary<string, object>(sessionValues));
+            context.Request.Session = new NancySession(new Dictionary<string, object>(sessionValues));
 
             //When
             var exception =
@@ -222,7 +222,7 @@
                                   { "CurrentCulture", new CultureInfo("en-GB") }
                               };
 
-            context.Request.Session = new Session(new Dictionary<string, object>(sessionValues));
+            context.Request.Session = new NancySession(new Dictionary<string, object>(sessionValues));
 
             //When
             var culture = BuiltInCultureConventions.SessionCulture(context, context.Environment.GetValue<GlobalizationConfiguration>());

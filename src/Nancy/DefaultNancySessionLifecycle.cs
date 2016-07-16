@@ -1,15 +1,20 @@
 ﻿using Nancy.Bootstrapper;
+using Nancy.Session;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nancy.Session
+namespace Nancy
 {
+    /// <summary>
+    /// <para>Default session lifecycle</para>
+    /// <para>Sessions in this lifecycle per request follows: Load > Create (if not found) > Save</para>
+    /// </summary>
     public class DefaultNancySessionLifecycle : ISessionLifecycle
     {
-        static ISessionProvider _sessionProvider;
+        static SessionProvider _sessionProvider;
 
         /// <summary>
         /// Initialisation
@@ -23,7 +28,7 @@ namespace Nancy.Session
         /// Load session provider
         /// </summary>
         /// <param name="provider">Loaded session provider</param>
-        public void LoadSessionProvider(ISessionProvider provider)
+        public void LoadSessionProvider(SessionProvider provider)
         {
             _sessionProvider = provider;
         }
@@ -49,6 +54,7 @@ namespace Nancy.Session
 
             return null;
         }
+
         /// <summary>
         /// End of pipeline
         /// </summary>

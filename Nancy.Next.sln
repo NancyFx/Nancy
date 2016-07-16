@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{5734E9DC-CF67-4337-B28E-695280598B88}"
 EndProject
@@ -87,6 +87,8 @@ EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Nancy.Demo.Hosting.Kestrel", "samples\Nancy.Demo.Hosting.Kestrel\Nancy.Demo.Hosting.Kestrel.xproj", "{9921E059-612B-4011-9AB6-FD30E69850A1}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Nancy.Tests.Functional", "test\Nancy.Tests.Functional\Nancy.Tests.Functional.xproj", "{742AC687-FC9A-4534-BB50-3D91738563A7}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Nancy.Session.ServerSession", "src\Nancy.Session.ServerSession\Nancy.Session.ServerSession.xproj", "{8A1800C7-72FD-450D-A28F-F95F332D2B51}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -242,6 +244,10 @@ Global
 		{742AC687-FC9A-4534-BB50-3D91738563A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{742AC687-FC9A-4534-BB50-3D91738563A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{742AC687-FC9A-4534-BB50-3D91738563A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A1800C7-72FD-450D-A28F-F95F332D2B51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A1800C7-72FD-450D-A28F-F95F332D2B51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A1800C7-72FD-450D-A28F-F95F332D2B51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A1800C7-72FD-450D-A28F-F95F332D2B51}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -284,5 +290,6 @@ Global
 		{31FA18D3-24AD-4AB0-B297-5A2FD871989E} = {F44224E5-8E58-4D52-A0F0-BCBA2ADC0A0B}
 		{9921E059-612B-4011-9AB6-FD30E69850A1} = {AA791E28-7914-439A-B59A-580B8D8FE95D}
 		{742AC687-FC9A-4534-BB50-3D91738563A7} = {F44224E5-8E58-4D52-A0F0-BCBA2ADC0A0B}
+		{8A1800C7-72FD-450D-A28F-F95F332D2B51} = {5734E9DC-CF67-4337-B28E-695280598B88}
 	EndGlobalSection
 EndGlobal

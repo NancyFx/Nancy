@@ -8,21 +8,22 @@ using System.Threading.Tasks;
 namespace Nancy.Session
 {
     /// <summary>
-    /// <para>Defines the behaviour in each stage of the lifecycle of a Session.</para>
+    /// <para>Defines the behaviour in each stage of the lifecycle of a NancySession.</para>
     /// <para>Initialise->OnStart->LoadSessionProvider->OnEnd->OnStart ... </para>
     /// </summary>
     public interface ISessionLifecycle
     {
         /// <summary>
-        /// Initialisation step. (Called only once)
+        /// Initialisation step called immediately after creation. (Called only once)
         /// </summary>
         /// <param name="pipelines">pipelines</param>
         void Initialise(IPipelines pipelines);
+        
         /// <summary>
-        /// When session provider is loaded
+        /// The session provider will be passed in immediately after it is created. The lifecycle will need to perform initialisation for the session provider
         /// </summary>
         /// <param name="provider">the loaded session provider</param>
-        void LoadSessionProvider(ISessionProvider provider);
+        void LoadSessionProvider(SessionProvider provider);
         /// <summary>
         /// On start of pipeline, this is where initialisation of session should happen
         /// </summary>

@@ -1,0 +1,30 @@
+{
+  "title": "Enables Server Session",
+  "description": "Sever Session are stored In Memory",
+  "version": "1.0.0-*",
+
+  "packOptions": {
+    "tags": [ "Nancy", "Session" ],
+    "projectUrl": "http://nancyfx.org",
+    "licenseUrl": "https://github.com/NancyFx/Nancy/blob/master/license.txt",
+    "iconUrl": "http://nancyfx.org/nancy-nuget.png"
+  },
+
+  "buildOptions": {
+    "define": [ "CORE" ],
+    "xmlDoc": true
+  },
+
+  "dependencies": {
+    "Nancy": { "target": "project" }
+  },
+
+  "frameworks": {
+    "netstandard1.6": {
+      "imports": [
+        "portable-net451+win8"
+      ]
+    },
+    "net452": {}
+  }
+}

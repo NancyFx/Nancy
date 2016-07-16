@@ -86,14 +86,14 @@
         }
 
         /// <summary>
-        /// Checks to see if the Session has a CurrentCulture key
+        /// Checks to see if the NancySession has a CurrentCulture key
         /// </summary>
         /// <param name="context">NancyContext</param>
         /// <param name="configuration">Culture configuration that contains allowed cultures</param>
-        /// <returns>CultureInfo if found in Session otherwise null</returns>
+        /// <returns>CultureInfo if found in NancySession otherwise null</returns>
         public static CultureInfo SessionCulture(NancyContext context, GlobalizationConfiguration configuration)
         {
-            var sessionType = context.Request.Session as NullSessionProvider;
+            var sessionType = context.Request.Session as NullSession;
             if (sessionType == null && context.Request.Session["CurrentCulture"] != null)
             {
                 return (CultureInfo)context.Request.Session["CurrentCulture"];

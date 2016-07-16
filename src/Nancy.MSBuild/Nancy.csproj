@@ -224,11 +224,26 @@
     <Compile Include="..\Nancy\Conventions\StaticFileContent.cs">
       <Link>Conventions\StaticFileContent.cs</Link>
     </Compile>
+    <Compile Include="..\Nancy\Cookies\ICookieConfiguration.cs">
+      <Link>Cookies\ICookieConfiguration.cs</Link>
+    </Compile>
     <Compile Include="..\Nancy\Culture\DefaultCultureService.cs">
       <Link>Culture\DefaultCultureService.cs</Link>
     </Compile>
     <Compile Include="..\Nancy\Culture\ICultureService.cs">
       <Link>Culture\ICultureService.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy\DefaultCookieConfiguration.cs">
+      <Link>DefaultCookieConfiguration.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy\DefaultCookieSessionDependency.cs">
+      <Link>DefaultCookieSessionDependency.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy\DefaultCookieSessionProvider.cs">
+      <Link>DefaultCookieSessionProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy\DefaultNancySessionLifecycle.cs">
+      <Link>DefaultNancySessionLifecycle.cs</Link>
     </Compile>
     <Compile Include="..\Nancy\DefaultResponseFormatterFactory.cs">
       <Link>DefaultResponseFormatterFactory.cs</Link>
@@ -391,6 +406,21 @@
     </Compile>
     <Compile Include="..\Nancy\Properties\InternalsVisibleTo.cs">
       <Link>Properties\InternalsVisibleTo.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy\Session\ISessionDependency.cs">
+      <Link>Session\ISessionDependency.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy\Session\ISessionLifecycle.cs">
+      <Link>Session\ISessionLifecycle.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy\Session\NancySession.cs">
+      <Link>Session\NancySession.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy\Session\NullSession.cs">
+      <Link>Session\NullSession.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy\Session\SessionProvider.cs">
+      <Link>Session\SessionProvider.cs</Link>
     </Compile>
     <Compile Include="..\Nancy\TypeCatalogExtensions.cs">
       <Link>TypeCatalogExtensions.cs</Link>
@@ -1202,12 +1232,6 @@
     <Compile Include="..\Nancy\IObjectSerializer.cs">
       <Link>IObjectSerializer.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy\Session\NullSessionProvider.cs">
-      <Link>Session\NullSessionProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy\Session\Session.cs">
-      <Link>Session\Session.cs</Link>
-    </Compile>
     <Compile Include="..\Nancy\HttpMultipartSubStream.cs">
       <Link>HttpMultipartSubStream.cs</Link>
     </Compile>
@@ -1376,11 +1400,6 @@
     <Compile Include="..\Nancy\Routing\Route.cs">
       <Link>Routing\Route.cs</Link>
     </Compile>
-    <Compile Include="Session\CookieSessionProvider.cs" />
-    <Compile Include="Session\DefaultNancySessionLifecycle.cs" />
-    <Compile Include="Session\ISessionLifecycle.cs" />
-    <Compile Include="Session\ISessionProvider.cs" />
-    <Compile Include="Session\ServerSessionProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\Nancy\Diagnostics\Views\Dashboard.sshtml">

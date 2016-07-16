@@ -5,15 +5,15 @@ namespace Nancy.Session
     using System.Collections.Generic;
 
     /// <summary>
-    /// Session implementation
+    /// NancySession implementation
     /// </summary>
-    public class Session : ISession
+    public class NancySession : ISession
     {
         private readonly IDictionary<string, object> dictionary;
         private bool hasChanged;
 
-        public Session() : this(new Dictionary<string, object>(0)){}
-        public Session(IDictionary<string, object> dictionary)
+        public NancySession() : this(new Dictionary<string, object>(0)){}
+        public NancySession(IDictionary<string, object> dictionary)
         {
             this.dictionary = dictionary;
         }

@@ -31,7 +31,7 @@ namespace Nancy.Session
         /// </summary>
         /// <param name="encryptionProvider">The encryption provider.</param>
         /// <param name="hmacProvider">The hmac provider</param>
-        /// <param name="objectSerializer">Session object serializer to use</param>
+        /// <param name="objectSerializer">NancySession object serializer to use</param>
         public CookieBasedSessions(IEncryptionProvider encryptionProvider, IHmacProvider hmacProvider, IObjectSerializer objectSerializer)
         {
             this.currentConfiguration = new CookieBasedSessionsConfiguration
@@ -120,7 +120,7 @@ namespace Nancy.Session
         /// <summary>
         /// Save the session into the response
         /// </summary>
-        /// <param name="session">Session to save</param>
+        /// <param name="session">NancySession to save</param>
         /// <param name="response">Response to save into</param>
         public void Save(ISession session, Response response)
         {
@@ -173,7 +173,7 @@ namespace Nancy.Session
                 var hmacLength = Base64Helpers.GetBase64Length(hmacProvider.HmacLength);
                 if (cookieData.Length < hmacLength)
                 {
-                  return new Session(dictionary);
+                  return new NancySession(dictionary);
                 }
 
                 var hmacString = cookieData.Substring(0, hmacLength);
@@ -198,14 +198,14 @@ namespace Nancy.Session
                 }
             }
 
-            return new Session(dictionary);
+            return new NancySession(dictionary);
         }
 
         /// <summary>
         /// Saves the request session into the response
         /// </summary>
         /// <param name="context">Nancy context</param>
-        /// <param name="sessionStore">Session store</param>
+        /// <param name="sessionStore">NancySession store</param>
         private static void SaveSession(NancyContext context, CookieBasedSessions sessionStore)
         {
             sessionStore.Save(context.Request.Session, context.Response);
@@ -215,7 +215,7 @@ namespace Nancy.Session
         /// Loads the request session
         /// </summary>
         /// <param name="context">Nancy context</param>
-        /// <param name="sessionStore">Session store</param>
+        /// <param name="sessionStore">NancySession store</param>
         /// <returns>Always returns null</returns>
         private static Response LoadSession(NancyContext context, CookieBasedSessions sessionStore)
         {

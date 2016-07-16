@@ -6,13 +6,13 @@ namespace Nancy.Tests.Unit.Sessions
 
     using Xunit;
 
-    public class NullSessionProviderFixture
+    public class NullSessionFixture
     {
-        private NullSessionProvider provider;
+        private NullSession provider;
 
-        public NullSessionProviderFixture()
+        public NullSessionFixture()
         {
-            this.provider = new NullSessionProvider();
+            this.provider = new NullSession();
         }
 
         [Fact]

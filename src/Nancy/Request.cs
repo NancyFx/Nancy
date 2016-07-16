@@ -85,7 +85,7 @@ namespace Nancy
 
             this.Headers = new RequestHeaders(headers ?? new Dictionary<string, IEnumerable<string>>());
 
-            this.Session = new NullSessionProvider();
+            this.Session = new NullSession();
 
             if (certificate != null)
             {
