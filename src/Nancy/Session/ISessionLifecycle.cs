@@ -1,12 +1,7 @@
-﻿using Nancy.Bootstrapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Nancy.Session
+﻿namespace Nancy.Session
 {
+    using Nancy.Bootstrapper;
+
     /// <summary>
     /// <para>Defines the behaviour in each stage of the lifecycle of a NancySession.</para>
     /// <para>Initialise->OnStart->LoadSessionProvider->OnEnd->OnStart ... </para>

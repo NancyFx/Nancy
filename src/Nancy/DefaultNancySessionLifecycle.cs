@@ -1,20 +1,15 @@
-﻿using Nancy.Bootstrapper;
-using Nancy.Session;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Nancy
+﻿namespace Nancy
 {
+    using Nancy.Bootstrapper;
+    using Nancy.Session;
+
     /// <summary>
     /// <para>Default session lifecycle</para>
     /// <para>Sessions in this lifecycle per request follows: Load > Create (if not found) > Save</para>
     /// </summary>
     public class DefaultNancySessionLifecycle : ISessionLifecycle
     {
-        static SessionProvider _sessionProvider;
+        private static SessionProvider sessionProvider;
 
         /// <summary>
         /// Initialisation
@@ -30,7 +25,7 @@ namespace Nancy
         /// <param name="provider">Loaded session provider</param>
         public void LoadSessionProvider(SessionProvider provider)
         {
-            _sessionProvider = provider;
+            sessionProvider = provider;
         }
         /// <summary>
         /// Start of pipeline
@@ -39,15 +34,15 @@ namespace Nancy
         /// <returns>Response with initialised session</returns>
         public Response OnStart(NancyContext ctx)
         {
-            if (_sessionProvider == null || ctx.Request == null)
+            if (sessionProvider == null || ctx.Request == null)
             {
                 return null;
             }
 
-            var session = _sessionProvider.Load(ctx);
+            var session = sessionProvider.Load(ctx);
             if (session == null)
             {
-                session = _sessionProvider.New(ctx);
+                session = sessionProvider.New(ctx);
             }
 
             ctx.Request.Session = session;
@@ -61,11 +56,11 @@ namespace Nancy
         /// <param name="ctx">Nancy Context</param>
         public void OnEnd(NancyContext ctx)
         {
-            if (_sessionProvider != null && ctx.Request != null)
+            if (sessionProvider != null && ctx.Request != null)
             {
                 if (ctx.Request.Session != null && ctx.Request.Session.HasChanged)
                 {
-                    _sessionProvider.Save(ctx.Request.Session, ctx);
+                    sessionProvider.Save(ctx.Request.Session, ctx);
                 }
             }
         }

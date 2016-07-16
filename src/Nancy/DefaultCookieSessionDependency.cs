@@ -1,13 +1,18 @@
-﻿using Nancy.Session;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Nancy
+﻿namespace Nancy
 {
+    using Nancy.Session;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
+    /// <summary>
+    /// Default Dependencies for <see cref="DefaultCookieSessionProvider"/> 
+    /// </summary>
     public class DefaultCookieSessionDependency : ISessionDependency
     {
+        /// <summary>
+        /// Returns instanced dependency <see cref="CookieBasedSessionsConfiguration"/> initialised with <see cref="DefaultObjectSerializer"/>
+        /// </summary>
         public Func<IReadOnlyCollection<object>> GetInstancedDependencies
         {
             get
@@ -23,6 +28,9 @@ namespace Nancy
             }
         }
 
+        /// <summary>
+        /// Returns the dependecy of type <see cref="DefaultCookieConfiguration"/>
+        /// </summary>
         public Func<IReadOnlyCollection<Type>> GetTypeDependencies
         {
             get

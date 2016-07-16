@@ -4,32 +4,44 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
 
     /// <summary>
     /// Interface for implementing session behaviour 
     /// </summary>
     public abstract class SessionProvider
     {
-        List<object> instances;
-        List<Type> types;
+        private List<object> instances;
+        private List<Type> types;
 
+        /// <summary>
+        /// Current type of <see cref="SessionProvider"/>  in use
+        /// </summary>
         public static Type CurrentSessionProviderType { get; private set; }
+
+        /// <summary>
+        /// Current type of <see cref="ISessionDependency"/>  in use
+        /// </summary>
         public static Type CurrentSessionDependencyType { get; private set; }
+
+        /// <summary>
+        /// Abstraction of session control
+        /// </summary>
         public SessionProvider()
         {
-            CurrentSessionProviderType = GetType();
+            CurrentSessionProviderType = this.GetType();
         }
 
         internal void SetSessionDependencies(ISessionDependency dependency)
         {
-            instances = new List<object>();
-            types = new List<Type>();
+            this.instances = new List<object>();
+            this.types = new List<Type>();
             if (dependency != null)
             {
                 var depInst = dependency.GetInstancedDependencies();
-                instances.AddRange(depInst);
+                this.instances.AddRange(depInst);
                 var depTypes = dependency.GetTypeDependencies();
-                types.AddRange(depTypes);
+                this.types.AddRange(depTypes);
             }
             CurrentSessionDependencyType = dependency.GetType();
         }
@@ -37,14 +49,14 @@
         protected IReadOnlyCollection<T> GetInstance<T>()
         {
             var type = typeof(T);
-            return instances.Where(i => type.IsAssignableFrom(i.GetType())).Select(i => (T)i).ToArray();
+            return this.instances.Where(i => type.IsAssignableFrom(i.GetType())).Select(i => (T)i).ToArray();
         }
 
         protected IReadOnlyCollection<Type> GetType<T>()
         {
             var type = typeof(T);
-            return types.Where(type.IsAssignableFrom)
-                .Where(t => !t.IsAbstract)
+            return this.types.Where(type.IsAssignableFrom)
+                .Where(t => !t.GetTypeInfo().IsAbstract)
                 .ToArray();
         }
 

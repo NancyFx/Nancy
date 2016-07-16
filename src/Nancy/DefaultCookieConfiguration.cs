@@ -1,13 +1,10 @@
-﻿using Nancy.Cookies;
-using Nancy.Session;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Nancy
+﻿namespace Nancy
 {
+    using Nancy.Cookies;
+
+    /// <summary>
+    /// Default cookie configuration with default name "_nc"
+    /// </summary>
     public class DefaultCookieConfiguration:ICookieConfiguration
     {
         internal const string DefaultCookieName = "_nc";
@@ -29,7 +26,7 @@ namespace Nancy
 
         public DefaultCookieConfiguration()
         {
-            CookieName = DefaultCookieName;
+            this.CookieName = DefaultCookieName;
         }
     }
 }

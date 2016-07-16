@@ -6,36 +6,39 @@ using System.Security.Cryptography;
 
 namespace Nancy.Session
 {
+    /// <summary>
+    /// Implements Server based session. Session values are stored in server's memory
+    /// </summary>
     public class ServerSessionProvider : SessionProvider
     {
-        ICookieConfiguration cookieConfiguration;
+        private ICookieConfiguration cookieConfiguration;
         
         public const int SID_SIZE = 64;
-        static ConcurrentDictionary<string, NancySession> sessions;
+        private static ConcurrentDictionary<string, NancySession> sessions;
         
-        static RandomNumberGenerator _rng;
+        private static RandomNumberGenerator randomNumberGenerator;
 
         protected string cookieName
         {
-            get { return cookieConfiguration.CookieName; }
+            get { return this.cookieConfiguration.CookieName; }
         }
 
         static ServerSessionProvider()
         {
-            _rng = RandomNumberGenerator.Create();
+            randomNumberGenerator = RandomNumberGenerator.Create();
             sessions = new ConcurrentDictionary<string, NancySession>();
         }
 
         public override void Initialize()
         {
-            cookieConfiguration = (ICookieConfiguration)Activator.CreateInstance(GetType<ICookieConfiguration>().FirstOrDefault());            
+            this.cookieConfiguration = (ICookieConfiguration)Activator.CreateInstance(GetType<ICookieConfiguration>().FirstOrDefault());            
         }
 
         public override ISession Load(NancyContext context)
         {
-            if (context.Request.Cookies.ContainsKey(cookieName))
+            if (context.Request.Cookies.ContainsKey(this.cookieName))
             {
-                string sid = context.Request.Cookies[cookieName];
+                string sid = context.Request.Cookies[this.cookieName];
 
                 if (sessions.ContainsKey(sid))
                     return sessions[sid];
@@ -48,9 +51,9 @@ namespace Nancy.Session
 
         public override void Clear(NancyContext context)
         {
-            if (context.Request.Cookies.ContainsKey(cookieName))
+            if (context.Request.Cookies.ContainsKey(this.cookieName))
             {
-                string sid = context.Request.Cookies[cookieName];
+                string sid = context.Request.Cookies[this.cookieName];
 
                 if (sessions.ContainsKey(sid))
                 {
@@ -63,11 +66,11 @@ namespace Nancy.Session
 
         public override void Save(ISession session, NancyContext context)
         {
-            if (context.Request.Cookies.ContainsKey(cookieName))
+            if (context.Request.Cookies.ContainsKey(this.cookieName))
             {
-                string sid = context.Request.Cookies[cookieName];
+                string sid = context.Request.Cookies[this.cookieName];
 
-                var cookie = new NancyCookie(cookieName, sid, true)
+                var cookie = new NancyCookie(this.cookieName, sid, true)
                 {
                     Domain = this.cookieConfiguration.Domain,
                     Path = this.cookieConfiguration.Path
@@ -88,11 +91,11 @@ namespace Nancy.Session
             do
             {
                 byte[] bSid = new byte[SID_SIZE];
-                _rng.GetBytes(bSid);
+                randomNumberGenerator.GetBytes(bSid);
                 sid = BitConverter.ToString(bSid).Replace("-", "");
             } while (sessions.ContainsKey(sid));
 
-            context.Request.Cookies[cookieName] = sid;
+            context.Request.Cookies[this.cookieName] = sid;
             sessions[sid] = session;
             
             return session;

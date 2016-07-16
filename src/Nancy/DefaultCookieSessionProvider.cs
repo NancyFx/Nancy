@@ -11,28 +11,27 @@
 
     class DefaultCookieSessionProvider : SessionProvider
     {
-        ICookieConfiguration cookieConfiguration;
+        private ICookieConfiguration cookieConfiguration;
         private CookieBasedSessionsConfiguration currentConfiguration;
 
         public CookieBasedSessionsConfiguration CookieBasedSessionsConfiguration
         {
-            get { return currentConfiguration; }
+            get { return this.currentConfiguration; }
         }
-
-
+        
         public string CookieName
         {
-            get { return cookieConfiguration.CookieName; }
+            get { return this.cookieConfiguration.CookieName; }
         }
         
         public override void Initialize()
         {
-            currentConfiguration = (CookieBasedSessionsConfiguration)GetInstance<CookieBasedSessionsConfiguration>().FirstOrDefault();
-            cookieConfiguration = (DefaultCookieConfiguration)GetInstance<DefaultCookieConfiguration>().FirstOrDefault();
+            this.currentConfiguration = (CookieBasedSessionsConfiguration)GetInstance<CookieBasedSessionsConfiguration>().FirstOrDefault();
+            this.cookieConfiguration = (DefaultCookieConfiguration)GetInstance<DefaultCookieConfiguration>().FirstOrDefault();
 
-            if(cookieConfiguration==null)
+            if(this.cookieConfiguration ==null)
             {
-                cookieConfiguration = (ICookieConfiguration)Activator.CreateInstance(GetType<ICookieConfiguration>().FirstOrDefault());
+                this.cookieConfiguration = (ICookieConfiguration)Activator.CreateInstance(GetType<ICookieConfiguration>().FirstOrDefault());
             }
             
             if (this.currentConfiguration == null)

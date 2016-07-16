@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Nancy.Cookies
 {
+    /// <summary>
+    /// Abstraction of cookie's configuration
+    /// </summary>
     public interface ICookieConfiguration
     {
         /// <summary>
