@@ -5,8 +5,14 @@ using System.Threading.Tasks;
 
 namespace Nancy.Session.ServerSession
 {
+    /// <summary>
+    /// Dependencies for <see cref="ServerSessionProvider"/> 
+    /// </summary>
     public class ServerSessionDependency : ISessionDependency
     {
+        /// <summary>
+        /// Returns empty list
+        /// </summary>
         public Func<IReadOnlyCollection<object>> GetInstancedDependencies
         {
             get
@@ -17,6 +23,9 @@ namespace Nancy.Session.ServerSession
             }            
         }
 
+        /// <summary>
+        /// Returns dependant type <see cref="DefaultCookieConfiguration"/> 
+        /// </summary>
         public Func<IReadOnlyCollection<Type>> GetTypeDependencies
         {
             get
