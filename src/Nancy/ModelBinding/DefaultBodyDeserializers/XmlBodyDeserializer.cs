@@ -40,10 +40,7 @@ namespace Nancy.ModelBinding.DefaultBodyDeserializers
         /// <returns>Model instance</returns>
         public object Deserialize(MediaRange mediaRange, Stream bodyStream, BindingContext context)
         {
-            if (bodyStream.CanSeek)
-            {
-                bodyStream.Position = 0;
-            }
+            bodyStream.Position = 0;
 
             var ser = new XmlSerializer(context.DestinationType);
             return ser.Deserialize(bodyStream);
