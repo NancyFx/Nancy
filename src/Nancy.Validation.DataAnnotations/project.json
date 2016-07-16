@@ -1,5 +1,5 @@
 ﻿{
-    "version": "2.0.0-*",
+    "version": "2.0.0-barneyrubble",
     "description": "Adds Data Annotation validation support to Nancy.",
     "authors": [ "Andreas Håkansson, Steven Robbins and contributors" ],
 
