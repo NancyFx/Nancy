@@ -7,7 +7,7 @@ using System.Xml.XPath;
 var target = Argument<string>("target", "Default");
 var source = Argument<string>("source", null);
 var apiKey = Argument<string>("apikey", null);
-var version = Argument<string>("targetversion", EnvironmentVariable("APPVEYOR_BUILD_VERSION"));
+var version = Argument<string>("targetversion", "2.0.0-" + EnvironmentVariable("APPVEYOR_BUILD_NUMBER"));
 var skipClean = Argument<bool>("skipclean", false);
 var skipTests = Argument<bool>("skiptests", false);
 var nogit = Argument<bool>("nogit", false);
@@ -303,10 +303,6 @@ Task("Update-Version")
 
 public void UpdateProjectJsonVersion(string version, FilePathCollection filePaths)
 {
-  if (version == null)
-  {
-      version = "0.0.0";
-  }
   Verbose(logAction => logAction("Setting version to {0}", version));
   foreach (var file in filePaths) 
   {
