@@ -30,6 +30,6 @@ deploy:
     branch: master
   
 build:
-  verbosity: minimal
+  verbosity: detailed
 
 test: off
