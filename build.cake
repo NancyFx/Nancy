@@ -7,7 +7,7 @@ using System.Xml.XPath;
 var target = Argument<string>("target", "Default");
 var source = Argument<string>("source", null);
 var apiKey = Argument<string>("apikey", null);
-var version = Argument<string>("targetversion", "2.0.0-" + (EnvironmentVariable("APPVEYOR_BUILD_NUMBER") ?? "*"));
+var version = Argument<string>("targetversion", "2.0.0-ci" + (EnvironmentVariable("APPVEYOR_BUILD_NUMBER") ?? "0"));
 var skipClean = Argument<bool>("skipclean", false);
 var skipTests = Argument<bool>("skiptests", false);
 var nogit = Argument<bool>("nogit", false);
