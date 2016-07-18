@@ -1,15 +1,35 @@
-[CmdletBinding()]
-Param(
-    [string]$Target = "Default",
-    [ValidateSet("Quiet", "Minimal", "Normal", "Verbose", "Diagnostic")]
-    [string]$Verbosity = "Verbose",
-    [switch]$WhatIf,
-    [string]$NuGetSource = $null,
-    [string]$NuGetApiKey = $null,
-    [string]$Version = $null,
-    [switch]$SkipClean,
-    [switch]$SkipTests
-)
+# Define constants.
+$PSScriptRoot = split-path -parent $MyInvocation.MyCommand.Definition;
+$Script = Join-Path $PSScriptRoot "build.cake"
+$ToolPath = Join-Path $PSScriptRoot "tools"
+$NuGetPath = Join-Path $ToolPath "nuget/NuGet.exe"
+$CakeVersion = "0.13.0"
+$CakePath = Join-Path $ToolPath "Cake.$CakeVersion/Cake.exe"
+$Target = "Default"
+$Verbosity = "Verbose"
+$DryRun
+$Arguments = @{}
+
+for($i=0; $i -lt $args.length; $i+=2)
+{
+  Write-Host $args[$i].ToLower()
+  if ($args[$i].ToLower() -eq "-target")
+  {
+    $Target = $args[$i+1]
+  }
+  ElseIf ($args[$i].ToLower() -eq "-verbosity")
+  {
+    $Verbosity = $args[$i+1]
+  }
+  ElseIf ($args[$i].ToLower() -eq "-dryrun")
+  {
+    $DryRun = "-dryrun"
+  }
+  Else
+  {
+    $Arguments.Add($args[$i], $args[$i+1])
+  }
+}
 
 ######################################################################################################
 
@@ -53,42 +73,23 @@ Function Remove-PathVariable([string]$VariableToRemove)
 
 Write-Host "Preparing to run build script..."
 
-# Define constants.
-$PSScriptRoot = split-path -parent $MyInvocation.MyCommand.Definition;
-$Script = Join-Path $PSScriptRoot "build.cake"
-$ToolPath = Join-Path $PSScriptRoot "tools"
-$NuGetPath = Join-Path $ToolPath "nuget/NuGet.exe"
-$CakeVersion = "0.13.0"
-$CakePath = Join-Path $ToolPath "Cake.$CakeVersion/Cake.exe"
-
 # Install Dotnet CLI.
 Install-Dotnet
 
 # Make sure Cake has been installed.
 if (!(Test-Path $CakePath)) {
-    Write-Verbose "Installing Cake..."
-    Invoke-Expression "&`"$NuGetPath`" install Cake -Version $CakeVersion -OutputDirectory `"$ToolPath`"" | Out-Null;
+    Write-Host "Installing Cake..."
+    Invoke-Expression "&`"$NuGetPath`" install Cake -Version $CakeVersion -Source https://api.nuget.org/v3/index.json -OutputDirectory `"$ToolPath`"" | Out-Null;
     if ($LASTEXITCODE -ne 0) {
         Throw "An error occured while restoring Cake from NuGet."
     }
 }
 
-# Is this a dry run?
-$UseDryRun = "";
-if($WhatIf.IsPresent) {
-    $UseDryRun = "-dryrun"
-}
-
 # Build the argument list.
-$Arguments = @{
-    source=$NuGetSource;
-    apikey=$NuGetApiKey;
-    targetversion=$Version;
-    skipclean=$SkipClean.IsPresent;
-    skiptests=$SkipTests.IsPresent;
-}.GetEnumerator() | %{"--{0}=`"{1}`"" -f $_.key, $_.value };
+$Arguments = $Arguments.GetEnumerator() | %{"{0}=`"{1}`"" -f $_.key, $_.value };
 
 # Start Cake.
 Write-Host "Running build script..."
+Write-Host "`"$CakePath`" `"$Script`" -target=`"$Target`" -verbosity=`"$Verbosity`" $DryRun $Arguments"
 Invoke-Expression "& `"$CakePath`" `"$Script`" -target=`"$Target`" -verbosity=`"$Verbosity`" $UseDryRun $Arguments"
 exit $LASTEXITCODE
