@@ -20,7 +20,7 @@ var projectJsonFiles = GetFiles("./src/**/project.json");
 var output = Directory("build");
 var outputBinaries = output + Directory("binaries");
 var outputBinariesNet452 = outputBinaries + Directory("net452");
-var outputBinariesNetstandard = outputBinaries + Directory("netstandard1.5");
+var outputBinariesNetstandard = outputBinaries + Directory("netstandard1.6");
 var outputPackages = output + Directory("packages");
 var outputNuGet = output + Directory("nuget");
 
