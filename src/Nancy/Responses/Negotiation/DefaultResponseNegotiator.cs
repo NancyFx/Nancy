@@ -80,6 +80,12 @@
             var targetType = routeResult.GetType();
             var responseType = typeof(Response);
 
+            if (routeResult is Response)
+            {
+                response = (Response)routeResult;
+                return true; 
+            }
+
             var methods = responseType.GetMethods(BindingFlags.Public | BindingFlags.Static);
 
             foreach (var method in methods)
