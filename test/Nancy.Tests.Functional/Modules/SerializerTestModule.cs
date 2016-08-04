@@ -3,6 +3,7 @@
     using System;
     using System.Globalization;
     using Nancy.Extensions;
+    using Nancy.IO;
     using Nancy.ModelBinding;
 
     public class SerializerTestModule : NancyModule
@@ -25,7 +26,7 @@
 
             Post("/serializer/date", args =>
             {
-                var s = this.Request.Body.AsString();
+                var s = ((RequestStream)this.Request.Body).AsString();
                 var model = this.Bind<FakeSerializerModel>();
                 return model;
             });
