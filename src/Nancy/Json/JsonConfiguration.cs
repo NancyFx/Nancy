@@ -17,7 +17,8 @@ namespace Nancy.Json
             Converters = new List<JavaScriptConverter> { new TimeSpanConverter(), new TupleConverter() },
             DefaultEncoding = Encoding.UTF8,
             PrimitiveConverters = new List<JavaScriptPrimitiveConverter>(),
-            RetainCasing = false
+            RetainCasing = false,
+            SerializeEnumToString = false
         };
 
         private JsonConfiguration()
@@ -31,12 +32,14 @@ namespace Nancy.Json
         /// <param name="converters">List of <see cref="JavaScriptConverter"/> instances.</param>
         /// <param name="primitiveConverters">List of <see cref="JavaScriptPrimitiveConverter"/> instances.</param>
         /// <param name="retainCasing"><see langword="true"/> if the name casing should be retained during serialization, otherwise <see langword="false"/>.</param>
-        public JsonConfiguration(Encoding defaultEncoding, IList<JavaScriptConverter> converters, IList<JavaScriptPrimitiveConverter> primitiveConverters, bool? retainCasing)
+        /// <param name="serializeEnumToString"><see langword="true"/> if enums should be represented as string otherwise <see langword="false"/>.</param>
+        public JsonConfiguration(Encoding defaultEncoding, IList<JavaScriptConverter> converters, IList<JavaScriptPrimitiveConverter> primitiveConverters, bool? retainCasing, bool? serializeEnumToString)
         {
             this.DefaultEncoding = defaultEncoding ?? Default.DefaultEncoding;
             this.Converters = converters ?? Default.Converters;
             this.PrimitiveConverters = primitiveConverters ?? Default.PrimitiveConverters;
             this.RetainCasing = retainCasing ?? Default.RetainCasing;
+            this.SerializeEnumToString = serializeEnumToString ?? Default.SerializeEnumToString;
         }
 
         /// <summary>
@@ -62,5 +65,10 @@ namespace Nancy.Json
         /// </summary>
         /// <remarks>The default is <see langword="false"/>.</remarks>
         public bool RetainCasing { get; private set; }
+
+        /// <summary>
+        /// Get or sets whether enums should be treated as string
+        /// </summary>
+        public bool SerializeEnumToString{ get; private set; }
     }
 }

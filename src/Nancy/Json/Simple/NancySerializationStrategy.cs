@@ -14,6 +14,7 @@
     public class NancySerializationStrategy : PocoJsonSerializerStrategy
     {
         private readonly bool retainCasing;
+        private readonly bool serializeEnumToString;
         private readonly List<JavaScriptConverter> converters = new List<JavaScriptConverter>();
         private readonly List<JavaScriptPrimitiveConverter> primitiveConverters = new List<JavaScriptPrimitiveConverter>();
         private readonly ConcurrentDictionary<Type, JavaScriptConverter> converterCache = new ConcurrentDictionary<Type, JavaScriptConverter>();
@@ -22,8 +23,8 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="NancySerializationStrategy"/> class.
         /// </summary>
-        /// <remarks>C# casing of objects will be defaulted to camelCase</remarks>
-        public NancySerializationStrategy() : this(false)
+        /// <remarks>C# casing of objects will be defaulted to camelCase and enums treated as integers</remarks>
+        public NancySerializationStrategy() : this(false, false)
         {
 
         }
@@ -32,9 +33,11 @@
         ///  Initializes a new instance of the <see cref="NancySerializationStrategy"/> class.
         /// </summary>
         /// <param name="retainCasing">Retain C# casing of objects when serialized</param>
-        public NancySerializationStrategy(bool retainCasing)
+        /// <param name="serializeEnumToString">Should enums be represented as string</param>
+        public NancySerializationStrategy(bool retainCasing, bool serializeEnumToString)
         {
             this.retainCasing = retainCasing;
+            this.serializeEnumToString = serializeEnumToString;
         }
 
         /// <summary>
@@ -131,6 +134,15 @@
             }
 
             return genericTypeConverter.Deserialize(values, type);
+        }
+
+        protected override object SerializeEnum(Enum p)
+        {
+            if (this.serializeEnumToString)
+            {
+                return p.ToString();
+            }
+            return base.SerializeEnum(p);
         }
 
         /// <summary>

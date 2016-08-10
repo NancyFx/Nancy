@@ -61,7 +61,7 @@ namespace Nancy.Json
         {
             this.jsonConfiguration = jsonConfiguration;
             this.globalizationConfiguration = globalizationConfiguration;
-            this.serializerStrategy = new NancySerializationStrategy(jsonConfiguration.RetainCasing);
+            this.serializerStrategy = new NancySerializationStrategy(jsonConfiguration.RetainCasing, jsonConfiguration.SerializeEnumToString);
         }
 
         /// <summary>
