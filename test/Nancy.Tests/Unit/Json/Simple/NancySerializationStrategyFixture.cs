@@ -171,8 +171,8 @@ namespace Nancy.Tests.Unit.Json.Simple
     public class NancySerializationStrategyTestWrapper : NancySerializationStrategy
     {
         public NancySerializationStrategyTestWrapper(
-            bool retainCasing = false)
-            : base(retainCasing)
+            bool retainCasing = false, bool serializeEnumToString = false)
+            : base(retainCasing, serializeEnumToString)
         {
 
         }
