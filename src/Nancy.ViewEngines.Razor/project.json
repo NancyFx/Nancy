@@ -1,4 +1,4 @@
-﻿{
+{
     "version": "2.0.0-barneyrubble",
     "description": "Enables using the Razor view engine with Nancy.",
     "authors": [ "Andreas Håkansson, Steven Robbins and contributors" ],
@@ -13,7 +13,8 @@
     "dependencies": {
         "Nancy": { "target": "project" },
         "Microsoft.AspNet.Razor": "2.0.30506.0",
-        "Microsoft.CodeAnalysis.CSharp": "1.1.0-rc1-20151109-01"
+      "Microsoft.CodeAnalysis.CSharp": "1.1.0-rc1-20151109-01",
+      "AsyncUsageAnalyzers": "1.0.0-alpha003"
     },
 
     "buildOptions": {

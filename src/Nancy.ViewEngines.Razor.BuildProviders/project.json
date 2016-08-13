@@ -1,8 +1,9 @@
-﻿{
+{
     "version": "2.0.0-barneyrubble",
 
     "dependencies": {
-        "Nancy": { "target": "project" },
+      "AsyncUsageAnalyzers": "1.0.0-alpha003",
+      "Nancy": { "target": "project" },
         "Nancy.ViewEngines.Razor": { "target": "project" }
     },
     

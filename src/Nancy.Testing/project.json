@@ -1,4 +1,4 @@
-﻿{
+{
     "version": "2.0.0-barneyrubble",
     "description": "Test harness for Nancy applications.",
     "authors": [ "Andreas Håkansson, Steven Robbins and contributors" ],
@@ -12,6 +12,7 @@
 
     "dependencies": {
         "AngleSharp": "0.9.8.1",
+        "AsyncUsageAnalyzers": "1.0.0-alpha003",
         "Nancy": { "target": "project" },
         "Nancy.Authentication.Forms": { "target": "project" }
     },

@@ -1,4 +1,4 @@
-﻿{
+{
     "version": "2.0.0-barneyrubble",
     "description": "Enables using the Nustache view engine with Nancy.",
     "authors": [ "Andreas Håkansson, Steven Robbins and contributors" ],
@@ -15,7 +15,8 @@
     },
 
     "dependencies": {
-        "Nancy": { "target": "project" },
+      "AsyncUsageAnalyzers": "1.0.0-alpha003",
+      "Nancy": { "target": "project" },
         "Nustache": "1.13.8.22"
     },
 
