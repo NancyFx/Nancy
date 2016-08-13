@@ -184,7 +184,7 @@ namespace Nancy.Testing.Tests
         }
 
         [Fact]
-        public async Task Should_add_basic_authentication_credentials_to_the_headers_of_the_request()
+        public void Should_add_basic_authentication_credentials_to_the_headers_of_the_request()
         {
             // Given
             var context = new BrowserContext(A.Fake<INancyEnvironment>());
