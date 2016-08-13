@@ -1,4 +1,4 @@
-﻿{
+{
     "version": "2.0.0-barneyrubble",
     "description": "Enables using the DotLiquid view engine with Nancy.",
     "authors": [ "Andreas Håkansson, Steven Robbins and contributors" ],
@@ -16,7 +16,8 @@
 
     "dependencies": {
         "Nancy": { "target": "project" },
-        "DotLiquid": "1.7.0"
+      "DotLiquid": "1.7.0",
+      "AsyncUsageAnalyzers": "1.0.0-alpha003"
     },
 
     "frameworks": {

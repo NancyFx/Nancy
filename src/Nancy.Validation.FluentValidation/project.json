@@ -1,4 +1,4 @@
-﻿{
+{
     "version": "2.0.0-barneyrubble",
     "description": "Adds Fluent Validation support to Nancy.",
     "authors": [ "Andreas Håkansson, Steven Robbins and contributors" ],
@@ -16,7 +16,8 @@
 
     "dependencies": {
         "Nancy": { "target": "project" },
-        "FluentValidation": "6.3.4-alpha"
+      "FluentValidation": "6.3.4-alpha",
+      "AsyncUsageAnalyzers": "1.0.0-alpha003"
     },
 
     "frameworks": {
