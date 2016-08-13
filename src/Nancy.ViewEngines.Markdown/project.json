@@ -17,7 +17,7 @@
     "dependencies": {
         "Nancy": { "target": "project" },
         "Markdown": "2.2.0",
-      "AsyncUsageAnalyzers": "1.0.0-alpha003"
+        "AsyncUsageAnalyzers": "1.0.0-alpha003"
     },
 
     "frameworks": {
