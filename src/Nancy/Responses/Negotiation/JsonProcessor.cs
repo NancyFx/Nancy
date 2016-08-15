@@ -107,8 +107,7 @@
 
             var subtypeString = requestedContentType.Subtype.ToString();
 
-            return (subtypeString.StartsWith("vnd", StringComparison.OrdinalIgnoreCase) &&
-                    subtypeString.EndsWith("+json", StringComparison.OrdinalIgnoreCase));
+            return subtypeString.EndsWith("+json", StringComparison.OrdinalIgnoreCase);
         }
     }
 }
