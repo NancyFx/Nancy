@@ -6,11 +6,11 @@
 
     using Xunit;
 
-    public class DataAnnotationValidatorFactoryFixture
+    public class DataAnnotationsValidatorFactoryFixture
     {
         private readonly DataAnnotationsValidatorFactory subject;
 
-        public DataAnnotationValidatorFactoryFixture()
+        public DataAnnotationsValidatorFactoryFixture()
         {
             var factory =
                 A.Fake<IPropertyValidatorFactory>();
@@ -18,7 +18,7 @@
             var adapter =
                 A.Fake<IValidatableObjectAdapter>();
 
-            this.subject = 
+            this.subject =
                 new DataAnnotationsValidatorFactory(factory, adapter);
         }
 
