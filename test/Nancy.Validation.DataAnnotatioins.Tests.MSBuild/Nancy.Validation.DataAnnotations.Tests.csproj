@@ -125,9 +125,6 @@
     <Compile Include="..\Nancy.Validation.DataAnnotatioins.Tests\DataAnnotationValidatorFactoryFixture.cs">
       <Link>DataAnnotationValidatorFactoryFixture.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy.Validation.DataAnnotatioins.Tests\DataAnnotationValidatorFixture.cs">
-      <Link>DataAnnotationValidatorFixture.cs</Link>
-    </Compile>
     <Compile Include="..\Nancy.Validation.DataAnnotatioins.Tests\DefaultValidatableObjectAdapterFixture.cs">
       <Link>DefaultValidatableObjectAdapterFixture.cs</Link>
     </Compile>
