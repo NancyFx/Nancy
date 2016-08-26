@@ -4,6 +4,9 @@ namespace Nancy.Responses.Negotiation
     using System.Runtime.CompilerServices;
     using System.Threading.Tasks;
 
+    /// <summary>
+    /// Configurator for a negotiated response.
+    /// </summary>
     public class Negotiator : IHideObjectMembers
     {
         // TODO - this perhaps should be an interface, along with the view thing above
@@ -35,5 +38,14 @@ namespace Nancy.Responses.Negotiation
         /// </summary>
         /// <value>A <see cref="NegotiationContext"/> instance.</value>
         public NegotiationContext NegotiationContext { get; private set; }
+
+        /// <summary>
+        /// Gets the awaiter for the class.
+        /// </summary>
+        /// <returns>A <see cref="TaskAwaiter{TResult}"/> instance.</returns>
+        public TaskAwaiter<Negotiator> GetAwaiter()
+        {
+            return Task.FromResult(this).GetAwaiter();
+        }
     }
 }
