@@ -4,6 +4,11 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    /// <summary>
+    /// Abstract base class for request pipelines with async support
+    /// </summary>
+    /// <typeparam name="TAsyncDelegate"></typeparam>
+    /// <typeparam name="TSyncDelegate"></typeparam>
     public abstract class AsyncNamedPipelineBase<TAsyncDelegate, TSyncDelegate>
     {
         /// <summary>
@@ -11,11 +16,18 @@
         /// </summary>
         protected readonly List<PipelineItem<TAsyncDelegate>> pipelineItems;
 
+        /// <summary>
+        /// Creates a new instance of AsyncNamedPipelineBase
+        /// </summary>
         protected AsyncNamedPipelineBase()
         {
             this.pipelineItems = new List<PipelineItem<TAsyncDelegate>>();
         }
 
+        /// <summary>
+        /// Creates a new instance of AsyncNamedPipelineBase with size
+        /// </summary>
+        /// <param name="capacity">Number of delegates in pipeline</param>
         protected AsyncNamedPipelineBase(int capacity)
         {
             this.pipelineItems = new List<PipelineItem<TAsyncDelegate>>(capacity);

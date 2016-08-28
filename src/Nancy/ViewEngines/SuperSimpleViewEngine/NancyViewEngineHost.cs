@@ -2,6 +2,10 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
 {
     using System;
 
+    /// <summary>
+    /// Nancy view engine host
+    /// </summary>
+    /// <seealso cref="Nancy.ViewEngines.SuperSimpleViewEngine.IViewEngineHost" />
     public class NancyViewEngineHost : IViewEngineHost
     {
         private IRenderContext renderContext;

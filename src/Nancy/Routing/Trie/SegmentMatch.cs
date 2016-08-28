@@ -24,6 +24,10 @@ namespace Nancy.Routing.Trie
         /// </summary>
         public IDictionary<string, object> CapturedParameters { get; private set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SegmentMatch"/> class.
+        /// </summary>
+        /// <param name="matches">if set to <c>true</c> [matches].</param>
         public SegmentMatch(bool matches)
         {
             this.Matches = matches;

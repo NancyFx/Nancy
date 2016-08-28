@@ -183,6 +183,7 @@ namespace Nancy
             foreach (var parts in values.Select(c => c.Split(new[] { '=' }, 2)))
             {
                 var cookieName = parts[0].Trim();
+
                 string cookieValue;
 
                 if (parts.Length == 1)
@@ -227,6 +228,9 @@ namespace Nancy
         /// <remarks>The values are stored in an <see cref="IEnumerable{T}"/> of string to be compliant with multi-value headers.</remarks>
         public RequestHeaders Headers { get; private set; }
 
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
         public void Dispose()
         {
             ((IDisposable)this.Body).Dispose();

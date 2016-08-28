@@ -143,6 +143,12 @@
             return defaultValue;
         }
 
+        /// <summary>
+        /// == operator for DynamicDictionaryValue
+        /// </summary>
+        /// <param name="dynamicValue"></param>
+        /// <param name="compareValue"></param>
+        /// <returns></returns>
         public static bool operator ==(DynamicDictionaryValue dynamicValue, object compareValue)
         {
             if (ReferenceEquals(null, dynamicValue))
@@ -158,6 +164,12 @@
             return dynamicValue.value != null && dynamicValue.value.Equals(compareValue);
         }
 
+        /// <summary>
+        /// != operator for DynamicDictionaryValue
+        /// </summary>
+        /// <param name="dynamicValue"></param>
+        /// <param name="compareValue"></param>
+        /// <returns></returns>
         public static bool operator !=(DynamicDictionaryValue dynamicValue, object compareValue)
         {
             return !(dynamicValue == compareValue);
@@ -333,11 +345,19 @@
             return base.TryConvert(binder, out result);
         }
 
+        /// <summary>
+        /// Returns the string representation for a DynamicDictionaryValue instance
+        /// </summary>
         public override string ToString()
         {
             return this.value == null ? base.ToString() : Convert.ToString(this.value);
         }
 
+
+        /// <summary>
+        /// Implicit type conversion operator from DynamicDictionaryValue to bool?
+        /// </summary>
+        /// <param name="dynamicValue"></param>
         public static implicit operator bool?(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -348,6 +368,11 @@
             return (bool)dynamicValue;
         }
 
+
+        /// <summary>
+        /// Implicit type conversion operator from DynamicDictionaryValue to bool
+        /// </summary>
+        /// <param name="dynamicValue"></param>
         public static implicit operator bool(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -369,6 +394,11 @@
             return true;
         }
 
+
+        /// <summary>
+        /// Implicit type conversion operator from DynamicDictionaryValue to string
+        /// </summary>
+        /// <param name="dynamicValue"></param>
         public static implicit operator string(DynamicDictionaryValue dynamicValue)
         {
             return dynamicValue.HasValue
@@ -376,6 +406,11 @@
                        : null;
         }
 
+
+        /// <summary>
+        /// Implicit type conversion operator from DynamicDictionaryValue to int?
+        /// </summary>
+        /// <param name="dynamicValue"></param>
         public static implicit operator int?(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -386,6 +421,11 @@
             return (int)dynamicValue;
         }
 
+
+        /// <summary>
+        /// Implicit type conversion operator from DynamicDictionaryValue to int
+        /// </summary>
+        /// <param name="dynamicValue"></param>
         public static implicit operator int(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -401,6 +441,11 @@
             return int.Parse(dynamicValue.ToString());
         }
 
+
+        /// <summary>
+        /// Implicit type conversion operator from DynamicDictionaryValue to Guid?
+        /// </summary>
+        /// <param name="dynamicValue"></param>
         public static implicit operator Guid?(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -411,6 +456,11 @@
             return (Guid)dynamicValue;
         }
 
+
+        /// <summary>
+        /// Implicit type conversion operator from DynamicDictionaryValue to Guid
+        /// </summary>
+        /// <param name="dynamicValue"></param>
         public static implicit operator Guid(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -426,6 +476,11 @@
             return Guid.Parse(dynamicValue.ToString());
         }
 
+
+        /// <summary>
+        /// Implicit type conversion operator from DynamicDictionaryValue to DateTime?
+        /// </summary>
+        /// <param name="dynamicValue"></param>
         public static implicit operator DateTime?(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -436,6 +491,11 @@
             return (DateTime)dynamicValue;
         }
 
+
+        /// <summary>
+        /// Implicit type conversion operator from DynamicDictionaryValue to DateTime
+        /// </summary>
+        /// <param name="dynamicValue"></param>
         public static implicit operator DateTime(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -451,6 +511,11 @@
             return DateTime.Parse(dynamicValue.ToString(), CultureInfo.InvariantCulture, dynamicValue.globalizationConfiguration.DateTimeStyles);
         }
 
+
+        /// <summary>
+        /// Implicit type conversion operator from DynamicDictionaryValue to TimeSpan?
+        /// </summary>
+        /// <param name="dynamicValue"></param>
         public static implicit operator TimeSpan?(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -461,6 +526,11 @@
             return (TimeSpan)dynamicValue;
         }
 
+
+        /// <summary>
+        /// Implicit type conversion operator from DynamicDictionaryValue to TimeSpan
+        /// </summary>
+        /// <param name="dynamicValue"></param>
         public static implicit operator TimeSpan(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -476,6 +546,11 @@
             return TimeSpan.Parse(dynamicValue.ToString());
         }
 
+
+        /// <summary>
+        /// Implicit type conversion operator from DynamicDictionaryValue to long?
+        /// </summary>
+        /// <param name="dynamicValue"></param>
         public static implicit operator long?(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -486,6 +561,11 @@
             return (long)dynamicValue;
         }
 
+
+        /// <summary>
+        /// Implicit type conversion operator from DynamicDictionaryValue to long
+        /// </summary>
+        /// <param name="dynamicValue"></param>
         public static implicit operator long(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -501,6 +581,11 @@
             return long.Parse(dynamicValue.ToString());
         }
 
+
+        /// <summary>
+        /// Implicit type conversion operator from DynamicDictionaryValue to float?
+        /// </summary>
+        /// <param name="dynamicValue"></param>
         public static implicit operator float?(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -511,6 +596,11 @@
             return (float)dynamicValue;
         }
 
+
+        /// <summary>
+        /// Implicit type conversion operator from DynamicDictionaryValue to float
+        /// </summary>
+        /// <param name="dynamicValue"></param>
         public static implicit operator float(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -526,6 +616,11 @@
             return float.Parse(dynamicValue.ToString());
         }
 
+
+        /// <summary>
+        /// Implicit type conversion operator from DynamicDictionaryValue to decimal?
+        /// </summary>
+        /// <param name="dynamicValue"></param>
         public static implicit operator decimal?(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -536,6 +631,11 @@
             return (decimal)dynamicValue;
         }
 
+
+        /// <summary>
+        /// Implicit type conversion operator from DynamicDictionaryValue to decimal
+        /// </summary>
+        /// <param name="dynamicValue"></param>
         public static implicit operator decimal(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -551,6 +651,11 @@
             return decimal.Parse(dynamicValue.ToString());
         }
 
+
+        /// <summary>
+        /// Implicit type conversion operator from DynamicDictionaryValue to double?
+        /// </summary>
+        /// <param name="dynamicValue"></param>
         public static implicit operator double?(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -561,6 +666,10 @@
             return (double)dynamicValue;
         }
 
+        /// <summary>
+        /// Implicit type conversion operator from DynamicDictionaryValue to double
+        /// </summary>
+        /// <param name="dynamicValue"></param>
         public static implicit operator double(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)

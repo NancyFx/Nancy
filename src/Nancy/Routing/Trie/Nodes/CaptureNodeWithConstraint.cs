@@ -22,6 +22,13 @@
             get { return 2000; }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CaptureNodeWithConstraint"/> class.
+        /// </summary>
+        /// <param name="parent">The parent.</param>
+        /// <param name="segment">The segment.</param>
+        /// <param name="nodeFactory">The node factory.</param>
+        /// <param name="routeSegmentConstraints">The route segment constraints.</param>
         public CaptureNodeWithConstraint(TrieNode parent, string segment, ITrieNodeFactory nodeFactory, IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints)
             : base(parent, segment, nodeFactory)
         {

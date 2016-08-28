@@ -15,11 +15,14 @@
     {
         private const string CsrfHookName = "CsrfPostHook";
 
+
+
         /// <summary>
         /// Enables Csrf token generation.
         /// This is disabled by default.
         /// </summary>
-        /// <param name="pipelines">Application pipelines</param>
+        /// <param name="pipelines">The application pipelines.</param>
+        /// <param name="cryptographyConfiguration">The cryptography configuration. This is <c>null</c> by default.</param>
         public static void Enable(IPipelines pipelines, CryptographyConfiguration cryptographyConfiguration = null)
         {
             cryptographyConfiguration = cryptographyConfiguration ?? CsrfApplicationStartup.CryptographyConfiguration;
@@ -76,7 +79,7 @@
         /// Only necessary if a particular route requires a new token for each request.
         /// </summary>
         /// <param name="module">Nancy module</param>
-        /// <returns></returns>
+        /// <param name="cryptographyConfiguration">The cryptography configuration. This is <c>null</c> by default.</param>
         public static void CreateNewCsrfToken(this INancyModule module, CryptographyConfiguration cryptographyConfiguration = null)
         {
             var tokenString = GenerateTokenString(cryptographyConfiguration);

@@ -2,6 +2,9 @@ namespace Nancy.Cookies
 {
     using System;
 
+    /// <summary>
+    /// Interface for the nancy cookie
+    /// </summary>
     public interface INancyCookie
     {
         /// <summary>

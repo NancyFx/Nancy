@@ -506,6 +506,7 @@
         /// related
         /// </summary>
         /// <param name="container">Container instance for resolving types if required.</param>
+        /// <param name="pipelines">Pipelines instance to be customized if required</param>
         protected virtual void ApplicationStartup(TContainer container, IPipelines pipelines)
         {
         }

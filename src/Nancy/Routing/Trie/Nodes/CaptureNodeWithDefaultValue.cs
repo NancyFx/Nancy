@@ -19,6 +19,12 @@ namespace Nancy.Routing.Trie.Nodes
             get { return 1000; }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CaptureNodeWithDefaultValue"/> class.
+        /// </summary>
+        /// <param name="parent">The parent.</param>
+        /// <param name="segment">The segment.</param>
+        /// <param name="nodeFactory">The node factory.</param>
         public CaptureNodeWithDefaultValue(TrieNode parent, string segment, ITrieNodeFactory nodeFactory)
             : base(parent, segment, nodeFactory)
         {

@@ -2,6 +2,9 @@ namespace Nancy.Bootstrapper
 {
     using System;
 
+    /// <summary>
+    /// Holds module type for registration into a container.
+    /// </summary>
     public sealed class ModuleRegistration
     {
         /// <summary>
@@ -13,6 +16,12 @@ namespace Nancy.Bootstrapper
             ModuleType = moduleType;
         }
 
+        /// <summary>
+        /// Gets the type of the module.
+        /// </summary>
+        /// <value>
+        /// The type of the module.
+        /// </value>
         public Type ModuleType { get; private set; }
     }
 }

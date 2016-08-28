@@ -2,6 +2,9 @@ namespace Nancy.Diagnostics
 {
     using Nancy.Bootstrapper;
 
+    /// <summary>
+    /// Interface for diagnostics.
+    /// </summary>
     public interface IDiagnostics
     {
         /// <summary>

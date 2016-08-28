@@ -9,9 +9,29 @@
     public class ViewNotFoundException : Exception
     {
         private readonly IRootPathProvider rootPathProvider;
+
+        /// <summary>
+        /// Gets the name of the view.
+        /// </summary>
+        /// <value>
+        /// The name of the view.
+        /// </value>
         public string ViewName { get; private set; }
 
+        /// <summary>
+        /// Gets the available view engine extensions.
+        /// </summary>
+        /// <value>
+        /// The available view engine extensions.
+        /// </value>
         public string[] AvailableViewEngineExtensions { get; private set; }
+
+        /// <summary>
+        /// Gets the inspected locations.
+        /// </summary>
+        /// <value>
+        /// The inspected locations.
+        /// </value>
         public string[] InspectedLocations { get; private set; }
 
         private string message;

@@ -6,6 +6,9 @@ namespace Nancy
     using Nancy.Bootstrapper;
     using Nancy.Diagnostics;
 
+    /// <summary>
+    /// Static configurations.
+    /// </summary>
     public static class StaticConfiguration
     {
         static StaticConfiguration()
