@@ -68,6 +68,27 @@
         }
 
         [Fact]
+        public void Should_handle_utf_8_filenamestar_param()
+        {
+            // Given
+            var contentDispositionHeader = BuildContentDispositionHeader(
+            "file_content",
+            "utf-8''file_%C3%A9%C3%A0%C3%A2%C3%A8%C3%A9%C3%A7.txt");
+            var stream = BuildStreamForSingleFile(
+            contentDispositionHeader,
+            "application/octet-stream",
+            null
+            );
+
+            // When
+            var boundary = new HttpMultipartBoundary(stream);
+
+            // Then
+            boundary.Filename.ShouldEqual("file_éàâèéç.txt");
+
+        }
+
+        [Fact]
         public void Should_set_file_name_to_empty_when_it_could_not_be_found_in_header()
         {
             // Given
