@@ -78,9 +78,7 @@
             /// <summary>
             /// Returns the template for the SayHelloWithAge
             /// </summary>
-            /// <value>
-            /// The template for the SayHelloWithAge
-            /// </value>
+            /// <value> The template for the SayHelloWithAge </value>
             public string SayHelloWithAgeTemplate
             {
                 get
@@ -92,9 +90,7 @@
             /// <summary>
             /// Returns the description of the SayHelloWithAgeDescription method
             /// </summary>
-            /// <value>
-            /// Description for the test method
-            /// </value>
+            /// <value>  Description for the test method  </value>
             public string SayHelloWithAgeDescription
             {
                 get

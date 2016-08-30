@@ -14,9 +14,7 @@
         /// <summary>
         /// Gets the supported tuple types.
         /// </summary>
-        /// <value>
-        /// The supported types.
-        /// </value>
+        /// <value>  The supported types. </value>
         public override IEnumerable<Type> SupportedTypes
         {
             get

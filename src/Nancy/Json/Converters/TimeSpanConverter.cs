@@ -12,9 +12,7 @@ namespace Nancy.Json.Converters
         /// <summary>
         /// Gets the supported types.
         /// </summary>
-        /// <value>
-        /// The supported types.
-        /// </value>
+        /// <value>  The collection of supported types. </value>
         public override IEnumerable<Type> SupportedTypes
         {
             get

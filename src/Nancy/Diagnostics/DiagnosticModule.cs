@@ -32,9 +32,7 @@
         /// <summary>
         /// Renders a view from inside a route handler.
         /// </summary>
-        /// <value>
-        /// A <see cref="ViewRenderer" /> instance that is used to determine which view that should be rendered.
-        /// </value>
+        /// <value>  A <see cref="ViewRenderer" /> instance that is used to determine which view that should be rendered. </value>
         public new DiagnosticsViewRenderer View
         {
             get { return new DiagnosticsViewRenderer(this.Context, this.environment); }

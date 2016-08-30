@@ -20,9 +20,7 @@
         /// <summary>
         /// Gets the list of available diagnostics.
         /// </summary>
-        /// <value>
-        /// The available diagnostics.
-        /// </value>
+        /// <value> The available diagnostics.  </value>
         public IEnumerable<InteractiveDiagnostic> AvailableDiagnostics { get; private set; }
 
         /// <summary>

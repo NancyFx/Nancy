@@ -7,39 +7,57 @@
     /// <summary>
     /// Intercepts the request before it is passed to the appropriate route handler.
     /// This gives you a couple of possibilities such as modifying parts of the request 
-    /// or even prematurely aborting the request by returning a response that will be sent back to the caller.
-    /// </summary>
+    /// or even prematurely aborting the request by returning a response that will be sent back to the caller.    /// </summary>
+    /// <seealso>
+    ///     <cref>
+    ///         Nancy.AsyncNamedPipelineBase{System.Func{Nancy.NancyContext, System.Threading.CancellationToken,
+    ///         System.Threading.Tasks.Task{Nancy.Response}}, System.Func{Nancy.NancyContext, Nancy.Response}}
+    ///     </cref>
+    /// </seealso>
     public class BeforePipeline : AsyncNamedPipelineBase<Func<NancyContext, CancellationToken, Task<Response>>, Func<NancyContext, Response>>
     {
+
         /// <summary>
-        /// Creates a new instance of BeforePipeline
+        /// Initializes a new instance of the <see cref="BeforePipeline"/> class.
         /// </summary>
         public BeforePipeline()
         {
         }
 
         /// <summary>
-        /// Creates a new instance of BeforePipeline with a capacity
+        /// Initializes a new instance of the <see cref="BeforePipeline"/> class.
         /// </summary>
-        /// <param name="capacity">Size of the pipeline which is the count of pipeline delegates</param>
+        /// <param name="capacity">Number of delegates in pipeline</param>
         public BeforePipeline(int capacity)
             : base(capacity)
         {
         }
 
         /// <summary>
-        /// Implict type conversion operator from BeforePipeline to func
+        /// Performs an implicit conversion from <see cref="BeforePipeline"/> to <see>
+        ///         <cref>Func{NancyContext, CancellationToken, Task{Response}}</cref>
+        ///     </see>
+        ///     .
         /// </summary>
-        /// <param name="pipeline"></param>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
         public static implicit operator Func<NancyContext, CancellationToken, Task<Response>>(BeforePipeline pipeline)
         {
             return pipeline.Invoke;
         }
 
         /// <summary>
-        /// Implict type conversion operator from func to BeforePipeline
+        /// Performs an implicit conversion from <see>
+        ///         <cref>Func{NancyContext, CancellationToken, Task{Response}}</cref>
+        ///     </see>
+        ///     to <see cref="BeforePipeline"/>.
         /// </summary>
-        /// <param name="func"></param>
+        /// <param name="func">The function.</param>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
         public static implicit operator BeforePipeline(Func<NancyContext, CancellationToken, Task<Response>> func)
         {
             var pipeline = new BeforePipeline();
@@ -48,11 +66,13 @@
         }
 
         /// <summary>
-        /// Appends a new func to the BeforePipeline
+        /// Appends a new function to the BeforePipeline.
         /// </summary>
-        /// <param name="pipeline">Target pipeline</param>
-        /// <param name="func">A function that returns a task</param>
-        /// <returns></returns>
+        /// <param name="pipeline">The BeforePipeline pipeline instance.</param>
+        /// <param name="func">The function.</param>
+        /// <returns>
+        /// The result of the operator.
+        /// </returns>
         public static BeforePipeline operator +(BeforePipeline pipeline, Func<NancyContext, CancellationToken, Task<Response>> func)
         {
             pipeline.AddItemToEndOfPipeline(func);
@@ -61,23 +81,28 @@
 
 
         /// <summary>
-        /// Appends a new action to the BeforePipeline
+        /// Appends a new action to the BeforePipeline.
         /// </summary>
-        /// <param name="pipeline">Target pipeline</param>
-        /// <param name="action">Action to be carried out</param>
-        /// <returns></returns>
+        /// <param name="pipeline">The BeforePipeline pipeline instance.</param>
+        /// <param name="action">The action.</param>
+        /// <returns>
+        /// The result of the operator.
+        /// </returns>
         public static BeforePipeline operator +(BeforePipeline pipeline, Func<NancyContext, Response> action)
         {
             pipeline.AddItemToEndOfPipeline(action);
             return pipeline;
         }
 
+
         /// <summary>
-        /// Appends the items of an BeforePipeline to the other
+        /// Appends the items of an BeforePipeline to the other.
         /// </summary>
-        /// <param name="pipelineToAddTo"></param>
-        /// <param name="pipelineToAdd"></param>
-        /// <returns></returns>
+        /// <param name="pipelineToAddTo">The pipeline to add to.</param>
+        /// <param name="pipelineToAdd">The pipeline to add.</param>
+        /// <returns>
+        /// The result of the operator.
+        /// </returns>
         public static BeforePipeline operator +(BeforePipeline pipelineToAddTo, BeforePipeline pipelineToAdd)
         {
             foreach (var pipelineItem in pipelineToAdd.PipelineItems)
@@ -90,10 +115,10 @@
 
 
         /// <summary>
-        /// Invokes BeforePipeline delegates
+        /// Invokes the specified context.
         /// </summary>
-        /// <param name="context"></param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="context">The context.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
         public async Task<Response> Invoke(NancyContext context, CancellationToken cancellationToken)
         {
@@ -110,10 +135,10 @@
         }
 
         /// <summary>
-        /// Wraps a sync delegate into it's async form
+        /// Wraps the specified pipeline item into its async form.
         /// </summary>
-        /// <param name="pipelineItem">Sync pipeline item instance</param>
-        /// <returns>Async pipeline item instance</returns>
+        /// <param name="pipelineItem">The pipeline item.</param>
+        /// <returns></returns>
         protected override PipelineItem<Func<NancyContext, CancellationToken, Task<Response>>> Wrap(PipelineItem<Func<NancyContext, Response>> pipelineItem)
         {
             return new PipelineItem<Func<NancyContext, CancellationToken, Task<Response>>>(pipelineItem.Name, (ctx, ct) => Task.FromResult(pipelineItem.Delegate(ctx)));

@@ -44,9 +44,7 @@ namespace Nancy.Json
         /// <summary>
         /// Gets the supported types.
         /// </summary>
-        /// <value>
-        /// The supported types.
-        /// </value>
+        /// <value>  The supported types.  </value>
         public abstract IEnumerable<Type> SupportedTypes { get; }
 
         /// <summary>

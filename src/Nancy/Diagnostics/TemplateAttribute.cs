@@ -12,9 +12,7 @@ namespace Nancy.Diagnostics
         /// <summary>
         /// Gets or sets the template.
         /// </summary>
-        /// <value>
-        /// The template.
-        /// </value>
+        /// <value> The template.  </value>
         public string Template { get; set; }
 
         /// <summary>

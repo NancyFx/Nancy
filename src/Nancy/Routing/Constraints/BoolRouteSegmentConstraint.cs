@@ -8,9 +8,7 @@
         /// <summary>
         /// Gets the name of the constraint.
         /// </summary>
-        /// <value>
-        /// The constraint's name.
-        /// </value>
+        /// <value> The constraint's name. </value>
         public override string Name
         {
             get { return "bool"; }

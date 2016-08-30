@@ -18,9 +18,7 @@
         /// <summary>
         /// Gets the current size for the collection.
         /// </summary>
-        /// <value>
-        /// The size of the current.
-        /// </value>
+        /// <value> Current size of the collection.</value>
         public int CurrentSize
         {
             get
