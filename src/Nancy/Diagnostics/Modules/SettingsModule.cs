@@ -84,17 +84,13 @@
         /// <summary>
         /// Gets or sets the name for the setting.
         /// </summary>
-        /// <value>
-        /// The name.
-        /// </value>
+        /// <value> The name of the setting </value>
         public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the value for this setting.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> or <c>false</c>.
-        /// </value>
+        /// <value>  <see langword="true"/> or <see langword="false"/> </value>
         public bool Value { get; set; }
     }
 }

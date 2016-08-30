@@ -10,9 +10,7 @@ namespace Nancy.Diagnostics
         /// <summary>
         /// Gets the list of available diagnostics.
         /// </summary>
-        /// <value>
-        /// The available diagnostics.
-        /// </value>
+        /// <value>  The available diagnostics. </value>
         IEnumerable<InteractiveDiagnostic> AvailableDiagnostics { get; }
 
         /// <summary>

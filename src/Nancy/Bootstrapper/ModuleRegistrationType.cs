@@ -19,9 +19,7 @@ namespace Nancy.Bootstrapper
         /// <summary>
         /// Gets the type of the module.
         /// </summary>
-        /// <value>
-        /// The type of the module.
-        /// </value>
+        /// <value> The type of the module.</value>
         public Type ModuleType { get; private set; }
     }
 }

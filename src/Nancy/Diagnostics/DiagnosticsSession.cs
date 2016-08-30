@@ -17,25 +17,19 @@ namespace Nancy.Diagnostics
         /// <summary>
         /// Gets or sets the hash.
         /// </summary>
-        /// <value>
-        /// The hash.
-        /// </value>
+        /// <value> The (salted) SHA256 hash. </value>
         public byte[] Hash { get; set; }
 
         /// <summary>
         /// Gets or sets the salt.
         /// </summary>
-        /// <value>
-        /// The salt.
-        /// </value>
+        /// <value>  The salt for the hash value. </value>
         public byte[] Salt { get; set; }
 
         /// <summary>
         /// Gets or sets the expiry.
         /// </summary>
-        /// <value>
-        /// The expiry.
-        /// </value>
+        /// <value> The time when the session will be expired.  </value>
         public DateTimeOffset Expiry { get; set; }
 
         /// <summary>

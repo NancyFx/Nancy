@@ -66,9 +66,7 @@
         /// <summary>
         /// Gets the provider types.
         /// </summary>
-        /// <value>
-        /// The provider types.
-        /// </value>
+        /// <value> The provider types.</value>
         public IEnumerable<Type> ProviderTypes { get; internal set; }
 
         /// <summary>

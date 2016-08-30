@@ -14,7 +14,7 @@ namespace Nancy.Diagnostics
         /// <summary>
         /// Initializes a new instance of the <see cref="RequestTraceSession"/> class.
         /// </summary>
-        /// <param name="id">The identifier.</param>
+        /// <param name="id">The session identifier.</param>
         public RequestTraceSession(Guid id)
         {
             this.Id = id;
@@ -24,17 +24,13 @@ namespace Nancy.Diagnostics
         /// <summary>
         /// Gets the identifier.
         /// </summary>
-        /// <value>
-        /// The identifier.
-        /// </value>
+        /// <value>  The session identifier. </value>
         public Guid Id { get; private set; }
 
         /// <summary>
         /// Gets the request traces.
         /// </summary>
-        /// <value>
-        /// The request traces.
-        /// </value>
+        /// <value> The collection of request traces.  </value>
         public IEnumerable<IRequestTrace> RequestTraces
         {
             get
@@ -44,7 +40,7 @@ namespace Nancy.Diagnostics
         }
 
         /// <summary>
-        /// Adds the request trace.
+        /// Adds a request trace to the collection.
         /// </summary>
         /// <param name="trace">The trace.</param>
         public void AddRequestTrace(IRequestTrace trace)

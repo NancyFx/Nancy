@@ -12,9 +12,7 @@ namespace Nancy.Diagnostics
         /// <summary>
         /// Gets or sets the description.
         /// </summary>
-        /// <value>
-        /// The description.
-        /// </value>
+        /// <value> The description. </value>
         public string Description { get; set; }
 
         /// <summary>
