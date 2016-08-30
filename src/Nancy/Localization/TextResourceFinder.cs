@@ -12,7 +12,8 @@
         private readonly NancyContext context;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TextResourceFinder"/> class.
+        /// Initializes a new instance of the <see cref="TextResourceFinder"/> class, with
+        /// the provided <paramref name="textResource"/> and <paramref name="context"/>.
         /// </summary>
         /// <param name="textResource">The <see cref="ITextResource"/> that should be used by the TextResourceFinder</param>
         /// <param name="context">The <see cref="NancyContext"/> that should be used by the TextResourceFinder</param>

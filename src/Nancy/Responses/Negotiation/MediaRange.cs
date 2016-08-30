@@ -9,9 +9,10 @@ namespace Nancy.Responses.Negotiation
     public class MediaRange : IEquatable<MediaRange>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="MediaRange"/> class from a string representation of a media range
+        /// Initializes a new instance of the <see cref="MediaRange"/> class, with
+        /// the provided <paramref name="contentType"/>.
         /// </summary>
-        /// <param name="contentType">the content type</param>
+        /// <param name="contentType">string representation of a media range</param>
         public MediaRange(string contentType)
         {
             this.ParseContentType(contentType);

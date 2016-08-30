@@ -11,7 +11,8 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         private IRenderContext renderContext;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NancyViewEngineHost"/> class.
+        /// Initializes a new instance of the <see cref="NancyViewEngineHost"/> class, with
+        /// the provided <paramref name="renderContext"/>.
         /// </summary>
         /// <param name="renderContext">
         /// The render context.

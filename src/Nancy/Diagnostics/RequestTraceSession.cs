@@ -12,7 +12,8 @@ namespace Nancy.Diagnostics
         private readonly ConcurrentLimitedCollection<IRequestTrace> requestTraces;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RequestTraceSession"/> class.
+        /// Initializes a new instance of the <see cref="RequestTraceSession"/> class, with
+        /// the provided <paramref name="id"/>.
         /// </summary>
         /// <param name="id">The session identifier.</param>
         public RequestTraceSession(Guid id)

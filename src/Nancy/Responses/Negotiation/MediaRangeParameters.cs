@@ -21,7 +21,8 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MediaRangeParameters"/> class.
+        /// Initializes a new instance of the <see cref="MediaRangeParameters"/> class, with
+        /// the provided <paramref name="parameters"/>.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
         public MediaRangeParameters(IDictionary<string, string> parameters)

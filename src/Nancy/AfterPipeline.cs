@@ -30,7 +30,8 @@ namespace Nancy
 
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AfterPipeline"/> class.
+        /// Initializes a new instance of the <see cref="AfterPipeline"/> class, with
+        /// the provided <paramref name= "capacity" />.
         /// </summary>
         /// <param name="capacity">Number of delegates in pipeline</param>
         public AfterPipeline(int capacity)

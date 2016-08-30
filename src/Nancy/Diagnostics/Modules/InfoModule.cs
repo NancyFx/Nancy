@@ -10,8 +10,9 @@
     using Nancy.Configuration;
     using Nancy.ViewEngines;
 
+
     /// <summary>
-    /// 
+    /// The information module for diagnostics.
     /// </summary>
     /// <seealso cref="Nancy.Diagnostics.DiagnosticModule" />
     public class InfoModule : DiagnosticModule
@@ -20,7 +21,9 @@
         private readonly IAssemblyCatalog assemblyCatalog;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="InfoModule"/> class.
+        /// Initializes a new instance of the <see cref="InfoModule"/> class, with
+        /// the provided <paramref name="rootPathProvider"/>, <paramref name="configuration"/>, 
+        /// <paramref name="environment"/>, <paramref name="typeCatalog"/> and <paramref name="assemblyCatalog"/>.
         /// </summary>
         /// <param name="rootPathProvider">The root path provider.</param>
         /// <param name="configuration">The configuration.</param>

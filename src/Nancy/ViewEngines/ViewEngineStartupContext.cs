@@ -6,7 +6,8 @@
     public class ViewEngineStartupContext
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ViewEngineStartupContext"/> class.
+        /// Initializes a new instance of the <see cref="ViewEngineStartupContext"/> class, with
+        /// the provided <paramref name="viewCache"/> and <paramref name="viewLocator"/>.
         /// </summary>
         /// <param name="viewCache">The view cache.</param>
         /// <param name="viewLocator">The view locator.</param>

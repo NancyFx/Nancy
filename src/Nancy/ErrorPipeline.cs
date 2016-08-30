@@ -24,7 +24,8 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ErrorPipeline"/> class.
+        /// Initializes a new instance of the <see cref="ErrorPipeline"/> class, with
+        /// the provided <paramref name="capacity"/>.
         /// </summary>
         /// <param name="capacity">The number of pipeline delegates.</param>
         public ErrorPipeline(int capacity) : base(capacity)

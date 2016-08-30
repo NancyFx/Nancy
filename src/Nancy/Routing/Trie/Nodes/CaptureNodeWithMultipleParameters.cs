@@ -8,6 +8,11 @@
 
     /// <summary>
     /// A node multiple standard captures combined with a literal e.g. {id}.png.{thing}.{otherthing}
+    /// Captures parameters within segments that contain literals.
+    ///     i.e:
+    ///         /{file}.{name}
+    ///         /{file}.html
+    ///         /{major}.{minor}.{revision}B{build}
     /// </summary>
     public class CaptureNodeWithMultipleParameters : TrieNode
     {
@@ -24,17 +29,15 @@
         private const string MatchParameter = "(.*)";
         private const string AssertEnd = "$";
 
+
         /// <summary>
-        /// Captures parameters within segments that contain literals.
-        ///     i.e:
-        ///         /{file}.{name}
-        ///         /{file}.html
-        ///         /{major}.{minor}.{revision}B{build}
+        /// Initializes a new instance of the <see cref="CaptureNodeWithMultipleParameters"/> class, with
+        /// the provided <paramref name="parent"/>, <paramref name="segment"/>, <paramref name="nodeFactory"/> and <paramref name="routeSegmentConstraints"/>.
         /// </summary>
         /// <param name="parent">The parent node</param>
         /// <param name="segment">The segment to match upon</param>
-        /// <param name="nodeFactory">The factory</param>
-        /// <param name="routeSegmentConstraints"></param>
+        /// <param name="nodeFactory">The node factory.</param>
+        /// <param name="routeSegmentConstraints">The route segment constraints.</param>
         public CaptureNodeWithMultipleParameters(TrieNode parent, string segment, ITrieNodeFactory nodeFactory, IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints)
             : base(parent, segment, nodeFactory)
         {

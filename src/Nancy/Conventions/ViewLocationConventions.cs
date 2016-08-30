@@ -17,7 +17,8 @@
         private readonly IEnumerable<Func<string, object, ViewLocationContext, string>> conventions;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ViewLocationConventions"/> class.
+        /// Initializes a new instance of the <see cref="ViewLocationConventions"/> class, with
+        /// the provided <paramref name="conventions"/>.
         /// </summary>
         /// <param name="conventions">The conventions.</param>
         public ViewLocationConventions(IEnumerable<Func<string, object, ViewLocationContext, string>> conventions)

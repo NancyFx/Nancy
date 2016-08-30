@@ -21,7 +21,8 @@
         private readonly GlobalizationConfiguration globalizationConfiguration;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DynamicDictionaryValue"/> class.
+        /// Initializes a new instance of the <see cref="DynamicDictionaryValue"/> class, with
+        /// the provided <paramref name="value"/>.
         /// </summary>
         /// <param name="value">The value to store in the instance</param>
         public DynamicDictionaryValue(object value)
@@ -30,7 +31,8 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DynamicDictionaryValue"/> class.
+        /// Initializes a new instance of the <see cref="DynamicDictionaryValue"/> class, with
+        /// the provided <paramref name="value"/> and <paramref name="globalizationConfiguration"/>.
         /// </summary>
         /// <param name="value">The value to store in the instance</param>
         /// <param name="globalizationConfiguration">A <see cref="GlobalizationConfiguration"/> instance.</param>

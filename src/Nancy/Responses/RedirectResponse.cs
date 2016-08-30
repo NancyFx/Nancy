@@ -8,7 +8,8 @@ namespace Nancy.Responses
     public class RedirectResponse : Response
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="RedirectResponse"/> class.
+        /// Initializes a new instance of the <see cref="RedirectResponse"/> class, with
+        /// the provided <paramref name="location"/> and <paramref name="type"/>.
         /// </summary>
         /// <param name="location">Location to redirect to</param>
         /// <param name="type">Type of redirection to perform</param>

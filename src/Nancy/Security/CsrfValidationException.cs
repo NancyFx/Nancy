@@ -17,9 +17,10 @@ namespace Nancy.Security
         public CsrfTokenValidationResult Result { get; private set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CsrfValidationException"/> class.
+        /// Initializes a new instance of the <see cref="CsrfValidationException"/> class, with
+        /// the provided <paramref name="result"/>.
         /// </summary>
-        /// <param name="result">The result.</param>
+        /// <param name="result">The CSRF token validation result.</param>
         public CsrfValidationException(CsrfTokenValidationResult result)
             : base(result.ToString())
         {

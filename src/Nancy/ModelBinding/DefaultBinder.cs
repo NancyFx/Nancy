@@ -30,7 +30,9 @@ namespace Nancy.ModelBinding
         private static readonly Regex UnderscoreRegex = new Regex(@"_(\d+)\z", RegexOptions.Compiled);
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultBinder"/> class.
+        /// Initializes a new instance of the <see cref="DefaultBinder"/> class, with
+        /// the provided <paramref name="typeConverters"/>, <paramref name="bodyDeserializers"/>, 
+        /// <paramref name="fieldNameConverter"/> and <paramref name="defaults"/>.
         /// </summary>
         /// <param name="typeConverters">The type converters.</param>
         /// <param name="bodyDeserializers">The body deserializers.</param>

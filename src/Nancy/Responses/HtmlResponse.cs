@@ -12,7 +12,9 @@
     public class HtmlResponse : Response
     {
         /// <summary>
-        /// Creates a new instance of the HtmlResponse class
+        /// Creates a new instance of the  <see cref="HtmlResponse"/> class, with
+        /// the provided <paramref name="statusCode"/>, <paramref name="contents"/>,
+        /// <paramref name="headers"/> and <paramref name="cookies"/>
         /// </summary>
         /// <param name="statusCode">Status code - defaults to OK</param>
         /// <param name="contents">Response body delegate - defaults to empty if null</param>
