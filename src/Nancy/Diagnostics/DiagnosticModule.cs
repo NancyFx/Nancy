@@ -19,7 +19,8 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DiagnosticModule"/> class.
+        /// Initializes a new instance of the <see cref="DiagnosticModule"/> class, with
+        /// the provided <paramref name="basePath"/>.
         /// </summary>
         /// <param name="basePath">The base path.</param>
         protected DiagnosticModule(string basePath)

@@ -22,7 +22,8 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EmbeddedFileResponse"/> class.
+        /// Initializes a new instance of the <see cref="EmbeddedFileResponse"/> class, with
+        /// the provided <paramref name="assembly"/>, <paramref name="resourcePath"/> and <paramref name="name"/>.
         /// </summary>
         /// <param name="assembly">The assembly.</param>
         /// <param name="resourcePath">The resource path.</param>

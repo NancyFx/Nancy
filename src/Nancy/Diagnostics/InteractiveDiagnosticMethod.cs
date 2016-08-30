@@ -39,7 +39,9 @@ namespace Nancy.Diagnostics
         public IEnumerable<Tuple<string, Type>> Arguments { get; private set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="InteractiveDiagnosticMethod"/> class.
+        /// Initializes a new instance of the <see cref="InteractiveDiagnosticMethod"/> class, with
+        /// the provided <paramref name="parentDiagnostic"/>, <paramref name="returnType"/>, 
+        /// <paramref name="methodName"/>, <paramref name="arguments"/> and <paramref name="description"/>.
         /// </summary>
         /// <param name="parentDiagnostic">The parent diagnostic.</param>
         /// <param name="returnType">Type of the return.</param>

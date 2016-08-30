@@ -20,7 +20,8 @@ namespace Nancy.Routing.Trie.Nodes
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RootNode"/> class.
+        /// Initializes a new instance of the <see cref="RootNode"/> class class with
+        /// the provided <paramref name="nodeFactory"/>.
         /// </summary>
         /// <param name="nodeFactory">The node factory.</param>
         public RootNode(ITrieNodeFactory nodeFactory)

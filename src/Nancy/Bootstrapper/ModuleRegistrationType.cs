@@ -7,10 +7,12 @@ namespace Nancy.Bootstrapper
     /// </summary>
     public sealed class ModuleRegistration
     {
+
         /// <summary>
-        /// Represents a module type for registration into a container
+        /// Initializes a new instance of the <see cref="ModuleRegistration"/> class, with
+        /// the provided <paramref name= "moduleType" />
         /// </summary>
-        /// <param name="moduleType">Type of the module</param>
+        /// <param name="moduleType">Type of the module.</param>
         public ModuleRegistration(Type moduleType)
         {
             ModuleType = moduleType;

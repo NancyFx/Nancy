@@ -12,7 +12,8 @@ namespace Nancy.Conventions
         private readonly IEnumerable<Func<NancyContext, string, Response>> conventions;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="StaticContentsConventions"/> class.
+        /// Initializes a new instance of the <see cref="StaticContentsConventions"/> class, with
+        /// the provided <paramref name="conventions"/>.
         /// </summary>
         /// <param name="conventions">The conventions.</param>
         public StaticContentsConventions(IEnumerable<Func<NancyContext, string, Response>> conventions)

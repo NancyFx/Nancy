@@ -12,7 +12,8 @@
         private readonly IRequestTracing sessionProvider;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TraceModule"/> class.
+        /// Initializes a new instance of the <see cref="TraceModule"/> class, with
+        /// the provided <paramref name="sessionProvider"/>.
         /// </summary>
         /// <param name="sessionProvider">The session provider.</param>
         public TraceModule(IRequestTracing sessionProvider)

@@ -40,7 +40,9 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ResolveResult"/> class.
+        /// Initializes a new instance of the <see cref="ResolveResult"/> class, with
+        /// the provided <paramref name="route"/>, <paramref name="parameters"/>, <paramref name="before"/>, 
+        /// <paramref name="after"/> and <paramref name="onError"/>.
         /// </summary>
         /// <param name="route">The request route instance.</param>
         /// <param name="parameters">The parameters.</param>

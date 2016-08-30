@@ -23,7 +23,8 @@
         public TDelegate Delegate { get; protected set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PipelineItem{TDelegate}"/> class.
+        /// Initializes a new instance of the <see cref="PipelineItem{TDelegate}"/> class, with
+        /// the provided <paramref name="name"/> and <paramref name="delegate"/>.
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="delegate">The delegate.</param>

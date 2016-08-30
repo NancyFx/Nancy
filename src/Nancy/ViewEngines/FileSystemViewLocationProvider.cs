@@ -13,7 +13,8 @@
         private readonly string rootPath;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FileSystemViewLocationProvider"/> class.
+        /// Initializes a new instance of the <see cref="FileSystemViewLocationProvider"/> class, with
+        /// the provided <paramref name="rootPathProvider"/>.
         /// </summary>
         /// <param name="rootPathProvider">A <see cref="IRootPathProvider"/> instance.</param>
         /// <remarks>Creating an instance using this constructor will result in the <see cref="DefaultFileSystemReader"/> being used internally.</remarks>
@@ -23,7 +24,8 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FileSystemViewLocationProvider"/> class.
+        /// Initializes a new instance of the <see cref="FileSystemViewLocationProvider"/> class, with
+        /// the provided <paramref name="rootPathProvider"/> and <paramref name="fileSystemReader"/>.
         /// </summary>
         /// <param name="rootPathProvider">A <see cref="IRootPathProvider"/> instance.</param>
         /// <param name="fileSystemReader">An <see cref="IFileSystemReader"/> instance that should be used when retrieving view information from the file system.</param>

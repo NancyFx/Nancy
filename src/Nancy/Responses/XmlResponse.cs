@@ -15,7 +15,8 @@
         private readonly XmlConfiguration configuration;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="XmlResponse{TModel}"/> class.
+        /// Initializes a new instance of the <see cref="XmlResponse{TModel}"/> class, with
+        /// the provided <paramref name="model"/>, <paramref name="serializer"/> and <paramref name="environment"/>.
         /// </summary>
         /// <param name="model">The model.</param>
         /// <param name="serializer">The serializer.</param>

@@ -14,7 +14,8 @@
         private readonly Response innerResponse;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="HeadResponse"/> class.
+        /// Initializes a new instance of the <see cref="HeadResponse"/> class, with
+        /// the provided <paramref name="response"/>.
         /// </summary>
         /// <param name="response">
         /// The full response to create the head response from.

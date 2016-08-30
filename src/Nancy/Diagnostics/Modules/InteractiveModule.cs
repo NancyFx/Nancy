@@ -16,7 +16,8 @@
         private readonly IInteractiveDiagnostics interactiveDiagnostics;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="InteractiveModule"/> class.
+        /// Initializes a new instance of the <see cref="InteractiveModule"/> class, with
+        /// the provided <paramref name="interactiveDiagnostics"/>.
         /// </summary>
         /// <param name="interactiveDiagnostics">The interactive diagnostics.</param>
         public InteractiveModule(IInteractiveDiagnostics interactiveDiagnostics)

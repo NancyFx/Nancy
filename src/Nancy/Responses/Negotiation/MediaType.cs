@@ -10,9 +10,10 @@ namespace Nancy.Responses.Negotiation
         private readonly string type;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MediaType"/> class for the media type part.
+        /// Initializes a new instance of the <see cref="MediaType"/> class, with
+        /// the provided <paramref name="type"/>.
         /// </summary>
-        /// <param name="type"></param>
+        /// <param name="type">the media type part</param>
         public MediaType(string type)
         {
             this.type = type;

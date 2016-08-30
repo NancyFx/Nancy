@@ -20,7 +20,8 @@ namespace Nancy.Routing.Trie.Nodes
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CaptureNodeWithDefaultValue"/> class.
+        /// Initializes a new instance of the <see cref="CaptureNodeWithDefaultValue"/> class, with
+        /// the provided <paramref name="parent"/>, <paramref name="segment"/> and <paramref name="nodeFactory"/>.
         /// </summary>
         /// <param name="parent">The parent.</param>
         /// <param name="segment">The segment.</param>

@@ -8,14 +8,22 @@
     /// <summary>
     /// Collection class for static culture conventions
     /// </summary>
+    /// <seealso>
+    ///     <cref>
+    ///         System.Collections.Generic.IEnumerable{System.Func{Nancy.NancyContext, Nancy.GlobalizationConfiguration,
+    ///         System.Globalization.CultureInfo}}
+    ///     </cref>
+    /// </seealso>
     public class CultureConventions : IEnumerable<Func<NancyContext, GlobalizationConfiguration, CultureInfo>>
     {
         private readonly IEnumerable<Func<NancyContext, GlobalizationConfiguration, CultureInfo>> conventions;
 
+
         /// <summary>
-        /// Creates a new instance of CultureConventions
+        /// Initializes a new instance of the <see cref="CultureConventions"/> class, with
+        /// the provided <paramref name="conventions"/>.
         /// </summary>
-        /// <param name="conventions"></param>
+        /// <param name="conventions">The conventions.</param>
         public CultureConventions(IEnumerable<Func<NancyContext, GlobalizationConfiguration, CultureInfo>> conventions)
         {
             this.conventions = conventions;

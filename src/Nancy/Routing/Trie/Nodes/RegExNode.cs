@@ -20,7 +20,8 @@ namespace Nancy.Routing.Trie.Nodes
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RegExNode"/> class.
+        /// Initializes a new instance of the <see cref="RegExNode"/>  class with
+        /// the provided <paramref name="parent"/>, <paramref name="segment"/> and <paramref name="nodeFactory"/>.
         /// </summary>
         /// <param name="parent">Parent node</param>
         /// <param name="segment">Segment of the route definition</param>

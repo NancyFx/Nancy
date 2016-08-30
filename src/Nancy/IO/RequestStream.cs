@@ -24,7 +24,8 @@
         private Stream stream;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RequestStream"/> class.
+        /// Initializes a new instance of the <see cref="RequestStream"/> class, with
+        /// the provided <paramref name="expectedLength"/>, <paramref name="thresholdLength"/> and <paramref name="disableStreamSwitching"/>.
         /// </summary>
         /// <param name="expectedLength">The expected length of the contents in the stream.</param>
         /// <param name="thresholdLength">The content length that will trigger the stream to be moved out of memory.</param>
@@ -35,7 +36,8 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RequestStream"/> class.
+        /// Initializes a new instance of the <see cref="RequestStream"/> class, with
+        /// the provided <paramref name="expectedLength"/>, <paramref name="expectedLength"/> and <paramref name="disableStreamSwitching"/>.
         /// </summary>
         /// <param name="stream">The <see cref="Stream"/> that should be handled by the request stream</param>
         /// <param name="expectedLength">The expected length of the contents in the stream.</param>
@@ -46,7 +48,8 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RequestStream"/> class.
+        /// Initializes a new instance of the <see cref="RequestStream"/> class, with
+        /// the provided <paramref name="expectedLength"/> and <paramref name="disableStreamSwitching"/>.
         /// </summary>
         /// <param name="expectedLength">The expected length of the contents in the stream.</param>
         /// <param name="disableStreamSwitching">if set to <see langword="true"/> the stream will never explicitly be moved to disk.</param>
@@ -56,7 +59,8 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RequestStream"/> class.
+        /// Initializes a new instance of the <see cref="RequestStream"/> class, with
+        /// the provided <paramref name="expectedLength"/>, <paramref name="expectedLength"/>, <paramref name="thresholdLength"/> and <paramref name="disableStreamSwitching"/>.
         /// </summary>
         /// <param name="stream">The <see cref="Stream"/> that should be handled by the request stream</param>
         /// <param name="expectedLength">The expected length of the contents in the stream.</param>

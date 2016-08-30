@@ -25,7 +25,8 @@
         public static readonly IList<Assembly> Ignore = new List<Assembly>();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ResourceViewLocationProvider"/> class.
+        /// Initializes a new instance of the <see cref="ResourceViewLocationProvider"/> class, with
+        /// the provided <paramref name="assemblyCatalog"/>.
         /// </summary>
         /// <param name="assemblyCatalog">An <see cref="IAssemblyCatalog"/> instance.</param>
         public ResourceViewLocationProvider(IAssemblyCatalog assemblyCatalog)
@@ -34,7 +35,8 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ResourceViewLocationProvider"/> class.
+        /// Initializes a new instance of the <see cref="ResourceViewLocationProvider"/> class, with
+        /// the provided <paramref name="resourceReader"/> and <paramref name="resourceAssemblyProvider"/>.
         /// </summary>
         /// <param name="resourceReader">An <see cref="IResourceReader"/> instance that should be used when extracting embedded views.</param>
         /// <param name="resourceAssemblyProvider">An <see cref="IResourceAssemblyProvider"/> instance that should be used to determine which assemblies to scan for embedded views.</param>

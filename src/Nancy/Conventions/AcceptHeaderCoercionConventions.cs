@@ -12,7 +12,8 @@
         private readonly IList<Func<IEnumerable<Tuple<string, decimal>>, NancyContext, IEnumerable<Tuple<string, decimal>>>> conventions;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AcceptHeaderCoercionConventions"/> class.
+        /// Initializes a new instance of the <see cref="AcceptHeaderCoercionConventions"/> class., with
+        /// the provided <paramref name= "conventions" />
         /// </summary>
         /// <param name="conventions">The conventions.</param>
         public AcceptHeaderCoercionConventions(IList<Func<IEnumerable<Tuple<string, decimal>>, NancyContext, IEnumerable<Tuple<string, decimal>>>> conventions)

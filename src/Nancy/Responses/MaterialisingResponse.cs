@@ -37,7 +37,8 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MaterialisingResponse"/> class.
+        /// Initializes a new instance of the <see cref="MaterialisingResponse"/> class, with
+        /// the provided <paramref name="sourceResponse"/>.
         /// </summary>
         /// <param name="sourceResponse">The source response.</param>
         public MaterialisingResponse(Response sourceResponse)
