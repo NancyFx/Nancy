@@ -131,7 +131,7 @@
                     while(!this.stop)
                     {
                         HttpListenerContext context = await this.listener.GetContextAsync().ConfigureAwait(false);
-                        Process(context);
+                        await this.Process(context).ConfigureAwait(false);
                     }
                 }
                 catch(Exception ex)
