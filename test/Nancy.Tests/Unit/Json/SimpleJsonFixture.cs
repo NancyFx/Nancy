@@ -1,5 +1,6 @@
 ﻿namespace Nancy.Tests.Unit.Json
 {
+    using System.Globalization;
     using Nancy.Json.Simple;
     using Xunit;
 
@@ -31,6 +32,31 @@
 
             //Then
             actual.ShouldEqual(@"42");
+        }
+
+        [Fact]
+        public void Should_serialize_enum_to_string()
+        {
+            //Given
+            var model = new ModelTest { EnumModel = TestEnum.Freddy };
+
+            //When
+            var result = SimpleJson.SerializeObject(model, new NancySerializationStrategy(false, true));
+
+            //Then
+            result.ShouldEqual("{\"enumModel\":\"Freddy\"}");
+        }
+
+        public class ModelTest
+        {
+            public TestEnum EnumModel { get; set; }
+        }
+        
+        public enum TestEnum
+        {
+            Rod = 1,
+            Jane = 2,
+            Freddy = 3
         }
     }
 }
