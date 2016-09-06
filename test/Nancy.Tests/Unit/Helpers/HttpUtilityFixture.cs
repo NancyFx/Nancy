@@ -1,5 +1,6 @@
 ﻿namespace Nancy.Tests.Unit.Helpers
 {
+    using System.Text;
     using Nancy.Helpers;
 
     using Xunit;
@@ -27,7 +28,7 @@
         {
             // Given
             StaticConfiguration.CaseSensitive = true;
-			var query = "key=value";
+            var query = "key=value";
 
             // When
             var collection = HttpUtility.ParseQueryString(query);
@@ -146,6 +147,28 @@
             {
                 var collection = HttpUtility.ParseQueryString(query);
                 collection.ShouldNotBeNull();
+            }).ShouldBeNull();
+        }
+
+        [Fact]
+        public void UrlDecode_returns_null_when_input_is_null()
+        {
+            byte[] input = null;
+            Record.Exception(() =>
+            {
+                var result = HttpUtility.UrlDecode(input, 0, 10, Encoding.UTF8);
+                result.ShouldBeNull();
+            }).ShouldBeNull();
+        }
+
+        [Fact]
+        public void UrlDecode_returns_null_when_input_string_is_null()
+        {
+            string input = null;
+            Record.Exception(() =>
+            {
+                var result = HttpUtility.UrlDecode(input, Encoding.UTF8);
+                result.ShouldBeNull();
             }).ShouldBeNull();
         }
     }
