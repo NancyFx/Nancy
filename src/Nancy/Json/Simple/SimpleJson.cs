@@ -1387,7 +1387,7 @@ namespace Nancy.Json.Simple
                 return value;
             if ((valueIsDouble && type != typeof(double)) || (valueIsLong && type != typeof(long)))
             {
-                obj = type == typeof(int) || type == typeof(uint) || type == typeof(long) || type == typeof(double) || type == typeof(float) || type == typeof(bool) || type == typeof(decimal) || type == typeof(byte) || type == typeof(short)
+                obj = type == typeof(int) || type == typeof(uint) || type == typeof(long) || type == typeof(ulong) || type == typeof(double) || type == typeof(float) || type == typeof(bool) || type == typeof(decimal) || type == typeof(byte) || type == typeof(short) || type == (typeof(ushort))
                     ? Convert.ChangeType(value, type, CultureInfo.InvariantCulture)
                     : value;
             }
