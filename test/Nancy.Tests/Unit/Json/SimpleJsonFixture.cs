@@ -47,6 +47,28 @@
             result.ShouldEqual("{\"enumModel\":\"Freddy\"}");
         }
 
+        [Fact]
+        public void Should_deserialize_json_number_to_ulong()
+        {
+            // Given
+            var json = "42";
+            // When
+            var result = SimpleJson.DeserializeObject(json, typeof(ulong), DateTimeStyles.None);
+            // Then
+            result.ShouldEqual(42ul);
+        }
+
+        [Fact]
+        public void Should_deserialize_json_number_to_ushort()
+        {
+            // Given
+            var json = "42";
+            // When
+            var result = SimpleJson.DeserializeObject(json, typeof(ushort), DateTimeStyles.None);
+            // Then
+            result.ShouldEqual((ushort)42);
+        }
+
         public class ModelTest
         {
             public TestEnum EnumModel { get; set; }
