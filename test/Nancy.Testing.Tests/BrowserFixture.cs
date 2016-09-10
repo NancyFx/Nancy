@@ -448,6 +448,9 @@ namespace Nancy.Testing.Tests
                     with.Accept("application/json");
                     with.FormValue("SomeString", "Hi");
                     with.FormValue("SomeInt", "1");
+                    with.FormValue("SomeNullableInt1", "2");
+                    with.FormValue("SomeNullableInt2", string.Empty);
+                    with.FormValue("SomeNullableInt3", null);
                     with.FormValue("SomeBoolean", "true");
                 });
 
@@ -457,6 +460,9 @@ namespace Nancy.Testing.Tests
             // Then
             Assert.Equal("Hi", actualModel.SomeString);
             Assert.Equal(1, actualModel.SomeInt);
+            actualModel.SomeNullableInt1.ShouldEqual(2);
+            actualModel.SomeNullableInt2.ShouldBeNull();
+            actualModel.SomeNullableInt3.ShouldBeNull();
             Assert.True(actualModel.SomeBoolean);
         }
 
@@ -470,6 +476,9 @@ namespace Nancy.Testing.Tests
                     with.Accept("application/json");
                     with.Query("SomeString", "Hi");
                     with.Query("SomeInt", "1");
+                    with.Query("SomeNullableInt1", "2");
+                    with.Query("SomeNullableInt2", string.Empty);
+                    with.Query("SomeNullableInt3", null);
                     with.Query("SomeBoolean", "true");
                 });
 
@@ -479,6 +488,9 @@ namespace Nancy.Testing.Tests
             // Then
             Assert.Equal("Hi", actualModel.SomeString);
             Assert.Equal(1, actualModel.SomeInt);
+            actualModel.SomeNullableInt1.ShouldEqual(2);
+            actualModel.SomeNullableInt2.ShouldBeNull();
+            actualModel.SomeNullableInt3.ShouldBeNull();
             Assert.True(actualModel.SomeBoolean);
         }
 
@@ -593,6 +605,12 @@ namespace Nancy.Testing.Tests
             public string SomeString { get; set; }
 
             public int SomeInt { get; set; }
+
+            public int? SomeNullableInt1 { get; set; }
+
+            public int? SomeNullableInt2 { get; set; }
+
+            public int? SomeNullableInt3 { get; set; }
 
             public bool SomeBoolean { get; set; }
         }
