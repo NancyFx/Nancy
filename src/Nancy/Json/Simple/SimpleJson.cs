@@ -85,12 +85,12 @@ namespace Nancy.Json.Simple
         class JsonArray : List<object>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="JsonArray"/> class. 
+        /// Initializes a new instance of the <see cref="JsonArray"/> class.
         /// </summary>
         public JsonArray() { }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="JsonArray"/> class. 
+        /// Initializes a new instance of the <see cref="JsonArray"/> class.
         /// </summary>
         /// <param name="capacity">The capacity of the json array.</param>
         public JsonArray(int capacity) : base(capacity) { }
@@ -481,7 +481,7 @@ namespace Nancy.Json.Simple
     /// <summary>
     /// This class encodes and decodes JSON strings.
     /// Spec. details, see http://www.json.org/
-    /// 
+    ///
     /// JSON uses Arrays and Objects. These correspond here to the datatypes JsonArray(IList&lt;object>) and JsonObject(IDictionary&lt;string,object>).
     /// All numbers are parsed to doubles.
     /// </summary>
@@ -1222,7 +1222,7 @@ namespace Nancy.Json.Simple
 
 #endif
     }
-    
+
     [GeneratedCode("simple-json", "1.0.0")]
 #if SIMPLE_JSON_INTERNAL
     internal
@@ -1393,9 +1393,9 @@ namespace Nancy.Json.Simple
 
             if (value == null)
                 return null;
-            
+
             object obj = null;
-            
+
             if (str != null)
             {
                 if (str.Length != 0) // We know it can't be null now.
@@ -1416,9 +1416,15 @@ namespace Nancy.Json.Simple
 
                         return null;
                     }
-                  
-                    if (type == typeof(string))  
+
+                    if (type == typeof(string))
                         return str;
+
+                // allows assigning "123" to int?
+                if (ReflectionUtils.IsNullableType(type))
+                {
+                    return ReflectionUtils.ToNullableType(str, type);
+                }
 
                     return Convert.ChangeType(str, type, CultureInfo.InvariantCulture);
                 }
@@ -1426,7 +1432,7 @@ namespace Nancy.Json.Simple
                 {
                     if (type == typeof(Guid))
                         obj = default(Guid);
-                    else if (ReflectionUtils.IsNullableType(type) && Nullable.GetUnderlyingType(type) == typeof(Guid))
+                    else if (ReflectionUtils.IsNullableType(type))
                         obj = null;
                     else
                         obj = str;
@@ -1437,7 +1443,7 @@ namespace Nancy.Json.Simple
             }
             else if (value is bool)
                 return value;
-            
+
             bool valueIsLong = value is long;
             bool valueIsDouble = value is double;
             if ((valueIsLong && type == typeof(long)) || (valueIsDouble && type == typeof(double)))

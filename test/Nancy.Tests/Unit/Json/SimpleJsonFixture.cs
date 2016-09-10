@@ -69,11 +69,81 @@
             result.ShouldEqual((ushort)42);
         }
 
+        [Fact]
+        public void Should_serialize_nullable_int_to_number()
+        {
+            // Given
+            var model = new NumberModel { SomeNullableInt = 42 };
+
+            // When
+            var result = SimpleJson.SerializeObject(model);
+
+            // Then
+            result.ShouldEqual("{\"SomeNullableInt\":42}");
+        }
+
+        [Fact]
+        public void Should_deserialize_number_to_nullable_int()
+        {
+            // Given
+            const string json = "{\"SomeNullableInt\":42}";
+
+            // When
+            var result = SimpleJson.DeserializeObject<NumberModel>(json);
+
+            // Then
+            result.SomeNullableInt.ShouldEqual(42);
+        }
+
+        [Fact]
+        public void Should_deserialize_numberstring_to_nullable_int()
+        {
+            // Given
+            const string json = "{\"SomeNullableInt\":\"42\"}";
+
+            // When
+            var result = SimpleJson.DeserializeObject<NumberModel>(json);
+
+            // Then
+            result.SomeNullableInt.ShouldEqual(42);
+        }
+
+        [Fact]
+        public void Should_serialize_nullable_int_to_null()
+        {
+            // Given
+            var model = new NumberModel { SomeNullableInt = null };
+
+            // When
+            var result = SimpleJson.SerializeObject(model);
+
+            // Then
+            result.ShouldEqual("{\"SomeNullableInt\":null}");
+        }
+
+        [Fact]
+        public void Should_deserialize_empty_string_to_nullable_int()
+        {
+            // Given
+            const string json = "{\"SomeNullableInt\":\"\"}";
+
+            // When
+            var result = SimpleJson.DeserializeObject<NumberModel>(json);
+
+            // Then
+            result.SomeNullableInt.ShouldEqual(null);
+        }
+
         public class ModelTest
         {
             public TestEnum EnumModel { get; set; }
         }
-        
+
+        public class NumberModel
+        {
+            public int? SomeNullableInt { get; set; }
+        }
+
         public enum TestEnum
         {
             Rod = 1,
