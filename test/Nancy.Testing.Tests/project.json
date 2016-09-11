@@ -2,9 +2,10 @@
     "dependencies": {
         "AngleSharp": "0.9.5",
         "dotnet-test-xunit": "2.2.0-preview2-build1029",
-        "FakeItEasy.Analyzer": "2.1.0",
-        "Microsoft.NETCore.Platforms": "1.0.1",
-        "Nancy": { "target": "project" },
+      "FakeItEasy": "2.2.0",
+      "FakeItEasy.Analyzer": "2.2.0",
+      "Microsoft.NETCore.Platforms": "1.0.1",
+      "Nancy": { "target": "project" },
         "Nancy.Testing": { "target": "project" },
         "xunit": "2.2.0-beta2-build3300"
     },
@@ -31,7 +32,6 @@
     "frameworks": {
         "net452": {
             "dependencies": {
-                "FakeItEasy": "2.0.0"
             },
             "frameworkAssemblies": {
                 "System.Runtime": { "type": "build" },
