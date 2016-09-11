@@ -130,8 +130,8 @@
                 {
                     while(!this.stop)
                     {
-                        HttpListenerContext context = await listener.GetContextAsync();
-                        Process(context);
+                        HttpListenerContext context = await this.listener.GetContextAsync().ConfigureAwait(false);
+                        await this.Process(context).ConfigureAwait(false);
                     }
                 }
                 catch(Exception ex)
@@ -159,7 +159,7 @@
                 throw new InvalidOperationException("Unable to configure namespace reservation");
             }
 
-            if (!TryStartListener())
+            if (!this.TryStartListener())
             {
                 throw new InvalidOperationException("Unable to start listener");
             }
@@ -209,8 +209,8 @@
 
         private string GetUser()
         {
-            return !string.IsNullOrWhiteSpace(this.configuration.UrlReservations.User) 
-                ? this.configuration.UrlReservations.User 
+            return !string.IsNullOrWhiteSpace(this.configuration.UrlReservations.User)
+                ? this.configuration.UrlReservations.User
                 : WindowsIdentity.GetCurrent().Name;
         }
 
@@ -336,7 +336,7 @@
 
             response.StatusCode = (int)nancyResponse.StatusCode;
 
-            if (configuration.AllowChunkedEncoding)
+            if (this.configuration.AllowChunkedEncoding)
             {
                 OutputWithDefaultTransferEncoding(nancyResponse, response);
             }
