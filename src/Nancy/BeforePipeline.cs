@@ -4,16 +4,13 @@
     using System.Threading;
     using System.Threading.Tasks;
 
+
     /// <summary>
     /// Intercepts the request before it is passed to the appropriate route handler.
     /// This gives you a couple of possibilities such as modifying parts of the request 
-    /// or even prematurely aborting the request by returning a response that will be sent back to the caller.    /// </summary>
-    /// <seealso>
-    ///     <cref>
-    ///         Nancy.AsyncNamedPipelineBase{System.Func{Nancy.NancyContext, System.Threading.CancellationToken,
-    ///         System.Threading.Tasks.Task{Nancy.Response}}, System.Func{Nancy.NancyContext, Nancy.Response}}
-    ///     </cref>
-    /// </seealso>
+    /// or even prematurely aborting the request by returning a response that will be sent back to the caller.
+    /// </summary>
+    /// <seealso cref="AsyncNamedPipelineBase" />
     public class BeforePipeline : AsyncNamedPipelineBase<Func<NancyContext, CancellationToken, Task<Response>>, Func<NancyContext, Response>>
     {
 
@@ -34,12 +31,9 @@
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="BeforePipeline"/> to <see>
-        ///         <cref>Func{NancyContext, CancellationToken, Task{Response}}</cref>
-        ///     </see>
-        ///     .
+        /// Performs an implicit conversion from <see cref="BeforePipeline"/> to <see cref="Func{NancyContext, CancellationToken, Task{Response}}"/>.
         /// </summary>
-        /// <param name="pipeline">The pipeline.</param>
+        /// <param name="pipeline">The <see cref="BeforePipeline"/>.</param>
         /// <returns>
         /// The result of the conversion.
         /// </returns>
@@ -48,13 +42,11 @@
             return pipeline.Invoke;
         }
 
+
         /// <summary>
-        /// Performs an implicit conversion from <see>
-        ///         <cref>Func{NancyContext, CancellationToken, Task{Response}}</cref>
-        ///     </see>
-        ///     to <see cref="BeforePipeline"/>.
+        /// Performs an implicit conversion from <see cref="Func{NancyContext, CancellationToken, Task{Response}}"/> to <see cref="BeforePipeline"/>.
         /// </summary>
-        /// <param name="func">The function.</param>
+        /// <param name="func">A <see cref="Func{NancyContext, CancellationToken, Task{Response}}"/>.</param>
         /// <returns>
         /// The result of the conversion.
         /// </returns>
@@ -66,10 +58,10 @@
         }
 
         /// <summary>
-        /// Appends a new function to the BeforePipeline.
+        /// Appends a new function to the <see cref="BeforePipeline"/>.
         /// </summary>
-        /// <param name="pipeline">The BeforePipeline pipeline instance.</param>
-        /// <param name="func">The function.</param>
+        /// <param name="pipeline">The <see cref="BeforePipeline"/> instance.</param>
+        /// <param name="func">A <see cref="Func{NancyContext, CancellationToken, Task{Response}}"/></param>
         /// <returns>
         /// The result of the operator.
         /// </returns>
@@ -81,10 +73,10 @@
 
 
         /// <summary>
-        /// Appends a new action to the BeforePipeline.
+        /// Appends a new action to the <see cref="BeforePipeline"/>.
         /// </summary>
-        /// <param name="pipeline">The BeforePipeline pipeline instance.</param>
-        /// <param name="action">The action.</param>
+        /// <param name="pipeline">The <see cref="BeforePipeline"/> instance.</param>
+        /// <param name="action">The <see cref="Action"/> for appending to the <see cref="BeforePipeline"/> instance.</param>
         /// <returns>
         /// The result of the operator.
         /// </returns>
@@ -96,10 +88,10 @@
 
 
         /// <summary>
-        /// Appends the items of an BeforePipeline to the other.
+        /// Appends the items of an <see cref="BeforePipeline"/> to the other.
         /// </summary>
-        /// <param name="pipelineToAddTo">The pipeline to add to.</param>
-        /// <param name="pipelineToAdd">The pipeline to add.</param>
+        /// <param name="pipelineToAddTo">The <see cref="BeforePipeline"/> to add to.</param>
+        /// <param name="pipelineToAdd">The <see cref="BeforePipeline"/> to add.</param>
         /// <returns>
         /// The result of the operator.
         /// </returns>
@@ -115,11 +107,10 @@
 
 
         /// <summary>
-        /// Invokes the specified context.
+        /// Invokes the specified <see cref="NancyContext"/>.
         /// </summary>
-        /// <param name="context">The context.</param>
+        /// <param name="context">The <see cref="NancyContext"/>.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns></returns>
         public async Task<Response> Invoke(NancyContext context, CancellationToken cancellationToken)
         {
             foreach (var pipelineDelegate in this.PipelineDelegates)
@@ -138,7 +129,6 @@
         /// Wraps the specified pipeline item into its async form.
         /// </summary>
         /// <param name="pipelineItem">The pipeline item.</param>
-        /// <returns></returns>
         protected override PipelineItem<Func<NancyContext, CancellationToken, Task<Response>>> Wrap(PipelineItem<Func<NancyContext, Response>> pipelineItem)
         {
             return new PipelineItem<Func<NancyContext, CancellationToken, Task<Response>>>(pipelineItem.Name, (ctx, ct) => Task.FromResult(pipelineItem.Delegate(ctx)));

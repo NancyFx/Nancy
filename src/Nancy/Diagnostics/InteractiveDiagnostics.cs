@@ -20,11 +20,11 @@
         /// <summary>
         /// Gets the list of available diagnostics.
         /// </summary>
-        /// <value> The available diagnostics.  </value>
+        /// <value>The available diagnostics.</value>
         public IEnumerable<InteractiveDiagnostic> AvailableDiagnostics { get; private set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="InteractiveDiagnostics"/> class.
+        /// Initializes an <see cref="InteractiveDiagnostics"/> class of <see cref="IDiagnosticsProvider"/> instances.
         /// </summary>
         /// <param name="providers">The providers.</param>
         public InteractiveDiagnostics(IEnumerable<IDiagnosticsProvider> providers)
@@ -55,7 +55,7 @@
         /// </summary>
         /// <param name="interactiveDiagnosticMethod">The interactive diagnostic method.</param>
         /// <param name="arguments">The arguments.</param>
-        /// <returns></returns>
+        /// <returns>The result of the <see cref="InteractiveDiagnosticMethod"/> as <see cref="object"/></returns>
         /// <exception cref="System.ArgumentException"></exception>
         public object ExecuteDiagnostic(InteractiveDiagnosticMethod interactiveDiagnosticMethod, object[] arguments)
         {
@@ -73,7 +73,7 @@
         /// Gets the template for an interactive diagnostic method instance.
         /// </summary>
         /// <param name="interactiveDiagnosticMethod">The interactive diagnostic method.</param>
-        /// <returns></returns>
+        /// <returns>The template as <see cref="string"/></returns>
         public string GetTemplate(InteractiveDiagnosticMethod interactiveDiagnosticMethod)
         {
             var diagObjectType = interactiveDiagnosticMethod.ParentDiagnosticObject.GetType();
@@ -86,7 +86,7 @@
         /// Gets the diagnostic for a provider.
         /// </summary>
         /// <param name="providerName">Name of the provider.</param>
-        /// <returns></returns>
+        /// <returns>The <see cref="InteractiveDiagnostic"/> instance.</returns>
         public InteractiveDiagnostic GetDiagnostic(string providerName)
         {
             return this.AvailableDiagnostics.FirstOrDefault(d => string.Equals(d.Name, providerName, StringComparison.OrdinalIgnoreCase));
@@ -97,7 +97,7 @@
         /// </summary>
         /// <param name="providerName">Name of the provider.</param>
         /// <param name="methodName">Name of the method.</param>
-        /// <returns></returns>
+        /// <returns>The <see cref="InteractiveDiagnosticMethod"/> instance</returns>
         public InteractiveDiagnosticMethod GetMethod(string providerName, string methodName)
         {
             var diagnostic = this.GetDiagnostic(providerName);

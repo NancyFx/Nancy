@@ -34,11 +34,9 @@
             this.Delegate = @delegate;
         }
 
+
         /// <summary>
-        /// Performs an implicit conversion from <see>
-        ///         <cref>TDelegate</cref>
-        ///     </see>
-        ///     to <see cref="PipelineItem{TDelegate}"/>.
+        /// Performs an implicit conversion from <see cref="TDelegate"/> to <see cref="PipelineItem{TDelegate}"/>.
         /// </summary>
         /// <param name="action">The action.</param>
         /// <returns>
@@ -50,10 +48,7 @@
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="PipelineItem{TDelegate}"/> to <see>
-        ///         <cref>TDelegate</cref>
-        ///     </see>
-        ///     .
+        /// Performs an implicit conversion from <see cref="PipelineItem{TDelegate}"/> to <see cref="TDelegate"/>.
         /// </summary>
         /// <param name="pipelineItem">The pipeline item.</param>
         /// <returns>

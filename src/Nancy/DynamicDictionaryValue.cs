@@ -45,7 +45,7 @@
         /// <summary>
         /// Gets a value indicating whether this instance has value.
         /// </summary>
-        /// <value><c>true</c> if this instance has value; otherwise, <c>false</c>.</value>
+        /// <value><see langword="true"/>  if this instance has value; otherwise, <see langword="false"/> .</value>
         /// <remarks><see langword="null"/> is considered as not being a value.</remarks>
         public bool HasValue
         {
@@ -148,9 +148,9 @@
         /// <summary>
         /// == operator for DynamicDictionaryValue
         /// </summary>
-        /// <param name="dynamicValue"></param>
-        /// <param name="compareValue"></param>
-        /// <returns></returns>
+        /// <param name="dynamicValue"><see cref="DynamicDictionaryValue"/></param>
+        /// <param name="compareValue"><see cref="object"/> value to compare to</param>
+        /// <returns><see langword="true"/> if equal,<see langword="false"/> otherwise</returns>
         public static bool operator ==(DynamicDictionaryValue dynamicValue, object compareValue)
         {
             if (ReferenceEquals(null, dynamicValue))
@@ -169,9 +169,9 @@
         /// <summary>
         /// != operator for DynamicDictionaryValue
         /// </summary>
-        /// <param name="dynamicValue"></param>
-        /// <param name="compareValue"></param>
-        /// <returns></returns>
+        /// <param name="dynamicValue"><see cref="DynamicDictionaryValue"/></param>
+        /// <param name="compareValue"><see cref="object"/> value to compare to</param>
+        /// <returns><see langword="true"/> if not equal,<see langword="false"/> otherwise</returns>
         public static bool operator !=(DynamicDictionaryValue dynamicValue, object compareValue)
         {
             return !(dynamicValue == compareValue);
@@ -180,7 +180,7 @@
         /// <summary>
         /// Indicates whether the current object is equal to another object of the same type.
         /// </summary>
-        /// <returns><c>true</c> if the current object is equal to the <paramref name="compareValue"/> parameter; otherwise, <c>false</c>.
+        /// <returns><see langword="true"/> if the current object is equal to the <paramref name="compareValue"/> parameter; otherwise, <see langword="false"/>.
         /// </returns>
         /// <param name="compareValue">An <see cref="DynamicDictionaryValue"/> to compare with this instance.</param>
         public bool Equals(DynamicDictionaryValue compareValue)
@@ -196,7 +196,7 @@
         /// <summary>
         /// Determines whether the specified <see cref="object"/> is equal to the current <see cref="object"/>.
         /// </summary>
-        /// <returns><c>true</c> if the specified <see cref="object"/> is equal to the current <see cref="DynamicDictionaryValue"/>; otherwise, <c>false</c>.</returns>
+        /// <returns><see langword="true"/> if the specified <see cref="object"/> is equal to the current <see cref="DynamicDictionaryValue"/>; otherwise, <see langword="false/>.</returns>
         /// <param name="compareValue">The <see cref="object"/> to compare with the current <see cref="DynamicDictionaryValue"/>.</param>
         public override bool Equals(object compareValue)
         {
@@ -225,7 +225,7 @@
         /// <summary>
         /// Provides implementation for binary operations. Classes derived from the <see cref="T:System.Dynamic.DynamicObject"/> class can override this method to specify dynamic behavior for operations such as addition and multiplication.
         /// </summary>
-        /// <returns><c>true</c> if the operation is successful; otherwise, <c>false</c>. If this method returns <c>false</c>, the run-time binder of the language determines the behavior. (In most cases, a language-specific run-time exception is thrown.)</returns>
+        /// <returns><see langword="true"/>  if the operation is successful; otherwise, <see langword="false"/>. If this method returns <see langword="false"/>, the run-time binder of the language determines the behavior. (In most cases, a language-specific run-time exception is thrown.)</returns>
         /// <param name="binder">Provides information about the binary operation. The binder.Operation property returns an <see cref="T:System.Linq.Expressions.ExpressionType"/> object. For example, for the sum = first + second statement, where first and second are derived from the DynamicObject class, binder.Operation returns ExpressionType.Add.</param><param name="arg">The right operand for the binary operation. For example, for the sum = first + second statement, where first and second are derived from the DynamicObject class, <paramref name="arg"/> is equal to second.</param><param name="result">The result of the binary operation.</param>
         public override bool TryBinaryOperation(BinaryOperationBinder binder, object arg, out object result)
         {
@@ -255,7 +255,7 @@
         /// <summary>
         /// Provides implementation for type conversion operations. Classes derived from the <see cref="T:System.Dynamic.DynamicObject"/> class can override this method to specify dynamic behavior for operations that convert an object from one type to another.
         /// </summary>
-        /// <returns><c>true</c> if the operation is successful; otherwise, <c>false</c>. If this method returns <c>false</c>, the run-time binder of the language determines the behavior. (In most cases, a language-specific run-time exception is thrown.)</returns>
+        /// <returns><see langword="true"/>  if the operation is successful; otherwise, <see langword="false"/>. If this method returns <see langword="false"/>, the run-time binder of the language determines the behavior. (In most cases, a language-specific run-time exception is thrown.)</returns>
         /// <param name="binder">Provides information about the conversion operation. The binder.Type property provides the type to which the object must be converted. For example, for the statement (String)sampleObject in C# (CType(sampleObject, Type) in Visual Basic), where sampleObject is an instance of the class derived from the <see cref="T:System.Dynamic.DynamicObject"/> class, binder.Type returns the <see cref="T:System.String"/> type. The binder.Explicit property provides information about the kind of conversion that occurs. It returns true for explicit conversion and false for implicit conversion.</param><param name="result">The result of the type conversion operation.</param>
         public override bool TryConvert(ConvertBinder binder, out object result)
         {
@@ -359,7 +359,7 @@
         /// <summary>
         /// Implicit type conversion operator from DynamicDictionaryValue to bool?
         /// </summary>
-        /// <param name="dynamicValue"></param>
+        /// <param name="dynamicValue"><see cref="DynamicDictionaryValue"/></param>
         public static implicit operator bool?(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -374,7 +374,7 @@
         /// <summary>
         /// Implicit type conversion operator from DynamicDictionaryValue to bool
         /// </summary>
-        /// <param name="dynamicValue"></param>
+        /// <param name="dynamicValue"><see cref="DynamicDictionaryValue"/></param>
         public static implicit operator bool(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -400,7 +400,7 @@
         /// <summary>
         /// Implicit type conversion operator from DynamicDictionaryValue to string
         /// </summary>
-        /// <param name="dynamicValue"></param>
+        /// <param name="dynamicValue"><see cref="DynamicDictionaryValue"/></param>
         public static implicit operator string(DynamicDictionaryValue dynamicValue)
         {
             return dynamicValue.HasValue
@@ -412,7 +412,7 @@
         /// <summary>
         /// Implicit type conversion operator from DynamicDictionaryValue to int?
         /// </summary>
-        /// <param name="dynamicValue"></param>
+        /// <param name="dynamicValue"><see cref="DynamicDictionaryValue"/></param>
         public static implicit operator int?(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -427,7 +427,7 @@
         /// <summary>
         /// Implicit type conversion operator from DynamicDictionaryValue to int
         /// </summary>
-        /// <param name="dynamicValue"></param>
+        /// <param name="dynamicValue"><see cref="DynamicDictionaryValue"/></param>
         public static implicit operator int(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -447,7 +447,7 @@
         /// <summary>
         /// Implicit type conversion operator from DynamicDictionaryValue to Guid?
         /// </summary>
-        /// <param name="dynamicValue"></param>
+        /// <param name="dynamicValue"><see cref="DynamicDictionaryValue"/></param>
         public static implicit operator Guid?(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -462,7 +462,7 @@
         /// <summary>
         /// Implicit type conversion operator from DynamicDictionaryValue to Guid
         /// </summary>
-        /// <param name="dynamicValue"></param>
+        /// <param name="dynamicValue"><see cref="DynamicDictionaryValue"/></param>
         public static implicit operator Guid(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -482,7 +482,7 @@
         /// <summary>
         /// Implicit type conversion operator from DynamicDictionaryValue to DateTime?
         /// </summary>
-        /// <param name="dynamicValue"></param>
+        /// <param name="dynamicValue"><see cref="DynamicDictionaryValue"/></param>
         public static implicit operator DateTime?(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -517,7 +517,7 @@
         /// <summary>
         /// Implicit type conversion operator from DynamicDictionaryValue to TimeSpan?
         /// </summary>
-        /// <param name="dynamicValue"></param>
+        /// <param name="dynamicValue"><see cref="DynamicDictionaryValue"/></param>
         public static implicit operator TimeSpan?(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -532,7 +532,7 @@
         /// <summary>
         /// Implicit type conversion operator from DynamicDictionaryValue to TimeSpan
         /// </summary>
-        /// <param name="dynamicValue"></param>
+        /// <param name="dynamicValue"><see cref="DynamicDictionaryValue"/></param>
         public static implicit operator TimeSpan(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -552,7 +552,7 @@
         /// <summary>
         /// Implicit type conversion operator from DynamicDictionaryValue to long?
         /// </summary>
-        /// <param name="dynamicValue"></param>
+        /// <param name="dynamicValue"><see cref="DynamicDictionaryValue"/></param>
         public static implicit operator long?(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -567,7 +567,7 @@
         /// <summary>
         /// Implicit type conversion operator from DynamicDictionaryValue to long
         /// </summary>
-        /// <param name="dynamicValue"></param>
+        /// <param name="dynamicValue"><see cref="DynamicDictionaryValue"/></param>
         public static implicit operator long(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -587,7 +587,7 @@
         /// <summary>
         /// Implicit type conversion operator from DynamicDictionaryValue to float?
         /// </summary>
-        /// <param name="dynamicValue"></param>
+        /// <param name="dynamicValue"><see cref="DynamicDictionaryValue"/></param>
         public static implicit operator float?(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -602,7 +602,7 @@
         /// <summary>
         /// Implicit type conversion operator from DynamicDictionaryValue to float
         /// </summary>
-        /// <param name="dynamicValue"></param>
+        /// <param name="dynamicValue"><see cref="DynamicDictionaryValue"/></param>
         public static implicit operator float(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -622,7 +622,7 @@
         /// <summary>
         /// Implicit type conversion operator from DynamicDictionaryValue to decimal?
         /// </summary>
-        /// <param name="dynamicValue"></param>
+        /// <param name="dynamicValue"><see cref="DynamicDictionaryValue"/></param>
         public static implicit operator decimal?(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -637,7 +637,7 @@
         /// <summary>
         /// Implicit type conversion operator from DynamicDictionaryValue to decimal
         /// </summary>
-        /// <param name="dynamicValue"></param>
+        /// <param name="dynamicValue"><see cref="DynamicDictionaryValue"/></param>
         public static implicit operator decimal(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -657,7 +657,7 @@
         /// <summary>
         /// Implicit type conversion operator from DynamicDictionaryValue to double?
         /// </summary>
-        /// <param name="dynamicValue"></param>
+        /// <param name="dynamicValue"><see cref="DynamicDictionaryValue"/></param>
         public static implicit operator double?(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -671,7 +671,7 @@
         /// <summary>
         /// Implicit type conversion operator from DynamicDictionaryValue to double
         /// </summary>
-        /// <param name="dynamicValue"></param>
+        /// <param name="dynamicValue"><see cref="DynamicDictionaryValue"/></param>
         public static implicit operator double(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)

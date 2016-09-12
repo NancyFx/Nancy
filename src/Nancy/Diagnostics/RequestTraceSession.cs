@@ -12,7 +12,7 @@ namespace Nancy.Diagnostics
         private readonly ConcurrentLimitedCollection<IRequestTrace> requestTraces;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RequestTraceSession"/> class, with
+        /// Initializes an instance of the <see cref="RequestTraceSession"/> class, with
         /// the provided <paramref name="id"/>.
         /// </summary>
         /// <param name="id">The session identifier.</param>
@@ -25,13 +25,13 @@ namespace Nancy.Diagnostics
         /// <summary>
         /// Gets the identifier.
         /// </summary>
-        /// <value>  The session identifier. </value>
+        /// <value>The session identifier.</value>
         public Guid Id { get; private set; }
 
         /// <summary>
         /// Gets the request traces.
         /// </summary>
-        /// <value> The collection of request traces.  </value>
+        /// <value>The collection of request traces.</value>
         public IEnumerable<IRequestTrace> RequestTraces
         {
             get
@@ -41,7 +41,7 @@ namespace Nancy.Diagnostics
         }
 
         /// <summary>
-        /// Adds a request trace to the collection.
+        /// Adds a request trace instance to the collection.
         /// </summary>
         /// <param name="trace">The trace.</param>
         public void AddRequestTrace(IRequestTrace trace)

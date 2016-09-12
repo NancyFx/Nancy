@@ -3,7 +3,7 @@ namespace Nancy.Cookies
     using System;
 
     /// <summary>
-    /// Interface for the nancy cookie
+    /// Defines the functionality of a Nancy context
     /// </summary>
     public interface INancyCookie
     {

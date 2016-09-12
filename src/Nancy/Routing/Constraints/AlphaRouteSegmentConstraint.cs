@@ -10,7 +10,7 @@
         /// <summary>
         /// Gets the name of the constraint.
         /// </summary>
-        /// <value> The constraint's name.  </value>
+        /// <value>The constraint's name.</value>
         public override string Name
         {
             get { return "alpha"; }
@@ -23,7 +23,7 @@
         /// <param name="segment">The segment to match.</param>
         /// <param name="matchedValue">The matched value.</param>
         /// <returns>
-        ///   <c>true</c> if the segment matches the constraint, <c>false</c> otherwise.
+        /// <see langword="true"/> if the segment matches the constraint, <see langword="false"/> otherwise.
         /// </returns>
         protected override bool TryMatch(string constraint, string segment, out string matchedValue)
         {

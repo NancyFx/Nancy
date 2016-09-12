@@ -11,31 +11,31 @@ namespace Nancy.Diagnostics
         /// <summary>
         /// Gets the parent diagnostic object.
         /// </summary>
-        /// <value>  The parent diagnostic object. </value>
+        /// <value>The parent diagnostic object.</value>
         public object ParentDiagnosticObject { get; private set; }
 
         /// <summary>
         /// Gets the return type
         /// </summary>
-        /// <value> The type of the method return type </value>
+        /// <value>The type of the method return type</value>
         public Type ReturnType { get; private set; }
 
         /// <summary>
         /// Gets the name of the method.
         /// </summary>
-        /// <value> The name of the method. </value>
+        /// <value>The name of the method.</value>
         public string MethodName { get; private set; }
 
         /// <summary>
         /// Gets the description.
         /// </summary>
-        /// <value> The description of the method. </value>
+        /// <value>The description of the method.</value>
         public string Description { get; private set; }
 
         /// <summary>
         /// Gets the arguments.
         /// </summary>
-        /// <value> The arguments for the method. </value>
+        /// <value>The arguments for the method.</value>
         public IEnumerable<Tuple<string, Type>> Arguments { get; private set; }
 
         /// <summary>
