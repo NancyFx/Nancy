@@ -21,7 +21,7 @@
         /// </summary>
         /// <param name="constraint">The route constraint.</param>
         /// <returns>
-        ///   <c>true</c> if the constraint matches, <c>false</c> otherwise.
+        /// <see langword="true"/> if the segment matches the constraint, <see langword="false"/> otherwise.
         /// </returns>
         public virtual bool Matches(string constraint)
         {
@@ -55,7 +55,9 @@
         /// <param name="constraint">The constraint.</param>
         /// <param name="segment">The segment to match.</param>
         /// <param name="matchedValue">The matched value.</param>
-        /// <returns><c>true</c> if the segment matches the constraint, <c>false</c> otherwise.</returns>
+        /// <returns>
+        /// <see langword="true"/> if the segment matches the constraint, <see langword="false"/> otherwise.
+        /// </returns>
         protected abstract bool TryMatch(string constraint, string segment, out T matchedValue);
 
         private static SegmentMatch CreateMatch(string parameterName, object matchedValue)

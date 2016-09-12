@@ -17,25 +17,25 @@ namespace Nancy.Diagnostics
         /// <summary>
         /// Gets or sets the hash.
         /// </summary>
-        /// <value> The (salted) SHA256 hash. </value>
+        /// <value>The (salted) SHA256 hash.</value>
         public byte[] Hash { get; set; }
 
         /// <summary>
         /// Gets or sets the salt.
         /// </summary>
-        /// <value>  The salt for the hash value. </value>
+        /// <value>The salt for the hash value.</value>
         public byte[] Salt { get; set; }
 
         /// <summary>
         /// Gets or sets the expiry.
         /// </summary>
-        /// <value> The time when the session will be expired.  </value>
+        /// <value>The time when the session will be expired.</value>
         public DateTimeOffset Expiry { get; set; }
 
         /// <summary>
-        /// Generates the random salt.
+        /// Generates a random salt.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A byte array representing the random salt.</returns>
         public static byte[] GenerateRandomSalt()
         {
             var provider = RandomNumberGenerator.Create();
@@ -47,11 +47,11 @@ namespace Nancy.Diagnostics
         }
 
         /// <summary>
-        /// Generates the salted hash.
+        /// Generates the salted hash of a byte array.
         /// </summary>
-        /// <param name="plainText">The plain text.</param>
-        /// <param name="salt">The salt.</param>
-        /// <returns></returns>
+        /// <param name="plainText">The plain text as <see cref="byte"/> array.</param>
+        /// <param name="salt">The salt as <see cref="byte"/> array.</param>
+        /// <returns>A byte array representing the salted hash.</returns>
         public static byte[] GenerateSaltedHash(byte[] plainText, byte[] salt)
         {
             var algorithm = SHA256.Create();
@@ -72,11 +72,11 @@ namespace Nancy.Diagnostics
         }
 
         /// <summary>
-        /// Generates the salted hash.
+        /// Generates the salted hash of a <see cref="string"/>.
         /// </summary>
-        /// <param name="plainText">The plain text.</param>
-        /// <param name="salt">The salt.</param>
-        /// <returns></returns>
+        /// <param name="plainText">The plain text as <see cref="string"/></param>
+        /// <param name="salt">The salt as <see cref="byte"/> array.</param>
+        /// <returns>A byte array representing the salted hash.</returns>
         public static byte[] GenerateSaltedHash(string plainText, byte[] salt)
         {
             return GenerateSaltedHash(Encoding.UTF8.GetBytes(plainText), salt);

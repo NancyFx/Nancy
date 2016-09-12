@@ -12,7 +12,7 @@ namespace Nancy.Json.Converters
         /// <summary>
         /// Gets the supported types.
         /// </summary>
-        /// <value>  The collection of supported types. </value>
+        /// <value>The collection of supported types.</value>
         public override IEnumerable<Type> SupportedTypes
         {
             get
@@ -27,7 +27,7 @@ namespace Nancy.Json.Converters
         /// <param name="dictionary">The dictionary.</param>
         /// <param name="type">The type.</param>
         /// <param name="serializer">The serializer.</param>
-        /// <returns></returns>
+        /// <returns>A <see cref="TimeSpan"/> instance as <see cref="object"/></returns>
         public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
         {
             return new TimeSpan(
@@ -43,7 +43,7 @@ namespace Nancy.Json.Converters
         /// </summary>
         /// <param name="obj">The object.</param>
         /// <param name="serializer">The serializer.</param>
-        /// <returns></returns>
+        /// <returns>A <see cref="Dictionary{TKey,TValue}"/> representing a <see cref="TimeSpan"/> object</returns>
         public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
         {
             var timeSpan = (TimeSpan)obj;

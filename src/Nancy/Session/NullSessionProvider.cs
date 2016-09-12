@@ -82,7 +82,7 @@ namespace Nancy.Session
         /// Gets a value indicating whether this instance has changed.
         /// </summary>
         /// <value>
-        /// <c>true</c> if this instance has changed; otherwise, <c>false</c>.
+        /// <see langword="true"/> if this instance has changed; otherwise, <see langword="false"/>.
         /// </value>
         public bool HasChanged
         {

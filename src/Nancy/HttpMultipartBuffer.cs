@@ -38,7 +38,7 @@
         /// Gets a value indicating whether this instance is closing boundary.
         /// </summary>
         /// <value>
-        /// <c>true</c> if this instance is closing boundary; otherwise, <c>false</c>.
+        /// <see langword="true"/> if this instance is closing boundary; otherwise, <see langword="false"/>.
         /// </value>
         public bool IsClosingBoundary
         {

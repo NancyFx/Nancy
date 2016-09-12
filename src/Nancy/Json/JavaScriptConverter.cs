@@ -44,7 +44,7 @@ namespace Nancy.Json
         /// <summary>
         /// Gets the supported types.
         /// </summary>
-        /// <value>  The supported types.  </value>
+        /// <value>The supported types.</value>
         public abstract IEnumerable<Type> SupportedTypes { get; }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace Nancy.Json
         /// </summary>
         /// <param name="dictionary">The dictionary.</param>
         /// <param name="type">The type.</param>
-        /// <returns></returns>
+        /// <returns>The deserialized <paramref name="dictionary"/></returns>
         public virtual object Deserialize(IDictionary<string, object> dictionary, Type type)
         {
             return Deserialize(dictionary, type, null);
@@ -64,14 +64,14 @@ namespace Nancy.Json
         /// <param name="dictionary">The dictionary.</param>
         /// <param name="type">The type.</param>
         /// <param name="serializer">The serializer.</param>
-        /// <returns></returns>
+        /// <returns>An <see cref="object"/> representing <paramref name="dictionary"/></returns>
         public abstract object Deserialize (IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer);
 
         /// <summary>
         /// Serializes the specified object.
         /// </summary>
         /// <param name="obj">The object.</param>
-        /// <returns></returns>
+        /// <returns>A <see cref="Dictionary{TKey,TValue}"/> instance</returns>
         public IDictionary<string, object> Serialize(object obj)
         {
             return Serialize(obj, null);
@@ -82,7 +82,7 @@ namespace Nancy.Json
         /// </summary>
         /// <param name="obj">The object.</param>
         /// <param name="serializer">The serializer.</param>
-        /// <returns></returns>
+        /// <returns>A <see cref="Dictionary{TKey,TValue}"/> instance</returns>
         public abstract IDictionary<string, object> Serialize (object obj, JavaScriptSerializer serializer);
 	}
 }

@@ -14,7 +14,7 @@
         /// <summary>
         /// Gets the supported tuple types.
         /// </summary>
-        /// <value>  The supported types. </value>
+        /// <value>The supported types.</value>
         public override IEnumerable<Type> SupportedTypes
         {
             get
@@ -36,7 +36,7 @@
         /// <param name="dictionary">The dictionary.</param>
         /// <param name="type">The type.</param>
         /// <param name="serializer">The serializer.</param>
-        /// <returns></returns>
+        /// <returns>A list of <see cref="Tuple{T1, T2}"/> representing the <paramref name="dictionary"/></returns>
         public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
         {
             var ctor = type.GetConstructors().First();
@@ -49,7 +49,6 @@
         /// </summary>
         /// <param name="obj">The object.</param>
         /// <param name="serializer">The serializer.</param>
-        /// <returns></returns>
         /// <exception cref="System.NotImplementedException"></exception>
         public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
         {

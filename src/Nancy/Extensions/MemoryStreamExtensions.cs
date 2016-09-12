@@ -4,7 +4,7 @@
     using System.IO;
 
     /// <summary>
-    /// 
+    /// Extensions for <see cref="MemoryStream"/>
     /// </summary>
     public static class MemoryStreamExtensions
     {

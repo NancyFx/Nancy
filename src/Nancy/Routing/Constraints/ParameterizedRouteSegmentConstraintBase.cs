@@ -14,7 +14,7 @@
         /// </summary>
         /// <param name="constraint">The route constraint.</param>
         /// <returns>
-        /// <c>true</c> if the constraint matches, <c>false</c> otherwise.
+        /// <see langword="true"/> if the segment matches the constraint, <see langword="false"/> otherwise.
         /// </returns>
         public override bool Matches(string constraint)
         {
@@ -28,7 +28,7 @@
         /// <param name="segment">The segment to match.</param>
         /// <param name="matchedValue">The matched value.</param>
         /// <returns>
-        ///   <c>true</c> if the segment matches the constraint, <c>false</c> otherwise.
+        /// <see langword="true"/> if the segment matches the constraint, <see langword="false"/> otherwise.
         /// </returns>
         protected override bool TryMatch(string constraint, string segment, out T matchedValue)
         {
@@ -42,7 +42,9 @@
         /// </summary>
         /// <param name="string">The string value.</param>
         /// <param name="result">The resulting integer.</param>
-        /// <returns><c>true</c> if the parsing was successful, <c>false</c> otherwise.</returns>
+        /// <returns>
+        /// <see langword="true"/> if the segment matches the constraint, <see langword="false"/> otherwise.
+        /// </returns>
         protected bool TryParseInt(string @string, out int result)
         {
             return int.TryParse(@string, NumberStyles.Integer, CultureInfo.InvariantCulture, out result);
@@ -54,7 +56,9 @@
         /// <param name="segment">The segment to match.</param>
         /// <param name="parameters">The parameters to match.</param>
         /// <param name="matchedValue">The matched value.</param>
-        /// <returns><c>true</c> if the segment and parameters matches the constraint, <c>false</c> otherwise.</returns>
+        /// <returns>
+        /// <see langword="true"/> if the segment matches the constraint, <see langword="false"/> otherwise.
+        /// </returns>
         protected abstract bool TryMatch(string segment, string[] parameters, out T matchedValue);
     }
 }

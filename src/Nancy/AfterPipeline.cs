@@ -5,21 +5,16 @@ namespace Nancy
     using System.Threading.Tasks;
     using Nancy.Helpers;
 
+
     /// <summary>
     /// Intercepts the request after the appropriate route handler has completed its operation.
     /// The After hooks does not have any return value because one has already been produced by the appropriate route. 
     /// Instead you get the option to modify (or completely replace) the existing response by accessing the Response property of the NancyContext that is passed in.
     /// </summary>
-    /// <seealso>
-    ///     <cref>
-    ///         Nancy.AsyncNamedPipelineBase{System.Func{Nancy.NancyContext, System.Threading.CancellationToken,
-    ///         System.Threading.Tasks.Task}, System.Action{Nancy.NancyContext}}
-    ///     </cref>
-    /// </seealso>
+    /// <seealso cref="Nancy.AsyncNamedPipelineBase{System.Func{Nancy.NancyContext, System.Threading.CancellationToken, System.Threading.Tasks.Task}, System.Action{Nancy.NancyContext}}" />
     public class AfterPipeline : AsyncNamedPipelineBase<Func<NancyContext, CancellationToken, Task>, Action<NancyContext>>
     {
         private static readonly Task completeTask = TaskHelpers.CompletedTask;
-
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AfterPipeline"/> class.
@@ -27,7 +22,6 @@ namespace Nancy
         public AfterPipeline()
         {
         }
-
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AfterPipeline"/> class, with
@@ -39,19 +33,15 @@ namespace Nancy
         {
         }
 
-
         /// <summary>
         /// Performs an implicit conversion from <see cref="AfterPipeline"/> to <see cref="Func{NancyContext, CancellationToken, Task}"/>.
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
-        /// <returns>
-        /// The result of the conversion.
-        /// </returns>
+        /// <returns>The result of the conversion.</returns>
         public static implicit operator Func<NancyContext, CancellationToken, Task>(AfterPipeline pipeline)
         {
             return pipeline.Invoke;
         }
-
 
         /// <summary>
         /// Performs an implicit conversion from <see cref="Func{NancyContext, CancellationToken, Task}"/> to <see cref="AfterPipeline"/>.
@@ -67,8 +57,6 @@ namespace Nancy
             return pipeline;
         }
 
-
-
         /// <summary>
         /// Appends a new func to the AfterPipeline
         /// </summary>
@@ -83,7 +71,6 @@ namespace Nancy
             return pipeline;
         }
 
-
         /// <summary>
         /// Appends a new action to the AfterPipeline
         /// </summary>
@@ -97,7 +84,6 @@ namespace Nancy
             pipeline.AddItemToEndOfPipeline(action);
             return pipeline;
         }
-
 
         /// <summary>
         /// Appends the items of an AfterPipeline to the other.
@@ -118,11 +104,10 @@ namespace Nancy
         }
 
         /// <summary>
-        /// Invokes the specified context.
+        /// Invokes the pipeline items in Nancy context.
         /// </summary>
-        /// <param name="context">The context.</param>
+        /// <param name="context">The Nancy context.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns></returns>
         public async Task Invoke(NancyContext context, CancellationToken cancellationToken)
         {
             foreach (var pipelineDelegate in this.PipelineDelegates)
@@ -131,12 +116,11 @@ namespace Nancy
             }
         }
 
-
         /// <summary>
         /// Wraps the specified pipeline item into its async form.
         /// </summary>
         /// <param name="pipelineItem">The pipeline item.</param>
-        /// <returns></returns>
+        /// <returns>Async pipeline item instance.</returns>
         protected override PipelineItem<Func<NancyContext, CancellationToken, Task>> Wrap(PipelineItem<Action<NancyContext>> pipelineItem)
         {
             return new PipelineItem<Func<NancyContext, CancellationToken, Task>>(pipelineItem.Name, (ctx, ct) =>

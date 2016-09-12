@@ -1,7 +1,7 @@
 ﻿namespace Nancy.Diagnostics
 {
     /// <summary>
-    /// 
+    /// A dummy diagnostic provider for testing purposes.
     /// </summary>
     /// <seealso cref="Nancy.Diagnostics.IDiagnosticsProvider" />
     public class TestingDiagnosticProvider : IDiagnosticsProvider
@@ -44,7 +44,7 @@
         }
 
         /// <summary>
-        /// 
+        /// Contains dummy diagnostic methods.
         /// </summary>
         public class DiagObject
         {
@@ -57,9 +57,9 @@
             }
 
             /// <summary>
-            /// String the return value.
+            /// String return value.
             /// </summary>
-            /// <returns></returns>
+            /// <returns>A dummy <seealso cref="string"/> value.</returns>
             public string StringReturnValue()
             {
                 return "Hello!";
@@ -69,7 +69,7 @@
             /// Returns hello with a given name.
             /// </summary>
             /// <param name="name">A name.</param>
-            /// <returns></returns>
+            /// <returns>A dummy <seealso cref="string"/> value.</returns>
             public string SayHello(string name)
             {
                 return string.Format("Hello {0}!", name);
@@ -78,7 +78,7 @@
             /// <summary>
             /// Returns the template for the SayHelloWithAge
             /// </summary>
-            /// <value> The template for the SayHelloWithAge </value>
+            /// <value>The template for the SayHelloWithAge</value>
             public string SayHelloWithAgeTemplate
             {
                 get
@@ -90,7 +90,7 @@
             /// <summary>
             /// Returns the description of the SayHelloWithAgeDescription method
             /// </summary>
-            /// <value>  Description for the test method  </value>
+            /// <value>Description for the test method</value>
             public string SayHelloWithAgeDescription
             {
                 get

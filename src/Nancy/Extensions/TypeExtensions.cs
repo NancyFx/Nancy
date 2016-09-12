@@ -167,10 +167,10 @@
         }
 
         /// <summary>
-        /// Gets the enum type code.
+        /// Gets the enum for type code.
         /// </summary>
         /// <param name="type">The type.</param>
-        /// <returns>An enum representing the type code.</returns>
+        /// <returns>An enum value representing the type code.</returns>
         public static TypeCode GetTypeCode(this Type type)
         {
             if (type == typeof(bool))

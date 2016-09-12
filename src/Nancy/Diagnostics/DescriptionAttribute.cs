@@ -3,7 +3,7 @@ namespace Nancy.Diagnostics
     using System;
 
     /// <summary>
-    /// 
+    /// Attribute for specifying Method and Property descriptions.
     /// </summary>
     /// <seealso cref="System.Attribute" />
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Property, AllowMultiple = false, Inherited = false)]

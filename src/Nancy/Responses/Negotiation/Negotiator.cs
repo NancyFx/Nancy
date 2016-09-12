@@ -32,7 +32,7 @@ namespace Nancy.Responses.Negotiation
         /// <summary>
         /// Gets the awaiter.
         /// </summary>
-        /// <returns></returns>
+        /// <returns><see cref="TaskAwaiter{Negotiator}"/></returns>
         public TaskAwaiter<Negotiator> GetAwaiter()
         {
             return Task.FromResult(this).GetAwaiter();

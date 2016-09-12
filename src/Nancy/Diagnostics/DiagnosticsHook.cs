@@ -139,6 +139,7 @@ namespace Nancy.Diagnostics
 
         /// <summary>
         /// Disables the specified pipelines.
+        /// <seealso cref="IPipelines"/>
         /// </summary>
         /// <param name="pipelines">The pipelines.</param>
         public static void Disable(IPipelines pipelines)

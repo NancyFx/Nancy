@@ -5,15 +5,11 @@
     using System.Collections.Generic;
     using System.Globalization;
 
+
     /// <summary>
     /// Collection class for static culture conventions
     /// </summary>
-    /// <seealso>
-    ///     <cref>
-    ///         System.Collections.Generic.IEnumerable{System.Func{Nancy.NancyContext, Nancy.GlobalizationConfiguration,
-    ///         System.Globalization.CultureInfo}}
-    ///     </cref>
-    /// </seealso>
+    /// <seealso cref="System.Collections.Generic.IEnumerable{System.Func{Nancy.NancyContext, Nancy.GlobalizationConfiguration, System.Globalization.CultureInfo}}" />
     public class CultureConventions : IEnumerable<Func<NancyContext, GlobalizationConfiguration, CultureInfo>>
     {
         private readonly IEnumerable<Func<NancyContext, GlobalizationConfiguration, CultureInfo>> conventions;
