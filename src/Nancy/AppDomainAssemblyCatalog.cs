@@ -68,11 +68,11 @@ namespace Nancy
 
                     if (!loadedNancyReferencingAssemblyNames.Any(loadedNancyReferencingAssemblyName => AssemblyName.ReferenceMatchesDefinition(loadedNancyReferencingAssemblyName, unloadedAssemblyName)))
                     {
-                        var inspectionAssembly = inspectionAppDomain.Load(unloadedAssemblyName);
+                        var inspectionAssembly = SafeLoadAssembly(inspectionAppDomain, unloadedAssemblyName);
 
-                        if (IsNancyReferencing(inspectionAssembly))
+                        if (inspectionAssembly != null && IsNancyReferencing(inspectionAssembly))
                         {
-                            var assembly = SafeLoadAssembly(unloadedAssemblyName);
+                            var assembly = SafeLoadAssembly(AppDomain.CurrentDomain, unloadedAssemblyName);
 
                             if (assembly != null)
                             {
@@ -135,11 +135,11 @@ namespace Nancy
             }
         }
 
-        private static Assembly SafeLoadAssembly(AssemblyName assemblyName)
+        private static Assembly SafeLoadAssembly(AppDomain domain, AssemblyName assemblyName)
         {
             try
             {
-                return AppDomain.CurrentDomain.Load(assemblyName);
+                return domain.Load(assemblyName);
             }
             catch
             {
