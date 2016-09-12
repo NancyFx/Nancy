@@ -57,7 +57,7 @@ namespace Nancy.Tests.Unit.Sessions
         {
             var response = new Response();
 
-            cookieStore.Save(new Session(new Dictionary<string, object> { { "key", "value" } }), response);
+            cookieStore.Save(new NancySession(new Dictionary<string, object> { { "key", "value" } }), response);
 
             response.Cookies.Count.ShouldEqual(0);
         }
@@ -66,7 +66,7 @@ namespace Nancy.Tests.Unit.Sessions
         public void Should_save_the_session_cookie()
         {
             var response = new Response();
-            var session = new Session(new Dictionary<string, object>
+            var session = new NancySession(new Dictionary<string, object>
                                       {
                                           {"key1", "val1"},
                                       });
@@ -88,7 +88,7 @@ namespace Nancy.Tests.Unit.Sessions
         public void Should_save_cookie_as_http_only()
         {
             var response = new Response();
-            var session = new Session();
+            var session = new NancySession();
             session["key 1"] = "val=1";
             A.CallTo(() => this.fakeEncryptionProvider.Encrypt("key+1=val%3d1;")).Returns("encryptedkey+1=val%3d1;");
 
@@ -101,7 +101,7 @@ namespace Nancy.Tests.Unit.Sessions
         public void Should_saves_url_safe_keys_and_values()
         {
             var response = new Response();
-            var session = new Session();
+            var session = new NancySession();
             session["key 1"] = "val=1";
             A.CallTo(() => this.fakeEncryptionProvider.Encrypt("key+1=val%3d1;")).Returns("encryptedkey+1=val%3d1;");
 
@@ -247,7 +247,7 @@ namespace Nancy.Tests.Unit.Sessions
         public void Should_call_the_formatter_on_save()
         {
             var response = new Response();
-            var session = new Session(new Dictionary<string, object>());
+            var session = new NancySession(new Dictionary<string, object>());
             session["key1"] = "value1";
             var fakeFormatter = A.Fake<IObjectSerializer>();
             var store = new CookieBasedSessions(this.fakeEncryptionProvider, this.fakeHmacProvider, fakeFormatter);
@@ -280,7 +280,7 @@ namespace Nancy.Tests.Unit.Sessions
         public void Should_be_able_to_save_a_complex_object_to_session()
         {
             var response = new Response();
-            var session = new Session(new Dictionary<string, object>());
+            var session = new NancySession(new Dictionary<string, object>());
             var payload = new DefaultSessionObjectFormatterFixture.Payload(27, true, "Test string");
             var store = new CookieBasedSessions(this.aesEncryptionProvider, this.defaultHmacProvider, this.defaultObjectSerializer);
             session["testObject"] = payload;
@@ -298,7 +298,7 @@ namespace Nancy.Tests.Unit.Sessions
         public void Should_be_able_to_load_an_object_previously_saved_to_session()
         {
             var response = new Response();
-            var session = new Session(new Dictionary<string, object>());
+            var session = new NancySession(new Dictionary<string, object>());
             var payload = new DefaultSessionObjectFormatterFixture.Payload(27, true, "Test string");
             var store = new CookieBasedSessions(this.aesEncryptionProvider, this.defaultHmacProvider, this.defaultObjectSerializer);
             session["testObject"] = payload;
@@ -315,7 +315,7 @@ namespace Nancy.Tests.Unit.Sessions
         public void Should_encrypt_data()
         {
             var response = new Response();
-            var session = new Session(new Dictionary<string, object>
+            var session = new NancySession(new Dictionary<string, object>
                                       {
                                           {"key1", "val1"},
                                       });
@@ -331,7 +331,7 @@ namespace Nancy.Tests.Unit.Sessions
         public void Should_generate_hmac()
         {
             var response = new Response();
-            var session = new Session(new Dictionary<string, object>
+            var session = new NancySession(new Dictionary<string, object>
                                       {
                                           {"key1", "val1"},
                                       });
@@ -429,7 +429,7 @@ namespace Nancy.Tests.Unit.Sessions
 
             //When
             var response = new Response();
-            var session = new Session(new Dictionary<string, object>
+            var session = new NancySession(new Dictionary<string, object>
                                         {
                                             {"key1", "val1"},
                                         });
@@ -454,7 +454,7 @@ namespace Nancy.Tests.Unit.Sessions
 
             //When
             var response = new Response();
-            var session = new Session(new Dictionary<string, object>
+            var session = new NancySession(new Dictionary<string, object>
                                         {
                                             {"key1", "val1"},
                                         });
@@ -480,7 +480,7 @@ namespace Nancy.Tests.Unit.Sessions
 
             //When
             var response = new Response();
-            var session = new Session(new Dictionary<string, object>
+            var session = new NancySession(new Dictionary<string, object>
                                           {
                                               {"key1", "val1"},
                                           });

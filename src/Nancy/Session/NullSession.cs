@@ -4,7 +4,7 @@ namespace Nancy.Session
     using System.Collections;
     using System.Collections.Generic;
 
-    public class NullSessionProvider : ISession
+    public class NullSession : ISession
     {
         /// <summary>
         /// Returns an enumerator that iterates through the collection.

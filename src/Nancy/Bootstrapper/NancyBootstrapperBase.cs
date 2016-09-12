@@ -13,7 +13,7 @@
     using Nancy.ModelBinding;
     using Nancy.Validation;
     using Nancy.ViewEngines;
-
+    using Session;
     /// <summary>
     /// Nancy bootstrapper base class
     /// </summary>
@@ -38,6 +38,25 @@
         /// Stores the <see cref="IRootPathProvider"/> used by Nancy
         /// </summary>
         private IRootPathProvider rootPathProvider;
+
+        /// <summary>
+        /// Stores the <see cref="ISessionLifecycle"/> used by Nancy
+        /// </summary>
+        private ISessionLifecycle sessionLifecycle;
+
+        /// <summary>
+        /// Stores the <see cref="SessionProvider"/> used by Nancy
+        /// </summary>
+        private SessionProvider sessionProvider;
+
+        /// <summary>
+        /// Stores the <see cref="ISessionDependency"/> used by Nancy 
+        /// </summary>
+        private ISessionDependency sessionDependency;
+
+        /// <summary>
+        /// Stores the <see cref="ISessionProvider"/> used by Nancy
+        /// </summary>
 
         /// <summary>
         /// Default Nancy conventions
@@ -69,7 +88,7 @@
 
         private IAssemblyCatalog assemblyCatalog;
         private ITypeCatalog typeCatalog;
-
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyBootstrapperBase{TContainer}"/> class.
         /// </summary>
@@ -108,7 +127,7 @@
         {
             get { return this.typeCatalog ?? (this.typeCatalog = new DefaultTypeCatalog(this.AssemblyCatalog)); }
         }
-
+        
         /// <summary>
         /// Nancy internal configuration
         /// </summary>
@@ -310,11 +329,11 @@
                         if (String.Equals(ctx.Request.Path, "/favicon.ico", StringComparison.OrdinalIgnoreCase))
                         {
                             var response = new Response
-                                {
-                                    ContentType = "image/vnd.microsoft.icon",
-                                    StatusCode = HttpStatusCode.OK,
-                                    Contents = s => s.Write(this.FavIcon, 0, this.FavIcon.Length)
-                                };
+                            {
+                                ContentType = "image/vnd.microsoft.icon",
+                                StatusCode = HttpStatusCode.OK,
+                                Contents = s => s.Write(this.FavIcon, 0, this.FavIcon.Length)
+                            };
 
                             response.Headers["Cache-Control"] = "public, max-age=604800, must-revalidate";
 
@@ -323,6 +342,33 @@
 
                         return null;
                     });
+            }
+
+            this.sessionLifecycle = GetSessionLifecycle(this.ApplicationPipelines);
+            this.sessionProvider = GetSessionProvider();
+            
+            if (sessionLifecycle != null && sessionProvider!=null)
+            {
+                sessionProvider.Initialize();
+
+                this.ApplicationPipelines.BeforeRequest.AddItemToStartOfPipeline(ctx =>
+                {
+                    if (sessionProvider != null)
+                    {
+                        sessionLifecycle.LoadSessionProvider(sessionProvider);
+                        return sessionLifecycle.OnStart(ctx);
+                    }
+
+                    return null;
+                });
+
+                this.ApplicationPipelines.AfterRequest.AddItemToEndOfPipeline(ctx =>
+                {
+                    if (sessionProvider != null)
+                    {
+                        sessionLifecycle.OnEnd(ctx);
+                    }
+                });
             }
 
             this.GetDiagnostics().Initialize(this.ApplicationPipelines);
@@ -464,6 +510,148 @@
         public override sealed int GetHashCode()
         {
             return base.GetHashCode();
+        }
+
+        protected virtual SessionProvider GetSessionProvider()
+        {
+            var sessionProviderTypes = typeCatalog
+                .GetTypesAssignableTo<SessionProvider>()
+                .NotOfType<DefaultCookieSessionProvider>()
+                .ToList();
+
+            Type sessionProviderType = null;
+            if(!sessionProviderTypes.Any())
+            {
+                sessionProviderType = typeof(DefaultCookieSessionProvider);
+            }
+
+            if (sessionProviderTypes.Count == 1)
+            {
+                sessionProviderType = sessionProviderTypes.Single();
+            }
+
+            Type tmpSessionProviderType;
+            if (NancyBootstrapperLocator.TryFindMostDerivedType(sessionProviderTypes, out tmpSessionProviderType))
+            {
+                sessionProviderType = tmpSessionProviderType;
+            }
+            
+            try
+            {
+                if (sessionProviderType != null)
+                {
+                    var sessionProvider = Activator.CreateInstance(sessionProviderType) as SessionProvider;
+                    this.sessionDependency = GetSessionDependency();
+
+                    if (sessionDependency != null)
+                    {
+                        sessionProvider.SetSessionDependencies(sessionDependency);
+                    }
+
+                    return sessionProvider;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                var errorMessage = string.Format("Could not initialize session provider of type '{0}'.", sessionProviderType.FullName);
+                throw new BootstrapperException(errorMessage, ex);
+            }
+        }
+
+        protected virtual ISessionDependency GetSessionDependency()
+        {
+            var sessionDependencyTypes = typeCatalog
+                .GetTypesAssignableTo<ISessionDependency>()
+                .NotOfType<DefaultCookieSessionDependency>()
+                .ToList();
+
+            Type sessionDependencyType = null;
+            if (!sessionDependencyTypes.Any())
+            {
+                sessionDependencyType = typeof(DefaultCookieSessionDependency);
+            }
+
+            if (sessionDependencyTypes.Count == 1)
+            {
+                sessionDependencyType = sessionDependencyTypes.Single();
+            }
+
+            Type tmpSessionDependencyType;
+            if (NancyBootstrapperLocator.TryFindMostDerivedType(sessionDependencyTypes, out tmpSessionDependencyType))
+            {
+                sessionDependencyType = tmpSessionDependencyType;
+            }
+
+            try
+            {
+                if (sessionDependencyType != null)
+                {
+                    var sessionDependency = Activator.CreateInstance(sessionDependencyType) as ISessionDependency;
+                    return sessionDependency;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                var errorMessage = string.Format("Could not initialize session dependency of type '{0}'.", sessionDependencyType.FullName);
+                throw new BootstrapperException(errorMessage, ex);
+            }
+        }
+
+        /// <summary>
+        /// Returns the NancySession Lifecycle for initialisation
+        /// </summary>
+        /// <returns>ISessionLifecycle instance</returns>
+        protected virtual ISessionLifecycle GetSessionLifecycle(IPipelines pipelines)
+        {
+            var lifecycleTypes = typeCatalog
+                .GetTypesAssignableTo<ISessionLifecycle>()
+                .NotOfType<DefaultNancySessionLifecycle>()
+                .ToList();
+            
+            Type lifecycleType =null;
+            if (!lifecycleTypes.Any())
+            {
+                lifecycleType = typeof(DefaultNancySessionLifecycle);
+            }
+
+            if (lifecycleTypes.Count == 1)
+            {
+                lifecycleType = lifecycleTypes.Single();
+            }
+
+            Type tmplifecycleType;
+            if (NancyBootstrapperLocator.TryFindMostDerivedType(lifecycleTypes, out tmplifecycleType))
+            {
+                lifecycleType = tmplifecycleType;
+            }
+
+            try
+            {
+                if (lifecycleType != null)
+                {
+                    var lifecycle = Activator.CreateInstance(lifecycleType) as ISessionLifecycle;
+                    lifecycle.Initialise(pipelines);
+                    return lifecycle;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                var errorMessage = string.Format("Could not initialize session lifecycle of type '{0}'.", lifecycleType.FullName);
+                throw new BootstrapperException(errorMessage, ex);
+            }
+            
         }
 
         /// <summary>
@@ -626,7 +814,7 @@
                 new InstanceRegistration(typeof(NancyInternalConfiguration), this.GetInitializedInternalConfiguration()),
                 new InstanceRegistration(typeof(IRootPathProvider), this.RootPathProvider),
                 new InstanceRegistration(typeof(IAssemblyCatalog), this.AssemblyCatalog),
-                new InstanceRegistration(typeof(ITypeCatalog), this.TypeCatalog),
+                new InstanceRegistration(typeof(ITypeCatalog), this.TypeCatalog)
             };
         }
 

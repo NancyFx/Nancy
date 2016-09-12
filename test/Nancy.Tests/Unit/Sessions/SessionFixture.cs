@@ -12,7 +12,7 @@ namespace Nancy.Tests
         public void Clearing_the_session_should_not_mark_it_as_changed_if_it_as_empty()
         {
             // Given
-            var session = new Session();
+            var session = new NancySession();
 
             // When
             session.DeleteAll();
@@ -25,7 +25,7 @@ namespace Nancy.Tests
         public void Clearing_the_session_should_mark_it_as_changed_if_it_was_not_empty()
         {
             // Given
-            var session = new Session(new Dictionary<string, object> { { "key", 1 } });
+            var session = new NancySession(new Dictionary<string, object> { { "key", 1 } });
 
             // When
             session.DeleteAll();
@@ -38,7 +38,7 @@ namespace Nancy.Tests
         public void Deleting_an_invalid_key_should_not_mark_it_as_changed()
         {
             // Given
-            var session = new Session(new Dictionary<string, object> { { "key", 1 } });
+            var session = new NancySession(new Dictionary<string, object> { { "key", 1 } });
 
             // When
             session.Delete("something");
@@ -51,7 +51,7 @@ namespace Nancy.Tests
         public void Deleting_a_key_should_mark_it_as_changed()
         {
             // Given
-            var session = new Session(new Dictionary<string, object> { { "key", 1 } });
+            var session = new NancySession(new Dictionary<string, object> { { "key", 1 } });
 
             // When
             session.Delete("key");
@@ -64,7 +64,7 @@ namespace Nancy.Tests
         public void Setting_a_session_should_mark_it_as_changed()
         {
             // Given
-            var session = new Session();
+            var session = new NancySession();
 
             // When
             session["key"] = "SomeValue";
@@ -77,7 +77,7 @@ namespace Nancy.Tests
         public void Setting_a_key_with_the_same_value_should_not_mark_it_as_changed()
         {
           // Given
-          var session = new Session(new Dictionary<string, object> { { "key", "SomeValue" } } );
+          var session = new NancySession(new Dictionary<string, object> { { "key", "SomeValue" } } );
 
           // When
           session["key"] = "SomeValue";
@@ -90,7 +90,7 @@ namespace Nancy.Tests
         public void Setting_a_key_with_a_different_value_should_mark_it_as_changed()
         {
           // Given
-          var session = new Session(new Dictionary<string, object> { { "key", "SomeValue" } });
+          var session = new NancySession(new Dictionary<string, object> { { "key", "SomeValue" } });
 
           // When
           session["key"] = "SomeValue2";

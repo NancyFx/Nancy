@@ -75,7 +75,8 @@
     <OutputPath>bin\MonoRelease\</OutputPath>
     <DefineConstants>TRACE;MONO</DefineConstants>
     <Optimize>true</Optimize>
-    <DebugType></DebugType>
+    <DebugType>
+    </DebugType>
     <PlatformTarget>anycpu</PlatformTarget>
     <CodeAnalysisLogFile>bin\Release\Nancy.Tests.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
@@ -233,6 +234,9 @@
     </Compile>
     <Compile Include="..\Nancy.Tests\Unit\Culture\BuiltInCultureConventionFixture.cs">
       <Link>Unit\Culture\BuiltInCultureConventionFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\DefaultCookieSessionProviderFixture.cs">
+      <Link>Unit\DefaultCookieSessionProviderFixture.cs</Link>
     </Compile>
     <Compile Include="..\Nancy.Tests\Unit\DefaultNancyBootstrapperFixture.cs">
       <Link>Unit\DefaultNancyBootstrapperFixture.cs</Link>
@@ -573,8 +577,8 @@
     <Compile Include="..\Nancy.Tests\Unit\Sessions\DefaultSessionObjectFormatterFixture.cs">
       <Link>Unit\Sessions\DefaultSessionObjectFormatterFixture.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy.Tests\Unit\Sessions\NullSessionProviderFixture.cs">
-      <Link>Unit\Sessions\NullSessionProviderFixture.cs</Link>
+    <Compile Include="..\Nancy.Tests\Unit\Sessions\NullSessionFixture.cs">
+      <Link>Unit\Sessions\NullSessionFixture.cs</Link>
     </Compile>
     <Compile Include="..\Nancy.Tests\Unit\Sessions\SessionFixture.cs">
       <Link>Unit\Sessions\SessionFixture.cs</Link>

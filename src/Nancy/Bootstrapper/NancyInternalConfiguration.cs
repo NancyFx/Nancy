@@ -17,6 +17,8 @@ namespace Nancy.Bootstrapper
     using Nancy.Security;
     using Nancy.Validation;
     using Nancy.ViewEngines;
+    using Session;
+    using Cookies;
 
     /// <summary>
     /// Configuration class for Nancy's internals.
@@ -50,6 +52,7 @@ namespace Nancy.Bootstrapper
                     NancyEngine = typeof(NancyEngine),
                     NancyModuleBuilder = typeof(DefaultNancyModuleBuilder),
                     ObjectSerializer = typeof(DefaultObjectSerializer),
+                    CookieConfiguration = typeof(DefaultCookieConfiguration),
                     RenderContextFactory = typeof(DefaultRenderContextFactory),
                     RequestDispatcher = typeof(DefaultRequestDispatcher),
                     RequestTraceFactory = typeof(DefaultRequestTraceFactory),
@@ -74,6 +77,8 @@ namespace Nancy.Bootstrapper
                     Serializers = typeCatalog.GetTypesAssignableTo<ISerializer>(TypeResolveStrategies.ExcludeNancy).Union(new List<Type>(new[] { typeof(DefaultJsonSerializer), typeof(DefaultXmlSerializer) })).ToList(),
                     StaticContentProvider = typeof(DefaultStaticContentProvider),
                     StatusCodeHandlers = new List<Type>(typeCatalog.GetTypesAssignableTo<IStatusCodeHandler>(TypeResolveStrategies.ExcludeNancy).Concat(new[] { typeof(DefaultStatusCodeHandler) })),
+                    SessionLifecycle = typeof(DefaultNancySessionLifecycle),
+                    SessionProvider = typeof(DefaultCookieSessionProvider),
                     TextResource = typeof(ResourceBasedTextResource),
                     TrieNodeFactory = typeof(TrieNodeFactory),
                     ViewLocator = typeof(DefaultViewLocator),
@@ -136,10 +141,13 @@ namespace Nancy.Bootstrapper
         public Type ViewLocationProvider { get; set; }
 
         public IList<Type> StatusCodeHandlers { get; set; }
+        public Type SessionLifecycle { get; set; }
+        public Type SessionProvider { get; set; }
 
         public Type CsrfTokenValidator { get; set; }
 
         public Type ObjectSerializer { get; set; }
+        public Type CookieConfiguration { get; set; }
 
         public IList<Type> Serializers { get; set; }
 
@@ -238,6 +246,7 @@ namespace Nancy.Bootstrapper
                 new TypeRegistration(typeof(IViewLocationProvider), this.ViewLocationProvider),
                 new TypeRegistration(typeof(ICsrfTokenValidator), this.CsrfTokenValidator),
                 new TypeRegistration(typeof(IObjectSerializer), this.ObjectSerializer),
+                new TypeRegistration(typeof(ICookieConfiguration), this.CookieConfiguration),
                 new TypeRegistration(typeof(IModelValidatorLocator), this.ModelValidatorLocator),
                 new TypeRegistration(typeof(IRequestTracing), this.RequestTracing),
                 new TypeRegistration(typeof(IRouteInvoker), this.RouteInvoker),
@@ -257,7 +266,9 @@ namespace Nancy.Bootstrapper
                 new TypeRegistration(typeof(INancyEnvironmentConfigurator), this.EnvironmentConfigurator),
                 new TypeRegistration(typeof(INancyEnvironmentFactory), this.EnvironmentFactory),
                 new TypeRegistration(typeof(ISerializerFactory), this.SerializerFactory),
-                new TypeRegistration(typeof(IRuntimeEnvironmentInformation), this.RuntimeEnvironmentInformation)
+                new TypeRegistration(typeof(IRuntimeEnvironmentInformation), this.RuntimeEnvironmentInformation),
+                new TypeRegistration(typeof(ISessionLifecycle),this.SessionLifecycle),
+                new TypeRegistration(typeof(SessionProvider),this.SessionProvider)
             };
         }
 
