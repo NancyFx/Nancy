@@ -146,7 +146,7 @@
         }
 
         /// <summary>
-        /// == operator for DynamicDictionaryValue
+        /// == operator for <see cref="DynamicDictionaryValue"/>
         /// </summary>
         /// <param name="dynamicValue"><see cref="DynamicDictionaryValue"/></param>
         /// <param name="compareValue"><see cref="object"/> value to compare to</param>
@@ -167,7 +167,7 @@
         }
 
         /// <summary>
-        /// != operator for DynamicDictionaryValue
+        /// != operator for <see cref="DynamicDictionaryValue"/>
         /// </summary>
         /// <param name="dynamicValue"><see cref="DynamicDictionaryValue"/></param>
         /// <param name="compareValue"><see cref="object"/> value to compare to</param>
@@ -348,8 +348,11 @@
         }
 
         /// <summary>
-        /// Returns the string representation for a DynamicDictionaryValue instance
+        /// Returns a <see cref="System.String" /> that represents a <see cref="DynamicDictionaryValue"/> instance.
         /// </summary>
+        /// <returns>
+        /// A <see cref="System.String" /> that represents this instance.
+        /// </returns>
         public override string ToString()
         {
             return this.value == null ? base.ToString() : Convert.ToString(this.value);
@@ -357,9 +360,12 @@
 
 
         /// <summary>
-        /// Implicit type conversion operator from DynamicDictionaryValue to bool?
+        /// Performs an implicit conversion from <see cref="DynamicDictionaryValue"/> to <see cref="System.Nullable{System.Boolean}"/>.
         /// </summary>
-        /// <param name="dynamicValue"><see cref="DynamicDictionaryValue"/></param>
+        /// <param name="dynamicValue">The <see cref="DynamicDictionaryValue"/> instance</param>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
         public static implicit operator bool?(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -371,10 +377,14 @@
         }
 
 
+
         /// <summary>
-        /// Implicit type conversion operator from DynamicDictionaryValue to bool
+        /// Performs an implicit conversion from <see cref="DynamicDictionaryValue"/> to <see cref="System.Boolean"/>.
         /// </summary>
-        /// <param name="dynamicValue"><see cref="DynamicDictionaryValue"/></param>
+        /// <param name="dynamicValue">The <see cref="DynamicDictionaryValue"/> instance</param>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
         public static implicit operator bool(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -396,11 +406,13 @@
             return true;
         }
 
-
         /// <summary>
-        /// Implicit type conversion operator from DynamicDictionaryValue to string
+        /// Performs an implicit conversion from <see cref="DynamicDictionaryValue"/> to <see cref="System.String"/>.
         /// </summary>
-        /// <param name="dynamicValue"><see cref="DynamicDictionaryValue"/></param>
+        /// <param name="dynamicValue">The <see cref="DynamicDictionaryValue"/> instance</param>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
         public static implicit operator string(DynamicDictionaryValue dynamicValue)
         {
             return dynamicValue.HasValue
@@ -409,10 +421,14 @@
         }
 
 
+
         /// <summary>
-        /// Implicit type conversion operator from DynamicDictionaryValue to int?
+        /// Performs an implicit conversion from <see cref="DynamicDictionaryValue"/> to <see cref="System.Nullable{System.Int32}"/>.
         /// </summary>
-        /// <param name="dynamicValue"><see cref="DynamicDictionaryValue"/></param>
+        /// <param name="dynamicValue">The <see cref="DynamicDictionaryValue"/> instance</param>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
         public static implicit operator int?(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -425,9 +441,12 @@
 
 
         /// <summary>
-        /// Implicit type conversion operator from DynamicDictionaryValue to int
+        /// Performs an implicit conversion from <see cref="DynamicDictionaryValue"/> to <see cref="System.Int32"/>.
         /// </summary>
-        /// <param name="dynamicValue"><see cref="DynamicDictionaryValue"/></param>
+        /// <param name="dynamicValue">The <see cref="DynamicDictionaryValue"/> instance</param>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
         public static implicit operator int(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -445,9 +464,12 @@
 
 
         /// <summary>
-        /// Implicit type conversion operator from DynamicDictionaryValue to Guid?
+        /// Performs an implicit conversion from <see cref="DynamicDictionaryValue"/> to <see cref="System.Nullable{Guid}"/>.
         /// </summary>
-        /// <param name="dynamicValue"><see cref="DynamicDictionaryValue"/></param>
+        /// <param name="dynamicValue">The <see cref="DynamicDictionaryValue"/> instance</param>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
         public static implicit operator Guid?(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -460,9 +482,12 @@
 
 
         /// <summary>
-        /// Implicit type conversion operator from DynamicDictionaryValue to Guid
+        /// Performs an implicit conversion from <see cref="DynamicDictionaryValue"/> to <see cref="Guid"/>.
         /// </summary>
-        /// <param name="dynamicValue"><see cref="DynamicDictionaryValue"/></param>
+        /// <param name="dynamicValue">The <see cref="DynamicDictionaryValue"/> instance</param>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
         public static implicit operator Guid(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -479,10 +504,14 @@
         }
 
 
+
         /// <summary>
-        /// Implicit type conversion operator from DynamicDictionaryValue to DateTime?
+        /// Performs an implicit conversion from <see cref="DynamicDictionaryValue"/> to <see cref="System.Nullable{DateTime}"/>.
         /// </summary>
-        /// <param name="dynamicValue"><see cref="DynamicDictionaryValue"/></param>
+        /// <param name="dynamicValue">The <see cref="DynamicDictionaryValue"/> instance</param>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
         public static implicit operator DateTime?(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -494,10 +523,14 @@
         }
 
 
+
         /// <summary>
-        /// Implicit type conversion operator from DynamicDictionaryValue to DateTime
+        /// Performs an implicit conversion from <see cref="DynamicDictionaryValue"/> to <see cref="DateTime"/>.
         /// </summary>
-        /// <param name="dynamicValue"></param>
+        /// <param name="dynamicValue">The <see cref="DynamicDictionaryValue"/> instance</param>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
         public static implicit operator DateTime(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -515,9 +548,12 @@
 
 
         /// <summary>
-        /// Implicit type conversion operator from DynamicDictionaryValue to TimeSpan?
+        /// Performs an implicit conversion from <see cref="DynamicDictionaryValue"/> to <see cref="System.Nullable{TimeSpan}"/>.
         /// </summary>
-        /// <param name="dynamicValue"><see cref="DynamicDictionaryValue"/></param>
+        /// <param name="dynamicValue">The <see cref="DynamicDictionaryValue"/> instance</param>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
         public static implicit operator TimeSpan?(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -529,10 +565,14 @@
         }
 
 
+
         /// <summary>
-        /// Implicit type conversion operator from DynamicDictionaryValue to TimeSpan
+        /// Performs an implicit conversion from <see cref="DynamicDictionaryValue"/> to <see cref="TimeSpan"/>.
         /// </summary>
-        /// <param name="dynamicValue"><see cref="DynamicDictionaryValue"/></param>
+        /// <param name="dynamicValue">The <see cref="DynamicDictionaryValue"/> instance</param>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
         public static implicit operator TimeSpan(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -550,7 +590,7 @@
 
 
         /// <summary>
-        /// Implicit type conversion operator from DynamicDictionaryValue to long?
+        /// Implicit type conversion operator from <see cref="DynamicDictionaryValue"/> to long?
         /// </summary>
         /// <param name="dynamicValue"><see cref="DynamicDictionaryValue"/></param>
         public static implicit operator long?(DynamicDictionaryValue dynamicValue)
@@ -565,9 +605,12 @@
 
 
         /// <summary>
-        /// Implicit type conversion operator from DynamicDictionaryValue to long
+        /// Performs an implicit conversion from <see cref="DynamicDictionaryValue"/> to <see cref="System.Int64"/>.
         /// </summary>
-        /// <param name="dynamicValue"><see cref="DynamicDictionaryValue"/></param>
+        /// <param name="dynamicValue">The <see cref="DynamicDictionaryValue"/> instance</param>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
         public static implicit operator long(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -584,10 +627,14 @@
         }
 
 
+
         /// <summary>
-        /// Implicit type conversion operator from DynamicDictionaryValue to float?
+        /// Performs an implicit conversion from <see cref="DynamicDictionaryValue"/> to <see cref="System.Nullable{System.Single}"/>.
         /// </summary>
-        /// <param name="dynamicValue"><see cref="DynamicDictionaryValue"/></param>
+        /// <param name="dynamicValue">The <see cref="DynamicDictionaryValue"/> instance</param>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
         public static implicit operator float?(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -599,10 +646,14 @@
         }
 
 
+
         /// <summary>
-        /// Implicit type conversion operator from DynamicDictionaryValue to float
+        /// Performs an implicit conversion from <see cref="DynamicDictionaryValue"/> to <see cref="System.Single"/>.
         /// </summary>
-        /// <param name="dynamicValue"><see cref="DynamicDictionaryValue"/></param>
+        /// <param name="dynamicValue">The <see cref="DynamicDictionaryValue"/> instance</param>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
         public static implicit operator float(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -619,10 +670,14 @@
         }
 
 
+
         /// <summary>
-        /// Implicit type conversion operator from DynamicDictionaryValue to decimal?
+        /// Performs an implicit conversion from <see cref="DynamicDictionaryValue"/> to <see cref="System.Nullable{System.Decimal}"/>.
         /// </summary>
-        /// <param name="dynamicValue"><see cref="DynamicDictionaryValue"/></param>
+        /// <param name="dynamicValue">The <see cref="DynamicDictionaryValue"/> instance</param>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
         public static implicit operator decimal?(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -634,10 +689,14 @@
         }
 
 
+
         /// <summary>
-        /// Implicit type conversion operator from DynamicDictionaryValue to decimal
+        /// Performs an implicit conversion from <see cref="DynamicDictionaryValue"/> to <see cref="System.Decimal"/>.
         /// </summary>
-        /// <param name="dynamicValue"><see cref="DynamicDictionaryValue"/></param>
+        /// <param name="dynamicValue">The <see cref="DynamicDictionaryValue"/> instance</param>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
         public static implicit operator decimal(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -654,10 +713,14 @@
         }
 
 
+
         /// <summary>
-        /// Implicit type conversion operator from DynamicDictionaryValue to double?
+        /// Performs an implicit conversion from <see cref="DynamicDictionaryValue"/> to <see cref="System.Nullable{System.Double}"/>.
         /// </summary>
-        /// <param name="dynamicValue"><see cref="DynamicDictionaryValue"/></param>
+        /// <param name="dynamicValue">The <see cref="DynamicDictionaryValue"/> instance</param>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
         public static implicit operator double?(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
@@ -668,10 +731,14 @@
             return (double)dynamicValue;
         }
 
+
         /// <summary>
-        /// Implicit type conversion operator from DynamicDictionaryValue to double
+        /// Performs an implicit conversion from <see cref="DynamicDictionaryValue"/> to <see cref="System.Double"/>.
         /// </summary>
-        /// <param name="dynamicValue"><see cref="DynamicDictionaryValue"/></param>
+        /// <param name="dynamicValue">The <see cref="DynamicDictionaryValue"/> instance</param>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
         public static implicit operator double(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
