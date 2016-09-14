@@ -2,12 +2,17 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
 {
     using System;
 
+    /// <summary>
+    /// Nancy view engine host
+    /// </summary>
+    /// <seealso cref="Nancy.ViewEngines.SuperSimpleViewEngine.IViewEngineHost" />
     public class NancyViewEngineHost : IViewEngineHost
     {
         private IRenderContext renderContext;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NancyViewEngineHost"/> class.
+        /// Initializes a new instance of the <see cref="NancyViewEngineHost"/> class, with
+        /// the provided <paramref name="renderContext"/>.
         /// </summary>
         /// <param name="renderContext">
         /// The render context.

@@ -21,7 +21,8 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MediaRangeParameters"/> class.
+        /// Initializes a new instance of the <see cref="MediaRangeParameters"/> class, with
+        /// the provided <paramref name="parameters"/>.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
         public MediaRangeParameters(IDictionary<string, string> parameters)
@@ -88,6 +89,13 @@
             }
         }
 
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="MediaRangeParameters"/> to <see cref="System.String"/>.
+        /// </summary>
+        /// <param name="mediaRangeParameters">The media range parameters.</param>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
         public static implicit operator string(MediaRangeParameters mediaRangeParameters)
         {
             return string.Join(";", mediaRangeParameters.parameters.Select(p => p.Key + "=" + p.Value));
@@ -107,6 +115,12 @@
             return new MediaRangeParameters(dictionary);
         }
 
+        /// <summary>
+        /// Returns a <see cref="System.String" /> that represents this instance.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String" /> that represents this instance.
+        /// </returns>
         public override string ToString()
         {
             return this;

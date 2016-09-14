@@ -9,9 +9,10 @@ namespace Nancy.Responses.Negotiation
     public class MediaRange : IEquatable<MediaRange>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="MediaRange"/> class from a string representation of a media range
+        /// Initializes a new instance of the <see cref="MediaRange"/> class, with
+        /// the provided <paramref name="contentType"/>.
         /// </summary>
-        /// <param name="contentType">the content type</param>
+        /// <param name="contentType">string representation of a media range</param>
         public MediaRange(string contentType)
         {
             this.ParseContentType(contentType);
@@ -100,11 +101,25 @@ namespace Nancy.Responses.Negotiation
             return this.Matches(other) && this.Parameters.Matches(other.Parameters);
         }
 
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="System.String"/> to <see cref="MediaRange"/>.
+        /// </summary>
+        /// <param name="contentType">Type of the content.</param>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
         public static implicit operator MediaRange(string contentType)
         {
             return new MediaRange(contentType);
         }
 
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="MediaRange"/> to <see cref="System.String"/>.
+        /// </summary>
+        /// <param name="mediaRange">The media range.</param>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
         public static implicit operator string(MediaRange mediaRange)
         {
             if (mediaRange.Parameters.Any())
@@ -127,6 +142,12 @@ namespace Nancy.Responses.Negotiation
             return this.Matches(other);
         }
 
+        /// <summary>
+        /// Returns a <see cref="System.String" /> that represents this instance.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String" /> that represents this instance.
+        /// </returns>
         public override string ToString()
         {
             return this;

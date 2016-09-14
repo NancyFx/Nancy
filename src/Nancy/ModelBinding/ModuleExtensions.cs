@@ -7,6 +7,9 @@ namespace Nancy.ModelBinding
 
     using Nancy.Validation;
 
+    /// <summary>
+    /// A convenience class that contains various extension methods for modules.
+    /// </summary>
     public static class ModuleExtensions
     {
         private static readonly string[] NoBlacklistedProperties = ArrayCache.Empty<string>();

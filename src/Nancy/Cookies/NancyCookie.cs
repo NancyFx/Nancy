@@ -12,7 +12,8 @@ namespace Nancy.Cookies
     public class NancyCookie : INancyCookie
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="NancyCookie"/> class.
+        /// Initializes a new instance of the <see cref="NancyCookie"/> class, with
+        /// the provided <paramref name="name"/> and <paramref name="value"/>.
         /// </summary>
         /// <param name="name">The name of the cookie.</param>
         /// <param name="value">The value of the cookie.</param>
@@ -22,7 +23,8 @@ namespace Nancy.Cookies
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NancyCookie"/> class.
+        /// Initializes a new instance of the <see cref="NancyCookie"/> class, with
+        /// the provided <paramref name="name"/>, <paramref name="value"/> and  <paramref name="expires"/>.
         /// </summary>
         /// <param name="name">The name of the cookie.</param>
         /// <param name="value">The value of the cookie.</param>
@@ -33,7 +35,8 @@ namespace Nancy.Cookies
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NancyCookie"/> class.
+        /// Initializes a new instance of the <see cref="NancyCookie"/> class, with
+        /// the provided <paramref name="name"/>, <paramref name="value"/> and  <paramref name="httpOnly"/>.
         /// </summary>
         /// <param name="name">The name of the cookie.</param>
         /// <param name="value">The value of the cookie.</param>
@@ -44,7 +47,8 @@ namespace Nancy.Cookies
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NancyCookie"/> class.
+        /// Initializes a new instance of the <see cref="NancyCookie"/> class, with
+        /// the provided <paramref name="name"/>, <paramref name="value"/>, <paramref name="httpOnly"/> and <paramref name="secure"/>.
         /// </summary>
         /// <param name="name">The name of the cookie.</param>
         /// <param name="value">The value of the cookie.</param>
@@ -56,7 +60,8 @@ namespace Nancy.Cookies
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NancyCookie"/> class.
+        /// Initializes a new instance of the <see cref="NancyCookie"/> class, with
+        /// the provided <paramref name="name"/>, <paramref name="value"/>, <paramref name="httpOnly"/>, <paramref name="secure"/> and  <paramref name="expires"/>.
         /// </summary>
         /// <param name="name">The name of the cookie.</param>
         /// <param name="value">The value of the cookie.</param>
@@ -130,6 +135,12 @@ namespace Nancy.Cookies
         /// </summary>
         public bool Secure { get; private set; }
 
+        /// <summary>
+        /// Returns a <see cref="System.String" /> that represents this instance.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String" /> that represents this instance.
+        /// </returns>
         public override string ToString()
         {
             var sb = new StringBuilder(50);

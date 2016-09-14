@@ -11,16 +11,33 @@
     public abstract class RouteSegmentConstraintBase<T> : IRouteSegmentConstraint
     {
         /// <summary>
-        /// Gets the name of the constraint, i.e. "int".
+        /// Gets the name of the constraint.
         /// </summary>
         /// <value>The constraint's name.</value>
         public abstract string Name { get; }
 
+        /// <summary>
+        /// Determines whether the given constraint matches the name of this constraint.
+        /// </summary>
+        /// <param name="constraint">The route constraint.</param>
+        /// <returns>
+        /// <see langword="true"/> if the segment matches the constraint, <see langword="false"/> otherwise.
+        /// </returns>
         public virtual bool Matches(string constraint)
         {
             return constraint.Equals(Name, StringComparison.OrdinalIgnoreCase);
         }
 
+        /// <summary>
+        /// Matches the segment and parameter name against the constraint.
+        /// </summary>
+        /// <param name="constraint">The constraint.</param>
+        /// <param name="segment">The segment.</param>
+        /// <param name="parameterName">Name of the parameter.</param>
+        /// <returns>
+        /// A <see cref="SegmentMatch" /> containing information about the captured parameters 
+        /// stating whether there is a match or not.
+        /// </returns>
         public SegmentMatch GetMatch(string constraint, string segment, string parameterName)
         {
             T value;
@@ -38,7 +55,9 @@
         /// <param name="constraint">The constraint.</param>
         /// <param name="segment">The segment to match.</param>
         /// <param name="matchedValue">The matched value.</param>
-        /// <returns><c>true</c> if the segment matches the constraint, <c>false</c> otherwise.</returns>
+        /// <returns>
+        /// <see langword="true"/> if the segment matches the constraint, <see langword="false"/> otherwise.
+        /// </returns>
         protected abstract bool TryMatch(string constraint, string segment, out T matchedValue);
 
         private static SegmentMatch CreateMatch(string parameterName, object matchedValue)

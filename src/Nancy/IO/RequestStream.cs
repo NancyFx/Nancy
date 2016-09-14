@@ -2,6 +2,9 @@
 {
     using System;
     using System.IO;
+    using System.Threading.Tasks;
+
+    using Nancy.Extensions;
 
     /// <summary>
     /// A <see cref="Stream"/> decorator that can handle moving the stream out from memory and on to disk when the contents reaches a certain length.
@@ -10,6 +13,9 @@
     {
         internal const int BufferSize = 4096;
 
+        /// <summary>
+        /// The default switchover threshold
+        /// </summary>
         public static long DEFAULT_SWITCHOVER_THRESHOLD = 81920;
 
         private bool disableStreamSwitching;
@@ -18,7 +24,8 @@
         private Stream stream;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RequestStream"/> class.
+        /// Initializes a new instance of the <see cref="RequestStream"/> class, with
+        /// the provided <paramref name="expectedLength"/>, <paramref name="thresholdLength"/> and <paramref name="disableStreamSwitching"/>.
         /// </summary>
         /// <param name="expectedLength">The expected length of the contents in the stream.</param>
         /// <param name="thresholdLength">The content length that will trigger the stream to be moved out of memory.</param>
@@ -29,7 +36,8 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RequestStream"/> class.
+        /// Initializes a new instance of the <see cref="RequestStream"/> class, with
+        /// the provided <paramref name="expectedLength"/>, <paramref name="expectedLength"/> and <paramref name="disableStreamSwitching"/>.
         /// </summary>
         /// <param name="stream">The <see cref="Stream"/> that should be handled by the request stream</param>
         /// <param name="expectedLength">The expected length of the contents in the stream.</param>
@@ -40,7 +48,8 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RequestStream"/> class.
+        /// Initializes a new instance of the <see cref="RequestStream"/> class, with
+        /// the provided <paramref name="expectedLength"/> and <paramref name="disableStreamSwitching"/>.
         /// </summary>
         /// <param name="expectedLength">The expected length of the contents in the stream.</param>
         /// <param name="disableStreamSwitching">if set to <see langword="true"/> the stream will never explicitly be moved to disk.</param>
@@ -50,7 +59,8 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RequestStream"/> class.
+        /// Initializes a new instance of the <see cref="RequestStream"/> class, with
+        /// the provided <paramref name="expectedLength"/>, <paramref name="expectedLength"/>, <paramref name="thresholdLength"/> and <paramref name="disableStreamSwitching"/>.
         /// </summary>
         /// <param name="stream">The <see cref="Stream"/> that should be handled by the request stream</param>
         /// <param name="expectedLength">The expected length of the contents in the stream.</param>
@@ -71,24 +81,34 @@
 
             if (!this.stream.CanSeek)
             {
-                this.MoveToWritableStream();
+                var task =
+                    MoveToWritableStream();
+
+                task.Wait();
+
+                if (task.IsFaulted)
+                {
+                    throw new InvalidOperationException("Unable to copy stream", task.Exception);
+                }
             }
 
             this.stream.Position = 0;
         }
 
+        /// <summary>
+        /// Finalizes an instance of the <see cref="RequestStream"/> class.
+        /// </summary>
         ~RequestStream()
         {
             this.Dispose(false);
         }
 
-        private void MoveToWritableStream()
+        private Task MoveToWritableStream()
         {
             var sourceStream = this.stream;
-
             this.stream = new MemoryStream(BufferSize);
 
-            sourceStream.CopyTo(this.stream);
+            return sourceStream.CopyToAsync(this);
         }
 
         /// <summary>
@@ -195,6 +215,10 @@
         }
 #endif
 
+        /// <summary>
+        /// Releases the unmanaged resources used by the <see cref="T:System.IO.Stream" /> and optionally releases the managed resources.
+        /// </summary>
+        /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
         protected override void Dispose(bool disposing)
         {
             if (this.isSafeToDisposeStream)
@@ -246,26 +270,59 @@
             this.stream.Flush();
         }
 
+        /// <summary>
+        /// Creates a new request stream from a stream.
+        /// </summary>
+        /// <param name="stream">The stream.</param>
+        /// <returns>A request stream instance</returns>
         public static RequestStream FromStream(Stream stream)
         {
             return FromStream(stream, 0, DEFAULT_SWITCHOVER_THRESHOLD, false);
         }
 
+        /// <summary>
+        /// Creates a new request stream from a stream.
+        /// </summary>
+        /// <param name="stream">The stream.</param>
+        /// <param name="expectedLength">The expected length.</param>
+        /// <returns>A request stream instance</returns>
         public static RequestStream FromStream(Stream stream, long expectedLength)
         {
             return FromStream(stream, expectedLength, DEFAULT_SWITCHOVER_THRESHOLD, false);
         }
 
+        /// <summary>
+        /// Creates a new request stream from a stream.
+        /// </summary>
+        /// <param name="stream">The stream.</param>
+        /// <param name="expectedLength">The expected length.</param>
+        /// <param name="thresholdLength">Length of the threshold.</param>
+        /// <returns>A request stream instance</returns>
         public static RequestStream FromStream(Stream stream, long expectedLength, long thresholdLength)
         {
             return FromStream(stream, expectedLength, thresholdLength, false);
         }
 
+        /// <summary>
+        /// Creates a new request stream from a stream.
+        /// </summary>
+        /// <param name="stream">The stream.</param>
+        /// <param name="expectedLength">The expected length.</param>
+        /// <param name="disableStreamSwitching">if set to <c>true</c> [disable stream switching].</param>
+        /// <returns>A request stream instance</returns>
         public static RequestStream FromStream(Stream stream, long expectedLength, bool disableStreamSwitching)
         {
             return FromStream(stream, expectedLength, DEFAULT_SWITCHOVER_THRESHOLD, disableStreamSwitching);
         }
 
+        /// <summary>
+        /// Creates a new request stream from a stream.
+        /// </summary>
+        /// <param name="stream">The stream.</param>
+        /// <param name="expectedLength">The expected length.</param>
+        /// <param name="thresholdLength">Length of the threshold.</param>
+        /// <param name="disableStreamSwitching">if set to <c>true</c> [disable stream switching].</param>
+        /// <returns>A request stream instance</returns>
         public static RequestStream FromStream(Stream stream, long expectedLength, long thresholdLength, bool disableStreamSwitching)
         {
             return new RequestStream(stream, expectedLength, thresholdLength, disableStreamSwitching);

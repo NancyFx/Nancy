@@ -17,6 +17,10 @@ namespace Nancy.Routing.Trie
 
         private static char[] splitSeparators = new[] {'/'};
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RouteResolverTrie"/> class.
+        /// </summary>
+        /// <param name="nodeFactory">The node factory.</param>
         public RouteResolverTrie(ITrieNodeFactory nodeFactory)
         {
             this.nodeFactory = nodeFactory;

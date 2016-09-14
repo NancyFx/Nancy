@@ -14,7 +14,8 @@
         private long position;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="HttpMultipartSubStream"/> class.
+        /// Initializes a new instance of the <see cref="HttpMultipartSubStream"/> class, with
+        /// the provided <paramref name="stream"/>, <paramref name="start"/> and <paramref name="end"/>.
         /// </summary>
         /// <param name="stream">The stream to create the sub-stream ontop of.</param>
         /// <param name="start">The start offset on the parent stream where the sub-stream should begin.</param>
@@ -98,6 +99,9 @@
             return subStreamRelativePosition;
         }
 
+        /// <summary>
+        /// Sets the position of the stream as the start point.
+        /// </summary>
         public void PositionStartAtCurrentLocation()
         {
             this.start = this.stream.Position;

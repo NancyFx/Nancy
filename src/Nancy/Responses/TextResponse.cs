@@ -13,7 +13,8 @@
         private const string TextPlainContentType = "text/plain";
 
         /// <summary>
-        /// Creates a new instance of the TextResponse class
+        /// Creates a new instance of the TextResponse class, with
+        /// the provided <paramref name="contents"/>, <paramref name="contentType"/> and <paramref name="encoding"/>.
         /// </summary>
         /// <param name="contents">Text content - defaults to empty if null</param>
         /// <param name="contentType">Content Type - defaults to text/plain</param>
@@ -44,7 +45,9 @@
         }
 
         /// <summary>
-        /// Creates a new instance of the TextResponse class
+        /// Creates a new instance of the TextResponse class, with
+        /// the provided <paramref name="statusCode"/>, <paramref name="contents"/>, <paramref name="encoding"/>, 
+        /// <paramref name="headers"/> and <paramref name="cookies"/>.
         /// </summary>
         /// <param name="statusCode">Status code - defaults to OK</param>
         /// <param name="contents">Text content - defaults to empty if null</param>

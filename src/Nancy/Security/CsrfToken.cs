@@ -31,6 +31,13 @@
         /// </summary>
         public byte[] Hmac { get; set; }
 
+        /// <summary>
+        /// Compares two <see cref="CsrfToken"/> instances.
+        /// </summary>
+        /// <param name="other">The <see cref="CsrfToken"/> to compare.</param>
+        /// <returns>
+        /// <see langword="true"/> if two <see cref="CsrfToken"/> instances are equal, <see langword="false"/> otherwise.
+        /// </returns>
         public bool Equals(CsrfToken other)
         {
             if (ReferenceEquals(null, other)) return false;
@@ -74,11 +81,27 @@
             }
         }
 
+        /// <summary>
+        /// Implements the operator == for <see cref="CsrfToken"/> instances.
+        /// </summary>
+        /// <param name="left">The left <see cref="CsrfToken"/>.</param>
+        /// <param name="right">The right <see cref="CsrfToken"/>.</param>
+        /// <returns>
+        /// <c>true</c> if left and right <see cref="CsrfToken"/> instances are equal.
+        /// </returns>
         public static bool operator ==(CsrfToken left, CsrfToken right)
         {
             return Equals(left, right);
         }
 
+        /// <summary>
+        /// Implements the operator != for <see cref="CsrfToken"/> instances.
+        /// </summary>
+        /// <param name="left">The left <see cref="CsrfToken"/>.</param>
+        /// <param name="right">The right <see cref="CsrfToken"/>.</param>
+        /// <returns>
+        /// <c>true</c> if left and right <see cref="CsrfToken"/> instances are not equal.
+        /// </returns>
         public static bool operator !=(CsrfToken left, CsrfToken right)
         {
             return !Equals(left, right);

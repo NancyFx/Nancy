@@ -8,6 +8,12 @@
     /// </summary>
     public class OptionsRoute : Route<Response>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OptionsRoute"/> class, with
+        /// the provided <paramref name="path"/> and <paramref name="allowedMethods"/>.
+        /// </summary>
+        /// <param name="path">The request path.</param>
+        /// <param name="allowedMethods">The list of allowed methods.</param>
         public OptionsRoute(string path, IEnumerable<string> allowedMethods)
             : base("OPTIONS", path, null, (x,c) => CreateMethodOptionsResponse(allowedMethods))
         {

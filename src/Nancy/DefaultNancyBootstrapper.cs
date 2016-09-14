@@ -277,6 +277,7 @@ namespace Nancy
         /// Executes auto registration with the given container.
         /// </summary>
         /// <param name="container">Container instance</param>
+        /// <param name="ignoredAssemblies">List of ignored assemblies</param>
         private void AutoRegister(TinyIoCContainer container, IEnumerable<Func<Assembly, bool>> ignoredAssemblies)
         {
             var assembly = typeof(NancyEngine).GetTypeInfo().Assembly;

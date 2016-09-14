@@ -85,98 +85,239 @@ namespace Nancy.Bootstrapper
             }
         }
 
+        /// <summary>
+        /// Gets or sets the runtime environment information
+        /// </summary>
         public Type RuntimeEnvironmentInformation { get; set; }
 
+        /// <summary>
+        /// Gets or sets the serializer factory.
+        /// </summary>
         public Type SerializerFactory { get; set; }
 
+        /// <summary>
+        /// Gets or sets the default configuration providers
+        /// </summary>
         public IList<Type> DefaultConfigurationProviders { get; set; }
 
+        /// <summary>
+        /// Gets or sets the environment configurator
+        /// </summary>
         public Type EnvironmentConfigurator { get; set; }
 
+        /// <summary>
+        ///Gets or sets the environment factory
+        /// </summary>
         public Type EnvironmentFactory { get; set; }
 
+        /// <summary>
+        /// Gets or sets the route metadata providers
+        /// </summary>
         public IList<Type> RouteMetadataProviders { get; set; }
 
+        /// <summary>
+        /// Gets or sets the route resolver
+        /// </summary>
         public Type RouteResolver { get; set; }
 
+        /// <summary>
+        /// Gets or sets the route pattern matcher
+        /// </summary>
         public Type RoutePatternMatcher { get; set; }
 
+        /// <summary>
+        /// Gets or sets the context factory
+        /// </summary>
         public Type ContextFactory { get; set; }
 
+        /// <summary>
+        /// Gets or sets the nancy engine
+        /// </summary>
         public Type NancyEngine { get; set; }
 
+        /// <summary>
+        /// Gets or sets the route cache
+        /// </summary>
         public Type RouteCache { get; set; }
 
+        /// <summary>
+        /// Gets or sets the route cache provider
+        /// </summary>
         public Type RouteCacheProvider { get; set; }
 
+        /// <summary>
+        /// Gets or sets the view locator
+        /// </summary>
         public Type ViewLocator { get; set; }
 
+        /// <summary>
+        /// Gets or sets the view factory
+        /// </summary>
         public Type ViewFactory { get; set; }
 
+        /// <summary>
+        /// Gets or sets the nancy module builder
+        /// </summary>
         public Type NancyModuleBuilder { get; set; }
 
+        /// <summary>
+        /// Gets or sets the response formatter factory
+        /// </summary>
         public Type ResponseFormatterFactory { get; set; }
 
+        /// <summary>
+        /// Gets or sets themodel binder locator
+        /// </summary>
         public Type ModelBinderLocator { get; set; }
 
+        /// <summary>
+        /// Gets or sets the binder
+        /// </summary>
         public Type Binder { get; set; }
 
+        /// <summary>
+        /// Gets or sets the binding defaults
+        /// </summary>
         public Type BindingDefaults { get; set; }
 
+        /// <summary>
+        /// Gets or sets the field name converter
+        /// </summary>
         public Type FieldNameConverter { get; set; }
 
+        /// <summary>
+        /// Gets or sets the model validator locator
+        /// </summary>
         public Type ModelValidatorLocator { get; set; }
 
+        /// <summary>
+        ///Gets or sets the view resolver
+        /// </summary>
         public Type ViewResolver { get; set; }
 
+        /// <summary>
+        /// Gets or sets the view cache
+        /// </summary>
         public Type ViewCache { get; set; }
 
+        /// <summary>
+        /// Gets or sets the render context factory
+        /// </summary>
         public Type RenderContextFactory { get; set; }
 
+        /// <summary>
+        /// Gets or sets the view location provider
+        /// </summary>
         public Type ViewLocationProvider { get; set; }
 
+        /// <summary>
+        /// Gets or sets the status code handlers
+        /// </summary>
         public IList<Type> StatusCodeHandlers { get; set; }
 
+        /// <summary>
+        /// Gets or sets the CSRF token validator
+        /// </summary>
         public Type CsrfTokenValidator { get; set; }
 
+        /// <summary>
+        /// Gets or sets the object serializer
+        /// </summary>
         public Type ObjectSerializer { get; set; }
 
+        /// <summary>
+        /// Gets or sets the types for serializers
+        /// </summary>
         public IList<Type> Serializers { get; set; }
 
+        /// <summary>
+        /// Gets or sets the interactive diagnostic providers
+        /// </summary>
         public IList<Type> InteractiveDiagnosticProviders { get; set; }
 
+        /// <summary>
+        /// Gets or sets the request tracing
+        /// </summary>
         public Type RequestTracing { get; set; }
 
+        /// <summary>
+        /// Gets or sets the route invoker
+        /// </summary>
         public Type RouteInvoker { get; set; }
 
+        /// <summary>
+        /// Gets or sets the response processors
+        /// </summary>
         public IList<Type> ResponseProcessors { get; set; }
 
+        /// <summary>
+        /// Gets or sets the request dispatcher
+        /// </summary>
         public Type RequestDispatcher { get; set; }
 
+        /// <summary>
+        /// Gets or sets the diagnostics
+        /// </summary>
         public Type Diagnostics { get; set; }
 
+        /// <summary>
+        /// Gets or sets the route segment extractor
+        /// </summary>
         public Type RouteSegmentExtractor { get; set; }
 
+        /// <summary>
+        /// Gets or sets the route description provider
+        /// </summary>
         public Type RouteDescriptionProvider { get; set; }
 
+        /// <summary>
+        /// Gets or sets the culture service
+        /// </summary>
         public Type CultureService { get; set; }
 
+        /// <summary>
+        /// Gets or sets the text resource
+        /// </summary>
         public Type TextResource { get; set; }
 
+        /// <summary>
+        /// Gets or sets the resource assembly provider
+        /// </summary>
         public Type ResourceAssemblyProvider { get; set; }
 
+        /// <summary>
+        /// Gets or sets the resource reader
+        /// </summary>
         public Type ResourceReader { get; set; }
 
+        /// <summary>
+        /// Gets or sets the static content provider
+        /// </summary>
         public Type StaticContentProvider { get; set; }
 
+        /// <summary>
+        /// Gets or sets the route resolver trie
+        /// </summary>
         public Type RouteResolverTrie { get; set; }
 
+        /// <summary>
+        /// Gets or sets the trie node factory
+        /// </summary>
         public Type TrieNodeFactory { get; set; }
 
+        /// <summary>
+        /// Gets or sets the route segment constraints
+        /// </summary>
         public IList<Type> RouteSegmentConstraints { get; set; }
 
+        /// <summary>
+        /// Gets or sets the request trace factory
+        /// </summary>
         public Type RequestTraceFactory { get; set; }
 
+        /// <summary>
+        /// Gets or sets the response negotiator
+        /// </summary>
         public Type ResponseNegotiator { get; set; }
 
         /// <summary>
@@ -197,6 +338,11 @@ namespace Nancy.Bootstrapper
             }
         }
 
+        /// <summary>
+        /// Creates a new nancy internal configuration initializer with overrides for default types.
+        /// </summary>
+        /// <param name="builder">Action that overrides default configuration types</param>
+        /// <returns>Initializer with overriden default types</returns>
         public static Func<ITypeCatalog, NancyInternalConfiguration> WithOverrides(Action<NancyInternalConfiguration> builder)
         {
             return catalog =>

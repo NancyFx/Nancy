@@ -7,7 +7,6 @@ namespace Nancy
     using System.Linq;
     using System.Runtime.CompilerServices;
     using System.Threading.Tasks;
-
     using Nancy.Cookies;
     using Nancy.Helpers;
     using Nancy.Responses;
@@ -37,6 +36,10 @@ namespace Nancy
             this.Cookies = new List<INancyCookie>(2);
         }
 
+        /// <summary>
+        /// Gets the awaiter.
+        /// </summary>
+        /// <returns><see cref="TaskAwaiter{Response}"/></returns>
         public TaskAwaiter<Response> GetAwaiter()
         {
             return Task.FromResult(this).GetAwaiter();

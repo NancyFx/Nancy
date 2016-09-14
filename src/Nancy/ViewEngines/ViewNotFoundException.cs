@@ -9,15 +9,37 @@
     public class ViewNotFoundException : Exception
     {
         private readonly IRootPathProvider rootPathProvider;
+
+        /// <summary>
+        /// Gets the name of the view.
+        /// </summary>
+        /// <value>
+        /// The name of the view.
+        /// </value>
         public string ViewName { get; private set; }
 
+        /// <summary>
+        /// Gets the available view engine extensions.
+        /// </summary>
+        /// <value>
+        /// The available view engine extensions.
+        /// </value>
         public string[] AvailableViewEngineExtensions { get; private set; }
+
+        /// <summary>
+        /// Gets the inspected locations.
+        /// </summary>
+        /// <value>
+        /// The inspected locations.
+        /// </value>
         public string[] InspectedLocations { get; private set; }
 
         private string message;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ViewNotFoundException"/>.
+        /// Initializes a new instance of the <see cref="ViewNotFoundException"/>, with
+        /// the provided <paramref name="viewName"/>, <paramref name="availableViewEngineExtensions"/>,
+        /// <paramref name="inspectedLocations"/> and <paramref name="rootPathProvider"/>.
         /// </summary>
         /// <param name="viewName">The name of the view that was being located.</param>
         /// <param name="availableViewEngineExtensions">List of available view extensions that can be rendered by the available view engines.</param>
@@ -41,7 +63,8 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ViewNotFoundException"/>.
+        /// Initializes a new instance of the <see cref="ViewNotFoundException"/> class, with
+        /// the provided <paramref name="viewName"/> and <paramref name="availableViewEngineExtensions"/>.
         /// </summary>
         /// <param name="viewName">The name of the view that was being located.</param>
         /// <param name="availableViewEngineExtensions">List of available view extensions that can be rendered by the available view engines.</param>
@@ -58,7 +81,8 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ViewNotFoundException"/>
+        /// Initializes a new instance of the <see cref="ViewNotFoundException"/> class, with
+        /// the provided <paramref name="msg"/>.
         /// </summary>
         /// <param name="msg">A message describing the problem</param>
         public ViewNotFoundException(string msg)

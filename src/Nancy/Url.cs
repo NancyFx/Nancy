@@ -15,8 +15,9 @@ namespace Nancy
 
         private string query;
 
+
         /// <summary>
-        /// Creates an instance of the <see cref="Url" /> class
+        /// Initializes a new instance of the <see cref="Url"/> class.
         /// </summary>
         public Url()
         {
@@ -29,7 +30,8 @@ namespace Nancy
         }
 
         /// <summary>
-        /// Creates an instance of the <see cref="Url" /> class
+        /// Initializes a new instance of the <see cref="Url" /> class, with
+        /// the provided <paramref name="url"/>.
         /// </summary>
         /// <param name="url">A <see cref="string" /> containing a URL.</param>
         public Url(string url)
@@ -109,6 +111,12 @@ namespace Nancy
             }
         }
 
+        /// <summary>
+        /// Returns a <see cref="System.String" /> that represents this instance.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String" /> that represents this instance.
+        /// </returns>
         public override string ToString()
         {
             return new StringBuilder()

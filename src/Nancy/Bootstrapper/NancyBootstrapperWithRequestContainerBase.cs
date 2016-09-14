@@ -14,6 +14,9 @@ namespace Nancy.Bootstrapper
     public abstract class NancyBootstrapperWithRequestContainerBase<TContainer> : NancyBootstrapperBase<TContainer>
         where TContainer : class
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NancyBootstrapperWithRequestContainerBase{TContainer}"/> class.
+        /// </summary>
         protected NancyBootstrapperWithRequestContainerBase()
         {
             this.RequestScopedTypes = ArrayCache.Empty<TypeRegistration>();
@@ -209,7 +212,7 @@ namespace Nancy.Bootstrapper
         /// <summary>
         /// Retrieve a specific module instance from the container
         /// </summary>
-        /// <param name="container">Container to use</param>
+        /// <param name="container">Container to use</param> 
         /// <param name="moduleType">Type of the module</param>
         /// <returns>NancyModule instance</returns>
         protected abstract INancyModule GetModule(TContainer container, Type moduleType);

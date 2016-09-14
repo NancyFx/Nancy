@@ -248,7 +248,8 @@
         /// <summary>
         /// Gets a delegate to store the OWIN environment and flow the user into the NancyContext
         /// </summary>
-        /// <param name="environment">OWIN Environment</param>
+        /// <param name="environment">The OWIN environment.</param>
+        /// <param name="user">The user as a ClaimsPrincipal.</param>
         /// <returns>Delegate</returns>
         private static Func<NancyContext, NancyContext> StoreEnvironment(IDictionary<string, object> environment, ClaimsPrincipal user)
         {

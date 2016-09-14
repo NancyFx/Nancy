@@ -22,7 +22,14 @@
     /// </summary>
     public class NancyEngine : INancyEngine
     {
+        /// <summary>
+        /// Key for error type
+        /// </summary>
         public const string ERROR_KEY = "ERROR_TRACE";
+
+        /// <summary>
+        /// Key for error exception message
+        /// </summary>
         public const string ERROR_EXCEPTION = "ERROR_EXCEPTION";
 
         private readonly IRequestDispatcher dispatcher;

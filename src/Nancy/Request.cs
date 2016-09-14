@@ -25,7 +25,8 @@ namespace Nancy
         private IDictionary<string, string> cookies;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Request"/> class.
+        /// Initializes a new instance of the <see cref="Request"/> class, with
+        /// the provided <paramref name="method"/>, <paramref name="path"/> and <paramref name="scheme"/>.
         /// </summary>
         /// <param name="method">The HTTP data transfer method used by the client.</param>
         /// <param name="path">The path of the requested resource, relative to the "Nancy root". This should not include the scheme, host name, or query portion of the URI.</param>
@@ -36,7 +37,9 @@ namespace Nancy
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Request"/> class.
+        /// Initializes a new instance of the <see cref="Request"/> class, with
+        /// the provided <paramref name="method"/>, <paramref name="url"/>, <paramref name="headers"/>, 
+        /// <paramref name="body"/>, <paramref name="ip"/>, <paramref name="certificate"/> and <paramref name="protocolVersion"/>.
         /// </summary>
         /// <param name="method">The HTTP data transfer method used by the client.</param>
         /// <param name="url">The <see cref="Url"/> of the requested resource</param>
@@ -183,6 +186,7 @@ namespace Nancy
             foreach (var parts in values.Select(c => c.Split(new[] { '=' }, 2)))
             {
                 var cookieName = parts[0].Trim();
+
                 string cookieValue;
 
                 if (parts.Length == 1)
@@ -227,6 +231,9 @@ namespace Nancy
         /// <remarks>The values are stored in an <see cref="IEnumerable{T}"/> of string to be compliant with multi-value headers.</remarks>
         public RequestHeaders Headers { get; private set; }
 
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
         public void Dispose()
         {
             ((IDisposable)this.Body).Dispose();
