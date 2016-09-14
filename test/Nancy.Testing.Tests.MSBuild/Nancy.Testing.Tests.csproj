@@ -73,7 +73,8 @@
     <OutputPath>bin\MonoRelease\</OutputPath>
     <DefineConstants>TRACE;MONO</DefineConstants>
     <Optimize>true</Optimize>
-    <DebugType></DebugType>
+    <DebugType>
+    </DebugType>
     <PlatformTarget>anycpu</PlatformTarget>
     <CodeAnalysisLogFile>bin\Release\Nancy.Testing.Tests.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
@@ -90,8 +91,8 @@
       <HintPath>..\..\packages\AngleSharp.0.9.5\lib\net45\AngleSharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="FakeItEasy, Version=2.0.0.0, Culture=neutral, PublicKeyToken=eff28e2146d5fd2c, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\FakeItEasy.2.0.0\lib\net40\FakeItEasy.dll</HintPath>
+    <Reference Include="FakeItEasy, Version=2.2.0.0, Culture=neutral, PublicKeyToken=eff28e2146d5fd2c, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\FakeItEasy.2.2.0\lib\net40\FakeItEasy.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -215,7 +216,7 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Analyzer Include="..\..\packages\FakeItEasy.Analyzer.2.1.0\analyzers\dotnet\cs\FakeItEasy.Analyzer.dll" />
+    <Analyzer Include="..\..\packages\FakeItEasy.Analyzer.2.2.0\analyzers\dotnet\cs\FakeItEasy.Analyzer.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
