@@ -12,11 +12,8 @@ namespace Nancy.Tests.Unit
             var link = new HttpLink("http://nancyfx.org/", "home");
             link.Parameters.Add("up", "up");
 
-            // When
-            var exception = Assert.Throws<ArgumentException>(() => link.Parameters.Add("UP", "UP"));
-
-            // Then
-            exception.Message.ShouldEqual("An item with the same key has already been added.");
+            // When, Then
+            Assert.Throws<ArgumentException>(() => link.Parameters.Add("UP", "UP"));
         }
 
         [Fact]
