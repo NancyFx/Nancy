@@ -11,7 +11,7 @@
     },
 
     "dependencies": {
-        "AngleSharp": "0.9.5",
+        "AngleSharp": "0.9.8.1",
         "Nancy": { "target": "project" },
         "Nancy.Authentication.Forms": { "target": "project" }
     },
