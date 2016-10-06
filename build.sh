@@ -29,7 +29,7 @@ done
 function installdotnet() {
   echo "Installing dotnet"
   wget https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0-preview2/scripts/obtain/dotnet-install.sh
-  sudo bash dotnet-install.sh --version 1.0.0-preview2-003121 --install-dir .dotnet
+  sudo bash dotnet-install.sh --version 1.0.0-preview2-003131 --install-dir .dotnet
   export PATH=.dotnet:$PATH
   export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
   dotnet --info
