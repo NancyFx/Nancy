@@ -26,22 +26,6 @@ namespace Nancy.Tests.Functional.Tests
         {
             // Given
             // When
-            var response = await browser.Get(
-                @"/razor-viewbag",
-                with =>
-                {
-                    with.HttpRequest();
-                });
-
-            // Then
-            Assert.True(response.Body.AsString().Contains(@"Hello Bob"));
-        }
-
-        [Fact]
-        public async Task Should_render_content_from_viewbags()
-        {
-            // Given
-            // When
             var response = await this.browser.Get(
                 @"/razor-viewbag",
                 with =>

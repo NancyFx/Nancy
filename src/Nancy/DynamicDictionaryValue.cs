@@ -355,7 +355,7 @@
         /// </returns>
         public override string ToString()
         {
-            return this.value == null ? base.ToString() : Convert.ToString(this.value);
+            return this.value == null ? string.Empty : Convert.ToString(this.value);
         }
 
 

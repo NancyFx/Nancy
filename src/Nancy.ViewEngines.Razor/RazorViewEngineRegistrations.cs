@@ -1,7 +1,7 @@
+﻿using Nancy.Bootstrapper;
+
 namespace Nancy.ViewEngines.Razor
 {
-    using Nancy.Bootstrapper;
-
     /// <summary>
     /// Default dependency registrations for the <see cref="RazorViewEngine"/> class.
     /// </summary>

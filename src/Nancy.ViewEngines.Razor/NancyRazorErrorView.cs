@@ -2,11 +2,13 @@
 {
     using System;
     using System.IO;
+    using System.Reflection;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Razor view used when compilation of the view fails.
     /// </summary>
-    public class NancyRazorErrorView : NancyRazorViewBase
+    public class NancyRazorErrorView : NancyRazorPage
     {
         private readonly TraceConfiguration traceConfiguration;
 
@@ -44,14 +46,14 @@
         /// <summary>
         /// Executes this instance.
         /// </summary>
-        public override void Execute()
+        public override async Task ExecuteAsync()
         {
             base.WriteLiteral(Template.Replace("[DETAILS]", this.traceConfiguration.DisplayErrorTraces ? this.Message : DisplayErrorTracesFalseMessage));
         }
 
         private static string LoadResource(string filename)
         {
-            var resourceStream = typeof(NancyRazorErrorView).Assembly.GetManifestResourceStream(String.Format("Nancy.ViewEngines.Razor.Resources.{0}", filename));
+            var resourceStream = typeof(NancyRazorErrorView).GetTypeInfo().Assembly.GetManifestResourceStream(String.Format("Nancy.ViewEngines.Razor.Resources.{0}", filename));
 
             if (resourceStream == null)
             {

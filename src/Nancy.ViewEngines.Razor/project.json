@@ -1,39 +1,40 @@
 ﻿{
-    "version": "2.0.0-barneyrubble",
-    "description": "Enables using the Razor view engine with Nancy.",
-    "authors": [ "Andreas Håkansson, Steven Robbins and contributors" ],
+  "version": "2.0.0-barneyrubble",
+  "description": "Enables using Razor with Nancy.",
+  "authors": [ "Andreas Håkansson, Steven Robbins and contributors" ],
 
-    "packOptions": {
-        "tags": [ "Nancy", "View Engine", "Razor" ],
-        "projectUrl": "http://nancyfx.org",
-        "licenseUrl": "https://github.com/NancyFx/Nancy/blob/master/license.txt",
-        "iconUrl": "http://nancyfx.org/nancy-nuget.png"
-    },
+  "packOptions": {
+    "tags": [ "Nancy", "View Engine", "Razor" ],
+    "projectUrl": "http://nancyfx.org",
+    "licenseUrl": "https://github.com/NancyFx/Nancy/blob/master/license.txt",
+    "iconUrl": "http://nancyfx.org/nancy-nuget.png"
+  },
 
-    "dependencies": {
-        "Nancy": { "target": "project" },
-        "Microsoft.AspNet.Razor": "2.0.30506.0",
-        "Microsoft.CodeAnalysis.CSharp": "1.1.0-rc1-20151109-01"
-    },
+  "buildOptions": {
+    "embed": "Resources/**/*.*",
+    "xmlDoc": true
+  },
 
-    "buildOptions": {
-        "embed": "Resources/**/*.*",
-        "xmlDoc": true
-    },
+  "dependencies": {
+    "Nancy": { "target": "project" },
+    "Microsoft.AspNetCore.Mvc.Razor": "1.0.0",
+    "Microsoft.AspNetCore.Mvc.Razor.Host": "1.0.1",
+    "Microsoft.Extensions.Configuration": "1.0.0",
+    "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.0.0",
+    "Microsoft.Extensions.Configuration.Json": "1.0.0",
+    "Microsoft.Extensions.DependencyInjection": "1.0.0",
+    "Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0",
+    "NETStandard.Library": "1.6.0",
+    "System.Reflection": "4.1.0"
+  },
 
-    "frameworks": {
-        "net452": {
-            "dependencies": {
-                "Microsoft.CodeDom.Providers.DotNetCompilerPlatform": "1.0.1"
-            },
-            "frameworkAssemblies": {
-                "System.Configuration": { "type": "build" },
-                "System.IO": { "type": "build" },
-                "System.Reflection": { "type": "build" },
-                "System.Runtime": { "type": "build" },
-                "System.Text.Encoding": { "type": "build" },
-                "System.Threading.Tasks": { "type": "build" }
-            }
-        }
+  "frameworks": {
+    "net452": { },
+    "netstandard1.6": {
+      "buildOptions": {
+          "define": [ "CORE" ]
+      },
+      "imports": "dnxcore50"
     }
+  }
 }

@@ -1,6 +1,6 @@
 namespace Nancy.ViewEngines.Razor.Tests
 {
-    public abstract class GreetingViewBase : NancyRazorViewBase
+    public abstract class GreetingViewBase : NancyRazorPage<dynamic>
     {
         public string Greet()
         {
