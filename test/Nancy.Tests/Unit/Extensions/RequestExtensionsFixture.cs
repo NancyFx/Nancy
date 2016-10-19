@@ -12,12 +12,11 @@
         [Fact]
         public void IsAjaxRequest_should_return_true_if_request_is_ajax()
         {
-            // Given 
-            var headers =
-                new Dictionary<string, IEnumerable<string>>
-                    {
-                        { "X-Requested-With", new[] { "XMLHttpRequest" } }
-                    };
+            // Given
+            var headers = new Dictionary<string, IEnumerable<string>>
+            {
+                { "X-Requested-With", new[] { "XMLHttpRequest" } }
+            };
 
             // When
             var request = new FakeRequest("POST", "/", headers);
@@ -41,7 +40,6 @@
         {
             // Given when
             var request = new FakeRequest("GET", "/", string.Empty, "::1");
-            request.Url.HostName = "localhost";
 
             // Then
             Assert.True(request.IsLocal());
@@ -72,8 +70,7 @@
         {
             // Given when
             var request = new FakeRequest("POST", "/", string.Empty, "127.0.0.1");
-            request.Url.HostName = "localhost";
-            
+
             // Then
             Assert.True(request.IsLocal());
         }
@@ -83,7 +80,6 @@
         {
             // Given when
             var request = new FakeRequest("GET", "/", string.Empty, "86.13.73.12");
-            request.Url.HostName = "anotherhost";
 
             // Then
             Assert.False(request.IsLocal());
