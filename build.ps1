@@ -53,7 +53,7 @@ Function Install-Dotnet()
     }
 
     # Run the dotnet CLI install
-    Write-Output "Installing Dotnet CLI version 1.0.0-preview2-003121..."
+    Write-Output "Installing Dotnet CLI version 1.0.0-preview2-003131..."
     & .\.dotnet\dotnet-install.ps1 -Channel "preview" -Version "1.0.0-preview2-003131" -InstallDir "$env:DOTNET_INSTALL_DIR"
 
     # Add the dotnet folder path to the process. This gets skipped
