@@ -13,8 +13,11 @@ Building Nancy
   * On Linux/MacOS type:
     ./build.sh
 
+*NOTE* On Linux/MacOS you need to have Mono >= 4.4 installed because Nancy targets .NET 4.5.2 for the full-framework build
+
 After the build has completed, there will be a new folder in the root called "build". It contains the following folders:
 
-* binaries -> All the Nancy assembilies and their dependencies
-* packages -> Zip file containing the binaries (other configurations might be added in the future)
-* nuget -> NuGet packages generated from this build
+  * binaries -> All the Nancy assembilies and their dependencies
+  * packages -> Zip file containing the binaries (other configurations might be added in the future)
+  * nuget -> NuGet packages generated from this build
+  
