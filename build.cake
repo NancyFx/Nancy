@@ -58,7 +58,7 @@ Task("Restore-NuGet-Packages")
         "https://api.nuget.org/v3/index.json",
     },
   };
-  
+
   //Restore at root until preview1-002702 bug fixed
   DotNetCoreRestore("./", settings);
   //DotNetCoreRestore("./src", settings);
@@ -101,7 +101,7 @@ Task("Test")
 
   if (IsRunningOnUnix())
   {
-    projects = projects 
+    projects = projects
               - GetFiles("./test/**/Nancy.Encryption.MachineKey.Tests.xproj")
               - GetFiles("./test/**/Nancy.ViewEngines.DotLiquid.Tests.xproj")
               - GetFiles("./test/**/Nancy.Embedded.Tests.xproj"); //Embedded somehow doesnt get executed on Travis but nothing explicit sets it
@@ -115,21 +115,21 @@ Task("Test")
         Configuration = configuration
       });
     }
-    else 
+    else
     {
-      // For when test projects are set to run against netstandard1.5 
+      // For when test projects are set to run against netstandard
 
       // DotNetCoreTest(project.GetDirectory().FullPath, new DotNetCoreTestSettings {
       //   Configuration = configuration,
-      //   Framework = "netstandard1.5",
+      //   Framework = "netstandard1.6",
       //   Runtime = "unix-64"
       // });
 
       var dirPath = project.GetDirectory().FullPath;
       var testFile = project.GetFilenameWithoutExtension();
 
-      using(var process = StartAndReturnProcess("mono", new ProcessSettings{Arguments = 
-        dirPath + "/bin/" + configuration + "/net452/unix-x64/dotnet-test-xunit.exe" + " " + 
+      using(var process = StartAndReturnProcess("mono", new ProcessSettings{Arguments =
+        dirPath + "/bin/" + configuration + "/net452/unix-x64/dotnet-test-xunit.exe" + " " +
         dirPath + "/bin/" + configuration + "/net452/unix-x64/" + testFile + ".dll"}))
       {
         process.WaitForExit();
@@ -153,10 +153,10 @@ Task("Publish")
     + GetFiles("src/**/bin/" + configuration + "/net452/*.pdb")
     + GetFiles("src/**/*.ps1"), outputBinariesNet452);
 
-  // Copy netstandard1.5 binaries.
-  CopyFiles(GetFiles("src/**/bin/" + configuration + "/netstandard1.5/*.dll")
-    + GetFiles("src/**/bin/" + configuration + "/netstandard1.5/*.xml")
-    + GetFiles("src/**/bin/" + configuration + "/netstandard1.5/*.pdb")
+  // Copy netstandard binaries.
+  CopyFiles(GetFiles("src/**/bin/" + configuration + "/netstandard1.6/*.dll")
+    + GetFiles("src/**/bin/" + configuration + "/netstandard1.6/*.xml")
+    + GetFiles("src/**/bin/" + configuration + "/netstandard1.6/*.pdb")
     + GetFiles("src/**/*.ps1"), outputBinariesNetstandard);
 
 });
@@ -233,7 +233,7 @@ Task("Prepare-Release")
   UpdateProjectJsonVersion(version, projectJsonFiles);
 
     // Add
-    foreach (var file in projectJsonFiles) 
+    foreach (var file in projectJsonFiles)
     {
       if (nogit)
       {
@@ -252,7 +252,7 @@ Task("Prepare-Release")
     {
       Information("git " + string.Format("commit -m \"Updated version to {0}\"", version));
     }
-    else 
+    else
     {
       StartProcess("git", new ProcessSettings {
         Arguments = string.Format("commit -m \"Updated version to {0}\"", version)
@@ -295,7 +295,7 @@ Task("Update-Version")
   if(string.IsNullOrWhiteSpace(version)) {
     throw new CakeException("No version specified!");
   }
-  
+
   UpdateProjectJsonVersion(version, projectJsonFiles);
 });
 
@@ -304,7 +304,7 @@ Task("Update-Version")
 public void UpdateProjectJsonVersion(string version, FilePathCollection filePaths)
 {
   Verbose(logAction => logAction("Setting version to {0}", version));
-  foreach (var file in filePaths) 
+  foreach (var file in filePaths)
   {
     var project = System.IO.File.ReadAllText(file.FullPath, Encoding.UTF8);
 

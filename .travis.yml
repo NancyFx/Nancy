@@ -9,7 +9,7 @@ addons:
     - libicu-dev
     - libssl-dev
     - libunwind8
-script: ./build.sh --verbosity diagnostic
+script: ./build.sh --verbosity=diagnostic
 notifications:
   email:
     - nancy@nancyfx.org
