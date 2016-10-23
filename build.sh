@@ -3,7 +3,6 @@
 # Define directories.
 
 SCRIPT_DIR=$PWD
-
 TOOLS_DIR=$SCRIPT_DIR/tools
 CAKE_VERSION=0.16.2
 CAKE_DLL=$TOOLS_DIR/Cake.CoreCLR.$CAKE_VERSION/Cake.dll
