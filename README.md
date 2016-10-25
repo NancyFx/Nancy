@@ -85,3 +85,8 @@ Nancy is licensed under [MIT](http://www.opensource.org/licenses/mit-license.php
 
 ### Travis (Mono) 
 [![Build Status](https://travis-ci.org/NancyFx/Nancy.png?branch=master)](https://travis-ci.org/NancyFx/Nancy)
+
+## Latest build (of master)
+
+### MyGet
+https://www.myget.org/gallery/nancyfx
