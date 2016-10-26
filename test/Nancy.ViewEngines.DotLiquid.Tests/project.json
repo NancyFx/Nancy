@@ -1,6 +1,6 @@
 {
     "dependencies": {
-        "DotLiquid": "1.7.0",
+        "DotLiquid": "2.0.55",
         "dotnet-test-xunit": "2.2.0-preview2-build1029",
         "FakeItEasy": "3.0.0",
         "FakeItEasy.Analyzer": "3.0.0",
