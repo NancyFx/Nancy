@@ -81,7 +81,7 @@ Nancy is licensed under [MIT](http://www.opensource.org/licenses/mit-license.php
 ## CI Builds
 
 ### AppVeyor (.NET) 
-[![Build Status](https://ci.appveyor.com/project/NancyFx/nancy)
+[![Build Status](https://ci.appveyor.com/api/projects/status/mpd9lbxvithu16vg?svg=true)](https://ci.appveyor.com/project/NancyFx/nancy)
 
 ### Travis (Mono) 
 [![Build Status](https://travis-ci.org/NancyFx/Nancy.png?branch=master)](https://travis-ci.org/NancyFx/Nancy)
