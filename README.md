@@ -80,8 +80,8 @@ Nancy is licensed under [MIT](http://www.opensource.org/licenses/mit-license.php
 
 ## CI Builds
 
-### TC (.net) 
-[![Build Status](http://nancy-ci.cloudapp.net/app/rest/builds/buildType:%28id:Nancy_NancyMaster%29/statusIcon)](http://nancy-ci.cloudapp.net/viewType.html?buildTypeId=Nancy_NancyMaster&guest=1)
+### AppVeyor (.NET) 
+[![Build Status](https://ci.appveyor.com/project/NancyFx/nancy)
 
 ### Travis (Mono) 
 [![Build Status](https://travis-ci.org/NancyFx/Nancy.png?branch=master)](https://travis-ci.org/NancyFx/Nancy)
