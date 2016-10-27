@@ -87,7 +87,7 @@
             }
 
             var contentMimeType = contentType.Split(';')[0];
-            
+
             return contentMimeType.StartsWith("application/xml", StringComparison.OrdinalIgnoreCase)
                 || contentMimeType.Equals("text/xml", StringComparison.OrdinalIgnoreCase)
                 || contentMimeType.Equals("application/problem+xml", StringComparison.OrdinalIgnoreCase)
