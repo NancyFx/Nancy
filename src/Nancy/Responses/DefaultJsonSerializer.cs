@@ -102,6 +102,5 @@
                 || contentMimeType.Equals("text/json", StringComparison.OrdinalIgnoreCase)
                 || contentMimeType.EndsWith("+json", StringComparison.OrdinalIgnoreCase);
         }
-
     }
 }
