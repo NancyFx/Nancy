@@ -30,8 +30,10 @@ namespace Nancy.Json
 {
     using System;
 
-    internal static class Json
+    public static class Json
     {
+        private const StringComparison ComparisonType = StringComparison.OrdinalIgnoreCase;
+
         /// <summary>
         /// Attempts to detect if the content type is JSON.
         /// Supports:
@@ -49,12 +51,18 @@ namespace Nancy.Json
                 return false;
             }
 
-            var contentMimeType = contentType.Split(';')[0];
+            var index = contentType.IndexOf(';');
 
-            return contentMimeType.Equals("application/json", StringComparison.OrdinalIgnoreCase) ||
-            contentMimeType.StartsWith("application/json-", StringComparison.OrdinalIgnoreCase) ||
-            contentMimeType.Equals("text/json", StringComparison.OrdinalIgnoreCase) ||
-            contentMimeType.EndsWith("+json", StringComparison.OrdinalIgnoreCase);
+            if (index >= 0)
+            {
+                contentType = contentType.Substring(0, index);
+            }
+
+            contentType = contentType.Trim();
+
+            return contentType.StartsWith("application/json", ComparisonType)
+                || contentType.Equals("text/json", ComparisonType)
+                || contentType.EndsWith("+json", ComparisonType);
         }
     }
 }
