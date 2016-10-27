@@ -88,8 +88,7 @@
 
             var contentMimeType = contentType.Split(';')[0];
 
-            return contentMimeType.Equals("application/xml", StringComparison.OrdinalIgnoreCase)
-                || contentMimeType.StartsWith("application/xml-", StringComparison.OrdinalIgnoreCase)
+            return contentMimeType.StartsWith("application/xml", StringComparison.OrdinalIgnoreCase)
                 || contentMimeType.Equals("text/xml", StringComparison.OrdinalIgnoreCase)
                 || contentMimeType.EndsWith("+xml", StringComparison.OrdinalIgnoreCase);
         }
