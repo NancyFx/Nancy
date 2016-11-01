@@ -1,4 +1,4 @@
-﻿{
+{
     "version": "2.0.0-barneyrubble",
     "description": "Enables hosting Nancy in any application.",
     "authors": [ "Andreas Håkansson, Steven Robbins and contributors" ],
@@ -16,7 +16,8 @@
     },
 
     "dependencies": {
-        "Nancy": { "target": "project" }
+      "AsyncUsageAnalyzers": "1.0.0-alpha003",
+      "Nancy": { "target": "project" }
     },
 
     "frameworks": {
