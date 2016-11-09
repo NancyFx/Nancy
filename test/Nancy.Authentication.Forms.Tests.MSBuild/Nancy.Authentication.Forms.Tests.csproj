@@ -157,9 +157,6 @@
     <Compile Include="..\Nancy.Tests\Fakes\FakeRouteCache.cs">
       <Link>Fakes\FakeRouteCache.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy.Tests\Fakes\FakeRoutePatternMatchResult.cs">
-      <Link>Fakes\FakeRoutePatternMatchResult.cs</Link>
-    </Compile>
     <Compile Include="..\Nancy.Tests\Fakes\FakeRouteResolver.cs">
       <Link>Fakes\FakeRouteResolver.cs</Link>
     </Compile>

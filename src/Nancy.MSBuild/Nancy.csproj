@@ -1143,9 +1143,6 @@
     <Compile Include="..\Nancy\Routing\DefaultRouteCacheProvider.cs">
       <Link>Routing\DefaultRouteCacheProvider.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy\Routing\DefaultRoutePatternMatcher.cs">
-      <Link>Routing\DefaultRoutePatternMatcher.cs</Link>
-    </Compile>
     <Compile Include="..\Nancy\IRootPathProvider.cs">
       <Link>IRootPathProvider.cs</Link>
     </Compile>
@@ -1161,20 +1158,11 @@
     <Compile Include="..\Nancy\Routing\RouteCache.cs">
       <Link>Routing\RouteCache.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy\Routing\IRoutePatternMatcher.cs">
-      <Link>Routing\IRoutePatternMatcher.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy\Routing\IRoutePatternMatchResult.cs">
-      <Link>Routing\IRoutePatternMatchResult.cs</Link>
-    </Compile>
     <Compile Include="..\Nancy\Routing\MethodNotAllowedRoute.cs">
       <Link>Routing\MethodNotAllowedRoute.cs</Link>
     </Compile>
     <Compile Include="..\Nancy\Routing\RouteDescription.cs">
       <Link>Routing\RouteDescription.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy\Routing\RoutePatternMatchResult.cs">
-      <Link>Routing\RoutePatternMatchResult.cs</Link>
     </Compile>
     <Compile Include="..\Nancy\Security\ModuleSecurity.cs">
       <Link>Security\ModuleSecurity.cs</Link>
