@@ -62,7 +62,6 @@ namespace Nancy.Bootstrapper
                     RouteCache = typeof(RouteCache),
                     RouteCacheProvider = typeof(DefaultRouteCacheProvider),
                     RouteInvoker = typeof(DefaultRouteInvoker),
-                    RoutePatternMatcher = typeof(DefaultRoutePatternMatcher),
                     RouteResolver = typeof(DefaultRouteResolver),
                     RouteResolverTrie = typeof(RouteResolverTrie),
                     RouteSegmentConstraints = typeCatalog.GetTypesAssignableTo<IRouteSegmentConstraint>().ToList(),
@@ -119,11 +118,6 @@ namespace Nancy.Bootstrapper
         /// Gets or sets the route resolver
         /// </summary>
         public Type RouteResolver { get; set; }
-
-        /// <summary>
-        /// Gets or sets the route pattern matcher
-        /// </summary>
-        public Type RoutePatternMatcher { get; set; }
 
         /// <summary>
         /// Gets or sets the context factory
@@ -368,7 +362,6 @@ namespace Nancy.Bootstrapper
                 new TypeRegistration(typeof(INancyEngine), this.NancyEngine),
                 new TypeRegistration(typeof(IRouteCache), this.RouteCache),
                 new TypeRegistration(typeof(IRouteCacheProvider), this.RouteCacheProvider),
-                new TypeRegistration(typeof(IRoutePatternMatcher), this.RoutePatternMatcher),
                 new TypeRegistration(typeof(IViewLocator), this.ViewLocator),
                 new TypeRegistration(typeof(IViewFactory), this.ViewFactory),
                 new TypeRegistration(typeof(INancyContextFactory), this.ContextFactory),
