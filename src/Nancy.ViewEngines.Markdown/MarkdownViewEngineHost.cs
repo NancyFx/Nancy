@@ -4,7 +4,8 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    using MarkdownSharp;
+    using HeyRed.MarkdownSharp;
+
 
     using Nancy.ViewEngines.SuperSimpleViewEngine;
 

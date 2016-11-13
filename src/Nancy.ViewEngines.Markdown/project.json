@@ -16,10 +16,11 @@
 
     "dependencies": {
         "Nancy": { "target": "project" },
-        "MarkdownSharp": "1.13.0"
+        "Markdown": "2.2.0"
     },
 
     "frameworks": {
-        "net452": { }
+      "net452": {},
+      "netstandard1.6": {}
     }
 }
