@@ -21,6 +21,7 @@
     },
 
     "frameworks": {
-        "net452": { }
+        "net452": { },
+        "netstandard1.6": { }
     }
 }
