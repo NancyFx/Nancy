@@ -91,26 +91,28 @@ Contributing to Nancy requires you to sign a [contribution license agreement](ht
 
 This project is supported by the [.NET Foundation](http://www.dotnetfoundation.org).
 
-## Copyright
 
-Copyright © 2010 Andreas Håkansson, Steven Robbins and contributors
+## Contribution License Agreement
 
-## License
+Contributing to Nancy requires you to sign a [contribution license agreement](https://cla2.dotnetfoundation.org/) (CLA) for anything other than a trivial change. By signing the contribution license agreement, the community is free to use your contribution to .NET Foundation projects.
 
-Nancy is licensed under [MIT](http://www.opensource.org/licenses/mit-license.php "Read more about the MIT license form"). Refer to license.txt for more information.
-
+## .NET Foundation
 
 ## CI Builds
 
-### AppVeyor (.NET) 
-[![Build Status](https://ci.appveyor.com/api/projects/status/mpd9lbxvithu16vg?svg=true)](https://ci.appveyor.com/project/NancyFx/nancy)
+This project is supported by the [.NET Foundation](http://www.dotnetfoundation.org).
 
-### Travis (Mono) 
-[![Build Status](https://travis-ci.org/NancyFx/Nancy.png?branch=master)](https://travis-ci.org/NancyFx/Nancy)
+## Copyright
+
+Copyright © 2010 Andreas Håkansson, Steven Robbins and contributors
 
 
 ## Latest build (of master)
 
 ### MyGet
 https://www.myget.org/gallery/nancyfx
+
+## License
+
+Nancy is licensed under [MIT](http://www.opensource.org/licenses/mit-license.php "Read more about the MIT license form"). Refer to license.txt for more information.
 
