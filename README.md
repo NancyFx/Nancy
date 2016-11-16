@@ -90,3 +90,6 @@ Nancy is licensed under [MIT](http://www.opensource.org/licenses/mit-license.php
 
 ### MyGet
 https://www.myget.org/gallery/nancyfx
+
+## .NET Foundation
+Nancy is part of the [.NET Foundation](https://www.dotnetfoundation.org/)
