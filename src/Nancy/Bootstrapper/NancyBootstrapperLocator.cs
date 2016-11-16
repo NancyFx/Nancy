@@ -43,26 +43,19 @@
 
         private static IReadOnlyCollection<Type> GetAvailableBootstrapperTypes()
         {
-            var assemblies = GetNancyReferencingAssemblies()
-                .Where(x => !x.IsDynamic)
-                .ToArray();
+            var assemblies = GetAssemblyCatalog();
 
-            return assemblies
-                .SelectMany(x => x.SafeGetExportedTypes())
-                .Where(x => !x.GetTypeInfo().IsAbstract && x.GetTypeInfo().IsPublic)
-                .Where(x => typeof(INancyBootstrapper).IsAssignableFrom(x))
-                .ToArray();
+            var types = new DefaultTypeCatalog(assemblies);
+
+            return types.GetTypesAssignableTo<INancyBootstrapper>(TypeResolveStrategies.ExcludeNancy);
         }
 
-        private static IEnumerable<Assembly> GetNancyReferencingAssemblies()
+        private static IAssemblyCatalog GetAssemblyCatalog()
         {
 #if CORE
-            var assemblyCatalog =
-                new DependencyContextAssemblyCatalog();
-
-            return assemblyCatalog.GetAssemblies();
+            return new DependencyContextAssemblyCatalog();
 #else
-            return AppDomain.CurrentDomain.GetAssemblies().Where(IsNancyReferencing).Where(assembly => !assembly.ReflectionOnly);
+            return new AppDomainAssemblyCatalog();
 #endif
         }
 
