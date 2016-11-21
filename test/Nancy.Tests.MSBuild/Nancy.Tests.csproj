@@ -510,12 +510,6 @@
     <Compile Include="..\Nancy.Tests\Unit\Routing\DefaultRouteInvokerFixture.cs">
       <Link>Unit\Routing\DefaultRouteInvokerFixture.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy.Tests\Unit\Routing\DefaultRoutePatternMatcherFixture.cs">
-      <Link>Unit\Routing\DefaultRoutePatternMatcherFixture.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Tests\Fakes\FakeRoutePatternMatchResult.cs">
-      <Link>Fakes\FakeRoutePatternMatchResult.cs</Link>
-    </Compile>
     <Compile Include="..\Nancy.Tests\Fakes\FakeRouteCache.cs">
       <Link>Fakes\FakeRouteCache.cs</Link>
     </Compile>
