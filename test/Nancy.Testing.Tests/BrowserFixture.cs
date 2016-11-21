@@ -689,14 +689,14 @@ namespace Nancy.Testing.Tests
 
                 Post("/serializedform", args =>
                 {
-                    var data = Request.Form.ToDictionary();
+                    IDictionary<string, object> data = Request.Form.ToDictionary();
 
                     return data;
                 });
 
                 Get("/serializedquerystring", args =>
                 {
-                    var data = Request.Query.ToDictionary();
+                    IDictionary<string, object> data = Request.Query.ToDictionary();
 
                     return data;
                 });
