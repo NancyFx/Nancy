@@ -118,6 +118,9 @@
     <Compile Include="..\Nancy.Validation.DataAnnotations\EmailAddressValidatorAdapter.cs">
       <Link>EmailAddressValidatorAdapter.cs</Link>
     </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotations\EnumDataTypeValidatorAdapter.cs">
+      <Link>EnumDataTypeValidatorAdapter.cs</Link>
+    </Compile>
     <Compile Include="..\Nancy.Validation.DataAnnotations\FileExtensionsValidatorAdapter.cs">
       <Link>FileExtensionsValidatorAdapter.cs</Link>
     </Compile>

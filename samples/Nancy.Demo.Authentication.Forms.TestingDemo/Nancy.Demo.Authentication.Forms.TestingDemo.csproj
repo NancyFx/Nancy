@@ -138,6 +138,9 @@
     <Compile Include="..\Nancy.Validation.DataAnnotatioins.Tests\EmailAddressValidatorAdapterFixture.cs">
       <Link>EmailAddressValidatorAdapterFixture.cs</Link>
     </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotatioins.Tests\EnumDataTypeValidatorAdapterFixture.cs">
+      <Link>EnumDataTypeValidatorAdapterFixture.cs</Link>
+    </Compile>
     <Compile Include="..\Nancy.Validation.DataAnnotatioins.Tests\FileExtensionsValidatorAdapterFixture.cs">
       <Link>FileExtensionsValidatorAdapterFixture.cs</Link>
     </Compile>
@@ -184,6 +187,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <Analyzer Include="..\..\packages\FakeItEasy.Analyzer.2.1.0\analyzers\dotnet\cs\FakeItEasy.Analyzer.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
