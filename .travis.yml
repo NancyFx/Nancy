@@ -1,10 +1,9 @@
 language: csharp
-mono: 4.4.2
 sudo: required
 dist: trusty
 addons:
   apt:
-    packages:
+    packages: 
     - gettext
     - libcurl4-openssl-dev
     - libicu-dev
