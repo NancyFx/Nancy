@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Reflection;
     using Nancy.Extensions;
+    using TinyIoc;
 
     /// <summary>
     /// Class for locating an INancyBootstrapper implementation.
@@ -50,8 +51,10 @@
             return assemblies
                 .SelectMany(x => x.SafeGetExportedTypes())
                 .Where(x => !x.GetTypeInfo().IsAbstract && x.GetTypeInfo().IsPublic)
-                .Where(x => typeof(INancyBootstrapper).IsAssignableFrom(x))
+                .Where(x => typeof(INancyBootstrapper).IsAssignableFrom(x) && x.AssemblyQualifiedName != typeof(NancyEngine).AssemblyQualifiedName)
                 .ToArray();
+
+           
         }
 
         private static IEnumerable<Assembly> GetNancyReferencingAssemblies()
