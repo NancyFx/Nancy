@@ -4,7 +4,7 @@ namespace Nancy.ViewEngines.Markdown
     using System.IO;
     using System.Text.RegularExpressions;
 
-    using MarkdownSharp;
+    using HeyRed.MarkdownSharp;
 
     using Nancy.Responses;
     using Nancy.ViewEngines.SuperSimpleViewEngine;
