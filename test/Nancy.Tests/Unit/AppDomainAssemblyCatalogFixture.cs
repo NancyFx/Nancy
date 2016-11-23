@@ -1,4 +1,5 @@
-﻿namespace Nancy.Tests.Unit
+﻿#if !CORE
+namespace Nancy.Tests.Unit
 {
     using System;
     using System.CodeDom.Compiler;
@@ -69,3 +70,4 @@
         }
     }
 }
+#endif

@@ -10,8 +10,9 @@
 
 namespace Nancy.Demo.Hosting.Aspnet.Resources {
     using System;
-    
-    
+    using Nancy.Extensions;
+
+
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -39,7 +40,7 @@ namespace Nancy.Demo.Hosting.Aspnet.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Nancy.Demo.Hosting.Aspnet.Resources.Menu", typeof(Menu).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Nancy.Demo.Hosting.Aspnet.Resources.Menu", typeof(Menu).GetAssembly());
                     resourceMan = temp;
                 }
                 return resourceMan;

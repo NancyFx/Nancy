@@ -2,6 +2,7 @@
 {
     using System.IO;
 
+    using Nancy.Extensions;
     using Nancy.Responses;
 
     using Xunit;
@@ -13,7 +14,7 @@
         {
             // Given, when
             var response =
-                new EmbeddedFileResponse(this.GetType().Assembly, "Nancy.Tests", "Resources.Views.staticviewresource.html");
+                new EmbeddedFileResponse(this.GetType().GetAssembly(), "Nancy.Tests", "Resources.Views.staticviewresource.html");
 
             // Then
             response.Headers["ETag"].ShouldEqual("\"B9D9DC2B50ADFD0867749D4837C63556339080CE\"");
@@ -24,7 +25,7 @@
         {
             // Given
             var response =
-                new EmbeddedFileResponse(this.GetType().Assembly, "Nancy.Tests", "Resources.Views.staticviewresource.html");
+                new EmbeddedFileResponse(this.GetType().GetAssembly(), "Nancy.Tests", "Resources.Views.staticviewresource.html");
 
             var outputStream = new MemoryStream();
 
@@ -40,7 +41,7 @@
         {
             // Given, when
             var response =
-                new EmbeddedFileResponse(this.GetType().Assembly, "Nancy.Tests", "i_dont_exist.jpg");
+                new EmbeddedFileResponse(this.GetType().GetAssembly(), "Nancy.Tests", "i_dont_exist.jpg");
 
             // Then
             response.Headers.ContainsKey("ETag").ShouldBeFalse();
@@ -51,7 +52,7 @@
         {
             // Given
             var response =
-                new EmbeddedFileResponse(this.GetType().Assembly, "Nancy.Tests", "i_dont_exist.jpg");
+                new EmbeddedFileResponse(this.GetType().GetAssembly(), "Nancy.Tests", "i_dont_exist.jpg");
 
             var outputStream = new MemoryStream();
 
@@ -67,7 +68,7 @@
         {
             // Given, when
             var response =
-                new EmbeddedFileResponse(this.GetType().Assembly, "nancy.tests", "Resources.Views.staticviewresource.html");
+                new EmbeddedFileResponse(this.GetType().GetAssembly(), "nancy.tests", "Resources.Views.staticviewresource.html");
 
             // Then
             response.Headers["ETag"].ShouldEqual("\"B9D9DC2B50ADFD0867749D4837C63556339080CE\"");

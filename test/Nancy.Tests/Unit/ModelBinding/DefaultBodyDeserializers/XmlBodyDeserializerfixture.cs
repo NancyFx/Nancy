@@ -133,7 +133,8 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
             using (var ms = new MemoryStream())
             {
                 ser.Serialize(ms, input);
-                xml = Encoding.Default.GetString(ms.ToArray());
+                // codepage 0 represents the system's default encoding
+                xml = Encoding.GetEncoding(0).GetString(ms.ToArray());
             }
             return xml;
         }

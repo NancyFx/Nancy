@@ -1,13 +1,17 @@
 ﻿namespace Nancy.Tests.Unit
 {
-    using System.CodeDom.Compiler;
+    using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
+    using System.Reflection;
     using System.Threading.Tasks;
-    using Microsoft.CSharp;
-
+    using Microsoft.CodeAnalysis;
+    using Microsoft.CodeAnalysis.CSharp;
     using Nancy.Bootstrapper;
+    using Nancy.Extensions;
     using Nancy.Tests.Fakes;
+    using Nancy.Tests.Helpers;
     using Nancy.TinyIoc;
 
     using Xunit;
@@ -74,22 +78,27 @@
         public void Container_should_ignore_specified_assemblies()
         {
             // Given
-            var ass = CSharpCodeProvider
-                .CreateProvider("CSharp")
-                .CompileAssemblyFromSource(
-                    new CompilerParameters
-                    {
-                        GenerateInMemory = true,
-                        GenerateExecutable = false,
-                        IncludeDebugInformation = false,
-                        OutputAssembly = "TestAssembly.dll"
-                    },
-                    new[]
-                    {
-                        "public interface IWillNotBeResolved { int i { get; set; } }",
-                        "public class WillNotBeResolved : IWillNotBeResolved { public int i { get; set; } }"
-                    })
-                .CompiledAssembly;
+            var syntaxTree = CSharpSyntaxTree.ParseText(
+                "public interface IWillNotBeResolved { int i { get; set; } }" +
+                "public class WillNotBeResolved : IWillNotBeResolved { public int i { get; set; } }");
+
+            var mscorlib = MetadataReference.CreateFromFile(typeof(object).GetAssembly().Location);
+            var compilation = CSharpCompilation.Create("MyCompilation",
+                new[] { syntaxTree },
+                new[] { mscorlib },
+                new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+
+            Assembly ass;
+            using (var memoryStream = new MemoryStream())
+            {
+                var emitResult = compilation.Emit(memoryStream);
+
+                Assert.True(emitResult.Success,
+                    "Compilation failed:" + Environment.NewLine + "  " +
+                    string.Join(Environment.NewLine + "  ", emitResult.Diagnostics));
+
+                ass = AssemblyHelpers.Load(memoryStream);
+            }
 
             // When
             this.bootstrapper.Initialise ();

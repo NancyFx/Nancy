@@ -235,7 +235,7 @@
             Url result = uri;
 
             // Then
-            result.Scheme.ShouldEqual(Uri.UriSchemeHttp);
+            result.Scheme.ShouldEqual("http");
             result.HostName.ShouldEqual(string.Empty);
             result.Port.ShouldEqual(null);
             result.BasePath.ShouldEqual(string.Empty);

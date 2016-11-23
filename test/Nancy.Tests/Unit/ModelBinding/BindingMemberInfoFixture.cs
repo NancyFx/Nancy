@@ -2,12 +2,12 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
     using System.Xml.Serialization;
 
     using Nancy.ModelBinding;
     using Nancy.Testing;
     using Xunit;
-    using Xunit.Sdk;
 
     public class BindingMemberInfoFixture
     {

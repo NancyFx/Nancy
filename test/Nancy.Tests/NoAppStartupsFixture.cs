@@ -44,9 +44,7 @@
 
         private static void ThrowWhenNoAppStartupsFixtureRuns()
         {
-            var frames = new StackTrace().GetFrames();
-
-            if (frames != null && frames.Select(f => f.GetMethod().DeclaringType).Any(t => t == typeof(NoAppStartupsFixture)))
+            if ( Environment.StackTrace.Contains(typeof(NoAppStartupsFixture).FullName))
             {
                 throw new Exception();
             }
