@@ -3,7 +3,7 @@
 # Define directories.
 SCRIPT_DIR=$PWD
 TOOLS_DIR=$SCRIPT_DIR/tools
-CAKE_VERSION=0.16.2
+CAKE_VERSION=0.17.0
 CAKE_DLL=$TOOLS_DIR/Cake.CoreCLR.$CAKE_VERSION/Cake.dll
 DOTNET_VERSION=1.0.0-preview2-003131
 DOTNET_INSTRALL_URI=https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0-preview2/scripts/obtain/dotnet-install.sh
