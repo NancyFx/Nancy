@@ -1,4 +1,4 @@
-$CakeVersion = "0.16.2"
+$CakeVersion = "0.17.0"
 $DotNetVersion = "1.0.0-preview2-003131";
 $DotNetInstallerUri = "https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0-preview2/scripts/obtain/dotnet-install.ps1";
 
