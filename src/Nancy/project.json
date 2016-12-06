@@ -2,7 +2,7 @@
     "version": "2.0.0-barneyrubble",
     "description": "Nancy is a lightweight web framework for the .Net platform, inspired by Sinatra. Nancy aim at delivering a low ceremony approach to building light, fast web applications.",
     "authors": [ "Andreas Håkansson, Steven Robbins and contributors" ],
-    
+
     "packOptions": {
         "tags": [ "Nancy" ],
         "projectUrl": "http://nancyfx.org",
@@ -11,8 +11,10 @@
     },
 
   "dependencies": {
-    "AsyncUsageAnalyzers": "1.0.0-alpha003",
-    "Microsoft.Extensions.DependencyModel": "1.0.0"
+    "AsyncUsageAnalyzers": {
+        "type": "build",
+        "version": "1.0.0-alpha003"
+    }
   },
 
     "buildOptions": {
@@ -32,6 +34,7 @@
             "dependencies": {
                 "Microsoft.CSharp": "4.0.1",
                 "Microsoft.Extensions.PlatformAbstractions": "1.0.0",
+                "Microsoft.Extensions.DependencyModel": "1.0.0",
                 "System.Collections.Concurrent": "4.0.12",
                 "System.Collections.Specialized": "4.0.1",
                 "System.ComponentModel.TypeConverter": "4.1.0",
@@ -57,13 +60,13 @@
                 "System.Xml.XmlSerializer": "4.0.11"
             },
             "imports": [
-                "dotnet54",
+                "dotnet5.4",
                 "portable-net451+win8"
             ]
         },
         "net452": {
             "frameworkAssemblies": {
-                "System.Xml": { "type": "build"}
+                "System.Xml": { "type": "build" }
             }
         }
     }
