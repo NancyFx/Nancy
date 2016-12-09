@@ -196,23 +196,24 @@ Task("Package-NuGet")
 });
 
 Task("Publish-NuGet")
-  .Description("Pushes the nuget packages in the nuget folder to a NuGet source. Also publishes the packages into the feeds.")
-  .Does(() =>
+    .Description("Pushes the nuget packages in the nuget folder to a NuGet source. Also publishes the packages into the feeds.")
+    .Does(() =>
 {
-  // Make sure we have an API key.
-  if(string.IsNullOrWhiteSpace(apiKey)){
-    throw new CakeException("No NuGet API key provided.");
-  }
+    if(string.IsNullOrWhiteSpace(apiKey)){
+        throw new CakeException("No NuGet API key provided.");
+    }
 
-  // Upload every package to the provided NuGet source (defaults to nuget.org).
-  var packages = GetFiles(outputNuGet.Path.FullPath + "/*" + version + ".nupkg");
-  foreach(var package in packages)
-  {
-    NuGetPush(package, new NuGetPushSettings {
-      Source = source,
-      ApiKey = apiKey
-    });
-  }
+    var packages =
+        GetFiles(outputNuGet.Path.FullPath + "/*.nupkg") -
+        GetFiles(outputNuGet.Path.FullPath + "/*.symbols.nupkg");
+
+    foreach(var package in packages)
+    {
+        NuGetPush(package, new NuGetPushSettings {
+            Source = source,
+            ApiKey = apiKey
+        });
+    }
 });
 
 ///////////////////////////////////////////////////////////////
@@ -229,8 +230,8 @@ Task("Tag")
 Task("Prepare-Release")
   .Does(() =>
 {
-  // Update version.
-  UpdateProjectJsonVersion(version, projectJsonFiles);
+    // Update version.
+    UpdateProjectJsonVersion(version, projectJsonFiles);
 
     // Add
     foreach (var file in projectJsonFiles)
@@ -292,36 +293,41 @@ Task("Prepare-Release")
 Task("Update-Version")
   .Does(() =>
 {
-  if(string.IsNullOrWhiteSpace(version)) {
-    throw new CakeException("No version specified!");
-  }
+    if(string.IsNullOrWhiteSpace(version)) {
+        throw new CakeException("No version specified!");
+    }
 
-  UpdateProjectJsonVersion(version, projectJsonFiles);
+    UpdateProjectJsonVersion(version, projectJsonFiles);
 });
 
 ///////////////////////////////////////////////////////////////
 
 public void UpdateProjectJsonVersion(string version, FilePathCollection filePaths)
 {
-  Verbose(logAction => logAction("Setting version to {0}", version));
-  foreach (var file in filePaths)
-  {
-    var project = System.IO.File.ReadAllText(file.FullPath, Encoding.UTF8);
+    Verbose(logAction => logAction("Setting version to {0}", version));
 
-    project = System.Text.RegularExpressions.Regex.Replace(project, "(\"version\":\\s*)\".+\"", "$1\"" + version + "\"");
+    foreach (var file in filePaths)
+    {
+        var project =
+            System.IO.File.ReadAllText(file.FullPath, Encoding.UTF8);
 
-    System.IO.File.WriteAllText(file.FullPath, project, Encoding.UTF8);
-  }
+        var projectVersion =
+            new System.Text.RegularExpressions.Regex("(\"version\":\\s*)\".+\"");
+
+        project =
+            projectVersion.Replace(project, "$1\"" + version + "\"", 1);
+
+        System.IO.File.WriteAllText(file.FullPath, project, Encoding.UTF8);
+    }
 }
 
-
 Task("Default")
-  .IsDependentOn("Test")
-  .IsDependentOn("Update-Version")
-  .IsDependentOn("Package-NuGet");
+    .IsDependentOn("Test")
+    .IsDependentOn("Update-Version")
+    .IsDependentOn("Package-NuGet");
 
 Task("Mono")
-  .IsDependentOn("Test");
+    .IsDependentOn("Test");
 
 ///////////////////////////////////////////////////////////////
 
