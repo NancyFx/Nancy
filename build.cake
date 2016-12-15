@@ -294,7 +294,7 @@ Task("Update-Version")
   .Does(() =>
 {
     if(string.IsNullOrWhiteSpace(version)) {
-        throw new CakeException("No version specified!");
+        throw new CakeException("No version specified! You need to pass in --targetversion=\"x.y.z\"");
     }
 
     UpdateProjectJsonVersion(version, projectJsonFiles);
@@ -302,9 +302,9 @@ Task("Update-Version")
 
 ///////////////////////////////////////////////////////////////
 
-public void UpdateProjectJsonVersion(string version, FilePathCollection filePaths)
+public static void UpdateProjectJsonVersion(string version, FilePathCollection filePaths)
 {
-    Verbose(logAction => logAction("Setting version to {0}", version));
+    Information("Setting version to " + version);
 
     foreach (var file in filePaths)
     {
