@@ -6,6 +6,7 @@ namespace Nancy
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using Nancy.Extensions;
     using Nancy.Helpers;
 
     /// <summary>

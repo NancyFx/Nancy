@@ -3,6 +3,7 @@ namespace Nancy.Helpers
 {
     using System;
     using System.Reflection;
+    using Nancy.Extensions;
 
     internal class ProxyNancyReferenceProber : MarshalByRefObject
     {

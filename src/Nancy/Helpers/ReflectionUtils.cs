@@ -33,26 +33,6 @@ namespace Nancy.Helpers
 
     internal static class ReflectionUtils
     {
-        #if !CORE
-        public static bool IsReferencing(this Assembly assembly, AssemblyName referenceName)
-        {
-            if (AssemblyName.ReferenceMatchesDefinition(assembly.GetName(), referenceName))
-            {
-                return true;
-            }
-
-            foreach (var referencedAssemblyName in assembly.GetReferencedAssemblies())
-            {
-                if (AssemblyName.ReferenceMatchesDefinition(referencedAssemblyName, referenceName))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-        #endif
-
         public static bool IsInstantiatableType(Type t)
         {
             if (t == null)
