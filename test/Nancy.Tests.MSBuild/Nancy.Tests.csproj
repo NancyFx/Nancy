@@ -75,7 +75,8 @@
     <OutputPath>bin\MonoRelease\</OutputPath>
     <DefineConstants>TRACE;MONO</DefineConstants>
     <Optimize>true</Optimize>
-    <DebugType></DebugType>
+    <DebugType>
+    </DebugType>
     <PlatformTarget>anycpu</PlatformTarget>
     <CodeAnalysisLogFile>bin\Release\Nancy.Tests.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
@@ -651,6 +652,7 @@
     <Compile Include="..\Nancy.Tests\Unit\Responses\GenericFileResponseFixture.cs">
       <Link>Unit\Responses\GenericFileResponseFixture.cs</Link>
     </Compile>
+    <Compile Include="Unit\AppDomainAssemblyCatalogFixture.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Nancy.Testing.MSBuild\Nancy.Testing.csproj">
