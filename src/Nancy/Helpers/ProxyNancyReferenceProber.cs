@@ -9,7 +9,7 @@ namespace Nancy.Helpers
     {
         public bool HasReference(AssemblyName assemblyNameForProbing, AssemblyName referenceAssemblyName)
         {
-            var assemblyForInspection = Assembly.Load(assemblyNameForProbing);
+            var assemblyForInspection = Assembly.ReflectionOnlyLoad(assemblyNameForProbing.Name);
 
             return assemblyForInspection.IsReferencing(referenceAssemblyName);
         }
