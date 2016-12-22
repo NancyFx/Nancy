@@ -1,5 +1,5 @@
-{
-    "version": "2.0.0-barneyrubble",
+﻿{
+    "version": "2.0.0-clinteastwood",
     "description": "System.Web MachineKey encrypton and HMAC providers for Nancy.",
     "authors": [ "Andreas Håkansson, Steven Robbins and contributors" ],
 

@@ -1,5 +1,5 @@
-{
-    "version": "2.0.0-barneyrubble",
+﻿{
+    "version": "2.0.0-clinteastwood",
     "description": "Enables hosting Nancy in any application.",
     "authors": [ "Andreas Håkansson, Steven Robbins and contributors" ],
 

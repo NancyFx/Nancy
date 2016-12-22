@@ -1,5 +1,5 @@
-{
-    "version": "2.0.0-barneyrubble",
+﻿{
+    "version": "2.0.0-clinteastwood",
 
     "dependencies": {
       "AsyncUsageAnalyzers": "1.0.0-alpha003",
