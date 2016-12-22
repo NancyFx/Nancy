@@ -260,9 +260,8 @@
 
             this.ConfigureApplicationContainer(this.ApplicationContainer);
 
-            var typeRegistrations = configuration
-                .GetTypeRegistrations()
-                .Concat(this.GetAdditionalTypes());
+            var typeRegistrations =
+                configuration.GetTypeRegistrations();
 
             var collectionTypeRegistrations = configuration
                 .GetCollectionTypeRegistrations()
@@ -602,18 +601,6 @@
         /// <param name="container">Container to register into</param>
         /// <param name="instanceRegistrations">Instance registration types</param>
         protected abstract void RegisterInstances(TContainer container, IEnumerable<InstanceRegistration> instanceRegistrations);
-
-        /// <summary>
-        /// Gets additional required type registrations
-        /// that don't form part of the core Nancy configuration
-        /// </summary>
-        /// <returns>Collection of TypeRegistration types</returns>
-        private IEnumerable<TypeRegistration> GetAdditionalTypes()
-        {
-            return new[] {
-                new TypeRegistration(typeof(IViewRenderer), typeof(DefaultViewRenderer)),
-            };
-        }
 
         /// <summary>
         /// Gets any additional instance registrations that need to
