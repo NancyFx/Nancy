@@ -37,15 +37,6 @@ namespace Nancy
         }
 
         /// <summary>
-        /// Gets the awaiter.
-        /// </summary>
-        /// <returns><see cref="TaskAwaiter{Response}"/></returns>
-        public TaskAwaiter<Response> GetAwaiter()
-        {
-            return Task.FromResult(this).GetAwaiter();
-        }
-
-        /// <summary>
         /// Gets or sets the type of the content.
         /// </summary>
         /// <value>The type of the content.</value>
