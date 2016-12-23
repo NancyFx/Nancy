@@ -8,27 +8,6 @@
 
     public class AppDomainAssemblyCatalogFixture
     {
-        private class ProxyAssemblyGenerator : MarshalByRefObject
-        {
-            public AssemblyName GenerateAssemblyAndGetName()
-            {
-                var generatedAssembly = CodeDomProvider
-                    .CreateProvider("CSharp")
-                    .CompileAssemblyFromSource(
-                        new CompilerParameters
-                        {
-                            GenerateInMemory = true,
-                            GenerateExecutable = false,
-                            IncludeDebugInformation = false,
-                            OutputAssembly = "AssemblyShouldNotBeLoadedIntoAppDomain.dll"
-                        },
-                        "public class DummyClass { }")
-                    .CompiledAssembly;
-
-                return generatedAssembly.GetName();
-            }
-        }
-
         [Fact]
         public void Modules_without_Nancy_references_should_not_keep_loaded_after_inspection()
         {
@@ -43,7 +22,6 @@
             try
             {
                 var generatedAssemblyName = assemblyGenerator.GenerateAssemblyAndGetName();
-
 
                 var assemblyCatalog = new AppDomainAssemblyCatalog();
 
@@ -66,6 +44,27 @@
             finally
             {
                 AppDomain.Unload(compilerAppDomain);
+            }
+        }
+
+        private class ProxyAssemblyGenerator : MarshalByRefObject
+        {
+            public AssemblyName GenerateAssemblyAndGetName()
+            {
+                var generatedAssembly = CodeDomProvider
+                    .CreateProvider("CSharp")
+                    .CompileAssemblyFromSource(
+                        new CompilerParameters
+                        {
+                            GenerateInMemory = true,
+                            GenerateExecutable = false,
+                            IncludeDebugInformation = false,
+                            OutputAssembly = "AssemblyShouldNotBeLoadedIntoAppDomain.dll"
+                        },
+                        "public class DummyClass { }")
+                    .CompiledAssembly;
+
+                return generatedAssembly.GetName();
             }
         }
     }
