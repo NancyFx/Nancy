@@ -5,17 +5,14 @@ namespace Nancy
     using System.Threading.Tasks;
     using Nancy.Helpers;
 
-
     /// <summary>
     /// Intercepts the request after the appropriate route handler has completed its operation.
-    /// The After hooks does not have any return value because one has already been produced by the appropriate route. 
+    /// The After hooks does not have any return value because one has already been produced by the appropriate route.
     /// Instead you get the option to modify (or completely replace) the existing response by accessing the Response property of the NancyContext that is passed in.
     /// </summary>
-    /// <seealso cref="Nancy.AsyncNamedPipelineBase{System.Func{Nancy.NancyContext, System.Threading.CancellationToken, System.Threading.Tasks.Task}, System.Action{Nancy.NancyContext}}" />
+    /// <seealso cref="AsyncNamedPipelineBase{TAsyncDelegate,TSyncDelegate}" />
     public class AfterPipeline : AsyncNamedPipelineBase<Func<NancyContext, CancellationToken, Task>, Action<NancyContext>>
     {
-        private static readonly Task completeTask = TaskHelpers.CompletedTask;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="AfterPipeline"/> class.
         /// </summary>

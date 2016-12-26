@@ -75,7 +75,8 @@
     <OutputPath>bin\MonoRelease\</OutputPath>
     <DefineConstants>TRACE;MONO</DefineConstants>
     <Optimize>true</Optimize>
-    <DebugType></DebugType>
+    <DebugType>
+    </DebugType>
     <PlatformTarget>anycpu</PlatformTarget>
     <CodeAnalysisLogFile>bin\Release\Nancy.Tests.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
@@ -602,9 +603,6 @@
     </Compile>
     <Compile Include="..\Nancy.Tests\Fakes\FakeViewEngine.cs">
       <Link>Fakes\FakeViewEngine.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Tests\Unit\ViewEngines\DefaultViewRendererFixture.cs">
-      <Link>Unit\ViewEngines\DefaultViewRendererFixture.cs</Link>
     </Compile>
     <Compile Include="..\Nancy.Tests\Unit\ViewEngines\FileSystemViewLocationProviderFixture.cs">
       <Link>Unit\ViewEngines\FileSystemViewLocationProviderFixture.cs</Link>

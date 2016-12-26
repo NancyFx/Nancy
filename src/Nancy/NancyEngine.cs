@@ -264,7 +264,7 @@
             {
                 handler.Handle(context.Response.StatusCode, context);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 if (defaultHandler == null)
                 {

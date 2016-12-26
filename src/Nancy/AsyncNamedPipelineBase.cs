@@ -17,7 +17,7 @@
         protected readonly List<PipelineItem<TAsyncDelegate>> pipelineItems;
 
         /// <summary>
-        /// Creates a new instance of <see cref="AsyncNamedPipelineBase"/>
+        /// Creates a new instance of <see cref="AsyncNamedPipelineBase{TAsyncDelegate,TSyncDelegate}"/>
         /// </summary>
         protected AsyncNamedPipelineBase()
         {
@@ -25,7 +25,7 @@
         }
 
         /// <summary>
-        /// Creates a new instance of <see cref="AsyncNamedPipelineBase"/> with size
+        /// Creates a new instance of <see cref="AsyncNamedPipelineBase{TAsyncDelegate,TSyncDelegate}"/> with size
         /// </summary>
         /// <param name="capacity">Number of delegates in pipeline</param>
         protected AsyncNamedPipelineBase(int capacity)
@@ -229,7 +229,7 @@
         public virtual void InsertBefore(string name, PipelineItem<TAsyncDelegate> item)
         {
             var existingIndex =
-                this.pipelineItems.FindIndex(i => String.Equals(name, i.Name, StringComparison.Ordinal));
+                this.pipelineItems.FindIndex(i => string.Equals(name, i.Name, StringComparison.Ordinal));
 
             if (existingIndex == -1)
             {
@@ -281,7 +281,7 @@
         public virtual void InsertAfter(string name, PipelineItem<TAsyncDelegate> item)
         {
             var existingIndex =
-                this.pipelineItems.FindIndex(i => String.Equals(name, i.Name, StringComparison.Ordinal));
+                this.pipelineItems.FindIndex(i => string.Equals(name, i.Name, StringComparison.Ordinal));
 
             if (existingIndex == -1)
             {
@@ -324,7 +324,7 @@
             }
 
             var existingIndex =
-                this.pipelineItems.FindIndex(i => String.Equals(name, i.Name, StringComparison.Ordinal));
+                this.pipelineItems.FindIndex(i => string.Equals(name, i.Name, StringComparison.Ordinal));
 
             if (existingIndex != -1)
             {

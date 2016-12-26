@@ -196,7 +196,7 @@
         /// <summary>
         /// Determines whether the specified <see cref="object"/> is equal to the current <see cref="object"/>.
         /// </summary>
-        /// <returns><see langword="true"/> if the specified <see cref="object"/> is equal to the current <see cref="DynamicDictionaryValue"/>; otherwise, <see langword="false/>.</returns>
+        /// <returns><see langword="true"/> if the specified <see cref="object"/> is equal to the current <see cref="DynamicDictionaryValue"/>; otherwise, <see langword="false"/>.</returns>
         /// <param name="compareValue">The <see cref="object"/> to compare with the current <see cref="DynamicDictionaryValue"/>.</param>
         public override bool Equals(object compareValue)
         {
@@ -294,7 +294,7 @@
             else if (binderType.GetTypeInfo().IsEnum)
             {
                 // handles enum to enum assignments
-                if (value.GetType().GetTypeInfo().IsEnum)
+                if (this.value.GetType().GetTypeInfo().IsEnum)
                 {
                     if (binderType == this.value.GetType())
                     {
@@ -337,9 +337,9 @@
                 }
 
 #if !NETSTANDARD1_6
-                result = Convert.ChangeType(value, typeCode);
+                result = Convert.ChangeType(this.value, typeCode);
 #else
-                result = Convert.ChangeType(value, binderType);
+                result = Convert.ChangeType(this.value, binderType);
 #endif
 
                 return true;
@@ -360,7 +360,7 @@
 
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="DynamicDictionaryValue"/> to <see cref="System.Nullable{System.Boolean}"/>.
+        /// Performs an implicit conversion from <see cref="DynamicDictionaryValue"/> to <see cref="Nullable{T}"/>.
         /// </summary>
         /// <param name="dynamicValue">The <see cref="DynamicDictionaryValue"/> instance</param>
         /// <returns>
@@ -423,7 +423,7 @@
 
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="DynamicDictionaryValue"/> to <see cref="System.Nullable{System.Int32}"/>.
+        /// Performs an implicit conversion from <see cref="DynamicDictionaryValue"/> to <see cref="Nullable{T}"/>.
         /// </summary>
         /// <param name="dynamicValue">The <see cref="DynamicDictionaryValue"/> instance</param>
         /// <returns>
@@ -629,7 +629,7 @@
 
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="DynamicDictionaryValue"/> to <see cref="System.Nullable{System.Single}"/>.
+        /// Performs an implicit conversion from <see cref="DynamicDictionaryValue"/> to <see cref="Nullable{T}"/>.
         /// </summary>
         /// <param name="dynamicValue">The <see cref="DynamicDictionaryValue"/> instance</param>
         /// <returns>
@@ -672,7 +672,7 @@
 
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="DynamicDictionaryValue"/> to <see cref="System.Nullable{System.Decimal}"/>.
+        /// Performs an implicit conversion from <see cref="DynamicDictionaryValue"/> to <see cref="Nullable{T}"/>.
         /// </summary>
         /// <param name="dynamicValue">The <see cref="DynamicDictionaryValue"/> instance</param>
         /// <returns>
@@ -715,7 +715,7 @@
 
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="DynamicDictionaryValue"/> to <see cref="System.Nullable{System.Double}"/>.
+        /// Performs an implicit conversion from <see cref="DynamicDictionaryValue"/> to <see cref="Nullable{T}"/>.
         /// </summary>
         /// <param name="dynamicValue">The <see cref="DynamicDictionaryValue"/> instance</param>
         /// <returns>
@@ -765,8 +765,12 @@
         /// <filterpriority>2</filterpriority>
         public TypeCode GetTypeCode()
         {
-            if (value == null) return TypeCode.Empty;
-            return value.GetType().GetTypeCode();
+            if (this.value == null)
+            {
+                return TypeCode.Empty;
+            }
+
+            return this.value.GetType().GetTypeCode();
         }
 
         /// <summary>
@@ -778,7 +782,7 @@
         /// <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information. </param><filterpriority>2</filterpriority>
         public bool ToBoolean(IFormatProvider provider)
         {
-            return Convert.ToBoolean(value, provider);
+            return Convert.ToBoolean(this.value, provider);
         }
 
         /// <summary>
@@ -790,7 +794,7 @@
         /// <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information. </param><filterpriority>2</filterpriority>
         public char ToChar(IFormatProvider provider)
         {
-            return Convert.ToChar(value, provider);
+            return Convert.ToChar(this.value, provider);
         }
 
         /// <summary>
@@ -802,7 +806,7 @@
         /// <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information. </param><filterpriority>2</filterpriority>
         public sbyte ToSByte(IFormatProvider provider)
         {
-            return Convert.ToSByte(value, provider);
+            return Convert.ToSByte(this.value, provider);
         }
 
         /// <summary>
@@ -814,7 +818,7 @@
         /// <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information. </param><filterpriority>2</filterpriority>
         public byte ToByte(IFormatProvider provider)
         {
-            return Convert.ToByte(value, provider);
+            return Convert.ToByte(this.value, provider);
         }
 
         /// <summary>
@@ -826,7 +830,7 @@
         /// <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information. </param><filterpriority>2</filterpriority>
         public short ToInt16(IFormatProvider provider)
         {
-            return Convert.ToInt16(value, provider);
+            return Convert.ToInt16(this.value, provider);
         }
 
         /// <summary>
@@ -838,7 +842,7 @@
         /// <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information. </param><filterpriority>2</filterpriority>
         public ushort ToUInt16(IFormatProvider provider)
         {
-            return Convert.ToUInt16(value, provider);
+            return Convert.ToUInt16(this.value, provider);
         }
 
         /// <summary>
@@ -850,7 +854,7 @@
         /// <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information. </param><filterpriority>2</filterpriority>
         public int ToInt32(IFormatProvider provider)
         {
-            return Convert.ToInt32(value, provider);
+            return Convert.ToInt32(this.value, provider);
         }
 
         /// <summary>
@@ -862,7 +866,7 @@
         /// <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information. </param><filterpriority>2</filterpriority>
         public uint ToUInt32(IFormatProvider provider)
         {
-            return Convert.ToUInt32(value, provider);
+            return Convert.ToUInt32(this.value, provider);
         }
 
         /// <summary>
@@ -874,7 +878,7 @@
         /// <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information. </param><filterpriority>2</filterpriority>
         public long ToInt64(IFormatProvider provider)
         {
-            return Convert.ToInt64(value, provider);
+            return Convert.ToInt64(this.value, provider);
         }
 
         /// <summary>
@@ -886,7 +890,7 @@
         /// <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information. </param><filterpriority>2</filterpriority>
         public ulong ToUInt64(IFormatProvider provider)
         {
-            return Convert.ToUInt64(value, provider);
+            return Convert.ToUInt64(this.value, provider);
         }
 
         /// <summary>
@@ -898,7 +902,7 @@
         /// <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information. </param><filterpriority>2</filterpriority>
         public float ToSingle(IFormatProvider provider)
         {
-            return Convert.ToSingle(value, provider);
+            return Convert.ToSingle(this.value, provider);
         }
 
         /// <summary>
@@ -910,7 +914,7 @@
         /// <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information. </param><filterpriority>2</filterpriority>
         public double ToDouble(IFormatProvider provider)
         {
-            return Convert.ToDouble(value, provider);
+            return Convert.ToDouble(this.value, provider);
         }
 
         /// <summary>
@@ -922,7 +926,7 @@
         /// <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information. </param><filterpriority>2</filterpriority>
         public decimal ToDecimal(IFormatProvider provider)
         {
-            return Convert.ToDecimal(value, provider);
+            return Convert.ToDecimal(this.value, provider);
         }
 
         /// <summary>
@@ -934,7 +938,7 @@
         /// <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information. </param><filterpriority>2</filterpriority>
         public DateTime ToDateTime(IFormatProvider provider)
         {
-            return Convert.ToDateTime(value, provider);
+            return Convert.ToDateTime(this.value, provider);
         }
 
         /// <summary>
@@ -946,7 +950,7 @@
         /// <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information. </param><filterpriority>2</filterpriority>
         public string ToString(IFormatProvider provider)
         {
-            return Convert.ToString(value, provider);
+            return Convert.ToString(this.value, provider);
         }
 
         /// <summary>
@@ -958,7 +962,7 @@
         /// <param name="conversionType">The <see cref="T:System.Type"/> to which the value of this instance is converted. </param><param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information. </param><filterpriority>2</filterpriority>
         public object ToType(Type conversionType, IFormatProvider provider)
         {
-            return Convert.ChangeType(value, conversionType, provider);
+            return Convert.ChangeType(this.value, conversionType, provider);
         }
 
 #endregion

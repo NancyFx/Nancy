@@ -176,7 +176,6 @@ namespace Nancy.Diagnostics
             if (ctx.Response == null)
             {
                 var routeResult = resolveResult.Route.Invoke(resolveResult.Parameters, CancellationToken);
-                routeResult.Wait();
 
                 ctx.Response = (Response)routeResult.Result;
             }

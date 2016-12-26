@@ -136,6 +136,11 @@
             return genericTypeConverter.Deserialize(values, type);
         }
 
+        /// <summary>
+        /// Serializes an <see cref="Enum"/>.
+        /// </summary>
+        /// <param name="p">The enum value to serialize.</param>
+        /// <returns>The serialized value.</returns>
         protected override object SerializeEnum(Enum p)
         {
             if (this.serializeEnumToString)

@@ -7,10 +7,10 @@
 
     /// <summary>
     /// Intercepts the request before it is passed to the appropriate route handler.
-    /// This gives you a couple of possibilities such as modifying parts of the request 
+    /// This gives you a couple of possibilities such as modifying parts of the request
     /// or even prematurely aborting the request by returning a response that will be sent back to the caller.
     /// </summary>
-    /// <seealso cref="AsyncNamedPipelineBase" />
+    /// <seealso cref="AsyncNamedPipelineBase{TAsyncDelegate,TSyncDelegate}" />
     public class BeforePipeline : AsyncNamedPipelineBase<Func<NancyContext, CancellationToken, Task<Response>>, Func<NancyContext, Response>>
     {
 
@@ -31,7 +31,7 @@
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="BeforePipeline"/> to <see cref="Func{NancyContext, CancellationToken, Task{Response}}"/>.
+        /// Performs an implicit conversion from <see cref="BeforePipeline"/> to <see cref="Func{TNancyContext, TCancellationToken, TTaskResponse}"/>.
         /// </summary>
         /// <param name="pipeline">The <see cref="BeforePipeline"/>.</param>
         /// <returns>
@@ -44,9 +44,9 @@
 
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="Func{NancyContext, CancellationToken, Task{Response}}"/> to <see cref="BeforePipeline"/>.
+        /// Performs an implicit conversion from <see cref="Func{TNancyContext, TCancellationToken, TTaskResponse}"/> to <see cref="BeforePipeline"/>.
         /// </summary>
-        /// <param name="func">A <see cref="Func{NancyContext, CancellationToken, Task{Response}}"/>.</param>
+        /// <param name="func">A <see cref="Func{TNancyContext, TCancellationToken, TTaskResponse}"/>.</param>
         /// <returns>
         /// A new <see cref="BeforePipeline"/> instance with <paramref name="func"/>.
         /// </returns>
@@ -61,7 +61,7 @@
         /// Appends a new function to the <see cref="BeforePipeline"/>.
         /// </summary>
         /// <param name="pipeline">The <see cref="BeforePipeline"/> instance.</param>
-        /// <param name="func">A <see cref="Func{NancyContext, CancellationToken, Task{Response}}"/></param>
+        /// <param name="func">A <see cref="Func{TNancyContext, TCancellationToken, TTaskResponse}"/></param>
         /// <returns>
         /// <paramref name="pipeline"/> with <paramref name="func"/> added
         /// </returns>
@@ -112,7 +112,7 @@
         /// <param name="context">The <see cref="NancyContext"/> instance.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> instance.</param>
         /// <returns>
-        /// A <see cref="Response"/> instance or <see langword="null" /> 
+        /// A <see cref="Response"/> instance or <see langword="null" />
         /// </returns>
         public async Task<Response> Invoke(NancyContext context, CancellationToken cancellationToken)
         {

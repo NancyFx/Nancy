@@ -30,6 +30,9 @@ namespace Nancy.Json
 {
     using System;
 
+    /// <summary>
+    /// JSON Helper Class.
+    /// </summary>
     public static class Json
     {
         private const StringComparison ComparisonType = StringComparison.OrdinalIgnoreCase;

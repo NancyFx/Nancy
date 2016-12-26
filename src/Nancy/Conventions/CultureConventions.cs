@@ -9,7 +9,7 @@
     /// <summary>
     /// Collection class for static culture conventions
     /// </summary>
-    /// <seealso cref="System.Collections.Generic.IEnumerable{System.Func{Nancy.NancyContext, Nancy.GlobalizationConfiguration, System.Globalization.CultureInfo}}" />
+    /// <seealso cref="Func{TContext, TGlobalizationConfiguration, TResult}" />
     public class CultureConventions : IEnumerable<Func<NancyContext, GlobalizationConfiguration, CultureInfo>>
     {
         private readonly IEnumerable<Func<NancyContext, GlobalizationConfiguration, CultureInfo>> conventions;
@@ -33,12 +33,12 @@
         /// </returns>
         public IEnumerator<Func<NancyContext, GlobalizationConfiguration, CultureInfo>> GetEnumerator()
         {
-            return conventions.GetEnumerator();
+            return this.conventions.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return GetEnumerator();
+            return this.GetEnumerator();
         }
     }
 }

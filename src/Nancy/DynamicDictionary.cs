@@ -81,7 +81,7 @@
         /// <param name="binder">Provides information about the object that called the dynamic operation. The binder.Name property provides the name of the member on which the dynamic operation is performed. For example, for the Console.WriteLine(sampleObject.SampleProperty) statement, where sampleObject is an instance of the class derived from the <see cref="T:System.Dynamic.DynamicObject"/> class, binder.Name returns "SampleProperty". The binder.IgnoreCase property specifies whether the member name is case-sensitive.</param><param name="result">The result of the get operation. For example, if the method is called for a property, you can assign the property value to <paramref name="result"/>.</param>
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
-            if (!dictionary.TryGetValue(binder.Name, out result))
+            if (!this.dictionary.TryGetValue(binder.Name, out result))
             {
                 result = new DynamicDictionaryValue(null, this.globalizationConfiguration);
             }
@@ -95,7 +95,7 @@
         /// <returns>A <see cref="IEnumerable{T}"/> that contains dynamic member names.</returns>
         public override IEnumerable<string> GetDynamicMemberNames()
         {
-            return dictionary.Keys;
+            return this.dictionary.Keys;
         }
 
         /// <summary>
@@ -104,7 +104,7 @@
         /// <returns>A <see cref="IEnumerable{T}"/> that contains dynamic member names.</returns>
         public IEnumerator<string> GetEnumerator()
         {
-            return dictionary.Keys.GetEnumerator();
+            return this.dictionary.Keys.GetEnumerator();
         }
 
         /// <summary>
@@ -113,7 +113,7 @@
         /// <returns>A <see cref="IEnumerator"/> that contains dynamic member names.</returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return dictionary.Keys.GetEnumerator();
+            return this.dictionary.Keys.GetEnumerator();
         }
 
         /// <summary>
@@ -127,7 +127,7 @@
                 name = GetNeutralKey(name);
 
                 dynamic member;
-                if (!dictionary.TryGetValue(name, out member))
+                if (!this.dictionary.TryGetValue(name, out member))
                 {
                     member = new DynamicDictionaryValue(null, this.globalizationConfiguration);
                 }
@@ -138,7 +138,7 @@
             {
                 name = GetNeutralKey(name);
 
-                dictionary[name] = value is DynamicDictionaryValue ? value : new DynamicDictionaryValue(value, this.globalizationConfiguration);
+                this.dictionary[name] = value is DynamicDictionaryValue ? value : new DynamicDictionaryValue(value, this.globalizationConfiguration);
             }
         }
 
@@ -192,7 +192,7 @@
         /// <returns> A hash code for this <see cref="DynamicDictionary"/>, suitable for use in hashing algorithms and data structures like a hash table.</returns>
         public override int GetHashCode()
         {
-            return (dictionary != null ? dictionary.GetHashCode() : 0);
+            return (this.dictionary != null ? this.dictionary.GetHashCode() : 0);
         }
 
         /// <summary>
@@ -353,7 +353,7 @@
         {
             var data = new Dictionary<string, object>();
 
-            foreach (var item in dictionary)
+            foreach (var item in this.dictionary)
             {
                 var newKey = item.Key;
                 var newValue = ((DynamicDictionaryValue)item.Value).Value;
