@@ -51,9 +51,12 @@
             if (available.Length > 1)
             {
                 var names = string.Join(", ", available.Select(v => v.GetType().Name));
-                var message =
-                    $"Ambiguous choice between multiple validators for type {type.Name}. "
-                    + $"The validators available are: {names}";
+                var message = string.Concat(
+                    "Ambiguous choice between multiple validators for type ",
+					type.Name,
+					". The validators available are: ",
+					names);
+
                 throw new InvalidOperationException(message);
             }
 
