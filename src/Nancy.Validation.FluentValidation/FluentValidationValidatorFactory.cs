@@ -48,6 +48,7 @@
             var available = this.validators
                 .Where(validator => fullType.GetTypeInfo().IsAssignableFrom(validator.GetType()))
                 .ToArray();
+
             if (available.Length > 1)
             {
                 var names = string.Join(", ", available.Select(v => v.GetType().Name));
