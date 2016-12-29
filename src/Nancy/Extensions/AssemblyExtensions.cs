@@ -38,7 +38,7 @@ namespace Nancy.Extensions
             return types;
         }
 
-        #if !CORE
+#if !CORE
         /// <summary>
         /// Indicates if a given assembly references another which is identified by its name.
         /// </summary>
@@ -62,6 +62,6 @@ namespace Nancy.Extensions
 
             return false;
         }
-        #endif
+#endif
     }
 }
