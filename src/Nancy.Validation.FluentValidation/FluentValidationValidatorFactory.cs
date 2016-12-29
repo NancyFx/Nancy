@@ -45,9 +45,23 @@
         {
             var fullType =
                 CreateValidatorType(type);
+            var available = this.validators
+                .Where(validator => fullType.GetTypeInfo().IsAssignableFrom(validator.GetType()))
+                .ToArray();
 
-            return this.validators
-                .SingleOrDefault(validator => fullType.GetTypeInfo().IsAssignableFrom(validator.GetType()));
+            if (available.Length > 1)
+            {
+                var names = string.Join(", ", available.Select(v => v.GetType().Name));
+                var message = string.Concat(
+                    "Ambiguous choice between multiple validators for type ",
+					type.Name,
+					". The validators available are: ",
+					names);
+
+                throw new InvalidOperationException(message);
+            }
+
+            return available.FirstOrDefault();
         }
 
         private static Type CreateValidatorType(Type type)
