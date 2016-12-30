@@ -1,7 +1,6 @@
 ﻿namespace Nancy.Demo.Hosting.Kestrel
 {
     using ModelBinding;
-    using System.Threading.Tasks;
 
     public class HomeModule : NancyModule
     {
