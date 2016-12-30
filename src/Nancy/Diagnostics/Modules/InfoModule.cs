@@ -52,7 +52,7 @@
                 data.Nancy.RootPath = rootPathProvider.GetRootPath();
                 data.Nancy.Hosting = GetHosting();
                 data.Nancy.BootstrapperContainer = GetBootstrapperContainer();
-                data.Nancy.LocatedBootstrapper = NancyBootstrapperLocator.Bootstrapper.GetType().ToString();
+                data.Nancy.LocatedBootstrapper = NancyBootstrapperLocator.GetBootstrapperType().ToString();
                 data.Nancy.LoadedViewEngines = GetViewEngines();
 
                 data.Configuration = new Dictionary<string, object>();

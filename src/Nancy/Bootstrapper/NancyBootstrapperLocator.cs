@@ -41,12 +41,15 @@
             }
         }
 
-        private static IReadOnlyCollection<Type> GetAvailableBootstrapperTypes()
+        private static ITypeCatalog GetDefaultTypeCatalog()
         {
             var assemblies = GetAssemblyCatalog();
 
-            var types = new DefaultTypeCatalog(assemblies);
+            return new DefaultTypeCatalog(assemblies);
+        }
 
+        private static IReadOnlyCollection<Type> GetAvailableBootstrapperTypes(ITypeCatalog types)
+        {
             return types.GetTypesAssignableTo<INancyBootstrapper>(TypeResolveStrategies.ExcludeNancy);
         }
 
@@ -79,9 +82,14 @@
         }
 #endif
 
-        private static Type GetBootstrapperType()
+        internal static Type GetBootstrapperType()
         {
-            var customBootstrappers = GetAvailableBootstrapperTypes();
+            return GetBootstrapperType(GetDefaultTypeCatalog());
+        }
+
+        internal static Type GetBootstrapperType(ITypeCatalog typeCatalog)
+        {
+            var customBootstrappers = GetAvailableBootstrapperTypes(typeCatalog);
 
             if (!customBootstrappers.Any())
             {
