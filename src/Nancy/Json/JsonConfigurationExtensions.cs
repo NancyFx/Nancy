@@ -3,10 +3,9 @@ namespace Nancy.Json
     using System.Collections.Generic;
     using System.Text;
     using Nancy.Configuration;
-    using Nancy.Diagnostics;
 
     /// <summary>
-    /// Contains <see cref="DiagnosticsConfiguration"/> configuration extensions for <see cref="INancyEnvironment"/>.
+    /// Contains <see cref="JsonConfiguration"/> configuration extensions for <see cref="INancyEnvironment"/>.
     /// </summary>
     public static class JsonConfigurationExtensions
     {
