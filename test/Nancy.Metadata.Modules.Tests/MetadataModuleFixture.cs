@@ -13,7 +13,7 @@
 
         public MetadataModuleFixture()
         {
-            this.route = new RouteDescription("NamedDescription", "GET", "/things", ctx => true);
+            this.route = new RouteDescription("NamedDescription", "GET", "/things", ctx => true, typeof(object));
             this.metadataModule = new FakeNancyMetadataModule();
         }
 

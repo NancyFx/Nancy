@@ -20,7 +20,7 @@
         {
             this.resolver = A.Fake<IMetadataModuleResolver>();
             this.module = A.Fake<INancyModule>();
-            this.route = new RouteDescription("NamedDescription", "GET", "/things", ctx => true);
+            this.route = new RouteDescription("NamedDescription", "GET", "/things", ctx => true, typeof(object));
             this.metadataModule = new FakeNancyMetadataModule();
             this.metadataModule.Describe[this.route.Name] = desc => { return Metadata; };
 

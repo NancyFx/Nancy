@@ -48,14 +48,14 @@
 
             public FakeRouteCacheConfigurator AddGetRoute(string path, Type moduleType)
             {
-                this.AddRoutesToCache(new[] { new RouteDescription(string.Empty, "GET", path, null) }, moduleType);
+                this.AddRoutesToCache(new[] { new RouteDescription(string.Empty, "GET", path, null, typeof(object)) }, moduleType);
 
                 return this;
             }
 
             public FakeRouteCacheConfigurator AddGetRoute(string path, Type moduleType, Func<NancyContext, bool> condition)
             {
-                this.AddRoutesToCache(new[] { new RouteDescription(string.Empty, "GET", path, condition) }, moduleType);
+                this.AddRoutesToCache(new[] { new RouteDescription(string.Empty, "GET", path, condition, typeof(object)) }, moduleType);
 
                 return this;
             }
