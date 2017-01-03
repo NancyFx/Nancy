@@ -4,6 +4,7 @@
 
     using Nancy.Bootstrapper;
     using Nancy.Configuration;
+    using Nancy.Conventions;
     using Nancy.Culture;
     using Nancy.Localization;
     using Nancy.ModelBinding;
@@ -29,8 +30,8 @@
         private readonly ITextResource textResource;
         private readonly INancyEnvironment environment;
         private readonly ITypeCatalog typeCatalog;
-
         private readonly IAssemblyCatalog assemblyCatalog;
+        private readonly AcceptHeaderCoercionConventions acceptHeaderCoercionConventions;
 
         /// <summary>
         /// Creates a new instance of the <see cref="DefaultDiagnostics"/> class.
@@ -49,6 +50,7 @@
         /// <param name="environment"></param>
         /// <param name="typeCatalog"></param>
         /// <param name="assemblyCatalog"></param>
+        /// <param name="acceptHeaderCoercionConventions"></param>
         public DefaultDiagnostics(
             IEnumerable<IDiagnosticsProvider> diagnosticProviders,
             IRootPathProvider rootPathProvider,
@@ -63,7 +65,8 @@
             ITextResource textResource,
             INancyEnvironment environment,
             ITypeCatalog typeCatalog,
-            IAssemblyCatalog assemblyCatalog)
+            IAssemblyCatalog assemblyCatalog,
+            AcceptHeaderCoercionConventions acceptHeaderCoercionConventions)
         {
             this.diagnosticProviders = diagnosticProviders;
             this.rootPathProvider = rootPathProvider;
@@ -79,6 +82,7 @@
             this.environment = environment;
             this.typeCatalog = typeCatalog;
             this.assemblyCatalog = assemblyCatalog;
+            this.acceptHeaderCoercionConventions = acceptHeaderCoercionConventions;
         }
 
         /// <summary>
@@ -102,7 +106,8 @@
                 this.textResource,
                 this.environment,
                 this.typeCatalog,
-                this.assemblyCatalog);
+                this.assemblyCatalog,
+                this.acceptHeaderCoercionConventions);
         }
     }
 }

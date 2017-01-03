@@ -8,6 +8,7 @@ namespace Nancy.Diagnostics
     using System.Threading;
     using Nancy.Bootstrapper;
     using Nancy.Configuration;
+    using Nancy.Conventions;
     using Nancy.Cookies;
     using Nancy.Cryptography;
     using Nancy.Culture;
@@ -33,7 +34,7 @@ namespace Nancy.Diagnostics
         /// Enables the diagnostics dashboard and will intercept all requests that are passed to
         /// the condigured paths.
         /// </summary>
-        public static void Enable(IPipelines pipelines, IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration, IModelBinderLocator modelBinderLocator, IEnumerable<IResponseProcessor> responseProcessors, IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints, ICultureService cultureService, IRequestTraceFactory requestTraceFactory, IEnumerable<IRouteMetadataProvider> routeMetadataProviders, ITextResource textResource, INancyEnvironment environment, ITypeCatalog typeCatalog, IAssemblyCatalog assemblyCatalog)
+        public static void Enable(IPipelines pipelines, IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration, IModelBinderLocator modelBinderLocator, IEnumerable<IResponseProcessor> responseProcessors, IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints, ICultureService cultureService, IRequestTraceFactory requestTraceFactory, IEnumerable<IRouteMetadataProvider> routeMetadataProviders, ITextResource textResource, INancyEnvironment environment, ITypeCatalog typeCatalog, IAssemblyCatalog assemblyCatalog, AcceptHeaderCoercionConventions acceptHeaderCoercionConventions)
         {
             var diagnosticsConfiguration =
                 environment.GetValue<DiagnosticsConfiguration>();
@@ -57,6 +58,8 @@ namespace Nancy.Diagnostics
                 diagnosticsRouteCache,
                 new RouteResolverTrie(new TrieNodeFactory(routeSegmentConstraints)),
                 environment);
+            var diagnosticResponseNegotiator = new DefaultResponseNegotiator(responseProcessors, acceptHeaderCoercionConventions);
+            var diagnosticRouteInvoker = new DefaultRouteInvoker(diagnosticResponseNegotiator);
 
             var serializer = new DefaultObjectSerializer();
 
@@ -104,7 +107,7 @@ namespace Nancy.Diagnostics
                         RewriteDiagnosticsUrl(diagnosticsConfiguration, ctx);
 
                         return ValidateConfiguration(diagnosticsConfiguration)
-                                   ? ExecuteDiagnostics(ctx, diagnosticsRouteResolver, diagnosticsConfiguration, serializer, diagnosticsEnvironment)
+                                   ? ExecuteDiagnostics(ctx, diagnosticsRouteResolver, diagnosticsConfiguration, serializer, diagnosticsEnvironment, diagnosticRouteInvoker)
                                    : new DiagnosticsViewRenderer(ctx, environment)["help"];
                     }));
         }
@@ -154,7 +157,7 @@ namespace Nancy.Diagnostics
             return renderer["login"];
         }
 
-        private static Response ExecuteDiagnostics(NancyContext ctx, IRouteResolver routeResolver, DiagnosticsConfiguration diagnosticsConfiguration, DefaultObjectSerializer serializer, INancyEnvironment environment)
+        private static Response ExecuteDiagnostics(NancyContext ctx, IRouteResolver routeResolver, DiagnosticsConfiguration diagnosticsConfiguration, DefaultObjectSerializer serializer, INancyEnvironment environment, IRouteInvoker routeInvoker)
         {
             var session = GetSession(ctx, diagnosticsConfiguration, serializer);
 
@@ -175,9 +178,8 @@ namespace Nancy.Diagnostics
 
             if (ctx.Response == null)
             {
-                var routeResult = resolveResult.Route.Invoke(resolveResult.Parameters, CancellationToken);
-
-                ctx.Response = (Response)routeResult.Result;
+                var routeResult = routeInvoker.Invoke(resolveResult.Route, CancellationToken, resolveResult.Parameters, ctx);
+                ctx.Response = routeResult.Result;
             }
 
             if (ctx.Request.Method.Equals("HEAD", StringComparison.OrdinalIgnoreCase))
