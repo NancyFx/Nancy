@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using Nancy.Bootstrapper;
     using Nancy.Configuration;
+    using Nancy.Conventions;
     using Nancy.Cryptography;
     using Nancy.Culture;
     using Nancy.Diagnostics;
@@ -45,6 +46,7 @@
             private readonly INancyEnvironment environment;
             private readonly ITypeCatalog typeCatalog;
             private readonly IAssemblyCatalog assemblyCatalog;
+            private readonly AcceptHeaderCoercionConventions acceptHeaderCoercionConventions;
 
             public FakeDiagnostics(
                 IRootPathProvider rootPathProvider,
@@ -59,7 +61,8 @@
                 ITextResource textResource,
                 INancyEnvironment environment,
                 ITypeCatalog typeCatalog,
-                IAssemblyCatalog assemblyCatalog)
+                IAssemblyCatalog assemblyCatalog,
+                AcceptHeaderCoercionConventions acceptHeaderCoercionConventions)
             {
                 this.diagnosticProviders = (new IDiagnosticsProvider[] { new FakeDiagnosticsProvider() }).ToArray();
                 this.rootPathProvider = rootPathProvider;
@@ -75,6 +78,7 @@
                 this.environment = environment;
                 this.typeCatalog = typeCatalog;
                 this.assemblyCatalog = assemblyCatalog;
+                this.acceptHeaderCoercionConventions = acceptHeaderCoercionConventions;
             }
 
             public void Initialize(IPipelines pipelines)
@@ -94,7 +98,8 @@
                     this.textResource,
                     this.environment,
                     this.typeCatalog,
-                    this.assemblyCatalog);
+                    this.assemblyCatalog,
+                    this.acceptHeaderCoercionConventions);
             }
         }
 
