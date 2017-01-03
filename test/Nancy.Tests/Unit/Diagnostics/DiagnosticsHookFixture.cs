@@ -8,6 +8,7 @@
     using Nancy.Cookies;
     using Nancy.Cryptography;
     using Nancy.Diagnostics;
+    using Nancy.Diagnostics.Modules;
     using Nancy.Testing;
 
     using Xunit;
@@ -321,6 +322,33 @@
             // Then we should see the fake testing provider and not the Nancy provided testing example
             result.Body.AsString().ShouldNotContain("Fake testing provider");
             result.Body.AsString().ShouldContain("Testing Diagnostic Provider");
+        }
+
+        [Fact]
+        public async Task Should_return_ok_for_post_settings()
+        {
+            // Given no custom interactive diagnostic providers
+            var bootstrapper = new ConfigurableBootstrapper(with =>
+            {
+                with.Configure(env =>
+                {
+                    env.Diagnostics(
+                        enabled: true,
+                        password: "password",
+                        cryptographyConfiguration: this.cryptoConfig);
+                });
+
+                with.EnableAutoRegistration();
+                with.Diagnostics<DefaultDiagnostics>();
+            });
+            var browser = new Browser(bootstrapper);
+            // When querying the list of interactive providers
+            var result = await browser.Post(DiagnosticsConfiguration.Default.Path + "/settings", with =>
+            {
+                with.Cookie(DiagsCookieName, this.GetSessionCookieValue("password"));
+                with.JsonBody(new SettingsModel { Name = "CaseSensitive", Value = true });
+            });
+            result.StatusCode.ShouldEqual(HttpStatusCode.OK);
         }
 
         private string GetSessionCookieValue(string password, DateTime? expiry = null)
