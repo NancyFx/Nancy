@@ -157,7 +157,7 @@ namespace Nancy.Json
         /// <returns>A JSON string representation of <paramref name="obj"/></returns>
         public string Serialize(object obj)
         {
-            return SimpleJson.SerializeObject(obj, this.serializerStrategy);
+            return SimpleJson.SerializeObject(obj, this.serializerStrategy, this.jsonConfiguration.ExcludeNullValues);
         }
 
         /// <summary>

@@ -18,7 +18,8 @@ namespace Nancy.Json
             DefaultEncoding = Encoding.UTF8,
             PrimitiveConverters = new List<JavaScriptPrimitiveConverter>(),
             RetainCasing = false,
-            SerializeEnumToString = false
+            SerializeEnumToString = false,
+            ExcludeNullValues = false
         };
 
         private JsonConfiguration()
@@ -33,13 +34,15 @@ namespace Nancy.Json
         /// <param name="primitiveConverters">List of <see cref="JavaScriptPrimitiveConverter"/> instances.</param>
         /// <param name="retainCasing"><see langword="true"/> if the name casing should be retained during serialization, otherwise <see langword="false"/>.</param>
         /// <param name="serializeEnumToString"><see langword="true"/> if enums should be represented as string otherwise <see langword="false"/>.</param>
-        public JsonConfiguration(Encoding defaultEncoding, IList<JavaScriptConverter> converters, IList<JavaScriptPrimitiveConverter> primitiveConverters, bool? retainCasing, bool? serializeEnumToString)
+        /// <param name="excludeNullValues"><see langword="true" /> if the serializer should exclude null values for properties on objects otherwise <see langword="false" />.</param>
+        public JsonConfiguration(Encoding defaultEncoding, IList<JavaScriptConverter> converters, IList<JavaScriptPrimitiveConverter> primitiveConverters, bool? retainCasing, bool? serializeEnumToString, bool? excludeNullValues)
         {
             this.DefaultEncoding = defaultEncoding ?? Default.DefaultEncoding;
             this.Converters = converters ?? Default.Converters;
             this.PrimitiveConverters = primitiveConverters ?? Default.PrimitiveConverters;
             this.RetainCasing = retainCasing ?? Default.RetainCasing;
             this.SerializeEnumToString = serializeEnumToString ?? Default.SerializeEnumToString;
+            this.ExcludeNullValues = excludeNullValues ?? Default.ExcludeNullValues;
         }
 
         /// <summary>
@@ -70,5 +73,10 @@ namespace Nancy.Json
         /// Get or sets whether enums should be treated as string
         /// </summary>
         public bool SerializeEnumToString{ get; private set; }
+
+        /// <summary>
+        /// Gets or sets if the serializer should return null values for properties on objects
+        /// </summary>
+        public bool ExcludeNullValues { get; set; }
     }
 }

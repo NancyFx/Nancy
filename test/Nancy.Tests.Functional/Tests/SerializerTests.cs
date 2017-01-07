@@ -127,6 +127,33 @@
             Assert.Equal(model.CreatedOn, resultModel.CreatedOn);
         }
 
+        [Fact]
+        public async Task Should_Not_Serialize_Nulls_If_Configured()
+        {
+            // Given
+            var bootstrapper = new ConfigurableBootstrapper(
+                configuration =>
+                {
+                    configuration.Configure(
+                        environment => environment.Json(excludeNullValues:true));
+
+                    configuration.Modules(new Type[] { typeof(SerializerTestModule) });
+                });
+
+            var browser = new Browser(bootstrapper);
+
+            //When
+            var result = await browser.Post("/serializer/date", with =>
+            {
+                with.Body("{\"createdOn\":\"2016-05-06T09:00:00.0000000+02:00\"}", "application/json");
+                with.Accept("application/json");
+            });
+
+            var body = result.Body.AsString();
+
+            Assert.Equal("{\"createdOn\":\"2016-05-06T07:00:00.0000000Z\"}", body);
+        }
+
         private static string GetTimezoneSuffix(DateTime value)
         {
             string suffix;
