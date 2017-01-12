@@ -1283,7 +1283,7 @@ namespace Nancy.Json.Simple
 
         internal static ReflectionUtils.ConstructorDelegate ContructorDelegateFactory(Type key)
         {
-            return ReflectionUtils.GetContructor(key, key.IsArray ? ArrayConstructorParameterTypes : EmptyTypes);
+            return ReflectionUtils.GetConstructor(key, key.IsArray ? ArrayConstructorParameterTypes : EmptyTypes);
         }
 
         internal static IDictionary<string, ReflectionUtils.GetDelegate> GetterValueFactory(Type type)
@@ -1430,7 +1430,14 @@ namespace Nancy.Json.Simple
                             obj = value;
                         else
                         {
-                            obj = ConstructorCache[type]();
+                            var constructor  = ConstructorCache[type];
+
+                            if (constructor == null)
+                            {
+                                throw new NoValidConstructorFoundException(type);
+                            }
+
+                            obj = constructor();
                             foreach (KeyValuePair<string, KeyValuePair<Type, ReflectionUtils.SetDelegate>> setter in SetCache[type])
                             {
                                 object jsonValue;
@@ -1604,6 +1611,13 @@ namespace Nancy.Json.Simple
     }
 
 #endif
+
+    internal class NoValidConstructorFoundException : Exception
+    {
+        public NoValidConstructorFoundException(Type type) : base(string.Format("No valid constructor could be found for {0}", type.FullName))
+        {
+        }
+    }
 
     // This class is meant to be copied into other libraries. So we want to exclude it from Code Analysis rules
     // that might be in place in the target project.
@@ -1822,7 +1836,7 @@ namespace Nancy.Json.Simple
 #endif
         }
 
-        public static ConstructorDelegate GetContructor(ConstructorInfo constructorInfo)
+        public static ConstructorDelegate GetConstructor(ConstructorInfo constructorInfo)
         {
 #if SIMPLE_JSON_NO_LINQ_EXPRESSION
                 return GetConstructorByReflection(constructorInfo);
@@ -1831,7 +1845,7 @@ namespace Nancy.Json.Simple
 #endif
         }
 
-        public static ConstructorDelegate GetContructor(Type type, params Type[] argsType)
+        public static ConstructorDelegate GetConstructor(Type type, params Type[] argsType)
         {
 #if SIMPLE_JSON_NO_LINQ_EXPRESSION
                 return GetConstructorByReflection(type, argsType);
