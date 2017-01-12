@@ -14,7 +14,7 @@
             var input = new DynamicDictionaryValue(value);
 
             //When
-            var actual = SimpleJson.SerializeObject(input, new NancySerializationStrategy());
+            var actual = SimpleJson.SerializeObject(input, new NancySerializationStrategy(), false);
 
             //Then
             actual.ShouldEqual(@"""42""");
@@ -28,7 +28,7 @@
             var input = new DynamicDictionaryValue(value);
 
             //When
-            var actual = SimpleJson.SerializeObject(input, new NancySerializationStrategy());
+            var actual = SimpleJson.SerializeObject(input, new NancySerializationStrategy(), false);
 
             //Then
             actual.ShouldEqual(@"42");
@@ -41,7 +41,7 @@
             var model = new ModelTest { EnumModel = TestEnum.Freddy };
 
             //When
-            var result = SimpleJson.SerializeObject(model, new NancySerializationStrategy(false, true));
+            var result = SimpleJson.SerializeObject(model, new NancySerializationStrategy(false, true), false);
 
             //Then
             result.ShouldEqual("{\"enumModel\":\"Freddy\"}");
