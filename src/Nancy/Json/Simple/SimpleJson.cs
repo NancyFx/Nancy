@@ -1237,6 +1237,25 @@ namespace Nancy.Json.Simple
         string MapDictionaryKeyToFieldName(string stringKey);
     }
 
+#if SIMPLE_JSON_INTERNAL
+    internal
+#else
+
+    public
+#endif
+        class TypedConstructorArgs
+    {
+        public Type Type { get; private set; }
+
+        public Type[] Parameters { get; private set; }
+
+        public TypedConstructorArgs(Type type, Type[] parameters)
+        {
+            this.Type = type;
+            this.Parameters = parameters;
+        }
+    }
+
     [GeneratedCode("simple-json", "1.0.0")]
 #if SIMPLE_JSON_INTERNAL
     internal
@@ -1245,7 +1264,9 @@ namespace Nancy.Json.Simple
 #endif
         class PocoJsonSerializerStrategy : IJsonSerializerStrategy
     {
-        internal static IDictionary<Type, ReflectionUtils.ConstructorDelegate> ConstructorCache;
+        internal static IDictionary<Type, ReflectionUtils.ConstructorDelegate> DefaultConstructorCache;
+
+        internal static IDictionary<TypedConstructorArgs, ReflectionUtils.ConstructorDelegate> TypedConstructorCache;
         internal static IDictionary<Type, IDictionary<string, ReflectionUtils.GetDelegate>> GetCache;
         internal static IDictionary<Type, IDictionary<string, KeyValuePair<Type, ReflectionUtils.SetDelegate>>> SetCache;
 
@@ -1266,7 +1287,8 @@ namespace Nancy.Json.Simple
 
         static PocoJsonSerializerStrategy()
         {
-            ConstructorCache = new ReflectionUtils.ThreadSafeDictionary<Type, ReflectionUtils.ConstructorDelegate>(ContructorDelegateFactory);
+            DefaultConstructorCache = new ReflectionUtils.ThreadSafeDictionary<Type, ReflectionUtils.ConstructorDelegate>(ContructorDelegateFactory);
+            TypedConstructorCache = new ReflectionUtils.ThreadSafeDictionary<TypedConstructorArgs, ReflectionUtils.ConstructorDelegate>(ContructorDelegateFactory);
             GetCache = new ReflectionUtils.ThreadSafeDictionary<Type, IDictionary<string, ReflectionUtils.GetDelegate>>(GetterValueFactory);
             SetCache = new ReflectionUtils.ThreadSafeDictionary<Type, IDictionary<string, KeyValuePair<Type, ReflectionUtils.SetDelegate>>>(SetterValueFactory);
         }
@@ -1283,7 +1305,12 @@ namespace Nancy.Json.Simple
 
         internal static ReflectionUtils.ConstructorDelegate ContructorDelegateFactory(Type key)
         {
-            return ReflectionUtils.GetConstructor(key, key.IsArray ? ArrayConstructorParameterTypes : EmptyTypes);
+            return ContructorDelegateFactory(new TypedConstructorArgs(key, key.IsArray ? ArrayConstructorParameterTypes : EmptyTypes));
+        }
+
+        internal static ReflectionUtils.ConstructorDelegate ContructorDelegateFactory(TypedConstructorArgs constructorArgs)
+        {
+            return ReflectionUtils.GetConstructor(constructorArgs.Type, constructorArgs.Parameters);
         }
 
         internal static IDictionary<string, ReflectionUtils.GetDelegate> GetterValueFactory(Type type)
@@ -1417,7 +1444,7 @@ namespace Nancy.Json.Simple
 
                         Type genericType = typeof(Dictionary<,>).MakeGenericType(keyType, valueType);
 
-                        IDictionary dict = (IDictionary)ConstructorCache[genericType]();
+                        IDictionary dict = (IDictionary)DefaultConstructorCache[genericType]();
 
                         foreach (KeyValuePair<string, object> kvp in jsonObject)
                             dict.Add(kvp.Key, this.DeserializeObject(kvp.Value, valueType, dateTimeStyles));
@@ -1430,22 +1457,27 @@ namespace Nancy.Json.Simple
                             obj = value;
                         else
                         {
-                            var constructor  = ConstructorCache[type];
+                            var constructor = DefaultConstructorCache[type];
 
-                            if (constructor == null)
+                            if (constructor != null)
                             {
-                                throw new NoValidConstructorFoundException(type);
-                            }
-
-                            obj = constructor();
-                            foreach (KeyValuePair<string, KeyValuePair<Type, ReflectionUtils.SetDelegate>> setter in SetCache[type])
-                            {
-                                object jsonValue;
-                                if (jsonObject.TryGetValue(setter.Key, out jsonValue))
+                                obj = constructor();
+                                foreach (KeyValuePair<string, KeyValuePair<Type, ReflectionUtils.SetDelegate>> setter in
+                                    SetCache[type])
                                 {
-                                    jsonValue = this.DeserializeObject(jsonValue, setter.Value.Key, dateTimeStyles);
-                                    setter.Value.Value(obj, jsonValue);
+                                    object jsonValue;
+                                    if (jsonObject.TryGetValue(setter.Key, out jsonValue))
+                                    {
+                                        jsonValue = this.DeserializeObject(jsonValue, setter.Value.Key, dateTimeStyles);
+                                        setter.Value.Value(obj, jsonValue);
+                                    }
                                 }
+                            }
+                            else
+                            {
+                                constructor = TypedConstructorCache[new TypedConstructorArgs(type, new [] { typeof(string), typeof(int), typeof(bool)})];
+                                obj = constructor("Hi", 1, true);
+
                             }
                         }
                     }
@@ -1460,7 +1492,7 @@ namespace Nancy.Json.Simple
 
                         if (type.IsArray)
                         {
-                            list = (IList)ConstructorCache[type](jsonObject.Count);
+                            list = (IList)DefaultConstructorCache[type](jsonObject.Count);
                             int i = 0;
                             foreach (object o in jsonObject)
                                 list[i++] = this.DeserializeObject(o, type.GetElementType(), dateTimeStyles);
@@ -1468,7 +1500,7 @@ namespace Nancy.Json.Simple
                         else if (ReflectionUtils.IsTypeGenericeCollectionInterface(type) || ReflectionUtils.IsAssignableFrom(typeof(IList), type))
                         {
                             Type innerType = ReflectionUtils.GetGenericListElementType(type);
-                            list = (IList)(ConstructorCache[type] ?? ConstructorCache[typeof(List<>).MakeGenericType(innerType)])(jsonObject.Count);
+                            list = (IList)(DefaultConstructorCache[type] ?? DefaultConstructorCache[typeof(List<>).MakeGenericType(innerType)])(jsonObject.Count);
                             foreach (object o in jsonObject)
                                 list.Add(this.DeserializeObject(o, innerType, dateTimeStyles));
                         }
@@ -1481,7 +1513,6 @@ namespace Nancy.Json.Simple
                 return ReflectionUtils.ToNullableType(obj, type);
             return obj;
         }
-
 
         protected virtual object SerializeEnum(Enum p)
         {
@@ -1791,6 +1822,7 @@ namespace Nancy.Json.Simple
                         matches = false;
                         break;
                     }
+                    i++; //todo this loop is weird.
                 }
 
                 if (matches)
