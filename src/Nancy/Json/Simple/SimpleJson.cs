@@ -62,6 +62,7 @@ namespace Nancy.Json.Simple
     using System.Diagnostics.CodeAnalysis;
     using System.Dynamic;
     using System.Globalization;
+    using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
     using System.Runtime.Serialization;
@@ -1243,16 +1244,16 @@ namespace Nancy.Json.Simple
 
     public
 #endif
-        class TypedConstructorArgs
+        class NamedConstructorArgs
     {
         public Type Type { get; private set; }
 
-        public Type[] Parameters { get; private set; }
+        public string[] ParameterNames { get; private set; }
 
-        public TypedConstructorArgs(Type type, Type[] parameters)
+        public NamedConstructorArgs(Type type, string[] parameterNames)
         {
             this.Type = type;
-            this.Parameters = parameters;
+            this.ParameterNames = parameterNames;
         }
     }
 
@@ -1265,10 +1266,11 @@ namespace Nancy.Json.Simple
         class PocoJsonSerializerStrategy : IJsonSerializerStrategy
     {
         internal static IDictionary<Type, ReflectionUtils.ConstructorDelegate> DefaultConstructorCache;
+        internal static IDictionary<NamedConstructorArgs, ReflectionUtils.ConstructorDelegate> TypedConstructorCache;
 
-        internal static IDictionary<TypedConstructorArgs, ReflectionUtils.ConstructorDelegate> TypedConstructorCache;
         internal static IDictionary<Type, IDictionary<string, ReflectionUtils.GetDelegate>> GetCache;
         internal static IDictionary<Type, IDictionary<string, KeyValuePair<Type, ReflectionUtils.SetDelegate>>> SetCache;
+        internal static IDictionary<NamedConstructorArgs, IDictionary<string, Type>> ParameterTypeCache;
 
         internal static readonly Type[] EmptyTypes = ArrayCache.Empty<Type>();
         internal static readonly Type[] ArrayConstructorParameterTypes = new Type[] { typeof(int) };
@@ -1288,9 +1290,10 @@ namespace Nancy.Json.Simple
         static PocoJsonSerializerStrategy()
         {
             DefaultConstructorCache = new ReflectionUtils.ThreadSafeDictionary<Type, ReflectionUtils.ConstructorDelegate>(ContructorDelegateFactory);
-            TypedConstructorCache = new ReflectionUtils.ThreadSafeDictionary<TypedConstructorArgs, ReflectionUtils.ConstructorDelegate>(ContructorDelegateFactory);
+            TypedConstructorCache = new ReflectionUtils.ThreadSafeDictionary<NamedConstructorArgs, ReflectionUtils.ConstructorDelegate>(ContructorDelegateFactory);
             GetCache = new ReflectionUtils.ThreadSafeDictionary<Type, IDictionary<string, ReflectionUtils.GetDelegate>>(GetterValueFactory);
             SetCache = new ReflectionUtils.ThreadSafeDictionary<Type, IDictionary<string, KeyValuePair<Type, ReflectionUtils.SetDelegate>>>(SetterValueFactory);
+            ParameterTypeCache = new ReflectionUtils.ThreadSafeDictionary<NamedConstructorArgs, IDictionary<string, Type>>(ParameterTypeFactory);
         }
 
         public string MapDictionaryKeyToFieldName(string stringKey)
@@ -1305,12 +1308,12 @@ namespace Nancy.Json.Simple
 
         internal static ReflectionUtils.ConstructorDelegate ContructorDelegateFactory(Type key)
         {
-            return ContructorDelegateFactory(new TypedConstructorArgs(key, key.IsArray ? ArrayConstructorParameterTypes : EmptyTypes));
+            return ReflectionUtils.GetConstructor(key, key.IsArray ? ArrayConstructorParameterTypes : EmptyTypes);
         }
 
-        internal static ReflectionUtils.ConstructorDelegate ContructorDelegateFactory(TypedConstructorArgs constructorArgs)
+        internal static ReflectionUtils.ConstructorDelegate ContructorDelegateFactory(NamedConstructorArgs constructorArgs)
         {
-            return ReflectionUtils.GetConstructor(constructorArgs.Type, constructorArgs.Parameters);
+            return ReflectionUtils.GetNamedConstructor(constructorArgs.Type, constructorArgs.ParameterNames);
         }
 
         internal static IDictionary<string, ReflectionUtils.GetDelegate> GetterValueFactory(Type type)
@@ -1345,15 +1348,32 @@ namespace Nancy.Json.Simple
                     MethodInfo setMethod = ReflectionUtils.GetSetterMethodInfo(propertyInfo);
                     if (setMethod.IsStatic || !setMethod.IsPublic)
                         continue;
-                    result[propertyInfo.Name] = new KeyValuePair<Type, ReflectionUtils.SetDelegate>(propertyInfo.PropertyType, ReflectionUtils.GetSetMethod(propertyInfo));
+                    result[propertyInfo.Name] = new KeyValuePair<Type, ReflectionUtils.SetDelegate>(
+                        propertyInfo.PropertyType, ReflectionUtils.GetSetMethod(propertyInfo));
                 }
             }
+
             foreach (FieldInfo fieldInfo in ReflectionUtils.GetFields(type))
             {
                 if (fieldInfo.IsInitOnly || fieldInfo.IsStatic || !fieldInfo.IsPublic)
                     continue;
                 result[fieldInfo.Name] = new KeyValuePair<Type, ReflectionUtils.SetDelegate>(fieldInfo.FieldType, ReflectionUtils.GetSetMethod(fieldInfo));
             }
+
+            return result;
+        }
+
+
+        internal static IDictionary<string, Type> ParameterTypeFactory(NamedConstructorArgs constructor)
+        {
+            IDictionary<string, Type> result = new Dictionary<string, Type>();
+            foreach (ParameterInfo paramterInfo in ReflectionUtils
+                .GetNamedConstructorInfo(constructor.Type, constructor.ParameterNames)
+                .GetParameters())
+            {
+                result[paramterInfo.Name] = paramterInfo.ParameterType;
+            }
+
             return result;
         }
 
@@ -1454,7 +1474,9 @@ namespace Nancy.Json.Simple
                     else
                     {
                         if (type == typeof(object))
+                        {
                             obj = value;
+                        }
                         else
                         {
                             var constructor = DefaultConstructorCache[type];
@@ -1475,9 +1497,29 @@ namespace Nancy.Json.Simple
                             }
                             else
                             {
-                                constructor = TypedConstructorCache[new TypedConstructorArgs(type, new [] { typeof(string), typeof(int), typeof(bool)})];
-                                obj = constructor("Hi", 1, true);
+                                var args = new NamedConstructorArgs(type, jsonObject.Keys.ToArray());
+                                constructor = TypedConstructorCache[args];
 
+                                if (constructor == null)
+                                {
+                                    throw new ValidConstructorNotFoundException(type);
+                                }
+
+                                var arguments = new object[jsonObject.Count];
+
+                                var index = 0;
+                                foreach (KeyValuePair<string, Type> parameterType in ParameterTypeCache[args])
+                                {
+                                    object jsonValue;
+                                    if (jsonObject.TryGetValue(parameterType.Key, out jsonValue))
+                                    {
+                                        jsonValue = this.DeserializeObject(jsonValue, parameterType.Value, dateTimeStyles);
+                                        arguments[index] = jsonValue;
+                                        index++;
+                                    }
+                                }
+
+                                obj = constructor(arguments);
                             }
                         }
                     }
@@ -1643,9 +1685,9 @@ namespace Nancy.Json.Simple
 
 #endif
 
-    internal class NoValidConstructorFoundException : Exception
+    internal class ValidConstructorNotFoundException : Exception
     {
-        public NoValidConstructorFoundException(Type type) : base(string.Format("No valid constructor could be found for {0}", type.FullName))
+        public ValidConstructorNotFoundException(Type type) : base(string.Format("No valid constructor could be found for {0}", type.FullName))
         {
         }
     }
@@ -1804,25 +1846,52 @@ namespace Nancy.Json.Simple
 
         public static ConstructorInfo GetConstructorInfo(Type type, params Type[] argsType)
         {
+             IEnumerable<ConstructorInfo> constructorInfos = GetConstructors(type);
+             int i;
+             bool matches;
+             foreach (ConstructorInfo constructorInfo in constructorInfos)
+             {
+                 ParameterInfo[] parameters = constructorInfo.GetParameters();
+                 if (argsType.Length != parameters.Length)
+                     continue;
+
+                 i = 0;
+                 matches = true;
+                 foreach (ParameterInfo parameterInfo in constructorInfo.GetParameters())
+                 {
+                     if (parameterInfo.ParameterType != argsType[i])
+                     {
+                         matches = false;
+                         break;
+                     }
+                 }
+
+                 if (matches)
+                     return constructorInfo;
+             }
+
+             return null;
+        }
+
+        public static ConstructorInfo GetNamedConstructorInfo(Type type, params string[] parameterNames)
+        {
             IEnumerable<ConstructorInfo> constructorInfos = GetConstructors(type);
-            int i;
-            bool matches;
             foreach (ConstructorInfo constructorInfo in constructorInfos)
             {
                 ParameterInfo[] parameters = constructorInfo.GetParameters();
-                if (argsType.Length != parameters.Length)
+                if (parameterNames.Length != parameters.Length)
                     continue;
 
-                i = 0;
-                matches = true;
+                var i = 0;
+                var matches = true;
                 foreach (ParameterInfo parameterInfo in constructorInfo.GetParameters())
                 {
-                    if (parameterInfo.ParameterType != argsType[i])
+                    if (!string.Equals(parameterInfo.Name, parameterNames[i], StringComparison.OrdinalIgnoreCase))
                     {
                         matches = false;
                         break;
                     }
-                    i++; //todo this loop is weird.
+                    i++;
                 }
 
                 if (matches)
@@ -1878,11 +1947,20 @@ namespace Nancy.Json.Simple
         }
 
         public static ConstructorDelegate GetConstructor(Type type, params Type[] argsType)
+                 {
+         #if SIMPLE_JSON_NO_LINQ_EXPRESSION
+                         return GetConstructorByReflection(type, argsType);
+         #else
+                     return GetConstructorByExpression(type, argsType);
+         #endif
+                 }
+
+        public static ConstructorDelegate GetNamedConstructor(Type type, params string[] parameterNames)
         {
 #if SIMPLE_JSON_NO_LINQ_EXPRESSION
-                return GetConstructorByReflection(type, argsType);
-#else
-            return GetConstructorByExpression(type, argsType);
+                         return GetNamedConstructorByReflection(type, parameterNames);
+         #else
+            return GetNamedConstructorByExpression(type, parameterNames);
 #endif
         }
 
@@ -1894,6 +1972,12 @@ namespace Nancy.Json.Simple
         public static ConstructorDelegate GetConstructorByReflection(Type type, params Type[] argsType)
         {
             ConstructorInfo constructorInfo = GetConstructorInfo(type, argsType);
+            return constructorInfo == null ? null : GetConstructorByReflection(constructorInfo);
+        }
+
+        public static ConstructorDelegate GetNamedConstructorByReflection(Type type, params string[] parameterNames)
+        {
+            ConstructorInfo constructorInfo = GetNamedConstructorInfo(type, parameterNames);
             return constructorInfo == null ? null : GetConstructorByReflection(constructorInfo);
         }
 
@@ -1921,6 +2005,12 @@ namespace Nancy.Json.Simple
         public static ConstructorDelegate GetConstructorByExpression(Type type, params Type[] argsType)
         {
             ConstructorInfo constructorInfo = GetConstructorInfo(type, argsType);
+            return constructorInfo == null ? null : GetConstructorByExpression(constructorInfo);
+        }
+
+        public static ConstructorDelegate GetNamedConstructorByExpression(Type type, params string[] parameterNames)
+        {
+            ConstructorInfo constructorInfo = GetNamedConstructorInfo(type, parameterNames);
             return constructorInfo == null ? null : GetConstructorByExpression(constructorInfo);
         }
 
