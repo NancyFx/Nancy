@@ -101,17 +101,9 @@
         /// <param name="parameters">A <see cref="DynamicDictionary"/> that contains the parameters that should be passed to the route.</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>A (hot) task of <see cref="Response"/> instance.</returns>
-        public override Task<object> Invoke(DynamicDictionary parameters, CancellationToken cancellationToken)
+        public override async Task<object> Invoke(DynamicDictionary parameters, CancellationToken cancellationToken)
         {
-            var task = this.Action.Invoke(parameters, cancellationToken);
-
-            var tcs = new TaskCompletionSource<object>();
-
-            task.ContinueWith(t => tcs.SetResult(t.Result), TaskContinuationOptions.OnlyOnRanToCompletion);
-            task.ContinueWith(t => tcs.SetException(t.Exception.InnerExceptions), TaskContinuationOptions.OnlyOnFaulted);
-            task.ContinueWith(t => tcs.SetCanceled(), TaskContinuationOptions.OnlyOnCanceled);
-
-            return tcs.Task;
+            return await this.Action.Invoke(parameters, cancellationToken).ConfigureAwait(false);
         }
     }
 }
