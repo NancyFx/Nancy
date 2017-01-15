@@ -103,7 +103,7 @@
         /// <returns>A (hot) task of <see cref="Response"/> instance.</returns>
         public override async Task<object> Invoke(DynamicDictionary parameters, CancellationToken cancellationToken)
         {
-            return await this.Action.Invoke(parameters, cancellationToken).ConfigureAwait(false);
+            return await this.Action.Invoke(parameters, cancellationToken).ConfigureAwait(false); 
         }
     }
 }
