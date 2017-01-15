@@ -649,6 +649,9 @@
     <Compile Include="..\Nancy.Tests\Unit\Responses\GenericFileResponseFixture.cs">
       <Link>Unit\Responses\GenericFileResponseFixture.cs</Link>
     </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\AppDomainAssemblyCatalogFixture.cs">
+      <Link>Unit\AppDomainAssemblyCatalogFixture.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Nancy.Testing.MSBuild\Nancy.Testing.csproj">

@@ -6,6 +6,8 @@ namespace Nancy
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using Nancy.Extensions;
+    using Nancy.Helpers;
 
     /// <summary>
     /// Default implementation of the <see cref="IAssemblyCatalog"/> interface, based on
@@ -40,7 +42,7 @@ namespace Nancy
 
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                if (!assembly.IsDynamic && !assembly.ReflectionOnly && IsNancyReferencing(assembly))
+                if (!assembly.IsDynamic && !assembly.ReflectionOnly && assembly.IsReferencing(NancyAssemblyName))
                 {
                     assemblies.Add(assembly);
                 }
@@ -52,7 +54,8 @@ namespace Nancy
         private static IEnumerable<Assembly> LoadNancyReferencingAssemblies(IEnumerable<Assembly> loadedAssemblies)
         {
             var assemblies = new HashSet<Assembly>();
-            var inspectionAppDomain = AppDomain.CreateDomain("AppDomainAssemblyCatalog");
+            var inspectionAppDomain = CreateInspectionAppDomain();
+            var inspectionProber = CreateRemoteReferenceProber(inspectionAppDomain);
             var loadedNancyReferencingAssemblyNames = loadedAssemblies.Select(assembly => assembly.GetName()).ToArray();
 
             foreach (var directory in GetAssemblyDirectories())
@@ -68,9 +71,7 @@ namespace Nancy
 
                     if (!loadedNancyReferencingAssemblyNames.Any(loadedNancyReferencingAssemblyName => AssemblyName.ReferenceMatchesDefinition(loadedNancyReferencingAssemblyName, unloadedAssemblyName)))
                     {
-                        var inspectionAssembly = SafeLoadAssembly(inspectionAppDomain, unloadedAssemblyName);
-
-                        if (inspectionAssembly != null && IsNancyReferencing(inspectionAssembly))
+                        if (inspectionProber.HasReference(unloadedAssemblyName, NancyAssemblyName))
                         {
                             var assembly = SafeLoadAssembly(AppDomain.CurrentDomain, unloadedAssemblyName);
 
@@ -88,22 +89,19 @@ namespace Nancy
             return assemblies.ToArray();
         }
 
-        private static bool IsNancyReferencing(Assembly assembly)
+        private static AppDomain CreateInspectionAppDomain()
         {
-            if (AssemblyName.ReferenceMatchesDefinition(assembly.GetName(), NancyAssemblyName))
-            {
-                return true;
-            }
+            var currentAppDomain = AppDomain.CurrentDomain;
 
-            foreach (var referencedAssemblyName in assembly.GetReferencedAssemblies())
-            {
-                if (AssemblyName.ReferenceMatchesDefinition(referencedAssemblyName, NancyAssemblyName))
-                {
-                    return true;
-                }
-            }
+            return AppDomain.CreateDomain("AppDomainAssemblyCatalog", currentAppDomain.Evidence,
+                currentAppDomain.SetupInformation);
+        }
 
-            return false;
+        private static ProxyNancyReferenceProber CreateRemoteReferenceProber(AppDomain appDomain)
+        {
+            return (ProxyNancyReferenceProber)appDomain.CreateInstanceAndUnwrap(
+                typeof(ProxyNancyReferenceProber).Assembly.FullName,
+                typeof(ProxyNancyReferenceProber).FullName);
         }
 
         private static IEnumerable<string> GetAssemblyDirectories()
