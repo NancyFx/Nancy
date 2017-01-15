@@ -23,11 +23,11 @@
         public HeadResponse(Response response)
         {
             this.innerResponse = response;
-            this.Contents = stream =>
+            this.Contents = (Func<Stream, Task>)(async stream =>
             {
-                this.CheckAndSetContentLength(this.innerResponse);
+                await this.CheckAndSetContentLength(this.innerResponse);
                 GetStringContents(string.Empty)(stream);
-            };
+            });
             this.ContentType = response.ContentType;
             this.Headers = response.Headers;
             this.StatusCode = response.StatusCode;
@@ -48,7 +48,7 @@
             return this.innerResponse.PreExecute(context);
         }
 
-        private void CheckAndSetContentLength(Response response)
+        private async Task CheckAndSetContentLength(Response response)
         {
             if (this.Headers.ContainsKey(ContentLength))
             {
@@ -57,7 +57,7 @@
 
             using (var nullStream = new NullStream())
             {
-                response.Contents.Invoke(nullStream);
+                await response.Contents.Body.Invoke(nullStream);
 
                 this.Headers[ContentLength] = nullStream.Length.ToString(CultureInfo.InvariantCulture);
             }

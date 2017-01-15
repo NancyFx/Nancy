@@ -25,15 +25,16 @@
         /// <returns>
         /// Task for completion/erroring
         /// </returns>
-        public override Task PreExecute(NancyContext context)
+        public override async Task PreExecute(NancyContext context)
         {
             using (var memoryStream = new MemoryStream())
             {
-                this.sourceResponse.Contents.Invoke(memoryStream);
+                await this.sourceResponse.Contents.Body.Invoke(memoryStream);
+
                 this.oldResponseOutput = memoryStream.ToArray();
             }
 
-            return base.PreExecute(context);
+            await base.PreExecute(context);
         }
 
         /// <summary>
@@ -49,18 +50,18 @@
             this.StatusCode = sourceResponse.StatusCode;
             this.ReasonPhrase = sourceResponse.ReasonPhrase;
 
-            this.Contents = WriteContents;
+            this.Contents = (Func<Stream, Task>)WriteContents;
         }
 
-        private void WriteContents(Stream stream)
+        private async Task WriteContents(Stream stream)
         {
             if (this.oldResponseOutput == null)
             {
-                this.sourceResponse.Contents.Invoke(stream);
+                await this.sourceResponse.Contents.Body.Invoke(stream);
             }
             else
             {
-                stream.Write(this.oldResponseOutput, 0, this.oldResponseOutput.Length);
+                await stream.WriteAsync(this.oldResponseOutput, 0, this.oldResponseOutput.Length);
             }
         }
     }

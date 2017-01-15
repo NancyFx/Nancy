@@ -4,6 +4,7 @@
     using System.IO;
     using System.Linq;
     using System.Text;
+    using System.Threading.Tasks;
     using Nancy.Bootstrapper;
     using Nancy.Configuration;
     using Nancy.Json;
@@ -73,7 +74,7 @@
             // http://stackoverflow.com/questions/111302/best-content-type-to-serve-jsonp
             context.Response.ContentType = string.Concat("application/javascript", Encoding);
 
-            context.Response.Contents = stream =>
+            context.Response.Contents = (Func<Stream, Task>)(async stream =>
             {
                 // disposing of stream is handled elsewhere
                 var writer = new StreamWriter(stream)
@@ -82,9 +83,9 @@
                 };
 
                 writer.Write("{0}(", callback);
-                original(stream);
+                await original.Body.Invoke(stream);
                 writer.Write(");");
-            };
+            });
         }
     }
 }

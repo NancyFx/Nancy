@@ -73,7 +73,7 @@ namespace Nancy.Diagnostics
 
             var stream = new MemoryStream();
 
-            view.Contents.Invoke(stream);
+            view.Contents.Body.Invoke(stream).Wait();
             stream.Position = 0;
             return stream;
         }

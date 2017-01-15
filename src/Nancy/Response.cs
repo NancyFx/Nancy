@@ -52,7 +52,7 @@ namespace Nancy
         /// </summary>
         /// <value>An <see cref="Action{T}"/> delegate, containing the code that will render contents to the response stream.</value>
         /// <remarks>The host of Nancy will pass in the output stream after the response has been handed back to it by Nancy.</remarks>
-        public Action<Stream> Contents { get; set; }
+        public BodyDelegate Contents { get; set; }
 
         /// <summary>
         /// Gets the collection of HTTP response headers that should be sent back to the client.

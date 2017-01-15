@@ -1,5 +1,6 @@
 namespace Nancy.ErrorHandling
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -127,13 +128,13 @@ namespace Nancy.ErrorHandling
             }
 
             context.Response.ContentType = "text/html";
-            context.Response.Contents = s =>
+            context.Response.Contents = (Action<Stream>)(s =>
             {
                 using (var writer = new StreamWriter(new UnclosableStreamWrapper(s), Encoding.UTF8))
                 {
                     writer.Write(contents);
                 }
-            };
+            });
         }
 
         private static string LoadResource(string filename)

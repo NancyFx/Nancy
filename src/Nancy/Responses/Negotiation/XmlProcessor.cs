@@ -2,7 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
+    using System.Net.Mime;
 
     /// <summary>
     /// Processes the model for xml media types and extension.
@@ -83,13 +85,13 @@
         {
             return new Response
             {
-                Contents = stream =>
+                Contents = (Action<Stream>)(stream =>
                 {
                     if (model != null)
                     {
                         serializer.Serialize("application/xml", model, stream);
                     }
-                },
+                }),
                 ContentType = "application/xml",
                 StatusCode = HttpStatusCode.OK
             };

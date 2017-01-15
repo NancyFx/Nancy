@@ -152,16 +152,15 @@
                         .ToArray();
                 }
 
-                nancyResponse.Contents(owinResponseBody);
+                using (context)
+                {
+                    return nancyResponse.Contents.Body.Invoke(owinResponseBody);
+                }
             }
             else
             {
                 return next(environment);
             }
-
-            context.Dispose();
-
-            return TaskHelpers.CompletedTask;
         }
 
         private static T Get<T>(IDictionary<string, object> env, string key)

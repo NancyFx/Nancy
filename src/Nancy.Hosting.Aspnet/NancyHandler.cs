@@ -37,7 +37,7 @@ namespace Nancy.Hosting.Aspnet
 
             using(var nancyContext = await this.engine.HandleRequest(request).ConfigureAwait(false))
             {
-                SetNancyResponseToHttpResponse(httpContext, nancyContext.Response);
+                await SetNancyResponseToHttpResponse(httpContext, nancyContext.Response);
             }
         }
 
@@ -118,7 +118,7 @@ namespace Nancy.Hosting.Aspnet
             return contentLength;
         }
 
-        public static void SetNancyResponseToHttpResponse(HttpContextBase context, Response response)
+        public static Task SetNancyResponseToHttpResponse(HttpContextBase context, Response response)
         {
             SetHttpResponseHeaders(context, response);
 
@@ -139,7 +139,7 @@ namespace Nancy.Hosting.Aspnet
                 context.Response.StatusDescription = response.ReasonPhrase;
             }
 
-            response.Contents.Invoke(new NancyResponseStream(context.Response));
+            return response.Contents.Body.Invoke(new NancyResponseStream(context.Response));
         }
 
         private static bool IsOutputBufferDisabled()

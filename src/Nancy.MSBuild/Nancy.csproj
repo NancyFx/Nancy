@@ -1359,6 +1359,7 @@
     <Compile Include="..\Nancy\Routing\Route.cs">
       <Link>Routing\Route.cs</Link>
     </Compile>
+    <Compile Include="BodyDelegate.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\Nancy\Diagnostics\Views\Dashboard.sshtml">

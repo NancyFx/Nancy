@@ -1,6 +1,8 @@
 ﻿namespace Nancy.Responses
 {
+    using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Text;
 
     using Nancy.Cookies;
@@ -36,11 +38,11 @@
 
             if (contents != null)
             {
-                this.Contents = stream =>
+                this.Contents = (Action<Stream>)(stream =>
                 {
                     var data = encoding.GetBytes(contents);
                     stream.Write(data, 0, data.Length);
-                };
+                });
             }
         }
 
@@ -66,11 +68,11 @@
 
             if (contents != null)
             {
-                this.Contents = stream =>
+                this.Contents = (Action<Stream>)(stream =>
                 {
                     var data = encoding.GetBytes(contents);
                     stream.Write(data, 0, data.Length);
-                };
+                });
             }
 
             if (headers != null)

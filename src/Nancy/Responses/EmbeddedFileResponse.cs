@@ -7,6 +7,7 @@
     using System.Security.Cryptography;
     using System.Text;
     using System.Text.RegularExpressions;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Represent an HTML response with embeded file content.
@@ -42,17 +43,17 @@
                 content.Seek(0, SeekOrigin.Begin);
             }
 
-            this.Contents = stream =>
+            this.Contents = (Func<Stream, Task>)(async stream =>
             {
                 if (content != null)
                 {
-                    content.CopyTo(stream);
+                    await content.CopyToAsync(stream);
                 }
                 else
                 {
                     stream.Write(ErrorText, 0, ErrorText.Length);
                 }
-            };
+            });
         }
 
         private Stream GetResourceContent(Assembly assembly, string resourcePath, string name)
