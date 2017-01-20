@@ -81,15 +81,7 @@
 
             if (!this.stream.CanSeek)
             {
-                var task =
-                    MoveToWritableStream();
-
-                task.Wait();
-
-                if (task.IsFaulted)
-                {
-                    throw new InvalidOperationException("Unable to copy stream", task.Exception);
-                }
+                this.MoveToWritableStream();
             }
 
             this.stream.Position = 0;
@@ -103,12 +95,12 @@
             this.Dispose(false);
         }
 
-        private Task MoveToWritableStream()
+        private void MoveToWritableStream()
         {
             var sourceStream = this.stream;
             this.stream = new MemoryStream(BufferSize);
 
-            return sourceStream.CopyToAsync(this);
+            sourceStream.CopyTo(this.stream);
         }
 
         /// <summary>
