@@ -15,6 +15,10 @@
 
         private ConcurrentQueue<T> internalStore;
 
+        /// <summary>
+        /// Gets the current size for the collection.
+        /// </summary>
+        /// <value> Current size of the collection.</value>
         public int CurrentSize
         {
             get
@@ -24,9 +28,10 @@
         }
 
         /// <summary>
-        /// Creates a new instance of the ConcurrentLimitedCollection class
+        /// Initializes a new instance of the <see cref="ConcurrentLimitedCollection{T}"/> class, with
+        /// the provided <paramref name="maxSize"/>.
         /// </summary>
-        /// <param name="maxSize">Maximum size for the collection</param>
+        /// <param name="maxSize">The maximum size for the collection.</param>
         public ConcurrentLimitedCollection(int maxSize)
         {
             this.maxSize = maxSize;

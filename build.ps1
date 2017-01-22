@@ -1,94 +1,84 @@
-[CmdletBinding()]
-Param(
-    [string]$Target = "Default",
-    [ValidateSet("Quiet", "Minimal", "Normal", "Verbose", "Diagnostic")]
-    [string]$Verbosity = "Verbose",
-    [switch]$WhatIf,
-    [string]$NuGetSource = $null,
-    [string]$NuGetApiKey = $null,
-    [string]$Version = $null,
-    [switch]$SkipClean,
-    [switch]$SkipTests
-)
+$CakeVersion = "0.17.0"
+$DotNetVersion = "1.0.0-preview2-003131";
+$DotNetInstallerUri = "https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0-preview2/scripts/obtain/dotnet-install.ps1";
 
-######################################################################################################
+# Make sure tools folder exists
+$PSScriptRoot = $pwd
 
-Function Install-Dotnet()
-{
-    # Prepare the dotnet CLI folder
-    $env:DOTNET_INSTALL_DIR="$(Convert-Path "$PSScriptRoot")\.dotnet\win7-x64"
-    if (!(Test-Path $env:DOTNET_INSTALL_DIR))
-    {
-      mkdir $env:DOTNET_INSTALL_DIR | Out-Null
-    }
-
-	# Download the dotnet CLI install script
-    if (!(Test-Path .\dotnet\install.ps1))
-    {
-      Write-Output "Downloading version 1.0.0-preview2 of Dotnet CLI installer..."
-      Invoke-WebRequest "https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0-preview2/scripts/obtain/dotnet-install.ps1" -OutFile ".\.dotnet\dotnet-install.ps1"
-    }
-
-    # Run the dotnet CLI install
-    Write-Output "Installing Dotnet CLI version 1.0.0-preview2-003121..."
-    & .\.dotnet\dotnet-install.ps1 -Channel "preview" -Version "1.0.0-preview2-003121" -InstallDir "$env:DOTNET_INSTALL_DIR"
-
-    # Add the dotnet folder path to the process. This gets skipped
-    # by Install-DotNetCli if it's already installed.
-    Remove-PathVariable $env:DOTNET_INSTALL_DIR
-    $env:PATH = "$env:DOTNET_INSTALL_DIR;$env:PATH"
+$ToolPath = Join-Path $PSScriptRoot "tools"
+if (!(Test-Path $ToolPath)) {
+    Write-Verbose "Creating tools directory..."
+    New-Item -Path $ToolPath -Type directory | out-null
 }
+
+###########################################################################
+# INSTALL .NET CORE CLI
+###########################################################################
 
 Function Remove-PathVariable([string]$VariableToRemove)
 {
-  $path = [Environment]::GetEnvironmentVariable("PATH", "User")
-  $newItems = $path.Split(';') | Where-Object { $_.ToString() -inotlike $VariableToRemove }
-  [Environment]::SetEnvironmentVariable("PATH", [System.String]::Join(';', $newItems), "User")
-  $path = [Environment]::GetEnvironmentVariable("PATH", "Process")
-  $newItems = $path.Split(';') | Where-Object { $_.ToString() -inotlike $VariableToRemove }
-  [Environment]::SetEnvironmentVariable("PATH", [System.String]::Join(';', $newItems), "Process")
-}
+    $path = [Environment]::GetEnvironmentVariable("PATH", "User")
+    if ($path -ne $null)
+    {
+        $newItems = $path.Split(';', [StringSplitOptions]::RemoveEmptyEntries) | Where-Object { "$($_)" -inotlike $VariableToRemove }
+        [Environment]::SetEnvironmentVariable("PATH", [System.String]::Join(';', $newItems), "User")
+    }
 
-######################################################################################################
-
-Write-Host "Preparing to run build script..."
-
-# Define constants.
-$PSScriptRoot = split-path -parent $MyInvocation.MyCommand.Definition;
-$Script = Join-Path $PSScriptRoot "build.cake"
-$ToolPath = Join-Path $PSScriptRoot "tools"
-$NuGetPath = Join-Path $ToolPath "nuget/NuGet.exe"
-$CakeVersion = "0.13.0"
-$CakePath = Join-Path $ToolPath "Cake.$CakeVersion/Cake.exe"
-
-# Install Dotnet CLI.
-Install-Dotnet
-
-# Make sure Cake has been installed.
-if (!(Test-Path $CakePath)) {
-    Write-Verbose "Installing Cake..."
-    Invoke-Expression "&`"$NuGetPath`" install Cake -Version $CakeVersion -OutputDirectory `"$ToolPath`"" | Out-Null;
-    if ($LASTEXITCODE -ne 0) {
-        Throw "An error occured while restoring Cake from NuGet."
+    $path = [Environment]::GetEnvironmentVariable("PATH", "Process")
+    if ($path -ne $null)
+    {
+        $newItems = $path.Split(';', [StringSplitOptions]::RemoveEmptyEntries) | Where-Object { "$($_)" -inotlike $VariableToRemove }
+        [Environment]::SetEnvironmentVariable("PATH", [System.String]::Join(';', $newItems), "Process")
     }
 }
 
-# Is this a dry run?
-$UseDryRun = "";
-if($WhatIf.IsPresent) {
-    $UseDryRun = "-dryrun"
+# Get .NET Core CLI path if installed.
+$FoundDotNetCliVersion = $null;
+if (Get-Command dotnet -ErrorAction SilentlyContinue) {
+    $FoundDotNetCliVersion = dotnet --version;
 }
 
-# Build the argument list.
-$Arguments = @{
-    source=$NuGetSource;
-    apikey=$NuGetApiKey;
-    targetversion=$Version;
-    skipclean=$SkipClean.IsPresent;
-    skiptests=$SkipTests.IsPresent;
-}.GetEnumerator() | %{"--{0}=`"{1}`"" -f $_.key, $_.value };
+if($FoundDotNetCliVersion -ne $DotNetVersion) {
+    $InstallPath = Join-Path $PSScriptRoot ".dotnet"
+    if (!(Test-Path $InstallPath)) {
+        mkdir -Force $InstallPath | Out-Null;
+    }
+    (New-Object System.Net.WebClient).DownloadFile($DotNetInstallerUri, "$InstallPath\dotnet-install.ps1");
+    & $InstallPath\dotnet-install.ps1 -Channel preview -Version $DotNetVersion -InstallDir $InstallPath;
 
-# Start Cake.
-Write-Host "Running build script..."
-Invoke-Expression "& `"$CakePath`" `"$Script`" -target=`"$Target`" -verbosity=`"$Verbosity`" $UseDryRun $Arguments"
+    Remove-PathVariable "$InstallPath"
+    $env:PATH = "$InstallPath;$env:PATH"
+    $env:DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
+    $env:DOTNET_CLI_TELEMETRY_OPTOUT=1
+
+    & dotnet --info
+}
+
+###########################################################################
+# INSTALL CAKE
+###########################################################################
+
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+Function Unzip
+{
+    param([string]$zipfile, [string]$outpath)
+
+    [System.IO.Compression.ZipFile]::ExtractToDirectory($zipfile, $outpath)
+}
+
+
+# Make sure Cake has been installed.
+$CakePath = Join-Path $ToolPath "Cake.CoreCLR.$CakeVersion/Cake.dll"
+if (!(Test-Path $CakePath)) {
+    Write-Host "Installing Cake..."
+     (New-Object System.Net.WebClient).DownloadFile("https://www.nuget.org/api/v2/package/Cake.CoreCLR/$CakeVersion", "$ToolPath\Cake.CoreCLR.zip")
+     Unzip "$ToolPath\Cake.CoreCLR.zip" "$ToolPath/Cake.CoreCLR.$CakeVersion"
+     Remove-Item "$ToolPath\Cake.CoreCLR.zip"
+}
+
+###########################################################################
+# RUN BUILD SCRIPT
+###########################################################################
+
+& dotnet "$CakePath" $args
 exit $LASTEXITCODE

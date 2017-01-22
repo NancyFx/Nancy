@@ -3,8 +3,16 @@
     using System;
     using System.IO;
 
+    /// <summary>
+    /// Extensions for <see cref="MemoryStream"/>
+    /// </summary>
     public static class MemoryStreamExtensions
     {
+        /// <summary>
+        /// Gets the buffer segment.
+        /// </summary>
+        /// <param name="stream">The memory stream.</param>
+        /// <returns>Buffer segment as bytes</returns>
         public static ArraySegment<byte> GetBufferSegment(this MemoryStream stream)
         {
 #if NETSTANDARD1_6

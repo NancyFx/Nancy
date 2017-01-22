@@ -1208,19 +1208,6 @@ namespace Nancy.Testing
             }
 
             /// <summary>
-            /// Configures the bootstrapper to use the provided instance of <see cref="IRoutePatternMatcher"/>.
-            /// </summary>
-            /// <param name="routePatternMatcher">The <see cref="IRoutePatternMatcher"/> instance that should be used by the bootstrapper.</param>
-            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
-            public ConfigurableBootstrapperConfigurator RoutePatternMatcher(IRoutePatternMatcher routePatternMatcher)
-            {
-                this.bootstrapper.registeredInstances.Add(
-                    new InstanceRegistration(typeof(IRoutePatternMatcher), routePatternMatcher));
-
-                return this;
-            }
-
-            /// <summary>
             /// Configures the bootstrapper to create an <see cref="IRouteInvoker"/> instance of the specified type.
             /// </summary>
             /// <typeparam name="T">The type of the <see cref="IRouteInvoker"/> that the bootstrapper should use.</typeparam>
@@ -1241,17 +1228,6 @@ namespace Nancy.Testing
                 this.bootstrapper.registeredInstances.Add(
                     new InstanceRegistration(typeof(IRouteInvoker), routeInvoker));
 
-                return this;
-            }
-
-            /// <summary>
-            /// Configures the bootstrapper to create an <see cref="IRoutePatternMatcher"/> instance of the specified type.
-            /// </summary>
-            /// <typeparam name="T">The type of the <see cref="IRoutePatternMatcher"/> that the bootstrapper should use.</typeparam>
-            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
-            public ConfigurableBootstrapperConfigurator RoutePatternMatcher<T>() where T : IRoutePatternMatcher
-            {
-                this.bootstrapper.configurationOverrides.Add(x => x.RoutePatternMatcher = typeof(T));
                 return this;
             }
 

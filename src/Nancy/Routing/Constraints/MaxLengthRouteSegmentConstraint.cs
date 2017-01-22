@@ -5,11 +5,26 @@
     /// </summary>
     public class MaxLengthRouteSegmentConstraint : ParameterizedRouteSegmentConstraintBase<string>
     {
+        /// <summary>
+        /// Gets the name of the constraint.
+        /// </summary>
+        /// <value>
+        /// The constraint's name.
+        /// </value>
         public override string Name
         {
             get { return "maxlength"; }
         }
 
+        /// <summary>
+        /// Tries to match the given segment and parameters against the constraint.
+        /// </summary>
+        /// <param name="segment">The segment to match.</param>
+        /// <param name="parameters">The parameters to match.</param>
+        /// <param name="matchedValue">The matched value.</param>
+        /// <returns>
+        /// <see langword="true"/> if the segment matches the constraint, <see langword="false"/> otherwise.
+        /// </returns>
         protected override bool TryMatch(string segment, string[] parameters, out string matchedValue)
         {
             int maxLength;

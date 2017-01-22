@@ -172,6 +172,8 @@
     <Compile Include="..\Nancy.Tests.Functional\Tests\SerializeTests.cs">
       <Link>Tests\SerializeTests.cs</Link>
     </Compile>
+    <Compile Include="Tests\DefaultXmlSerializerTests.cs" />
+    <Compile Include="Tests\DefaultJsonSerializerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Nancy.Testing.MSBuild\Nancy.Testing.csproj">

@@ -1,15 +1,18 @@
 language: csharp
+mono: alpha
 sudo: required
 dist: trusty
 addons:
   apt:
-    packages: 
+    packages:
     - gettext
     - libcurl4-openssl-dev
     - libicu-dev
     - libssl-dev
     - libunwind8
-script: ./build.sh --verbosity diagnostic
+env:
+    - MONO_TLS_PROVIDER=legacy
+script: ./build.sh --verbosity=diagnostic
 notifications:
   email:
     - nancy@nancyfx.org

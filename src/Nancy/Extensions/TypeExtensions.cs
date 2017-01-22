@@ -166,6 +166,11 @@
                 && givenType.GetGenericTypeDefinition() == genericType;
         }
 
+        /// <summary>
+        /// Gets the enum for type code.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>An enum value representing the type code.</returns>
         public static TypeCode GetTypeCode(this Type type)
         {
             if (type == typeof(bool))

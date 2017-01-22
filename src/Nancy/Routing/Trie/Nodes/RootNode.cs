@@ -19,6 +19,11 @@ namespace Nancy.Routing.Trie.Nodes
             get { return 0; }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RootNode"/> class class with
+        /// the provided <paramref name="nodeFactory"/>.
+        /// </summary>
+        /// <param name="nodeFactory">The node factory.</param>
         public RootNode(ITrieNodeFactory nodeFactory)
             : base(null, null, nodeFactory)
         {

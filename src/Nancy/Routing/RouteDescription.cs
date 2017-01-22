@@ -19,7 +19,8 @@ namespace Nancy.Routing
         /// <param name="method">The request method of the route.</param>
         /// <param name="path">The path that the route will be invoked for.</param>
         /// <param name="condition">The condition that has to be fulfilled for the route to be a valid match.</param>
-        public RouteDescription(string name, string method, string path, Func<NancyContext, bool> condition)
+        /// <param name="returnType">The <see cref="Type"/> of the value returned by the route.</param>
+        public RouteDescription(string name, string method, string path, Func<NancyContext, bool> condition, Type returnType)
         {
             if (string.IsNullOrEmpty(method))
             {
@@ -35,6 +36,7 @@ namespace Nancy.Routing
             this.Method = method;
             this.Path = path;
             this.Condition = condition;
+            this.ReturnType = returnType;
         }
 
         /// <summary>
@@ -77,6 +79,12 @@ namespace Nancy.Routing
         /// </summary>
         /// <value>An <see cref="IEnumerable{T}"/>, containing the segments for the route.</value>
         public IEnumerable<string> Segments { get; set; }
+
+        /// <summary>
+        /// Gets the <see cref="Type"/> of the value returned by the route.
+        /// </summary>
+        /// <value>A <see cref="Type"/> instance.</value>
+        public Type ReturnType { get; private set; }
 
         private string DebuggerDisplay
         {

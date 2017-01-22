@@ -27,21 +27,36 @@
         /// <returns><see langword="true" /> if the request is local, otherwise <see langword="false"/>.</returns>
         public static bool IsLocal(this Request request)
         {
-            if (string.IsNullOrEmpty(request.UserHostAddress) || string.IsNullOrEmpty(request.Url))
+            var userHostAddress = request.UserHostAddress;
+
+            if (!string.IsNullOrEmpty(userHostAddress))
+            {
+                if (userHostAddress.Equals("127.0.0.1"))
+                {
+                    return true;
+                }
+
+                if (userHostAddress.Equals("::1"))
+                {
+                    return true;
+                }
+            }
+
+            var url = request.Url;
+
+            if (string.IsNullOrEmpty(url))
             {
                 return false;
             }
 
-            Uri uri = null;
-            if (Uri.TryCreate(request.Url, UriKind.Absolute, out uri))
+            Uri uri;
+            if (Uri.TryCreate(url, UriKind.Absolute, out uri))
             {
                 return uri.IsLoopback;
             }
-            else
-            {
-                // Invalid or relative Request.Url string
-                return false;
-            }
+
+            // Invalid or relative Request.Url string
+            return false;
         }
     }
 }

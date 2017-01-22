@@ -11,8 +11,8 @@
         private Stream source;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="StreamResponse"/> class with the
-        /// provided stream provider and content-type.
+        /// Initializes a new instance of the <see cref="StreamResponse"/>, with
+        /// the provided <paramref name="source"/> and <paramref name="contentType"/>.
         /// </summary>
         /// <param name="source">The value producer for the response.</param>
         /// <param name="contentType">The content-type of the stream contents.</param>

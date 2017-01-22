@@ -75,7 +75,8 @@
     <OutputPath>bin\MonoRelease\</OutputPath>
     <DefineConstants>TRACE;MONO</DefineConstants>
     <Optimize>true</Optimize>
-    <DebugType></DebugType>
+    <DebugType>
+    </DebugType>
     <PlatformTarget>anycpu</PlatformTarget>
     <CodeAnalysisLogFile>bin\Release\Nancy.Tests.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
@@ -510,12 +511,6 @@
     <Compile Include="..\Nancy.Tests\Unit\Routing\DefaultRouteInvokerFixture.cs">
       <Link>Unit\Routing\DefaultRouteInvokerFixture.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy.Tests\Unit\Routing\DefaultRoutePatternMatcherFixture.cs">
-      <Link>Unit\Routing\DefaultRoutePatternMatcherFixture.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Tests\Fakes\FakeRoutePatternMatchResult.cs">
-      <Link>Fakes\FakeRoutePatternMatchResult.cs</Link>
-    </Compile>
     <Compile Include="..\Nancy.Tests\Fakes\FakeRouteCache.cs">
       <Link>Fakes\FakeRouteCache.cs</Link>
     </Compile>
@@ -609,9 +604,6 @@
     <Compile Include="..\Nancy.Tests\Fakes\FakeViewEngine.cs">
       <Link>Fakes\FakeViewEngine.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy.Tests\Unit\ViewEngines\DefaultViewRendererFixture.cs">
-      <Link>Unit\ViewEngines\DefaultViewRendererFixture.cs</Link>
-    </Compile>
     <Compile Include="..\Nancy.Tests\Unit\ViewEngines\FileSystemViewLocationProviderFixture.cs">
       <Link>Unit\ViewEngines\FileSystemViewLocationProviderFixture.cs</Link>
     </Compile>
@@ -656,6 +648,9 @@
     </Compile>
     <Compile Include="..\Nancy.Tests\Unit\Responses\GenericFileResponseFixture.cs">
       <Link>Unit\Responses\GenericFileResponseFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Unit\AppDomainAssemblyCatalogFixture.cs">
+      <Link>Unit\AppDomainAssemblyCatalogFixture.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -734,6 +729,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\..\packages\FakeItEasy.Analyzer.2.1.0\analyzers\dotnet\cs\FakeItEasy.Analyzer.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

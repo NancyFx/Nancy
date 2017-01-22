@@ -17,7 +17,9 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ViewLocationResult"/> class.
+        /// Initializes a new instance of the <see cref="ViewLocationResult"/> class, with
+        /// the provided <paramref name="location"/>, <paramref name="name"/>, 
+        /// <paramref name="extension"/> and <paramref name="contents"/>.
         /// </summary>
         /// <param name="location">The location of where the view was found.</param>
         /// <param name="name">The name of the view.</param>
@@ -104,11 +106,27 @@
             }
         }
 
+        /// <summary>
+        /// Implements the operator ==.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>
+        /// The result of the operator.
+        /// </returns>
         public static bool operator ==(ViewLocationResult left, ViewLocationResult right)
         {
             return Equals(left, right);
         }
 
+        /// <summary>
+        /// Implements the operator !=.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>
+        /// The result of the operator.
+        /// </returns>
         public static bool operator !=(ViewLocationResult left, ViewLocationResult right)
         {
             return !Equals(left, right);

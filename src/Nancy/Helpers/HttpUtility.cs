@@ -1,3 +1,5 @@
+#pragma warning disable CS1591, CS1574, CS1711, CS1712 //  Disable XML comment related warnings
+
 //
 // System.Web.HttpUtility
 //
@@ -253,10 +255,7 @@ namespace Nancy.Helpers
             if (bytes == null)
                 return null;
             if (count == 0)
-                return String.Empty;
-
-            if (bytes == null)
-                throw new ArgumentNullException("bytes");
+                return string.Empty;
 
             if (offset < 0 || offset > bytes.Length)
                 throw new ArgumentOutOfRangeException("offset");
@@ -264,8 +263,8 @@ namespace Nancy.Helpers
             if (count < 0 || offset + count > bytes.Length)
                 throw new ArgumentOutOfRangeException("count");
 
-            StringBuilder output = new StringBuilder();
-            MemoryStream acc = new MemoryStream();
+            var output = new StringBuilder();
+            var acc = new MemoryStream();
 
             int end = count + offset;
             int xchar;

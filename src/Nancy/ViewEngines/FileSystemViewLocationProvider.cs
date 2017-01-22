@@ -13,7 +13,8 @@
         private readonly string rootPath;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FileSystemViewLocationProvider"/> class.
+        /// Initializes a new instance of the <see cref="FileSystemViewLocationProvider"/> class, with
+        /// the provided <paramref name="rootPathProvider"/>.
         /// </summary>
         /// <param name="rootPathProvider">A <see cref="IRootPathProvider"/> instance.</param>
         /// <remarks>Creating an instance using this constructor will result in the <see cref="DefaultFileSystemReader"/> being used internally.</remarks>
@@ -23,7 +24,8 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FileSystemViewLocationProvider"/> class.
+        /// Initializes a new instance of the <see cref="FileSystemViewLocationProvider"/> class, with
+        /// the provided <paramref name="rootPathProvider"/> and <paramref name="fileSystemReader"/>.
         /// </summary>
         /// <param name="rootPathProvider">A <see cref="IRootPathProvider"/> instance.</param>
         /// <param name="fileSystemReader">An <see cref="IFileSystemReader"/> instance that should be used when retrieving view information from the file system.</param>
@@ -53,6 +55,7 @@
         /// Returns an <see cref="ViewLocationResult"/> instance for all the views matching the viewName that could be located by the provider.
         /// </summary>
         /// <param name="supportedViewExtensions">An <see cref="IEnumerable{T}"/> instance, containing the view engine file extensions that is supported by the running instance of Nancy.</param>
+        /// <param name="location">Location of the view</param>
         /// <param name="viewName">The name of the view to try and find</param>
         /// <returns>An <see cref="IEnumerable{T}"/> instance, containing <see cref="ViewLocationResult"/> instances for the located views.</returns>
         /// <remarks>If no views could be located, this method should return an empty enumerable, never <see langword="null"/>.</remarks>

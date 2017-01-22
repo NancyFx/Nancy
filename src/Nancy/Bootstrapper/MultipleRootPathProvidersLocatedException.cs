@@ -26,7 +26,8 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MultipleRootPathProvidersLocatedException"/> class.
+        /// Initializes a new instance of the <see cref="MultipleRootPathProvidersLocatedException"/> class, with
+        /// the provided <paramref name= "message" />
         /// </summary>
         /// <param name="message">The message that describes the error.</param>
         public MultipleRootPathProvidersLocatedException(string message) : base(message)
@@ -34,7 +35,8 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MultipleRootPathProvidersLocatedException"/> class.
+        /// Initializes a new instance of the <see cref="MultipleRootPathProvidersLocatedException"/> class, with
+        /// the provided <paramref name= "message" /> and  <paramref name= "innerException" />
         /// </summary>
         /// <param name="message">The error message that explains the reason for the exception.</param>
         /// <param name="innerException">The exception that is the cause of the current exception, or a null reference (Nothing in Visual Basic) if no inner exception is specified.</param>
@@ -43,7 +45,8 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MultipleRootPathProvidersLocatedException"/> class.
+        /// Initializes a new instance of the <see cref="MultipleRootPathProvidersLocatedException"/> class, with
+        /// the provided <paramref name= "providerTypes" />
         /// </summary>
         /// <param name="providerTypes">The provider types.</param>
         public MultipleRootPathProvidersLocatedException(IEnumerable<Type> providerTypes)
@@ -66,9 +69,7 @@
         /// <summary>
         /// Gets the provider types.
         /// </summary>
-        /// <value>
-        /// The provider types.
-        /// </value>
+        /// <value> The provider types.</value>
         public IEnumerable<Type> ProviderTypes { get; internal set; }
 
         /// <summary>

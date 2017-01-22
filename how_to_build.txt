@@ -1,47 +1,23 @@
 How to build Nancy
 ==================
 
-*NOTE* These instructions are *only* for building with Rake - if you just want to build Nancy manually you can do so just by loading the solution into Visual Studio 2010/2012/2013 and pressing build :-)
-
-Prerequisites
--------------
-
-1. Download and install Ruby 1.9.3 from http://www.ruby-lang.org/en/downloads
-2. At the command prompt run the following to update RubyGems to the latest version: 
-
-	gem update --system
-
-3. You will need the albacore gem, install this at the command prompt with:
-
-	gem install albacore --version "1.0.0.rc2"
-
-4. If you don't have Visual Studio 2010 installed you'll need to download and install Visual Studio 2010 Shell from http://www.microsoft.com/en-us/download/details.aspx?id=1366
-5. Download and install the Windows 8.1 SDK from https://msdn.microsoft.com/en-us/windows/desktop/bg162891.aspx (or the appropriate version for your OS)
+*NOTE* These instructions are *only* for building with Cake - if you just want to build Nancy manually you can do so just by loading the solution into Visual Studio 2015 and pressing build :-)
 
 Building Nancy
 --------------
 
-1. At the command prompt, navigate to the Nancy root folder (should contain rakefile.rb)
+1. At the command prompt, navigate to the Nancy root folder (should contain build.cake)
 2. To run the default build (which will compile, test and package Nancy) type the following command:
+  * On Windows type:
+    ./build.ps1
+  * On Linux/MacOS type:
+    ./build.sh
 
-	rake
-
-In addition, you can see the full list of all the build tasks by running:
-
-	rake -T
-
-To run a particular task ('test' for example), use the following command:
-
-	rake test
-
-You can run multiple tasks by listing them ('test' then 'nuget' for example):
-
-	rake test nuget_package
+*NOTE* On Linux/MacOS you need to have Mono >= 4.4 installed because Nancy targets .NET 4.5.2 for the full-framework build
 
 After the build has completed, there will be a new folder in the root called "build". It contains the following folders:
 
-* binaries -> All the Nancy assembilies and their dependencies
-* packages -> Zip file containing the binaries (other configurations might be added in the future)
-* nuget -> NuGet packages generated from this build
-* documentation -> Generated documentation (todo)
-* coverage -> Test coverage reports (todo)
+  * binaries -> All the Nancy assembilies and their dependencies
+  * packages -> Zip file containing the binaries (other configurations might be added in the future)
+  * nuget -> NuGet packages generated from this build
+  

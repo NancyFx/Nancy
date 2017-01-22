@@ -17,6 +17,14 @@
         private readonly Response sourceResponse;
         private byte[] oldResponseOutput;
 
+        /// <summary>
+        /// Executes at the end of the nancy execution pipeline and before control is passed back to the hosting.
+        /// Can be used to pre-render/validate views while still inside the main pipeline/error handling.
+        /// </summary>
+        /// <param name="context">Nancy context</param>
+        /// <returns>
+        /// Task for completion/erroring
+        /// </returns>
         public override Task PreExecute(NancyContext context)
         {
             using (var memoryStream = new MemoryStream())
@@ -28,6 +36,11 @@
             return base.PreExecute(context);
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MaterialisingResponse"/> class, with
+        /// the provided <paramref name="sourceResponse"/>.
+        /// </summary>
+        /// <param name="sourceResponse">The source response.</param>
         public MaterialisingResponse(Response sourceResponse)
         {
             this.sourceResponse = sourceResponse;

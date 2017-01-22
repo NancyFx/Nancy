@@ -3,6 +3,9 @@ namespace Nancy.Cryptography
     using System;
     using System.Runtime.CompilerServices;
 
+    /// <summary>
+    /// Compares two HMAC
+    /// </summary>
     public static class HmacComparer
     {
         /// <summary>

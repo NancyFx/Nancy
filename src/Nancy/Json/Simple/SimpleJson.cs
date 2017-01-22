@@ -1,3 +1,5 @@
+#pragma warning disable CS1591, CS1574, CS1711, CS1712 //  Disable XML comment related warnings
+
 //-----------------------------------------------------------------------
 // <copyright file="SimpleJson.cs" company="The Outercurve Foundation">
 //    Copyright (c) 2011, The Outercurve Foundation.
@@ -589,17 +591,18 @@ namespace Nancy.Json.Simple
         /// </summary>
         /// <param name="json">A IDictionary&lt;string,object> / IList&lt;object></param>
         /// <param name="jsonSerializerStrategy">Serializer strategy to use</param>
+        /// <param name="excludeNullValues"><see langword="true" /> if the serializer should exclude null values for properties on objects otherwise <see langword="false" /></param>
         /// <returns>A JSON encoded string, or null if object 'json' is not serializable</returns>
-        public static string SerializeObject(object json, IJsonSerializerStrategy jsonSerializerStrategy)
+        public static string SerializeObject(object json, IJsonSerializerStrategy jsonSerializerStrategy, bool excludeNullValues)
         {
             StringBuilder builder = new StringBuilder(BUILDER_CAPACITY);
-            bool success = SerializeValue(jsonSerializerStrategy, json, builder);
+            bool success = SerializeValue(jsonSerializerStrategy, json, builder, excludeNullValues);
             return (success ? builder.ToString() : null);
         }
 
         public static string SerializeObject(object json)
         {
-            return SerializeObject(json, CurrentJsonSerializerStrategy);
+            return SerializeObject(json, CurrentJsonSerializerStrategy, false);
         }
 
         public static string EscapeToJavascriptString(string jsonString)
@@ -993,9 +996,10 @@ namespace Nancy.Json.Simple
             return TOKEN_NONE;
         }
 
-        static bool SerializeValue(IJsonSerializerStrategy jsonSerializerStrategy, object value, StringBuilder builder)
+        static bool SerializeValue(IJsonSerializerStrategy jsonSerializerStrategy, object value, StringBuilder builder, bool excludeNullValues)
         {
             bool success = true;
+
             string stringValue = value as string;
             if (stringValue != null)
                 success = SerializeString(stringValue, builder);
@@ -1004,20 +1008,20 @@ namespace Nancy.Json.Simple
                 IDictionary<string, object> dict = value as IDictionary<string, object>;
                 if (dict != null)
                 {
-                    success = SerializeObject(jsonSerializerStrategy, dict.Keys, dict.Values, builder);
+                    success = SerializeObject(jsonSerializerStrategy, dict.Keys, dict.Values, builder, excludeNullValues);
                 }
                 else
                 {
                     IDictionary<string, string> stringDictionary = value as IDictionary<string, string>;
                     if (stringDictionary != null)
                     {
-                        success = SerializeObject(jsonSerializerStrategy, stringDictionary.Keys, stringDictionary.Values, builder);
+                        success = SerializeObject(jsonSerializerStrategy, stringDictionary.Keys, stringDictionary.Values, builder, excludeNullValues);
                     }
                     else
                     {
                         IEnumerable enumerableValue = value as IEnumerable;
                         if (enumerableValue != null)
-                            success = SerializeArray(jsonSerializerStrategy, enumerableValue, builder);
+                            success = SerializeArray(jsonSerializerStrategy, enumerableValue, builder, excludeNullValues);
                         else if (IsNumeric(value))
                             success = SerializeNumber(value, builder);
                         else if (value is bool)
@@ -1029,7 +1033,7 @@ namespace Nancy.Json.Simple
                             object serializedObject;
                             success = jsonSerializerStrategy.TrySerializeNonPrimitiveObject(value, out serializedObject);
                             if (success)
-                                SerializeValue(jsonSerializerStrategy, serializedObject, builder);
+                                SerializeValue(jsonSerializerStrategy, serializedObject, builder, excludeNullValues);
                         }
                     }
                 }
@@ -1037,7 +1041,7 @@ namespace Nancy.Json.Simple
             return success;
         }
 
-        static bool SerializeObject(IJsonSerializerStrategy jsonSerializerStrategy, IEnumerable keys, IEnumerable values, StringBuilder builder)
+        static bool SerializeObject(IJsonSerializerStrategy jsonSerializerStrategy, IEnumerable keys, IEnumerable values, StringBuilder builder, bool excludeNullValues)
         {
             builder.Append("{");
             IEnumerator ke = keys.GetEnumerator();
@@ -1047,15 +1051,21 @@ namespace Nancy.Json.Simple
             {
                 object key = ke.Current;
                 object value = ve.Current;
+
+                if (value == null && excludeNullValues)
+                {
+                    continue;
+                }
+
                 if (!first)
                     builder.Append(",");
                 string stringKey = key as string;
                 if (stringKey != null)
                     SerializeString(jsonSerializerStrategy.MapDictionaryKeyToFieldName(stringKey), builder);
                 else
-                    if (!SerializeValue(jsonSerializerStrategy, value, builder)) return false;
+                    if (!SerializeValue(jsonSerializerStrategy, value, builder, excludeNullValues)) return false;
                 builder.Append(":");
-                if (!SerializeValue(jsonSerializerStrategy, value, builder))
+                if (!SerializeValue(jsonSerializerStrategy, value, builder, excludeNullValues))
                     return false;
                 first = false;
             }
@@ -1063,7 +1073,7 @@ namespace Nancy.Json.Simple
             return true;
         }
 
-        static bool SerializeArray(IJsonSerializerStrategy jsonSerializerStrategy, IEnumerable anArray, StringBuilder builder)
+        static bool SerializeArray(IJsonSerializerStrategy jsonSerializerStrategy, IEnumerable anArray, StringBuilder builder, bool excludeNullValues)
         {
             builder.Append("[");
             bool first = true;
@@ -1071,7 +1081,7 @@ namespace Nancy.Json.Simple
             {
                 if (!first)
                     builder.Append(",");
-                if (!SerializeValue(jsonSerializerStrategy, value, builder))
+                if (!SerializeValue(jsonSerializerStrategy, value, builder, excludeNullValues))
                     return false;
                 first = false;
             }
@@ -1387,7 +1397,7 @@ namespace Nancy.Json.Simple
                 return value;
             if ((valueIsDouble && type != typeof(double)) || (valueIsLong && type != typeof(long)))
             {
-                obj = type == typeof(int) || type == typeof(uint) || type == typeof(long) || type == typeof(double) || type == typeof(float) || type == typeof(bool) || type == typeof(decimal) || type == typeof(byte) || type == typeof(short)
+                obj = type == typeof(int) || type == typeof(uint) || type == typeof(long) || type == typeof(ulong) || type == typeof(double) || type == typeof(float) || type == typeof(bool) || type == typeof(decimal) || type == typeof(byte) || type == typeof(short) || type == (typeof(ushort))
                     ? Convert.ChangeType(value, type, CultureInfo.InvariantCulture)
                     : value;
             }

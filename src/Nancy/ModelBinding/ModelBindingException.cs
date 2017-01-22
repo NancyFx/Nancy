@@ -22,8 +22,8 @@ namespace Nancy.ModelBinding
         public virtual Type BoundType { get; private set; }
 
         /// <summary>
-        /// Initializes a new instance of the ModelBindingException class with a specified model type,
-        /// property name and the original exception, which caused the problem
+        /// Initializes a new instance of the <see cref="ModelBindingException"/> class, with
+        /// the provided <paramref name="boundType"/>, <paramref name="propertyBindingExceptions"/> and <paramref name="innerException"/>.
         /// </summary>
         /// <param name="boundType">the model type to bind to</param>
         /// <param name="propertyBindingExceptions">the original exceptions, thrown while binding the property</param>

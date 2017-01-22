@@ -37,5 +37,31 @@ namespace Nancy.Extensions
             }
             return types;
         }
+
+#if !CORE
+        /// <summary>
+        /// Indicates if a given assembly references another which is identified by its name.
+        /// </summary>
+        /// <param name="assembly">The assembly which will be probed.</param>
+        /// <param name="referenceName">The reference assembly name.</param>
+        /// <returns>A boolean value indicating if there is a reference.</returns>
+        public static bool IsReferencing(this Assembly assembly, AssemblyName referenceName)
+        {
+            if (AssemblyName.ReferenceMatchesDefinition(assembly.GetName(), referenceName))
+            {
+                return true;
+            }
+
+            foreach (var referencedAssemblyName in assembly.GetReferencedAssemblies())
+            {
+                if (AssemblyName.ReferenceMatchesDefinition(referencedAssemblyName, referenceName))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+#endif
     }
 }

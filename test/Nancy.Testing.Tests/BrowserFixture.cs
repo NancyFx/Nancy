@@ -184,7 +184,7 @@ namespace Nancy.Testing.Tests
         }
 
         [Fact]
-        public async Task Should_add_basic_authentication_credentials_to_the_headers_of_the_request()
+        public void Should_add_basic_authentication_credentials_to_the_headers_of_the_request()
         {
             // Given
             var context = new BrowserContext(A.Fake<INancyEnvironment>());
@@ -689,14 +689,14 @@ namespace Nancy.Testing.Tests
 
                 Post("/serializedform", args =>
                 {
-                    var data = Request.Form.ToDictionary();
+                    IDictionary<string, object> data = Request.Form.ToDictionary();
 
                     return data;
                 });
 
                 Get("/serializedquerystring", args =>
                 {
-                    var data = Request.Query.ToDictionary();
+                    IDictionary<string, object> data = Request.Query.ToDictionary();
 
                     return data;
                 });

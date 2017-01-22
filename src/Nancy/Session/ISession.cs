@@ -10,7 +10,7 @@ namespace Nancy.Session
         /// <summary>
         /// The number of session values
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The count of sessions</returns>
         int Count { get; }
 
         /// <summary>
@@ -28,6 +28,12 @@ namespace Nancy.Session
         /// </summary>
         object this[string key] { get; set; }
 
+        /// <summary>
+        /// Gets a value indicating whether this instance has changed.
+        /// </summary>
+        /// <value>
+        /// <see langword="true"/> if this instance has changed; otherwise, <see langword="false"/>.
+        /// </value>
         bool HasChanged { get; }
     }
 }

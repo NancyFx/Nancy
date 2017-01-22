@@ -5,10 +5,23 @@
     using Nancy.Configuration;
     using Nancy.Xml;
 
+    /// <summary>
+    /// Represents an HTTP response with XML content.
+    /// </summary>
+    /// <typeparam name="TModel">The type of the model.</typeparam>
+    /// <seealso cref="Nancy.Response" />
     public class XmlResponse<TModel> : Response
     {
         private readonly XmlConfiguration configuration;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="XmlResponse{TModel}"/> class, with
+        /// the provided <paramref name="model"/>, <paramref name="serializer"/> and <paramref name="environment"/>.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <param name="serializer">The serializer.</param>
+        /// <param name="environment">The environment.</param>
+        /// <exception cref="System.InvalidOperationException">XML Serializer not set</exception>
         public XmlResponse(TModel model, ISerializer serializer, INancyEnvironment environment)
         {
             if (serializer == null)

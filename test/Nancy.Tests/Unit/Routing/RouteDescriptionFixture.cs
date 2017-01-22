@@ -1,9 +1,7 @@
 ﻿namespace Nancy.Tests.Unit.Routing
 {
     using System;
-
     using Nancy.Routing;
-
     using Xunit;
 
     public class RouteDescriptionFixture
@@ -13,7 +11,7 @@
         {
             //Given, When
             var exception =
-                Record.Exception(() => new RouteDescription(string.Empty, null, "/", null));
+                Record.Exception(() => new RouteDescription(string.Empty, null, "/", null, typeof(object)));
 
             // Then
             exception.ShouldBeOfType<ArgumentException>();
@@ -24,7 +22,7 @@
         {
             //Given, When
             var exception =
-                Record.Exception(() => new RouteDescription(string.Empty, "", "/", null));
+                Record.Exception(() => new RouteDescription(string.Empty, "", "/", null, typeof(object)));
 
             // Then
             exception.ShouldBeOfType<ArgumentException>();
@@ -35,7 +33,7 @@
         {
             //Given, When
             var exception =
-                Record.Exception(() => new RouteDescription(string.Empty, "GET", null, null));
+                Record.Exception(() => new RouteDescription(string.Empty, "GET", null, null, typeof(object)));
 
             // Then
             exception.ShouldBeOfType<ArgumentException>();
@@ -46,10 +44,24 @@
         {
             //Given, When
             var exception =
-                Record.Exception(() => new RouteDescription(string.Empty, "GET", "", null));
+                Record.Exception(() => new RouteDescription(string.Empty, "GET", "", null, typeof(object)));
 
             // Then
             exception.ShouldBeOfType<ArgumentException>();
+        }
+
+        [Theory]
+        [InlineData(typeof(object))]
+        [InlineData(typeof(int))]
+        [InlineData(typeof(string))]
+        public void Should_set_return_type_property(Type returnType)
+        {
+            // Given, When
+            var description =
+                new RouteDescription(string.Empty, "GET", "/", null, returnType);
+
+            // Then
+            description.ReturnType.ShouldEqual(returnType);
         }
     }
 }

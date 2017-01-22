@@ -2,6 +2,10 @@
 {
     using System;
 
+    /// <summary>
+    /// Represents an exception occurred when binding the properties.
+    /// </summary>
+    /// <seealso cref="System.Exception" />
     public class PropertyBindingException : Exception
     {
         private const string ExceptionMessage = "Unable to bind property: {0}; Attempted value: {1}";

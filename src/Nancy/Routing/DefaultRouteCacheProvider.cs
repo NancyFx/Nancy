@@ -14,6 +14,9 @@
     /// </summary>
     public class DefaultRouteCacheProvider : IRouteCacheProvider, IDiagnosticsProvider
     {
+        /// <summary>
+        /// The route cache factory
+        /// </summary>
         protected readonly Func<IRouteCache> RouteCacheFactory;
 
         /// <summary>

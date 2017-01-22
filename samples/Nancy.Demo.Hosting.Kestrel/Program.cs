@@ -1,7 +1,6 @@
 namespace Nancy.Demo.Hosting.Kestrel
 {
     using System.IO;
-    using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     
     public class Program

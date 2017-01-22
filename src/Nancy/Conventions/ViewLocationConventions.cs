@@ -16,11 +16,22 @@
     {
         private readonly IEnumerable<Func<string, object, ViewLocationContext, string>> conventions;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ViewLocationConventions"/> class, with
+        /// the provided <paramref name="conventions"/>.
+        /// </summary>
+        /// <param name="conventions">The conventions.</param>
         public ViewLocationConventions(IEnumerable<Func<string, object, ViewLocationContext, string>> conventions)
         {
             this.conventions = conventions;
         }
 
+        /// <summary>
+        /// Returns an enumerator that iterates through the collection.
+        /// </summary>
+        /// <returns>
+        /// An enumerator that can be used to iterate through the collection.
+        /// </returns>
         public IEnumerator<Func<string, object, ViewLocationContext, string>> GetEnumerator()
         {
             return conventions.GetEnumerator();

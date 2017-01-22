@@ -119,8 +119,7 @@
 
             var subtypeString = requestedContentType.Subtype.ToString();
 
-            return (subtypeString.StartsWith("vnd", StringComparison.OrdinalIgnoreCase) &&
-                    subtypeString.EndsWith("+xml", StringComparison.OrdinalIgnoreCase));
+            return subtypeString.EndsWith("+xml", StringComparison.OrdinalIgnoreCase);
         }
     }
 }
