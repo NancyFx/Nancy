@@ -759,6 +759,34 @@ namespace Nancy.Tests.Functional.Tests
             Assert.Equal(contentType, result.ContentType);
         }
 
+        [Fact]
+        public async Task Should_negotiate_null_DefaultModel_when_null_returned_from_action()
+        {
+            // Given
+            var module = new ConfigurableNancyModule(with =>
+            {
+                with.Get("/null", (x, m) => (object)null);
+            });
+            module.After += context => 
+            {
+                if (context.NegotiationContext.DefaultModel == null)
+                {
+                    context.Response = new NotFoundResponse();
+                }
+            };
+
+            var browser = new Browser(with =>
+            {
+                with.Module(module);
+            });
+
+            // When
+            var response = await browser.Get("/null");
+
+            // Then
+            Assert.Equal((HttpStatusCode)404, response.StatusCode);
+        }
+
         private static Func<dynamic, NancyModule, Negotiator> CreateNegotiatedResponse(Action<Negotiator> action = null)
         {
             return (parameters, module) =>
