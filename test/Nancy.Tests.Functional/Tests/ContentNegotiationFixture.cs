@@ -760,7 +760,7 @@ namespace Nancy.Tests.Functional.Tests
         }
 
         [Fact]
-        public async Task Should_negotiate_null_DefaultModel_when_null_returned_from_action()
+        public async Task Should_not_set_DefaultModel_when_null_was_returned_from_action()
         {
             // Given
             var module = new ConfigurableNancyModule(with =>
