@@ -43,9 +43,9 @@
 
         private static ITypeCatalog GetDefaultTypeCatalog()
         {
-            var assemblies = GetAssemblyCatalog();
+            var assemblyCatalog = GetAssemblyCatalog();
 
-            return new DefaultTypeCatalog(assemblies);
+            return new DefaultTypeCatalog(assemblyCatalog);
         }
 
         private static IReadOnlyCollection<Type> GetAvailableBootstrapperTypes(ITypeCatalog types)
