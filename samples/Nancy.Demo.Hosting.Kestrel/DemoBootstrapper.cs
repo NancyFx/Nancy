@@ -1,24 +1,26 @@
 namespace Nancy.Demo.Hosting.Kestrel
 {
-    using System;
+    using Nancy;
+    using Nancy.TinyIoc;
     
     public class DemoBootstrapper : DefaultNancyBootstrapper
     {
+        private readonly IAppConfiguration appConfig;
+
         public DemoBootstrapper()
         {
-            
         }
         
-        public DemoBootstrapper(AppConfiguration appConfig)
+        public DemoBootstrapper(IAppConfiguration appConfig)
         {
-            /*
-            We could register appConfig as an instance in the container which can
-            be injected into areas that need it or we could create our own INancyEnvironment
-            extension and use that.
-            */
-            Console.WriteLine(appConfig.Smtp.Server);
-            Console.WriteLine(appConfig.Smtp.User);
-            Console.WriteLine(appConfig.Logging.IncludeScopes);
+            this.appConfig = appConfig;
+        }
+
+        protected override void ConfigureApplicationContainer(TinyIoCContainer container)
+        {
+            base.ConfigureApplicationContainer(container);
+
+            container.Register<IAppConfiguration>(appConfig);
         }
     }   
 }
