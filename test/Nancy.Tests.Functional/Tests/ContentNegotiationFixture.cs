@@ -767,6 +767,7 @@ namespace Nancy.Tests.Functional.Tests
             {
                 with.Get("/null", (x, m) => (object)null);
             });
+
             module.After += context => 
             {
                 if (context.NegotiationContext.DefaultModel == null)
@@ -784,7 +785,7 @@ namespace Nancy.Tests.Functional.Tests
             var response = await browser.Get("/null");
 
             // Then
-            Assert.Equal((HttpStatusCode)404, response.StatusCode);
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
         private static Func<dynamic, NancyModule, Negotiator> CreateNegotiatedResponse(Action<Negotiator> action = null)
