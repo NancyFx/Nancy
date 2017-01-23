@@ -7,7 +7,7 @@ namespace Nancy.Demo.Hosting.Kestrel
     
     public class Startup
     {
-        public IConfiguration Configuration { get; set; }
+        private readonly IConfiguration config;
         
         public Startup(IHostingEnvironment env)
         {
@@ -15,13 +15,11 @@ namespace Nancy.Demo.Hosting.Kestrel
                               .AddJsonFile("appsettings.json")
                               .SetBasePath(env.ContentRootPath);
 
-            Configuration = builder.Build();
+            config = builder.Build();
         }
         
         public void Configure(IApplicationBuilder app)
         {
-            
-            var config = this.Configuration;
             var appConfig = new AppConfiguration();
             ConfigurationBinder.Bind(config, appConfig);
 
