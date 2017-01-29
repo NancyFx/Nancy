@@ -6,7 +6,7 @@ namespace Nancy
     using System.Linq;
     using System.Reflection;
     using Microsoft.Extensions.DependencyModel;
-    
+
     /// <summary>
     /// Default implementation of the <see cref="IAssemblyCatalog"/> interface, based on
     /// retrieving <see cref="Assembly"/> information from <see cref="DependencyContext"/>.
@@ -17,12 +17,20 @@ namespace Nancy
         private readonly DependencyContext dependencyContext;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DependencyContextAssemblyCatalog"/> class.
+        /// Initializes a new instance of the <see cref="DependencyContextAssemblyCatalog"/> class,
+        /// using <see cref="Assembly.GetEntryAssembly()"/>.
         /// </summary>
         public DependencyContextAssemblyCatalog()
+            : this(Assembly.GetEntryAssembly())
         {
-            var entryAssembly = Assembly.GetEntryAssembly();
-            
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DependencyContextAssemblyCatalog"/> class,
+        /// using <paramref name="entryAssembly"/>.
+        /// </summary>
+        public DependencyContextAssemblyCatalog(Assembly entryAssembly)
+        {
             this.dependencyContext = DependencyContext.Load(entryAssembly);
         }
 
@@ -47,10 +55,10 @@ namespace Nancy
                     }
                 }
             }
-            
+
             return results.ToArray();
         }
-        
+
         private static Assembly SafeLoadAssembly(AssemblyName assemblyName)
         {
             try
