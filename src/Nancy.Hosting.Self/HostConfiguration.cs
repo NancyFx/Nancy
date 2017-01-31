@@ -54,6 +54,16 @@
         /// </summary>
         public bool AllowAuthorityFallback { get; set; }
 
+        /// <summary>
+        /// Gets or sets a property determining how many total connections the NancyHost can maintain simultaneously.
+        /// Higher values mean more conections can be maintained at a slower average response times; while fewer connections will be rejected.
+        /// Lower values will result in fewer conections, yet will be maintained at a faster average response time.
+        /// </summary>
+        public int MaximumConnectionCount { get; set; }
+
+        /// <summary>
+        /// Initializes the default configuration. MaximumConnectionCount is defaulted to 4.
+        /// </summary>
         public HostConfiguration()
         {
             this.RewriteLocalhost = true;
@@ -65,6 +75,7 @@
                     Debug.Write(message);
                 };
             this.EnableClientCertificates = false;
+            this.MaximumConnectionCount = 4;
         }
     }
 }

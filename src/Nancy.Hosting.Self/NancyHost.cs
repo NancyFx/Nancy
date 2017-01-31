@@ -13,6 +13,7 @@
     using Nancy.Extensions;
     using Nancy.Helpers;
     using Nancy.IO;
+    using System.Threading;
 
     /// <summary>
     /// Allows to host Nancy server inside any application - console or windows service.
@@ -124,20 +125,26 @@
         {
             this.StartListener();
 
-            Task.Factory.StartNew(async () =>
+            Task.Run(() =>
             {
-                try
+                var semaphore = new Semaphore(this.configuration.MaximumConnectionCount, this.configuration.MaximumConnectionCount);
+                while (!this.stop)
                 {
-                    while(!this.stop)
+                    semaphore.WaitOne();
+
+                    this.listener.GetContextAsync().ContinueWith(async (contextTask) =>
                     {
-                        HttpListenerContext context = await this.listener.GetContextAsync().ConfigureAwait(false);
-                        await this.Process(context).ConfigureAwait(false);
-                    }
-                }
-                catch(Exception ex)
-                {
-                    this.configuration.UnhandledExceptionCallback.Invoke(ex);
-                    throw;
+                        try
+                        {
+                            semaphore.Release();
+                            var context = await contextTask.ConfigureAwait(false);
+                            await this.Process(context).ConfigureAwait(false);
+                        }
+                        catch (Exception ex)
+                        {
+                            this.configuration.UnhandledExceptionCallback.Invoke(ex);
+                        }
+                    });
                 }
             });
         }
