@@ -143,6 +143,7 @@
                         catch (Exception ex)
                         {
                             this.configuration.UnhandledExceptionCallback.Invoke(ex);
+                            throw;
                         }
                     });
                 }
