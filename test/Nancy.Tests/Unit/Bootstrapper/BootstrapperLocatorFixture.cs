@@ -81,6 +81,50 @@
 
         }
 
+        public class TestTypeCatalog : ITypeCatalog
+        {
+            private readonly IReadOnlyCollection<Type> types;
+
+            public TestTypeCatalog(IReadOnlyCollection<Type> types)
+            {
+                this.types = types;
+            }
+
+            public IReadOnlyCollection<Type> GetTypesAssignableTo(Type type, TypeResolveStrategy strategy)
+            {
+                return types;
+            }
+        }
+
+        [Fact]
+        public void Should_throw_exception_when_multiple_bootstrappers_are_located()
+        {
+            // Given
+            var list = new List<Type> { typeof(MyFirstBootstwapper), typeof(AnotherFirstBootstwapper) };
+            var typeCatalog = new TestTypeCatalog(list);
+
+            // When
+            var result = Record.Exception(() => NancyBootstrapperLocator.GetBootstrapperType(typeCatalog));
+
+            // Then
+            result.ShouldNotBeNull();
+            result.GetType().ShouldEqual(typeof(BootstrapperException));
+        }
+
+        [Fact]
+        public void Should_resolve_bootstrapper_type_from_unique_type()
+        {
+            // Given
+            var list = new List<Type> {typeof (MyFirstBootstwapper)};
+            var typeCatalog = new TestTypeCatalog(list);
+
+            // When
+            var bootstrapperType = NancyBootstrapperLocator.GetBootstrapperType(typeCatalog);
+
+            // Then
+            bootstrapperType.ShouldEqual(typeof(MyFirstBootstwapper));
+        }
+
         [Fact]
         public void Should_automatically_resolve_the_most_derived_bootstrapper()
         {
