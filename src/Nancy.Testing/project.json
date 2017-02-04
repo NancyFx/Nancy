@@ -1,29 +1,37 @@
 ﻿{
     "version": "2.0.0-clinteastwood",
     "description": "Test harness for Nancy applications.",
-    "authors": [ "Andreas Håkansson, Steven Robbins and contributors" ],
-
+    "authors": [
+        "Andreas Håkansson, Steven Robbins and contributors"
+    ],
     "packOptions": {
-        "tags": [ "Nancy", "Testing" ],
+        "tags": [
+            "Nancy",
+            "Testing"
+        ],
         "projectUrl": "http://nancyfx.org",
         "licenseUrl": "https://github.com/NancyFx/Nancy/blob/master/license.txt",
         "iconUrl": "http://nancyfx.org/nancy-nuget.png"
     },
-
     "dependencies": {
         "AngleSharp": "0.9.8.1",
-        "AsyncUsageAnalyzers": "1.0.0-alpha003",
-        "Nancy": { "target": "project" },
-        "Nancy.Authentication.Forms": { "target": "project" }
+        "AsyncUsageAnalyzers": {
+            "type": "build",
+            "version": "1.0.0-alpha003"
+        },
+        "Nancy": {
+            "target": "project"
+        },
+        "Nancy.Authentication.Forms": {
+            "target": "project"
+        }
     },
-
     "buildOptions": {
         "xmlDoc": true,
         "embed": [
             "Resources/NancyTestingCert.pfx"
         ]
     },
-
     "frameworks": {
         "netstandard1.6": {
             "dependencies": {
@@ -37,9 +45,15 @@
         },
         "net452": {
             "frameworkAssemblies": {
-                "System.IO": { "type": "build" },
-                "System.Runtime": { "type": "build" },
-                "System.Xml.Linq": { "type": "build" }
+                "System.IO": {
+                    "type": "build"
+                },
+                "System.Runtime": {
+                    "type": "build"
+                },
+                "System.Xml.Linq": {
+                    "type": "build"
+                }
             }
         }
     }
