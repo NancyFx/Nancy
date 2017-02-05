@@ -61,21 +61,51 @@
         /// </summary>
         public int MaximumConnectionCount { get; set; }
 
+
         /// <summary>
-        /// Initializes the default configuration. MaximumConnectionCount is defaulted to 4.
+        /// Gets approximate processor thread count by halfing the Logical Core count to 
+        /// account for hyper-threading.
         /// </summary>
+        private static int ProcessorThreadCount
+        {
+            get
+            {
+                // Divide by 2 for hyper-threading, and good defaults.
+                var threadCount = Environment.ProcessorCount >> 1;
+
+                if (threadCount < 1)
+                {
+                    // Ensure thread count is at least 1.
+                    return 1;
+                }
+
+                return threadCount;
+            }
+        }
+
+        /// <summary>
+        /// Initializes the default configuration.
+        /// MaximumConnectionCount by default is half of the Logical Core count.
+        /// </summary>
+        /// <remarks>
+        /// If the system running NancyHost is not using hyper-threading you may want to consider
+        /// supplying your own values for MaximumConnectionCount as the default assumes 
+        /// hyperthreading is being utilized.
+        /// </remarks>
         public HostConfiguration()
         {
             this.RewriteLocalhost = true;
             this.UrlReservations = new UrlReservations();
             this.AllowChunkedEncoding = true;
             this.UnhandledExceptionCallback = e =>
-                {
-                    var message = string.Format("---\n{0}\n---\n", e);
-                    Debug.Write(message);
-                };
+            {
+                var message = string.Format("---\n{0}\n---\n", e);
+                Debug.Write(message);
+            };
             this.EnableClientCertificates = false;
-            this.MaximumConnectionCount = 4;
+            this.MaximumConnectionCount = ProcessorThreadCount;
         }
+
+
     }
 }
