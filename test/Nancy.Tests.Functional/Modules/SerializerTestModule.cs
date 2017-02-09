@@ -26,7 +26,7 @@
 
             Post("/serializer/date", args =>
             {
-                var s = ((RequestStream)this.Request.Body).AsString();
+                var s = this.Request.Body.AsString();
                 var model = this.Bind<FakeSerializerModel>();
                 return model;
             });

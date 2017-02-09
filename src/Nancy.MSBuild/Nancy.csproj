@@ -321,8 +321,8 @@
     <Compile Include="..\Nancy\Extensions\ModelValidationErrorExtensions.cs">
       <Link>Extensions\ModelValidationErrorExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy\Extensions\RequestStreamExtensions.cs">
-      <Link>Extensions\RequestStreamExtensions.cs</Link>
+    <Compile Include="..\Nancy\Extensions\StreamExtensions.cs">
+      <Link>Extensions\StreamExtensions.cs</Link>
     </Compile>
     <Compile Include="..\Nancy\Extensions\TypeExtensions.cs">
       <Link>Extensions\TypeExtensions.cs</Link>

@@ -262,8 +262,8 @@
     <Compile Include="..\Nancy.Tests\Unit\ErrorHandling\DefaultStatusCodeHandlerFixture.cs">
       <Link>Unit\ErrorHandling\DefaultStatusCodeHandlerFixture.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy.Tests\Unit\Extensions\RequestStreamExtensionsFixture.cs">
-      <Link>Unit\Extensions\RequestStreamExtensionsFixture.cs</Link>
+    <Compile Include="..\Nancy.Tests\Unit\Extensions\StreamExtensionsFixture.cs">
+      <Link>Unit\Extensions\StreamExtensionsFixture.cs</Link>
     </Compile>
     <Compile Include="..\Nancy.Tests\Unit\Extensions\TypeExtensionsFixture.cs">
       <Link>Unit\Extensions\TypeExtensionsFixture.cs</Link>
