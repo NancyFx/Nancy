@@ -6,7 +6,7 @@
     using Nancy.IO;
     using Xunit;
 
-    public class RequestStreamExtensionsFixture
+    public class StreamExtensionsFixture
     {
         [Fact]
         public void AsString_should_always_start_from_position_0_and_reset_it_afterwards()
@@ -27,6 +27,23 @@
                 // Then
                 Assert.Equal("fake request body", result);
                 Assert.Equal(initialPosition, requestStream.Position);
+            }
+        }
+
+        [Fact]
+        public void AsString_should_not_close_stream()
+        {
+            // Given
+            using (var innerStream = new MemoryStream())
+            using (var streamWriter = new StreamWriter(innerStream, Encoding.UTF8) { AutoFlush = true })
+            {
+                streamWriter.Write("fake request body");
+
+                // When
+                innerStream.AsString(Encoding.UTF8);
+
+                // Then
+                Assert.True(innerStream.CanRead);
             }
         }
     }
