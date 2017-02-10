@@ -1,20 +1,26 @@
 ﻿{
     "version": "2.0.0-clinteastwood",
-
     "dependencies": {
-      "AsyncUsageAnalyzers": "1.0.0-alpha003",
-      "Nancy": { "target": "project" },
-        "Nancy.ViewEngines.Razor": { "target": "project" }
+        "AsyncUsageAnalyzers": {
+            "type": "build",
+            "version": "1.0.0-alpha003"
+        },
+        "Nancy": {
+            "target": "project"
+        },
+        "Nancy.ViewEngines.Razor": {
+            "target": "project"
+        }
     },
-    
     "buildOptions": {
         "xmlDoc": true
     },
-
     "frameworks": {
         "net452": {
             "frameworkAssemblies": {
-                "System.Web": { "type": "build" }
+                "System.Web": {
+                    "type": "build"
+                }
             }
         }
     }

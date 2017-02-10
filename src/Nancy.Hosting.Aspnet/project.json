@@ -1,10 +1,14 @@
 ﻿{
     "version": "2.0.0-clinteastwood",
     "description": "Enables hosting Nancy on ASP.NET.",
-    "authors": [ "Andreas Håkansson, Steven Robbins and contributors" ],
-
+    "authors": [
+        "Andreas Håkansson, Steven Robbins and contributors"
+    ],
     "packOptions": {
-        "tags": [ "Nancy", "Host" ],
+        "tags": [
+            "Nancy",
+            "Host"
+        ],
         "projectUrl": "http://nancyfx.org",
         "licenseUrl": "https://github.com/NancyFx/Nancy/blob/master/license.txt",
         "iconUrl": "http://nancyfx.org/nancy-nuget.png",
@@ -14,21 +18,27 @@
             }
         }
     },
-
     "buildOptions": {
         "xmlDoc": true
     },
-
     "dependencies": {
-        "AsyncUsageAnalyzers": "1.0.0-alpha003",
-        "Nancy": { "target": "project" }
+        "AsyncUsageAnalyzers": {
+            "type": "build",
+            "version": "1.0.0-alpha003"
+        },
+        "Nancy": {
+            "target": "project"
+        }
     },
-
     "frameworks": {
         "net452": {
             "frameworkAssemblies": {
-                "System.Configuration": { "type": "build" },
-                "System.Web": { "type": "build" }
+                "System.Configuration": {
+                    "type": "build"
+                },
+                "System.Web": {
+                    "type": "build"
+                }
             }
         }
     }

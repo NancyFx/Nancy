@@ -1,26 +1,34 @@
 ﻿{
     "version": "2.0.0-clinteastwood",
     "description": "Enables hosting Nancy in any application.",
-    "authors": [ "Andreas Håkansson, Steven Robbins and contributors" ],
-
+    "authors": [
+        "Andreas Håkansson, Steven Robbins and contributors"
+    ],
     "packOptions": {
-        "tags": [ "Nancy", "Host" ],
+        "tags": [
+            "Nancy",
+            "Host"
+        ],
         "projectUrl": "http://nancyfx.org",
         "licenseUrl": "https://github.com/NancyFx/Nancy/blob/master/license.txt",
         "iconUrl": "http://nancyfx.org/nancy-nuget.png"
     },
-
     "buildOptions": {
-        "define": [ "CORE" ],
+        "define": [
+            "CORE"
+        ],
         "xmlDoc": true
     },
-
     "dependencies": {
-      "AsyncUsageAnalyzers": "1.0.0-alpha003",
-      "Nancy": { "target": "project" }
+        "AsyncUsageAnalyzers": {
+            "type": "build",
+            "version": "1.0.0-alpha003"
+        },
+        "Nancy": {
+            "target": "project"
+        }
     },
-
     "frameworks": {
-        "net452": { }
+        "net452": {}
     }
 }

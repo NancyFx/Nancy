@@ -1,10 +1,15 @@
 ﻿{
     "version": "2.0.0-clinteastwood",
     "description": "Enables using the Razor view engine with Nancy.",
-    "authors": [ "Andreas Håkansson, Steven Robbins and contributors" ],
-
+    "authors": [
+        "Andreas Håkansson, Steven Robbins and contributors"
+    ],
     "packOptions": {
-        "tags": [ "Nancy", "View Engine", "Razor" ],
+        "tags": [
+            "Nancy",
+            "View Engine",
+            "Razor"
+        ],
         "projectUrl": "http://nancyfx.org",
         "licenseUrl": "https://github.com/NancyFx/Nancy/blob/master/license.txt",
         "iconUrl": "http://nancyfx.org/nancy-nuget.png",
@@ -15,31 +20,45 @@
             }
         }
     },
-
     "dependencies": {
-        "Nancy": { "target": "project" },
+        "Nancy": {
+            "target": "project"
+        },
         "Microsoft.AspNet.Razor": "2.0.30506.0",
         "Microsoft.CodeAnalysis.CSharp": "1.1.0-rc1-20151109-01",
-        "AsyncUsageAnalyzers": "1.0.0-alpha003"
+        "AsyncUsageAnalyzers": {
+            "type": "build",
+            "version": "1.0.0-alpha003"
+        }
     },
-
     "buildOptions": {
         "embed": "Resources/**/*.*",
         "xmlDoc": true
     },
-
     "frameworks": {
         "net452": {
             "dependencies": {
                 "Microsoft.CodeDom.Providers.DotNetCompilerPlatform": "1.0.1"
             },
             "frameworkAssemblies": {
-                "System.Configuration": { "type": "build" },
-                "System.IO": { "type": "build" },
-                "System.Reflection": { "type": "build" },
-                "System.Runtime": { "type": "build" },
-                "System.Text.Encoding": { "type": "build" },
-                "System.Threading.Tasks": { "type": "build" }
+                "System.Configuration": {
+                    "type": "build"
+                },
+                "System.IO": {
+                    "type": "build"
+                },
+                "System.Reflection": {
+                    "type": "build"
+                },
+                "System.Runtime": {
+                    "type": "build"
+                },
+                "System.Text.Encoding": {
+                    "type": "build"
+                },
+                "System.Threading.Tasks": {
+                    "type": "build"
+                }
             }
         }
     }
