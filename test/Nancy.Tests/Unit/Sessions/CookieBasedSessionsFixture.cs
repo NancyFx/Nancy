@@ -5,12 +5,12 @@ namespace Nancy.Tests.Unit.Sessions
     using System.Linq;
     using System.Reflection;
     using System.Threading;
-    using System.Web;
 
     using FakeItEasy;
 
     using Nancy.Bootstrapper;
     using Nancy.Cryptography;
+    using Nancy.Helpers;
     using Nancy.IO;
     using Nancy.Session;
     using Nancy.Tests.Fakes;

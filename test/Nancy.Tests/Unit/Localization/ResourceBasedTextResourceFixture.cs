@@ -3,6 +3,7 @@
     using System;
     using FakeItEasy;
 
+    using Nancy.Extensions;
     using Nancy.Localization;
 
     using Xunit;
@@ -14,7 +15,7 @@
         {
             // Given
             var resourceAssemblyProvider = A.Fake<IResourceAssemblyProvider>();
-            A.CallTo(() => resourceAssemblyProvider.GetAssembliesToScan()).Returns(new[] { typeof(NancyEngine).Assembly });
+            A.CallTo(() => resourceAssemblyProvider.GetAssembliesToScan()).Returns(new[] { typeof(NancyEngine).GetAssembly() });
 
             var defaultTextResource = new ResourceBasedTextResource(resourceAssemblyProvider);
             var context = new NancyContext();
@@ -31,7 +32,7 @@
         {
             // Given
             var resourceAssemblyProvider = A.Fake<IResourceAssemblyProvider>();
-            A.CallTo(() => resourceAssemblyProvider.GetAssembliesToScan()).Returns(new[] { this.GetType().Assembly });
+            A.CallTo(() => resourceAssemblyProvider.GetAssembliesToScan()).Returns(new[] { this.GetType().GetAssembly() });
 
             var defaultTextResource = new ResourceBasedTextResource(resourceAssemblyProvider);
             var context = new NancyContext();
@@ -51,7 +52,7 @@
                 "More than one text resources match the Texts key. Try providing a more specific key.";
 
             var resourceAssemblyProvider = A.Fake<IResourceAssemblyProvider>();
-            A.CallTo(() => resourceAssemblyProvider.GetAssembliesToScan()).Returns(new[] { this.GetType().Assembly });
+            A.CallTo(() => resourceAssemblyProvider.GetAssembliesToScan()).Returns(new[] { this.GetType().GetAssembly() });
 
             var defaultTextResource = new ResourceBasedTextResource(resourceAssemblyProvider);
             var context = new NancyContext();

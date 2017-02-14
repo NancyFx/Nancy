@@ -10,8 +10,8 @@
 
 namespace Nancy.Tests.Resources {
     using System;
-    
-    
+    using Nancy.Extensions;
+
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -39,7 +39,7 @@ namespace Nancy.Tests.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Nancy.Tests.Resources.Link.Texts", typeof(Link_Texts).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Nancy.Tests.Resources.Link.Texts", typeof(Link_Texts).GetAssembly());
                     resourceMan = temp;
                 }
                 return resourceMan;

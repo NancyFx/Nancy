@@ -245,7 +245,7 @@
             {
                 if (this.ShouldThrowWhenGettingEngine)
                 {
-                    throw new ApplicationException("Something when wrong when trying to compose the engine.");
+                    throw new Exception("Something when wrong when trying to compose the engine.");
                 }
 
                 return this.FakeNancyEngine;

@@ -5,7 +5,7 @@ namespace Nancy.Tests.Unit
     using System.Threading;
 
     using Nancy.Cookies;
-
+    using Nancy.Tests.xUnitExtensions;
     using Xunit;
 
     public class NancyCookieFixture
@@ -37,25 +37,17 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
+        [UsingCulture("fr-FR")]
         public void Should_stringify_an_expiry_to_english()
         {
-            var originalCulture = Thread.CurrentThread.CurrentCulture;
-            try
-            {
-                // Given
-                Thread.CurrentThread.CurrentCulture = new CultureInfo("fr-FR");
-                var date = new DateTime(2015, 10, 8, 9, 10, 11, DateTimeKind.Utc);
+            // Given
+            var date = new DateTime(2015, 10, 8, 9, 10, 11, DateTimeKind.Utc);
 
-                // When
-                var cookie = new NancyCookie("leto", "worm") { Expires = date }.ToString();
+            // When
+            var cookie = new NancyCookie("leto", "worm") { Expires = date }.ToString();
 
-                // Then
-                cookie.ShouldEqual("leto=worm; path=/; expires=Thu, 08-Oct-2015 09:10:11 GMT");
-            }
-            finally
-            {
-                Thread.CurrentThread.CurrentCulture = originalCulture;
-            }
+            // Then
+            cookie.ShouldEqual("leto=worm; path=/; expires=Thu, 08-Oct-2015 09:10:11 GMT");
         }
 
         [Fact]

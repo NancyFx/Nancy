@@ -1,7 +1,9 @@
 {
+    "version": "1.4.1.0",
     "dependencies": {
         "dotnet-test-xunit": "2.2.0-preview2-build1029",
-        "FakeItEasy.Analyzer": "2.1.0",
+        "FakeItEasy": "3.0.0-rc001",
+        "FakeItEasy.Analyzer": "3.0.0-rc001",
         "Microsoft.NETCore.Platforms": "1.0.1",
         "Nancy": { "target": "project" },
         "Nancy.Testing": { "target": "project" },
@@ -28,14 +30,27 @@
 
     "frameworks": {
         "net452": {
-            "dependencies": {
-                "FakeItEasy": "2.0.0"
-            },
             "frameworkAssemblies": {
                 "System.Runtime": { "type": "build" },
                 "System.Threading.Tasks": { "type": "build" },
                 "System.Web": { "type": "build" }
+            },
+            "dependencies": {
+                "Microsoft.CodeAnalysis.CSharp": "1.3.2"
             }
+        },
+        "netcoreapp1.0": {
+            "buildOptions": {
+                "define": [ "CORE" ]
+            },
+            "dependencies": {
+                "Microsoft.CodeAnalysis.CSharp": "2.0.0-rc",
+                "Microsoft.NETCore.App": {
+                    "type": "platform",
+                    "version": "1.0.0"
+                }
+            },
+            "imports": [ "netstandard1.6" ]
         }
     },
 

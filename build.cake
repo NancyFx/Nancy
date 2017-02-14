@@ -58,20 +58,70 @@ Task("Compile")
     .IsDependentOn("Restore-NuGet-Packages")
     .Does(() =>
     {
-        var projects = GetFiles("./**/*.xproj");
-
         if (IsRunningOnUnix())
         {
-            projects = projects - GetFiles("./**/Nancy.Encryption.MachineKey.xproj");
-        }
+            var srcProjects = GetFiles("./src/**/*.xproj");
+            srcProjects = srcProjects - GetFiles("./**/Nancy.Encryption.MachineKey.xproj");
 
-        foreach(var project in projects)
+            var testProjects = GetFiles("./test/**/*.xproj");
+
+            var dotnetTestProjects = testProjects
+                                 - GetFiles("test/**/Nancy.Authentication.Basic.Tests.xproj")
+                                 - GetFiles("test/**/Nancy.Authentication.Forms.Tests.xproj")
+                                 - GetFiles("test/**/Nancy.Embedded.Tests.xproj")
+                                 - GetFiles("test/**/Nancy.Encryption.MachineKey.Tests.xproj")
+                                 - GetFiles("test/**/Nancy.Hosting.Aspnet.Tests.xproj")
+                                 - GetFiles("test/**/Nancy.Hosting.Self.Tests.xproj")
+                                 - GetFiles("test/**/Nancy.Metadata.Modules.Tests.xproj")
+                                 - GetFiles("test/**/Nancy.Owin.Tests.xproj")
+                                 - GetFiles("test/**/Nancy.Testing.Tests.xproj")
+                                 - GetFiles("test/**/Nancy.Tests.Functional.xproj")
+                                 - GetFiles("test/**/Nancy.Validation.DataAnnotatioins.Tests.xproj")
+                                 - GetFiles("test/**/Nancy.Validation.FluentValidation.Tests.xproj")
+                                 - GetFiles("test/**/Nancy.ViewEngines.DotLiquid.Tests.xproj")
+                                 - GetFiles("test/**/Nancy.ViewEngines.Markdown.Tests.xproj")
+                                 - GetFiles("test/**/Nancy.ViewEngines.Razor.Tests.xproj")
+                                 - GetFiles("test/**/Nancy.ViewEngines.Razor.Tests.Models.xproj");
+
+            foreach(var srcProject in srcProjects)
+            {
+                DotNetCoreBuild(srcProject.GetDirectory().FullPath, new DotNetCoreBuildSettings {
+                    Configuration = configuration,
+                    Verbose = false
+                });
+            }
+
+            foreach(var testProject in testProjects)
+            {
+                DotNetCoreBuild(testProject.GetDirectory().FullPath, new DotNetCoreBuildSettings {
+                    Configuration = configuration,
+                    Verbose = false,
+                    Framework = "net452",
+                    Runtime = "unix-x64"
+                });
+            }
+
+            foreach(var dotnetTestProject in dotnetTestProjects)
+            {
+                DotNetCoreBuild(dotnetTestProject.GetDirectory().FullPath, new DotNetCoreBuildSettings {
+                    Configuration = configuration,
+                    Verbose = false,
+                    Framework = "netcoreapp1.0"
+                });
+            }
+        }
+        else
         {
-            DotNetCoreBuild(project.GetDirectory().FullPath, new DotNetCoreBuildSettings {
-                Configuration = configuration,
-                Verbose = false,
-                Runtime = IsRunningOnWindows() ? null : "unix-x64"
-            });
+            var projects = GetFiles("./**/*.xproj");
+            projects = projects
+                                - GetFiles("./**/Nancy.Encryption.MachineKey.xproj");
+            foreach(var project in projects)
+            {
+                DotNetCoreBuild(project.GetDirectory().FullPath, new DotNetCoreBuildSettings {
+                    Configuration = configuration,
+                    Verbose = false
+                });
+            }
         }
     });
 
@@ -255,6 +305,33 @@ Task("Test")
                 - GetFiles("./test/**/Nancy.Encryption.MachineKey.Tests.xproj")
                 - GetFiles("./test/**/Nancy.ViewEngines.DotLiquid.Tests.xproj")
                 - GetFiles("./test/**/Nancy.Embedded.Tests.xproj"); //Embedded somehow doesnt get executed on Travis but nothing explicit sets it
+
+            var testProjects = GetFiles("./test/**/*.xproj");
+            var dotnetTestProjects = testProjects
+                                 - GetFiles("test/**/Nancy.Authentication.Basic.Tests.xproj")
+                                 - GetFiles("test/**/Nancy.Authentication.Forms.Tests.xproj")
+                                 - GetFiles("test/**/Nancy.Embedded.Tests.xproj")
+                                 - GetFiles("test/**/Nancy.Encryption.MachineKey.Tests.xproj")
+                                 - GetFiles("test/**/Nancy.Hosting.Aspnet.Tests.xproj")
+                                 - GetFiles("test/**/Nancy.Hosting.Self.Tests.xproj")
+                                 - GetFiles("test/**/Nancy.Metadata.Modules.Tests.xproj")
+                                 - GetFiles("test/**/Nancy.Owin.Tests.xproj")
+                                 - GetFiles("test/**/Nancy.Testing.Tests.xproj")
+                                 - GetFiles("test/**/Nancy.Tests.Functional.xproj")
+                                 - GetFiles("test/**/Nancy.Validation.DataAnnotatioins.Tests.xproj")
+                                 - GetFiles("test/**/Nancy.Validation.FluentValidation.Tests.xproj")
+                                 - GetFiles("test/**/Nancy.ViewEngines.DotLiquid.Tests.xproj")
+                                 - GetFiles("test/**/Nancy.ViewEngines.Markdown.Tests.xproj")
+                                 - GetFiles("test/**/Nancy.ViewEngines.Razor.Tests.xproj")
+                                 - GetFiles("test/**/Nancy.ViewEngines.Razor.Tests.Models.xproj");
+
+            foreach(var dotnetTestProject in dotnetTestProjects)
+            {
+                DotNetCoreTest(dotnetTestProject.GetDirectory().FullPath, new DotNetCoreTestSettings {
+                    Configuration = configuration,
+                    Framework = "netcoreapp1.0"
+                });
+            }
         }
 
         foreach(var project in projects)
@@ -267,14 +344,6 @@ Task("Test")
             }
             else
             {
-                // For when test projects are set to run against netstandard
-
-                // DotNetCoreTest(project.GetDirectory().FullPath, new DotNetCoreTestSettings {
-                //   Configuration = configuration,
-                //   Framework = "netstandard1.6",
-                //   Runtime = "unix-64"
-                // });
-
                 var dirPath = project.GetDirectory().FullPath;
                 var testFile = project.GetFilenameWithoutExtension();
 

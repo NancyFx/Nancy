@@ -1,6 +1,7 @@
 namespace Nancy.Tests.Unit.ModelBinding
 {
     using System;
+    using System.Reflection;
 
     using FakeItEasy;
     using Nancy.Configuration;

@@ -4,16 +4,15 @@
     using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
-    using System.Linq;
     using System.Text;
 
     using Nancy.Configuration;
     using Nancy.Conventions;
     using Nancy.Diagnostics;
+    using Nancy.Extensions;
     using Nancy.Responses;
 
     using Xunit;
-    using Xunit.Extensions;
 
     public class StaticContentConventionBuilderFixture
     {
@@ -26,7 +25,12 @@
 
         public StaticContentConventionBuilderFixture()
         {
-            this.directory = Environment.CurrentDirectory;
+            // Under .NET Framework, resources are copied to
+            // bin\Release\net452\win7-x64\Resources (modulo version and architecture), but under .NET Core, they go to
+            // bin\Release\netcoreapp1.0\Resources.
+            // Set our working directory relative the assembly to ensure the tests find the resources.
+            this.directory = new DirectoryInfo(typeof(StaticContentConventionBuilderFixture).GetAssembly().Location)
+                .Parent.FullName;
             this.environment = new DefaultNancyEnvironment();
             this.environment.StaticContent(safepaths:this.directory);
         }
@@ -263,7 +267,7 @@
                 using (var stream = new MemoryStream())
                 {
                     fileResponse.Contents(stream);
-                    return Encoding.UTF8.GetString(stream.GetBuffer(), 0, (int)stream.Length);
+                    return Encoding.UTF8.GetString(stream.ToArray());
                 }
             }
 

@@ -58,8 +58,8 @@ namespace Nancy.Tests.Unit
 
                 root.Name.ShouldEqual("Person");
                 root.ChildNodes.Count.ShouldEqual(2);
-                root.SelectSingleNode("//Person/FirstName").InnerText.ShouldEqual("Andy");
-                root.SelectSingleNode("//Person/LastName").InnerText.ShouldEqual("Pike");
+                root["FirstName"].InnerText.ShouldEqual("Andy");
+                root["LastName"].InnerText.ShouldEqual("Pike");
             }
         }
 

@@ -12,6 +12,7 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
     using Nancy.Json;
     using Nancy.ModelBinding;
     using Nancy.ModelBinding.DefaultBodyDeserializers;
+    using Nancy.Tests.xUnitExtensions;
     using Xunit;
     using Xunit.Extensions;
 
@@ -284,12 +285,11 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
 
 #if !MONO
         [Fact]
+        [UsingCulture("de-DE")]
         public void Should_Serialize_Doubles_In_Different_Cultures()
         {
             // TODO - fixup on mono, seems to throw inside double.parse
             // Given
-            Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("de-DE");
-
             var modelWithDoubleValues =
                 new ModelWithDoubleValues
                     {
@@ -377,7 +377,7 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
                 return other.StringProperty == this.StringProperty &&
                        other.IntProperty == this.IntProperty &&
                        !other.ArrayProperty.Except(this.ArrayProperty).Any() &&
-                       other.DateProperty.ToShortDateString() == this.DateProperty.ToShortDateString();
+                       other.DateProperty.ToString("d") == this.DateProperty.ToString("d");
             }
 
             public override bool Equals(object obj)
