@@ -1,11 +1,11 @@
 ﻿namespace Nancy.Embedded.Tests.Unit
 {
     using System.IO;
-    using System.Reflection;
     using System.Text;
 
     using Nancy.Diagnostics;
     using Nancy.Embedded.Conventions;
+    using Nancy.Extensions;
     using Nancy.Responses;
     using Nancy.Tests;
 
@@ -84,7 +84,7 @@
                 };
 
             var assembly =
-                Assembly.GetExecutingAssembly();
+                typeof(EmbeddedStaticContentConventionBuilderFixture).GetAssembly();
 
             var resolver =
                 EmbeddedStaticContentConventionBuilder.AddDirectory(virtualDirectory, assembly, contentPath ?? "Resources");
@@ -97,7 +97,7 @@
                 using (var stream = new MemoryStream())
                 {
                     response.Contents(stream);
-                    return Encoding.UTF8.GetString(stream.GetBuffer(), 0, (int)stream.Length);
+                    return Encoding.UTF8.GetString(stream.ToArray());
                 }
             }
 
