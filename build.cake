@@ -66,7 +66,6 @@ Task("Compile")
             var testProjects = GetFiles("./test/**/*.xproj");
 
             var dotnetTestProjects = testProjects
-                                 - GetFiles("test/**/Nancy.Authentication.Basic.Tests.xproj")
                                  - GetFiles("test/**/Nancy.Authentication.Forms.Tests.xproj")
                                  - GetFiles("test/**/Nancy.Embedded.Tests.xproj")
                                  - GetFiles("test/**/Nancy.Encryption.MachineKey.Tests.xproj")
@@ -308,7 +307,6 @@ Task("Test")
 
             var testProjects = GetFiles("./test/**/*.xproj");
             var dotnetTestProjects = testProjects
-                                 - GetFiles("test/**/Nancy.Authentication.Basic.Tests.xproj")
                                  - GetFiles("test/**/Nancy.Authentication.Forms.Tests.xproj")
                                  - GetFiles("test/**/Nancy.Embedded.Tests.xproj")
                                  - GetFiles("test/**/Nancy.Encryption.MachineKey.Tests.xproj")

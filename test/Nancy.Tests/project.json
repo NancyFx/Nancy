@@ -2,8 +2,8 @@
     "version": "1.4.1.0",
     "dependencies": {
         "dotnet-test-xunit": "2.2.0-preview2-build1029",
-        "FakeItEasy": "3.0.0-rc001",
-        "FakeItEasy.Analyzer": "3.0.0-rc001",
+        "FakeItEasy": "3.0.0",
+        "FakeItEasy.Analyzer": "3.0.0",
         "Microsoft.NETCore.Platforms": "1.0.1",
         "Nancy": { "target": "project" },
         "Nancy.Testing": { "target": "project" },
@@ -49,8 +49,7 @@
                     "type": "platform",
                     "version": "1.0.0"
                 }
-            },
-            "imports": [ "netstandard1.6" ]
+            }
         }
     },
 
