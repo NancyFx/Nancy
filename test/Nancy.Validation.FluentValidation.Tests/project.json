@@ -5,8 +5,9 @@
         "FluentValidation": "6.3.4-alpha",
         "Nancy": { "target": "project" },
         "Nancy.Validation.FluentValidation": { "target": "project" },
-        "xunit": "2.2.0-beta2-build3300",
-        "FakeItEasy.Analyzer": "2.1.0"
+        "xunit": "2.2.0",
+        "FakeItEasy": "3.0.0",
+        "FakeItEasy.Analyzer": "3.0.0"
     },
 
     "buildOptions": {
@@ -17,11 +18,16 @@
 
     "frameworks": {
         "net452": {
-            "dependencies": {
-                "FakeItEasy": "2.0.0"
-            },
             "frameworkAssemblies": {
                 "System.Runtime": { "type": "build" }
+            }
+        },
+        "netcoreapp1.0": {
+            "dependencies": {
+                "Microsoft.NETCore.App": {
+                    "type": "platform",
+                    "version": "1.0.0"
+                }
             }
         }
     },
