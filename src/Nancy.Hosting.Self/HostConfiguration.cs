@@ -61,7 +61,6 @@
         /// </summary>
         public int MaximumConnectionCount { get; set; }
 
-
         /// <summary>
         /// Gets approximate processor thread count by halfing the Logical Core count to 
         /// account for hyper-threading.
@@ -98,10 +97,10 @@
             this.UrlReservations = new UrlReservations();
             this.AllowChunkedEncoding = true;
             this.UnhandledExceptionCallback = e =>
-            {
-                var message = string.Format("---\n{0}\n---\n", e);
-                Debug.Write(message);
-            };
+                {
+                    var message = string.Format("---\n{0}\n---\n", e);
+                    Debug.Write(message);
+                };
             this.EnableClientCertificates = false;
             this.MaximumConnectionCount = ProcessorThreadCount;
         }
