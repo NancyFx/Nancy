@@ -45,6 +45,28 @@
         }
 
         [Fact]
+        public async Task Should_return_JSON_with_parameterised_constructor_from_serialized_form()
+        {
+            //Given
+            var response = await browser.Post("/serializedform", (with) =>
+            {
+                with.HttpRequest();
+                with.Accept("application/json");
+                with.FormValue("SomeString", "Hi");
+                with.FormValue("SomeInt", "1");
+                with.FormValue("SomeBoolean", "true");
+            });
+
+            //When
+            var actualModel = response.Body.DeserializeJson<ParameterisedConstructorEchoModel>();
+
+            //Then
+            Assert.Equal("Hi", actualModel.SomeString);
+            Assert.Equal(1, actualModel.SomeInt);
+            Assert.Equal(true, actualModel.SomeBoolean);
+        }
+
+        [Fact]
         public async Task Should_return_JSON_serialized_querystring()
         {
             //Given
@@ -68,6 +90,20 @@
 
         public class EchoModel
         {
+            public string SomeString { get; set; }
+            public int SomeInt { get; set; }
+            public bool SomeBoolean { get; set; }
+        }
+
+        public class ParameterisedConstructorEchoModel
+        {
+            public ParameterisedConstructorEchoModel(string someString, int someInt, bool someBoolean)
+            {
+                this.SomeString = someString;
+                this.SomeInt = someInt;
+                this.SomeBoolean = someBoolean;
+            }
+
             public string SomeString { get; set; }
             public int SomeInt { get; set; }
             public bool SomeBoolean { get; set; }
