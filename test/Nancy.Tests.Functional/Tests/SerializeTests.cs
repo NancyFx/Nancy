@@ -66,7 +66,6 @@
             Assert.Equal(true, actualModel.SomeBoolean);
         }
 
-
         [Fact]
         public async Task Should_return_JSON_serialized_querystring()
         {
@@ -108,7 +107,6 @@
             public string SomeString { get; set; }
             public int SomeInt { get; set; }
             public bool SomeBoolean { get; set; }
-
         }
     }
 }
