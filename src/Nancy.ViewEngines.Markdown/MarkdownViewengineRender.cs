@@ -3,7 +3,7 @@
     using System;
     using System.Text.RegularExpressions;
 
-    using MarkdownSharp;
+    using HeyRed.MarkdownSharp;
 
     public static class MarkdownViewengineRender
     {

@@ -17,17 +17,20 @@
     "buildOptions": {
         "xmlDoc": true
     },
+
     "dependencies": {
         "Nancy": {
             "target": "project"
         },
-        "MarkdownSharp": "1.13.0",
+        "Markdown": "2.2.0",
         "AsyncUsageAnalyzers": {
             "type": "build",
             "version": "1.0.0-alpha003"
         }
     },
+
     "frameworks": {
-        "net452": {}
+        "net452": {},
+        "netstandard1.6": {}
     }
 }
