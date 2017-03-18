@@ -296,7 +296,7 @@
         [Fact]
         public async Task Should_return_diagnostic_example()
         {
-            // Given no custom interactive diagnostic providers
+            // Given
             var bootstrapper = new ConfigurableBootstrapper(with =>
             {
                 with.Configure(env =>
@@ -313,13 +313,13 @@
 
             var browser = new Browser(bootstrapper);
 
-            // When querying the list of interactive providers
+            // When
             var result = await browser.Get(DiagnosticsConfiguration.Default.Path + "/interactive/providers/", with =>
                 {
                     with.Cookie(DiagsCookieName, this.GetSessionCookieValue("password"));
                 });
 
-            // Then we should see the fake testing provider and not the Nancy provided testing example
+            // Then
             result.Body.AsString().ShouldNotContain("Fake testing provider");
             result.Body.AsString().ShouldContain("Testing Diagnostic Provider");
         }
@@ -327,7 +327,7 @@
         [Fact]
         public async Task Should_return_ok_for_post_settings()
         {
-            // Given no custom interactive diagnostic providers
+            // Given
             var bootstrapper = new ConfigurableBootstrapper(with =>
             {
                 with.Configure(env =>
@@ -342,7 +342,8 @@
                 with.Diagnostics<DefaultDiagnostics>();
             });
             var browser = new Browser(bootstrapper);
-            // When querying the list of interactive providers
+            
+            // When
             var result = await browser.Post(DiagnosticsConfiguration.Default.Path + "/settings", with =>
             {
                 with.Cookie(DiagsCookieName, this.GetSessionCookieValue("password"));
