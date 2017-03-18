@@ -69,7 +69,9 @@
 
         private static IEnumerable<string> GetFilenames(string path, string extension)
         {
-            return Directory.GetFiles(path, string.Concat("*.", extension), SearchOption.AllDirectories);
+            return !Directory.Exists(path) 
+                ? Enumerable.Empty<string>()
+                : Directory.GetFiles(path, string.Concat("*.", extension), SearchOption.AllDirectories);
         }
     }
 }
