@@ -349,6 +349,8 @@
                 with.Cookie(DiagsCookieName, this.GetSessionCookieValue("password"));
                 with.JsonBody(new SettingsModel { Name = "CaseSensitive", Value = true });
             });
+            
+            // Then
             result.StatusCode.ShouldEqual(HttpStatusCode.OK);
         }
 
