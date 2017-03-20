@@ -8,7 +8,7 @@
     using global::DotLiquid.Exceptions;
     using global::DotLiquid.FileSystems;
     using global::DotLiquid.NamingConventions;
-
+    using Nancy.Extensions;
     using Nancy.Responses;
 
     /// <summary>
@@ -158,7 +158,7 @@
 
         private static string LoadResource(string filename)
         {
-            var resourceStream = typeof(DotLiquidViewEngine).Assembly.GetManifestResourceStream(string.Format("Nancy.ViewEngines.DotLiquid.Resources.{0}", filename));
+            var resourceStream = typeof(DotLiquidViewEngine).GetAssembly().GetManifestResourceStream(string.Format("Nancy.ViewEngines.DotLiquid.Resources.{0}", filename));
 
             if (resourceStream == null)
             {

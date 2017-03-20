@@ -21,7 +21,7 @@
         "Nancy": {
             "target": "project"
         },
-        "DotLiquid": "1.7.0",
+        "DotLiquid": "2.0.64",
         "AsyncUsageAnalyzers": {
             "type": "build",
             "version": "1.0.0-alpha003"
