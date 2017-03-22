@@ -61,6 +61,12 @@ Task("Compile")
         if (IsRunningOnUnix())
         {
             var srcProjects = GetFiles("./src/**/*.xproj");
+
+            if (srcProjects.Count == 0)
+            {
+                throw new CakeException("Unable to find any projects to build.");
+            }
+
             srcProjects = srcProjects - GetFiles("./**/Nancy.Encryption.MachineKey.xproj");
 
             var testProjects = GetFiles("./test/**/*.xproj");
@@ -292,6 +298,11 @@ Task("Test")
         var projects =
             GetFiles("./test/**/*.xproj") -
             GetFiles("./test/**/Nancy.ViewEngines.Razor.Tests.Models.xproj");
+
+        if (projects.Count == 0)
+        {
+            throw new CakeException("Unable to find any projects to test.");
+        }
 
         if (IsRunningOnUnix())
         {
