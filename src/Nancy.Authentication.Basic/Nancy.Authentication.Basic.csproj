@@ -5,6 +5,7 @@
     <VersionPrefix>2.0.0-clinteastwood</VersionPrefix>
     <Authors>Andreas Håkansson, Steven Robbins and contributors</Authors>
     <TargetFrameworks>netstandard1.6;net452</TargetFrameworks>
+    <DisableImplicitFrameworkReferences Condition=" '$(TargetFramework)' == 'net452' ">true</DisableImplicitFrameworkReferences>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Nancy.Authentication.Basic</AssemblyName>
     <PackageId>Nancy.Authentication.Basic</PackageId>

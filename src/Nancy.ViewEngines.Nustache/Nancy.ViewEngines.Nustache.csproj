@@ -5,6 +5,7 @@
     <VersionPrefix>2.0.0-clinteastwood</VersionPrefix>
     <Authors>Andreas Håkansson, Steven Robbins and contributors</Authors>
     <TargetFramework>net452</TargetFramework>
+    <DisableImplicitFrameworkReferences Condition=" '$(TargetFramework)' == 'net452' ">true</DisableImplicitFrameworkReferences>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Nancy.ViewEngines.Nustache</AssemblyName>
     <PackageId>Nancy.ViewEngines.Nustache</PackageId>

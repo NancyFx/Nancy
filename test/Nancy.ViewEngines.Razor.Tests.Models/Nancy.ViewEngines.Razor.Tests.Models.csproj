@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net452</TargetFramework>
+    <DisableImplicitFrameworkReferences Condition=" '$(TargetFramework)' == 'net452' ">true</DisableImplicitFrameworkReferences>
     <AssemblyName>Nancy.ViewEngines.Razor.Tests.Models</AssemblyName>
     <PackageId>Nancy.ViewEngines.Razor.Tests.Models</PackageId>
   </PropertyGroup>

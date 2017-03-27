@@ -3,6 +3,7 @@
   <PropertyGroup>
     <VersionPrefix>2.0.0-clinteastwood</VersionPrefix>
     <TargetFramework>net452</TargetFramework>
+    <DisableImplicitFrameworkReferences Condition=" '$(TargetFramework)' == 'net452' ">true</DisableImplicitFrameworkReferences>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Nancy.ViewEngines.Razor.BuildProviders</AssemblyName>
     <PackageId>Nancy.ViewEngines.Razor.BuildProviders</PackageId>
