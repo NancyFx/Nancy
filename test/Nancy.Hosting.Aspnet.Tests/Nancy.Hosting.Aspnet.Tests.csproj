@@ -1,10 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <RuntimeFrameworkVersion>2.0.0-beta-001776-00</RuntimeFrameworkVersion>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <TargetFramework>net452</TargetFramework>
     <AssemblyName>Nancy.Hosting.Aspnet.Tests</AssemblyName>
     <PackageId>Nancy.Hosting.Aspnet.Tests</PackageId>

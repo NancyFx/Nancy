@@ -1,10 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <RuntimeFrameworkVersion>2.0.0-beta-001776-00</RuntimeFrameworkVersion>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <TargetFrameworks>net452;netcoreapp1.0</TargetFrameworks>
     <AssemblyName>Nancy.Metadata.Modules.Tests</AssemblyName>
     <PackageId>Nancy.Metadata.Modules.Tests</PackageId>
