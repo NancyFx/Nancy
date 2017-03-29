@@ -27,8 +27,8 @@
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
-    <PackageReference Include="Microsoft.Extensions.PlatformAbstractions" Version="1.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="1.0.0" />
+    <PackageReference Include="Microsoft.Extensions.PlatformAbstractions" Version="1.1.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="1.1.1" />
     <PackageReference Include="System.Collections.Specialized" Version="4.0.1" />
     <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.1.0" />
     <PackageReference Include="System.Net.NameResolution" Version="4.0.0" />
