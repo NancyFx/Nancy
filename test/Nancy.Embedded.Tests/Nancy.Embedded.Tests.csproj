@@ -6,7 +6,6 @@
     <AssemblyName>Nancy.Embedded.Tests</AssemblyName>
     <PackageId>Nancy.Embedded.Tests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
-    <RuntimeFrameworkVersion Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">1.0.4</RuntimeFrameworkVersion>
   </PropertyGroup>
 
   <ItemGroup>

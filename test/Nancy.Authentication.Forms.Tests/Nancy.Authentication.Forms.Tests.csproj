@@ -6,7 +6,6 @@
     <AssemblyName>Nancy.Authentication.Forms.Tests</AssemblyName>
     <PackageId>Nancy.Authentication.Forms.Tests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
-    <RuntimeFrameworkVersion Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">1.0.4</RuntimeFrameworkVersion>
   </PropertyGroup>
 
   <ItemGroup>
