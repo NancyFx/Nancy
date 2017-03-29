@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net452;netcoreapp1.0</TargetFrameworks>
+    <TargetFrameworks>net452;netcoreapp1.1</TargetFrameworks>
     <DisableImplicitFrameworkReferences Condition=" '$(TargetFramework)' == 'net452' ">true</DisableImplicitFrameworkReferences>
     <AssemblyName>Nancy.Authentication.Forms.Tests</AssemblyName>
     <PackageId>Nancy.Authentication.Forms.Tests</PackageId>

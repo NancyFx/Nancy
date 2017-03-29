@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <VersionPrefix>1.4.1.0</VersionPrefix>
-    <TargetFrameworks>net452;netcoreapp1.0</TargetFrameworks>
+    <TargetFrameworks>net452;netcoreapp1.1</TargetFrameworks>
     <DisableImplicitFrameworkReferences Condition=" '$(TargetFramework)' == 'net452' ">true</DisableImplicitFrameworkReferences>
     <AssemblyName>Nancy.Tests</AssemblyName>
     <PackageId>Nancy.Tests</PackageId>
@@ -35,11 +35,12 @@
     <Reference Include="System.Runtime" />
     <Reference Include="System.Threading.Tasks" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.1' ">
     <DefineConstants>$(DefineConstants);CORE</DefineConstants>
   </PropertyGroup>
 
@@ -47,7 +48,7 @@
     <DefineConstants>$(DefineConstants);MONO</DefineConstants>
   </PropertyGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.1' ">
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="2.0.0-rc" />
   </ItemGroup>
 
