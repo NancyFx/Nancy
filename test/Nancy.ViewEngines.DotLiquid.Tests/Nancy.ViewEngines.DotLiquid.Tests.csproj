@@ -27,7 +27,6 @@
     <PackageReference Include="DotLiquid" Version="2.0.64" />
     <PackageReference Include="FakeItEasy" Version="3.0.0" />
     <PackageReference Include="FakeItEasy.Analyzer" Version="3.0.0" />
-    <PackageReference Include="Microsoft.NETCore.Platforms" Version="1.0.2" />
     <PackageReference Include="xunit" Version="2.2.0" />
   </ItemGroup>
 

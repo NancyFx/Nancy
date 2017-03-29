@@ -21,7 +21,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
-    <PackageReference Include="Microsoft.NETCore.Platforms" Version="1.0.2" />
     <PackageReference Include="FluentValidation" Version="6.3.4-alpha" />
     <PackageReference Include="xunit" Version="2.2.0" />
     <PackageReference Include="FakeItEasy" Version="3.0.0" />
