@@ -9,7 +9,6 @@
     <DefineConstants>$(DefineConstants);CORE</DefineConstants>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Nancy.Hosting.Self</AssemblyName>
-    <PackageId>Nancy.Hosting.Self</PackageId>
     <PackageTags>Nancy;Host</PackageTags>
     <PackageIconUrl>http://nancyfx.org/nancy-nuget.png</PackageIconUrl>
     <PackageProjectUrl>http://nancyfx.org</PackageProjectUrl>

@@ -8,7 +8,6 @@
     <DisableImplicitFrameworkReferences Condition=" '$(TargetFramework)' == 'net452' ">true</DisableImplicitFrameworkReferences>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Nancy.ViewEngines.Spark</AssemblyName>
-    <PackageId>Nancy.ViewEngines.Spark</PackageId>
     <PackageTags>Nancy;View Engine;Spark</PackageTags>
     <PackageIconUrl>http://nancyfx.org/nancy-nuget.png</PackageIconUrl>
     <PackageProjectUrl>http://nancyfx.org</PackageProjectUrl>

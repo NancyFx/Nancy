@@ -6,7 +6,6 @@
     <DisableImplicitFrameworkReferences Condition=" '$(TargetFramework)' == 'net452' ">true</DisableImplicitFrameworkReferences>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Nancy.ViewEngines.Razor.BuildProviders</AssemblyName>
-    <PackageId>Nancy.ViewEngines.Razor.BuildProviders</PackageId>
   </PropertyGroup>
 
   <ItemGroup>

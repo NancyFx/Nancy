@@ -4,7 +4,6 @@
     <TargetFramework>net452</TargetFramework>
     <DisableImplicitFrameworkReferences Condition=" '$(TargetFramework)' == 'net452' ">true</DisableImplicitFrameworkReferences>
     <AssemblyName>Nancy.ViewEngines.Markdown.Tests</AssemblyName>
-    <PackageId>Nancy.ViewEngines.Markdown.Tests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
   </PropertyGroup>
 

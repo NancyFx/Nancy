@@ -8,7 +8,6 @@
     <DisableImplicitFrameworkReferences Condition=" '$(TargetFramework)' == 'net452' ">true</DisableImplicitFrameworkReferences>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Nancy.Authentication.Forms</AssemblyName>
-    <PackageId>Nancy.Authentication.Forms</PackageId>
     <PackageTags>Nancy;Authentication</PackageTags>
     <PackageIconUrl>http://nancyfx.org/nancy-nuget.png</PackageIconUrl>
     <PackageProjectUrl>http://nancyfx.org</PackageProjectUrl>

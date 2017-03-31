@@ -4,7 +4,6 @@
     <TargetFramework>net452</TargetFramework>
     <DisableImplicitFrameworkReferences Condition=" '$(TargetFramework)' == 'net452' ">true</DisableImplicitFrameworkReferences>
     <AssemblyName>Nancy.Hosting.Self.Tests</AssemblyName>
-    <PackageId>Nancy.Hosting.Self.Tests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
   </PropertyGroup>
 

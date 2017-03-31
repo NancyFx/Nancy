@@ -5,7 +5,6 @@
     <DebugType>portable</DebugType>
     <AssemblyName>Nancy.Demo.Hosting.Kestrel</AssemblyName>
     <OutputType>Exe</OutputType>
-    <PackageId>Nancy.Demo.Hosting.Kestrel</PackageId>
   </PropertyGroup>
 
   <ItemGroup>

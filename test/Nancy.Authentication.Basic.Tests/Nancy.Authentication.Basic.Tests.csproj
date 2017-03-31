@@ -4,7 +4,6 @@
     <TargetFrameworks>net452;netcoreapp1.1</TargetFrameworks>
     <DisableImplicitFrameworkReferences Condition=" '$(TargetFramework)' == 'net452' ">true</DisableImplicitFrameworkReferences>
     <AssemblyName>Nancy.Authentication.Basic.Tests</AssemblyName>
-    <PackageId>Nancy.Authentication.Basic.Tests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
   </PropertyGroup>
 

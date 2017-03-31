@@ -8,7 +8,6 @@
     <DisableImplicitFrameworkReferences Condition=" '$(TargetFramework)' == 'net452' ">true</DisableImplicitFrameworkReferences>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Nancy.Encryption.MachineKey</AssemblyName>
-    <PackageId>Nancy.Encryption.MachineKey</PackageId>
     <PackageTags>Nancy;Encryption</PackageTags>
     <PackageIconUrl>http://nancyfx.org/nancy-nuget.png</PackageIconUrl>
     <PackageProjectUrl>http://nancyfx.org</PackageProjectUrl>

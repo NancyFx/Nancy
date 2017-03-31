@@ -4,7 +4,6 @@
     <TargetFramework>net452</TargetFramework>
     <DisableImplicitFrameworkReferences Condition=" '$(TargetFramework)' == 'net452' ">true</DisableImplicitFrameworkReferences>
     <AssemblyName>Nancy.Encryption.MachineKey.Tests</AssemblyName>
-    <PackageId>Nancy.Encryption.MachineKey.Tests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
   </PropertyGroup>
 
