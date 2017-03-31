@@ -356,7 +356,7 @@
         /// Sets the length of the current stream.
         /// </summary>
         /// <param name="value">The desired length of the current stream in bytes. </param>
-        /// <exception cref="NotSupportedException">The stream does not support having it's length set.</exception>
+        /// <exception cref="NotSupportedException">The stream does not support having its length set.</exception>
         /// <remarks>This functionality is not supported by the <see cref="RequestStream"/> type and will always throw <see cref="NotSupportedException"/>.</remarks>
         public override void SetLength(long value)
         {

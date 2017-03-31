@@ -16,7 +16,7 @@
             {
                 config.Module<MyModule>();
                 // explicitly declare the status code handler that throws, just
-                // incase it's not there for some other reason.
+                // in case it's not there for some other reason.
                 config.StatusCodeHandlers(new[] { typeof(PassThroughStatusCodeHandler)});
             });
         }
