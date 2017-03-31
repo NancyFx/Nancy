@@ -1,18 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>Enables hosting Nancy in any application.</Description>
-    <VersionPrefix>2.0.0-clinteastwood</VersionPrefix>
-    <Authors>Andreas Håkansson, Steven Robbins and contributors</Authors>
-    <TargetFramework>net452</TargetFramework>
-    <DisableImplicitFrameworkReferences Condition=" '$(TargetFramework)' == 'net452' ">true</DisableImplicitFrameworkReferences>
-    <DefineConstants>$(DefineConstants);CORE</DefineConstants>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Nancy.Hosting.Self</AssemblyName>
-    <PackageTags>Nancy;Host</PackageTags>
+    <Authors>Andreas Håkansson, Steven Robbins and contributors</Authors>
+    <DefineConstants>$(DefineConstants);CORE</DefineConstants>
+    <Description>Enables hosting Nancy in any application.</Description>
+    <DisableImplicitFrameworkReferences Condition=" '$(TargetFramework)' == 'net452' ">true</DisableImplicitFrameworkReferences>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageIconUrl>http://nancyfx.org/nancy-nuget.png</PackageIconUrl>
-    <PackageProjectUrl>http://nancyfx.org</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/NancyFx/Nancy/blob/master/license.txt</PackageLicenseUrl>
+    <PackageProjectUrl>http://nancyfx.org</PackageProjectUrl>
+    <PackageTags>Nancy;Host</PackageTags>
+    <TargetFramework>net452</TargetFramework>
+    <VersionPrefix>2.0.0-clinteastwood</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,8 +26,8 @@
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
-    <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
   </ItemGroup>
 
 </Project>

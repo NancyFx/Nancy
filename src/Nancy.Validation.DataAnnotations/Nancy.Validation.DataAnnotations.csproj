@@ -1,17 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>Adds Data Annotation validation support to Nancy.</Description>
-    <VersionPrefix>2.0.0-clinteastwood</VersionPrefix>
+    <AssemblyName>Nancy.Validation.DataAnnotations</AssemblyName>
     <Authors>Andreas Håkansson, Steven Robbins and contributors</Authors>
-    <TargetFramework>net452</TargetFramework>
+    <Description>Adds Data Annotation validation support to Nancy.</Description>
     <DisableImplicitFrameworkReferences Condition=" '$(TargetFramework)' == 'net452' ">true</DisableImplicitFrameworkReferences>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <AssemblyName>Nancy.Validation.DataAnnotations</AssemblyName>
-    <PackageTags>Nancy;Validation;DataAnnotations</PackageTags>
     <PackageIconUrl>http://nancyfx.org/nancy-nuget.png</PackageIconUrl>
-    <PackageProjectUrl>http://nancyfx.org</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/NancyFx/Nancy/blob/master/license.txt</PackageLicenseUrl>
+    <PackageProjectUrl>http://nancyfx.org</PackageProjectUrl>
+    <PackageTags>Nancy;Validation;DataAnnotations</PackageTags>
+    <TargetFramework>net452</TargetFramework>
+    <VersionPrefix>2.0.0-clinteastwood</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,9 +25,9 @@
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
 
 </Project>

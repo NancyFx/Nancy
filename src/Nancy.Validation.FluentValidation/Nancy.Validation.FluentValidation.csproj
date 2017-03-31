@@ -1,17 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>Adds Fluent Validation support to Nancy.</Description>
-    <VersionPrefix>2.0.0-clinteastwood</VersionPrefix>
+    <AssemblyName>Nancy.Validation.FluentValidation</AssemblyName>
     <Authors>Andreas Håkansson, Steven Robbins and contributors</Authors>
-    <TargetFrameworks>net452;netstandard1.6</TargetFrameworks>
+    <Description>Adds Fluent Validation support to Nancy.</Description>
     <DisableImplicitFrameworkReferences Condition=" '$(TargetFramework)' == 'net452' ">true</DisableImplicitFrameworkReferences>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <AssemblyName>Nancy.Validation.FluentValidation</AssemblyName>
-    <PackageTags>Nancy;Validation;FluentValidation</PackageTags>
     <PackageIconUrl>http://nancyfx.org/nancy-nuget.png</PackageIconUrl>
-    <PackageProjectUrl>http://nancyfx.org</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/NancyFx/Nancy/blob/master/license.txt</PackageLicenseUrl>
+    <PackageProjectUrl>http://nancyfx.org</PackageProjectUrl>
+    <PackageTags>Nancy;Validation;FluentValidation</PackageTags>
+    <TargetFrameworks>net452;netstandard1.6</TargetFrameworks>
+    <VersionPrefix>2.0.0-clinteastwood</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,15 +19,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="6.3.4-alpha" />
     <PackageReference Include="AsyncUsageAnalyzers" Version="1.0.0-alpha003">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="FluentValidation" Version="6.3.4-alpha" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
-    <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
   </ItemGroup>
 
 </Project>

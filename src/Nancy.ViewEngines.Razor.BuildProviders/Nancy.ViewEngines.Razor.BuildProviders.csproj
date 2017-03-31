@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <VersionPrefix>2.0.0-clinteastwood</VersionPrefix>
-    <TargetFramework>net452</TargetFramework>
+    <AssemblyName>Nancy.ViewEngines.Razor.BuildProviders</AssemblyName>
     <DisableImplicitFrameworkReferences Condition=" '$(TargetFramework)' == 'net452' ">true</DisableImplicitFrameworkReferences>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <AssemblyName>Nancy.ViewEngines.Razor.BuildProviders</AssemblyName>
+    <TargetFramework>net452</TargetFramework>
+    <VersionPrefix>2.0.0-clinteastwood</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,9 +20,9 @@
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Web" />
     <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
 
 </Project>

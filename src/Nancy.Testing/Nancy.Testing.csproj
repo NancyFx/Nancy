@@ -1,17 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>Test harness for Nancy applications.</Description>
-    <VersionPrefix>2.0.0-clinteastwood</VersionPrefix>
+    <AssemblyName>Nancy.Testing</AssemblyName>
     <Authors>Andreas Håkansson, Steven Robbins and contributors</Authors>
-    <TargetFrameworks>netstandard1.6;net452</TargetFrameworks>
+    <Description>Test harness for Nancy applications.</Description>
     <DisableImplicitFrameworkReferences Condition=" '$(TargetFramework)' == 'net452' ">true</DisableImplicitFrameworkReferences>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <AssemblyName>Nancy.Testing</AssemblyName>
-    <PackageTags>Nancy;Testing</PackageTags>
     <PackageIconUrl>http://nancyfx.org/nancy-nuget.png</PackageIconUrl>
-    <PackageProjectUrl>http://nancyfx.org</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/NancyFx/Nancy/blob/master/license.txt</PackageLicenseUrl>
+    <PackageProjectUrl>http://nancyfx.org</PackageProjectUrl>
+    <PackageTags>Nancy;Testing</PackageTags>
+    <TargetFrameworks>netstandard1.6;net452</TargetFrameworks>
+    <VersionPrefix>2.0.0-clinteastwood</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>
@@ -31,16 +31,17 @@
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
+    <PackageReference Include="System.Xml.XDocument" Version="4.3.0" />
     <PackageReference Include="System.Xml.XmlDocument" Version="4.0.1" />
-    <PackageReference Include="System.Xml.XDocument" Version="4.0.11" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.IO" />
     <Reference Include="System.Runtime" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Xml" />
     <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
 
 </Project>

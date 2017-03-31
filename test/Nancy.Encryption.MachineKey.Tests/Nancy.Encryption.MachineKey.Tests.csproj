@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net452</TargetFramework>
-    <DisableImplicitFrameworkReferences Condition=" '$(TargetFramework)' == 'net452' ">true</DisableImplicitFrameworkReferences>
     <AssemblyName>Nancy.Encryption.MachineKey.Tests</AssemblyName>
+    <DisableImplicitFrameworkReferences Condition=" '$(TargetFramework)' == 'net452' ">true</DisableImplicitFrameworkReferences>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+    <TargetFramework>net452</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,10 +17,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="FakeItEasy.Analyzer" Version="3.0.0" />
+    <PackageReference Include="FakeItEasy" Version="3.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
-    <PackageReference Include="FakeItEasy" Version="3.0.0" />
-    <PackageReference Include="FakeItEasy.Analyzer" Version="3.0.0" />
     <PackageReference Include="xunit" Version="2.2.0" />
   </ItemGroup>
 

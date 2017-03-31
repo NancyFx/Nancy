@@ -1,17 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>Nancy extensions for OWIN hosting.</Description>
-    <VersionPrefix>2.0.0-clinteastwood</VersionPrefix>
+    <AssemblyName>Nancy.Owin</AssemblyName>
     <Authors>Andreas Håkansson, Steven Robbins and contributors</Authors>
-    <TargetFramework>net452</TargetFramework>
+    <Description>Nancy extensions for OWIN hosting.</Description>
     <DisableImplicitFrameworkReferences Condition=" '$(TargetFramework)' == 'net452' ">true</DisableImplicitFrameworkReferences>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <AssemblyName>Nancy.Owin</AssemblyName>
-    <PackageTags>Nancy;OWIN</PackageTags>
     <PackageIconUrl>http://nancyfx.org/nancy-nuget.png</PackageIconUrl>
-    <PackageProjectUrl>http://nancyfx.org</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/NancyFx/Nancy/blob/master/license.txt</PackageLicenseUrl>
+    <PackageProjectUrl>http://nancyfx.org</PackageProjectUrl>
+    <PackageTags>Nancy;OWIN</PackageTags>
+    <TargetFramework>net452</TargetFramework>
+    <VersionPrefix>2.0.0-clinteastwood</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,8 +26,8 @@
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
-    <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
   </ItemGroup>
 
 </Project>
