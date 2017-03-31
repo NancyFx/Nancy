@@ -4,7 +4,7 @@
     <AssemblyName>Nancy.Tests</AssemblyName>
     <DisableImplicitFrameworkReferences Condition=" '$(TargetFramework)' == 'net452' ">true</DisableImplicitFrameworkReferences>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
-    <TargetFrameworks>net452;netcoreapp1.1</TargetFrameworks>
+    <TargetFrameworks>netcoreapp1.1;net452</TargetFrameworks>
     <VersionPrefix>1.4.1.0</VersionPrefix>
   </PropertyGroup>
 
