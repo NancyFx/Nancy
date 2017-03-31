@@ -335,7 +335,7 @@
         }
 
         /// <summary>
-        /// Wraps a sync delegate into it's async form
+        /// Wraps a sync delegate into its async form
         /// </summary>
         /// <param name="syncDelegate">Sync pipeline instance</param>
         /// <returns>Async pipeline instance</returns>
