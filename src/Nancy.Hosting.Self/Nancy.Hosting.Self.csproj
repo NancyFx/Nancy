@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyName>Nancy.Hosting.Self</AssemblyName>
     <Authors>Andreas Håkansson, Steven Robbins and contributors</Authors>
     <DefineConstants>$(DefineConstants);CORE</DefineConstants>
     <Description>Enables hosting Nancy in any application.</Description>

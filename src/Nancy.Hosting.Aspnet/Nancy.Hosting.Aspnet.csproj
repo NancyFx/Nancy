@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyName>Nancy.Hosting.Aspnet</AssemblyName>
     <Authors>Andreas Håkansson, Steven Robbins and contributors</Authors>
     <Description>Enables hosting Nancy on ASP.NET.</Description>
     <DisableImplicitFrameworkReferences Condition=" '$(TargetFramework)' == 'net452' ">true</DisableImplicitFrameworkReferences>

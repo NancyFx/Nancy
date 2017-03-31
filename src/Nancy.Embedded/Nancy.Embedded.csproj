@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyName>Nancy.Embedded</AssemblyName>
     <Authors>Andreas Håkansson, Steven Robbins and contributors</Authors>
     <Description>Helpers for serving embedded static content with Nancy.</Description>
     <DisableImplicitFrameworkReferences Condition=" '$(TargetFramework)' == 'net452' ">true</DisableImplicitFrameworkReferences>

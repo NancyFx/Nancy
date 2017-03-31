@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyName>Nancy.Testing</AssemblyName>
     <Authors>Andreas Håkansson, Steven Robbins and contributors</Authors>
     <Description>Test harness for Nancy applications.</Description>
     <DisableImplicitFrameworkReferences Condition=" '$(TargetFramework)' == 'net452' ">true</DisableImplicitFrameworkReferences>

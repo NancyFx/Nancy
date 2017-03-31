@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyName>Nancy.Encryption.MachineKey</AssemblyName>
     <Authors>Andreas Håkansson, Steven Robbins and contributors</Authors>
     <Description>System.Web MachineKey encrypton and HMAC providers for Nancy.</Description>
     <DisableImplicitFrameworkReferences Condition=" '$(TargetFramework)' == 'net452' ">true</DisableImplicitFrameworkReferences>
