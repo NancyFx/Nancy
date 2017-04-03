@@ -1,16 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Authors>Andreas Håkansson, Steven Robbins and contributors</Authors>
     <Description>Test harness for Nancy applications.</Description>
-    <DisableImplicitFrameworkReferences Condition=" '$(TargetFramework)' == 'net452' ">true</DisableImplicitFrameworkReferences>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <PackageIconUrl>http://nancyfx.org/nancy-nuget.png</PackageIconUrl>
-    <PackageLicenseUrl>https://github.com/NancyFx/Nancy/blob/master/license.txt</PackageLicenseUrl>
-    <PackageProjectUrl>http://nancyfx.org</PackageProjectUrl>
     <PackageTags>Nancy;Testing</PackageTags>
     <TargetFrameworks>netstandard1.6;net452</TargetFrameworks>
-    <VersionPrefix>2.0.0-clinteastwood</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,15 +11,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Nancy/Nancy.csproj" />
     <ProjectReference Include="../Nancy.Authentication.Forms/Nancy.Authentication.Forms.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AngleSharp" Version="0.9.8.1" />
-    <PackageReference Include="AsyncUsageAnalyzers" Version="1.0.0-alpha003">
-      <PrivateAssets>All</PrivateAssets>
-    </PackageReference>
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
@@ -35,12 +24,10 @@
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.IO" />
     <Reference Include="System.Runtime" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml" />
-    <Reference Include="System" />
   </ItemGroup>
 
 </Project>

@@ -1,32 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Authors>Andreas Håkansson, Steven Robbins and contributors</Authors>
     <Description>Enables using the DotLiquid view engine with Nancy.</Description>
-    <DisableImplicitFrameworkReferences Condition=" '$(TargetFramework)' == 'net452' ">true</DisableImplicitFrameworkReferences>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <PackageIconUrl>http://nancyfx.org/nancy-nuget.png</PackageIconUrl>
-    <PackageLicenseUrl>https://github.com/NancyFx/Nancy/blob/master/license.txt</PackageLicenseUrl>
-    <PackageProjectUrl>http://nancyfx.org</PackageProjectUrl>
     <PackageTags>Nancy;View Engine;DotLiquid</PackageTags>
     <TargetFramework>net452</TargetFramework>
-    <VersionPrefix>2.0.0-clinteastwood</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Nancy/Nancy.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="AsyncUsageAnalyzers" Version="1.0.0-alpha003">
-      <PrivateAssets>All</PrivateAssets>
-    </PackageReference>
     <PackageReference Include="DotLiquid" Version="2.0.64" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System" />
   </ItemGroup>
 
 </Project>
