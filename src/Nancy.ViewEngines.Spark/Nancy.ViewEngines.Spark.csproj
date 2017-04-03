@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>Enables using the Spark view engine with Nancy.</Description>
-    <PackageTags>Nancy;View Engine;Spark</PackageTags>
+    <PackageTags>$(PackageTags);View Engine;Spark</PackageTags>
     <TargetFramework>net452</TargetFramework>
   </PropertyGroup>
 

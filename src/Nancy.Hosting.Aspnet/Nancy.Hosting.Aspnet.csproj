@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>Enables hosting Nancy on ASP.NET.</Description>
-    <PackageTags>Nancy;Host</PackageTags>
+    <PackageTags>$(PackageTags);Host</PackageTags>
     <TargetFramework>net452</TargetFramework>
   </PropertyGroup>
 

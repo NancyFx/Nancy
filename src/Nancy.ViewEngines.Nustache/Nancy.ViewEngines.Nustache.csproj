@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>Enables using the Nustache view engine with Nancy.</Description>
-    <PackageTags>Nancy;View Engine;Nustache</PackageTags>
+    <PackageTags>$(PackageTags);View Engine;Nustache</PackageTags>
     <TargetFramework>net452</TargetFramework>
   </PropertyGroup>
 

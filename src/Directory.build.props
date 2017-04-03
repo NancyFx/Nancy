@@ -6,6 +6,7 @@
     <PackageIconUrl>http://nancyfx.org/nancy-nuget.png</PackageIconUrl>
     <PackageLicenseUrl>https://github.com/NancyFx/Nancy/blob/master/license.txt</PackageLicenseUrl>
     <PackageProjectUrl>http://nancyfx.org</PackageProjectUrl>
+    <PackageTags>Nancy</PackageTags>
     <VersionPrefix>2.0.0-clinteastwood</VersionPrefix>
   </PropertyGroup>
 

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>Test harness for Nancy applications.</Description>
-    <PackageTags>Nancy;Testing</PackageTags>
+    <PackageTags>$(PackageTags);Testing</PackageTags>
     <TargetFrameworks>netstandard1.6;net452</TargetFrameworks>
   </PropertyGroup>
 

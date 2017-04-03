@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>A forms authentication provider for Nancy.</Description>
-    <PackageTags>Nancy;Authentication</PackageTags>
+    <PackageTags>$(PackageTags);Authentication</PackageTags>
     <TargetFrameworks>netstandard1.6;net452</TargetFrameworks>
   </PropertyGroup>
 

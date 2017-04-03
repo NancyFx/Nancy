@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>Enables using Markdown with Nancy.</Description>
-    <PackageTags>Nancy;View Engine;Markdown</PackageTags>
+    <PackageTags>$(PackageTags);View Engine;Markdown</PackageTags>
     <TargetFrameworks>net452;netstandard1.6</TargetFrameworks>
   </PropertyGroup>
 

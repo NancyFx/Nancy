@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>Enables using the Razor view engine with Nancy.</Description>
-    <PackageTags>Nancy;View Engine;Razor</PackageTags>
+    <PackageTags>$(PackageTags);View Engine;Razor</PackageTags>
     <TargetFramework>net452</TargetFramework>
   </PropertyGroup>
 
