@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>net452</TargetFramework>
   </PropertyGroup>
@@ -17,5 +16,4 @@
   <ItemGroup>
     <PackageReference Include="DotLiquid" Version="2.0.64" />
   </ItemGroup>
-
 </Project>

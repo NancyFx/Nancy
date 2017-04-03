@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <Description>Enables hosting Nancy on ASP.NET.</Description>
     <PackageTags>$(PackageTags);Host</PackageTags>
@@ -17,5 +16,4 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web" />
   </ItemGroup>
-
 </Project>

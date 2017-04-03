@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>net452</TargetFramework>
   </PropertyGroup>
@@ -7,5 +6,4 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'MonoRelease' ">
     <DefineConstants>$(DefineConstants);MONO</DefineConstants>
   </PropertyGroup>
-
 </Project>

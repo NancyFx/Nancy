@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <Description>Nancy extensions for OWIN hosting.</Description>
     <PackageTags>$(PackageTags);OWIN</PackageTags>
@@ -9,5 +8,4 @@
   <ItemGroup>
     <PackageReference Include="OWIN" Version="1.0.0" />
   </ItemGroup>
-
 </Project>

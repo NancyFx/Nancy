@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <Description>Test harness for Nancy applications.</Description>
     <PackageTags>$(PackageTags);Testing</PackageTags>
@@ -29,5 +28,4 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml" />
   </ItemGroup>
-
 </Project>

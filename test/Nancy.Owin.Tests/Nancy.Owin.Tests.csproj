@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>net452</TargetFramework>
   </PropertyGroup>
@@ -8,5 +7,4 @@
     <PackageReference Include="Microsoft.Owin" Version="3.0.1" />
     <PackageReference Include="OwinHttpMessageHandler" Version="1.3.5" />
   </ItemGroup>
-
 </Project>

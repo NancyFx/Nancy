@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <Description>Enables using the Razor view engine with Nancy.</Description>
     <PackageTags>$(PackageTags);View Engine;Razor</PackageTags>
@@ -35,5 +34,4 @@
     <Reference Include="System.Text.Encoding" />
     <Reference Include="System.Threading.Tasks" />
   </ItemGroup>
-
 </Project>

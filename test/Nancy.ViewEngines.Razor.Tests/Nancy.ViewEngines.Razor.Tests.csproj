@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>net452</TargetFramework>
   </PropertyGroup>
@@ -14,5 +13,4 @@
     <ProjectReference Include="../../src/Nancy.ViewEngines.Razor/Nancy.ViewEngines.Razor.csproj" />
     <ProjectReference Include="../Nancy.ViewEngines.Razor.Tests.Models/Nancy.ViewEngines.Razor.Tests.Models.csproj" />
   </ItemGroup>
-
 </Project>

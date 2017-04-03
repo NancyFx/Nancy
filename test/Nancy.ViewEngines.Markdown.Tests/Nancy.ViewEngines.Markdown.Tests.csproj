@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>net452</TargetFramework>
   </PropertyGroup>
@@ -13,5 +12,4 @@
   <ItemGroup>
     <PackageReference Include="MarkdownSharp" Version="1.13.0" />
   </ItemGroup>
-
 </Project>

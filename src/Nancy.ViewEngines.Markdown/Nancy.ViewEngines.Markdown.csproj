@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <Description>Enables using Markdown with Nancy.</Description>
     <PackageTags>$(PackageTags);View Engine;Markdown</PackageTags>
@@ -9,5 +8,4 @@
   <ItemGroup>
     <PackageReference Include="Markdown" Version="2.2.0" />
   </ItemGroup>
-
 </Project>
