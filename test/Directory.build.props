@@ -1,0 +1,42 @@
+<Project>
+  <PropertyGroup>
+    <DisableImplicitFrameworkReferences Condition=" '$(TargetFramework)' == 'net452' ">true</DisableImplicitFrameworkReferences>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.1' ">
+    <DefineConstants>$(DefineConstants);CORE</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'MonoRelease' ">
+    <DefineConstants>$(DefineConstants);MONO</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ProjectUnderTest>$(MSBuildProjectName.Substring(0, $(MSBuildProjectName.IndexOf(".Tests"))))</ProjectUnderTest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/Nancy/Nancy.csproj" />
+    <ProjectReference Include="../../src/$(ProjectUnderTest)/$(ProjectUnderTest).csproj" />
+    <ProjectReference Include="../../src/Nancy.Testing/Nancy.Testing.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(MSBuildProjectName)' != 'Nancy.Tests' and '$(MSBuildProjectName)' != 'Nancy.ViewEngines.Razor.Tests.Models' ">
+    <Compile Include="..\Nancy.Tests\Fakes\*.cs;..\Nancy.Tests\ShouldExtensions.cs;..\Nancy.Tests\xUnitExtensions\*.cs" Exclude="bin\**;obj\**;packages\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FakeItEasy.Analyzer" Version="3.0.0" />
+    <PackageReference Include="FakeItEasy" Version="3.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
+    <PackageReference Include="xunit" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Runtime" />
+    <Reference Include="System.Threading.Tasks" />
+    <Reference Include="System" />
+  </ItemGroup>
+</Project>
