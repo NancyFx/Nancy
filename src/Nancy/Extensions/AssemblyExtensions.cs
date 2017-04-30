@@ -31,9 +31,14 @@ namespace Nancy.Extensions
             {
                 types = ArrayCache.Empty<Type>();
             }
-            catch (FileLoadException) {
+            catch (FileLoadException)
+            {
                 // probably assembly version conflict
                 types = ArrayCache.Empty<Type>();
+            }
+            catch (ReflectionTypeLoadException)
+            {
+                types = new Type[] { };
             }
             return types;
         }
