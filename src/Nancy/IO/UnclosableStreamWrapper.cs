@@ -7,7 +7,7 @@
     /// To close the unclosable stream..
     /// To fight the unbeatable foe..
     /// To bear with unbearable sorrow..
-    /// To run where the brave dare not go..
+    /// To run where the brave dare not go..  
     /// </summary>
     public class UnclosableStreamWrapper : Stream, IDisposable
     {
