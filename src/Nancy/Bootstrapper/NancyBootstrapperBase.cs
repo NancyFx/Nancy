@@ -282,6 +282,7 @@
             this.RegisterCollectionTypes(this.ApplicationContainer, collectionTypeRegistrations);
             this.RegisterInstances(this.ApplicationContainer, instanceRegistrations);
             this.RegisterRegistrationTasks(this.GetRegistrationTasks());
+            this.RegisterModules(this.ApplicationContainer, this.Modules);
 
             var environment = this.GetEnvironmentConfigurator().ConfigureEnvironment(this.Configure);
             this.RegisterNancyEnvironment(this.ApplicationContainer, environment);
