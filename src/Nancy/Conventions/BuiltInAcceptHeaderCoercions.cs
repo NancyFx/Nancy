@@ -40,7 +40,18 @@ namespace Nancy.Conventions
         {
             var current = currentAcceptHeaders as Tuple<string, decimal>[] ?? currentAcceptHeaders.ToArray();
 
-            return IsStupidBrowser(current, context) ? DefaultAccept : current;
+            return IsNotRequestingJson(current) && IsStupidBrowser(current, context) ? DefaultAccept : current;
+        }
+
+        /// <summary>
+        /// Stupid browsers can sometimes send the proper content type, if the browser wants json, we don't 
+        /// want to send them html.
+        /// </summary>
+        /// <param name="currentAcceptHeaders">Current Headers</param>
+        /// <returns>true if browser is requesting json</returns>
+        private static bool IsNotRequestingJson(IEnumerable<Tuple<string, decimal>> currentAcceptHeaders)
+        {
+            return !(currentAcceptHeaders.Any(header => header.Item1 == "application/json"));
         }
 
         /// <summary>
