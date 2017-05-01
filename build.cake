@@ -60,28 +60,28 @@ Task("Compile")
     {
         if (IsRunningOnUnix())
         {
-            var srcProjects = GetFiles("./src/**/*.xproj");
+            var srcProjects = GetFiles("./src/**/*.csproj");
 
             if (srcProjects.Count == 0)
             {
                 throw new CakeException("Unable to find any projects to build.");
             }
 
-            srcProjects = srcProjects - GetFiles("./**/Nancy.Encryption.MachineKey.xproj");
+            srcProjects = srcProjects - GetFiles("./**/Nancy.Encryption.MachineKey.csproj");
 
-            var testProjects = GetFiles("./test/**/*.xproj");
+            var testProjects = GetFiles("./test/**/*.csproj");
 
             var dotnetTestProjects = testProjects
-                                 - GetFiles("test/**/Nancy.Embedded.Tests.xproj")
-                                 - GetFiles("test/**/Nancy.Encryption.MachineKey.Tests.xproj")
-                                 - GetFiles("test/**/Nancy.Hosting.Aspnet.Tests.xproj")
-                                 - GetFiles("test/**/Nancy.Hosting.Self.Tests.xproj")
-                                 - GetFiles("test/**/Nancy.Owin.Tests.xproj")
-                                 - GetFiles("test/**/Nancy.Validation.DataAnnotatioins.Tests.xproj")
-                                 - GetFiles("test/**/Nancy.ViewEngines.DotLiquid.Tests.xproj")
-                                 - GetFiles("test/**/Nancy.ViewEngines.Markdown.Tests.xproj")
-                                 - GetFiles("test/**/Nancy.ViewEngines.Razor.Tests.xproj")
-                                 - GetFiles("test/**/Nancy.ViewEngines.Razor.Tests.Models.xproj");
+                                 - GetFiles("test/**/Nancy.Embedded.Tests.csproj")
+                                 - GetFiles("test/**/Nancy.Encryption.MachineKey.Tests.csproj")
+                                 - GetFiles("test/**/Nancy.Hosting.Aspnet.Tests.csproj")
+                                 - GetFiles("test/**/Nancy.Hosting.Self.Tests.csproj")
+                                 - GetFiles("test/**/Nancy.Owin.Tests.csproj")
+                                 - GetFiles("test/**/Nancy.Validation.DataAnnotatioins.Tests.csproj")
+                                 - GetFiles("test/**/Nancy.ViewEngines.DotLiquid.Tests.csproj")
+                                 - GetFiles("test/**/Nancy.ViewEngines.Markdown.Tests.csproj")
+                                 - GetFiles("test/**/Nancy.ViewEngines.Razor.Tests.csproj")
+                                 - GetFiles("test/**/Nancy.ViewEngines.Razor.Tests.Models.csproj");
 
             foreach(var srcProject in srcProjects)
             {
@@ -112,9 +112,8 @@ Task("Compile")
         }
         else
         {
-            var projects = GetFiles("./**/*.xproj");
-            projects = projects
-                                - GetFiles("./**/Nancy.Encryption.MachineKey.xproj");
+            var projects = GetFiles("./src/**/*.csproj");
+            projects = projects - GetFiles("./**/Nancy.Encryption.MachineKey.csproj");
             foreach(var project in projects)
             {
                 DotNetCoreBuild(project.GetDirectory().FullPath, new DotNetCoreBuildSettings {
@@ -143,7 +142,7 @@ Task("Package-NuGet")
     .Description("Generates NuGet packages for each project that contains a nuspec")
     .Does(() =>
     {
-        var projects = GetFiles("./src/**/*.xproj");
+        var projects = GetFiles("./src/**/*.csproj");
         foreach(var project in projects)
         {
             var settings = new DotNetCorePackSettings {
@@ -296,8 +295,8 @@ Task("Test")
     .Does(() =>
     {
         var projects =
-            GetFiles("./test/**/*.xproj") -
-            GetFiles("./test/**/Nancy.ViewEngines.Razor.Tests.Models.xproj");
+            GetFiles("./test/**/*.csproj") -
+            GetFiles("./test/**/Nancy.ViewEngines.Razor.Tests.Models.csproj");
 
         if (projects.Count == 0)
         {
@@ -307,22 +306,22 @@ Task("Test")
         if (IsRunningOnUnix())
         {
             projects = projects
-                - GetFiles("./test/**/Nancy.Encryption.MachineKey.Tests.xproj")
-                - GetFiles("./test/**/Nancy.ViewEngines.DotLiquid.Tests.xproj")
-                - GetFiles("./test/**/Nancy.Embedded.Tests.xproj"); //Embedded somehow doesnt get executed on Travis but nothing explicit sets it
+                - GetFiles("./test/**/Nancy.Encryption.MachineKey.Tests.csproj")
+                - GetFiles("./test/**/Nancy.ViewEngines.DotLiquid.Tests.csproj")
+                - GetFiles("./test/**/Nancy.Embedded.Tests.csproj"); //Embedded somehow doesnt get executed on Travis but nothing explicit sets it
 
-            var testProjects = GetFiles("./test/**/*.xproj");
+            var testProjects = GetFiles("./test/**/*.csproj");
             var dotnetTestProjects = testProjects
-                                 - GetFiles("test/**/Nancy.Embedded.Tests.xproj")
-                                 - GetFiles("test/**/Nancy.Encryption.MachineKey.Tests.xproj")
-                                 - GetFiles("test/**/Nancy.Hosting.Aspnet.Tests.xproj")
-                                 - GetFiles("test/**/Nancy.Hosting.Self.Tests.xproj")
-                                 - GetFiles("test/**/Nancy.Owin.Tests.xproj")
-                                 - GetFiles("test/**/Nancy.Validation.DataAnnotatioins.Tests.xproj")
-                                 - GetFiles("test/**/Nancy.ViewEngines.DotLiquid.Tests.xproj")
-                                 - GetFiles("test/**/Nancy.ViewEngines.Markdown.Tests.xproj")
-                                 - GetFiles("test/**/Nancy.ViewEngines.Razor.Tests.xproj")
-                                 - GetFiles("test/**/Nancy.ViewEngines.Razor.Tests.Models.xproj");
+                                 - GetFiles("test/**/Nancy.Embedded.Tests.csproj")
+                                 - GetFiles("test/**/Nancy.Encryption.MachineKey.Tests.csproj")
+                                 - GetFiles("test/**/Nancy.Hosting.Aspnet.Tests.csproj")
+                                 - GetFiles("test/**/Nancy.Hosting.Self.Tests.csproj")
+                                 - GetFiles("test/**/Nancy.Owin.Tests.csproj")
+                                 - GetFiles("test/**/Nancy.Validation.DataAnnotatioins.Tests.csproj")
+                                 - GetFiles("test/**/Nancy.ViewEngines.DotLiquid.Tests.csproj")
+                                 - GetFiles("test/**/Nancy.ViewEngines.Markdown.Tests.csproj")
+                                 - GetFiles("test/**/Nancy.ViewEngines.Razor.Tests.csproj")
+                                 - GetFiles("test/**/Nancy.ViewEngines.Razor.Tests.Models.csproj");
 
             foreach(var dotnetTestProject in dotnetTestProjects)
             {
