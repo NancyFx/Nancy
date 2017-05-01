@@ -264,7 +264,7 @@ Task("Restore-NuGet-Packages")
         var settings = new DotNetCoreRestoreSettings
         {
             Verbose = false,
-            Verbosity = DotNetCoreRestoreVerbosity.Warning,
+            Verbosity = DotNetCoreRestoreVerbosity.Minimal,
             Sources = new [] {
                 "https://www.myget.org/F/xunit/api/v3/index.json",
                 "https://dotnet.myget.org/F/dotnet-core/api/v3/index.json",
