@@ -3,9 +3,9 @@
 # Define directories.
 SCRIPT_DIR=$PWD
 TOOLS_DIR=$SCRIPT_DIR/tools
-CAKE_VERSION=0.19.1
+CAKE_VERSION=0.19.4
 CAKE_DLL=$TOOLS_DIR/Cake.CoreCLR.$CAKE_VERSION/Cake.dll
-DOTNET_VERSION=1.0.1
+DOTNET_VERSION=1.0.3
 DOTNET_INSTRALL_URI=https://raw.githubusercontent.com/dotnet/cli/rel/1.0.1/scripts/obtain/dotnet-install.sh
 
 # Make sure the tools folder exist.

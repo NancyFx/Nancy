@@ -1,5 +1,5 @@
-$CakeVersion = "0.19.1"
-$DotNetVersion = "1.0.1";
+$CakeVersion = "0.19.4"
+$DotNetVersion = "1.0.3";
 $DotNetInstallerUri = "https://raw.githubusercontent.com/dotnet/cli/rel/1.0.1/scripts/obtain/dotnet-install.ps1";
 
 # Make sure tools folder exists
