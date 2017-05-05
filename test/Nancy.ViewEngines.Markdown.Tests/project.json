@@ -1,8 +1,8 @@
 {
     "dependencies": {
         "dotnet-test-xunit": "2.2.0-preview2-build1029",
-        "FakeItEasy": "3.0.0",
-        "FakeItEasy.Analyzer": "3.0.0",
+        "FakeItEasy": "3.3.2",
+        "FakeItEasy.Analyzer": "3.3.2",
         "MarkdownSharp": "1.13.0",
         "Microsoft.NETCore.Platforms": "1.0.1",
         "Nancy": { "target": "project" },
