@@ -1,26 +1,25 @@
 // Usings
-using System.Xml;
-using System.Xml.Linq;
-using System.Xml.XPath;
+using System.Text.RegularExpressions;
 
 // Arguments
 var target = Argument<string>("target", "Default");
 var source = Argument<string>("source", null);
 var apiKey = Argument<string>("apikey", null);
 var version = Argument<string>("targetversion", "2.0.0-Pre" + (EnvironmentVariable("APPVEYOR_BUILD_NUMBER") ?? "0"));
-var skipClean = Argument<bool>("skipclean", false);
-var skipTests = Argument<bool>("skiptests", false);
 var nogit = Argument<bool>("nogit", false);
 
 // Variables
-var configuration = IsRunningOnWindows() ? "Release" : "MonoRelease";
+// var configuration = IsRunningOnWindows() ? "Release" : "MonoRelease";
+var configuration = "Release";
+var fullFrameworkTarget = "net452";
+var coreTarget = "netstandard1.6";
 var projectJsonFiles = GetFiles("./src/**/project.json");
 
 // Directories
 var output = Directory("build");
 var outputBinaries = output + Directory("binaries");
-var outputBinariesNet452 = outputBinaries + Directory("net452");
-var outputBinariesNetstandard = outputBinaries + Directory("netstandard1.6");
+var outputBinariesNet452 = outputBinaries + Directory(fullFrameworkTarget);
+var outputBinariesNetstandard = outputBinaries + Directory(coreTarget);
 var outputPackages = output + Directory("packages");
 var outputNuGet = output + Directory("nuget");
 
@@ -45,82 +44,38 @@ Task("Clean")
             outputBinariesNetstandard
         });
 
-        if(!skipClean) {
-            CleanDirectories("./src/**/" + configuration);
-            CleanDirectories("./test/**/" + configuration);
-            CleanDirectories("./samples/**/" + configuration);
-        }
+        CleanDirectories("./src/**/" + configuration);
+        CleanDirectories("./test/**/" + configuration);
+        CleanDirectories("./samples/**/" + configuration);
     });
 
 Task("Compile")
-    .Description("Builds the solution")
+    .Description("Builds all the projects in the solution")
     .IsDependentOn("Clean")
     .IsDependentOn("Restore-NuGet-Packages")
     .Does(() =>
     {
-        if (IsRunningOnUnix())
+        var projects =
+            GetFiles("./**/*.csproj") -
+            GetFiles("./samples/**/*.csproj");
+
+        if (projects.Count == 0)
         {
-            var srcProjects = GetFiles("./src/**/*.csproj");
-
-            if (srcProjects.Count == 0)
-            {
-                throw new CakeException("Unable to find any projects to build.");
-            }
-
-            srcProjects = srcProjects - GetFiles("./**/Nancy.Encryption.MachineKey.csproj");
-
-            var testProjects = GetFiles("./test/**/*.csproj");
-
-            var dotnetTestProjects = testProjects
-                                 - GetFiles("test/**/Nancy.Embedded.Tests.csproj")
-                                 - GetFiles("test/**/Nancy.Encryption.MachineKey.Tests.csproj")
-                                 - GetFiles("test/**/Nancy.Hosting.Aspnet.Tests.csproj")
-                                 - GetFiles("test/**/Nancy.Hosting.Self.Tests.csproj")
-                                 - GetFiles("test/**/Nancy.Owin.Tests.csproj")
-                                 - GetFiles("test/**/Nancy.Validation.DataAnnotatioins.Tests.csproj")
-                                 - GetFiles("test/**/Nancy.ViewEngines.DotLiquid.Tests.csproj")
-                                 - GetFiles("test/**/Nancy.ViewEngines.Markdown.Tests.csproj")
-                                 - GetFiles("test/**/Nancy.ViewEngines.Razor.Tests.csproj")
-                                 - GetFiles("test/**/Nancy.ViewEngines.Razor.Tests.Models.csproj");
-
-            foreach(var srcProject in srcProjects)
-            {
-                DotNetCoreBuild(srcProject.GetDirectory().FullPath, new DotNetCoreBuildSettings {
-                    Configuration = configuration,
-                    Verbose = false
-                });
-            }
-
-            foreach(var testProject in testProjects)
-            {
-                DotNetCoreBuild(testProject.GetDirectory().FullPath, new DotNetCoreBuildSettings {
-                    Configuration = configuration,
-                    Verbose = false,
-                    Framework = "net452",
-                    Runtime = "unix-x64"
-                });
-            }
-
-            foreach(var dotnetTestProject in dotnetTestProjects)
-            {
-                DotNetCoreBuild(dotnetTestProject.GetDirectory().FullPath, new DotNetCoreBuildSettings {
-                    Configuration = configuration,
-                    Verbose = false,
-                    Framework = "netcoreapp1.0"
-                });
-            }
+            throw new CakeException("Unable to find any projects to build.");
         }
-        else
+
+        foreach(var project in projects)
         {
-            var projects = GetFiles("./src/**/*.csproj");
-            projects = projects - GetFiles("./**/Nancy.Encryption.MachineKey.csproj");
-            foreach(var project in projects)
-            {
-                DotNetCoreBuild(project.GetDirectory().FullPath, new DotNetCoreBuildSettings {
-                    Configuration = configuration,
-                    Verbose = false
-                });
-            }
+            DotNetCoreBuild(project.GetDirectory().FullPath, new DotNetCoreBuildSettings {
+                ArgumentCustomization = args => {
+                    if (IsRunningOnUnix()) {
+                        args.Append(string.Concat("-f ", coreTarget));
+                    }
+
+                    return args;
+                },
+                Configuration = configuration
+            });
         }
     });
 
@@ -139,18 +94,15 @@ Task("Package")
     });
 
 Task("Package-NuGet")
-    .Description("Generates NuGet packages for each project that contains a nuspec")
+    .Description("Generates NuGet packages for each project")
     .Does(() =>
     {
-        var projects = GetFiles("./src/**/*.csproj");
-        foreach(var project in projects)
+        foreach(var project in GetFiles("./src/**/*.csproj"))
         {
-            var settings = new DotNetCorePackSettings {
+            DotNetCorePack(project.GetDirectory().FullPath, new DotNetCorePackSettings {
                 Configuration = "Release",
                 OutputDirectory = outputNuGet
-            };
-
-            DotNetCorePack(project.GetDirectory().FullPath, settings);
+            });
         }
     });
 
@@ -160,16 +112,16 @@ Task("Publish")
     .Does(() =>
     {
         // Copy net452 binaries.
-        CopyFiles(GetFiles("src/**/bin/" + configuration + "/net452/*.dll")
-            + GetFiles("src/**/bin/" + configuration + "/net452/*.xml")
-            + GetFiles("src/**/bin/" + configuration + "/net452/*.pdb")
-            + GetFiles("src/**/*.ps1"), outputBinariesNet452);
+        CopyFiles(GetFiles("./src/**/bin/" + configuration + "/" + fullFrameworkTarget + "/*.dll")
+            + GetFiles("./src/**/bin/" + configuration + "/" + fullFrameworkTarget + "/*.xml")
+            + GetFiles("./src/**/bin/" + configuration + "/" + fullFrameworkTarget + "/*.pdb")
+            + GetFiles("./src/**/*.ps1"), outputBinariesNet452);
 
         // Copy netstandard binaries.
-        CopyFiles(GetFiles("src/**/bin/" + configuration + "/netstandard1.6/*.dll")
-            + GetFiles("src/**/bin/" + configuration + "/netstandard1.6/*.xml")
-            + GetFiles("src/**/bin/" + configuration + "/netstandard1.6/*.pdb")
-            + GetFiles("src/**/*.ps1"), outputBinariesNetstandard);
+        CopyFiles(GetFiles("./src/**/bin/" + configuration + "/" + coreTarget + "/*.dll")
+            + GetFiles("./src/**/bin/" + configuration + "/" + coreTarget + "/*.xml")
+            + GetFiles("./src/**/bin/" + configuration + "/" + coreTarget + "/*.pdb")
+            + GetFiles("./src/**/*.ps1"), outputBinariesNetstandard);
     });
 
 Task("Publish-NuGet")
@@ -194,13 +146,11 @@ Task("Publish-NuGet")
     });
 
 Task("Prepare-Release")
+    .IsDependentOn("Update-Version")
     .Does(() =>
     {
-        // Update version.
-        UpdateProjectJsonVersion(version, projectJsonFiles);
-
         // Add
-        foreach (var file in projectJsonFiles)
+        foreach (var file in GetFiles("./src/**/*.csproj"))
         {
             if (nogit)
             {
@@ -257,30 +207,14 @@ Task("Prepare-Release")
     });
 
 Task("Restore-NuGet-Packages")
-    .Description("Restores NuGet packages")
+    .Description("Restores NuGet packages for all projects")
     .Does(() =>
-        {
-        var settings = new DotNetCoreRestoreSettings
-        {
-            Verbose = false,
-            Verbosity = DotNetCoreRestoreVerbosity.Minimal,
-            Sources = new [] {
-                "https://www.myget.org/F/xunit/api/v3/index.json",
-                "https://dotnet.myget.org/F/dotnet-core/api/v3/index.json",
-                "https://dotnet.myget.org/F/cli-deps/api/v3/index.json",
-                "https://api.nuget.org/v3/index.json"
-            }
-        };
-
-        //Restore at root until preview1-002702 bug fixed
-        DotNetCoreRestore("./", settings);
-        //DotNetCoreRestore("./src", settings);
-        //DotNetCoreRestore("./samples", settings);
-        //DotNetCoreRestore("./test", settings);
+    {
+        DotNetCoreRestore();
     });
 
 Task("Tag")
-    .Description("Tags the current release.")
+    .Description("Tags the current release")
     .Does(() =>
     {
         StartProcess("git", new ProcessSettings {
@@ -289,77 +223,23 @@ Task("Tag")
     });
 
 Task("Test")
-    .Description("Executes xUnit tests")
-    .WithCriteria(!skipTests)
+    .Description("Executes unit tests for all projects")
     .IsDependentOn("Compile")
     .Does(() =>
     {
         var projects =
-            GetFiles("./test/**/*.csproj") -
-            GetFiles("./test/**/Nancy.ViewEngines.Razor.Tests.Models.csproj");
+            GetFiles("./test/**/*.csproj");
 
         if (projects.Count == 0)
         {
             throw new CakeException("Unable to find any projects to test.");
         }
 
-        if (IsRunningOnUnix())
-        {
-            projects = projects
-                - GetFiles("./test/**/Nancy.Encryption.MachineKey.Tests.csproj")
-                - GetFiles("./test/**/Nancy.ViewEngines.DotLiquid.Tests.csproj")
-                - GetFiles("./test/**/Nancy.Embedded.Tests.csproj"); //Embedded somehow doesnt get executed on Travis but nothing explicit sets it
-
-            var testProjects = GetFiles("./test/**/*.csproj");
-            var dotnetTestProjects = testProjects
-                                 - GetFiles("test/**/Nancy.Embedded.Tests.csproj")
-                                 - GetFiles("test/**/Nancy.Encryption.MachineKey.Tests.csproj")
-                                 - GetFiles("test/**/Nancy.Hosting.Aspnet.Tests.csproj")
-                                 - GetFiles("test/**/Nancy.Hosting.Self.Tests.csproj")
-                                 - GetFiles("test/**/Nancy.Owin.Tests.csproj")
-                                 - GetFiles("test/**/Nancy.Validation.DataAnnotatioins.Tests.csproj")
-                                 - GetFiles("test/**/Nancy.ViewEngines.DotLiquid.Tests.csproj")
-                                 - GetFiles("test/**/Nancy.ViewEngines.Markdown.Tests.csproj")
-                                 - GetFiles("test/**/Nancy.ViewEngines.Razor.Tests.csproj")
-                                 - GetFiles("test/**/Nancy.ViewEngines.Razor.Tests.Models.csproj");
-
-            foreach(var dotnetTestProject in dotnetTestProjects)
-            {
-                DotNetCoreTest(dotnetTestProject.GetDirectory().FullPath, new DotNetCoreTestSettings {
-                    Configuration = configuration,
-                    Framework = "netcoreapp1.0"
-                });
-            }
-        }
-
         foreach(var project in projects)
         {
-            if (IsRunningOnWindows())
-            {
-                DotNetCoreTest(project.GetDirectory().FullPath, new DotNetCoreTestSettings {
-                    Configuration = configuration
-                });
-            }
-            else
-            {
-                var dirPath = project.GetDirectory().FullPath;
-                var testFile = project.GetFilenameWithoutExtension();
-
-                var settings = new ProcessSettings {
-                    Arguments =
-                        dirPath + "/bin/" + configuration + "/net452/unix-x64/dotnet-test-xunit.exe" + " " +
-                        dirPath + "/bin/" + configuration + "/net452/unix-x64/" + testFile + ".dll"
-                };
-
-                using(var process = StartAndReturnProcess("mono", settings))
-                {
-                    process.WaitForExit();
-                    if (process.GetExitCode() != 0)
-                    {
-                        throw new Exception("Nancy tests failed.");
-                    }
-                }
-            }
+            DotNetCoreTest(project.FullPath, new DotNetCoreTestSettings {
+                NoBuild = true
+            });
         }
     });
 
@@ -372,7 +252,21 @@ Task("Update-Version")
             throw new CakeException("No version specified! You need to pass in --targetversion=\"x.y.z\"");
         }
 
-        UpdateProjectJsonVersion(version, projectJsonFiles);
+        var file =
+            MakeAbsolute(File("./src/Directory.build.props"));
+
+        Information(file.FullPath);
+
+        var project =
+            System.IO.File.ReadAllText(file.FullPath, Encoding.UTF8);
+
+        var projectVersion =
+            new Regex(@"<Version>.+<\/Version>");
+
+        project =
+            projectVersion.Replace(project, string.Concat("<Version>", version, "</Version>"));
+
+        System.IO.File.WriteAllText(file.FullPath, project, Encoding.UTF8);
     });
 
 /*
@@ -380,24 +274,3 @@ Task("Update-Version")
 */
 
 RunTarget(target);
-
-/*
-/ HELPER FUNCTIONS
-*/
-
-public static void UpdateProjectJsonVersion(string version, FilePathCollection filePaths)
-{
-    foreach (var file in filePaths)
-    {
-        var project =
-            System.IO.File.ReadAllText(file.FullPath, Encoding.UTF8);
-
-        var projectVersion =
-            new System.Text.RegularExpressions.Regex("(\"version\":\\s*)\".+\"");
-
-        project =
-            projectVersion.Replace(project, "$1\"" + version + "\"", 1);
-
-        System.IO.File.WriteAllText(file.FullPath, project, Encoding.UTF8);
-    }
-}
