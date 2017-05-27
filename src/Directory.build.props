@@ -1,4 +1,4 @@
-<Project>
+﻿<Project>
   <PropertyGroup>
     <Authors>Andreas Håkansson, Steven Robbins and contributors</Authors>
     <DisableImplicitFrameworkReferences Condition=" '$(TargetFramework)' == 'net452' ">true</DisableImplicitFrameworkReferences>
@@ -7,7 +7,7 @@
     <PackageLicenseUrl>https://github.com/NancyFx/Nancy/blob/master/license.txt</PackageLicenseUrl>
     <PackageProjectUrl>http://nancyfx.org</PackageProjectUrl>
     <PackageTags>Nancy</PackageTags>
-    <VersionPrefix>2.0.0-clinteastwood</VersionPrefix>
+    <Version>2.0.0-clinteastwood</Version>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(MSBuildProjectName)' != 'Nancy' ">
