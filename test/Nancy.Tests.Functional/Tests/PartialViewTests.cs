@@ -1,4 +1,4 @@
-﻿#if !NETCOREAPP1_0
+﻿#if !CORE
 namespace Nancy.Tests.Functional.Tests
 {
     using System;
@@ -41,7 +41,7 @@ namespace Nancy.Tests.Functional.Tests
 
             var firstIndex = body.IndexOf(@"Hello World, this is the View Start...", StringComparison.Ordinal);
             var lastIndex = body.LastIndexOf(@"Hello World, this is the View Start...", StringComparison.Ordinal);
-            
+
             // If the index is not the same then the string occurs twice...
             Assert.Equal(firstIndex, lastIndex);
         }

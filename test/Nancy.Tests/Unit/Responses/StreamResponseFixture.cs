@@ -1,11 +1,9 @@
 ﻿namespace Nancy.Tests.Unit.Responses
 {
+    using System;
     using System.IO;
-
     using FakeItEasy;
-
     using Nancy.Responses;
-
     using Xunit;
 
     public class StreamResponseFixture
@@ -19,10 +17,10 @@
 
             var inputStream =
                 new MemoryStream(streamContent);
-            
-            var response = 
+
+            var response =
                 new StreamResponse(() => inputStream, "test");
-            
+
             var outputStream = new MemoryStream();
 
             // When
@@ -62,9 +60,7 @@
         {
             // Given
             var inputStream =
-                A.Fake<Stream>();
-
-            A.CallTo(() => inputStream.CanRead).Returns(false);
+                new TestStream(canRead: false);
 
             var response =
                 new StreamResponse(() => inputStream, "test");
@@ -76,6 +72,56 @@
 
             // Then
             exception.ShouldNotBeNull();
+        }
+
+        public class TestStream : Stream
+        {
+            public TestStream(bool canRead = true, bool canWrite = true)
+            {
+                this.CanRead = canRead;
+                this.CanWrite = canWrite;
+            }
+
+            public override bool CanRead { get; }
+
+            public override bool CanSeek
+            {
+                get { return true; }
+            }
+
+            public override bool CanWrite  { get; }
+
+            public override long Length
+            {
+                get { return 0; }
+            }
+
+            public override long Position
+            {
+                get { return 0; }
+                set { }
+            }
+
+            public override void Flush()
+            {
+            }
+            public override int Read(byte[] buffer, int offset, int count)
+            {
+                return 0;
+            }
+
+            public override long Seek(long offset, SeekOrigin origin)
+            {
+                return 0;
+            }
+
+            public override void SetLength(long value)
+            {
+            }
+
+            public override void Write(byte[] buffer, int offset, int count)
+            {
+            }
         }
     }
 }

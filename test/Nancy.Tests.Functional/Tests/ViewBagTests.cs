@@ -1,4 +1,4 @@
-﻿#if !NETCOREAPP1_0
+﻿#if !CORE
 namespace Nancy.Tests.Functional.Tests
 {
     using System.Threading.Tasks;
@@ -12,7 +12,7 @@ namespace Nancy.Tests.Functional.Tests
         private readonly INancyBootstrapper bootstrapper;
 
         private readonly Browser browser;
-        
+
         public ViewBagTests()
         {
             this.bootstrapper = new ConfigurableBootstrapper(
@@ -64,7 +64,7 @@ namespace Nancy.Tests.Functional.Tests
                     with.HttpRequest();
                     with.Accept("application/json");
                 });
-                
+
             // When
             var model = response.Body.DeserializeJson<ViewBagModel>();
 
