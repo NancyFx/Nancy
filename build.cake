@@ -9,17 +9,17 @@ var version = Argument<string>("targetversion", "2.0.0-Pre" + (EnvironmentVariab
 var nogit = Argument<bool>("nogit", false);
 
 // Variables
-// var configuration = IsRunningOnWindows() ? "Release" : "MonoRelease";
 var configuration = "Release";
 var fullFrameworkTarget = "net452";
-var coreTarget = "netstandard1.6";
+var netStandardTarget = "netstandard1.6";
+var netCoreTarget = "netcoreapp1.1";
 var projectJsonFiles = GetFiles("./src/**/project.json");
 
 // Directories
 var output = Directory("build");
 var outputBinaries = output + Directory("binaries");
 var outputBinariesNet452 = outputBinaries + Directory(fullFrameworkTarget);
-var outputBinariesNetstandard = outputBinaries + Directory(coreTarget);
+var outputBinariesNetstandard = outputBinaries + Directory(netStandardTarget);
 var outputPackages = output + Directory("packages");
 var outputNuGet = output + Directory("nuget");
 
@@ -66,10 +66,18 @@ Task("Compile")
 
         foreach(var project in projects)
         {
+            var content =
+                System.IO.File.ReadAllText(project.FullPath, Encoding.UTF8);
+
+            if (IsRunningOnUnix() && content.Contains(">" + fullFrameworkTarget + "<")) {
+                Information(project.GetFilename() + " only supports " +fullFrameworkTarget + " and cannot be built on *nix. Skipping.");
+                continue;
+            }
+
             DotNetCoreBuild(project.GetDirectory().FullPath, new DotNetCoreBuildSettings {
                 ArgumentCustomization = args => {
                     if (IsRunningOnUnix()) {
-                        args.Append(string.Concat("-f ", coreTarget));
+                        args.Append(string.Concat("-f ", project.GetDirectory().GetDirectoryName().Contains(".Tests") ? netCoreTarget : netStandardTarget));
                     }
 
                     return args;
@@ -100,7 +108,7 @@ Task("Package-NuGet")
         foreach(var project in GetFiles("./src/**/*.csproj"))
         {
             DotNetCorePack(project.GetDirectory().FullPath, new DotNetCorePackSettings {
-                Configuration = "Release",
+                Configuration = configuration,
                 OutputDirectory = outputNuGet
             });
         }
@@ -118,9 +126,9 @@ Task("Publish")
             + GetFiles("./src/**/*.ps1"), outputBinariesNet452);
 
         // Copy netstandard binaries.
-        CopyFiles(GetFiles("./src/**/bin/" + configuration + "/" + coreTarget + "/*.dll")
-            + GetFiles("./src/**/bin/" + configuration + "/" + coreTarget + "/*.xml")
-            + GetFiles("./src/**/bin/" + configuration + "/" + coreTarget + "/*.pdb")
+        CopyFiles(GetFiles("./src/**/bin/" + configuration + "/" + netStandardTarget + "/*.dll")
+            + GetFiles("./src/**/bin/" + configuration + "/" + netStandardTarget + "/*.xml")
+            + GetFiles("./src/**/bin/" + configuration + "/" + netStandardTarget + "/*.pdb")
             + GetFiles("./src/**/*.ps1"), outputBinariesNetstandard);
     });
 
@@ -237,7 +245,23 @@ Task("Test")
 
         foreach(var project in projects)
         {
+            var content =
+                System.IO.File.ReadAllText(project.FullPath, Encoding.UTF8);
+
+            if (IsRunningOnUnix() && content.Contains(">" + fullFrameworkTarget + "<")) {
+                Information(project.GetFilename() + " only supports " +fullFrameworkTarget + " and tests cannot be executed on *nix. Skipping.");
+                continue;
+            }
+
             DotNetCoreTest(project.FullPath, new DotNetCoreTestSettings {
+                ArgumentCustomization = args => {
+                    if (IsRunningOnUnix()) {
+                        args.Append(string.Concat("-f ", netCoreTarget));
+                    }
+
+                    return args;
+                },
+                Configuration = configuration,
                 NoBuild = true
             });
         }
