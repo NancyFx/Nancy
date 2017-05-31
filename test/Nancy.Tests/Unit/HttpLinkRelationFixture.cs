@@ -180,6 +180,7 @@
             rel.Value.ShouldEqual("home");
         }
 
+        [Fact]
         public void Relation_should_be_equal_to_itself()
         {
             // Given

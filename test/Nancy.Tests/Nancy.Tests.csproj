@@ -4,7 +4,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Resources\views\staticviewresource.html" Exclude="bin\**;obj\**;packages\**;@(EmbeddedResource)" />
+    <EmbeddedResource Include="Resources\Views\staticviewresource.html" Exclude="bin\**;obj\**;packages\**;@(EmbeddedResource)" />
     <None Update="Resources\**\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
