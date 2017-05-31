@@ -277,7 +277,7 @@ Task("Update-Version")
         }
 
         var file =
-            MakeAbsolute(File("./src/Directory.build.props"));
+            MakeAbsolute(File("./src/Directory.Build.props"));
 
         Information(file.FullPath);
 
