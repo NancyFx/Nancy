@@ -80,18 +80,19 @@
                     return () => null;
                 }
 
-                var transformedRequestPath =
-                     GetSafeRequestPath(requestPath, requestedPath, contentPath);
+                var fullFilePath =
+                    Path.GetFullPath(GetSafeRequestPath(requestPath, requestedPath, contentPath));
 
-                transformedRequestPath =
-                    GetEncodedPath(transformedRequestPath);
+                var relativeFilePath =
+                    ResolveRelativeFilePath(fullFilePath);
 
-                // Resolve relative paths by using c:\ as a fake root path
-                var fileName =
-                    Path.GetFullPath(Path.Combine("c:\\", transformedRequestPath));
+                var fileName = Path.Combine(
+                    Path.DirectorySeparatorChar.ToString(),
+                    GetEncodedPath(relativeFilePath));
 
-                var contentRootPath =
-                    Path.GetFullPath(Path.Combine("c:\\", GetEncodedPath(contentPath)));
+                var contentRootPath = Path.Combine(
+                    Path.DirectorySeparatorChar.ToString(),
+                    GetEncodedPath(contentPath));
 
                 if (!IsWithinContentFolder(contentRootPath, fileName))
                 {
@@ -100,7 +101,7 @@
                 }
 
                 var resourceName =
-                    Path.GetDirectoryName(assembly.GetName().Name + fileName.Substring(2)).Replace('\\', '.').Replace('-', '_');
+                    Path.GetDirectoryName(assembly.GetName().Name + fileName).Replace(Path.DirectorySeparatorChar, '.').Replace('-', '_');
 
                 fileName =
                     Path.GetFileName(fileName);
@@ -114,6 +115,14 @@
                 context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[EmbeddedStaticContentConventionBuilder] Returning file '", fileName, "'")));
                 return () => new EmbeddedFileResponse(assembly, resourceName, fileName);
             };
+        }
+
+        private static string ResolveRelativeFilePath(string fullFilePath)
+        {
+            var fileRootPath =
+                Directory.GetDirectoryRoot(fullFilePath);
+
+            return fullFilePath.Substring(fileRootPath.Length);
         }
 
         private static string GetEncodedPath(string path)

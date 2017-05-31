@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netcoreapp1.1;net452</TargetFrameworks>
-    <VersionPrefix>1.4.1.0</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>

@@ -345,14 +345,29 @@ namespace Nancy.Tests.Unit.Sessions
         [Fact]
         public void Should_load_valid_test_data()
         {
-            var inputValue = ValidHmac + ValidData;
-            inputValue = HttpUtility.UrlEncode(inputValue);
-            var store = new CookieBasedSessions(this.aesEncryptionProvider, this.defaultHmacProvider, this.defaultObjectSerializer);
-            var request = new Request("GET", "/", "http");
-            request.Cookies.Add(store.CookieName, inputValue);
+            // Given
+            var payload = new DefaultSessionObjectFormatterFixture.Payload
+            {
+                BoolValue = true
+            };
 
+            var cookieData = GenerateCookieData(new Dictionary<string, object>
+            {
+                { "key1", payload }
+            });
+
+            var store =
+                new CookieBasedSessions(this.aesEncryptionProvider, this.defaultHmacProvider, this.defaultObjectSerializer);
+
+            var request =
+                new Request("GET", "/", "http");
+
+            request.Cookies.Add(store.CookieName, cookieData.ToString());
+
+            // When
             var result = store.Load(request);
 
+            // Then
             result.Count.ShouldEqual(1);
             result.First().Value.ShouldBeOfType(typeof(DefaultSessionObjectFormatterFixture.Payload));
         }
