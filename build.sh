@@ -51,8 +51,5 @@ fi
 # RUN BUILD SCRIPT
 ###########################################################################
 
-# Ensure full-framework builds uses Mono
-export FrameworkPathOverride=$(dirname $(which mono))/../lib/mono/4.5/
-
 # Start Cake
 exec dotnet "$CAKE_DLL" "$@"
