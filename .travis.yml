@@ -1,5 +1,5 @@
 language: csharp
-mono: alpha
+mono: none
 sudo: required
 dist: trusty
 addons:
@@ -10,8 +10,6 @@ addons:
     - libicu-dev
     - libssl-dev
     - libunwind8
-env:
-    - MONO_TLS_PROVIDER=legacy
 script: ./build.sh --verbosity=diagnostic
 notifications:
   email:
