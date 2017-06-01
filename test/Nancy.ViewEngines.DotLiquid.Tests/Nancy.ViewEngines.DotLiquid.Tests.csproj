@@ -10,10 +10,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../src/Nancy.ViewEngines.DotLiquid/Nancy.ViewEngines.DotLiquid.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="DotLiquid" Version="2.0.64" />
   </ItemGroup>
 </Project>
