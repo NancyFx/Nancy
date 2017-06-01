@@ -13,7 +13,6 @@ var configuration = "Release";
 var fullFrameworkTarget = "net452";
 var netStandardTarget = "netstandard1.6";
 var netCoreTarget = "netcoreapp1.1";
-var projectJsonFiles = GetFiles("./src/**/project.json");
 
 // Directories
 var output = Directory("build");
@@ -253,17 +252,16 @@ Task("Test")
                 continue;
             }
 
-            DotNetCoreTest(project.FullPath, new DotNetCoreTestSettings {
-                ArgumentCustomization = args => {
-                    if (IsRunningOnUnix()) {
-                        args.Append(string.Concat("-f ", netCoreTarget));
-                    }
+            var settings = new ProcessSettings {
+                Arguments = string.Concat("xunit -configuration ", configuration, " -nobuild -verbose"),
+                WorkingDirectory = project.GetDirectory()
+            };
 
-                    return args;
-                },
-                Configuration = configuration,
-                NoBuild = true
-            });
+            if (IsRunningOnUnix()) {
+                settings.Arguments.Append(string.Concat("-framework ", netCoreTarget));
+            }
+
+            StartProcess("dotnet", settings);
         }
     });
 
