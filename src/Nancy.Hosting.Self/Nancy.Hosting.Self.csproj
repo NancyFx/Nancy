@@ -1,0 +1,7 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Description>Enables hosting Nancy in any application.</Description>
+    <PackageTags>$(PackageTags);Host</PackageTags>
+    <TargetFramework>net452</TargetFramework>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Description>Adds Fluent Validation support to Nancy.</Description>
+    <PackageTags>$(PackageTags);Validation;FluentValidation</PackageTags>
+    <TargetFrameworks>net452;netstandard1.6</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="6.3.4-alpha" />
+  </ItemGroup>
+</Project>

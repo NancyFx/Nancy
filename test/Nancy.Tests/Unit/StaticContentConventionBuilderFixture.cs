@@ -25,12 +25,10 @@
 
         public StaticContentConventionBuilderFixture()
         {
-            // Under .NET Framework, resources are copied to
-            // bin\Release\net452\win7-x64\Resources (modulo version and architecture), but under .NET Core, they go to
-            // bin\Release\netcoreapp1.0\Resources.
-            // Set our working directory relative the assembly to ensure the tests find the resources.
-            this.directory = new DirectoryInfo(typeof(StaticContentConventionBuilderFixture).GetAssembly().Location)
-                .Parent.FullName;
+            var assembly = typeof(StaticContentConventionBuilderFixture).GetAssembly();
+            var localPath = new Uri(assembly.CodeBase).LocalPath;
+            this.directory = new DirectoryInfo(localPath).Parent.FullName;
+
             this.environment = new DefaultNancyEnvironment();
             this.environment.StaticContent(safepaths:this.directory);
         }

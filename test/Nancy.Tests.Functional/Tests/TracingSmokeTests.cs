@@ -1,4 +1,4 @@
-﻿#if !NETCOREAPP1_0
+﻿#if !CORE
 namespace Nancy.Tests.Functional.Tests
 {
     using System;

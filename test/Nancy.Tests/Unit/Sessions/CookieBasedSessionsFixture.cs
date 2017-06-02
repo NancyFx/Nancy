@@ -1,20 +1,19 @@
 namespace Nancy.Tests.Unit.Sessions
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Text;
     using System.Threading;
-
     using FakeItEasy;
-
     using Nancy.Bootstrapper;
     using Nancy.Cryptography;
     using Nancy.Helpers;
     using Nancy.IO;
     using Nancy.Session;
     using Nancy.Tests.Fakes;
-
     using Xunit;
 
     public class CookieBasedSessionsFixture
@@ -123,18 +122,18 @@ namespace Nancy.Tests.Unit.Sessions
         [Fact]
         public void Should_load_an_empty_session_if_session_cookie_is_invalid()
         {
-          //given
-          var inputValue = ValidHmac.Substring(0, 5); //invalid Hmac
-          inputValue = HttpUtility.UrlEncode(inputValue);
-          var store = new CookieBasedSessions(this.aesEncryptionProvider, this.defaultHmacProvider, this.defaultObjectSerializer);
-          var request = new Request("GET", "/", "http");
-          request.Cookies.Add(store.CookieName, inputValue);
+            //given
+            var inputValue = ValidHmac.Substring(0, 5); //invalid Hmac
+            inputValue = HttpUtility.UrlEncode(inputValue);
+            var store = new CookieBasedSessions(this.aesEncryptionProvider, this.defaultHmacProvider, this.defaultObjectSerializer);
+            var request = new Request("GET", "/", "http");
+            request.Cookies.Add(store.CookieName, inputValue);
 
-          //when
-          var result = store.Load(request);
+            //when
+            var result = store.Load(request);
 
-          //then
-          result.Count.ShouldEqual(0);
+            //then
+            result.Count.ShouldEqual(0);
         }
 
         [Fact]
@@ -346,14 +345,29 @@ namespace Nancy.Tests.Unit.Sessions
         [Fact]
         public void Should_load_valid_test_data()
         {
-            var inputValue = ValidHmac + ValidData;
-            inputValue = HttpUtility.UrlEncode(inputValue);
-            var store = new CookieBasedSessions(this.aesEncryptionProvider, this.defaultHmacProvider, this.defaultObjectSerializer);
-            var request = new Request("GET", "/", "http");
-            request.Cookies.Add(store.CookieName, inputValue);
+            // Given
+            var payload = new DefaultSessionObjectFormatterFixture.Payload
+            {
+                BoolValue = true
+            };
 
+            var cookieData = GenerateCookieData(new Dictionary<string, object>
+            {
+                { "key1", payload }
+            });
+
+            var store =
+                new CookieBasedSessions(this.aesEncryptionProvider, this.defaultHmacProvider, this.defaultObjectSerializer);
+
+            var request =
+                new Request("GET", "/", "http");
+
+            request.Cookies.Add(store.CookieName, cookieData.ToString());
+
+            // When
             var result = store.Load(request);
 
+            // Then
             result.Count.ShouldEqual(1);
             result.First().Value.ShouldBeOfType(typeof(DefaultSessionObjectFormatterFixture.Payload));
         }
@@ -492,13 +506,61 @@ namespace Nancy.Tests.Unit.Sessions
             cookie.Path.ShouldEqual(storeConfig.Path);
         }
 
+        private class CookieData
+        {
+            public string Data { get; set; }
+
+            public string Hmac { get; set; }
+
+            public override string ToString()
+            {
+                return HttpUtility.UrlEncode(string.Concat(this.Hmac, this.Data));
+            }
+        }
+
+        private CookieData GenerateCookieData(string key, object data)
+        {
+            return this.GenerateCookieData(new Dictionary<string, object>
+            {
+                { key, data }
+            });
+        }
+
+        private CookieData GenerateCookieData(IDictionary<string, object> data)
+        {
+            var sb = new StringBuilder();
+
+            foreach (var key in data.Keys)
+            {
+                sb.Append(HttpUtility.UrlEncode(key));
+                sb.Append("=");
+
+                var objectString = this.defaultObjectSerializer.Serialize(data[key]);
+
+                sb.Append(HttpUtility.UrlEncode(objectString));
+                sb.Append(";");
+            }
+
+            var encryptedData =
+                this.aesEncryptionProvider.Encrypt(sb.ToString());
+
+            var hmacBytes =
+                this.defaultHmacProvider.GenerateHmac(encryptedData);
+
+            return new CookieData
+            {
+                Data = encryptedData,
+                Hmac = Convert.ToBase64String(hmacBytes)
+            };
+        }
+
         private Request CreateRequest(string sessionValue, bool load = true)
         {
             var headers = new Dictionary<string, IEnumerable<string>>(1);
 
             if (!string.IsNullOrEmpty(sessionValue))
             {
-                headers.Add("cookie", new[] { this.cookieStore.CookieName+ "=" + HttpUtility.UrlEncode(sessionValue) });
+                headers.Add("cookie", new[] { this.cookieStore.CookieName + "=" + HttpUtility.UrlEncode(sessionValue) });
             }
 
             var request = new Request("GET", new Url { Path = "/", Scheme = "http", Port = 9001, BasePath = "goku.power" }, CreateRequestStream(), headers);

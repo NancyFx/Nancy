@@ -1,0 +1,7 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Description>Helpers for serving embedded static content with Nancy.</Description>
+    <PackageTags>$(PackageTags);Embedded;Static Content</PackageTags>
+    <TargetFrameworks>netstandard1.6;net452</TargetFrameworks>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net452</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="..\Nancy.Tests\Fakes\FakeDefaultNancyBootstrapper.cs" />
+  </ItemGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'MonoRelease' ">
+    <DefineConstants>$(DefineConstants);MONO</DefineConstants>
+  </PropertyGroup>
+</Project>

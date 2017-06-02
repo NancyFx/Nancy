@@ -1,0 +1,31 @@
+﻿<Project>
+  <PropertyGroup>
+    <Authors>Andreas Håkansson, Steven Robbins and contributors</Authors>
+    <DisableImplicitFrameworkReferences Condition=" '$(TargetFramework)' == 'net452' ">true</DisableImplicitFrameworkReferences>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageIconUrl>http://nancyfx.org/nancy-nuget.png</PackageIconUrl>
+    <PackageLicenseUrl>https://github.com/NancyFx/Nancy/blob/master/license.txt</PackageLicenseUrl>
+    <PackageProjectUrl>http://nancyfx.org</PackageProjectUrl>
+    <PackageTags>Nancy</PackageTags>
+    <Version>2.0.0-clinteastwood</Version>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(MSBuildProjectName)' != 'Nancy' ">
+    <ProjectReference Include="../Nancy/Nancy.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AsyncUsageAnalyzers" Version="1.0.0-alpha003">
+      <PrivateAssets>All</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
+    <DefineConstants>$(DefineConstants);CORE</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Description>Enables using the Nustache view engine with Nancy.</Description>
+    <PackageTags>$(PackageTags);View Engine;Nustache</PackageTags>
+    <TargetFramework>net452</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Nustache" Version="1.13.8.22" />
+  </ItemGroup>
+</Project>

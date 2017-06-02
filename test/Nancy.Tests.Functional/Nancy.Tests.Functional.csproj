@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp1.1;net452</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Update="Content\**\*;Views\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
+    <ProjectReference Include="../../src/Nancy.ViewEngines.Razor/Nancy.ViewEngines.Razor.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,7 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Description>A forms authentication provider for Nancy.</Description>
+    <PackageTags>$(PackageTags);Authentication</PackageTags>
+    <TargetFrameworks>netstandard1.6;net452</TargetFrameworks>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,7 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Description>Nancy metadata modules to describe your APIs.</Description>
+    <PackageTags>$(PackageTags);Metadata</PackageTags>
+    <TargetFrameworks>netstandard1.6;net452</TargetFrameworks>
+  </PropertyGroup>
+</Project>
