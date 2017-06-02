@@ -1,6 +1,7 @@
 ﻿<Project>
   <PropertyGroup>
     <Authors>Andreas Håkansson, Steven Robbins and contributors</Authors>
+    <CodeAnalysisRuleSet>..\..\Nancy.ruleset</CodeAnalysisRuleSet>
     <DisableImplicitFrameworkReferences Condition=" '$(TargetFramework)' == 'net452' ">true</DisableImplicitFrameworkReferences>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageIconUrl>http://nancyfx.org/nancy-nuget.png</PackageIconUrl>
