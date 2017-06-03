@@ -220,7 +220,12 @@ Task("Restore-NuGet-Packages")
     .Description("Restores NuGet packages for all projects")
     .Does(() =>
     {
-        DotNetCoreRestore();
+        DotNetCoreRestore(new DotNetCoreRestoreSettings {
+            ArgumentCustomization = args => {
+                args.Append("--verbosity minimal");
+                return args;
+            }
+        });
     });
 
 Task("Tag")
