@@ -157,6 +157,7 @@ namespace Nancy.ViewEngines.DotLiquid.Tests
             result.ShouldBeNull();
         }
 
+        [Fact]
         public void Should_return_model_value_when_property_name_is_valid_and_model_is_object()
         {
             // Given

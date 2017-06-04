@@ -41,7 +41,7 @@
             //Then
             Assert.Equal("Hi", actualModel.SomeString);
             Assert.Equal(1, actualModel.SomeInt);
-            Assert.Equal(true, actualModel.SomeBoolean);
+            Assert.True(actualModel.SomeBoolean);
         }
 
         [Fact]
@@ -63,7 +63,7 @@
             //Then
             Assert.Equal("Hi", actualModel.SomeString);
             Assert.Equal(1, actualModel.SomeInt);
-            Assert.Equal(true, actualModel.SomeBoolean);
+            Assert.True(actualModel.SomeBoolean);
         }
 
         [Fact]
@@ -85,7 +85,7 @@
             //Then
             Assert.Equal("Hi", actualModel.SomeString);
             Assert.Equal(1, actualModel.SomeInt);
-            Assert.Equal(true, actualModel.SomeBoolean);
+            Assert.True(actualModel.SomeBoolean);
         }
 
         public class EchoModel

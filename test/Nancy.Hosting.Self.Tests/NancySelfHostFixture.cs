@@ -120,7 +120,7 @@ namespace Nancy.Hosting.Self.Tests
                 var response = WebRequest.Create(new Uri(BaseUri, "rel")).GetResponse();
 
                 Assert.Equal("chunked", response.Headers["Transfer-Encoding"]);
-                Assert.Equal(null, response.Headers["Content-Length"]);
+                Assert.Null(response.Headers["Content-Length"]);
 
                 using (var reader = new StreamReader(response.GetResponseStream()))
                 {
@@ -141,7 +141,7 @@ namespace Nancy.Hosting.Self.Tests
             {
                 var response = WebRequest.Create(new Uri(BaseUri, "rel")).GetResponse();
 
-                Assert.Equal(null, response.Headers["Transfer-Encoding"]);
+                Assert.Null(response.Headers["Transfer-Encoding"]);
                 Assert.Equal(22, Convert.ToInt32(response.Headers["Content-Length"]));
 
                 using (var reader = new StreamReader(response.GetResponseStream()))

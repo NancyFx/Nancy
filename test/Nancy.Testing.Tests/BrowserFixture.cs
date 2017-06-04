@@ -457,7 +457,7 @@ namespace Nancy.Testing.Tests
             // Then
             Assert.Equal("Hi", actualModel.SomeString);
             Assert.Equal(1, actualModel.SomeInt);
-            Assert.Equal(true, actualModel.SomeBoolean);
+            Assert.True(actualModel.SomeBoolean);
         }
 
         [Fact]
@@ -479,7 +479,7 @@ namespace Nancy.Testing.Tests
             // Then
             Assert.Equal("Hi", actualModel.SomeString);
             Assert.Equal(1, actualModel.SomeInt);
-            Assert.Equal(true, actualModel.SomeBoolean);
+            Assert.True(actualModel.SomeBoolean);
         }
 
         [Fact]

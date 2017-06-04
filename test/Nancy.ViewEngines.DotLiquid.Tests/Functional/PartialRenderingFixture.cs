@@ -27,8 +27,8 @@ namespace Nancy.ViewEngines.DotLiquid.Tests.Functional
             var result = await this.browser.Get("/unquotedpartial");
 
             // Then
-            Assert.Equal(result.StatusCode, HttpStatusCode.OK);
-            Assert.Equal(result.Body.AsString(), "This content is from the partial");
+            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+            Assert.Equal("This content is from the partial", result.Body.AsString());
         }
 
         [Fact]
@@ -39,8 +39,8 @@ namespace Nancy.ViewEngines.DotLiquid.Tests.Functional
             var result = await this.browser.Get("/singlequotedpartial");
 
             // Then
-            Assert.Equal(result.StatusCode, HttpStatusCode.OK);
-            Assert.Equal(result.Body.AsString(), "This content is from the partial");
+            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+            Assert.Equal("This content is from the partial", result.Body.AsString());
         }
 
         [Fact]
@@ -51,8 +51,8 @@ namespace Nancy.ViewEngines.DotLiquid.Tests.Functional
             var result = await this.browser.Get("/doublequotedpartial");
 
             // Then
-            Assert.Equal(result.StatusCode, HttpStatusCode.OK);
-            Assert.Equal(result.Body.AsString(), "This content is from the partial");
+            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+            Assert.Equal("This content is from the partial", result.Body.AsString());
         }
     }
 

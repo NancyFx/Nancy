@@ -142,31 +142,6 @@
             this.output.ShouldContain("<div>Spark</div>");
         }
 
-        [Fact(Skip = "Only add this if we think we'll need to render anonymous types")]
-        public void Should_be_able_to_render_a_view_with_an_anonymous_view_model()
-        {
-            //Given, When
-            this.FindViewAndRender("ViewThatUsesAnonymousViewModel", new {Foo = 42, Bar = new FakeViewModel {Text = "is the answer"}});
-
-            //Then
-            this.output.ShouldContain("<div>42 is the answer</div>");
-        }
-
-        [Fact(Skip = "Only add this if we think we'll need to render anonymous types")]
-        public void Should_be_able_to_render_a_view_with_culture_aware_formatting()
-        {
-            using (new ScopedCulture(CultureInfo.CreateSpecificCulture("en-us")))
-            {
-                //Given, When
-                this.FindViewAndRender("ViewThatUsesFormatting", new {Number = 9876543.21, Date = new DateTime(2010, 12, 11)});
-
-                //Then
-                this.output.ShouldContainInOrder(
-                    "<div>9,876,543.21</div>",
-                    "<div>2010/12/11</div>");
-            }
-        }
-
         [Fact]
         public void Should_be_able_to_render_partials_that_share_state()
         {

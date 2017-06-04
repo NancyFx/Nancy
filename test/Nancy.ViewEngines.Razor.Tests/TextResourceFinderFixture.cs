@@ -26,7 +26,7 @@
         public void Should_return_result_of_text_resource(string text)
         {
             // Given
-            A.CallTo(() => this.textResource[A<string>._, A<NancyContext>._]).Returns(text);
+            A.CallTo(() => this.textResource["name", this.context]).Returns(text);
 
             // When
             var result = (string)finder.name;
@@ -43,7 +43,7 @@
             var result = (string)finder.name;
 
             // Then
-            A.CallTo(() => this.textResource[A<string>._, this.context]).MustHaveHappened();
+            A.CallTo(() => this.textResource["name", this.context]).MustHaveHappened();
         }
 
         [Fact]
@@ -54,7 +54,7 @@
             var result = (string)finder.foo;
 
             // Then
-            A.CallTo(() => this.textResource["foo", A<NancyContext>._]).MustHaveHappened();
+            A.CallTo(() => this.textResource["foo", this.context]).MustHaveHappened();
         }
 
         [Fact]
@@ -65,7 +65,7 @@
             var result = (string)finder.foo.bar.other;
 
             // Then
-            A.CallTo(() => this.textResource["foo.bar.other", A<NancyContext>._]).MustHaveHappened();
+            A.CallTo(() => this.textResource["foo.bar.other", this.context]).MustHaveHappened();
         }
 
         [Fact]

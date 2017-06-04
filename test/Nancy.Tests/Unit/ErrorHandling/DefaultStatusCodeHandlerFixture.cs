@@ -210,7 +210,7 @@ namespace Nancy.Tests.Unit.ErrorHandling
             this.statusCodeHandler.Handle(HttpStatusCode.InternalServerError, context);
 
             // Then
-            Assert.Equal(context.NegotiationContext.ViewName, null);
+            Assert.Null(context.NegotiationContext.ViewName);
         }
     }
 }

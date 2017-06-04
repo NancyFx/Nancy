@@ -79,7 +79,7 @@ namespace Nancy.Tests.Unit
         public void Can_set_status_on_json_response()
         {
             var response = formatter.AsJson(new { foo = "bar" }, HttpStatusCode.InternalServerError);
-            Assert.Equal(response.StatusCode, HttpStatusCode.InternalServerError);
+            Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
         }
 
         private static INancyEnvironment GetTestingEnvironment()

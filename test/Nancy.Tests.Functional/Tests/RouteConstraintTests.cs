@@ -47,7 +47,7 @@
             var response = await this.browser.Get(url, with => { with.HttpRequest(); with.Accept("application/json");});
             // Then
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal(response.Body.AsString(), "{\"left\":\"4.1.2\",\"right\":\"4.1.5\"}");
+            Assert.Equal("{\"left\":\"4.1.2\",\"right\":\"4.1.5\"}", response.Body.AsString());
         }
 
         [Fact]
@@ -59,7 +59,7 @@
             var response = await this.browser.Get(url, with => { with.HttpRequest(); with.Accept("application/json"); });
             // Then
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal(response.Body.AsString(), "{\"versionNumber\":\"4.1.2\"}");
+            Assert.Equal("{\"versionNumber\":\"4.1.2\"}", response.Body.AsString());
         }
 
         [Fact]
@@ -71,7 +71,7 @@
             var response = await this.browser.Get(url, with => { with.HttpRequest(); with.Accept("application/json"); });
             // Then
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal(response.Body.AsString(), "{\"invalidVersionNumber\":\"4.1.\"}");
+            Assert.Equal("{\"invalidVersionNumber\":\"4.1.\"}", response.Body.AsString());
         }
 
         public class UltimateRouteSegmentConstraint : RouteSegmentConstraintBase<int>
