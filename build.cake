@@ -282,7 +282,7 @@ Task("Test")
 
             if (StartProcess("dotnet", settings) != 0)
             {
-                Error("One or more tests failed during execution of: " + project.GetFilename());
+                throw new CakeException("One or more tests failed during execution of: " + project.GetFilename());
             }
         }
     });
