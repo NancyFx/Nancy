@@ -17,6 +17,7 @@ namespace Nancy.Testing.Tests
     using Nancy.Tests.xUnitExtensions;
     using Xunit;
     using FakeItEasy;
+    using Json;
 
     public class BrowserFixture
     {
@@ -64,6 +65,30 @@ namespace Nancy.Testing.Tests
 
             // Then
             result.Body.AsString().ShouldEqual(userHostAddress);
+        }
+
+        public async Task Should_have_the_correct_environment_setup()
+        {
+            // Given
+            var response = await browser.Post("/serializedform", (with) =>
+            {
+                with.HttpRequest();
+                with.Accept("application/json");
+                with.FormValue("SomeString", "Hi");
+                with.FormValue("SomeInt", "1");
+                with.FormValue("SomeBoolean", "true");
+            });
+
+            // When
+            var env = response.Body.BrowserContext.Environment;
+
+            var jsonConfiguration = env.GetValue<JsonConfiguration>();
+            var globalizationConfiguration = env.GetValue<GlobalizationConfiguration>();
+
+            // Then
+            Assert.Equal(1, globalizationConfiguration.SupportedCultureNames.Count());
+            Assert.Equal(2, jsonConfiguration.Converters.Count());
+            Assert.Equal(0, jsonConfiguration.PrimitiveConverters.Count());
         }
 
         [Fact]
