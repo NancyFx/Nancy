@@ -14,7 +14,7 @@
         public string GetRootPath()
         {
 #if CORE
-            return Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.Application.ApplicationBasePath;
+            return System.IO.Directory.GetCurrentDirectory();
 #else
             return AppDomain.CurrentDomain.BaseDirectory;
 #endif
