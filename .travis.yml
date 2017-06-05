@@ -12,7 +12,7 @@ addons:
     - libunwind8
 env:
     - MONO_TLS_PROVIDER=legacy
-script: ./build.sh --verbosity=diagnostic
+script: ./build.sh --verbosity=minimal
 notifications:
   email:
     - nancy@nancyfx.org
