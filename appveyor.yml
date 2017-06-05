@@ -14,7 +14,7 @@ install:
 - set PATH=C:\Program Files (x86)\MSBuild\14.0\Bin;%PATH%
 
 build_script:
-- ps: .\build.ps1 -verbosity=normal
+- ps: .\build.ps1 -verbosity=minimal
 
 artifacts:
 - path: build\nuget\*.nupkg
