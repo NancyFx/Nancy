@@ -91,13 +91,19 @@
                                 serverClientIp,
                                 certificate,
                                 owinRequestProtocol);
+                        try
+                        {
+                            var nancyContext = await engine.HandleRequest(
+                                nancyRequest,
+                                StoreEnvironment(environment, owinUser),
+                                owinCallCancelled).ConfigureAwait(false);
 
-                        var nancyContext = await engine.HandleRequest(
-                            nancyRequest,
-                            StoreEnvironment(environment, owinUser),
-                            owinCallCancelled).ConfigureAwait(false);
-
-                        await RequestComplete(nancyContext, environment, options.PerformPassThrough, next).ConfigureAwait(false);
+                            await RequestComplete(nancyContext, environment, options.PerformPassThrough, next).ConfigureAwait(false);
+                        }
+                        catch (Exception ex)
+                        {
+                            environment["owin.ResponseStatusCode"] = 500;
+                        }
                     };
         }
 
