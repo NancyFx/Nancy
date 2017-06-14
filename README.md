@@ -68,7 +68,7 @@ Nancy are:
 
 | Platform                    | Status                                                                                                                                  |
 |-----------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|
-| AppVeyor (.NET & .NET Core) | [![Build Status](https://ci.appveyor.com/api/projects/status/mpd9lbxvithu16vg?svg=true)](https://ci.appveyor.com/project/NancyFx/nancy) |
+| AppVeyor (.NET & .NET Core) | [![Build Status](https://ci.appveyor.com/api/projects/status/mpd9lbxvithu16vg/branch/master?svg=true)](https://ci.appveyor.com/project/NancyFx/nancy) |
 | Travis (Mono)               | [![Build Status](https://travis-ci.org/NancyFx/Nancy.png?branch=master)](https://travis-ci.org/NancyFx/Nancy)                           |
 
 To get build artifacts of latest `master`, please use our [MyGet feed](https://www.myget.org/gallery/nancyfx)
