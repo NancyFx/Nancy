@@ -13,14 +13,13 @@ namespace Nancy.Json
         /// Configures JSON serialization.
         /// </summary>
         /// <param name="environment"><see cref="INancyEnvironment"/> that should be configured.</param>
-        /// <param name="maxJsonLength">Max length of JSON output.</param>
         /// <param name="defaultEncoding">The <see cref="Encoding"/> that should be as a default.</param>
         /// <param name="converters">List of <see cref="JavaScriptConverter"/> that should be used.</param>
         /// <param name="primitiveConverters">List of <see cref="JavaScriptPrimitiveConverter"/> that should be used.</param>
         /// <param name="retainCasing"><see langword="true" /> if C# casing should be retained, otherwise <see langword="false" /> to use camel-casing.</param>
         /// <param name="serializeEnumToString"><see langword="true"/> if enums should be represented as string otherwise <see langword="false"/>.</param>
         /// <param name="excludeNullValues"><see langword="true" /> if the serializer should exclude null values for properties on objects otherwise <see langword="false" />.</param>
-        public static void Json(this INancyEnvironment environment, int? maxJsonLength = null, Encoding defaultEncoding = null, IList<JavaScriptConverter> converters = null, IList<JavaScriptPrimitiveConverter> primitiveConverters = null, bool? retainCasing = null, bool? serializeEnumToString = null, bool? excludeNullValues = false)
+        public static void Json(this INancyEnvironment environment, Encoding defaultEncoding = null, IList<JavaScriptConverter> converters = null, IList<JavaScriptPrimitiveConverter> primitiveConverters = null, bool? retainCasing = null, bool? serializeEnumToString = null, bool? excludeNullValues = false)
         {
             environment.AddValue(new JsonConfiguration(
                 defaultEncoding ?? JsonConfiguration.Default.DefaultEncoding,
