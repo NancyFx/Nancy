@@ -171,17 +171,17 @@
             return cookieToken;
         }
 
+        private static void AddTokenValue(Dictionary<string, string> dictionary, string key, string value)
+        {
+            if (!string.IsNullOrEmpty(key))
+            {
+                dictionary.Add(key, value);
+            }
+        }
+
         private static CsrfToken ParseToCsrfToken(string cookieTokenString)
         {
             var parsed = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-
-            void Add(string key, string value)
-            {
-                if (!string.IsNullOrEmpty(key))
-                {
-                    parsed.Add(key, value);
-                }
-            }
 
             var currentKey = string.Empty;
             var buffer = new StringBuilder();
@@ -197,7 +197,7 @@
                         buffer.Clear();
                         break;
                     case PairDelimiter:
-                        Add(currentKey, buffer.ToString());
+                        AddTokenValue(parsed, currentKey, buffer.ToString());
                         buffer.Clear();
                         break;
                     default:
@@ -206,7 +206,7 @@
                 }
             }
 
-            Add(currentKey, buffer.ToString());
+            AddTokenValue(parsed, currentKey, buffer.ToString());
 
             if (parsed.Keys.Count() != 3)
             {
@@ -217,7 +217,7 @@
             {
                 return new CsrfToken
                 {
-                    CreatedDate = DateTimeOffset.ParseExact(parsed["CreatedDate"], "o", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal),
+                    CreatedDate = DateTimeOffset.ParseExact(parsed["CreatedDate"], "o", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal),
                     Hmac = Convert.FromBase64String(parsed["Hmac"]),
                     RandomBytes = Convert.FromBase64String(parsed["RandomBytes"])
                 };
