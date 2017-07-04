@@ -26,8 +26,8 @@
         /// <remarks>This is disabled by default.</remarks>
         /// <param name="pipelines">The application pipelines.</param>
         /// <param name="cryptographyConfiguration">The cryptography configuration. This is <see langword="null" /> by default.</param>
-        /// <param name="csrfCookieSecureFlag">Set the CSRF cookie secure flag. This is <see langword="false"/> by default</param>
-        public static void Enable(IPipelines pipelines, CryptographyConfiguration cryptographyConfiguration = null, bool csrfCookieSecureFlag = false)
+        /// <param name="useSecureCookie">Set the CSRF cookie secure flag. This is <see langword="false"/> by default</param>
+        public static void Enable(IPipelines pipelines, CryptographyConfiguration cryptographyConfiguration = null, bool useSecureCookie = false)
         {
             cryptographyConfiguration = cryptographyConfiguration ?? CsrfApplicationStartup.CryptographyConfiguration;
 
@@ -45,7 +45,7 @@
                         context.Response.Cookies.Add(new NancyCookie(
                             CsrfToken.DEFAULT_CSRF_KEY,
                             (string)context.Items[CsrfToken.DEFAULT_CSRF_KEY],
-                            httpOnly:true, secure: csrfCookieSecureFlag));
+                            httpOnly:true, secure: useSecureCookie));
 
                         return;
                     }
@@ -65,7 +65,7 @@
                     var tokenString = GenerateTokenString(cryptographyConfiguration);
 
                     context.Items[CsrfToken.DEFAULT_CSRF_KEY] = tokenString;
-                    context.Response.Cookies.Add(new NancyCookie(CsrfToken.DEFAULT_CSRF_KEY, tokenString, httpOnly: true, secure: csrfCookieSecureFlag));
+                    context.Response.Cookies.Add(new NancyCookie(CsrfToken.DEFAULT_CSRF_KEY, tokenString, httpOnly: true, secure: useSecureCookie));
                 });
 
             pipelines.AfterRequest.AddItemToEndOfPipeline(postHook);
