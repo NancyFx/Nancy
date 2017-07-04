@@ -45,7 +45,7 @@
                         context.Response.Cookies.Add(new NancyCookie(
                             CsrfToken.DEFAULT_CSRF_KEY,
                             (string)context.Items[CsrfToken.DEFAULT_CSRF_KEY],
-                            httpOnly:true, secure: useSecureCookie));
+                            true, useSecureCookie));
 
                         return;
                     }
@@ -65,7 +65,7 @@
                     var tokenString = GenerateTokenString(cryptographyConfiguration);
 
                     context.Items[CsrfToken.DEFAULT_CSRF_KEY] = tokenString;
-                    context.Response.Cookies.Add(new NancyCookie(CsrfToken.DEFAULT_CSRF_KEY, tokenString, httpOnly: true, secure: useSecureCookie));
+                    context.Response.Cookies.Add(new NancyCookie(CsrfToken.DEFAULT_CSRF_KEY, tokenString, true, useSecureCookie));
                 });
 
             pipelines.AfterRequest.AddItemToEndOfPipeline(postHook);
