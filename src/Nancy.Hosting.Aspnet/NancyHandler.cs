@@ -98,7 +98,7 @@ namespace Nancy.Hosting.Aspnet
 
             RequestStream body = null;
 
-            if (expectedRequestLength != 0)
+            if (expectedRequestLength != 0 || HasChunkedEncoding(incomingHeaders))
             {
                 body = RequestStream.FromStream(context.Request.InputStream, expectedRequestLength, StaticConfiguration.DisableRequestStreamSwitching ?? true);
             }
@@ -112,6 +112,17 @@ namespace Nancy.Hosting.Aspnet
                 context.Request.UserHostAddress, 
                 certificate,
                 protocolVersion);
+        }
+
+        private static bool HasChunkedEncoding(IDictionary<string, IEnumerable<string>> incomingHeaders)
+        {
+            IEnumerable<string> transferEncodingValue;
+            if (incomingHeaders == null || !incomingHeaders.TryGetValue("Transfer-Encoding", out transferEncodingValue))
+            {
+                return false;
+            }
+            var transferEncodingString = transferEncodingValue.SingleOrDefault() ?? string.Empty;
+            return transferEncodingString.Equals("chunked", StringComparison.OrdinalIgnoreCase);
         }
 
         private static long GetExpectedRequestLength(IDictionary<string, IEnumerable<string>> incomingHeaders)
