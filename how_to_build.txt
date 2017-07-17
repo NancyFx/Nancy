@@ -1,7 +1,7 @@
 How to build Nancy
 ==================
 
-*NOTE* These instructions are *only* for building with Cake - if you just want to build Nancy manually you can do so just by loading the solution into Visual Studio 2015 and pressing build :-)
+*NOTE* These instructions are *only* for building with Cake - if you just want to build Nancy manually you can do so just by loading the solution into Visual Studio 2017 and pressing build :-)
 
 Building Nancy
 --------------
