@@ -55,7 +55,7 @@ namespace Nancy
 
         private static List<string> getDirectories(string root, int depth)
         {
-            List<string> dirs = new List<string>();
+            var dirs = new List<string>();
             foreach(var dir in Directory.EnumerateDirectories(root))
             {
                 dirs.Add(dir);
@@ -75,7 +75,7 @@ namespace Nancy
             var loadedNancyReferencingAssemblyNames = loadedAssemblies.Select(assembly => assembly.GetName()).ToArray();
 
             var rootDirectories = GetAssemblyDirectories();
-            List<string> searchDirectories = new List<string>();
+            var searchDirectories = new List<string>();
             
             // get all directories based on search depth
             foreach (var dir in rootDirectories)
