@@ -500,7 +500,7 @@
                 this.stream.Position = 0;
             }
             this.stream.CopyTo(targetStream, 8196);
-            if (this.stream.CanSeek)
+            if (this.stream.CanWrite)
             {
                 this.stream.Flush();
             }
