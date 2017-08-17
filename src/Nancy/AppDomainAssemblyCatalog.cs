@@ -15,6 +15,8 @@ namespace Nancy
     /// </summary>
     public class AppDomainAssemblyCatalog : IAssemblyCatalog
     {
+        public static int ModuleSearchDepth { get; set; }
+
         private static readonly AssemblyName NancyAssemblyName = typeof(INancyEngine).GetTypeInfo().Assembly.GetName();
         private readonly Lazy<IReadOnlyCollection<Assembly>> assemblies = new Lazy<IReadOnlyCollection<Assembly>>(GetAvailableAssemblies);
 
@@ -51,6 +53,20 @@ namespace Nancy
             return assemblies;
         }
 
+        private static List<string> getDirectories(string root, int depth)
+        {
+            var dirs = new List<string>();
+            foreach(var dir in Directory.EnumerateDirectories(root))
+            {
+                dirs.Add(dir);
+                if(depth > 0)
+                {
+                    dirs.AddRange(getDirectories(dir, depth - 1));
+                }
+            }
+            return dirs;
+        }
+
         private static IEnumerable<Assembly> LoadNancyReferencingAssemblies(IEnumerable<Assembly> loadedAssemblies)
         {
             var assemblies = new HashSet<Assembly>();
@@ -58,7 +74,17 @@ namespace Nancy
             var inspectionProber = CreateRemoteReferenceProber(inspectionAppDomain);
             var loadedNancyReferencingAssemblyNames = loadedAssemblies.Select(assembly => assembly.GetName()).ToArray();
 
-            foreach (var directory in GetAssemblyDirectories())
+            var rootDirectories = GetAssemblyDirectories();
+            var searchDirectories = new List<string>();
+            
+            // get all directories based on search depth
+            foreach (var dir in rootDirectories)
+            {
+                searchDirectories.AddRange(getDirectories(dir, ModuleSearchDepth));
+            }
+
+
+            foreach (var directory in searchDirectories)
             {
                 foreach (var assemblyPath in Directory.EnumerateFiles(directory, "*.dll"))
                 {
