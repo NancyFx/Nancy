@@ -16,9 +16,9 @@
 
 - Nancy version:
 - Nancy host
-  - [ ] ASP.NET
-  - [ ] OWIN
-  - [ ] Self-Hosted
+  - [ ] Nancy.Hosting.Aspnet
+  - [ ] Nancy.Hosting.Self
+  - [ ] Nancy.Owin (<!-- Name your OWIN server here, for example HttpListener, HttpSysServer, Kestrel, Nowin, System.Web -->)
   - [ ] Other:
 - Other Nancy packages and versions:
 - Environment (Operating system, version and so on):
