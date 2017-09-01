@@ -5,6 +5,8 @@ namespace Nancy.Tests.Unit
     using System.IO;
     using System.Linq;
     using System.Text;
+    using System.Threading;
+    using System.Threading.Tasks;
     using FakeItEasy;
     using Nancy.Helpers;
     using Nancy.IO;
@@ -814,6 +816,21 @@ namespace Nancy.Tests.Unit
             ShouldAssertExtensions.ShouldBeOfType<string>(request.Query["key1"].Value);
         }
 
+        [Fact]
+        public void Should_not_flush_underlying_stream_if_it_is_not_writable()
+        {
+            var largeStream = new NonWriteableStream(
+                new MemoryStream(new byte[1025]));
+            // Given
+            var memory = new RequestStream(largeStream, 1025, 1024, false);
+
+            // When
+            var exception = Record.Exception(() => new Request("POST", new Url { Path = "/", Scheme = "http" }, memory));
+
+            // Then
+            exception.ShouldBeNull();
+        }
+
         private static RequestStream CreateRequestStream()
         {
             return CreateRequestStream(new MemoryStream());
@@ -893,6 +910,82 @@ namespace Nancy.Tests.Unit
                 Encoding.ASCII.GetBytes(boundaryBuilder.ToString());
 
             return bytes;
+        }
+
+        private class NonWriteableStream : Stream
+        {
+            private readonly MemoryStream inner;
+
+            public NonWriteableStream(MemoryStream inner)
+            {
+                this.inner = inner;
+            }
+
+            public override void Flush()
+            {
+                throw new NotSupportedException();
+            }
+
+            public override Task FlushAsync(CancellationToken cancellationToken)
+            {
+                throw new NotSupportedException();
+            }
+
+            public override int Read(byte[] buffer, int offset, int count)
+            {
+                return this.inner.Read(buffer, offset, count);
+            }
+
+            public override long Seek(long offset, SeekOrigin origin)
+            {
+                return this.inner.Seek(offset, origin);
+            }
+
+            public override void SetLength(long value)
+            {
+                throw new NotSupportedException();
+            }
+
+            public override void Write(byte[] buffer, int offset, int count)
+            {
+                throw new NotSupportedException();
+            }
+
+            public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+            {
+                throw new NotSupportedException();
+            }
+
+            public override void WriteByte(byte value)
+            {
+                throw new NotSupportedException();
+            }
+
+            public override bool CanRead
+            {
+                get { return this.inner.CanRead; }
+            }
+
+            public override bool CanSeek
+            {
+                get { return this.inner.CanSeek; }
+            }
+
+            public override bool CanWrite
+            {
+                get { return false; }
+            }
+
+            public override long Length
+            {
+                get { return this.inner.Length; }
+            }
+
+            public override long Position
+            {
+                get { return this.inner.Position; }
+                set { this.inner.Position = value; }
+            }
         }
     }
 }
