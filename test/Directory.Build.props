@@ -1,7 +1,9 @@
 <Project>
   <PropertyGroup>
-    <DisableImplicitFrameworkReferences Condition=" '$(TargetFramework)' == 'net452' ">true</DisableImplicitFrameworkReferences>
     <CodeAnalysisRuleSet>..\..\Nancy.ruleset</CodeAnalysisRuleSet>
+    <Configurations>Debug;Release</Configurations>
+    <DisableImplicitFrameworkReferences Condition=" '$(TargetFramework)' == 'net452' ">true</DisableImplicitFrameworkReferences>
+    <Platforms>AnyCPU</Platforms>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.1' ">

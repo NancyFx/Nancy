@@ -2,12 +2,14 @@
   <PropertyGroup>
     <Authors>Andreas Håkansson, Steven Robbins and contributors</Authors>
     <CodeAnalysisRuleSet>..\..\Nancy.ruleset</CodeAnalysisRuleSet>
+    <Configurations>Debug;Release</Configurations>
     <DisableImplicitFrameworkReferences Condition=" '$(TargetFramework)' == 'net452' ">true</DisableImplicitFrameworkReferences>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageIconUrl>http://nancyfx.org/nancy-nuget.png</PackageIconUrl>
     <PackageLicenseUrl>https://github.com/NancyFx/Nancy/blob/master/license.txt</PackageLicenseUrl>
     <PackageProjectUrl>http://nancyfx.org</PackageProjectUrl>
     <PackageTags>Nancy</PackageTags>
+    <Platforms>AnyCPU</Platforms>
     <Version>2.0.0-clinteastwood</Version>
   </PropertyGroup>
 
