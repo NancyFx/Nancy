@@ -4,34 +4,35 @@
     using System.Diagnostics;
 
     /// <summary>
-    /// Host configuration for the self host
+    /// Host configuration for the self host.
     /// </summary>
     public sealed class HostConfiguration
     {
         /// <summary>
-        /// Gets or sets a property that determines if localhost uris are 
-        /// rewritten to htp://+:port/ style uris to allow for listening on 
-        /// all ports, but requiring either a url reservation, or admin
-        /// access
+        /// Gets or sets a property that determines if localhost URIs are 
+        /// rewritten to http://+:port/ style URIs to allow for listening on 
+        /// all IP addresses, but requiring either a URL reservation, or admin
+        /// access.
         /// Defaults to true.
         /// </summary>
         public bool RewriteLocalhost { get; set; }
 
         /// <summary>
-        /// Configuration around automatically creating url reservations
+        /// Configuration around automatically creating URL reservations.
         /// </summary>
         public UrlReservations UrlReservations { get; set; }
 
         /// <summary>
         /// Gets or sets a property that determines if Transfer-Encoding: Chunked is allowed
-        /// for the response instead of Content-Length (default: true).
+        /// for the response instead of Content-Length.
+        /// Defaults to true.
         /// </summary>
         public bool AllowChunkedEncoding { get; set; }
 
         /// <summary>
         /// Gets or sets a property that provides a callback to be called
-        /// if there's an unhandled exception in the self host.
-        /// Note: this will *not* be called for normal nancy Exceptions
+        /// if there is an unhandled exception in the self host.
+        /// Note: this will *not* be called for normal Nancy exceptions
         /// that are handled by the Nancy handlers.
         /// Defaults to writing to debug out.
         /// </summary>
@@ -47,17 +48,20 @@
         public bool EnableClientCertificates { get; set; }
 
         /// <summary>
-        /// Gets or sets a property determining if base uri matching can fall back to just
-        /// using Authority (Schema + Host + Port) as base uri if it cannot match anything in
+        /// Gets or sets a property determining if base URI matching can fall back to just
+        /// using Authority (Schema + Host + Port) as base URI if it cannot match anything in
         /// the known list. This should only be set to True if you have issues with port forwarding
         /// (e.g. on Azure).
+        /// Defaults to false.
         /// </summary>
         public bool AllowAuthorityFallback { get; set; }
 
         /// <summary>
         /// Gets or sets a property determining how many total connections the NancyHost can maintain simultaneously.
-        /// Higher values mean more conections can be maintained at a slower average response times; while fewer connections will be rejected.
+        /// Higher values mean more connections can be maintained at a slower average response times; while fewer
+        /// connections will be rejected.
         /// Lower values will result in fewer conections, yet will be maintained at a faster average response time.
+        /// Defaults to the approximate number of processor threads.
         /// </summary>
         public int MaximumConnectionCount { get; set; }
 
@@ -104,7 +108,5 @@
             this.EnableClientCertificates = false;
             this.MaximumConnectionCount = ProcessorThreadCount;
         }
-
-
     }
 }
