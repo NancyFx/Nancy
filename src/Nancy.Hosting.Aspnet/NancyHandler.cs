@@ -1,5 +1,6 @@
 namespace Nancy.Hosting.Aspnet
 {
+    using System;
     using System.Collections.Generic;
     using System.Configuration;
     using System.Globalization;
@@ -73,7 +74,7 @@ namespace Nancy.Hosting.Aspnet
 
             RequestStream body = null;
 
-            if (expectedRequestLength != 0)
+            if (expectedRequestLength != 0 || HasChunkedEncoding(incomingHeaders))
             {
                 body = RequestStream.FromStream(context.Request.InputStream, expectedRequestLength, StaticConfiguration.DisableRequestStreamSwitching ?? true);
             }
@@ -116,6 +117,17 @@ namespace Nancy.Hosting.Aspnet
             }
 
             return contentLength;
+        }
+
+        private static bool HasChunkedEncoding(IDictionary<string, IEnumerable<string>> incomingHeaders)
+        {
+            IEnumerable<string> transferEncodingValue;
+            if (incomingHeaders == null || !incomingHeaders.TryGetValue("Transfer-Encoding", out transferEncodingValue))
+            {
+                return false;
+            }
+            var transferEncodingString = transferEncodingValue.SingleOrDefault() ?? string.Empty;
+            return transferEncodingString.Equals("chunked", StringComparison.OrdinalIgnoreCase);
         }
 
         public static void SetNancyResponseToHttpResponse(HttpContextBase context, Response response)
