@@ -28,7 +28,4 @@ deploy:
   on:
     branch: master
 
-build:
-  verbosity: detailed
-
 test: off
