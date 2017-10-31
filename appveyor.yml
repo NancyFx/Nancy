@@ -1,4 +1,4 @@
-os: Visual Studio 2015
+image: Visual Studio 2017
 
 version: 2.0.0-ci000{build}
 configuration: Release
@@ -28,8 +28,5 @@ deploy:
   skip_symbols: true
   on:
     branch: master
-
-build:
-  verbosity: detailed
 
 test: off
