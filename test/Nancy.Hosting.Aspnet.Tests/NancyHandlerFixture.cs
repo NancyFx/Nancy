@@ -3,6 +3,7 @@ namespace Nancy.Hosting.Aspnet.Tests
     using System;
     using System.Collections.Specialized;
     using System.IO;
+    using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
     using System.Web;
@@ -107,6 +108,73 @@ namespace Nancy.Hosting.Aspnet.Tests
 
             // Then
             A.CallTo(() => disposable.Dispose()).MustHaveHappened(Repeated.Exactly.Once);
+        }
+        [Fact]
+        public async Task Should_create_request_body_when_content_length_specified()
+        {
+            var bodyString = "This is a sample body";
+            var nancyContext = new NancyContext() { Response = new Response() };
+            A.CallTo(() => this.request.HttpMethod).Returns("POST");
+            A.CallTo(() => this.request.Headers).Returns(new NameValueCollection { { "Content-Length", bodyString.Length.ToString() } });
+            A.CallTo(() => this.request.InputStream).Returns(new MemoryStream(Encoding.UTF8.GetBytes(bodyString)));
+            A.CallTo(() => this.request.Url).Returns(new Uri("http://ihatedummydata.com/about"));
+            A.CallTo(() => this.engine.HandleRequest(
+                                        A<Request>.Ignored,
+                                        A<Func<NancyContext, NancyContext>>.Ignored,
+                                        A<CancellationToken>.Ignored))
+                                      .Returns(Task.FromResult(nancyContext));
+ 
+            await this.handler.ProcessRequest(this.context);
+ 
+            A.CallTo(() => this.engine.HandleRequest(A<Request>
+                .That
+                .Matches(x => x.Body.Length == bodyString.Length), A<Func<NancyContext, NancyContext>>.Ignored, A<CancellationToken>.Ignored))
+                .MustHaveHappened();
+        }
+ 
+        [Fact]
+        public async Task Should_not_create_request_body_when_content_length__not_specified_and_not_chunked()
+        {
+            var bodyString = "This is a sample body";
+            var nancyContext = new NancyContext() { Response = new Response() };
+            A.CallTo(() => this.request.HttpMethod).Returns("GET");
+            A.CallTo(() => this.request.InputStream).Returns(new MemoryStream(Encoding.UTF8.GetBytes(bodyString)));
+            A.CallTo(() => this.request.Url).Returns(new Uri("http://ihatedummydata.com/about"));
+            A.CallTo(() => this.engine.HandleRequest(
+                                        A<Request>.Ignored,
+                                        A<Func<NancyContext, NancyContext>>.Ignored,
+                                        A<CancellationToken>.Ignored))
+                                      .Returns(Task.FromResult(nancyContext));
+ 
+            await this.handler.ProcessRequest(this.context);
+ 
+            A.CallTo(() => this.engine.HandleRequest(A<Request>
+                .That
+                .Matches(x => x.Body.Length == 0), A<Func<NancyContext, NancyContext>>.Ignored, A<CancellationToken>.Ignored))
+                .MustHaveHappened();
+        }
+ 
+        [Fact]
+        public async Task Should_create_request_body_when_content_length_not_specified_but_transfer_encoding_is_chunked()
+        {
+            var bodyString = "This is a sample body";
+            var nancyContext = new NancyContext() { Response = new Response() };
+            A.CallTo(() => this.request.HttpMethod).Returns("POST");
+            A.CallTo(() => this.request.Headers).Returns(new NameValueCollection { { "Transfer-Encoding", "chunked" } });
+            A.CallTo(() => this.request.InputStream).Returns(new MemoryStream(Encoding.UTF8.GetBytes(bodyString)));
+            A.CallTo(() => this.request.Url).Returns(new Uri("http://ihatedummydata.com/about"));
+            A.CallTo(() => this.engine.HandleRequest(
+                                        A<Request>.Ignored,
+                                        A<Func<NancyContext, NancyContext>>.Ignored,
+                                        A<CancellationToken>.Ignored))
+                                      .Returns(Task.FromResult(nancyContext));
+ 
+            await this.handler.ProcessRequest(this.context);
+ 
+            A.CallTo(() => this.engine.HandleRequest(A<Request>
+                .That
+                .Matches(x => x.Body.Length == bodyString.Length), A<Func<NancyContext, NancyContext>>.Ignored, A<CancellationToken>.Ignored))
+                .MustHaveHappened();
         }
 
         private void SetupRequestProcess(NancyContext nancyContext)
