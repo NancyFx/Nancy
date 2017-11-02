@@ -45,6 +45,10 @@ While it’s hard to pin down exactly what it is, it’s a very emotive term aft
 
 Above all, creating an application with Nancy should be a pleasure, and hopefully fun! But without sacrificing the power or extensibility that you may need as your application grows.
 
+## Getting started
+
+As a start several working samples are provided in the `/sample` directory. Simply run the build script `build.ps1` (for Windows PowerShell) or `build.sh` (for \*nix-Bash) first.
+
 ## Community
 
 Nancy followers can be found on Slack [NancyFx team](http://nancyfx.slack.com). You can also find Nancy on Twitter using the #NancyFx hashtag.
