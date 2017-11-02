@@ -24,12 +24,13 @@
             }
 
             var requestEtag = context.Request.Headers.IfNoneMatch.FirstOrDefault();
-            var requestDate = context.Request.Headers.IfModifiedSince;
 
-            if (requestEtag != null && !string.IsNullOrEmpty(etag) && requestEtag.Equals(etag, StringComparison.Ordinal))
+            if (requestEtag != null && !string.IsNullOrEmpty(etag))
             {
-                return true;
+                return requestEtag.Equals(etag, StringComparison.Ordinal);
             }
+
+            var requestDate = context.Request.Headers.IfModifiedSince;
 
             if (requestDate.HasValue && lastModified.HasValue && ((int)(lastModified.Value - requestDate.Value).TotalSeconds) <= 0)
             {
