@@ -109,6 +109,29 @@ namespace Nancy.Hosting.Aspnet.Tests
             // Then
             A.CallTo(() => disposable.Dispose()).MustHaveHappened(Repeated.Exactly.Once);
         }
+
+        [Fact]
+        public async Task Should_contain_correct_path_when_uri_contains_space()
+        {
+            var bodyString = "This is a sample body";
+            var nancyContext = new NancyContext() { Response = new Response() };
+            A.CallTo(() => this.request.HttpMethod).Returns("GET");
+            A.CallTo(() => this.request.ApplicationPath).Returns("/web root");
+            A.CallTo(() => this.request.Url).Returns(new Uri("http://ihatedummydata.com/web root/api/"));
+            A.CallTo(() => this.engine.HandleRequest(
+                                        A<Request>.Ignored,
+                                        A<Func<NancyContext, NancyContext>>.Ignored,
+                                        A<CancellationToken>.Ignored))
+                                      .Returns(Task.FromResult(nancyContext));
+
+            await this.handler.ProcessRequest(this.context);
+
+            A.CallTo(() => this.engine.HandleRequest(A<Request>
+                .That
+                .Matches(x => x.Url.Path == "/api/"), A<Func<NancyContext, NancyContext>>.Ignored, A<CancellationToken>.Ignored))
+                .MustHaveHappened();
+        }
+
         [Fact]
         public async Task Should_create_request_body_when_content_length_specified()
         {
