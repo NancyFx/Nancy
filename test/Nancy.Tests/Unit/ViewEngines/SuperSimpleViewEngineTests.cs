@@ -36,6 +36,29 @@
 
             Assert.Equal(@"<html><head></head><body>HiHi</body></html>", result);
         }
+        
+        [Fact]
+        public void Should_expand_dynamic_partial_inside_each_section()
+        {
+            const string input = @"<html><head></head><body>@Each;@Partial['@Current'];@EndEach</body></html>";
+            var fakeViewEngineHost = new FakeViewEngineHost();
+            fakeViewEngineHost.GetTemplateCallback = (s, m) =>
+            {
+                switch (s)
+                {
+                    case "model1":
+                        return "FirstPartial";
+                    case "model2":
+                        return "SecondPartial";
+                     default:
+                         return s;
+                }
+            };
+            var model = new List<string>() { "model1", "model2" };
+            var result = viewEngine.Render(input, model, fakeViewEngineHost);
+
+            Assert.Equal(@"<html><head></head><body>FirstPartialSecondPartial</body></html>", result);
+        }
 
         [Fact]
         public void Should_expand_multiple_partials_inside_each_section()

@@ -650,7 +650,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
                 result,
                 m =>
                 {
-                    var partialViewName = m.Groups["ViewName"].Value;
+                    var partialViewName = ReplaceCurrentMatch(m.Groups["ViewName"].Value, model, host);
                     var partialModel = model;
                     var properties = GetCaptureGroupValues(m, "ParameterName");
 
