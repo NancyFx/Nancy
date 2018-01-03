@@ -30,7 +30,7 @@
             this.viewLocationProvider = viewLocationProvider;
             this.viewEngines = viewEngines;
             this.invalidCharacters = Path.GetInvalidFileNameChars().Where(c => c != '/').ToArray();
-            this.viewLocationResults = new List<ViewLocationResult>(this.GetInititialViewLocations());
+            this.viewLocationResults = new List<ViewLocationResult>(this.GetInitialViewLocations());
             this.configuration = environment.GetValue<ViewConfiguration>();
         }
 
@@ -123,7 +123,7 @@
 
             if (uncachedResults.Length > 1)
             {
-                throw new AmbiguousViewsException(GetAmgiguousViewExceptionMessage(uncachedResults.Length, uncachedResults));
+                throw new AmbiguousViewsException(GetAmbiguousViewExceptionMessage(uncachedResults.Length, uncachedResults));
             }
 
             return uncachedResults.First();
@@ -139,7 +139,7 @@
 
             if (cachedResults.Length > 1)
             {
-                throw new AmbiguousViewsException(GetAmgiguousViewExceptionMessage(cachedResults.Length, cachedResults));
+                throw new AmbiguousViewsException(GetAmbiguousViewExceptionMessage(cachedResults.Length, cachedResults));
             }
 
             return null;
@@ -168,7 +168,7 @@
                        .ToArray();
         }
 
-        private IEnumerable<ViewLocationResult> GetInititialViewLocations()
+        private IEnumerable<ViewLocationResult> GetInitialViewLocations()
         {
             var supportedViewExtensions =
                 this.GetSupportedViewExtensions();
@@ -186,9 +186,9 @@
                 .Distinct();
         }
 
-        private static string GetAmgiguousViewExceptionMessage(int count, IEnumerable<ViewLocationResult> viewsThatMatchesCritera)
+        private static string GetAmbiguousViewExceptionMessage(int count, IEnumerable<ViewLocationResult> viewsThatMatchesCriteria)
         {
-            return string.Format("This exception was thrown because multiple views were found. {0} view(s):\r\n\t{1}", count, string.Join("\r\n\t", viewsThatMatchesCritera.Select(GetFullLocationOfView).ToArray()));
+            return string.Format("This exception was thrown because multiple views were found. {0} view(s):\r\n\t{1}", count, string.Join("\r\n\t", viewsThatMatchesCriteria.Select(GetFullLocationOfView).ToArray()));
         }
 
         private static string GetFullLocationOfView(ViewLocationResult viewLocationResult)
