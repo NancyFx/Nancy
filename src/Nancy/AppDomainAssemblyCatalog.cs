@@ -22,7 +22,7 @@ namespace Nancy
         /// Gets all <see cref="Assembly"/> instances in the catalog.
         /// </summary>
         /// <returns>An <see cref="IReadOnlyCollection{T}"/> of <see cref="Assembly"/> instances.</returns>
-        public IReadOnlyCollection<Assembly> GetAssemblies()
+        public virtual IReadOnlyCollection<Assembly> GetAssemblies()
         {
             return this.assemblies.Value;
         }
