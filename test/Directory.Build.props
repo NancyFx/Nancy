@@ -20,7 +20,13 @@
 
   <ItemGroup>
     <ProjectReference Include="../../src/Nancy/Nancy.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(MSBuildProjectName)' != 'Nancy.Tests' and '$(MSBuildProjectName)' != 'Nancy.Tests.Functional' ">
     <ProjectReference Include="../../src/$(ProjectUnderTest)/$(ProjectUnderTest).csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(MSBuildProjectName)' != 'Nancy.Testing.Tests' ">
     <ProjectReference Include="../../src/Nancy.Testing/Nancy.Testing.csproj" />
   </ItemGroup>
 
