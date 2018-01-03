@@ -114,7 +114,7 @@
                 return null;
             }
 
-            if (!authorization.StartsWith(SCHEME))
+            if (!authorization.StartsWith(SCHEME, StringComparison.OrdinalIgnoreCase))
             {
                 return null;
             }
