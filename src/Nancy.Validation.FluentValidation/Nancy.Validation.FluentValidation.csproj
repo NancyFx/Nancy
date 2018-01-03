@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Description>Adds Fluent Validation support to Nancy.</Description>
     <PackageTags>$(PackageTags);Validation;FluentValidation</PackageTags>
-    <TargetFrameworks>net452;netstandard1.6</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
