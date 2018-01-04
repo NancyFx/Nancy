@@ -530,6 +530,11 @@ namespace Nancy.Json.Simple
         /// <returns>An IList&lt;object>, a IDictionary&lt;string,object>, a double, a string, null, true, or false</returns>
         public static object DeserializeObject(string json)
         {
+            if (string.IsNullOrWhiteSpace(json))
+            {
+                return null;
+            }
+
             object obj;
             if (TryDeserializeObject(json, out obj))
                 return obj;
