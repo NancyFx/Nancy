@@ -9,41 +9,41 @@
         [Fact]
         public void String_dictionary_values_are_Json_serialized_as_strings()
         {
-            //Given
+            // Given
             dynamic value = "42";
             var input = new DynamicDictionaryValue(value);
 
-            //When
+            // When
             var actual = SimpleJson.SerializeObject(input, new NancySerializationStrategy(), false);
 
-            //Then
+            // Then
             actual.ShouldEqual(@"""42""");
         }
 
         [Fact]
         public void Integer_dictionary_values_are_Json_serialized_as_integers()
         {
-            //Given
+            // Given
             dynamic value = 42;
             var input = new DynamicDictionaryValue(value);
 
-            //When
+            // When
             var actual = SimpleJson.SerializeObject(input, new NancySerializationStrategy(), false);
 
-            //Then
+            // Then
             actual.ShouldEqual(@"42");
         }
 
         [Fact]
         public void Should_serialize_enum_to_string()
         {
-            //Given
+            // Given
             var model = new ModelTest { EnumModel = TestEnum.Freddy };
 
-            //When
+            // When
             var result = SimpleJson.SerializeObject(model, new NancySerializationStrategy(false, true), false);
 
-            //Then
+            // Then
             result.ShouldEqual("{\"enumModel\":\"Freddy\"}");
         }
 
@@ -52,8 +52,10 @@
         {
             // Given
             var json = "42";
+
             // When
             var result = SimpleJson.DeserializeObject(json, typeof(ulong), DateTimeStyles.None);
+
             // Then
             result.ShouldEqual(42ul);
         }
@@ -63,8 +65,10 @@
         {
             // Given
             var json = "42";
+
             // When
             var result = SimpleJson.DeserializeObject(json, typeof(ushort), DateTimeStyles.None);
+
             // Then
             result.ShouldEqual((ushort)42);
         }
@@ -132,6 +136,45 @@
 
             // Then
             result.SomeNullableInt.ShouldEqual(null);
+        }
+
+        [Fact]
+        public void Should_deserialize_null_string_to_null_object()
+        {
+            // Given
+            const string json = null;
+
+            // When
+            var result = SimpleJson.DeserializeObject(json);
+
+            // Then
+            result.ShouldBeNull();
+        }
+
+        [Fact]
+        public void Should_deserialize_empty_string_to_null_object()
+        {
+            // Given
+            var json = string.Empty;
+
+            // When
+            var result = SimpleJson.DeserializeObject(json);
+
+            // Then
+            result.ShouldBeNull();
+        }
+
+        [Fact]
+        public void Should_deserialize_white_space_to_null_object()
+        {
+            // Given
+            const string json = " \t\r\n ";
+
+            // When
+            var result = SimpleJson.DeserializeObject(json);
+
+            // Then
+            result.ShouldBeNull();
         }
 
         public class ModelTest
