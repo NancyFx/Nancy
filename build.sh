@@ -3,9 +3,9 @@
 # Define directories.
 SCRIPT_DIR=$PWD
 TOOLS_DIR=$SCRIPT_DIR/tools
-CAKE_VERSION=0.19.4
-CAKE_DLL=$TOOLS_DIR/Cake.CoreCLR.$CAKE_VERSION/Cake.dll
-DOTNET_VERSION=$(cat global.json | grep -Po '[\d]\.[\d]\.[\d]')
+CAKE_VERSION=0.24.0
+CAKE_DLL=$TOOLS_DIR/Cake.$CAKE_VERSION/Cake.exe
+DOTNET_VERSION=$(cat global.json | grep -o '[0-9]\.[0-9]\.[0-9]')
 DOTNET_INSTRALL_URI=https://raw.githubusercontent.com/dotnet/cli/rel/1.0.1/scripts/obtain/dotnet-install.sh
 
 # Make sure the tools folder exist.
@@ -28,13 +28,12 @@ export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 "$SCRIPT_DIR/.dotnet/dotnet" --info
 
-
 ###########################################################################
 # INSTALL CAKE
 ###########################################################################
 
 if [ ! -f "$CAKE_DLL" ]; then
-    curl -Lsfo "$TOOLS_DIR/Cake.CoreCLR.zip" "https://www.nuget.org/api/v2/package/Cake.CoreCLR/$CAKE_VERSION" && unzip -q "$TOOLS_DIR/Cake.CoreCLR.zip" -d "$TOOLS_DIR/Cake.CoreCLR.$CAKE_VERSION" && rm -f "$TOOLS_DIR/Cake.CoreCLR.zip"
+    curl -Lsfo Cake.zip "https://www.nuget.org/api/v2/package/Cake/$CAKE_VERSION" && unzip -q Cake.zip -d "$TOOLS_DIR/Cake.$CAKE_VERSION" && rm -f Cake.zip
     if [ $? -ne 0 ]; then
         echo "An error occured while installing Cake."
         exit 1
@@ -55,4 +54,4 @@ fi
 export FrameworkPathOverride=$(dirname $(which mono))/../lib/mono/4.5/
 
 # Start Cake
-exec dotnet "$CAKE_DLL" "$@"
+exec mono "$CAKE_DLL" "$@"
