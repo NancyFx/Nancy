@@ -1,18 +1,18 @@
 language: csharp
-mono: alpha
+os:
+  - linux
+
 sudo: required
 dist: trusty
-addons:
-  apt:
-    packages:
-    - gettext
-    - libcurl4-openssl-dev
-    - libicu-dev
-    - libssl-dev
-    - libunwind8
-env:
-    - MONO_TLS_PROVIDER=legacy
-script: ./build.sh --verbosity=minimal
+
+mono:
+  - 4.4.2
+
+dotnet: 1.1.4
+
+script:
+  - ./build.sh --verbosity=minimal
+
 notifications:
   email:
     - nancy@nancyfx.org
