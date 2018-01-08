@@ -108,6 +108,17 @@ Task("Package-NuGet")
     {
         foreach(var project in GetFiles("./src/**/*.csproj"))
         {
+            Information("Packaging " + project.GetFilename().FullPath);
+
+            var content =
+                System.IO.File.ReadAllText(project.FullPath, Encoding.UTF8);
+
+            if (IsRunningOnUnix() && content.Contains(">" + fullFrameworkTarget + "<"))
+            {
+                Information(project.GetFilename() + " only supports " +fullFrameworkTarget + " and cannot be packaged on *nix. Skipping.");
+                continue;
+            }
+
             DotNetCorePack(project.GetDirectory().FullPath, new DotNetCorePackSettings {
                 Configuration = configuration,
                 OutputDirectory = outputNuGet
