@@ -10,7 +10,7 @@
     <PackageProjectUrl>http://nancyfx.org</PackageProjectUrl>
     <PackageTags>Nancy</PackageTags>
     <Platforms>AnyCPU</Platforms>
-    <Version>2.0.0-clinteastwood</Version>
+    <Version>2.0.0-Pre1902</Version>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(MSBuildProjectName)' != 'Nancy' ">
