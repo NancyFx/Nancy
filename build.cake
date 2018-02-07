@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 var target = Argument<string>("target", "Default");
 var source = Argument<string>("source", null);
 var apiKey = Argument<string>("apikey", null);
-var version = Argument<string>("targetversion", "2.0.0-Pre" + (EnvironmentVariable("APPVEYOR_BUILD_NUMBER") ?? "0"));
+var version = Argument<string>("targetversion", "2.0.0-pre" + (EnvironmentVariable("APPVEYOR_BUILD_NUMBER") ?? "0"));
 var nogit = Argument<bool>("nogit", false);
 
 // Variables
