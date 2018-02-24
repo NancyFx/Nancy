@@ -57,9 +57,10 @@ namespace Nancy.Cryptography
         /// <returns>Hmac bytes</returns>
         public byte[] GenerateHmac(byte[] data)
         {
-            var hmacGenerator = new HMACSHA256(this.key);
-
-            return hmacGenerator.ComputeHash(data);
+            using (var hmacGenerator = new HMACSHA256(this.key))
+            {
+                return hmacGenerator.ComputeHash(data);
+            }
         }
     }
 }

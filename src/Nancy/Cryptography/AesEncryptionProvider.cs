@@ -72,7 +72,7 @@ namespace Nancy.Cryptography
                 {
                     return String.Empty;
                 }
-                throw ex;
+                throw;
             }
         }
     }
