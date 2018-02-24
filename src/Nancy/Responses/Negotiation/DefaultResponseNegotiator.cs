@@ -1,7 +1,6 @@
 ﻿namespace Nancy.Responses.Negotiation
 {
     using System;
-    using System.CodeDom.Compiler;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -390,9 +389,10 @@
         /// <param name="response">The response.</param>
         private static void AddContentTypeHeader(NegotiationContext negotiationContext, Response response)
         {
-            if (negotiationContext.Headers.ContainsKey("Content-Type"))
+            string contentType;
+            if (negotiationContext.Headers.TryGetValue("Content-Type", out contentType))
             {
-                response.ContentType = negotiationContext.Headers["Content-Type"];
+                response.ContentType = contentType;
                 negotiationContext.Headers.Remove("Content-Type");
             }
         }

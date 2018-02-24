@@ -2102,7 +2102,8 @@ namespace Nancy.Testing
             /// <returns>The <see cref="INancyModule"/> instance</returns>
             public INancyModule GetModule(Type moduleType, NancyContext context)
             {
-                return this.moduleInstances.ContainsKey(moduleType.FullName) ? this.moduleInstances[moduleType.FullName] : null;
+                INancyModule module;
+                return this.moduleInstances.TryGetValue(moduleType.FullName, out module) ? module : null;
             }
 
             /// <summary>

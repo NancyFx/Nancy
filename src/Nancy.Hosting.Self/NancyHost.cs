@@ -11,7 +11,6 @@
     using System.Threading.Tasks;
     using Nancy.Bootstrapper;
     using Nancy.Extensions;
-    using Nancy.Helpers;
     using Nancy.IO;
     using System.Threading;
 
@@ -371,8 +370,9 @@
                 buffer = memoryStream.ToArray();
             }
 
-            var contentLength = (nancyResponse.Headers.ContainsKey("Content-Length")) ?
-                Convert.ToInt64(nancyResponse.Headers["Content-Length"]) :
+            string value;
+            var contentLength = nancyResponse.Headers.TryGetValue("Content-Length", out value) ?
+                Convert.ToInt64(value) :
                 buffer.Length;
 
             response.SendChunked = false;
@@ -395,13 +395,13 @@
                 return 0;
             }
 
-            if (!incomingHeaders.ContainsKey("Content-Length"))
+            IEnumerable<string> values;
+            if (!incomingHeaders.TryGetValue("Content-Length", out values))
             {
                 return 0;
             }
 
-            var headerValue =
-                incomingHeaders["Content-Length"].SingleOrDefault();
+            var headerValue = values.SingleOrDefault();
 
             if (headerValue == null)
             {

@@ -166,10 +166,10 @@ namespace Nancy.Session
             var cookieName = this.currentConfiguration.CookieName;
             var hmacProvider = this.currentConfiguration.CryptographyConfiguration.HmacProvider;
             var encryptionProvider = this.currentConfiguration.CryptographyConfiguration.EncryptionProvider;
-
-            if (request.Cookies.ContainsKey(cookieName))
+            string cookieValue;
+            if (request.Cookies.TryGetValue(cookieName, out cookieValue))
             {
-                var cookieData = HttpUtility.UrlDecode(request.Cookies[cookieName]);
+                var cookieData = HttpUtility.UrlDecode(cookieValue);
                 var hmacLength = Base64Helpers.GetBase64Length(hmacProvider.HmacLength);
                 if (cookieData.Length < hmacLength)
                 {

@@ -259,7 +259,8 @@ namespace Nancy.Json.Simple
         /// </returns>
         public bool Contains(KeyValuePair<string, object> item)
         {
-            return this._members.ContainsKey(item.Key) && this._members[item.Key] == item.Value;
+            object value;
+            return this._members.TryGetValue(item.Key, out value) && value == item.Value;
         }
 
         /// <summary>

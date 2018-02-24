@@ -79,12 +79,14 @@
 
                 foreach (var entry in this.cacheProvider.GetCache().Values.SelectMany(t => t.Select(t1 => t1.Item2)))
                 {
-                    if (!result.ContainsKey(entry.Method))
+                    IList<object> value;
+                    if (!result.TryGetValue(entry.Method, out value))
                     {
-                        result[entry.Method] = new List<object>();
+                        value = new List<object>();
+                        result[entry.Method] = value;
                     }
 
-                    result[entry.Method].Add(new { Name = entry.Name, Path = entry.Path });
+                    value.Add(new { Name = entry.Name, Path = entry.Path });
                 }
 
                 return result;

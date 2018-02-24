@@ -54,12 +54,14 @@
             {
                 foreach (var name in rule.MemberNames)
                 {
-                    if (!results.ContainsKey(name))
+                    IList<ModelValidationRule> list;
+                    if (!results.TryGetValue(name, out list))
                     {
-                        results.Add(name, new List<ModelValidationRule>());
+                        list = new List<ModelValidationRule>();
+                        results.Add(name, list);
                     }
 
-                    results[name].Add(rule);
+                    list.Add(rule);
                 }
             }
 

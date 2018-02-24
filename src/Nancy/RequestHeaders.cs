@@ -6,7 +6,6 @@ namespace Nancy
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
-    using System.Reflection;
     using Nancy.Cookies;
     using Nancy.Responses.Negotiation;
 
@@ -274,8 +273,9 @@ namespace Nancy
         {
             get
             {
-                return (this.headers.ContainsKey(name)) ?
-                    this.headers[name] :
+                IEnumerable<string> value;
+                return this.headers.TryGetValue(name, out value) ?
+                    value :
                     Enumerable.Empty<string>();
             }
         }

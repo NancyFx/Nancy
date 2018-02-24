@@ -143,8 +143,9 @@
                 if (nancyResponse.Cookies != null && nancyResponse.Cookies.Count != 0)
                 {
                     const string setCookieHeaderKey = "Set-Cookie";
-                    string[] setCookieHeader = owinResponseHeaders.ContainsKey(setCookieHeaderKey)
-                                                    ? owinResponseHeaders[setCookieHeaderKey]
+                    string[] cookieHeader;
+                    string[] setCookieHeader = owinResponseHeaders.TryGetValue(setCookieHeaderKey, out cookieHeader)
+                                                    ? cookieHeader
                                                     : ArrayCache.Empty<string>();
                     owinResponseHeaders[setCookieHeaderKey] = setCookieHeader
                         .Concat(nancyResponse.Cookies.Select(cookie => cookie.ToString()))

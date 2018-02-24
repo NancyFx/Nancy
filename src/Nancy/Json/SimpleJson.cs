@@ -264,7 +264,8 @@ namespace Nancy
         /// </returns>
         public bool Contains(KeyValuePair<string, object> item)
         {
-            return _members.ContainsKey(item.Key) && _members[item.Key] == item.Value;
+            object value;
+            return _members.TryGetValue(item.Key, out value) && value == item.Value;
         }
 
         /// <summary>

@@ -2,7 +2,6 @@ namespace Nancy.ViewEngines.Razor.CSharp
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Web.Razor.Tokenizer.Symbols;
 
     /// <summary>
@@ -83,8 +82,8 @@ namespace Nancy.ViewEngines.Razor.CSharp
                 {"bool", typeof (bool)},
                 {"object", typeof (object)},
             };
-
-            return (primitives.ContainsKey(typeName) ? primitives[typeName] : null);
+            Type type;
+            return primitives.TryGetValue(typeName, out type) ? type : null;
         }
     }
 }

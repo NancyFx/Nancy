@@ -53,12 +53,13 @@
 
         private static string GetContextValue(BrowserResponse response, string key)
         {
-            if (!response.Context.Items.ContainsKey(key))
+            object val;
+            if (!response.Context.Items.TryGetValue(key, out val))
             {
                 return string.Empty;
             }
 
-            var value = (string)response.Context.Items[key];
+            var value = (string)val;
             return string.IsNullOrEmpty(value) ? string.Empty : value;
         }
     }

@@ -85,7 +85,8 @@
         {
             get
             {
-                return (this.parameters.ContainsKey(name)) ? this.parameters[name] : null;
+                string value;
+                return this.parameters.TryGetValue(name, out value) ? value : null;
             }
         }
 
