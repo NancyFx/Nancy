@@ -46,6 +46,16 @@
         }
 
         /// <summary>
+        /// Checks if a type is array, collection or enumerable
+        /// </summary>
+        /// <param name="source">The type to check.</param>
+        /// <returns></returns>
+        public static bool IsCollectionOrArrayOrEnumerable(this Type source)
+        {
+            return source.IsArray() || source.IsCollection() || source.IsEnumerable();
+        }
+
+        /// <summary>
         /// Checks if a type is an array or not
         /// </summary>
         /// <param name="source">The type to check.</param>

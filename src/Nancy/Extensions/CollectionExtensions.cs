@@ -84,5 +84,20 @@
                 }
             }
         }
+
+        /// <summary>
+        /// Tries to get value from dictionary
+        /// </summary>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="source">The <see cref="IDictionary{TKey,TValue}"/> instance to get value from.</param>
+        /// <param name="key">The key to lookup.</param>
+        /// <returns></returns>
+        public static TValue GetValueOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> source, TKey key)
+        {
+            TValue result;
+            source.TryGetValue(key, out result);
+            return result;
+        }
     }
 }

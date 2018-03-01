@@ -396,7 +396,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             binder.Bind(context, typeof(TestModel), null, BindingConfig.Default);
 
             // Then
-            validProperties.ShouldEqual(22);
+            validProperties.ShouldEqual(BindingMemberInfo.Collect(typeof(TestModel)).Count());
         }
 
         [Fact]
@@ -1514,6 +1514,58 @@ namespace Nancy.Tests.Unit.ModelBinding
             result.IntProperty.ShouldEqual(10);
         }
 
+        [Fact]
+         public void Should_bind_multiple_Form_properties_to_a_list_as_a_complex_property()
+         {
+             //Given
+             var typeConverters = new ITypeConverter[] { new CollectionConverter(), new FallbackConverter() };
+             var binder = this.GetBinder(typeConverters);
+ 
+             var context = CreateContextWithHeader("Content-Type", new[] { "application/x-www-form-urlencoded" });
+             context.Request.Form["StringProperty"] = "Test";
+             context.Request.Form["IntProperty"] = "1";
+             context.Request.Form["Friends[0].Name"] = "Steven";
+             context.Request.Form["Friends[0].Age"] = "21";
+             context.Request.Form["Friends[1].Name"] = "Andreas";
+ 
+             // When
+             var result = (TestModel)binder.Bind(context, typeof(TestModel), null, BindingConfig.Default);
+ 
+             // Then
+             result.StringProperty.ShouldEqual("Test");
+             result.IntProperty.ShouldEqual(1);
+             result.Friends.First().Name.ShouldEqual("Steven");
+             result.Friends.First().Age.ShouldEqual(21);
+             result.Friends.Last().Name.ShouldEqual("Andreas");
+             result.Friends.Last().Age.ShouldEqual(default(int));
+         }
+
+        [Fact]
+        public void Should_bind_multiple_Form_properties_to_a_array_as_a_complex_property()
+        {
+            //Given
+            var typeConverters = new ITypeConverter[] { new CollectionConverter(), new FallbackConverter() };
+            var binder = this.GetBinder(typeConverters);
+
+            var context = CreateContextWithHeader("Content-Type", new[] { "application/x-www-form-urlencoded" });
+            context.Request.Form["StringProperty"] = "Test";
+            context.Request.Form["IntProperty"] = "1";
+            context.Request.Form["FriendsArray[0].Name"] = "Steven";
+            context.Request.Form["FriendsArray[0].Age"] = "21";
+            context.Request.Form["FriendsArray[1].Name"] = "Andreas";
+
+            // When
+            var result = (TestModel)binder.Bind(context, typeof(TestModel), null, BindingConfig.Default);
+
+            // Then
+            result.StringProperty.ShouldEqual("Test");
+            result.IntProperty.ShouldEqual(1);
+            result.FriendsArray.First().Name.ShouldEqual("Steven");
+            result.FriendsArray.First().Age.ShouldEqual(21);
+            result.FriendsArray.Last().Name.ShouldEqual("Andreas");
+            result.FriendsArray.Last().Age.ShouldEqual(default(int));
+        }
+
         private IBinder GetBinder(IEnumerable<ITypeConverter> typeConverters = null, IEnumerable<IBodyDeserializer> bodyDeserializers = null, IFieldNameConverter nameConverter = null, BindingDefaults bindingDefaults = null)
         {
             var converters = typeConverters ?? new ITypeConverter[] { new DateTimeConverter(), new NumericConverter(), new FallbackConverter() };
@@ -1624,6 +1676,16 @@ namespace Nancy.Tests.Unit.ModelBinding
             public List<AnotherTestModel> ModelsProperty { get; set; }
 
             public List<AnotherTestModel> ModelsField;
+            public List<Friend> Friends { get; set; }
+
+            public Friend[] FriendsArray { get; set; }
+        }
+
+        public class Friend
+        {
+            public string Name { get; set; }
+
+            public int Age { get; set; }
         }
 
         public class InheritedTestModel : TestModel
