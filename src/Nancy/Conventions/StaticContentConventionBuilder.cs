@@ -113,6 +113,19 @@ namespace Nancy.Conventions
             return null;
         }
 
+        private static string GetSafeFullPath(string path)
+        {
+            try
+            {
+                return Path.GetFullPath(path);
+            }
+            catch (Exception)
+            {
+            }
+
+            return null;
+        }
+
         private static string GetContentPath(string requestedPath, string contentPath)
         {
             contentPath =
@@ -152,11 +165,29 @@ namespace Nancy.Conventions
                 transformedRequestPath =
                     GetEncodedPath(transformedRequestPath);
 
+                var relativeFileName =
+                    Path.Combine(applicationRootPath, transformedRequestPath);
+
                 var fileName =
-                    Path.GetFullPath(Path.Combine(applicationRootPath, transformedRequestPath));
+                    GetSafeFullPath(relativeFileName);
+
+                if (fileName == null)
+                {
+                    context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] The request '", relativeFileName, "' contains an invalid path character")));
+                    return ctx => null;
+                }
+
+                var relatveContentRootPath =
+                    Path.Combine(applicationRootPath, GetEncodedPath(contentPath));
 
                 var contentRootPath =
-                    Path.GetFullPath(Path.Combine(applicationRootPath, GetEncodedPath(contentPath)));
+                    GetSafeFullPath(relatveContentRootPath);
+
+                if (contentRootPath == null)
+                {
+                    context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] The request '", fileName, "' is trying to access a path inside the content folder, which contains an invalid path character '", relatveContentRootPath, "'")));
+                    return ctx => null;
+                }
 
                 if (!IsWithinContentFolder(contentRootPath, fileName))
                 {
