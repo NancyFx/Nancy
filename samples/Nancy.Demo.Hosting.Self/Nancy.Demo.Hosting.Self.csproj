@@ -106,6 +106,78 @@
     <Compile Include="Program.cs" />
     <Compile Include="TestModule.cs" />
     <Compile Include="DemoBootstrapper.cs" />
+    <Compile Include="..\Nancy.Validation.DataAnnotations\CompareValidatorAdapter.cs">
+      <Link>CompareValidatorAdapter.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotations\CreditCardValidatorAdapter.cs">
+      <Link>CreditCardValidatorAdapter.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotations\DefaultPropertyValidatorFactory.cs">
+      <Link>DefaultPropertyValidatorFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotations\EmailAddressValidatorAdapter.cs">
+      <Link>EmailAddressValidatorAdapter.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotations\EnumDataTypeValidatorAdapter.cs">
+      <Link>EnumDataTypeValidatorAdapter.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotations\FileExtensionsValidatorAdapter.cs">
+      <Link>FileExtensionsValidatorAdapter.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotations\IPropertyValidator.cs">
+      <Link>IPropertyValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotations\IPropertyValidatorFactory.cs">
+      <Link>IPropertyValidatorFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotations\IValidatableObjectAdapter.cs">
+      <Link>IValidatableObjectAdapter.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotations\MaxLengthValidatorAdapter.cs">
+      <Link>MaxLengthValidatorAdapter.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotations\MinLengthValidatorAdapter.cs">
+      <Link>MinLengthValidatorAdapter.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotations\PhoneValidatorAdapter.cs">
+      <Link>PhoneValidatorAdapter.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotations\PropertyValidator.cs">
+      <Link>PropertyValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotations\DataAnnotationsRegistrations.cs">
+      <Link>DataAnnotationsRegistrations.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotations\DefaultValidatableObjectAdapter.cs">
+      <Link>DefaultValidatableObjectAdapter.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotations\DataAnnotationsValidator.cs">
+      <Link>DataAnnotationsValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotations\DataAnnotationsValidatorAdapter.cs">
+      <Link>DataAnnotationsValidatorAdapter.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotations\DataAnnotationsValidatorFactory.cs">
+      <Link>DataAnnotationsValidatorFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotations\IDataAnnotationsValidatorAdapter.cs">
+      <Link>IDataAnnotationsValidatorAdapter.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotations\RangeValidatorAdapter.cs">
+      <Link>RangeValidatorAdapter.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotations\RegexValidatorAdapter.cs">
+      <Link>RegexValidatorAdapter.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotations\RequiredValidatorAdapter.cs">
+      <Link>RequiredValidatorAdapter.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotations\StringLengthValidatorAdapter.cs">
+      <Link>StringLengthValidatorAdapter.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Validation.DataAnnotations\UrlValidatorAdapter.cs">
+      <Link>UrlValidatorAdapter.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Nancy.Hosting.Self.MSBuild\Nancy.Hosting.Self.csproj">

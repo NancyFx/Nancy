@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.4
+VisualStudioVersion = 15.0.26430.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{5734E9DC-CF67-4337-B28E-695280598B88}"
 EndProject
@@ -88,6 +88,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Hosting.Kestrel", "samples\Nancy.Demo.Hosting.Kestrel\Nancy.Demo.Hosting.Kestrel.csproj", "{3AF8D59E-D10A-46DE-97A6-0A6C156F22CD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.ViewEngines.Spark.Tests", "test\Nancy.ViewEngines.Spark.Tests\Nancy.ViewEngines.Spark.Tests.csproj", "{08C1D823-E8E1-4D86-8F73-A9F3AE8FEFC7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Validation", "samples\Nancy.Demo.Validation\Nancy.Demo.Validation.csproj", "{F417B81C-B914-4BFD-8299-6BBD11072B01}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -555,6 +557,18 @@ Global
 		{08C1D823-E8E1-4D86-8F73-A9F3AE8FEFC7}.Release|x64.Build.0 = Release|Any CPU
 		{08C1D823-E8E1-4D86-8F73-A9F3AE8FEFC7}.Release|x86.ActiveCfg = Release|Any CPU
 		{08C1D823-E8E1-4D86-8F73-A9F3AE8FEFC7}.Release|x86.Build.0 = Release|Any CPU
+		{F417B81C-B914-4BFD-8299-6BBD11072B01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F417B81C-B914-4BFD-8299-6BBD11072B01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F417B81C-B914-4BFD-8299-6BBD11072B01}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F417B81C-B914-4BFD-8299-6BBD11072B01}.Debug|x64.Build.0 = Debug|Any CPU
+		{F417B81C-B914-4BFD-8299-6BBD11072B01}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F417B81C-B914-4BFD-8299-6BBD11072B01}.Debug|x86.Build.0 = Debug|Any CPU
+		{F417B81C-B914-4BFD-8299-6BBD11072B01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F417B81C-B914-4BFD-8299-6BBD11072B01}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F417B81C-B914-4BFD-8299-6BBD11072B01}.Release|x64.ActiveCfg = Release|Any CPU
+		{F417B81C-B914-4BFD-8299-6BBD11072B01}.Release|x64.Build.0 = Release|Any CPU
+		{F417B81C-B914-4BFD-8299-6BBD11072B01}.Release|x86.ActiveCfg = Release|Any CPU
+		{F417B81C-B914-4BFD-8299-6BBD11072B01}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -598,5 +612,6 @@ Global
 		{EEEE504F-24AC-4932-9B28-F684AB20FB50} = {5734E9DC-CF67-4337-B28E-695280598B88}
 		{3AF8D59E-D10A-46DE-97A6-0A6C156F22CD} = {AA791E28-7914-439A-B59A-580B8D8FE95D}
 		{08C1D823-E8E1-4D86-8F73-A9F3AE8FEFC7} = {058BCE2A-8F81-4404-83D3-844CE030E513}
+		{F417B81C-B914-4BFD-8299-6BBD11072B01} = {AA791E28-7914-439A-B59A-580B8D8FE95D}
 	EndGlobalSection
 EndGlobal
