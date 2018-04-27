@@ -158,7 +158,7 @@ namespace Nancy.ErrorHandling
             }
         }
 
-        internal class DefaultStatusCodeHandlerResult
+        public class DefaultStatusCodeHandlerResult
         {
             public HttpStatusCode StatusCode { get; set; }
 
