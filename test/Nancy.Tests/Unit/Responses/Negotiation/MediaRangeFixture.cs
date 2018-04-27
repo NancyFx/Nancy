@@ -83,5 +83,18 @@
             // Then
             range.ToString().ShouldEqual("application/vnd.nancy;a=1;b=2");
         }
+
+        [Fact]
+        public void Should_cast_to_null_string()
+        {
+            // Given
+            MediaRange range = null;
+
+            // When
+            string cast = (string)range;
+
+            // Then
+            Assert.Null(cast);
+        }
     }
 }
