@@ -475,14 +475,14 @@ namespace Nancy.ModelBinding
                                            .Distinct()
                                            .Select((k, i) => new KeyValuePair<int, int>(i, k))
                                            .ToDictionary(k => k.Key, v => v.Value);
-
-                if (indexindexes.ContainsKey(index))
+                int indexValue;
+                if (indexindexes.TryGetValue(index, out indexValue))
                 {
                     var propertyValue =
                         context.RequestData.Where(c =>
                         {
                             var indexId = IsMatch(c.Key);
-                            return c.Key.StartsWith(propertyName, StringComparison.OrdinalIgnoreCase) && indexId != -1 && indexId == indexindexes[index];
+                            return c.Key.StartsWith(propertyName, StringComparison.OrdinalIgnoreCase) && indexId != -1 && indexId == indexValue;
                         })
                         .Select(k => k.Value)
                         .FirstOrDefault();
@@ -492,7 +492,9 @@ namespace Nancy.ModelBinding
 
                 return string.Empty;
             }
-            return context.RequestData.ContainsKey(propertyName) ? context.RequestData[propertyName] : string.Empty;
+
+            string value;
+            return context.RequestData.TryGetValue(propertyName, out value) ? value : string.Empty;
         }
 
         private object DeserializeRequestBody(BindingContext context)

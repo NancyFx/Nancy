@@ -18,12 +18,14 @@
         /// <returns>A reference to the <see cref="ModelValidationResult.Errors"/> property.</returns>
         public static IDictionary<string, IList<ModelValidationError>> Add(this IDictionary<string, IList<ModelValidationError>> errors, string name, string errorMessage)
         {
-            if (!errors.ContainsKey(name))
+            IList<ModelValidationError> value;
+            if (!errors.TryGetValue(name, out value))
             {
-                errors[name] = new List<ModelValidationError>();
+                value = new List<ModelValidationError>();
+                errors[name] = value;
             }
 
-            errors[name].Add(new ModelValidationError(name, errorMessage));
+            value.Add(new ModelValidationError(name, errorMessage));
 
             return errors;
         }

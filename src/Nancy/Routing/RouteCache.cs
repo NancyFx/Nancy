@@ -93,12 +93,14 @@
 
         private void AddRoutesToCache(IEnumerable<RouteDescription> routes, Type moduleType)
         {
-            if (!this.ContainsKey(moduleType))
+            List<Tuple<int, RouteDescription>> routeDescriptions;
+            if (!this.TryGetValue(moduleType, out routeDescriptions))
             {
-                this[moduleType] = new List<Tuple<int, RouteDescription>>();
+                routeDescriptions = new List<Tuple<int, RouteDescription>>();
+                this[moduleType] = routeDescriptions;
             }
 
-            this[moduleType].AddRange(routes.Select((r, i) => new Tuple<int, RouteDescription>(i, r)));
+            routeDescriptions.AddRange(routes.Select((r, i) => new Tuple<int, RouteDescription>(i, r)));
         }
     }
 }

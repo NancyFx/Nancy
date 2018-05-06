@@ -3889,8 +3889,9 @@ namespace Nancy.TinyIoc
 
                 try
                 {
-                    args[parameterIndex] = parameters.ContainsKey(currentParam.Name) ?
-                                            parameters[currentParam.Name] :
+                    object value;
+                    args[parameterIndex] = parameters.TryGetValue(currentParam.Name, out value) ?
+                                            value :
                                             ResolveInternal(
                                                 new TypeRegistration(currentParam.ParameterType),
                                                 NamedParameterOverloads.Default,

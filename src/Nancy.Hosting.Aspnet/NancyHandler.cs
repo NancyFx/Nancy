@@ -97,13 +97,13 @@ namespace Nancy.Hosting.Aspnet
                 return 0;
             }
 
-            if (!incomingHeaders.ContainsKey("Content-Length"))
+            IEnumerable<string> values;
+            if (!incomingHeaders.TryGetValue("Content-Length", out values))
             {
                 return 0;
             }
 
-            var headerValue =
-                incomingHeaders["Content-Length"].SingleOrDefault();
+            var headerValue = values.SingleOrDefault();
 
             if (headerValue == null)
             {

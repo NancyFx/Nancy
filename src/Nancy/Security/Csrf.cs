@@ -9,7 +9,6 @@
     using Nancy.Bootstrapper;
     using Nancy.Cookies;
     using Nancy.Cryptography;
-    using Nancy.Helpers;
 
     /// <summary>
     /// Csrf protection methods
@@ -40,19 +39,20 @@
                         return;
                     }
 
-                    if (context.Items.ContainsKey(CsrfToken.DEFAULT_CSRF_KEY))
+                    object value;
+                    if (context.Items.TryGetValue(CsrfToken.DEFAULT_CSRF_KEY, out value))
                     {
                         context.Response.Cookies.Add(new NancyCookie(
                             CsrfToken.DEFAULT_CSRF_KEY,
-                            (string)context.Items[CsrfToken.DEFAULT_CSRF_KEY],
+                            (string)value,
                             true, useSecureCookie));
 
                         return;
                     }
 
-                    if (context.Request.Cookies.ContainsKey(CsrfToken.DEFAULT_CSRF_KEY))
+                    string cookieValue;
+                    if (context.Request.Cookies.TryGetValue(CsrfToken.DEFAULT_CSRF_KEY, out cookieValue))
                     {
-                        var cookieValue = context.Request.Cookies[CsrfToken.DEFAULT_CSRF_KEY];
                         var cookieToken = ParseToCsrfToken(cookieValue);
 
                         if (CsrfApplicationStartup.TokenValidator.CookieTokenStillValid(cookieToken))

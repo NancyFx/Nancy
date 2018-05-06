@@ -64,7 +64,11 @@ namespace Nancy.Session
         /// <returns>The value, or null or the key didn't exist</returns>
         public object this[string key]
         {
-            get { return dictionary.ContainsKey(key) ? dictionary[key] : null; }
+            get
+            {
+                object value;
+                return dictionary.TryGetValue(key, out value) ? value : null;
+            }
             set
             {
                 var existingValue = this[key] ?? new Object();

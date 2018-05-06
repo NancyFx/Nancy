@@ -20,9 +20,10 @@ namespace Nancy.Testing
             // We only really want to generate this once, so we'll stick it in the context
             // This isn't ideal, but we don't want to hide the guts of the context from the
             // tests this will have to do.
-            if (context.Items.ContainsKey(key))
+            object value;
+            if (context.Items.TryGetValue(key, out value))
             {
-                return (T)context.Items[key];
+                return (T)value;
             }
 
             T data = getData.Invoke();

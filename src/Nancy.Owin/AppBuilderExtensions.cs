@@ -44,12 +44,13 @@ namespace Owin
 
         private static void HookDisposal(IAppBuilder builder, NancyOptions nancyOptions)
         {
-            if (!builder.Properties.ContainsKey(AppDisposingKey))
+            object value;
+            if (!builder.Properties.TryGetValue(AppDisposingKey, out value))
             {
                 return;
             }
 
-            var appDisposing = builder.Properties[AppDisposingKey] as CancellationToken?;
+            var appDisposing = value as CancellationToken?;
 
             if (appDisposing.HasValue)
             {

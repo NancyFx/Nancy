@@ -40,11 +40,10 @@ namespace Nancy.Routing
         /// <returns>The metadata instance if available, otherwise <see langword="null"/>.</returns>
         public TMetadata Retrieve<TMetadata>()
         {
-            var key =
-                typeof(TMetadata);
-
-            return (this.Raw.ContainsKey(key)) ?
-                (TMetadata)this.Raw[key] :
+            var key = typeof(TMetadata);
+            object value;
+            return this.Raw.TryGetValue(key, out value) ?
+                (TMetadata)value :
                 default(TMetadata);
         }
     }

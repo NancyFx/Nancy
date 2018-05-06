@@ -714,8 +714,8 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
                 m =>
                 {
                     var sectionName = m.Groups["SectionName"].Value;
-
-                    return sections.ContainsKey(sectionName) ? sections[sectionName] : string.Empty;
+                    string sectionValue;
+                    return sections.TryGetValue(sectionName, out sectionValue) ? sectionValue : string.Empty;
                 });
 
             return result;

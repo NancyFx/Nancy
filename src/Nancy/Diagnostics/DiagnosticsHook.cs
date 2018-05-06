@@ -228,12 +228,12 @@ namespace Nancy.Diagnostics
                 return ProcessLogin(context, diagnosticsConfiguration, serializer);
             }
 
-            if (!context.Request.Cookies.ContainsKey(diagnosticsConfiguration.CookieName))
+            string encryptedValue;
+            if (!context.Request.Cookies.TryGetValue(diagnosticsConfiguration.CookieName, out encryptedValue))
             {
                 return null;
             }
 
-            var encryptedValue = context.Request.Cookies[diagnosticsConfiguration.CookieName];
             var hmacStringLength = Base64Helpers.GetBase64Length(diagnosticsConfiguration.CryptographyConfiguration.HmacProvider.HmacLength);
             var encryptedSession = encryptedValue.Substring(hmacStringLength);
             var hmacString = encryptedValue.Substring(0, hmacStringLength);
