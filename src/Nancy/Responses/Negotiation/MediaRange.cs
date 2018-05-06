@@ -122,6 +122,11 @@ namespace Nancy.Responses.Negotiation
         /// </returns>
         public static implicit operator string(MediaRange mediaRange)
         {
+            if (null == mediaRange)
+            {
+                return null;
+            }
+
             if (mediaRange.Parameters.Any())
             {
                 return string.Concat(mediaRange.Type, "/", mediaRange.Subtype, ";", mediaRange.Parameters);
