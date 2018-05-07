@@ -9,7 +9,7 @@ dist: trusty
 mono:
   - 4.4.2
 
-dotnet: 1.1.4
+dotnet: 2.1.4
 
 script:
   - ./build.sh --verbosity=minimal
