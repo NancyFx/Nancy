@@ -1,8 +1,11 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.4
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{5734E9DC-CF67-4337-B28E-695280598B88}"
+	ProjectSection(SolutionItems) = preProject
+		src\Directory.Build.props = src\Directory.Build.props
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{AAB0D92A-7B90-478A-8360-3E6A20BD0B71}"
 	ProjectSection(SolutionItems) = preProject
@@ -12,82 +15,85 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{AA791E28-7914-439A-B59A-580B8D8FE95D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{058BCE2A-8F81-4404-83D3-844CE030E513}"
+	ProjectSection(SolutionItems) = preProject
+		test\Directory.Build.props = test\Directory.Build.props
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.ViewEngines.Razor.Tests.Models", "test\Nancy.ViewEngines.Razor.Tests.Models\Nancy.ViewEngines.Razor.Tests.Models.csproj", "{0E7E06C1-C223-4975-A9DB-D338EBF0A9BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nancy.ViewEngines.Razor.Tests.Models", "test\Nancy.ViewEngines.Razor.Tests.Models\Nancy.ViewEngines.Razor.Tests.Models.csproj", "{0E7E06C1-C223-4975-A9DB-D338EBF0A9BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.ViewEngines.Razor.Tests", "test\Nancy.ViewEngines.Razor.Tests\Nancy.ViewEngines.Razor.Tests.csproj", "{06B9857A-02A6-430D-B579-98A762C281D3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nancy.ViewEngines.Razor.Tests", "test\Nancy.ViewEngines.Razor.Tests\Nancy.ViewEngines.Razor.Tests.csproj", "{06B9857A-02A6-430D-B579-98A762C281D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy", "src\Nancy\Nancy.csproj", "{ADAB2C6B-10FE-4B31-BCD2-E2EFA69D5A66}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nancy", "src\Nancy\Nancy.csproj", "{ADAB2C6B-10FE-4B31-BCD2-E2EFA69D5A66}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Testing", "src\Nancy.Testing\Nancy.Testing.csproj", "{66119997-5949-45D6-9175-F1C7C599A8F5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nancy.Testing", "src\Nancy.Testing\Nancy.Testing.csproj", "{66119997-5949-45D6-9175-F1C7C599A8F5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.ViewEngines.Razor", "src\Nancy.ViewEngines.Razor\Nancy.ViewEngines.Razor.csproj", "{D1D2622E-ACF7-479C-ABC8-E1B94E41D9D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nancy.ViewEngines.Razor", "src\Nancy.ViewEngines.Razor\Nancy.ViewEngines.Razor.csproj", "{D1D2622E-ACF7-479C-ABC8-E1B94E41D9D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Authentication.Forms", "src\Nancy.Authentication.Forms\Nancy.Authentication.Forms.csproj", "{09F5EB90-1063-4338-A146-25F7BE8BFF43}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nancy.Authentication.Forms", "src\Nancy.Authentication.Forms\Nancy.Authentication.Forms.csproj", "{09F5EB90-1063-4338-A146-25F7BE8BFF43}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.ViewEngines.Markdown.Tests", "test\Nancy.ViewEngines.Markdown.Tests\Nancy.ViewEngines.Markdown.Tests.csproj", "{1CA8D3D3-B6A6-4006-AA96-671CB41D6391}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nancy.ViewEngines.Markdown.Tests", "test\Nancy.ViewEngines.Markdown.Tests\Nancy.ViewEngines.Markdown.Tests.csproj", "{1CA8D3D3-B6A6-4006-AA96-671CB41D6391}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.ViewEngines.Markdown", "src\Nancy.ViewEngines.Markdown\Nancy.ViewEngines.Markdown.csproj", "{CCB5075B-C50A-4CD1-983A-2D51DC2430F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nancy.ViewEngines.Markdown", "src\Nancy.ViewEngines.Markdown\Nancy.ViewEngines.Markdown.csproj", "{CCB5075B-C50A-4CD1-983A-2D51DC2430F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.ViewEngines.DotLiquid.Tests", "test\Nancy.ViewEngines.DotLiquid.Tests\Nancy.ViewEngines.DotLiquid.Tests.csproj", "{89C49FF5-9441-4DE8-A33F-1B2852401A54}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nancy.ViewEngines.DotLiquid.Tests", "test\Nancy.ViewEngines.DotLiquid.Tests\Nancy.ViewEngines.DotLiquid.Tests.csproj", "{89C49FF5-9441-4DE8-A33F-1B2852401A54}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.ViewEngines.DotLiquid", "src\Nancy.ViewEngines.DotLiquid\Nancy.ViewEngines.DotLiquid.csproj", "{9F16EBDF-4546-43C2-82B8-7D698F7A1E89}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nancy.ViewEngines.DotLiquid", "src\Nancy.ViewEngines.DotLiquid\Nancy.ViewEngines.DotLiquid.csproj", "{9F16EBDF-4546-43C2-82B8-7D698F7A1E89}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Validation.FluentValidation.Tests", "test\Nancy.Validation.FluentValidation.Tests\Nancy.Validation.FluentValidation.Tests.csproj", "{0E9B466C-1151-4AE9-A55A-6377A25F8235}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nancy.Validation.FluentValidation.Tests", "test\Nancy.Validation.FluentValidation.Tests\Nancy.Validation.FluentValidation.Tests.csproj", "{0E9B466C-1151-4AE9-A55A-6377A25F8235}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Validation.FluentValidation", "src\Nancy.Validation.FluentValidation\Nancy.Validation.FluentValidation.csproj", "{33D5FB92-074E-4C13-BFD6-21184DD0013A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nancy.Validation.FluentValidation", "src\Nancy.Validation.FluentValidation\Nancy.Validation.FluentValidation.csproj", "{33D5FB92-074E-4C13-BFD6-21184DD0013A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Validation.DataAnnotations.Tests", "test\Nancy.Validation.DataAnnotations.Tests\Nancy.Validation.DataAnnotations.Tests.csproj", "{EF3149F4-59C1-4896-989E-59D9D5F9050A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nancy.Validation.DataAnnotations.Tests", "test\Nancy.Validation.DataAnnotations.Tests\Nancy.Validation.DataAnnotations.Tests.csproj", "{EF3149F4-59C1-4896-989E-59D9D5F9050A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Validation.DataAnnotations", "src\Nancy.Validation.DataAnnotations\Nancy.Validation.DataAnnotations.csproj", "{FA2462FE-A439-48C5-976D-491F73C25CE1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nancy.Validation.DataAnnotations", "src\Nancy.Validation.DataAnnotations\Nancy.Validation.DataAnnotations.csproj", "{FA2462FE-A439-48C5-976D-491F73C25CE1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Tests.Functional", "test\Nancy.Tests.Functional\Nancy.Tests.Functional.csproj", "{7944AA31-16BA-43A8-A9CB-2ED758518C9E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nancy.Tests.Functional", "test\Nancy.Tests.Functional\Nancy.Tests.Functional.csproj", "{7944AA31-16BA-43A8-A9CB-2ED758518C9E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Tests", "test\Nancy.Tests\Nancy.Tests.csproj", "{9C383F09-8936-42ED-B9A6-ED3300AECB1C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nancy.Tests", "test\Nancy.Tests\Nancy.Tests.csproj", "{9C383F09-8936-42ED-B9A6-ED3300AECB1C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Testing.Tests", "test\Nancy.Testing.Tests\Nancy.Testing.Tests.csproj", "{5E5AF23F-61F6-4B44-B682-2D141B54DF5C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nancy.Testing.Tests", "test\Nancy.Testing.Tests\Nancy.Testing.Tests.csproj", "{5E5AF23F-61F6-4B44-B682-2D141B54DF5C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Owin.Tests", "test\Nancy.Owin.Tests\Nancy.Owin.Tests.csproj", "{C0A85A7D-9D7F-4A6C-BA33-9E79050CF522}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nancy.Owin.Tests", "test\Nancy.Owin.Tests\Nancy.Owin.Tests.csproj", "{C0A85A7D-9D7F-4A6C-BA33-9E79050CF522}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Owin", "src\Nancy.Owin\Nancy.Owin.csproj", "{23C68B10-36FD-41DE-AAA3-77BEDFD63945}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nancy.Owin", "src\Nancy.Owin\Nancy.Owin.csproj", "{23C68B10-36FD-41DE-AAA3-77BEDFD63945}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Metadata.Modules.Tests", "test\Nancy.Metadata.Modules.Tests\Nancy.Metadata.Modules.Tests.csproj", "{8302F65E-035F-45D7-B894-915B68B72711}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nancy.Metadata.Modules.Tests", "test\Nancy.Metadata.Modules.Tests\Nancy.Metadata.Modules.Tests.csproj", "{8302F65E-035F-45D7-B894-915B68B72711}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Metadata.Modules", "src\Nancy.Metadata.Modules\Nancy.Metadata.Modules.csproj", "{89DED7A5-7334-4852-A1FC-9266AD0EF388}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nancy.Metadata.Modules", "src\Nancy.Metadata.Modules\Nancy.Metadata.Modules.csproj", "{89DED7A5-7334-4852-A1FC-9266AD0EF388}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Hosting.Self.Tests", "test\Nancy.Hosting.Self.Tests\Nancy.Hosting.Self.Tests.csproj", "{8909AB97-EDD6-4AB2-B733-A543ACB957CA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nancy.Hosting.Self.Tests", "test\Nancy.Hosting.Self.Tests\Nancy.Hosting.Self.Tests.csproj", "{8909AB97-EDD6-4AB2-B733-A543ACB957CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Hosting.Self", "src\Nancy.Hosting.Self\Nancy.Hosting.Self.csproj", "{AA837BCA-A2D6-4F74-95BC-1F6A66146562}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nancy.Hosting.Self", "src\Nancy.Hosting.Self\Nancy.Hosting.Self.csproj", "{AA837BCA-A2D6-4F74-95BC-1F6A66146562}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Hosting.Aspnet.Tests", "test\Nancy.Hosting.Aspnet.Tests\Nancy.Hosting.Aspnet.Tests.csproj", "{53FB25E0-C8CB-4D65-8D94-6FA627BF9760}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nancy.Hosting.Aspnet.Tests", "test\Nancy.Hosting.Aspnet.Tests\Nancy.Hosting.Aspnet.Tests.csproj", "{53FB25E0-C8CB-4D65-8D94-6FA627BF9760}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Hosting.Aspnet", "src\Nancy.Hosting.Aspnet\Nancy.Hosting.Aspnet.csproj", "{833A65BC-5B37-468D-8BB4-2343CEFDFA5D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nancy.Hosting.Aspnet", "src\Nancy.Hosting.Aspnet\Nancy.Hosting.Aspnet.csproj", "{833A65BC-5B37-468D-8BB4-2343CEFDFA5D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Encryption.MachineKey.Tests", "test\Nancy.Encryption.MachineKey.Tests\Nancy.Encryption.MachineKey.Tests.csproj", "{C42C352E-F3E2-41F6-A446-0CACDA5096AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nancy.Encryption.MachineKey.Tests", "test\Nancy.Encryption.MachineKey.Tests\Nancy.Encryption.MachineKey.Tests.csproj", "{C42C352E-F3E2-41F6-A446-0CACDA5096AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Encryption.MachineKey", "src\Nancy.Encryption.MachineKey\Nancy.Encryption.MachineKey.csproj", "{EF313B39-68CF-45D1-9094-BDDCCAC9DB2D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nancy.Encryption.MachineKey", "src\Nancy.Encryption.MachineKey\Nancy.Encryption.MachineKey.csproj", "{EF313B39-68CF-45D1-9094-BDDCCAC9DB2D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Embedded.Tests", "test\Nancy.Embedded.Tests\Nancy.Embedded.Tests.csproj", "{8A936050-5B84-4711-A235-2BA36A445B26}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nancy.Embedded.Tests", "test\Nancy.Embedded.Tests\Nancy.Embedded.Tests.csproj", "{8A936050-5B84-4711-A235-2BA36A445B26}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Embedded", "src\Nancy.Embedded\Nancy.Embedded.csproj", "{8120B952-D9BC-450A-B691-C030177CD24D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nancy.Embedded", "src\Nancy.Embedded\Nancy.Embedded.csproj", "{8120B952-D9BC-450A-B691-C030177CD24D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Authentication.Forms.Tests", "test\Nancy.Authentication.Forms.Tests\Nancy.Authentication.Forms.Tests.csproj", "{E3C25A1C-2754-4134-8780-1F0A247D6850}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nancy.Authentication.Forms.Tests", "test\Nancy.Authentication.Forms.Tests\Nancy.Authentication.Forms.Tests.csproj", "{E3C25A1C-2754-4134-8780-1F0A247D6850}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Authentication.Basic.Tests", "test\Nancy.Authentication.Basic.Tests\Nancy.Authentication.Basic.Tests.csproj", "{5323D32E-0CF2-41B6-AF91-37F744AC1554}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nancy.Authentication.Basic.Tests", "test\Nancy.Authentication.Basic.Tests\Nancy.Authentication.Basic.Tests.csproj", "{5323D32E-0CF2-41B6-AF91-37F744AC1554}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Authentication.Basic", "src\Nancy.Authentication.Basic\Nancy.Authentication.Basic.csproj", "{22E99FEC-8DFC-4E87-90EE-BC7F6E988DAD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nancy.Authentication.Basic", "src\Nancy.Authentication.Basic\Nancy.Authentication.Basic.csproj", "{22E99FEC-8DFC-4E87-90EE-BC7F6E988DAD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.ViewEngines.Spark", "src\Nancy.ViewEngines.Spark\Nancy.ViewEngines.Spark.csproj", "{0E546413-BBF8-40B3-8534-8D1D986AA888}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nancy.ViewEngines.Spark", "src\Nancy.ViewEngines.Spark\Nancy.ViewEngines.Spark.csproj", "{0E546413-BBF8-40B3-8534-8D1D986AA888}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.ViewEngines.Razor.BuildProviders", "src\Nancy.ViewEngines.Razor.BuildProviders\Nancy.ViewEngines.Razor.BuildProviders.csproj", "{D92ADA88-361B-480A-81D2-AE1F7B2E0660}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nancy.ViewEngines.Razor.BuildProviders", "src\Nancy.ViewEngines.Razor.BuildProviders\Nancy.ViewEngines.Razor.BuildProviders.csproj", "{D92ADA88-361B-480A-81D2-AE1F7B2E0660}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.ViewEngines.Nustache", "src\Nancy.ViewEngines.Nustache\Nancy.ViewEngines.Nustache.csproj", "{4FB42026-81C2-47B3-99A4-751452E64814}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nancy.ViewEngines.Nustache", "src\Nancy.ViewEngines.Nustache\Nancy.ViewEngines.Nustache.csproj", "{4FB42026-81C2-47B3-99A4-751452E64814}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Authentication.Stateless", "src\Nancy.Authentication.Stateless\Nancy.Authentication.Stateless.csproj", "{EEEE504F-24AC-4932-9B28-F684AB20FB50}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nancy.Authentication.Stateless", "src\Nancy.Authentication.Stateless\Nancy.Authentication.Stateless.csproj", "{EEEE504F-24AC-4932-9B28-F684AB20FB50}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Hosting.Kestrel", "samples\Nancy.Demo.Hosting.Kestrel\Nancy.Demo.Hosting.Kestrel.csproj", "{3AF8D59E-D10A-46DE-97A6-0A6C156F22CD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nancy.Demo.Hosting.Kestrel", "samples\Nancy.Demo.Hosting.Kestrel\Nancy.Demo.Hosting.Kestrel.csproj", "{3AF8D59E-D10A-46DE-97A6-0A6C156F22CD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.ViewEngines.Spark.Tests", "test\Nancy.ViewEngines.Spark.Tests\Nancy.ViewEngines.Spark.Tests.csproj", "{08C1D823-E8E1-4D86-8F73-A9F3AE8FEFC7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nancy.ViewEngines.Spark.Tests", "test\Nancy.ViewEngines.Spark.Tests\Nancy.ViewEngines.Spark.Tests.csproj", "{08C1D823-E8E1-4D86-8F73-A9F3AE8FEFC7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -598,5 +604,8 @@ Global
 		{EEEE504F-24AC-4932-9B28-F684AB20FB50} = {5734E9DC-CF67-4337-B28E-695280598B88}
 		{3AF8D59E-D10A-46DE-97A6-0A6C156F22CD} = {AA791E28-7914-439A-B59A-580B8D8FE95D}
 		{08C1D823-E8E1-4D86-8F73-A9F3AE8FEFC7} = {058BCE2A-8F81-4404-83D3-844CE030E513}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {781C77FF-8818-4AF3-BCAF-C82B52FFF0C0}
 	EndGlobalSection
 EndGlobal

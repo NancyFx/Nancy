@@ -9,7 +9,7 @@
     <PackageReference Include="Spark" Version="1.7.0" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
+  <ItemGroup>
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web" />
   </ItemGroup>

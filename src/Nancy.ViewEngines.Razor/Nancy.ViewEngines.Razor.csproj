@@ -20,14 +20,11 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.Razor" Version="2.0.30506" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="1.3.2" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
     <PackageReference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform" Version="1.0.3" />
     <PackageReference Include="System.Collections.Immutable" Version="1.2.0" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
+  <ItemGroup>
     <Reference Include="System.Configuration" />
     <Reference Include="System.IO" />
     <Reference Include="System.Reflection" />

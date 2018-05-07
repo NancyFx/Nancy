@@ -3,7 +3,7 @@
     <TargetFramework>net452</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
+  <ItemGroup>
     <Reference Include="System.Web" />
   </ItemGroup>
 </Project>

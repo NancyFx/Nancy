@@ -15,7 +15,7 @@
         /// <returns>Buffer segment as bytes</returns>
         public static ArraySegment<byte> GetBufferSegment(this MemoryStream stream)
         {
-#if NETSTANDARD1_6
+#if NETSTANDARD2_0
             ArraySegment<byte> buffer;
             if (stream.TryGetBuffer(out buffer))
             {
@@ -29,7 +29,7 @@
 
         private static byte[] GetBytes(this MemoryStream stream)
         {
-#if NETSTANDARD1_6
+#if NETSTANDARD2_0
             return stream.ToArray(); // This is all we have if TryGetBuffer fails in GetBufferSegment
 #else
             return stream.GetBuffer();

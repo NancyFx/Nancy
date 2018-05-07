@@ -7,7 +7,7 @@
     <ProjectReference Include="../Nancy.ViewEngines.Razor/Nancy.ViewEngines.Razor.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
+  <ItemGroup>
     <Reference Include="System.Web" />
   </ItemGroup>
 </Project>

@@ -11,8 +11,8 @@ var nogit = Argument<bool>("nogit", false);
 // Variables
 var configuration = "Release";
 var fullFrameworkTarget = "net452";
-var netStandardTarget = "netstandard1.6";
-var netCoreTarget = "netcoreapp1.1";
+var netStandardTarget = "netstandard2.0";
+var netCoreTarget = "netcoreapp2.0";
 
 // Directories
 var output = Directory("build");

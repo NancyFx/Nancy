@@ -1,6 +1,6 @@
 $CakeVersion = "0.24.0"
 $DotNetVersion = select-string -Path .\global.json -Pattern '[\d]\.[\d]\.[\d]' | % {$_.Matches} | % {$_.Value };
-$DotNetInstallerUri = "https://raw.githubusercontent.com/dotnet/cli/rel/1.0.1/scripts/obtain/dotnet-install.ps1";
+$DotNetInstallerUri = "https://raw.githubusercontent.com/dotnet/cli/v$DotNetVersion/scripts/obtain/dotnet-install.ps1";
 
 # Make sure tools folder exists
 $PSScriptRoot = $pwd
@@ -45,7 +45,7 @@ if($FoundDotNetCliVersion -ne $DotNetVersion) {
     }
 
     (New-Object System.Net.WebClient).DownloadFile($DotNetInstallerUri, "$InstallPath\dotnet-install.ps1");
-    & $InstallPath\dotnet-install.ps1 -Channel preview -Version $DotNetVersion -InstallDir $InstallPath;
+    & $InstallPath\dotnet-install.ps1 -Channel Current -Version $DotNetVersion -InstallDir $InstallPath;
 
     Remove-PathVariable "$InstallPath"
     $env:PATH = "$InstallPath;$env:PATH"
