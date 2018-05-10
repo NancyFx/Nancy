@@ -91,7 +91,13 @@ namespace Nancy.ErrorHandling
                 ? DisplayErrorTracesFalseMessage
                 : string.Concat("<pre>", context.GetExceptionDetails().Replace("<", "&gt;").Replace(">", "&lt;"), "</pre>");
 
-            var result = new DefaultStatusCodeHandlerResult(statusCode, this.errorMessages[statusCode], details);
+            var result = new DefaultStatusCodeHandlerResult
+            {
+                Details = details,
+                Message = this.errorMessages[statusCode],
+                StatusCode = statusCode
+            };
+            
             try
             {
                 context.Response = this.responseNegotiator.NegotiateResponse(result, context);
@@ -152,20 +158,13 @@ namespace Nancy.ErrorHandling
             }
         }
 
-        internal class DefaultStatusCodeHandlerResult
+        public class DefaultStatusCodeHandlerResult
         {
-            public DefaultStatusCodeHandlerResult(HttpStatusCode statusCode, string message, string details)
-            {
-                this.StatusCode = statusCode;
-                this.Message = message;
-                this.Details = details;
-            }
+            public HttpStatusCode StatusCode { get; set; }
 
-            public HttpStatusCode StatusCode { get; private set; }
+            public string Message { get; set; }
 
-            public string Message { get; private set; }
-
-            public string Details { get; private set; }
+            public string Details { get; set; }
         }
     }
 }

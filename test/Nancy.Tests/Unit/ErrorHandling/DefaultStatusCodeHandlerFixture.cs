@@ -212,5 +212,36 @@ namespace Nancy.Tests.Unit.ErrorHandling
             // Then
             Assert.Null(context.NegotiationContext.ViewName);
         }
+
+        [Fact]
+        public void Should_be_xml_serializable()
+        {
+            // Given
+            var environment = new DefaultNancyEnvironment();
+            environment.AddValue(Xml.XmlConfiguration.Default);
+            environment.Tracing(
+                enabled: true,
+                displayErrorTraces: true);
+            var serializer = new Nancy.Responses.DefaultXmlSerializer(environment);
+            var model = new DefaultStatusCodeHandler.DefaultStatusCodeHandlerResult()
+            {
+                StatusCode = HttpStatusCode.NotFound,
+                Message =  "not found",
+                Details = "not found details"
+            };
+
+            // When
+            var xml = new System.Xml.XmlDocument();
+            using (var stream = new MemoryStream())
+            {
+                serializer.Serialize("application/xml", model, stream);
+
+                stream.Position = 0;
+                xml.Load(stream);
+            }
+
+            // Then
+            Assert.Equal("DefaultStatusCodeHandlerResult", xml.DocumentElement.Name);
+        }
     }
 }
