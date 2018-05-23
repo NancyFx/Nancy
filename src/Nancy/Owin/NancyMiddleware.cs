@@ -80,7 +80,11 @@
 
                         var url = CreateUrl(owinRequestHost, owinRequestScheme, owinRequestPathBase, owinRequestPath, owinRequestQueryString);
 
-                        var nancyRequestStream = new RequestStream(owinRequestBody, ExpectedLength(owinRequestHeaders), StaticConfiguration.DisableRequestStreamSwitching ?? false);
+                        var expectedLength = ExpectedLength(owinRequestHeaders);
+                        // If length is 0 just use empty memory stream; as there is no body
+                        var nancyRequestStream = (expectedLength == 0) ?
+                            (Stream)new MemoryStream() :
+                            new RequestStream(owinRequestBody, expectedLength ?? 0, StaticConfiguration.DisableRequestStreamSwitching ?? false);
 
                         var nancyRequest = new Request(
                                 owinRequestMethod,
@@ -193,14 +197,24 @@
             return null;
         }
 
-        private static long ExpectedLength(IDictionary<string, string[]> headers)
+        private static long? ExpectedLength(IDictionary<string, string[]> headers)
         {
             var header = GetHeader(headers, "Content-Length");
-            if (string.IsNullOrWhiteSpace(header))
-                return 0;
 
-            int contentLength;
-            return int.TryParse(header, NumberStyles.Any, CultureInfo.InvariantCulture, out contentLength) ? contentLength : 0;
+            if (string.IsNullOrWhiteSpace(header))
+            {
+                header = GetHeader(headers, "Transfer-Encoding");
+                if (string.IsNullOrWhiteSpace(header))
+                {
+                    // No content-length or transfer-encoding means the length is definately 0
+                    return 0;
+                }
+                // Has transfer-encoding, length is unknown
+                return null;
+            }
+
+            // If length cannot be converted to an int, treat it as unknown
+            return int.TryParse(header, NumberStyles.Any, CultureInfo.InvariantCulture, out int contentLength) ? contentLength : (long?)null;
         }
 
         /// <summary>
