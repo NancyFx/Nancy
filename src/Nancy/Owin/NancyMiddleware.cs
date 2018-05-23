@@ -82,7 +82,9 @@
 
                         var expectedLength = ExpectedLength(owinRequestHeaders);
                         // If length is 0 just use empty memory stream; as there is no body
-                        var nancyRequestStream = (expectedLength == 0) ? (Stream)new MemoryStream() : new RequestStream(owinRequestBody, ExpectedLength(owinRequestHeaders) ?? 0, StaticConfiguration.DisableRequestStreamSwitching ?? false);
+                        var nancyRequestStream = (expectedLength == 0) ?
+                            (Stream)new MemoryStream() :
+                            new RequestStream(owinRequestBody, expectedLength ?? 0, StaticConfiguration.DisableRequestStreamSwitching ?? false);
 
                         var nancyRequest = new Request(
                                 owinRequestMethod,
