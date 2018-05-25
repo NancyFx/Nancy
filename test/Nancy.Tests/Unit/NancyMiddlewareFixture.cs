@@ -71,7 +71,7 @@ namespace Nancy.Tests.Unit
                     A<Request>.Ignored,
                     A<Func<NancyContext, NancyContext>>.Ignored,
                     (CancellationToken)this.environment["owin.CallCancelled"]))
-             .MustHaveHappened(Repeated.Exactly.Once);
+             .MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -155,7 +155,7 @@ namespace Nancy.Tests.Unit
             this.host.Invoke(environment);
 
             // Then
-            A.CallTo(() => mockDisposable.Dispose()).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => mockDisposable.Dispose()).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

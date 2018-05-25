@@ -239,7 +239,7 @@ namespace Nancy.Tests.Unit.Sessions
 
             store.Load(request);
 
-            A.CallTo(() => fakeFormatter.Deserialize("value1")).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => fakeFormatter.Deserialize("value1")).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -253,7 +253,7 @@ namespace Nancy.Tests.Unit.Sessions
 
             store.Save(session, response);
 
-            A.CallTo(() => fakeFormatter.Serialize("value1")).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => fakeFormatter.Serialize("value1")).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -272,7 +272,7 @@ namespace Nancy.Tests.Unit.Sessions
 
             beforePipeline.Invoke(nancyContext, new CancellationToken());
 
-            A.CallTo(() => fakeFormatter.Deserialize(A<string>.Ignored)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => fakeFormatter.Deserialize(A<string>.Ignored)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -323,7 +323,7 @@ namespace Nancy.Tests.Unit.Sessions
             cookieStore.Save(session, response);
 
             A.CallTo(() => this.fakeEncryptionProvider.Encrypt(A<string>.Ignored))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -339,7 +339,7 @@ namespace Nancy.Tests.Unit.Sessions
             cookieStore.Save(session, response);
 
             A.CallTo(() => this.fakeHmacProvider.GenerateHmac(A<string>.Ignored))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappenedOnceExactly();
         }
 
         [Fact]

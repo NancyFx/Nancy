@@ -23,7 +23,7 @@ namespace Nancy.Tests.Unit.Security
 
             module.RequiresAuthentication();
 
-            A.CallTo(() => module.Before.AddItemToEndOfPipeline(A<Func<NancyContext, Response>>.Ignored)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => module.Before.AddItemToEndOfPipeline(A<Func<NancyContext, Response>>.Ignored)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -33,7 +33,7 @@ namespace Nancy.Tests.Unit.Security
 
             module.RequiresClaims(_ => true);
 
-            A.CallTo(() => module.Before.AddItemToEndOfPipeline(A<Func<NancyContext, Response>>.Ignored)).MustHaveHappened(Repeated.Exactly.Twice);
+            A.CallTo(() => module.Before.AddItemToEndOfPipeline(A<Func<NancyContext, Response>>.Ignored)).MustHaveHappenedTwiceExactly();
         }
 
         [Fact]

@@ -116,8 +116,8 @@
             this.bootstrapper.Initialise();
 
             // Then
-            A.CallTo(() => startupMock.Initialize(A<IPipelines>._)).MustHaveHappened(Repeated.Exactly.Once);
-            A.CallTo(() => startupMock2.Initialize(A<IPipelines>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => startupMock.Initialize(A<IPipelines>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => startupMock2.Initialize(A<IPipelines>._)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -214,7 +214,7 @@
 
             this.bootstrapper.Initialise();
 
-            A.CallTo(() => fakeDiagnostics.Initialize(A<IPipelines>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => fakeDiagnostics.Initialize(A<IPipelines>._)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -259,8 +259,8 @@
             uninitialiedBootstrapper.GetRequestPipelines(new NancyContext());
 
             // Then
-            A.CallTo(() => startupMock.Initialize(A<IPipelines>._, A<NancyContext>._)).MustHaveHappened(Repeated.Exactly.Once);
-            A.CallTo(() => startupMock2.Initialize(A<IPipelines>._, A<NancyContext>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => startupMock.Initialize(A<IPipelines>._, A<NancyContext>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => startupMock2.Initialize(A<IPipelines>._, A<NancyContext>._)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

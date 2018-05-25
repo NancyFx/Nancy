@@ -56,7 +56,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             Model result = adapter;
 
             // Then
-            A.CallTo(() => fakeLocator.GetBinderForType(typeof(Model), A<NancyContext>.Ignored)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => fakeLocator.GetBinderForType(typeof(Model), A<NancyContext>.Ignored)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -77,7 +77,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             Model result = adapter;
 
             // Then
-            A.CallTo(() => fakeLocator.GetBinderForType(A<Type>.Ignored, context)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => fakeLocator.GetBinderForType(A<Type>.Ignored, context)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -96,7 +96,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             var result = (Model)adapter;
 
             // Then
-            A.CallTo(() => fakeLocator.GetBinderForType(typeof(Model), A<NancyContext>.Ignored)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => fakeLocator.GetBinderForType(typeof(Model), A<NancyContext>.Ignored)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

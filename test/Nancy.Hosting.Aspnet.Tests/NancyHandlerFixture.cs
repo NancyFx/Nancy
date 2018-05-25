@@ -107,7 +107,7 @@ namespace Nancy.Hosting.Aspnet.Tests
             await this.handler.ProcessRequest(this.context);
 
             // Then
-            A.CallTo(() => disposable.Dispose()).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => disposable.Dispose()).MustHaveHappenedOnceExactly();
         }
         [Fact]
         public async Task Should_create_request_body_when_content_length_specified()
