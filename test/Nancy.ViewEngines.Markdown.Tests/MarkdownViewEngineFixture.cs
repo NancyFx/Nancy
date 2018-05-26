@@ -122,7 +122,7 @@ Hi there!
 
             var result = this.viewEngine.ConvertMarkdown(location);
 
-            Assert.True(result.StartsWith("<!DOCTYPE html>"));
+            result.ShouldStartWith("<!DOCTYPE html>");
         }
 
         [Fact]
@@ -152,7 +152,7 @@ Hi there!
 
             var result = ReadAll(stream);
 
-            Assert.True(result.StartsWith("<!DOCTYPE html>"));
+            result.ShouldStartWith("<!DOCTYPE html>");
         }
 
         [Fact]

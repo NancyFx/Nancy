@@ -232,7 +232,7 @@
 
             pipeline.RemoveByName("item2");
 
-            Assert.Equal(1, pipeline.Items.Count());
+            pipeline.Items.ShouldHaveCount(1);
             Assert.Same(item1, pipeline.Items.First());
         }
 

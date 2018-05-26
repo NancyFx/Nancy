@@ -84,9 +84,14 @@
             Assert.False(actual.Contains(expected), string.Format("'{0}' does contain '{1}'", actual, expected));
         }
 
-        public static void ShouldHave<T>(this IEnumerable<T> list, Func<T, bool> predicate)
+        public static void ShouldHave<T>(this IEnumerable<T> list, T expected)
         {
-            Assert.True(list.Any(predicate));
+            Assert.Contains(expected, list);
+        }
+
+        public static void ShouldHave<T>(this IEnumerable<T> list, Predicate<T> predicate)
+        {
+            Assert.Contains(list, predicate);
         }
 
         public static void ShouldHaveCount<T>(this IEnumerable<T> list, int expected)

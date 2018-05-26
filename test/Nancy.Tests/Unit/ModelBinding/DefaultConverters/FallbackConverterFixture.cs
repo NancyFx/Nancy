@@ -63,9 +63,7 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultConverters
         [InlineData("ON")]
         public void Should_convert_on_to_true_for_bool(string value)
         {
-            string input = "on";
-
-            var result = (bool)converter.Convert(input, typeof(bool), null);
+            var result = (bool)converter.Convert(value, typeof(bool), null);
 
             result.ShouldBeTrue();
         }

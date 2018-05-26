@@ -1133,7 +1133,7 @@ namespace Nancy.Tests.Unit
             var result = input.ToDictionary();
 
             //Then
-            Assert.IsType(typeof(Dictionary<string, object>), result);
+            result.ShouldBeOfType<Dictionary<string, object>>();
         }
 
         [Fact]
@@ -1143,8 +1143,9 @@ namespace Nancy.Tests.Unit
             var result = this.dictionary.ToDictionary();
 
             //Then
-            Assert.IsType(typeof(long), GetLongValue(result["TestInt"]));
-            Assert.IsType(typeof(string), GetStringValue(result["TestString"]));
+            //Can't invoke extension methods on dynamic objects using instance method syntax, so access via class.
+            ShouldAssertExtensions.ShouldBeOfType<long>(GetLongValue(result["TestInt"]));
+            ShouldAssertExtensions.ShouldBeOfType<string>(GetStringValue(result["TestString"]));
         }
 
         [Fact]
