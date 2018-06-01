@@ -9,6 +9,7 @@
 
     using Nancy.Conventions;
     using Nancy.Extensions;
+    using Nancy.Helpers;
 
     /// <summary>
     /// The default implementation for a response negotiator.
@@ -82,7 +83,7 @@
             if (routeResult is Response)
             {
                 response = (Response)routeResult;
-                return true; 
+                return true;
             }
 
             var methods = responseType.GetMethods(BindingFlags.Public | BindingFlags.Static);
@@ -364,7 +365,7 @@
         /// <returns>The link header.</returns>
         protected virtual string CreateLinkHeader(Url requestUrl, IEnumerable<KeyValuePair<string, MediaRange>> linkProcessors, string existingLinkHeader)
         {
-            var fileName = Path.GetFileNameWithoutExtension(requestUrl.Path);
+            var fileName = HttpUtility.UrlEncode(Path.GetFileNameWithoutExtension(requestUrl.Path));
             var baseUrl = string.Concat(requestUrl.BasePath, "/", fileName);
             var linkBuilder = new HttpLinkBuilder();
 
