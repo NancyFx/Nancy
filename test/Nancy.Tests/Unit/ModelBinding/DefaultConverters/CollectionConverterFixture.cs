@@ -49,7 +49,7 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultConverters
             converter.Convert(input, typeof(string[]), mockContext);
 
             A.CallTo(() => this.mockStringTypeConverter.Convert(null, null, null)).WithAnyArguments()
-                .MustHaveHappened(Repeated.Exactly.Times(3));
+                .MustHaveHappened(3, Times.Exactly);
         }
 
         [Fact]
@@ -72,7 +72,7 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultConverters
             converter.Convert(input, typeof(List<string>), mockContext);
 
             A.CallTo(() => this.mockStringTypeConverter.Convert(null, null, null)).WithAnyArguments()
-                .MustHaveHappened(Repeated.Exactly.Times(3));
+                .MustHaveHappened(3, Times.Exactly);
         }
 
         [Fact]
@@ -95,7 +95,7 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultConverters
             converter.Convert(input, typeof(IEnumerable<string>), mockContext);
 
             A.CallTo(() => this.mockStringTypeConverter.Convert(null, null, null)).WithAnyArguments()
-                .MustHaveHappened(Repeated.Exactly.Times(3));
+                .MustHaveHappened(3, Times.Exactly);
         }
     }
 }

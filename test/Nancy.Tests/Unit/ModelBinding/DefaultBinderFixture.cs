@@ -135,7 +135,7 @@ namespace Nancy.Tests.Unit.ModelBinding
 
             // Then
             A.CallTo(() => deserializer.Deserialize(null, null, null)).WithAnyArguments()
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -170,7 +170,7 @@ namespace Nancy.Tests.Unit.ModelBinding
 
             // Then
             A.CallTo(() => deserializer.CanDeserialize(A<MediaRange>.That.Matches(x => x.Matches("application/xml")), A<BindingContext>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -187,7 +187,7 @@ namespace Nancy.Tests.Unit.ModelBinding
 
             // Then
             A.CallTo(() => deserializer.CanDeserialize(A<MediaRange>.That.Matches(x => x.Matches("application/xml")), A<BindingContext>.That.Not.IsNull()))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -273,7 +273,7 @@ namespace Nancy.Tests.Unit.ModelBinding
 
             // Then
             A.CallTo(() => typeConverter.CanConvertTo(null, null)).WithAnyArguments()
-                .MustHaveHappened(Repeated.Exactly.Times(2));
+                .MustHaveHappenedTwiceExactly();
         }
 
         [Fact]
@@ -292,7 +292,7 @@ namespace Nancy.Tests.Unit.ModelBinding
 
             // Then
             A.CallTo(() => typeConverter.Convert(null, null, null)).WithAnyArguments()
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -414,7 +414,7 @@ namespace Nancy.Tests.Unit.ModelBinding
 
             // Then
             A.CallTo(() => deserializer.CanDeserialize(A<MediaRange>.That.Matches(x => x.Matches("application/xml")), A<BindingContext>.That.Not.IsNull()))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -431,7 +431,7 @@ namespace Nancy.Tests.Unit.ModelBinding
 
             // Then
             A.CallTo(() => this.passthroughNameConverter.Convert(null)).WithAnyArguments()
-                .MustHaveHappened(Repeated.Exactly.Times(2));
+                .MustHaveHappenedTwiceExactly();
         }
 
         [Fact]
@@ -490,7 +490,7 @@ namespace Nancy.Tests.Unit.ModelBinding
 
             // Then
             A.CallTo(() => deserializer.Deserialize(null, null, null)).WithAnyArguments()
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -510,7 +510,7 @@ namespace Nancy.Tests.Unit.ModelBinding
 
             // Then
             A.CallTo(() => typeConverter.Convert(null, null, null)).WithAnyArguments()
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -533,7 +533,7 @@ namespace Nancy.Tests.Unit.ModelBinding
 
             // Then
             A.CallTo(() => userDeserializer.Deserialize(null, null, null)).WithAnyArguments()
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappenedOnceExactly();
             A.CallTo(() => defaultDeserializer.Deserialize(null, null, null)).WithAnyArguments()
                 .MustNotHaveHappened();
         }
@@ -558,7 +558,7 @@ namespace Nancy.Tests.Unit.ModelBinding
 
             // Then
             A.CallTo(() => userTypeConverter.Convert(null, null, null)).WithAnyArguments()
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappenedOnceExactly();
             A.CallTo(() => defaultTypeConverter.Convert(null, null, null)).WithAnyArguments()
                 .MustNotHaveHappened();
         }

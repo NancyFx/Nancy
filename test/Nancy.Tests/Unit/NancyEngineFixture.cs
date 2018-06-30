@@ -129,7 +129,7 @@ namespace Nancy.Tests.Unit
             this.engine.HandleRequest(request);
 
             // Then
-            A.CallTo(() => this.contextFactory.Create(request)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => this.contextFactory.Create(request)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -309,7 +309,7 @@ namespace Nancy.Tests.Unit
             await this.engine.HandleRequest(request);
 
             // Then
-            A.CallTo(() => this.statusCodeHandler.HandlesStatusCode(A<HttpStatusCode>.Ignored, A<NancyContext>.Ignored)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => this.statusCodeHandler.HandlesStatusCode(A<HttpStatusCode>.Ignored, A<NancyContext>.Ignored)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -336,7 +336,7 @@ namespace Nancy.Tests.Unit
             await this.engine.HandleRequest(request);
 
             // Then
-            A.CallTo(() => this.statusCodeHandler.Handle(A<HttpStatusCode>.Ignored, A<NancyContext>.Ignored)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => this.statusCodeHandler.Handle(A<HttpStatusCode>.Ignored, A<NancyContext>.Ignored)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

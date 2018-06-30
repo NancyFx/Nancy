@@ -117,9 +117,9 @@ namespace Nancy.Authentication.Forms.Tests
             FormsAuthentication.Enable(pipelines, this.config);
 
             A.CallTo(() => pipelines.BeforeRequest.AddItemToStartOfPipeline(A<Func<NancyContext, Response>>.Ignored))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappenedOnceExactly();
             A.CallTo(() => pipelines.AfterRequest.AddItemToEndOfPipeline(A<Action<NancyContext>>.Ignored))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -131,7 +131,7 @@ namespace Nancy.Authentication.Forms.Tests
             FormsAuthentication.Enable(pipelines, this.config);
 
             A.CallTo(() => pipelines.BeforeRequest.AddItemToStartOfPipeline(A<Func<NancyContext, Response>>.Ignored))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappenedOnceExactly();
             A.CallTo(() => pipelines.AfterRequest.AddItemToEndOfPipeline(A<Action<NancyContext>>.Ignored))
                 .MustNotHaveHappened();
         }
@@ -272,7 +272,7 @@ namespace Nancy.Authentication.Forms.Tests
             FormsAuthentication.UserLoggedInRedirectResponse(context, userGuid, DateTime.Now.AddDays(1));
 
             A.CallTo(() => mockEncrypter.Encrypt(A<string>.Ignored))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -288,7 +288,7 @@ namespace Nancy.Authentication.Forms.Tests
 
             // Then
             A.CallTo(() => mockEncrypter.Encrypt(A<string>.Ignored))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -305,7 +305,7 @@ namespace Nancy.Authentication.Forms.Tests
             FormsAuthentication.UserLoggedInRedirectResponse(context, userGuid, DateTime.Now.AddDays(1));
 
             A.CallTo(() => mockHmac.GenerateHmac(fakeCryptoText))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -325,7 +325,7 @@ namespace Nancy.Authentication.Forms.Tests
 
             // Then
             A.CallTo(() => mockHmac.GenerateHmac(fakeCryptoText))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -394,7 +394,7 @@ namespace Nancy.Authentication.Forms.Tests
             fakePipelines.BeforeRequest.Invoke(this.context, new CancellationToken());
 
             A.CallTo(() => mockMapper.GetUserFromIdentifier(this.userGuid, this.context))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappenedOnceExactly();
         }
 
         [Fact]

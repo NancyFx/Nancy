@@ -120,7 +120,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             factory.RenderView("view.html", new object(), this.viewLocationContext);
 
             // Then
-            A.CallTo(() => this.renderContextFactory.GetRenderContext(A<ViewLocationContext>.Ignored)).MustHaveHappened(Repeated.NoMoreThan.Once);
+            A.CallTo(() => this.renderContextFactory.GetRenderContext(A<ViewLocationContext>.Ignored)).MustHaveHappenedOnceOrLess();
         }
 
         [Fact]

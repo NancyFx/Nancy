@@ -34,7 +34,7 @@
             this.configurator.ConfigureEnvironment(env => { });
 
             // Then
-            A.CallTo(() => this.factory.CreateEnvironment()).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => this.factory.CreateEnvironment()).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -86,7 +86,7 @@
             // Then
             foreach (var provider in providers)
             {
-                A.CallTo(() => provider.GetDefaultConfiguration()).MustHaveHappened(Repeated.Exactly.Once);
+                A.CallTo(() => provider.GetDefaultConfiguration()).MustHaveHappenedOnceExactly();
             }
         }
 

@@ -55,7 +55,7 @@ namespace Nancy.Tests.Unit
             this.context.Dispose();
 
             // Then
-            A.CallTo(() => disposable.Dispose()).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => disposable.Dispose()).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

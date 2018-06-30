@@ -326,7 +326,7 @@ namespace Nancy.Tests.Unit.Routing
             await this.requestDispatcher.Dispatch(context, new CancellationToken());
 
             // Then
-            A.CallTo(() => this.routeResolver.Resolve(context)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => this.routeResolver.Resolve(context)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -637,7 +637,7 @@ namespace Nancy.Tests.Unit.Routing
             await this.requestDispatcher.Dispatch(context, new CancellationToken());
 
             // Then
-            A.CallTo(() => this.routeInvoker.Invoke(resolvedRoute.Route, A<CancellationToken>._, A<DynamicDictionary>._, A<NancyContext>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => this.routeInvoker.Invoke(resolvedRoute.Route, A<CancellationToken>._, A<DynamicDictionary>._, A<NancyContext>._)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -678,7 +678,7 @@ namespace Nancy.Tests.Unit.Routing
             await this.requestDispatcher.Dispatch(context, new CancellationToken());
 
             // Then
-            A.CallTo(() => this.routeResolver.Resolve(A<NancyContext>._)).MustHaveHappened(Repeated.Exactly.Twice);
+            A.CallTo(() => this.routeResolver.Resolve(A<NancyContext>._)).MustHaveHappenedTwiceExactly();
         }
 
         [Fact]
@@ -706,7 +706,7 @@ namespace Nancy.Tests.Unit.Routing
             await this.requestDispatcher.Dispatch(context, new CancellationToken());
 
             // Then
-            A.CallTo(() => this.routeInvoker.Invoke(A<Route>._, A<CancellationToken>._, parameters, A<NancyContext>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => this.routeInvoker.Invoke(A<Route>._, A<CancellationToken>._, parameters, A<NancyContext>._)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -732,7 +732,7 @@ namespace Nancy.Tests.Unit.Routing
             await this.requestDispatcher.Dispatch(context, new CancellationToken());
 
             // Then
-            A.CallTo(() => this.routeInvoker.Invoke(A<Route>._, A<CancellationToken>._, A<DynamicDictionary>._, context)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => this.routeInvoker.Invoke(A<Route>._, A<CancellationToken>._, A<DynamicDictionary>._, context)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
