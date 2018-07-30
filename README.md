@@ -97,7 +97,7 @@ This project is supported by the [.NET Foundation](http://www.dotnetfoundation.o
 
 ## Copyright
 
-Copyright © 2010 Andreas Håkansson, Steven Robbins and contributors
+Copyright © 2018 Andreas Håkansson, Steven Robbins and contributors
 
 ## License
 
