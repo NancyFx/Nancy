@@ -26,12 +26,19 @@
             return tcs.Task;
         }
 
+        public static Task GetFaultedTask(Exception exception)
+        {
+            var tcs = new TaskCompletionSource<object>();
+            tcs.SetException(exception);
+            return tcs.Task;
+        }
+
         public static void WhenCompleted<T>(this Task<T> task, Action<Task<T>> onComplete, Action<Task<T>> onFaulted, bool execSync = false)
         {
             // If we've already completed, just run the correct delegate
-            if (task.IsCompleted)
+            if (task.IsCompleted || task.IsCanceled)
             {
-                if (task.IsFaulted)
+                if (task.IsFaulted || task.IsCanceled)
                 {
                     onFaulted.Invoke(task);
                     return;
@@ -53,6 +60,12 @@
                 execSync ?
                     TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.OnlyOnFaulted :
                     TaskContinuationOptions.OnlyOnFaulted);
+
+            task.ContinueWith(
+                t => onFaulted.Invoke(GetFaultedTask<T>(new TaskCanceledException())),
+                execSync ?
+                    TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.OnlyOnCanceled :
+                    TaskContinuationOptions.OnlyOnCanceled);
         }
 
         public static void WhenCompleted(this Task task, Action<Task> onComplete, Action<Task> onFaulted, bool execSync = false)
@@ -82,6 +95,12 @@
                 execSync ?
                     TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.OnlyOnFaulted :
                     TaskContinuationOptions.OnlyOnFaulted);
+
+            task.ContinueWith(
+                t => onFaulted.Invoke(GetFaultedTask(new TaskCanceledException())),
+                execSync ?
+                    TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.OnlyOnCanceled :
+                    TaskContinuationOptions.OnlyOnCanceled);
         }
     }
 }
