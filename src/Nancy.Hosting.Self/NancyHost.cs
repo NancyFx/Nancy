@@ -426,24 +426,31 @@
 
         private void Process(HttpListenerContext ctx)
         {
+            Action<Exception> onError = (e) =>
+            {
+                this.configuration.UnhandledExceptionCallback.Invoke(e);
+            };
+
+            Action<NancyContext> onComplete = (nancyContext) =>
+            {
+                try
+                {
+                    ConvertNancyResponseToResponse(nancyContext.Response, ctx.Response);
+                }
+                catch (Exception e)
+                {
+                    onError(e);
+                }
+            };
+
             try
             {
                 var nancyRequest = this.ConvertRequestToNancyRequest(ctx.Request);
-                using (var nancyContext = this.engine.HandleRequest(nancyRequest))
-                {
-                    try
-                    {
-                        ConvertNancyResponseToResponse(nancyContext.Response, ctx.Response);
-                    }
-                    catch (Exception e)
-                    {
-                        this.configuration.UnhandledExceptionCallback.Invoke(e);
-                    }
-                }
+                this.engine.HandleRequest(nancyRequest, onComplete, onError);
             }
             catch (Exception e)
             {
-                this.configuration.UnhandledExceptionCallback.Invoke(e);
+                onError(e);
             }
         }
     }
