@@ -115,9 +115,16 @@
             var staticContentResponse = this.staticContentProvider.GetContent(context);
             if (staticContentResponse != null)
             {
-                context.Response = staticContentResponse;
-                tcs.SetResult(context);
-                return tcs.Task;
+                try
+                {
+                    context.Response = staticContentResponse;
+                    tcs.SetResult(context);
+                    return tcs.Task;
+                }
+                finally
+                {
+                    cts.Dispose();
+                }
             }
 
             var pipelines = this.RequestPipelinesFactory.Invoke(context);
@@ -147,7 +154,14 @@
                 },
                 errorTask =>
                 {
-		            tcs.SetException(errorTask.Exception);
+                    try
+                    {
+                        tcs.SetException(errorTask.Exception);
+                    }
+                    finally
+                    {
+                        cts.Dispose();
+                    }
                 },
                 true);
 
