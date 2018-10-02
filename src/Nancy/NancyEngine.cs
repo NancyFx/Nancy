@@ -95,7 +95,8 @@
 
         public Task<NancyContext> HandleRequest(Request request, Func<NancyContext, NancyContext> preRequest, CancellationToken cancellationToken)
         {
-	        var cts = CancellationTokenSource.CreateLinkedTokenSource(this.engineDisposedCts.Token, cancellationToken);
+	        using(var cts = CancellationTokenSource.CreateLinkedTokenSource(this.engineDisposedCts.Token, cancellationToken))
+            {
             cts.Token.ThrowIfCancellationRequested();
 
             var tcs = new TaskCompletionSource<NancyContext>();
@@ -138,10 +139,6 @@
 		                tcs.SetException(ex);
 		                return;
 	                }
-	                finally
-	                {
-		                cts.Dispose();
-	                }
 
                     tcs.SetResult(completeTask.Result);
                 },
@@ -152,6 +149,7 @@
                 true);
 
             return tcs.Task;
+            }
         }
 
         /// <summary>
