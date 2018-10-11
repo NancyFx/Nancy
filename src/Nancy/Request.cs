@@ -48,7 +48,7 @@ namespace Nancy
         /// <param name="protocolVersion">The HTTP protocol version.</param>
         public Request(string method,
             Url url,
-            RequestStream body = null,
+            Stream body = null,
             IDictionary<string, IEnumerable<string>> headers = null,
             string ip = null,
             byte[] certificate = null,
@@ -149,10 +149,10 @@ namespace Nancy
         public dynamic Query { get; set; }
 
         /// <summary>
-        /// Gets a <see cref="RequestStream"/> that can be used to read the incoming HTTP body
+        /// Gets a <see cref="Stream"/> that can be used to read the incoming HTTP body
         /// </summary>
-        /// <value>A <see cref="RequestStream"/> object representing the incoming HTTP body.</value>
-        public RequestStream Body { get; private set; }
+        /// <value>A <see cref="Stream"/> object representing the incoming HTTP body.</value>
+        public Stream Body { get; private set; }
 
         /// <summary>
         /// Gets the request cookies.
