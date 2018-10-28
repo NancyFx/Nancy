@@ -73,7 +73,7 @@ namespace Nancy.Hosting.Aspnet
             var expectedRequestLength =
                 GetExpectedRequestLength(incomingHeaders);
 
-            var basePath = context.Request.ApplicationPath.TrimEnd('/');
+            var basePath = HttpUtility.UrlEncode(context.Request.ApplicationPath).TrimEnd('/');
 
             var path = context.Request.Url.AbsolutePath.Substring(basePath.Length);
             path = string.IsNullOrWhiteSpace(path) ? "/" : path;
