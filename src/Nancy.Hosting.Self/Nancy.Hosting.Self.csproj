@@ -2,6 +2,6 @@
   <PropertyGroup>
     <Description>Enables hosting Nancy in any application.</Description>
     <PackageTags>$(PackageTags);Host</PackageTags>
-    <TargetFramework>net452</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
   </PropertyGroup>
 </Project>

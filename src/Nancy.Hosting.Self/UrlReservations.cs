@@ -1,7 +1,9 @@
 ﻿namespace Nancy.Hosting.Self
 {
     using System;
+#if !CORE
     using System.Security.Principal;
+#endif
 
     /// <summary>
     /// Configuration for automatic url reservation creation
@@ -9,10 +11,10 @@
     public class UrlReservations
     {
         private const string EveryoneAccountName = "Everyone";
-
+#if !CORE
         private static readonly IdentityReference EveryoneReference =
             new SecurityIdentifier(WellKnownSidType.WorldSid, null);
-
+#endif
         public UrlReservations()
         {
             this.CreateAutomatically = false;
@@ -36,12 +38,14 @@
         {
             try
             {
+
+#if !CORE
                 var account = EveryoneReference.Translate(typeof(NTAccount)) as NTAccount;
                 if (account != null)
                 {
                     return account.Value;
                 }
-
+#endif
                 return EveryoneAccountName;
             }
             catch (Exception)
