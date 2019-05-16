@@ -218,11 +218,7 @@
         {
             return !string.IsNullOrWhiteSpace(this.configuration.UrlReservations.User)
                 ? this.configuration.UrlReservations.User
-#if CORE
-                : string.Empty;
-#else
                 : WindowsIdentity.GetCurrent().Name;
-#endif
         }
 
         /// <summary>
