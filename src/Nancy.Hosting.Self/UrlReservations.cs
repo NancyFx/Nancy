@@ -36,12 +36,12 @@
         {
             try
             {
-
                 var account = EveryoneReference.Translate(typeof(NTAccount)) as NTAccount;
                 if (account != null)
                 {
                     return account.Value;
                 }
+
                 return EveryoneAccountName;
             }
             catch (Exception)
