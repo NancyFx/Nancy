@@ -249,6 +249,58 @@ namespace Nancy.Hosting.Self.Tests
         }
 
         [Fact]
+        public void Should_use_strong_wildcard_in_url_prefixes_by_default()
+        {
+            // Given
+            var host = new NancyHost(
+                new HostConfiguration(),
+                new Uri("http://localhost/")
+            );
+
+            // When
+            var prefix = host.GetPrefixes().Single();
+
+            // Then
+            prefix.ShouldStartWith("http://+:");
+        }
+
+        [Fact]
+        public void Should_use_strong_wildcard_in_url_prefixes_when_configured()
+        {
+            // Given
+            var host = new NancyHost(
+                new HostConfiguration() {
+                    UseWeakWildcard = false,
+                },
+                new Uri("http://localhost/")
+            );
+
+            // When
+            var prefix = host.GetPrefixes().Single();
+
+            // Then
+            prefix.ShouldStartWith("http://+:");
+        }
+
+        [Fact]
+        public void Should_use_weak_wildcard_in_url_prefixes_when_configured()
+        {
+            // Given
+            var host = new NancyHost(
+                new HostConfiguration() {
+                    UseWeakWildcard = true,
+                },
+                new Uri("http://localhost/")
+            );
+
+            // When
+            var prefix = host.GetPrefixes().Single();
+
+            // Then
+            prefix.ShouldStartWith("http://*:");
+        }
+
+        [Fact]
         public void Should_not_throw_when_disposed_without_starting()
         {
             // Given

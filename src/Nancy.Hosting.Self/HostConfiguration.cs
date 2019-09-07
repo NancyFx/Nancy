@@ -18,6 +18,16 @@
         public bool RewriteLocalhost { get; set; }
 
         /// <summary>
+        /// Gets or sets a property indicating that <see cref="RewriteLocalhost"/>
+        /// should use the weak wildcard (*) instead of the strong wildcard (+).
+        /// If you use the weak wildcard then Nancy will only receive requests that
+        /// have not matched any other URL prefix registration, in other words
+        /// requests that no other application wants to handle.
+        /// Defaults to false.
+        /// </summary>
+        public bool UseWeakWildcard { get; set; }
+
+        /// <summary>
         /// Configuration around automatically creating URL reservations.
         /// </summary>
         public UrlReservations UrlReservations { get; set; }
@@ -98,6 +108,7 @@
         public HostConfiguration()
         {
             this.RewriteLocalhost = true;
+            this.UseWeakWildcard = false;
             this.UrlReservations = new UrlReservations();
             this.AllowChunkedEncoding = true;
             this.UnhandledExceptionCallback = e =>
