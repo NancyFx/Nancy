@@ -280,6 +280,180 @@ namespace Nancy.Tests.Unit.Security
             validatedClaims.ShouldEqualSequence(user.Claims);
         }
 
+        [Fact]
+        public void Should_return_false_for_required_role_if_the_roles_are_null()
+        {
+            // Given
+            ClaimsPrincipal user = GetFakeUser("Fake");
+            var requiredRole = "not-present-role";
+
+            // When
+            var result = user.IsInRole(requiredRole);
+
+            // Then
+            result.ShouldBeFalse();
+        }
+        
+        [Fact]
+        public void Should_return_false_for_required_role_if_the_user_does_not_have_role()
+        {
+            // Given
+            ClaimsPrincipal user = GetFakeUser("Fake", new Claim(ClaimTypes.Role, string.Empty));
+            var requiredRole = "not-present-role";
+
+            // When
+            var result = user.IsInRole(requiredRole);
+
+            // Then
+            result.ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Should_return_true_for_required_role_if_the_user_does_have_role()
+        {
+            // Given
+            ClaimsPrincipal user = GetFakeUser("Fake", new Claim(ClaimTypes.Role, "present-role"));
+            var requiredRole = "present-role";
+
+            // When
+            var result = user.IsInRole(requiredRole);
+
+            // Then
+            result.ShouldBeTrue();
+        }
+
+        [Fact]
+        public void Should_return_false_for_required_roles_if_the_user_is_null()
+        {
+            // Given
+            ClaimsPrincipal user = null;
+            var requiredRoles = new string[] { "not-present-role1", "not-present-role2" };
+
+            // When
+            var result = user.IsInRoles(requiredRoles);
+
+            // Then
+            result.ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Should_return_false_for_required_roles_if_the_roles_are_null()
+        {
+            // Given
+            ClaimsPrincipal user = GetFakeUser("Fake");
+            string[] requiredRoles = null;
+
+            // When
+            var result = user.IsInRoles(requiredRoles);
+
+            // Then
+            result.ShouldBeFalse();
+        }
+        
+        [Fact]
+        public void Should_return_false_for_required_roles_if_the_user_does_not_have_all_roles()
+        {
+            // Given
+            ClaimsPrincipal user = GetFakeUser("Fake",
+                new Claim(ClaimTypes.Role, "present-role1"),
+                new Claim(ClaimTypes.Role, "present-role2"),
+                new Claim(ClaimTypes.Role, "present-role3"));
+            var requiredRoles = new string[]
+            {
+                "present-role1",
+                "not-present-role1"
+            };
+
+            // When
+            var result = user.IsInRoles(requiredRoles);
+
+            // Then
+            result.ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Should_return_true_for_required_roles_if_the_user_does_have_all_roles()
+        {
+            // Given
+            ClaimsPrincipal user = GetFakeUser("Fake",
+                new Claim(ClaimTypes.Role, "present-role1"),
+                new Claim(ClaimTypes.Role, "present-role2"),
+                new Claim(ClaimTypes.Role, "present-role3"));
+            var requiredRoles = new string[]
+            {
+                "present-role1",
+                "present-role2"
+            };
+
+            // When
+            var result = user.IsInRoles(requiredRoles);
+
+            // Then
+            result.ShouldBeTrue();
+        }
+
+        [Fact]
+        public void Should_return_false_for_any_required_role_if_the_user_is_null()
+        {
+            // Given
+            ClaimsPrincipal user = null;
+            var requiredRoles = new string[] { "not-present-role1", "not-present-role2" };
+
+            // When
+            var result = user.IsInAnyRole(requiredRoles);
+
+            // Then
+            result.ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Should_return_false_for_any_required_role_if_the_roles_are_null()
+        {
+            // Given
+            ClaimsPrincipal user = GetFakeUser("Fake");
+            string[] requiredRoles = null;
+
+            // When
+            var result = user.IsInAnyRole(requiredRoles);
+
+            // Then
+            result.ShouldBeFalse();
+        }
+        
+        [Fact]
+        public void Should_return_false_for_any_required_role_if_the_user_does_not_have_any_role()
+        {
+            // Given
+            ClaimsPrincipal user = GetFakeUser("Fake",
+                new Claim(ClaimTypes.Role, "present-role1"),
+                new Claim(ClaimTypes.Role, "present-role2"),
+                new Claim(ClaimTypes.Role, "present-role3"));
+            var requiredRoles = new string[] { "not-present-role1", "not-present-role2" };
+
+            // When
+            var result = user.IsInAnyRole(requiredRoles);
+
+            // Then
+            result.ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Should_return_true_for_any_required_role_if_the_user_does_have_any_of_role()
+        {
+            // Given
+            ClaimsPrincipal user = GetFakeUser("Fake",
+                new Claim(ClaimTypes.Role, "present-role1"),
+                new Claim(ClaimTypes.Role, "present-role2"),
+                new Claim(ClaimTypes.Role, "present-role3"));
+            var requiredRoles = new string[] { "present-role1", "not-present-role1" };
+
+            // When
+            var result = user.IsInAnyRole(requiredRoles);
+
+            // Then
+            result.ShouldBeTrue();
+        }
+
         private static ClaimsPrincipal GetFakeUser(string userName, params Claim[] claims)
         {
             var claimsList = (claims ?? Enumerable.Empty<Claim>()).ToList();

@@ -64,6 +64,34 @@
         }
 
         /// <summary>
+        /// Creates a hook to be used in a pipeline before a route handler to ensure
+        /// that the request was made by an authenticated user being in all of
+        /// the required roles.
+        /// </summary>
+        /// <param name="roles">Roles the authenticated user needs to be in</param>
+        /// <returns>Hook that returns an Unauthorized response if the user is not
+        /// authenticated or is not in all of the required roles, null
+        /// otherwise</returns>
+        public static Func<NancyContext, Response> RequiresRoles(params string[] roles)
+        {
+            return ForbiddenIfNot(ctx => ctx.CurrentUser.IsInRoles(roles));
+        }
+
+        /// <summary>
+        /// Creates a hook to be used in a pipeline before a route handler to ensure
+        /// that the request was made by an authenticated user being in at least one of
+        /// the required roles.
+        /// </summary>
+        /// <param name="roles">Roles the authenticated user needs to be in at least one of</param>
+        /// <returns>Hook that returns an Unauthorized response if the user is not
+        /// authenticated or is not in at least one of the required roles, null
+        /// otherwise</returns>
+        public static Func<NancyContext, Response> RequiresAnyRole(params string[] roles)
+        {
+            return ForbiddenIfNot(ctx => ctx.CurrentUser.IsInAnyRole(roles));
+        }
+
+        /// <summary>
         /// Creates a hook to be used in a pipeline before a route handler to ensure that
         /// the request satisfies a specific test.
         /// </summary>

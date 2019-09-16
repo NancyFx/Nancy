@@ -42,6 +42,28 @@ namespace Nancy.Security
             module.AddBeforeHookOrExecute(SecurityHooks.RequiresAuthentication(), "Requires Authentication");
             module.AddBeforeHookOrExecute(SecurityHooks.RequiresAnyClaim(requiredClaims), "Requires Any Claim");
         }
+
+        /// <summary>
+        /// This module requires authentication and certain roles to be present.
+        /// </summary>
+        /// <param name="module">Module to enable</param>
+        /// <param name="requiredRoles">Role(s) required</param>
+        public static void RequiresRoles(this INancyModule module, params string[] requiredRoles)
+        {
+            module.AddBeforeHookOrExecute(SecurityHooks.RequiresAuthentication(), "Requires Authentication");
+            module.AddBeforeHookOrExecute(SecurityHooks.RequiresRoles(requiredRoles), "Requires Roles");
+        }
+
+        /// <summary>
+        /// This module requires authentication and any one of certain roles to be present.
+        /// </summary>
+        /// <param name="module">Module to enable</param>
+        /// <param name="requiredRoles">Role(s) at least one of which is required</param>
+        public static void RequiresAnyRole(this INancyModule module, params string[] requiredRoles)
+        {
+            module.AddBeforeHookOrExecute(SecurityHooks.RequiresAuthentication(), "Requires Authentication");
+            module.AddBeforeHookOrExecute(SecurityHooks.RequiresAnyRole(requiredRoles), "Requires Any Role");
+        }
         
         /// <summary>
         /// This module requires https.

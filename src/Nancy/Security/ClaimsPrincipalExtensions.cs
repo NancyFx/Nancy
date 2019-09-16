@@ -56,5 +56,27 @@
                 && user.Claims != null
                 && isValid(user.Claims);
         }
+
+        /// <summary>
+        /// Tests if the user is in all of the required roles.
+        /// </summary>
+        /// <param name="user">User to be verified</param>
+        /// <param name="requiredRoles">Roles the user needs to be in</param>
+        /// <returns>True if the user is in all of the required roles, false otherwise</returns>
+        public static bool IsInRoles(this ClaimsPrincipal user, params string[] requiredRoles)
+        {
+            return user != null && requiredRoles != null && requiredRoles.All(user.IsInRole);
+        }
+
+        /// <summary>
+        /// Tests if the user is in at least one of the required roles.
+        /// </summary>
+        /// <param name="user">User to be verified</param>
+        /// <param name="requiredRoles">Roles the user needs to be in at least one of</param>
+        /// <returns>True if the user is in at least one of the required roles, false otherwise</returns>
+        public static bool IsInAnyRole(this ClaimsPrincipal user, params string[] requiredRoles)
+        {
+            return user != null && requiredRoles != null && requiredRoles.Any(user.IsInRole);
+        }
     }
 }
