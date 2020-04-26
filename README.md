@@ -1,3 +1,21 @@
+# ** Announcement ** - Nancy is no longer being maintained! 
+
+We would like to thank all the thousands of users of Nancy, all the people who wrote blog posts, conference speakers, video producers and those that spread the word of Nancy.  
+
+We would like to thank the 150+ contributors to Nancy that made it what it became, without you the work would have been much harder and opportunities missed.  
+
+We would like to thank [VQ](http://www.vqcomms.com) for financially sponsoring our open source efforts.  
+
+We would like to thank the core contributors to Nancy [@jchannon](https://github.com/jchannon), [@khellang](https://github.com/khellang), [@damianh](https://github.com/damianh), [@phillip-haydon](https://github.com/phillip-haydon), [@prabirshrestha](https://github.com/prabirshrestha), [@horsdal](https://github.com/horsdal) for working hard into the nights coding, testing and writing docs but most importantly the founders of Nancy itself [@thecodejunkie](https://github.com/thecodejunkie) and [@grumpydev](https://github.com/grumpydev) whose vision made Nancy what it was, a fun, performant and enjoyable web framework.
+
+## Support
+We understand that organisations may have services and products that still depend on Nancy in production. A couple of members of the team can offer a support, maintenance, migration services on commercial terms. Please reach out to [nancyfx.help@gmail.com](mailto:nancyfx.help@gmail.com) to discuss options.
+
+## Forking
+Nancy's licence is permissible so we encourage forking if you need to perform maintenance. However, the logos and name are copyright to Andreas Håkansson and Steven Robbins and are not for re-use or editing. Please see full licence information [here](https://github.com/NancyFx/Nancy.Portfolio/blob/master/license.txt)
+
+
+------------------------------------------------------------------------------------------------------------------------------------------
 # Meet Nancy [![NuGet Version](http://img.shields.io/nuget/v/Nancy.svg?style=flat)](https://www.nuget.org/packages/Nancy/) [![Slack Status](http://slack.nancyfx.org/badge.svg)](http://slack.nancyfx.org)
 
 Nancy is a lightweight, low-ceremony, framework for building HTTP based services on .NET Framework/Core and [Mono](http://mono-project.com). The goal of the framework is to stay out of the way as much as possible and provide a super-duper-happy-path to all interactions.
