@@ -3,10 +3,10 @@
 # Define directories.
 SCRIPT_DIR=$PWD
 TOOLS_DIR=$SCRIPT_DIR/tools
-CAKE_VERSION=0.24.0
+CAKE_VERSION=0.37.0
 CAKE_DLL=$TOOLS_DIR/Cake.$CAKE_VERSION/Cake.exe
-DOTNET_VERSION=$(cat "$SCRIPT_DIR/global.json" | grep -o '[0-9]\.[0-9]\.[0-9]')
-DOTNET_INSTRALL_URI=https://raw.githubusercontent.com/dotnet/cli/v$DOTNET_VERSION/scripts/obtain/dotnet-install.sh
+DOTNET_VERSION=$(cat "$SCRIPT_DIR/global.json" | grep -o '[0-9]\.[0-9]\.[0-9]*')
+DOTNET_INSTRALL_URI=https://dot.net/v1/dotnet-install.sh
 
 # Make sure the tools folder exist.
 if [ ! -d "$TOOLS_DIR" ]; then

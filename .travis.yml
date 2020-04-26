@@ -4,12 +4,12 @@ os:
   - osx
 
 sudo: required
-dist: trusty
+dist: bionic
 
 mono:
-  - 4.4.2
+  - 6.8.0
 
-dotnet: 2.1.4
+dotnet: 3.1.102
 
 script:
   - ./build.sh --verbosity=minimal

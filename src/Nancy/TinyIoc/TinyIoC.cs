@@ -80,7 +80,7 @@
 #endif
 
 
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NETSTANDARD2_1
 #undef SERIALIZABLE
 #undef APPDOMAIN_GETASSEMBLIES
 #endif
@@ -4075,7 +4075,7 @@ namespace Nancy.TinyIoc
         #endregion
     }
 
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NETSTANDARD2_1
     static class ReverseTypeExtender
     {
         public static bool IsClass(this Type type)
@@ -4130,7 +4130,7 @@ namespace Nancy.TinyIoc
     }
 #endif
     // reverse shim for WinRT SR changes...
-#if (!NETFX_CORE && !NETSTANDARD2_0)
+#if (!NETFX_CORE && (!NETSTANDARD2_0 && !NETSTANDARD2_1))
     static class ReverseTypeExtender
     {
         public static bool IsClass(this Type type)

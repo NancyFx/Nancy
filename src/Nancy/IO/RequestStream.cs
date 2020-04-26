@@ -390,7 +390,7 @@
                 // in NancyWcfGenericService - webRequest.UriTemplateMatch
                 var old = this.stream;
                 this.MoveStreamContentsToFileStream();
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NETSTANDARD2_1
                 old.Dispose();
 #else
                 old.Close();
@@ -483,7 +483,7 @@
 
             if (this.stream.CanSeek && this.stream.Length == 0)
             {
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NETSTANDARD2_1
                 this.stream.Dispose();
 #else
                 this.stream.Close();

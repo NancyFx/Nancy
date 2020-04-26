@@ -18,12 +18,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AsyncUsageAnalyzers" Version="1.0.0-alpha003">
-      <PrivateAssets>All</PrivateAssets>
+    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="16.5.132">
+      <PrivateAssets>True</PrivateAssets>
     </PackageReference>
   </ItemGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0'
+                 OR '$(TargetFramework)' == 'netstandard2.1'">
     <DefineConstants>$(DefineConstants);CORE</DefineConstants>
   </PropertyGroup>
 

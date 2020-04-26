@@ -11,8 +11,8 @@ var nogit = Argument<bool>("nogit", false);
 // Variables
 var configuration = "Release";
 var fullFrameworkTarget = "net452";
-var netStandardTarget = "netstandard2.0";
-var netCoreTarget = "netcoreapp2.0";
+var netStandardTarget = "netstandard2.1";
+var netCoreTarget = "netcoreapp3.1";
 
 // Directories
 var output = Directory("build");
@@ -280,13 +280,13 @@ Task("Test")
             }
 
             var settings = new ProcessSettings {
-                Arguments = string.Concat("xunit -configuration ", configuration, " -nobuild"),
+                Arguments = string.Concat("test --configuration ", configuration, " --no-build"),
                 WorkingDirectory = project.GetDirectory()
             };
 
             if (IsRunningOnUnix())
             {
-                settings.Arguments.Append(string.Concat("-framework ", netCoreTarget));
+                settings.Arguments.Append(string.Concat("--framework ", netCoreTarget));
             }
 
             Information("Executing tests for " + project.GetFilename() + " with arguments: " + settings.Arguments.Render());

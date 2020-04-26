@@ -1,6 +1,6 @@
-$CakeVersion = "0.24.0"
-$DotNetVersion = select-string -Path .\global.json -Pattern '[\d]\.[\d]\.[\d]' | % {$_.Matches} | % {$_.Value };
-$DotNetInstallerUri = "https://raw.githubusercontent.com/dotnet/cli/v$DotNetVersion/scripts/obtain/dotnet-install.ps1";
+$CakeVersion = "0.37.0"
+$DotNetVersion = select-string -Path .\global.json -Pattern '[\d]\.[\d]\.[\d]*' | % {$_.Matches} | % {$_.Value };
+$DotNetInstallerUri = "https://dot.net/v1/dotnet-install.ps1";
 
 # Make sure tools folder exists
 $PSScriptRoot = $pwd
