@@ -4,7 +4,7 @@ We would like to thank all the thousands of users of Nancy, all the people who w
 
 We would like to thank the 150+ contributors to Nancy that made it what it became, without you the work would have been much harder and opportunities missed.  
 
-We would like to thank [VQ](http://www.vqcomms.com) for being one of the few companies that paid for our open source efforts.  
+We would like to thank [VQ](http://www.vqcomms.com) for financially sponsoring our open source efforts.  
 
 We would like to thank the core contributors to Nancy [@jchannon](https://github.com/jchannon), [@khellang](https://github.com/khellang), [@damianh](https://github.com/damianh), [@phillip-haydon](https://github.com/phillip-haydon), [@prabirshrestha](https://github.com/prabirshrestha), [@horsdal](https://github.com/horsdal) for working hard into the nights coding, testing and writing docs but most importantly the founders of Nancy itself [@thecodejunkie](https://github.com/thecodejunkie) and [@grumpydev](https://github.com/grumpydev) whose vision made Nancy what it was, a fun, performant and enjoyable web framework.
 
