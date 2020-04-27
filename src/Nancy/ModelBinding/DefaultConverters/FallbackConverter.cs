@@ -46,7 +46,7 @@ namespace Nancy.ModelBinding.DefaultConverters
                 {
                     return true;
                 }
-                return null;
+                throw;
             }
         }
     }

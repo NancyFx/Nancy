@@ -296,25 +296,6 @@ namespace Nancy.Tests.Unit.ModelBinding
         }
 
         [Fact]
-        public void Should_ignore_properties_that_cannot_be_converted()
-        {
-            // Given
-            var binder = this.GetBinder(typeConverters: new[] { new FallbackConverter() });
-            var context = new NancyContext { Request = new FakeRequest("GET", "/") };
-            context.Request.Form["StringProperty"] = "Test";
-            context.Request.Form["IntProperty"] = "12";
-            context.Request.Form["DateProperty"] = "Broken";
-
-            // When
-            var result = (TestModel)binder.Bind(context, typeof(TestModel), null, BindingConfig.Default);
-
-            // Then
-            result.StringProperty.ShouldEqual("Test");
-            result.IntProperty.ShouldEqual(12);
-            result.DateProperty.ShouldEqual(default(DateTime));
-        }
-
-        [Fact]
         public void Should_throw_ModelBindingException_if_convertion_of_a_property_fails()
         {
             // Given
@@ -322,6 +303,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             var context = new NancyContext { Request = new FakeRequest("GET", "/") };
             context.Request.Form["IntProperty"] = "badint";
             context.Request.Form["AnotherIntProperty"] = "morebad";
+            context.Request.Form["DateProperty"] = "bad dates"; // Indiana Jones' monkey is dead :)
 
             // Then
             Type modelType = typeof(TestModel);
@@ -334,6 +316,9 @@ namespace Nancy.Tests.Unit.ModelBinding
                              && exception.PropertyBindingExceptions.Any(pe =>
                                                                         pe.PropertyName == "AnotherIntProperty"
                                                                         && pe.AttemptedValue == "morebad")
+                             && exception.PropertyBindingExceptions.Any(pe =>
+                                                                        pe.PropertyName == "DateProperty"
+                                                                        && pe.AttemptedValue == "bad dates")
                              && exception.PropertyBindingExceptions.All(pe =>
                                                                         pe.InnerException.Message.Contains(pe.AttemptedValue)
                                                                         && pe.InnerException.Message.Contains(modelType.GetProperty(pe.PropertyName).PropertyType.Name)));
