@@ -39,7 +39,7 @@
             Assert.Equal(3, innerExceptions.Count);
 
             foreach (var exception in expectedExceptions)
-                Assert.True(innerExceptions.Contains(exception));
+                innerExceptions.ShouldHave(exception);
         }
     }
 }

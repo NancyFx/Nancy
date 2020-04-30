@@ -152,7 +152,7 @@
             BeforePipeline castPipeline = item2;
 
             // Then
-            Assert.Equal(1, castPipeline.PipelineDelegates.Count());
+            castPipeline.PipelineDelegates.ShouldHaveCount(1);
             Assert.Same(item2, castPipeline.PipelineDelegates.First());
         }
 

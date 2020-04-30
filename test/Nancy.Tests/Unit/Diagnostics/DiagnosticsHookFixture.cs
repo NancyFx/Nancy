@@ -50,7 +50,7 @@
             var result = await browser.Get(DiagnosticsConfiguration.Default.Path);
 
             // Then
-            Assert.True(result.Body.AsString().Contains("Diagnostics Disabled"));
+            result.Body.AsString().ShouldContain("Diagnostics Disabled");
         }
 
         [Fact]
@@ -77,7 +77,7 @@
             var result = await browser.Get(DiagnosticsConfiguration.Default.Path);
 
             // Then
-            Assert.True(result.Body.AsString().Contains("Diagnostics Disabled"));
+            result.Body.AsString().ShouldContain("Diagnostics Disabled");
         }
 #endif
 

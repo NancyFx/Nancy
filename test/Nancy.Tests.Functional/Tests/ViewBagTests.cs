@@ -34,7 +34,7 @@ namespace Nancy.Tests.Functional.Tests
                 });
 
             // Then
-            Assert.True(response.Body.AsString().Contains(@"Hello Bob"));
+            response.Body.AsString().ShouldContain(@"Hello Bob");
         }
 
         [Fact]
@@ -50,7 +50,7 @@ namespace Nancy.Tests.Functional.Tests
                 });
 
             // Then
-            Assert.True(response.Body.AsString().Contains(@"Hello Bob"));
+            response.Body.AsString().ShouldContain(@"Hello Bob");
         }
 
         [Fact]
