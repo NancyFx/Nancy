@@ -241,7 +241,7 @@
 
                 if (this.configuration.RewriteLocalhost && !baseUri.Host.Contains("."))
                 {
-                    prefix = prefix.Replace("localhost", "+");
+                    prefix = prefix.Replace("localhost", this.configuration.UseWeakWildcard ? "*" : "+");
                 }
 
                 yield return prefix;
