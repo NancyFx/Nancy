@@ -134,6 +134,40 @@
         }
 
         [Fact]
+        public void Should_be_able_to_add_headers_as_enumerable()
+        {
+            var headers = new List<Tuple<string, string>>
+            {
+                new Tuple<string, string>("test", "testvalue"),
+                new Tuple<string, string>("test2", "test2value")
+            };
+
+            var response = new Response();
+            var result = response.WithHeaders(headers);
+
+            result.Headers.ShouldNotBeNull();
+            result.Headers["test"].ShouldEqual("testvalue");
+            result.Headers["test2"].ShouldEqual("test2value");
+        }
+
+        [Fact]
+        public void Should_be_able_to_add_headers_as_enumerable_of_anonymous()
+        {
+            var headers = new List<object>
+            {
+                new { Header = "test", Value = "testvalue" },
+                new { Header = "test2", Value = "test2value" }
+            };
+
+            var response = new Response();
+            var result = response.WithHeaders(headers);
+
+            result.Headers.ShouldNotBeNull();
+            result.Headers["test"].ShouldEqual("testvalue");
+            result.Headers["test2"].ShouldEqual("test2value");
+        }
+
+        [Fact]
         public void Should_be_able_to_chain_setting_single_headers()
         {
             var response = new Response();

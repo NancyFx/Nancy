@@ -144,6 +144,30 @@ namespace Nancy
         }
 
         /// <summary>
+        /// Adds headers to the response using anonymous types
+        /// </summary>
+        /// Enumerable of headers - each header should be a Tuple with two string elements
+        /// for header name and header value
+        /// </param>
+        /// <returns>Modified response</returns>
+        public static Response WithHeaders(this Response response, IEnumerable<Tuple<string, string>> headers)
+        {
+            return response.WithHeaders(headers.ToArray());
+        }
+
+        /// <summary>
+        /// Adds headers to the response using anonymous types
+        /// </summary>
+        /// Enumerable of headers - each header should be a Tuple with two string elements
+        /// for header name and header value
+        /// </param>
+        /// <returns>Modified response</returns>
+        public static Response WithHeaders(this Response response, IEnumerable<object> headers)
+        {
+            return response.WithHeaders(headers.ToArray());
+        }
+
+        /// <summary>
         /// Sets the content type of the response
         /// </summary>
         /// <param name="response">Response object</param>
