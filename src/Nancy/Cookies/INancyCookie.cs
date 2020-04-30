@@ -52,5 +52,10 @@ namespace Nancy.Cookies
         /// Whether the cookie is secure (i.e. HTTPS only)
         /// </summary>
         bool Secure { get; }
+
+        /// <summary>
+        /// Wheather the cookie is same site
+        /// </summary>
+        SameSite? SameSite { get; }
     }
 }

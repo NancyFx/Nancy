@@ -162,6 +162,16 @@ namespace Nancy.Tests.Unit
             result.ShouldEqual("Value+with+spaces");
         }
 
+        [Fact]
+        public void Should_add_same_site_if_set()
+        {
+            // When
+            var cookie = new NancyCookie("leto", "worm") { SameSite = SameSite.Lax }.ToString();
+
+            // Then
+            cookie.ShouldEqual("leto=worm; path=/; samesite=Lax");
+        }
+
         public static string GetInvariantAbbreviatedMonthName(DateTime dateTime)
         {
             return CultureInfo.InvariantCulture.DateTimeFormat.AbbreviatedMonthNames[dateTime.Month - 1];
