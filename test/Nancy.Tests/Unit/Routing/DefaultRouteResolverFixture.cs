@@ -152,11 +152,11 @@
             //Then
             if (ShouldBeFound(path, caseSensitive))
             {
-              result.Body.AsString().ShouldEqual("OptionalCaptureWithDefault " + expected);
+                result.Body.AsString().ShouldEqual("OptionalCaptureWithDefault " + expected);
             }
             else
             {
-              result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
+                result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
             }
         }
 
@@ -174,12 +174,71 @@
             //Then
             if (ShouldBeFound(path, caseSensitive))
             {
-              result.Body.AsString().ShouldEqual("OptionalCaptureWithDefault test");
+                result.Body.AsString().ShouldEqual("OptionalCaptureWithDefault test");
             }
             else
             {
-              result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
+                result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
             }
+        }
+
+        [Theory]
+        [InlineData("/api", "Single optional segment")]
+        [InlineData("/api/", "Single optional segment")]
+        [InlineData("/api/arg1", "Single optional segment")]
+        [InlineData("/api/arg1/", "Single optional segment")]
+        [InlineData("/api/arg1/arg2", "Two optional segments")]
+        [InlineData("/api/arg1/arg2/", "Two optional segments")]
+        [InlineData("/api/arg1/arg2/arg3", "Three optional segments")]
+        [InlineData("/api/arg1/arg2/arg3/", "Three optional segments")]
+        public async Task Should_Resolve_Optionals_Correctly(string path, string expected)
+        {
+            var browser = InitBrowser(caseSensitive: false);
+            var result = await browser.Get(path);
+            result.Body.AsString().ShouldEqual(expected);
+        }
+
+        [Theory]
+        [InlineData("/api/greedy/arg1", "Greedy match")]
+        [InlineData("/api/greedy/arg1/arg2", "Greedy match")]
+        public async Task Should_Resolve_Greedy_Alongside_Optionals(string path, string expected)
+        {
+            var browser = InitBrowser(caseSensitive: false);
+            var result = await browser.Get(path);
+            result.Body.AsString().ShouldEqual(expected);
+        }
+
+        [Theory]
+        [InlineData("/optional/literal/bar", "Single optional segment, literal segment at end")]
+        [InlineData("/optional/literal/arg1/bar", "Single optional segment, literal segment at end")]
+        [InlineData("/optional/literal/arg1/arg2/bar", "Two optional segments, literal segment at end")]
+        public async Task Should_Resolve_Optionals_with_Literal_Ends(string path, string expected)
+        {
+            var browser = InitBrowser(caseSensitive: false);
+            var result = await browser.Get(path);
+            result.Body.AsString().ShouldEqual(expected);
+        }
+        
+        [Theory]
+        [InlineData("/optional/variable/hello", "Single  hello")]
+        [InlineData("/optional/variable/hello/there", "Single hello there")]
+        [InlineData("/optional/variable/hello/there/everybody", "Double hello there everybody")]
+        public async Task Should_Resolve_Optionals_with_Variable_Ends(string path, string expected)
+        {
+            var browser = InitBrowser(caseSensitive: false);
+            var result = await browser.Get(path);            
+            result.Body.AsString().ShouldEqual(expected);
+        }
+        
+        [Theory]        
+        [InlineData("/too/greedy/arg1", "One arg1")]
+        [InlineData("/too/greedy/arg1/hello", "Literal arg1")]
+        public async Task Should_Not_Be_Too_Greedy(string path, string expected)
+        {
+            var browser = InitBrowser(caseSensitive: false);
+            var result = await browser.Get(path);
+            var woot = result.Body.AsString();
+            result.Body.AsString().ShouldEqual(expected);
         }
 
         [Theory]
@@ -442,6 +501,7 @@
             }
         }
 
+
         private class TestModule : NancyModule
         {
             public TestModule()
@@ -475,6 +535,26 @@
                 Get("/capturenodewithliteral/{file}.html", args => "CaptureNodeWithLiteral " + args.file + ".html");
 
                 Get(@"/regex/(?<foo>\d{2,4})/{bar}", args => string.Format("RegEx {0} {1}", args.foo, args.bar));
+
+                Get("/api/{arg1?}", args => "Single optional segment");
+
+                Get("/api/{arg1?}/{arg2?}", args => "Two optional segments");
+
+                Get("/api/{arg1?}/{arg2?}/{arg3?}", args => "Three optional segments");
+
+                Get("/api/greedy/{something*}", args => "Greedy match");
+
+                Get("/optional/literal/{arg1?}/bar", args => "Single optional segment, literal segment at end");
+
+                Get("/optional/literal/{arg1?}/{arg2?}/bar", args => "Two optional segments, literal segment at end");
+
+                Get("/optional/variable/{arg1?}/{variable}", args => string.Format("Single {0} {1}", args.arg1.Value, args.variable.Value));
+
+                Get("/optional/variable/{arg1?}/{arg2?}/{variable}", args => string.Format("Double {0} {1} {2}", args.arg1.Value, args.arg2.Value, args.variable.Value));
+
+                Get("/too/greedy/{arg1*}", args => string.Format("One {0}", args.arg1.Value));
+
+                Get("/too/greedy/{arg1*}/hello", args => string.Format("Literal {0}", args.arg1.Value));                
             }
         }
     }

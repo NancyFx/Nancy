@@ -65,17 +65,7 @@ namespace Nancy.Routing.Trie
         /// <param name="other">An object to compare with this object.</param>
         public int CompareTo(MatchResult other)
         {
-            // Length of the route takes precedence over score
-            if (this.RouteLength < other.RouteLength)
-            {
-                return -1;
-            }
-
-            if (this.RouteLength > other.RouteLength)
-            {
-                return 1;
-            }
-
+            // Score of the route takes precedence over length
             if (this.Score < other.Score)
             {
                 return -1;
@@ -86,16 +76,29 @@ namespace Nancy.Routing.Trie
                 return 1;
             }
 
+            // If the score is the same, take the shortest route that matches
+            if (this.RouteLength < other.RouteLength)
+            {
+                return 1;
+            }
+
+            if (this.RouteLength > other.RouteLength)
+            {
+                return -1;
+            }
+
+
             if (Equals(this.ModuleType, other.ModuleType))
             {
+                //Otherwise, we need to take the route that was indexed first
                 if (this.RouteIndex < other.RouteIndex)
                 {
-                    return -1;
+                    return 1;
                 }
 
                 if (this.RouteIndex > other.RouteIndex)
                 {
-                    return 1;
+                    return -1;
                 }
             }
 
