@@ -20,7 +20,10 @@ Nancy's licence is permissible so we encourage forking if you need to perform ma
 
 Nancy is a lightweight, low-ceremony, framework for building HTTP based services on .NET Framework/Core and [Mono](http://mono-project.com). The goal of the framework is to stay out of the way as much as possible and provide a super-duper-happy-path to all interactions.
 
-Nancy is designed to handle `DELETE`, `GET`, `HEAD`, `OPTIONS`, `POST`, `PUT` and `PATCH` requests and provides a simple, elegant, [Domain Specific Language (DSL)](http://en.wikipedia.org/wiki/Domain-specific_language) for returning a response with just a couple of keystrokes, leaving you with more time to focus on the important bits..
+Nancy is designed to handle DELETE, GET, HEAD, OPTIONS, POST, PUT
+and PATCH requests. It provides a simple, elegant, Domain Specific
+Language(DSL), which returns a response with just a couple of keystrokes and
+leaves you with more time to focus on other things
 **your** code and **your** application.
 
 Write your application
