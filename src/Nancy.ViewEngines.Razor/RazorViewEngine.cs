@@ -13,6 +13,7 @@
     using Microsoft.CSharp;
 
     using Nancy.Bootstrapper;
+    using Nancy.Extensions;
     using Nancy.Helpers;
     using Nancy.Responses;
 
@@ -220,7 +221,9 @@
                 GetAssemblyPath(modelType)
             };
 
-            assemblies.AddRange(AppDomainAssemblyTypeScanner.Assemblies.Select(GetAssemblyPath));
+            // Ignore any assemblies that haven't been loaded from disk
+            var filteredAssemblies = AppDomainAssemblyTypeScanner.Assemblies.Where(a => !string.IsNullOrWhiteSpace(a.Location)).ToArray();
+            assemblies.AddRange(filteredAssemblies.Select(GetAssemblyPath));
 
             if (referencingAssembly != null)
             {
